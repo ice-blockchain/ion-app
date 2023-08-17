@@ -1,0 +1,13 @@
+{
+	"emeraldwalk.runonsave": {
+		"commands": [
+			{
+				"match": "app_.*\\.arb",
+				"cmd": "scripts/generate_locales.sh"
+			}
+		]
+	},
+	"editor.codeActionsOnSave": [
+		"source.fixAll"
+	]
+}
