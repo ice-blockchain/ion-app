@@ -44,10 +44,7 @@ app.*.map.json
 /android/app/release
 
 # Automatically generated files
-/lib/generated
-*.g.dart
-*.freezed.dart
-*.gen.dart
+
 
 # IDE
 .vscode
