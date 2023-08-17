@@ -49,3 +49,5 @@ app.*.map.json
 *.freezed.dart
 *.gen.dart
 
+# IDE
+.vscode
