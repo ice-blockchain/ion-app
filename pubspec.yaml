@@ -1,0 +1,39 @@
+name: ice
+description: Ice Flutter Project
+
+publish_to: 'none'
+
+version: 0.0.0+1
+
+environment:
+  sdk: '>=3.0.6 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  freezed_annotation: ^2.4.1
+  get: ^4.6.5
+  intl: any
+  json_annotation: ^4.8.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.2
+  build_runner: ^2.4.6
+  flutter_gen_runner: ^5.3.1
+  lint: ^2.1.2
+  freezed: ^2.4.1
+  json_serializable: ^6.7.1
+  flutter_gen: ^5.3.1
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - assets/images/foo.jpg
+
+flutter_gen:
+  output: lib/generated/
