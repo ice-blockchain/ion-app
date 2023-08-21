@@ -49,3 +49,7 @@ app.*.map.json
 
 # Environment
 *.env
+fastlane/keys
+
+# Ruby
+/vendor/bundle/
