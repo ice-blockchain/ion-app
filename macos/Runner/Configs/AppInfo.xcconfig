@@ -8,7 +8,7 @@
 PRODUCT_NAME = ice
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = io.ice.app
+PRODUCT_BUNDLE_IDENTIFIER = io.ice.app.ion
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2023 io.ice. All rights reserved.

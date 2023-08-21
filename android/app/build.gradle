@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "io.ice.app"
+    namespace "io.ice.app.ion"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -50,7 +50,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "io.ice.app"
+        applicationId "io.ice.app.ion"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -84,7 +84,7 @@ android {
         }
         staging {
             dimension "default"
-            applicationIdSuffix ".mainnet_staging"
+            applicationIdSuffix ".staging"
             manifestPlaceholders = [appName: "ice staging"]
         }
     }
