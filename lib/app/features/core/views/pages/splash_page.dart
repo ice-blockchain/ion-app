@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ice/app/features/core/controllers/init_controller.dart';
 
 class SplashPage extends StatelessWidget {
-  SplashPage({super.key});
-
-  final InitController initController = Get.put(InitController());
+  const SplashPage({super.key});
 
   @override
   Widget build(BuildContext context) {

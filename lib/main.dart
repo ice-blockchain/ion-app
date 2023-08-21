@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ice/app/navigation/app_bindings.dart';
 import 'package:ice/app/navigation/app_pages.dart';
 import 'package:ice/generated/app_localizations.dart';
 
@@ -15,6 +16,7 @@ class AppDemo extends StatelessWidget {
     return GetMaterialApp(
       initialRoute: Routes.splash,
       getPages: AppPages.pages,
+      initialBinding: AppGlobalBindings(),
       localizationsDelegates: I18n.localizationsDelegates,
       supportedLocales: I18n.supportedLocales,
     );

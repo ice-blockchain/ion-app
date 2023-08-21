@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ice/app/features/core/views/pages/main_tabs_routes.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page.dart';
+
+const int mainTabsNavigatorId = 1;
 
 class MainTabsBinding extends Bindings {
   @override
@@ -14,30 +17,38 @@ class MainTabsController extends GetxController {
 
   RxInt currentIndex = 0.obs;
 
-  final List<String> pages = <String>['/browse', '/history', '/settings'];
+  final List<String> pages = <String>[
+    MainTabsPaths.browse,
+    MainTabsPaths.history,
+    MainTabsPaths.settings
+  ];
 
   void changePage(int index) {
     currentIndex.value = index;
-    Get.offAndToNamed(pages[index], id: 1);
+    Get.toNamed(pages[index], id: mainTabsNavigatorId);
   }
 
   Route<Object>? onGenerateRoute(RouteSettings settings) {
     return switch (settings.name) {
-      '/browse' => GetPageRoute<Object>(
+      MainTabsPaths.browse => GetPageRoute<Object>(
           settings: settings,
           page: () => WalletPage(),
           transition: Transition.noTransition,
           // binding: BrowseBinding(),
         ),
-      '/history' => GetPageRoute<Object>(
+      MainTabsPaths.history => GetPageRoute<Object>(
           settings: settings,
-          page: () => WalletPage(),
+          page: () => const Placeholder(
+            color: Colors.blueAccent,
+          ),
           transition: Transition.noTransition,
           // binding: HistoryBinding(),
         ),
-      '/settings' => GetPageRoute<Object>(
+      MainTabsPaths.settings => GetPageRoute<Object>(
           settings: settings,
-          page: () => WalletPage(),
+          page: () => const Placeholder(
+            color: Colors.amber,
+          ),
           transition: Transition.noTransition,
           // binding: SettingsBinding(),
         ),
@@ -54,7 +65,7 @@ class MainTabs extends GetView<MainTabsController> {
     return Scaffold(
       // PageView
       body: Navigator(
-        key: Get.nestedKey(1),
+        key: Get.nestedKey(mainTabsNavigatorId),
         initialRoute: '/browse',
         onGenerateRoute: controller.onGenerateRoute,
       ),

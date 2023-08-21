@@ -13,7 +13,7 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(I18n.of(context)!.hello('Kir'))),
+      appBar: AppBar(title: Text(I18n.of(context)!.hello('Icer'))),
       body: Column(
         children: <Widget>[
           Center(

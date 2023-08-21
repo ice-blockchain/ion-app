@@ -11,6 +11,18 @@ class AuthController extends GetxController {
 
   AuthState get state => authStateStream.value;
 
+  @override
+  void onInit() {
+    super.onInit();
+    ever(authStateStream, handleAuthChange);
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    init();
+  }
+
   Future<AuthController> init() async {
     await 2.seconds.delay();
     authStateStream.value = Random().nextBool()
@@ -21,6 +33,17 @@ class AuthController extends GetxController {
     return this;
   }
 
+  void handleAuthChange(AuthState authState) {
+    if (authState is Authenticated) {
+      Get.offAllNamed(Routes.main);
+    }
+    if (authState is UnAuthenticated) {
+      Get.offAllNamed(
+        Routes.auth,
+      );
+    }
+  }
+
   Future<void> signIn({required String email, required String password}) async {
     try {
       authStateStream.value = const AuthenticationLoading();
@@ -28,7 +51,6 @@ class AuthController extends GetxController {
       authStateStream.value = const Authenticated(
         authToken: AuthToken(access: 'access', refresh: 'refresh'),
       );
-      Get.offAllNamed(Routes.main);
     } catch (error) {
       authStateStream.value = AuthenticationFailure(message: error.toString());
       printError(info: error.toString());
@@ -41,7 +63,6 @@ class AuthController extends GetxController {
       authStateStream.value = const AuthenticationLoading();
       await 2.seconds.delay();
       authStateStream.value = const UnAuthenticated();
-      Get.offAllNamed(Routes.auth);
     } catch (error) {
       authStateStream.value = AuthenticationFailure(message: error.toString());
       printError(info: e.toString());
