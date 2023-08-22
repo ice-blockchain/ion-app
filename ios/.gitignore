@@ -34,3 +34,4 @@ Runner/GeneratedPluginRegistrant.*
 !default.perspectivev3
 
 GoogleService-Info.plist
+Flutter/Environment.xcconfig

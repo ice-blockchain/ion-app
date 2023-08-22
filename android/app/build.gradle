@@ -85,7 +85,7 @@ android {
         staging {
             dimension "default"
             applicationIdSuffix ".staging"
-            manifestPlaceholders = [appName: "ice staging"]
+            manifestPlaceholders = [appName: "ice-staging"]
         }
     }
 }
