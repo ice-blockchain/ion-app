@@ -3,6 +3,7 @@ require 'json'
 MATCH_GIT_URL = ENV["MATCH_GIT_URL"]
 APP_ENV = ENV["APP_ENV"]
 APP_ID = ENV["APP_ID"]
+APPLE_DEVELOPMENT_TEAM = ENV["APPLE_DEVELOPMENT_TEAM"]
 FIREBASE_DISTRIBUTION_TOKEN = ENV["FIREBASE_DISTRIBUTION_TOKEN"]
 FIREBASE_ANDROID_APP_ID = ENV["FIREBASE_ANDROID_APP_ID"]
 FIREBASE_IOS_APP_ID = ENV["FIREBASE_IOS_APP_ID"]
@@ -33,14 +34,14 @@ platform :ios do
         temp_keystore_user = 'match_keystore_user'
         temp_keystore_password = 'match_keystore_password'
         sign_type = options[:sign_type]
-        export_method = options[:sign_type] == "appstore" ? "app-store" : "ad-hoc"
+        export_method = sign_type == "appstore" ? "app-store" : "ad-hoc"
 
         ensure_temp_keychain(temp_keystore_user, temp_keystore_password)
 
         match(
             type: sign_type,
             readonly: true,
-            app_identifier: [APP_ID],
+            app_identifier: APP_ID,
             keychain_name: temp_keystore_user,
             keychain_password: temp_keystore_password,
             api_key_path: "./fastlane/keys/appstore-connect-key.json",
@@ -49,13 +50,11 @@ platform :ios do
 
         gym(
             skip_build_archive: true,
+            project: "./ios/Runner.xcodeproj",
             archive_path: "./build/ios/archive/Runner.xcarchive",
+            output_directory: "./build/ios/",
             export_method: export_method,
-            export_options: {
-                provisioningProfiles: {
-                    [APP_ID] => ENV["sigh_#{main_bundle_id}_#{sign_type}_profile-path"]
-                }
-            }
+            export_team_id: APPLE_DEVELOPMENT_TEAM,
         )
     end
 
@@ -68,6 +67,7 @@ platform :ios do
             when "testflight"
                 pilot(
                     app_identifier: APP_ID,
+                    ipa: "./build/ios/Runner.ipa",
                     skip_waiting_for_build_processing: true,
                     api_key_path: "./fastlane/keys/appstore-connect-key.json",
                     skip_submission: true,
@@ -77,6 +77,7 @@ platform :ios do
             when "firebase"
                 firebase_app_distribution(
                     app: FIREBASE_IOS_APP_ID,
+                    ipa_path: "./build/ios/Runner.ipa",
                     firebase_cli_token: FIREBASE_DISTRIBUTION_TOKEN,
                     release_notes: options[:release_notes] || git_branch,
                     groups: "Internal-testers",
