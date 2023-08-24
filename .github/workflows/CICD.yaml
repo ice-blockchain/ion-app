@@ -1,0 +1,296 @@
+name: CI/CD
+on:
+  push:
+    branches:
+      - master
+      - 'release/v*'
+  pull_request:
+    branches:
+      - master
+      - 'release/v*'
+jobs:
+  flutter:
+    name: Flutter -- verify, build, test
+    if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.draft == false) || github.event_name == 'push'  }}
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout main repo
+        id: checkout-main-repo
+        uses: actions/checkout@v3
+        with:
+          path: main-repo
+      - name: Checkout the target 'master' branch of 'flutter-app-secrets'
+        id: checkout-secrets
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ secrets.FLUTTER_APP_SECRETS_REPO }}
+          ref: master
+          token: ${{ secrets.ICE_CI_CD_BOT_GH_PAT }}
+          path: flutter-app-secrets
+          fetch-depth: 0
+      - name: Detect APP environment and set it to ENV
+        id: detect-env
+        run: |
+          if [[ ${{ github.event_name == 'push' && github.ref_name != 'master' }} == true ]]
+            then
+              echo "APP_ENV=production" >> $GITHUB_ENV
+            else
+              echo "APP_ENV=staging" >> $GITHUB_ENV
+          fi
+      - name: Configure APP environment (${{ env.APP_ENV }})
+        id: setup-env
+        run: |
+          cd main-repo
+          scripts/configure_env.sh $APP_ENV
+      - name: Mask APP environment and keys in logs
+        id: mask-secrets
+        run: |
+          cd main-repo
+          cat .env | awk '!/^\s*#/' | awk '!/^\s*$/' | while IFS='' read -r line; do
+            value=$(echo "$line" | cut -d '=' -f 2-)
+            echo "::add-mask::$value"
+          done
+          for file in ./fastlane/keys/*.json
+          do
+            node -pe 'Object.entries(JSON.parse(process.argv[1])).forEach(([_, val])=>(typeof val === "string" && val.split("\n").forEach((row) => row && console.log("::add-mask::"+row))))' "$(cat $file)"
+          done
+      - name: Set Flutter
+        id: set-flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - run: flutter --version
+      - name: Install dependencies
+        id: install-dependencies
+        run: |
+          cd main-repo
+          flutter pub get
+      - name: Generate code
+        id: generate-code
+        run: |
+          cd main-repo
+          ./scripts/generate_locales.sh
+          ./scripts/generate_code.sh
+      - name: Analyze code
+        id: analyze-code
+        run: |
+          cd main-repo
+          ./scripts/analyze.sh
+      - name: Run tests
+        id: run-tests
+        run: |
+          cd main-repo
+          ./scripts/run_tests.sh
+      - uses: actions/cache@v3
+        id: cache_all
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+      - name: Slack Notification
+        if: ${{ github.event_name == 'push' && success() == false}}
+        uses: act10ns/slack@v2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.FRONTEND_SLACK_WEBHOOK }}
+          SLACK_MESSAGE_TITLE: Flutter -- verify, build, test
+        with:
+          config: main-repo/.github/slack.yml
+          status: ${{ job.status }}
+          steps: ${{ '{}' }}
+  ios-cicd:
+    name: iOS -- build, deploy
+    needs: [flutter]
+    if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.draft == false) || github.event_name == 'push'  }}
+    runs-on: macOS-latest
+    env:
+      FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 180
+      FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 10
+    steps:
+      - uses: actions/cache@v3
+        id: cache_all
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+      - name: Mask APP environment and keys in logs
+        id: mask-secrets
+        run: |
+          cd main-repo
+          cat .env | awk '!/^\s*#/' | awk '!/^\s*$/' | while IFS='' read -r line; do
+            value=$(echo "$line" | cut -d '=' -f 2-)
+            echo "::add-mask::$value"
+          done
+          for file in ./fastlane/keys/*.json
+          do
+            node -pe 'Object.entries(JSON.parse(process.argv[1])).forEach(([_, val])=>(typeof val === "string" && val.split("\n").forEach((row) => row && console.log("::add-mask::"+row))))' "$(cat $file)"
+          done
+      - name: Setup Ruby version
+        id: setup-ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: main-repo
+          ruby-version: '3.2.2'
+          bundler-cache: true
+      - name: Set Flutter
+        id: set-flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - run: flutter --version
+      - name: Install dependencies
+        id: install-dependencies
+        run: |
+          cd main-repo
+          flutter pub get
+      - name: Detect context and set APP environment variables
+        id: setup-env
+        env:
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          if [[ ${{ github.event_name == 'pull_request' && github.event.pull_request.draft == false}} == true ]]
+            then
+              echo "IOS_SIGN_TYPE=adhoc" >> $GITHUB_ENV
+              echo "DEPLOY_TARGET=firebase" >> $GITHUB_ENV
+              echo "APP_VERSION=9.9.9" >> $GITHUB_ENV
+              echo "RELEASE_NOTES=${{ github.head_ref }}" >> $GITHUB_ENV
+            else
+              echo "IOS_SIGN_TYPE=appstore" >> $GITHUB_ENV
+              echo "DEPLOY_TARGET=testflight" >> $GITHUB_ENV
+              if [[ ${{ github.ref_name == 'master' }} == true ]]
+                then
+                  echo "APP_VERSION=9.9.9" >> $GITHUB_ENV
+                else
+                  echo "APP_VERSION=$(echo ${GITHUB_REF_NAME#*v})" >> $GITHUB_ENV
+              fi
+          fi
+          if [[ ${{ github.event_name == 'push' && github.ref_name != 'master' }} == true ]]
+            then
+              echo "APP_ENV=production" >> $GITHUB_ENV
+            else
+              echo "APP_ENV=staging" >> $GITHUB_ENV
+          fi
+          echo "BUILD_NUMBER=$(echo $((GITHUB_RUN_NUMBER)))" >> $GITHUB_ENV
+      - name: Build iOS App v(${{ env.APP_VERSION }} build:${{ env.BUILD_NUMBER }})
+        id: build-app
+        run: |
+          cd main-repo
+          flutter build ipa --release --no-codesign --build-number=$BUILD_NUMBER --build-name=$APP_VERSION
+      - name: Sign iOS App (${{env.IOS_SIGN_TYPE}})
+        id: sign-app
+        run: |
+          cd main-repo
+          bundle exec fastlane ios sign sign_type:$IOS_SIGN_TYPE
+      - name: Deploy iOS App to ${{env.DEPLOY_TARGET}}
+        id: deploy-app
+        run: |
+          cd main-repo
+          bundle exec fastlane ios deploy target:$DEPLOY_TARGET release_notes:$RELEASE_NOTES
+      - name: Slack Notification
+        if: ${{ always() && github.event_name == 'push' }}
+        uses: act10ns/slack@v2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.FRONTEND_SLACK_WEBHOOK }}
+          SLACK_MESSAGE_TITLE: iOS -- build, deploy
+        with:
+          config: main-repo/.github/slack.yml
+          status: ${{ job.status }}
+          steps: ${{ '{}' }}
+  android-cicd:
+    name: Android -- build, deploy
+    needs: [flutter]
+    if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.draft == false) || github.event_name == 'push'  }}
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/cache@v3
+        id: cache_all
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+      - name: Mask APP environment and keys in logs
+        id: mask-secrets
+        run: |
+          cd main-repo
+          cat .env | awk '!/^\s*#/' | awk '!/^\s*$/' | while IFS='' read -r line; do
+            value=$(echo "$line" | cut -d '=' -f 2-)
+            echo "::add-mask::$value"
+          done
+          for file in ./fastlane/keys/*.json
+          do
+            node -pe 'Object.entries(JSON.parse(process.argv[1])).forEach(([_, val])=>(typeof val === "string" && val.split("\n").forEach((row) => row && console.log("::add-mask::"+row))))' "$(cat $file)"
+          done
+      - name: Setup Java
+        id: setup-java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+          check-latest: true
+      - name: Setup Ruby version
+        id: setup-ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: main-repo
+          ruby-version: '3.2.2'
+          bundler-cache: true
+      - name: Set Flutter
+        id: set-flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - run: flutter --version
+      - name: Install dependencies
+        id: install-dependencies
+        run: |
+          cd main-repo
+          flutter pub get
+      - name: Detect context and set APP environment variables
+        id: setup-env
+        env:
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          if [[ ${{ github.event_name == 'pull_request' && github.event.pull_request.draft == false}} == true ]]
+            then
+              echo "ANDROID_ARCHIVE_TYPE=apk" >> $GITHUB_ENV
+              echo "DEPLOY_TARGET=firebase" >> $GITHUB_ENV
+              echo "APP_VERSION=9.9.9" >> $GITHUB_ENV
+              echo "RELEASE_NOTES=release_notes:${{ github.head_ref }}" >> $GITHUB_ENV
+            else
+              echo "ANDROID_ARCHIVE_TYPE=bundle" >> $GITHUB_ENV
+              echo "DEPLOY_TARGET=playstore" >> $GITHUB_ENV
+              if [[ ${{ github.ref_name == 'master' }} == true ]]
+                then
+                  echo "APP_VERSION=9.9.9" >> $GITHUB_ENV
+                else
+                  echo "APP_VERSION=$(echo ${GITHUB_REF_NAME#*v})" >> $GITHUB_ENV
+              fi
+          fi
+          if [[ ${{ github.event_name == 'push' && github.ref_name != 'master' }} == true ]]
+            then
+              echo "APP_ENV=production" >> $GITHUB_ENV
+              echo "RELEASE_STATUS=completed" >> $GITHUB_ENV
+            else
+              echo "APP_ENV=staging" >> $GITHUB_ENV
+              echo "RELEASE_STATUS=draft" >> $GITHUB_ENV
+          fi
+          echo "BUILD_NUMBER=$(echo $((GITHUB_RUN_NUMBER)))" >> $GITHUB_ENV
+      - name: Build Android App (${{env.ANDROID_ARCHIVE_TYPE}} v${{ env.APP_VERSION }} build:${{ env.BUILD_NUMBER }})
+        id: build-app
+        run: |
+          cd main-repo
+          flutter build $ANDROID_ARCHIVE_TYPE --release --flavor=$APP_ENV --build-number=$BUILD_NUMBER --build-name=$APP_VERSION
+      - name: Deploy Android App to ${{env.DEPLOY_TARGET}}
+        id: deploy-app
+        run: |
+          cd main-repo
+          bundle exec fastlane android deploy target:$DEPLOY_TARGET release_status:$RELEASE_STATUS $RELEASE_NOTES
+      - name: Slack Notification
+        if: ${{ always() && github.event_name == 'push' }}
+        uses: act10ns/slack@v2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.FRONTEND_SLACK_WEBHOOK }}
+          SLACK_MESSAGE_TITLE: Android -- build, deploy
+        with:
+          config: main-repo/.github/slack.yml
+          status: ${{ job.status }}
+          steps: ${{ '{}' }}

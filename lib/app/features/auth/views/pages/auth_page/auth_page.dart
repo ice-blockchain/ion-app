@@ -29,11 +29,11 @@ class AuthPage extends StatelessWidget {
               ),
               label: const Text('sign in'),
               onPressed: () => <void>{
-                authController.signIn(email: 'foo@bar.baz', password: '123')
+                authController.signIn(email: 'foo@bar.baz', password: '123'),
               },
             ),
           ),
-          Image.asset(Assets.images.foo.path)
+          Image.asset(Assets.images.foo.path),
         ],
       ),
     );

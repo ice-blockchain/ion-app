@@ -3,15 +3,20 @@ import 'dart:math';
 import 'package:get/get.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/data/models/auth_token.dart';
+import 'package:ice/app/features/core/controllers/env_service.dart';
 import 'package:ice/app/navigation/app_pages.dart';
 
 class AuthController extends GetxController {
+  final EnvService envService = Get.find<EnvService>();
+
   final Rx<AuthState> authStateStream =
       Rx<AuthState>(const AuthenticationUnknown());
 
   AuthState get state => authStateStream.value;
 
   Future<AuthController> init() async {
+    // ignore: avoid_print
+    print(envService.get(EnvVariable.FOO));
     await 2.seconds.delay();
     authStateStream.value = Random().nextBool()
         ? const UnAuthenticated()

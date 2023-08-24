@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:ice/app/features/auth/controllers/auth_controller.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
+import 'package:ice/app/features/core/controllers/env_service.dart';
 import 'package:ice/app/navigation/app_pages.dart';
 
 class InitController extends GetxController {
@@ -11,6 +12,7 @@ class InitController extends GetxController {
   }
 
   Future<void> _initRootBindings() async {
+    await Get.putAsync<EnvService>(() => EnvService().init());
     await Get.putAsync<AuthController>(
       () => AuthController().init(),
       permanent: true,

@@ -1,0 +1,139 @@
+require 'json'
+
+MATCH_GIT_URL = ENV["MATCH_GIT_URL"]
+APP_ENV = ENV["APP_ENV"]
+APP_ID = ENV["APP_ID"]
+APPLE_DEVELOPMENT_TEAM = ENV["APPLE_DEVELOPMENT_TEAM"]
+FIREBASE_DISTRIBUTION_TOKEN = ENV["FIREBASE_DISTRIBUTION_TOKEN"]
+FIREBASE_ANDROID_APP_ID = ENV["FIREBASE_ANDROID_APP_ID"]
+FIREBASE_IOS_APP_ID = ENV["FIREBASE_IOS_APP_ID"]
+
+def delete_temp_keychain(name)
+    delete_keychain(
+      name: name
+    ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+end
+
+def create_temp_keychain(name, password)
+    create_keychain(
+        name: name,
+        password: password,
+        unlock: false,
+        timeout: 3000,
+    )
+end
+
+def ensure_temp_keychain(name, password)
+    delete_temp_keychain(name)
+    create_temp_keychain(name, password)
+end
+
+platform :ios do
+    desc "Sign iOS app"
+    lane :sign do |options|
+        temp_keystore_user = 'match_keystore_user'
+        temp_keystore_password = 'match_keystore_password'
+        sign_type = options[:sign_type]
+        export_method = sign_type == "appstore" ? "app-store" : "ad-hoc"
+
+        ensure_temp_keychain(temp_keystore_user, temp_keystore_password)
+
+        match(
+            type: sign_type,
+            readonly: true,
+            app_identifier: APP_ID,
+            keychain_name: temp_keystore_user,
+            keychain_password: temp_keystore_password,
+            api_key_path: "./fastlane/keys/appstore-connect-key.json",
+            git_url: MATCH_GIT_URL
+        )
+
+        gym(
+            skip_build_archive: true,
+            project: "./ios/Runner.xcodeproj",
+            archive_path: "./build/ios/archive/Runner.xcarchive",
+            output_directory: "./build/ios/",
+            export_method: export_method,
+            export_team_id: APPLE_DEVELOPMENT_TEAM,
+        )
+    end
+
+    desc "Deploy iOS app"
+    lane :deploy do |options|
+        deploy_retry = 0
+
+        begin
+            case options[:target]
+            when "testflight"
+                pilot(
+                    app_identifier: APP_ID,
+                    ipa: "./build/ios/Runner.ipa",
+                    skip_waiting_for_build_processing: true,
+                    api_key_path: "./fastlane/keys/appstore-connect-key.json",
+                    skip_submission: true,
+                    distribute_external: false,
+                    notify_external_testers: false,
+                )
+            when "firebase"
+                firebase_app_distribution(
+                    app: FIREBASE_IOS_APP_ID,
+                    ipa_path: "./build/ios/Runner.ipa",
+                    firebase_cli_token: FIREBASE_DISTRIBUTION_TOKEN,
+                    release_notes: options[:release_notes] || git_branch,
+                    groups: "Internal-testers",
+                )
+            end
+        rescue => exception
+            deploy_retry +=1
+            if deploy_retry <= 3
+                puts "Retrying because of #{exception}".yellow
+                retry
+            else
+                raise exception
+            end
+        end
+    end
+end
+
+platform :android do
+    desc "Deploy Android app"
+    lane :deploy do |options|
+        deploy_retry = 0
+
+        begin
+            case options[:target]
+            when "playstore"
+                upload_to_play_store(
+                    package_name: APP_ID,
+                    track: "internal",
+                    aab: "build/app/outputs/bundle/#{APP_ENV}Release/app-#{APP_ENV}-release.aab",
+                    json_key: "./fastlane/keys/gp-console.json",
+                    skip_upload_metadata: true,
+                    skip_upload_images: true,
+                    skip_upload_screenshots: true,
+                    skip_upload_apk: true,
+                    release_status: options[:release_status],
+                )
+            when "firebase"
+                # use bundles when the app is published
+                firebase_app_distribution(
+                    app: FIREBASE_ANDROID_APP_ID,
+                    firebase_cli_token: FIREBASE_DISTRIBUTION_TOKEN,
+                    android_artifact_type: "APK",
+                    android_artifact_path: "build/app/outputs/flutter-apk/app-#{APP_ENV}-release.apk",
+                    release_notes: options[:release_notes] || git_branch,
+                    groups: "Internal-testers",
+                )
+            end
+        rescue => exception
+                deploy_retry +=1
+            if deploy_retry <= 3
+                puts "Retrying because of #{exception}".yellow
+                retry
+            else
+                raise exception
+            end
+        end
+    end
+end
+

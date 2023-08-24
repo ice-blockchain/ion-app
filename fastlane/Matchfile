@@ -1,0 +1,3 @@
+type("appstore")
+
+app_identifier(["io.ice.app.ion", "io.ice.app.ion.staging"])

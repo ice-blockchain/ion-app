@@ -46,3 +46,10 @@ app.*.map.json
 
 # VSCode related
 .vscode
+
+# Environment
+*.env
+fastlane/keys
+
+# Ruby
+/vendor/bundle/
