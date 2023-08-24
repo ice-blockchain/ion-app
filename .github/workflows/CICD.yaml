@@ -59,6 +59,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          cache: true
       - run: flutter --version
       - name: Install dependencies
         id: install-dependencies
@@ -129,6 +130,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          cache: true
       - run: flutter --version
       - name: Install dependencies
         id: install-dependencies
@@ -230,6 +232,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          cache: true
       - run: flutter --version
       - name: Install dependencies
         id: install-dependencies
