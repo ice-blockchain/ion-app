@@ -18,6 +18,7 @@ dependencies:
   get: ^4.6.5
   intl: any
   json_annotation: ^4.8.1
+  flutter_screenutil: ^5.9.0
 
 dev_dependencies:
   flutter_test:
@@ -33,6 +34,10 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+  fonts:
+    - family: IcoMoon
+      fonts:
+        - asset: assets/fonts/icomoon.ttf
   assets:
     - .app.env
     - assets/images/foo.jpg
