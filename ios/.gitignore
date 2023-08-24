@@ -35,3 +35,4 @@ Runner/GeneratedPluginRegistrant.*
 
 GoogleService-Info.plist
 Flutter/Environment.xcconfig
+Runner/Runner.entitlements
