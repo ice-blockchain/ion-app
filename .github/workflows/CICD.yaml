@@ -153,7 +153,7 @@ jobs:
               echo "APP_ENV=staging" >> $GITHUB_ENV
           fi
           echo "BUILD_NUMBER=$(echo $((GITHUB_RUN_NUMBER)))" >> $GITHUB_ENV
-      - name: Build iOS App v(${{ env.APP_VERSION }} #${{ env.BUILD_NUMBER }})
+      - name: Build iOS App v(${{ env.APP_VERSION }} build:${{ env.BUILD_NUMBER }})
         id: build-app
         run: |
           cd main-repo
@@ -245,7 +245,7 @@ jobs:
               echo "RELEASE_STATUS=draft" >> $GITHUB_ENV
           fi
           echo "BUILD_NUMBER=$(echo $((GITHUB_RUN_NUMBER)))" >> $GITHUB_ENV
-      - name: Build Android App (${{env.ANDROID_ARCHIVE_TYPE}} v${{ env.APP_VERSION }} #${{ env.BUILD_NUMBER }})
+      - name: Build Android App (${{env.ANDROID_ARCHIVE_TYPE}} v${{ env.APP_VERSION }} build:${{ env.BUILD_NUMBER }})
         id: build-app
         run: |
           cd main-repo
