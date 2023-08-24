@@ -256,7 +256,7 @@ jobs:
               echo "APP_VERSION=9.9.9" >> $GITHUB_ENV
               echo "RELEASE_NOTES=release_notes:${{ github.head_ref }}" >> $GITHUB_ENV
             else
-              echo "ANDROID_ARCHIVE_TYPE=bundle" >> $GITHUB_ENV
+              echo "ANDROID_ARCHIVE_TYPE=appbundle" >> $GITHUB_ENV
               echo "DEPLOY_TARGET=playstore" >> $GITHUB_ENV
               if [[ ${{ github.ref_name == 'master' }} == true ]]
                 then
