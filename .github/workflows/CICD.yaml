@@ -42,7 +42,7 @@ jobs:
         run: |
           cd main-repo
           scripts/configure_env.sh $APP_ENV
-      - name: Mask APP environment and configuration values in logs
+      - name: Mask APP environment and keys in logs
         id: mask-secrets
         run: |
           cd main-repo
@@ -50,7 +50,7 @@ jobs:
             value=$(echo "$line" | cut -d '=' -f 2-)
             echo "::add-mask::$value"
           done
-          for file in ./configuration/*.json
+          for file in ./fastlane/keys/*.json
           do
             node -pe 'Object.entries(JSON.parse(process.argv[1])).forEach(([_, val])=>(typeof val === "string" && val.split("\n").forEach((row) => row && console.log("::add-mask::"+row))))' "$(cat $file)"
           done
@@ -105,7 +105,7 @@ jobs:
         with:
           path: ./*
           key: ${{ github.sha }}
-      - name: Mask APP environment and configuration values in logs
+      - name: Mask APP environment and keys in logs
         id: mask-secrets
         run: |
           cd main-repo
@@ -113,7 +113,7 @@ jobs:
             value=$(echo "$line" | cut -d '=' -f 2-)
             echo "::add-mask::$value"
           done
-          for file in ./configuration/*.json
+          for file in ./fastlane/keys/*.json
           do
             node -pe 'Object.entries(JSON.parse(process.argv[1])).forEach(([_, val])=>(typeof val === "string" && val.split("\n").forEach((row) => row && console.log("::add-mask::"+row))))' "$(cat $file)"
           done
@@ -188,7 +188,7 @@ jobs:
         with:
           path: ./*
           key: ${{ github.sha }}
-      - name: Mask APP environment and configuration values in logs
+      - name: Mask APP environment and keys in logs
         id: mask-secrets
         run: |
           cd main-repo
@@ -196,7 +196,7 @@ jobs:
             value=$(echo "$line" | cut -d '=' -f 2-)
             echo "::add-mask::$value"
           done
-          for file in ./configuration/*.json
+          for file in ./fastlane/keys/*.json
           do
             node -pe 'Object.entries(JSON.parse(process.argv[1])).forEach(([_, val])=>(typeof val === "string" && val.split("\n").forEach((row) => row && console.log("::add-mask::"+row))))' "$(cat $file)"
           done
