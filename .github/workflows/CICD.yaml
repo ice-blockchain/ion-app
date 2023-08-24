@@ -9,8 +9,8 @@ on:
       - master
       - 'release/v*'
 jobs:
-  setup-project:
-    name: Setup the Project
+  flutter:
+    name: Flutter -- verify, build, test
     if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.draft == false) || github.event_name == 'push'  }}
     runs-on: macOS-latest
     steps:
@@ -87,14 +87,14 @@ jobs:
         uses: act10ns/slack@v2
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.FRONTEND_SLACK_WEBHOOK }}
-          SLACK_MESSAGE_TITLE: Setup the Project
+          SLACK_MESSAGE_TITLE: Flutter -- verify, build, test
         with:
           config: main-repo/.github/slack.yml
           status: ${{ job.status }}
           steps: ${{ '{}' }}
   ios-cicd:
     name: iOS -- build, deploy
-    needs: [setup-project]
+    needs: [flutter]
     if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.draft == false) || github.event_name == 'push'  }}
     runs-on: macOS-latest
     env:
@@ -192,7 +192,7 @@ jobs:
           steps: ${{ '{}' }}
   android-cicd:
     name: Android -- build, deploy
-    needs: [setup-project]
+    needs: [flutter]
     if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.draft == false) || github.event_name == 'push'  }}
     runs-on: macOS-latest
     steps:

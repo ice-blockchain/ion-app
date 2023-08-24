@@ -2,8 +2,8 @@ username: mobile-app-CI-CD
 icon_url: https://avatars.githubusercontent.com/u/102382658?s=400&u=62e73f4cb845c48a07a19e03c6f84b721e40c0a6&v=4
 
 pretext: "{{env.SLACK_MESSAGE_TITLE}}"
-title: Mobile App CI/CD
-title_link: https://github.com/ice-blockchain/mobile-app/actions
+title: Flutter App CI/CD
+title_link: https://github.com/ice-blockchain/flutter-app/actions
 
 text: |
   {{#if description}}<{{diffUrl}}|`{{diffRef}}`> - {{description}}{{/if}}
