@@ -147,7 +147,7 @@ jobs:
         env:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
         run: |
-          if [[ ${{ github.event_name == 'pull_request' && github.event.pull_request.draft == false}} == true ]]
+          if [[ false == true ]]
             then
               echo "IOS_SIGN_TYPE=adhoc" >> $GITHUB_ENV
               echo "DEPLOY_TARGET=firebase" >> $GITHUB_ENV
@@ -249,7 +249,7 @@ jobs:
         env:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
         run: |
-          if [[ ${{ github.event_name == 'pull_request' && github.event.pull_request.draft == false}} == true ]]
+          if [[ false == true ]]
             then
               echo "ANDROID_ARCHIVE_TYPE=apk" >> $GITHUB_ENV
               echo "DEPLOY_TARGET=firebase" >> $GITHUB_ENV
