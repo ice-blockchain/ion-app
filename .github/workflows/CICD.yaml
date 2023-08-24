@@ -268,7 +268,7 @@ jobs:
           if [[ ${{ github.event_name == 'push' && github.ref_name != 'master' }} == true ]]
             then
               echo "APP_ENV=production" >> $GITHUB_ENV
-              echo "RELEASE_STATUS=completed" >> $GITHUB_ENV
+              echo "RELEASE_STATUS=draft" >> $GITHUB_ENV
             else
               echo "APP_ENV=staging" >> $GITHUB_ENV
               echo "RELEASE_STATUS=draft" >> $GITHUB_ENV
