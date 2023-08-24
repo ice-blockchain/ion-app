@@ -41,7 +41,7 @@ class WalletPage extends StatelessWidget {
                   shouldIconPulse: true,
                   barBlur: 10,
                   isDismissible: true,
-                )
+                ),
               },
             ),
             const SizedBox(width: 30),
@@ -53,7 +53,7 @@ class WalletPage extends StatelessWidget {
                   onConfirm: () => <void>{Get.back()},
                   middleText:
                       'Dialog made in 3 lines of code. Dialog made in 3 lines of code',
-                )
+                ),
               },
             ),
             const SizedBox(width: 30),
@@ -61,22 +61,24 @@ class WalletPage extends StatelessWidget {
               label: const Text('Show Bottom Sheet'),
               icon: const Icon(Icons.arrow_upward),
               onPressed: () => <void>{
-                Get.bottomSheet(Center(
-                  child: Wrap(
-                    children: <Widget>[
-                      ListTile(
-                        leading: const Icon(Icons.music_note),
-                        title: const Text('Music'),
-                        onTap: () {},
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.videocam),
-                        title: const Text('Video'),
-                        onTap: () {},
-                      ),
-                    ],
+                Get.bottomSheet(
+                  Center(
+                    child: Wrap(
+                      children: <Widget>[
+                        ListTile(
+                          leading: const Icon(Icons.music_note),
+                          title: const Text('Music'),
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.videocam),
+                          title: const Text('Video'),
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
                   ),
-                ))
+                ),
               },
             ),
           ],

@@ -22,7 +22,7 @@ class MainTabsBar extends GetView<MainTabsController> {
               MainTabsBarTile(tabName: MainTabsPaths.messages),
               MainTabsBarMainTile(),
               MainTabsBarTile(tabName: MainTabsPaths.wallet),
-              MainTabsBarTile(tabName: MainTabsPaths.de_fi),
+              MainTabsBarTile(tabName: MainTabsPaths.deFi),
             ],
           ),
         ),

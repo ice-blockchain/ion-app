@@ -19,9 +19,9 @@ IconData? toIconData(String tabName) {
       {
         return IcoMoonIcons.wallet;
       }
-    case MainTabsPaths.de_fi:
+    case MainTabsPaths.deFi:
       {
-        return IcoMoonIcons.de_fi;
+        return IcoMoonIcons.deFi;
       }
   }
   return null;

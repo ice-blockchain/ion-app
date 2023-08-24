@@ -16,7 +16,7 @@ class MainTabsBarMainTileIcon extends GetView<MainTabsController> {
       () {
         final IconData iconData = controller.bottomSheetVisible.isTrue
             ? IcoMoonIcons.close
-            : IcoMoonIcons.ice_logo;
+            : IcoMoonIcons.iceLogo;
 
         return AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),

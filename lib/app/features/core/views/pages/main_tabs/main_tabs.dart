@@ -36,7 +36,7 @@ Route<Object>? onGenerateRoute(RouteSettings settings) {
         transition: Transition.noTransition,
         // binding: SettingsBinding(),
       ),
-    MainTabsPaths.de_fi => GetPageRoute<Object>(
+    MainTabsPaths.deFi => GetPageRoute<Object>(
         settings: settings,
         page: () => const Placeholder(
           color: Colors.red,

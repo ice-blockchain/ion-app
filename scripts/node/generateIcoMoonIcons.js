@@ -5,8 +5,14 @@ function generateDartClassFromIcoMoonSelection(filePath) {
   const data = JSON.parse(rawData);
   const icons = data.icons;
 
+  const toCamelCase = (str) => {
+    return str.replace(/_([a-z])/g, (match, letter) => {
+        return letter.toUpperCase();
+    });
+  };
+
   const iconEntries = icons.map(icon => {
-    const name = icon.properties.name;
+    const name = toCamelCase(icon.properties.name);
     const code = '0x' + icon.properties.code.toString(16);
     return `static const IconData ${name} = IconData(${code}, fontFamily: _kFontFam);`;
   });
