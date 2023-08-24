@@ -75,7 +75,7 @@ jobs:
         id: analyze-code
         run: |
           cd main-repo
-          ./scrips/analyze.sh
+          ./scripts/analyze.sh
       - uses: actions/cache@v3
         id: cache_all
         with:
