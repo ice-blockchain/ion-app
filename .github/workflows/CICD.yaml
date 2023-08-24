@@ -23,7 +23,7 @@ jobs:
         id: checkout-secrets
         uses: actions/checkout@v3
         with:
-          repository: ${{ secrets.MOBILE_APP_SECRETS_REPO }}
+          repository: ${{ secrets.FLUTTER_APP_SECRETS_REPO }}
           ref: master
           token: ${{ secrets.ICE_CI_CD_BOT_GH_PAT }}
           path: flutter-app-secrets
