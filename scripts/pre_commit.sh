@@ -32,5 +32,15 @@ fi
 printf "\e[33;1m%s\e[0m\n" 'Finished running Flutter analyzer'
 printf '%s\n' "${avar}"
 
+# Run Tests
+printf "\e[33;1m%s\e[0m\n" '=== Run Tests ==='
+scripts/run_tests.sh
+if [ $? -ne 0 ]; then
+  printf "\e[31;1m%s\e[0m\n" '=== Run Tests error ==='
+  exit 1
+fi
+printf "\e[33;1m%s\e[0m\n" 'Finished running Run Tests'
+printf '%s\n' "${avar}"
+
 # If we made it this far, the commit is allowed
 exit 0
