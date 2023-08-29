@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ice/app/navigation/app_pages.dart';
+import 'package:ice/app/theme/theme.dart';
 import 'package:ice/generated/app_localizations.dart';
 
 void main() async {
@@ -17,6 +18,9 @@ class AppDemo extends StatelessWidget {
       getPages: AppPages.pages,
       localizationsDelegates: I18n.localizationsDelegates,
       supportedLocales: I18n.supportedLocales,
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: ThemeMode.light,
     );
   }
 }
