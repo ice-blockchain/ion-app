@@ -13,7 +13,9 @@ class WalletPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Wallet Page')),
+      appBar: AppBar(
+        title: const Text('Wallet Page'),
+      ),
       body: Container(
         decoration: BoxDecoration(color: context.theme.appColors.background),
         child: Center(
