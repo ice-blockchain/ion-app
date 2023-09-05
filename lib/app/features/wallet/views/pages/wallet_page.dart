@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ice/app/features/auth/controllers/auth_controller.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/theme/colors.dart';
 import 'package:ice/app/theme/text_styles.dart';
+import 'package:ice/app/theme/theme.dart';
 
-class WalletPage extends StatelessWidget {
-  WalletPage({super.key});
-
-  final AuthController authController = Get.find<AuthController>();
+class WalletPage extends HookConsumerWidget {
+  const WalletPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AuthState authState = ref.watch(authProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Wallet Page'),
@@ -24,16 +25,14 @@ class WalletPage extends StatelessWidget {
             children: <Widget>[
               ElevatedButton.icon(
                 label: const Text('Sign Out'),
-                icon: Obx(
-                  () => authController.state is AuthenticationLoading
-                      ? const SizedBox(
-                          height: 10,
-                          width: 10,
-                          child: CircularProgressIndicator(color: Colors.white),
-                        )
-                      : const Icon(Icons.logout),
-                ),
-                onPressed: () => <void>{authController.signOut()},
+                icon: authState is AuthenticationLoading
+                    ? const SizedBox(
+                        height: 10,
+                        width: 10,
+                        child: CircularProgressIndicator(color: Colors.white),
+                      )
+                    : const Icon(Icons.logout),
+                onPressed: ref.read(authProvider.notifier).signOut,
               ),
               Text(
                 'Styled Text',

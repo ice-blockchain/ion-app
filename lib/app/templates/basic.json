@@ -1,0 +1,12 @@
+{
+	"colors": {
+		"light": {
+			"primary": 4284612846,
+			"background": 4294967278
+		},
+		"dark": {
+			"primary": 4293647865,
+			"background": 4294930176
+		}
+	}
+}
