@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/theme/colors.dart';
-import 'package:ice/app/theme/text_styles.dart';
+import 'package:ice/app/theme/app_colors.dart';
+import 'package:ice/app/theme/app_typography.dart';
 import 'package:ice/app/theme/theme.dart';
 
 class WalletPage extends HookConsumerWidget {

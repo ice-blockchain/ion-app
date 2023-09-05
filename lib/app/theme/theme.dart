@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/app_bar_theme.dart';
-import 'package:ice/app/theme/colors.dart';
+import 'package:ice/app/theme/app_colors.dart';
 
-ThemeData lightTheme = ThemeData(
-  brightness: Brightness.light,
-  extensions: <ThemeExtension<dynamic>>[lightColors],
-  appBarTheme: lightAppBarTheme,
-);
+ThemeData buildLightTheme(Template template) {
+  return ThemeData.light().copyWith(
+    extensions: <ThemeExtension<dynamic>>[
+      AppColorsExtension.fromTemplate(template.colors.light),
+    ],
+    appBarTheme: buildLightAppBarTheme(template),
+  );
+}
 
-ThemeData darkTheme = ThemeData(
-  brightness: Brightness.dark,
-  extensions: <ThemeExtension<dynamic>>[darkColors],
-  appBarTheme: darkAppBarTheme,
-);
+ThemeData buildDarkTheme(Template template) {
+  return ThemeData.dark().copyWith(
+    extensions: <ThemeExtension<dynamic>>[
+      AppColorsExtension.fromTemplate(template.colors.dark),
+    ],
+    appBarTheme: buildDarkAppBarTheme(template),
+  );
+}
 
 extension ThemeGetter on BuildContext {
   /// Usage example: `context.theme`

@@ -8,5 +8,8 @@
 			"primary": 4293647865,
 			"background": 4294930176
 		}
+	},
+	"appBar": {
+		"toolbarHeight": 50
 	}
 }
