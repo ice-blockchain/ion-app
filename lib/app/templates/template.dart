@@ -35,12 +35,35 @@ class TemplateAppBarTheme {
 }
 
 @JsonSerializable()
+class TemplateTextTheme {
+  TemplateTextTheme(this.fontSize, this.letterSpacing);
+
+  factory TemplateTextTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateTextThemeFromJson(json);
+
+  double fontSize;
+  double letterSpacing;
+}
+
+@JsonSerializable()
+class TemplateTextThemes {
+  TemplateTextThemes(this.h1, this.body1);
+
+  factory TemplateTextThemes.fromJson(Map<String, dynamic> json) =>
+      _$TemplateTextThemesFromJson(json);
+
+  TemplateTextTheme h1;
+  TemplateTextTheme body1;
+}
+
+@JsonSerializable()
 class Template {
-  Template(this.colors, this.appBar);
+  Template(this.colors, this.textThemes, this.appBar);
 
   factory Template.fromJson(Map<String, dynamic> json) =>
       _$TemplateFromJson(json);
 
   TemplateColorsLightDark colors;
+  TemplateTextThemes textThemes;
   TemplateAppBarTheme appBar;
 }

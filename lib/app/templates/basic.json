@@ -9,6 +9,16 @@
 			"background": 4294930176
 		}
 	},
+	"textThemes": {
+		"h1": {
+			"fontSize": 22,
+			"letterSpacing": 1
+		},
+		"body1": {
+			"fontSize": 14,
+			"letterSpacing": 2
+		}
+	},
 	"appBar": {
 		"toolbarHeight": 50
 	}

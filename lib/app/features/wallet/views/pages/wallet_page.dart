@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/theme/app_colors.dart';
-import 'package:ice/app/theme/app_typography.dart';
+import 'package:ice/app/theme/app_text_themes.dart';
 import 'package:ice/app/theme/theme.dart';
 
 class WalletPage extends HookConsumerWidget {
@@ -36,7 +36,7 @@ class WalletPage extends HookConsumerWidget {
               ),
               Text(
                 'Styled Text',
-                style: AppTypography.body1.copyWith(
+                style: context.theme.appTextThemes.body1.copyWith(
                   color: context.theme.appColors.primary,
                   fontWeight: FontWeight.w700,
                 ),
