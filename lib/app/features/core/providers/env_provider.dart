@@ -9,11 +9,11 @@ enum EnvVariable { FOO }
 
 @Riverpod(keepAlive: true)
 class Env extends _$Env {
-  final String filename = '.app.env';
+  final String _filename = '.app.env';
 
   @override
   Future<void> build() async {
-    await dotenv.load(fileName: filename);
+    await dotenv.load(fileName: _filename);
     final List<EnvVariable> notDefined = _getNotDefined();
     if (notDefined.isNotEmpty) {
       throw Exception('Invalid ENV value for $notDefined');
