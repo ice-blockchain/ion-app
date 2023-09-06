@@ -5,6 +5,7 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
 import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
+import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page.dart';
@@ -29,6 +30,8 @@ class IceApp extends HookConsumerWidget {
 
     final AuthState authStatus = ref.watch(authProvider);
 
+    final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
+
     return init.when(
       loading: () => const SplashPage(),
       error: (Object error, StackTrace stack) => const ErrorPage(),
@@ -40,7 +43,7 @@ class IceApp extends HookConsumerWidget {
           supportedLocales: I18n.supportedLocales,
           theme: buildLightTheme(template),
           darkTheme: buildDarkTheme(template),
-          themeMode: ThemeMode.light,
+          themeMode: appThemeMode,
           home: authStatus is Authenticated
               ? const WalletPage()
               : const AuthPage(),
