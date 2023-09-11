@@ -15,6 +15,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   }
 
   final Color primary;
+
   final Color background;
 
   @override

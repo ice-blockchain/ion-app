@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/theme/app_colors.dart';
 import 'package:ice/app/theme/app_text_themes.dart';
 import 'package:ice/app/theme/theme.dart';
@@ -35,6 +36,10 @@ class WalletPage extends HookConsumerWidget {
                       )
                     : const Icon(Icons.logout),
                 onPressed: ref.read(authProvider.notifier).signOut,
+              ),
+              ElevatedButton(
+                onPressed: () => const InnerWalletRoute().go(context),
+                child: const Text('Go To Inner Wallet'),
               ),
               Text(
                 'Styled Text',
