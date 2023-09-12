@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,6 +18,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   @override
   Future<void> build() async {
     _authState = ref.watch(authProvider);
+    ref.watch(initAppProvider);
 
     ref.listenSelf((_, __) {
       if (state.isLoading) {
@@ -28,6 +30,18 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
 
   String? redirect(BuildContext context, GoRouterState state) {
     final bool isLoggingIn = state.matchedLocation == AuthRoute.path;
+    final bool isSplash = state.matchedLocation == SplashRoute.path;
+
+    //TODO how to redirect in case of error?
+
+    if (isSplash) {
+      if (_authState is Authenticated) {
+        return WalletRoute.path;
+      }
+      if (_authState is UnAuthenticated) {
+        return AuthRoute.path;
+      }
+    }
 
     if (isLoggingIn && _authState is Authenticated) {
       return WalletRoute.path;
@@ -36,6 +50,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     if (!isLoggingIn && _authState is UnAuthenticated) {
       return AuthRoute.path;
     }
+
     return null;
   }
 
