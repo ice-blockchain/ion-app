@@ -10,7 +10,7 @@ GoRouter useAppRouter(WidgetRef ref) {
 
   final GoRouter router = useMemoized(
     () => GoRouter(
-      initialLocation: SplashRoute.path,
+      initialLocation: const SplashRoute().location,
       refreshListenable: notifier,
       debugLogDiagnostics: true,
       routes: $appRoutes,

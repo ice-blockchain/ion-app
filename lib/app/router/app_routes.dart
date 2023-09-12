@@ -18,31 +18,28 @@ final GlobalKey<NavigatorState> shellNavigatorChatKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellChat');
 
 @TypedGoRoute<SplashRoute>(
-  path: SplashRoute.path,
+  path: '/splash',
 )
 class SplashRoute extends GoRouteData {
   const SplashRoute();
-  static const String path = '/splash';
   @override
   Widget build(BuildContext context, GoRouterState state) => const SplashPage();
 }
 
 @TypedGoRoute<ErrorRoute>(
-  path: ErrorRoute.path,
+  path: '/error',
 )
 class ErrorRoute extends GoRouteData {
   const ErrorRoute();
-  static const String path = '/error';
   @override
   Widget build(BuildContext context, GoRouterState state) => const ErrorPage();
 }
 
 @TypedGoRoute<AuthRoute>(
-  path: AuthRoute.path,
+  path: '/auth',
 )
 class AuthRoute extends GoRouteData {
   const AuthRoute();
-  static const String path = '/auth';
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return const NoTransitionPage<void>(child: AuthPage());
@@ -54,10 +51,10 @@ class AuthRoute extends GoRouteData {
     TypedStatefulShellBranch<WalletBranch>(
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<WalletRoute>(
-          path: WalletRoute.path,
+          path: '/wallet',
           routes: <TypedRoute<RouteData>>[
             TypedGoRoute<InnerWalletRoute>(
-              path: InnerWalletRoute.path,
+              path: 'inner',
             ),
           ],
         ),
@@ -66,7 +63,7 @@ class AuthRoute extends GoRouteData {
     TypedStatefulShellBranch<ChatBranch>(
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<ChatRoute>(
-          path: ChatRoute.path,
+          path: '/chat',
         ),
       ],
     ),
@@ -92,7 +89,6 @@ class WalletBranch extends StatefulShellBranchData {
 
 class WalletRoute extends GoRouteData {
   const WalletRoute();
-  static const String path = '/wallet';
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return const NoTransitionPage<void>(child: WalletPage());
@@ -101,7 +97,6 @@ class WalletRoute extends GoRouteData {
 
 class InnerWalletRoute extends GoRouteData {
   const InnerWalletRoute();
-  static const String path = 'inner-wallet';
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const InnerWalletPage();
@@ -114,7 +109,6 @@ class ChatBranch extends StatefulShellBranchData {
 
 class ChatRoute extends GoRouteData {
   const ChatRoute();
-  static const String path = '/chat';
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return const NoTransitionPage<void>(child: ChatPage());
@@ -122,11 +116,11 @@ class ChatRoute extends GoRouteData {
 }
 
 @TypedGoRoute<ModalExampleRoute>(
-  path: ModalExampleRoute.path,
+  path: '/modal',
 )
 class ModalExampleRoute extends GoRouteData {
   const ModalExampleRoute();
-  static const String path = '/modal';
+  static final GlobalKey<NavigatorState> $parentNavigatorKey = rootNavigatorKey;
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CustomTransitionPage<void>(

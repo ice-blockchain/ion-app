@@ -17,7 +17,7 @@ class ChatPage extends HookConsumerWidget {
         decoration: BoxDecoration(color: context.theme.appColors.background),
         child: Center(
           child: ElevatedButton(
-            onPressed: () => const ModalExampleRoute().go(context),
+            onPressed: () => const ModalExampleRoute().push(context),
             child: const Text('Open Error Modal'),
           ),
         ),

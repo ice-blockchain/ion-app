@@ -30,34 +30,35 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   }
 
   String? redirect(BuildContext context, GoRouterState state) {
-    final bool isAuthInProgress = state.matchedLocation == AuthRoute.path;
-    final bool isSplash = state.matchedLocation == SplashRoute.path;
+    final bool isAuthInProgress =
+        state.matchedLocation == const AuthRoute().location;
+    final bool isSplash = state.matchedLocation == const SplashRoute().location;
     final bool isInitError = _init?.hasError ?? false;
     final bool isInitInProgress = _init?.isLoading ?? true;
 
     if (isInitError) {
-      return ErrorRoute.path;
+      return const ErrorRoute().location;
     }
 
     if (isInitInProgress && !isSplash) {
-      return SplashRoute.path;
+      return const SplashRoute().location;
     }
 
     if (isSplash && !isInitInProgress) {
       if (_authState is Authenticated) {
-        return WalletRoute.path;
+        return const WalletRoute().location;
       }
       if (_authState is UnAuthenticated) {
-        return AuthRoute.path;
+        return const AuthRoute().location;
       }
     }
 
     if (isAuthInProgress && _authState is Authenticated) {
-      return WalletRoute.path;
+      return const WalletRoute().location;
     }
 
     if (!isAuthInProgress && _authState is UnAuthenticated) {
-      return AuthRoute.path;
+      return const AuthRoute().location;
     }
 
     return null;

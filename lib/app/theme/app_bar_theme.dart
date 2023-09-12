@@ -8,6 +8,7 @@ AppBarTheme buildLightAppBarTheme(Template template) {
     toolbarHeight: template.appBar.toolbarHeight,
     backgroundColor: Color(template.colors.light.background),
     titleTextStyle: TextStyle(color: Color(template.colors.light.primary)),
+    iconTheme: const IconThemeData(color: Colors.black),
   );
 }
 
