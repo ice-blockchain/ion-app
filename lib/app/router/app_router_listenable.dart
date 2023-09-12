@@ -14,11 +14,12 @@ part 'app_router_listenable.g.dart';
 class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   VoidCallback? _routerListener;
   AuthState _authState = const AuthenticationUnknown();
+  AsyncValue<void>? _init;
 
   @override
   Future<void> build() async {
     _authState = ref.watch(authProvider);
-    ref.watch(initAppProvider);
+    _init = ref.watch(initAppProvider);
 
     ref.listenSelf((_, __) {
       if (state.isLoading) {
@@ -29,12 +30,20 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   }
 
   String? redirect(BuildContext context, GoRouterState state) {
-    final bool isLoggingIn = state.matchedLocation == AuthRoute.path;
+    final bool isAuthInProgress = state.matchedLocation == AuthRoute.path;
     final bool isSplash = state.matchedLocation == SplashRoute.path;
+    final bool isInitError = _init?.hasError ?? false;
+    final bool isInitInProgress = _init?.isLoading ?? true;
 
-    //TODO how to redirect in case of error?
+    if (isInitError) {
+      return ErrorRoute.path;
+    }
 
-    if (isSplash) {
+    if (isInitInProgress && !isSplash) {
+      return SplashRoute.path;
+    }
+
+    if (isSplash && !isInitInProgress) {
       if (_authState is Authenticated) {
         return WalletRoute.path;
       }
@@ -43,11 +52,11 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
       }
     }
 
-    if (isLoggingIn && _authState is Authenticated) {
+    if (isAuthInProgress && _authState is Authenticated) {
       return WalletRoute.path;
     }
 
-    if (!isLoggingIn && _authState is UnAuthenticated) {
+    if (!isAuthInProgress && _authState is UnAuthenticated) {
       return AuthRoute.path;
     }
 

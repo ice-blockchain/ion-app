@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page.dart';
+import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/modal_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/wallet/views/pages/inner_wallet_page.dart';
@@ -24,6 +25,16 @@ class SplashRoute extends GoRouteData {
   static const String path = '/splash';
   @override
   Widget build(BuildContext context, GoRouterState state) => const SplashPage();
+}
+
+@TypedGoRoute<ErrorRoute>(
+  path: ErrorRoute.path,
+)
+class ErrorRoute extends GoRouteData {
+  const ErrorRoute();
+  static const String path = '/error';
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const ErrorPage();
 }
 
 @TypedGoRoute<AuthRoute>(
