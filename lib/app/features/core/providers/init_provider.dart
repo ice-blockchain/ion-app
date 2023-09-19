@@ -1,0 +1,16 @@
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/core/providers/env_provider.dart';
+import 'package:ice/app/features/core/providers/template_provider.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'init_provider.g.dart';
+
+@riverpod
+Future<void> initApp(InitAppRef ref) async {
+  await Future<void>.delayed(const Duration(seconds: 2));
+  await ref.read(envProvider.future);
+  await Future.wait(<Future<void>>[
+    ref.read(templateProvider.future),
+    ref.read(authProvider.notifier).rehydrate(),
+  ]);
+}

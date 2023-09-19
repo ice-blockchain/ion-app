@@ -1,3 +1,4 @@
 #!/bin/bash
 
-flutter analyze
+# custom_lint runs riverpod_lint 
+flutter analyze && flutter pub run custom_lint

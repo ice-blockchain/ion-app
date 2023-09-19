@@ -1,20 +1,23 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get/get.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'env_provider.g.dart';
 
 enum EnvVariable { FOO }
 
-class EnvService extends GetxService {
-  final String filename = '.app.env';
+@Riverpod(keepAlive: true)
+class Env extends _$Env {
+  final String _filename = '.app.env';
 
-  Future<EnvService> init() async {
-    await dotenv.load(fileName: filename);
+  @override
+  Future<void> build() async {
+    await dotenv.load(fileName: _filename);
     final List<EnvVariable> notDefined = _getNotDefined();
     if (notDefined.isNotEmpty) {
       throw Exception('Invalid ENV value for $notDefined');
     }
-    return this;
   }
 
   List<EnvVariable> _getNotDefined() {

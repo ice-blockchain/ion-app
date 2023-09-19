@@ -12,12 +12,15 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.1.0
+  flutter_hooks: ^0.20.1
   flutter_localizations:
     sdk: flutter
   freezed_annotation: ^2.4.1
-  get: ^4.6.5
+  go_router: ^10.1.2
+  hooks_riverpod: ^2.3.10
   intl: any
   json_annotation: ^4.8.1
+  riverpod_annotation: ^2.1.4
 
 dev_dependencies:
   flutter_test:
@@ -29,12 +32,17 @@ dev_dependencies:
   freezed: ^2.4.1
   json_serializable: ^6.7.1
   flutter_gen: ^5.3.1
+  riverpod_generator: ^2.3.1
+  custom_lint: ^0.5.3
+  riverpod_lint: ^2.0.4
+  go_router_builder: ^2.3.1
 
 flutter:
   generate: true
   uses-material-design: true
   assets:
     - .app.env
+    - lib/app/templates/basic.json
     - assets/images/foo.jpg
 
 flutter_gen:

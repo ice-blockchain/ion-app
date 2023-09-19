@@ -1,0 +1,25 @@
+{
+	"colors": {
+		"light": {
+			"primary": 4284612846,
+			"background": 4294967278
+		},
+		"dark": {
+			"primary": 4293647865,
+			"background": 4294930176
+		}
+	},
+	"textThemes": {
+		"h1": {
+			"fontSize": 22,
+			"letterSpacing": 1
+		},
+		"body1": {
+			"fontSize": 14,
+			"letterSpacing": 2
+		}
+	},
+	"appBar": {
+		"toolbarHeight": 50
+	}
+}
