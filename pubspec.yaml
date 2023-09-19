@@ -1,12 +1,12 @@
 name: ice
 description: Ice Flutter Project
 
-publish_to: 'none'
+publish_to: "none"
 
 version: 0.0.0+1
 
 environment:
-  sdk: '>=3.0.6 <4.0.0'
+  sdk: ">=3.0.6 <4.0.0"
 
 dependencies:
   flutter:
@@ -44,6 +44,65 @@ flutter:
     - .app.env
     - lib/app/templates/basic.json
     - assets/images/foo.jpg
+    - assets/images/addfill.png
+    - assets/images/addstroke.png
+    - assets/images/apple.png
+    - assets/images/back_arrow.png
+    - assets/images/backsheet.png
+    - assets/images/camera.png
+    - assets/images/checkboxoff.png
+    - assets/images/checkboxon.png
+    - assets/images/checkgreen.png
+    - assets/images/clear.png
+    - assets/images/closesheet.png
+    - assets/images/coins.png
+    - assets/images/comment.png
+    - assets/images/company1.png
+    - assets/images/copy.png
+    - assets/images/copyblue.png
+    - assets/images/delete.png
+    - assets/images/details.png
+    - assets/images/discord.png
+    - assets/images/down.png
+    - assets/images/facebook.png
+    - assets/images/github.png
+    - assets/images/history.png
+    - assets/images/ice.png
+    - assets/images/icestroke.png
+    - assets/images/information.png
+    - assets/images/internet.png
+    - assets/images/invite.png
+    - assets/images/inviter.png
+    - assets/images/link.png
+    - assets/images/linkcontacts.png
+    - assets/images/linkedin.png
+    - assets/images/login_dropdown.png
+    - assets/images/login_email.png
+    - assets/images/logoloader.png
+    - assets/images/managewallet.png
+    - assets/images/name.png
+    - assets/images/next.png
+    - assets/images/nfts.png
+    - assets/images/nickname.png
+    - assets/images/nostr.png
+    - assets/images/phone.png
+    - assets/images/private_key.png
+    - assets/images/qrcode.png
+    - assets/images/receive.png
+    - assets/images/report.png
+    - assets/images/repost.png
+    - assets/images/search.png
+    - assets/images/send.png
+    - assets/images/settings.png
+    - assets/images/share.png
+    - assets/images/stats.png
+    - assets/images/tryagain.png
+    - assets/images/twitterx.png
+    - assets/images/up.png
+    - assets/images/variant8.png
+    - assets/images/verify.png
+    - assets/images/walletnft.png
+    - assets/images/x.png
 
 flutter_gen:
   output: lib/generated/
