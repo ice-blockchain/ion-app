@@ -1,44 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:lottie/lottie.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends HookConsumerWidget {
   @override
-  _SplashPageState createState() => _SplashPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AnimationController animationController = useAnimationController();
 
-class _SplashPageState extends State<SplashPage>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(vsync: this)
-      ..addStatusListener((AnimationStatus status) {
-        if (status == AnimationStatus.completed) {
-          /// Navigate to the next page
+    useEffect(
+      () {
+        void listener(AnimationStatus status) {
+          if (status == AnimationStatus.completed) {
+            ref.read(splashProvider.notifier).animationCompleted = true;
+          }
         }
-      });
-  }
 
-  @override
-  Widget build(BuildContext context) {
+        animationController.addStatusListener(listener);
+
+        return () => animationController.removeStatusListener(listener);
+      },
+      <Object?>[animationController],
+    );
+
     return Scaffold(
       body: Container(
         width: double.infinity,
-        color: context.theme.appColors.primaryAccent,
+        color: Colors.blueGrey,
         child: Center(
           // <-- Wrap Lottie animation with a Container
           child: LottieBuilder.asset(
             'assets/lottie/splash-logo.json',
-            controller: _controller,
+            controller: animationController,
             width: double.infinity,
             fit: BoxFit.fitWidth,
             onLoaded: (LottieComposition composition) {
-              _controller
+              animationController
                 ..duration = composition.duration
                 ..forward();
             },
@@ -46,11 +44,5 @@ class _SplashPageState extends State<SplashPage>
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }

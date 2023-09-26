@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/init_provider.dart';
+import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -35,16 +36,17 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     final bool isSplash = state.matchedLocation == const SplashRoute().location;
     final bool isInitError = _init?.hasError ?? false;
     final bool isInitInProgress = _init?.isLoading ?? true;
+    final bool isAnimationCompleted = ref.watch(splashProvider);
 
     if (isInitError) {
       return const ErrorRoute().location;
     }
 
-    if (isInitInProgress && !isSplash) {
+    if (isInitInProgress && !isSplash || !isAnimationCompleted) {
       return const SplashRoute().location;
     }
 
-    if (isSplash && !isInitInProgress) {
+    if (isSplash && !isInitInProgress && isAnimationCompleted) {
       if (_authState is Authenticated) {
         return const WalletRoute().location;
       }
