@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
+import 'package:ice/app/features/auth/views/pages/intro_page/intro_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/modal_page.dart';
@@ -46,6 +47,17 @@ class AuthRoute extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return const NoTransitionPage<void>(child: AuthPage());
+  }
+}
+
+@TypedGoRoute<IntroRoute>(
+  path: '/intro',
+)
+class IntroRoute extends GoRouteData {
+  const IntroRoute();
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage<void>(child: IntroPage());
   }
 }
 
