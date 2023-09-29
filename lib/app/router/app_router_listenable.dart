@@ -5,7 +5,6 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/auth_flow_route.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router_listenable.g.dart';
@@ -32,7 +31,10 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   }
 
   String? redirect(BuildContext context, GoRouterState state) {
-    final bool isAuthInProgress = state.matchedLocation == AuthFlowRoute.path;
+    //TODO: check that its part of intro navigation flow
+    final bool isAuthInProgress =
+        state.matchedLocation == const IntroRoute().location ||
+            state.matchedLocation == const AuthRoute().location;
     final bool isSplash = state.matchedLocation == const SplashRoute().location;
     final bool isInitError = _init?.hasError ?? false;
     final bool isInitInProgress = _init?.isLoading ?? true;

@@ -39,25 +39,27 @@ class ErrorRoute extends GoRouteData {
   Widget build(BuildContext context, GoRouterState state) => const ErrorPage();
 }
 
-@TypedGoRoute<AuthRoute>(
-  path: '/authflow/auth',
-)
-class AuthRoute extends GoRouteData {
-  const AuthRoute();
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage<void>(child: AuthPage());
-  }
-}
-
 @TypedGoRoute<IntroRoute>(
-  path: '/authflow/intro',
+  path: '/intro',
+  routes: <TypedRoute<RouteData>>[
+    TypedGoRoute<AuthRoute>(
+      path: 'auth',
+    ),
+  ],
 )
 class IntroRoute extends GoRouteData {
   const IntroRoute();
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return const NoTransitionPage<void>(child: IntroPage());
+  }
+}
+
+class AuthRoute extends GoRouteData {
+  const AuthRoute();
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage<void>(child: AuthPage());
   }
 }
 

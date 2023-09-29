@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:lottie/lottie.dart';
 
 class IntroPage extends HookConsumerWidget {
@@ -31,8 +31,7 @@ class IntroPage extends HookConsumerWidget {
               child: Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to the Auth route
-                    GoRouter.of(context).go('/authflow/auth');
+                    const AuthRoute().go(context);
                   },
                   child: const Text('Continue'),
                 ),
