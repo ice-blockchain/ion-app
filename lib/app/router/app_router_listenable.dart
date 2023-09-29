@@ -5,6 +5,7 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/auth_flow_route.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router_listenable.g.dart';
@@ -31,8 +32,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   }
 
   String? redirect(BuildContext context, GoRouterState state) {
-    final bool isAuthInProgress =
-        state.matchedLocation == const AuthRoute().location;
+    final bool isAuthInProgress = state.matchedLocation == AuthFlowRoute.path;
     final bool isSplash = state.matchedLocation == const SplashRoute().location;
     final bool isInitError = _init?.hasError ?? false;
     final bool isInitInProgress = _init?.isLoading ?? true;
@@ -51,7 +51,8 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
         return const WalletRoute().location;
       }
       if (_authState is UnAuthenticated) {
-        return const AuthRoute().location;
+        /// Navigate to the Intro screen after splash for unauthenticated users
+        return const IntroRoute().location;
       }
     }
 
@@ -60,7 +61,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     }
 
     if (!isAuthInProgress && _authState is UnAuthenticated) {
-      return const AuthRoute().location;
+      return const IntroRoute().location;
     }
 
     return null;

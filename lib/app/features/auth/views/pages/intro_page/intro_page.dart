@@ -17,9 +17,10 @@ class IntroPage extends HookConsumerWidget {
             // Your Lottie animation
             Center(
               child: LottieBuilder.asset(
-                'assets/lottie/splash-logo.json',
+                'assets/lottie/intro.json',
                 width: double.infinity,
                 fit: BoxFit.fitWidth,
+                repeat: false,
               ),
             ),
             // Positioned button
@@ -31,7 +32,7 @@ class IntroPage extends HookConsumerWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     // Navigate to the Auth route
-                    GoRouter.of(context).go('/auth');
+                    GoRouter.of(context).go('/authflow/auth');
                   },
                   child: const Text('Continue'),
                 ),

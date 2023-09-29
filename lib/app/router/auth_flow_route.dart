@@ -4,10 +4,11 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/nested_navigator_wrapper.dart';
 
 @TypedGoRoute<AuthFlowRoute>(
-  path: '/',
+  path: '/authflow',
 )
 class AuthFlowRoute extends GoRouteData {
   const AuthFlowRoute();
+  static const String path = '/authflow';
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {

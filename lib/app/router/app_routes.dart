@@ -40,7 +40,7 @@ class ErrorRoute extends GoRouteData {
 }
 
 @TypedGoRoute<AuthRoute>(
-  path: '/auth',
+  path: '/authflow/auth',
 )
 class AuthRoute extends GoRouteData {
   const AuthRoute();
@@ -51,7 +51,7 @@ class AuthRoute extends GoRouteData {
 }
 
 @TypedGoRoute<IntroRoute>(
-  path: '/intro',
+  path: '/authflow/intro',
 )
 class IntroRoute extends GoRouteData {
   const IntroRoute();

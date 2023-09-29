@@ -106,6 +106,7 @@ flutter:
     - assets/images/x.png
 
     - assets/lottie/splash-logo.json
+    - assets/lottie/intro.json
 
 flutter_gen:
   output: lib/generated/
