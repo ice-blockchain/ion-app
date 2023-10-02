@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/shared/widgets/side_padding.dart';
 import 'package:lottie/lottie.dart';
 
 class IntroPage extends HookConsumerWidget {
@@ -11,17 +14,48 @@ class IntroPage extends HookConsumerWidget {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        color: Colors.blueGrey,
+        color: context.theme.appColors.secondaryBackground,
         child: Stack(
           children: <Widget>[
             // Your Lottie animation
-            Center(
-              child: LottieBuilder.asset(
-                'assets/lottie/intro.json',
-                width: double.infinity,
-                fit: BoxFit.fitWidth,
-                repeat: false,
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                LottieBuilder.asset(
+                  'assets/lottie/intro.json',
+                  width: double.infinity,
+                  fit: BoxFit.fitWidth,
+                  repeat: false,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 40,
+                    right: 85,
+                    bottom: 10,
+                  ),
+                  child: Text(
+                    'The Global Currency Reset',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w900,
+                      color: context.theme.appColors.primaryText,
+                    ),
+                  ),
+                ),
+                SidePadding(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '#DecentralizedFuture',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: context.theme.appColors.primaryAccent,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             // Positioned button
             Positioned(
