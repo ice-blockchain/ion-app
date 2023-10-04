@@ -126,8 +126,58 @@ class TemplateTextThemes {
 }
 
 @JsonSerializable()
+class TemplateMenuTheme {
+  TemplateMenuTheme(
+    this.elevation,
+    this.borderRadius,
+    this.paddingLeft,
+    this.paddingTop,
+    this.paddingRight,
+    this.paddingBottom,
+  );
+
+  factory TemplateMenuTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateMenuThemeFromJson(json);
+
+  double elevation;
+  double borderRadius;
+  double paddingLeft;
+  double paddingTop;
+  double paddingRight;
+  double paddingBottom;
+}
+
+@JsonSerializable()
+class TemplateMenuButtonTheme {
+  TemplateMenuButtonTheme(
+    this.iconSize,
+    this.minHeight,
+    this.paddingLeft,
+    this.paddingTop,
+    this.paddingRight,
+    this.paddingBottom,
+  );
+
+  factory TemplateMenuButtonTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateMenuButtonThemeFromJson(json);
+
+  double iconSize;
+  double minHeight;
+  double paddingLeft;
+  double paddingTop;
+  double paddingRight;
+  double paddingBottom;
+}
+
+@JsonSerializable()
 class Template {
-  Template(this.colors, this.textThemes, this.appBar);
+  Template(
+    this.colors,
+    this.textThemes,
+    this.appBar,
+    this.menu,
+    this.menuButton,
+  );
 
   factory Template.fromJson(Map<String, dynamic> json) =>
       _$TemplateFromJson(json);
@@ -135,4 +185,6 @@ class Template {
   TemplateColorsLightDark colors;
   TemplateTextThemes textThemes;
   TemplateAppBarTheme appBar;
+  TemplateMenuTheme menu;
+  TemplateMenuButtonTheme menuButton;
 }

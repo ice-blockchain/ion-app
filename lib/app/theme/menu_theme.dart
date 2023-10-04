@@ -10,14 +10,22 @@ MenuThemeData buildMenuTheme(
 ) {
   return MenuThemeData(
     style: MenuStyle(
-      elevation: const MaterialStatePropertyAll<double>(16),
-      shadowColor: const MaterialStatePropertyAll<Color>(Colors.black38),
-      padding: const MaterialStatePropertyAll<EdgeInsetsGeometry>(
-        EdgeInsets.symmetric(vertical: 11),
+      elevation: MaterialStatePropertyAll<double>(template.menu.elevation),
+      shadowColor: MaterialStatePropertyAll<Color>(
+        colors.tertararyBackground.withOpacity(0.3),
       ),
-      shape: const MaterialStatePropertyAll<OutlinedBorder>(
+      padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+        EdgeInsets.fromLTRB(
+          template.menu.paddingLeft,
+          template.menu.paddingTop,
+          template.menu.paddingRight,
+          template.menu.paddingBottom,
+        ),
+      ),
+      shape: MaterialStatePropertyAll<OutlinedBorder>(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16)),
+          borderRadius:
+              BorderRadius.all(Radius.circular(template.menu.borderRadius)),
         ),
       ),
       backgroundColor:
