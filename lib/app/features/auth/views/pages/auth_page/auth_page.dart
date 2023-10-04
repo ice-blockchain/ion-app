@@ -11,7 +11,6 @@ class AuthPage extends HookConsumerWidget {
     final AuthState authState = ref.watch(authProvider);
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: Column(
         children: <Widget>[
           Center(
