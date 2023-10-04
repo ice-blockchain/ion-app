@@ -104,6 +104,7 @@ flutter:
     - assets/images/verify.png
     - assets/images/walletnft.png
     - assets/images/x.png
+    - assets/images/iceRound.png
 
     - assets/lottie/splash-logo.json
     - assets/lottie/intro.json

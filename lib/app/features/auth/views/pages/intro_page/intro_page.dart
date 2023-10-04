@@ -5,6 +5,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
 import 'package:ice/app/shared/widgets/modal_wrapper.dart';
 import 'package:ice/app/shared/widgets/side_padding.dart';
+import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
 
 class IntroPage extends HookConsumerWidget {
@@ -35,7 +36,7 @@ class IntroPage extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 LottieBuilder.asset(
-                  'assets/lottie/intro.json',
+                  Assets.lottie.intro,
                   width: double.infinity,
                   fit: BoxFit.fitWidth,
                   repeat: false,
