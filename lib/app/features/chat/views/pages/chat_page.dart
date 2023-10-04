@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/theme/app_colors.dart';
-import 'package:ice/app/theme/theme.dart';
 
 class ChatPage extends HookConsumerWidget {
   const ChatPage({super.key});
@@ -14,11 +14,15 @@ class ChatPage extends HookConsumerWidget {
         title: const Text('Chat Page'),
       ),
       body: Container(
-        decoration: BoxDecoration(color: context.theme.appColors.background),
+        decoration: BoxDecoration(color: context.theme.appColors.attentionRed),
         child: Center(
-          child: ElevatedButton(
-            onPressed: () => const ModalExampleRoute().push(context),
-            child: const Text('Open Error Modal'),
+          child: Column(
+            children: <Widget>[
+              ElevatedButton(
+                onPressed: () => const ModalExampleRoute().push(context),
+                child: const Text('Open Error Modal'),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,16 +1,66 @@
+import 'dart:ui';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ice/app/templates/converters.dart';
 
 part 'template.g.dart';
 
 @JsonSerializable()
 class TemplateColors {
-  TemplateColors(this.primary, this.background);
+  TemplateColors(
+    this.primaryAccent,
+    this.primaryText,
+    this.secondaryText,
+    this.tertararyText,
+    this.primaryBackground,
+    this.secondaryBackground,
+    this.tertararyBackground,
+    this.backgroundSheet,
+    this.onPrimaryAccent,
+    this.onTertararyBackground,
+    this.onTerararyFill,
+    this.onSecondaryBackground,
+    this.strokeElements,
+    this.sheetLine,
+    this.attentionRed,
+    this.success,
+  );
 
   factory TemplateColors.fromJson(Map<String, dynamic> json) =>
       _$TemplateColorsFromJson(json);
 
-  int primary;
-  int background;
+  @ColorConverter()
+  Color primaryAccent;
+  @ColorConverter()
+  Color primaryText;
+  @ColorConverter()
+  Color secondaryText;
+  @ColorConverter()
+  Color tertararyText;
+  @ColorConverter()
+  Color primaryBackground;
+  @ColorConverter()
+  Color secondaryBackground;
+  @ColorConverter()
+  Color tertararyBackground;
+  @ColorConverter()
+  Color backgroundSheet;
+  @ColorConverter()
+  Color onPrimaryAccent;
+  @ColorConverter()
+  Color onTertararyBackground;
+  @ColorConverter()
+  Color onTerararyFill;
+  @ColorConverter()
+  Color onSecondaryBackground;
+  @ColorConverter()
+  Color strokeElements;
+  @ColorConverter()
+  Color sheetLine;
+  @ColorConverter()
+  Color attentionRed;
+  @ColorConverter()
+  Color success;
 }
 
 @JsonSerializable()
@@ -36,24 +86,43 @@ class TemplateAppBarTheme {
 
 @JsonSerializable()
 class TemplateTextTheme {
-  TemplateTextTheme(this.fontSize, this.letterSpacing);
+  TemplateTextTheme(this.fontSize, this.height, this.fontWeight);
 
   factory TemplateTextTheme.fromJson(Map<String, dynamic> json) =>
       _$TemplateTextThemeFromJson(json);
 
-  double fontSize;
-  double letterSpacing;
+  double? fontSize;
+  double? height;
+  @FontWeightConverter()
+  FontWeight? fontWeight;
 }
 
 @JsonSerializable()
 class TemplateTextThemes {
-  TemplateTextThemes(this.h1, this.body1);
+  TemplateTextThemes(
+    this.headline1,
+    this.inputFieldText,
+    this.title,
+    this.subtitle,
+    this.subtitle2,
+    this.body,
+    this.body2,
+    this.caption,
+    this.caption2,
+  );
 
   factory TemplateTextThemes.fromJson(Map<String, dynamic> json) =>
       _$TemplateTextThemesFromJson(json);
 
-  TemplateTextTheme h1;
-  TemplateTextTheme body1;
+  TemplateTextTheme headline1;
+  TemplateTextTheme inputFieldText;
+  TemplateTextTheme title;
+  TemplateTextTheme subtitle;
+  TemplateTextTheme subtitle2;
+  TemplateTextTheme body;
+  TemplateTextTheme body2;
+  TemplateTextTheme caption;
+  TemplateTextTheme caption2;
 }
 
 @JsonSerializable()
