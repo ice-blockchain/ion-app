@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/generated/app_localizations.dart';
-import 'package:ice/generated/assets.gen.dart';
 
 class AuthPage extends HookConsumerWidget {
   const AuthPage({super.key});
@@ -13,7 +11,7 @@ class AuthPage extends HookConsumerWidget {
     final AuthState authState = ref.watch(authProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(I18n.of(context)!.hello('Kir'))),
+      backgroundColor: Colors.transparent,
       body: Column(
         children: <Widget>[
           Center(
@@ -33,7 +31,6 @@ class AuthPage extends HookConsumerWidget {
               },
             ),
           ),
-          Image.asset(Assets.images.foo.path),
         ],
       ),
     );

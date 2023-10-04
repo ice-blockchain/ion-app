@@ -2,12 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
 import 'package:ice/app/shared/widgets/side_padding.dart';
 import 'package:lottie/lottie.dart';
 
 class IntroPage extends HookConsumerWidget {
   const IntroPage({super.key});
+
+  void showMyBottomSheet(BuildContext context) {
+    // const AuthRoute().go(context);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+      ),
+      builder: (BuildContext context) => SizedBox(
+        height: MediaQuery.of(context).size.height - 74,
+        child: const AuthPage(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,7 +80,7 @@ class IntroPage extends HookConsumerWidget {
               child: Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    const AuthRoute().go(context);
+                    showMyBottomSheet(context);
                   },
                   child: const Text('Continue'),
                 ),
