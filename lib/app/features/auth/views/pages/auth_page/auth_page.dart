@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/shared/widgets/email_input.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class AuthPage extends HookConsumerWidget {
@@ -14,51 +16,58 @@ class AuthPage extends HookConsumerWidget {
     final AuthState authState = ref.watch(authProvider);
 
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          const SizedBox(
-            height: 65,
-          ),
-          Image.asset(
-            Assets.images.iceRound.path,
-          ),
-          const SizedBox(
-            height: 19,
-          ),
-          Text(
-            'Get started',
-            style: context.theme.appTextThemes.headline1,
-          ),
-          Text(
-            'Choose your login method',
-            style: context.theme.appTextThemes.body2.copyWith(
-              color: context.theme.appColors.tertararyText,
+      body: Container(
+        margin: const EdgeInsets.symmetric(horizontal: defaultEdgeInset),
+        child: Column(
+          children: <Widget>[
+            const SizedBox(
+              height: 65,
             ),
-          ),
-          Center(
-            child: ElevatedButton.icon(
-              icon: authState is AuthenticationLoading
-                  ? const SizedBox(
-                      height: 10,
-                      width: 10,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                      ),
-                    )
-                  : const Icon(
-                      Icons.login,
-                    ),
-              label: const Text(
-                'Continue',
+            Image.asset(
+              Assets.images.iceRound.path,
+            ),
+            const SizedBox(
+              height: 19,
+            ),
+            Text(
+              'Get started',
+              style: context.theme.appTextThemes.headline1,
+            ),
+            Text(
+              'Choose your login method',
+              style: context.theme.appTextThemes.body2.copyWith(
+                color: context.theme.appColors.tertararyText,
               ),
-              onPressed: () => <void>{
-                ref
-                    .read(authProvider.notifier)
-                    .signIn(email: 'foo@bar.baz', password: '123'),
-              },
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 35,
+            ),
+            const EmailInput(),
+            Center(
+              child: ElevatedButton.icon(
+                icon: authState is AuthenticationLoading
+                    ? const SizedBox(
+                        height: 10,
+                        width: 10,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.login,
+                      ),
+                label: const Text(
+                  'Continue',
+                ),
+                onPressed: () => <void>{
+                  ref
+                      .read(authProvider.notifier)
+                      .signIn(email: 'foo@bar.baz', password: '123'),
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

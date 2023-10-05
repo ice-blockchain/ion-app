@@ -22,6 +22,7 @@ dependencies:
   json_annotation: ^4.8.1
   lottie: ^2.6.0
   riverpod_annotation: ^2.1.4
+  email_validator: "^2.1.16"
 
 dev_dependencies:
   flutter_test:
