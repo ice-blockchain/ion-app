@@ -23,7 +23,7 @@ final GlobalKey<NavigatorState> shellNavigatorChatKey =
 class SplashRoute extends GoRouteData {
   const SplashRoute();
   @override
-  Widget build(BuildContext context, GoRouterState state) => const SplashPage();
+  Widget build(BuildContext context, GoRouterState state) => SplashPage();
 }
 
 @TypedGoRoute<ErrorRoute>(

@@ -20,6 +20,7 @@ dependencies:
   hooks_riverpod: ^2.3.10
   intl: any
   json_annotation: ^4.8.1
+  lottie: ^2.6.0
   riverpod_annotation: ^2.1.4
 
 dev_dependencies:
@@ -103,6 +104,8 @@ flutter:
     - assets/images/verify.png
     - assets/images/walletnft.png
     - assets/images/x.png
+
+    - assets/lottie/splash-logo.json
 
 flutter_gen:
   output: lib/generated/
