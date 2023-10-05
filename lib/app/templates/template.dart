@@ -170,11 +170,24 @@ class TemplateMenuButtonTheme {
 }
 
 @JsonSerializable()
+class MenuAnchor {
+  MenuAnchor(
+    this.alignmentOffsetY,
+  );
+
+  factory MenuAnchor.fromJson(Map<String, dynamic> json) =>
+      _$MenuAnchorFromJson(json);
+
+  double alignmentOffsetY;
+}
+
+@JsonSerializable()
 class Template {
   Template(
     this.colors,
     this.textThemes,
     this.appBar,
+    this.menuAnchor,
     this.menu,
     this.menuButton,
   );
@@ -185,6 +198,7 @@ class Template {
   TemplateColorsLightDark colors;
   TemplateTextThemes textThemes;
   TemplateAppBarTheme appBar;
+  MenuAnchor menuAnchor;
   TemplateMenuTheme menu;
   TemplateMenuButtonTheme menuButton;
 }

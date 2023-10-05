@@ -7,6 +7,9 @@ import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/shared/widgets/action_button/action_button.dart';
+import 'package:ice/app/shared/widgets/drop_down_menu/drop_down_menu.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
 
@@ -18,7 +21,7 @@ class WalletPage extends HookConsumerWidget {
     final AuthState authState = ref.watch(authProvider);
     final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
 
-    final ValueNotifier<SampleItem?> selected = useState(null);
+    final ValueNotifier<SampleItem?> selected = useState(SampleItem.itemOne);
 
     return Scaffold(
       appBar: AppBar(
@@ -31,15 +34,34 @@ class WalletPage extends HookConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              MenuAnchor(
-                alignmentOffset: const Offset(0, 8),
+              ActionButton(
+                label: const Icon(
+                  Icons.add,
+                  size: 24,
+                ),
+                onPressed: () {},
+              ),
+              DropDownMenu(
                 builder: (
                   BuildContext context,
                   MenuController controller,
                   Widget? child,
                 ) {
-                  return ElevatedButton.icon(
-                    label: Text(selected.value.toString()),
+                  return ActionButton(
+                    leadingIcon: Image.asset(
+                      Assets.images.foo.path,
+                      width: 30,
+                      height: 30,
+                      fit: BoxFit.cover,
+                    ),
+                    label: Text(
+                      selected.value.toString(),
+                    ),
+                    trailingIcon: Icon(
+                      controller.isOpen
+                          ? Icons.arrow_drop_up_rounded
+                          : Icons.arrow_drop_down_rounded,
+                    ),
                     onPressed: () {
                       if (controller.isOpen) {
                         controller.close();
@@ -47,7 +69,6 @@ class WalletPage extends HookConsumerWidget {
                         controller.open();
                       }
                     },
-                    icon: const Icon(Icons.more_horiz),
                   );
                 },
                 menuChildren: <Widget>[

@@ -6,9 +6,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'template_provider.g.dart';
 
+Template? _template;
+
+//TODO::discuss this approach
+Template get appTemplate {
+  return _template!;
+}
+
 @Riverpod(keepAlive: true)
 Future<Template> template(TemplateRef ref) async {
   final String jsonString =
       await rootBundle.loadString('lib/app/templates/basic.json');
-  return Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
+  return _template =
+      Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
 }
