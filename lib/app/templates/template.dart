@@ -109,6 +109,7 @@ class TemplateTextThemes {
     this.body2,
     this.caption,
     this.caption2,
+    this.caption3,
   );
 
   factory TemplateTextThemes.fromJson(Map<String, dynamic> json) =>
@@ -123,6 +124,7 @@ class TemplateTextThemes {
   TemplateTextTheme body2;
   TemplateTextTheme caption;
   TemplateTextTheme caption2;
+  TemplateTextTheme caption3;
 }
 
 @JsonSerializable()

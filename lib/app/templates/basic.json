@@ -46,7 +46,8 @@
     "body": { "fontSize": 13, "height": 1.38, "fontWeight": 600 },
     "body2": { "fontSize": 13, "fontWeight": 400 },
     "caption": { "fontSize": 12, "fontWeight": 500 },
-    "caption2": { "fontSize": 11, "height": 1.63, "fontWeight": 400 }
+    "caption2": { "fontSize": 12, "fontWeight": 400 },
+    "caption3": { "fontSize": 11, "height": 1.63, "fontWeight": 400 }
   },
   "appBar": {
     "toolbarHeight": 50

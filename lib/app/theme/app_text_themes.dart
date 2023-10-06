@@ -12,6 +12,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     required this.body2,
     required this.caption,
     required this.caption2,
+    required this.caption3,
   });
 
   factory AppTextThemesExtension.fromTemplate(TemplateTextThemes textThemes) {
@@ -25,6 +26,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       body2: TemplateTextStyle.fromTemplate(textThemes.body2),
       caption: TemplateTextStyle.fromTemplate(textThemes.caption),
       caption2: TemplateTextStyle.fromTemplate(textThemes.caption2),
+      caption3: TemplateTextStyle.fromTemplate(textThemes.caption3),
     );
   }
 
@@ -37,6 +39,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   final TextStyle body2;
   final TextStyle caption;
   final TextStyle caption2;
+  final TextStyle caption3;
 
   @override
   ThemeExtension<AppTextThemesExtension> copyWith({
@@ -49,6 +52,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     TextStyle? body2,
     TextStyle? caption,
     TextStyle? caption2,
+    TextStyle? caption3,
   }) {
     return AppTextThemesExtension(
       headline1: headline1 ?? this.headline1,
@@ -60,6 +64,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       body2: body2 ?? this.body2,
       caption: caption ?? this.caption,
       caption2: caption2 ?? this.caption2,
+      caption3: caption3 ?? this.caption3,
     );
   }
 
@@ -82,6 +87,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       body2: TextStyle.lerp(body2, other.body2, t)!,
       caption: TextStyle.lerp(caption, other.caption, t)!,
       caption2: TextStyle.lerp(caption2, other.caption2, t)!,
+      caption3: TextStyle.lerp(caption3, other.caption3, t)!,
     );
   }
 }

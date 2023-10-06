@@ -9,6 +9,7 @@ import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/shared/widgets/action_button/action_button.dart';
 import 'package:ice/app/shared/widgets/drop_down_menu/drop_down_menu.dart';
+import 'package:ice/app/shared/widgets/list_tile/list_tile.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
@@ -34,6 +35,29 @@ class WalletPage extends HookConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              ListItem(
+                leading: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(12)),
+                  child: Image.asset(
+                    Assets.images.foo.path,
+                    width: 36,
+                    height: 36,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                title: const Text('Etherium'),
+                subtitle: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'ETHad',
+                    ),
+                    Text(
+                      'ETHad !',
+                    ),
+                  ],
+                ),
+              ),
               ActionButton(
                 label: const Icon(
                   Icons.add,
