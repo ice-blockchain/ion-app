@@ -5,6 +5,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/shared/widgets/action_button/action_button.dart';
 import 'package:ice/app/shared/widgets/email_input.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -14,6 +15,7 @@ class AuthPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AuthState authState = ref.watch(authProvider);
+    final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
 
     return Scaffold(
       body: Container(
@@ -26,6 +28,15 @@ class AuthPage extends HookConsumerWidget {
             Image.asset(
               Assets.images.iceRound.path,
             ),
+            // ActionButton(
+            //   onPressed: () {},
+            //   style: outlined(context),
+            //   label: const Text('Hello'),
+            //   trailingIcon: Image.asset(
+            //     Assets.images.camera.path,
+            //     color: Colors.amber,
+            //   ),
+            // ),
             const SizedBox(
               height: 19,
             ),
@@ -42,7 +53,10 @@ class AuthPage extends HookConsumerWidget {
             const SizedBox(
               height: 35,
             ),
-            const EmailInput(),
+            EmailInput(formKey: emailFormKey),
+            const SizedBox(
+              height: 16,
+            ),
             Center(
               child: ElevatedButton.icon(
                 icon: authState is AuthenticationLoading
@@ -60,6 +74,7 @@ class AuthPage extends HookConsumerWidget {
                   'Continue',
                 ),
                 onPressed: () => <void>{
+                  emailFormKey.currentState?.reset(),
                   ref
                       .read(authProvider.notifier)
                       .signIn(email: 'foo@bar.baz', password: '123'),
