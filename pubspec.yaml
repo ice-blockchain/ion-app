@@ -107,6 +107,7 @@ flutter:
     - assets/images/x.png
     - assets/images/iceRound.png
     - assets/images/field_email.png
+    - assets/images/iceIcon.png
 
     - assets/lottie/splash-logo.json
     - assets/lottie/intro.json
