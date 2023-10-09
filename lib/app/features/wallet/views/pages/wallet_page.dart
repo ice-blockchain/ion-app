@@ -9,7 +9,7 @@ import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/shared/widgets/action_button/action_button.dart';
 import 'package:ice/app/shared/widgets/drop_down_menu/drop_down_menu.dart';
-import 'package:ice/app/shared/widgets/list_tile/list_tile.dart';
+import 'package:ice/app/shared/widgets/list_item/list_item.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
@@ -22,7 +22,9 @@ class WalletPage extends HookConsumerWidget {
     final AuthState authState = ref.watch(authProvider);
     final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
 
-    final ValueNotifier<SampleItem?> selected = useState(SampleItem.itemOne);
+    final ValueNotifier<SampleItem> selected = useState(SampleItem.itemOne);
+
+    final ValueNotifier<bool> checked = useState(false);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,6 +37,11 @@ class WalletPage extends HookConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              ListItem.checkbox(
+                onTap: () => checked.value = !checked.value,
+                value: checked.value,
+                title: const Text('ice.wallet'),
+              ),
               ListItem(
                 leading: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
