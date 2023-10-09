@@ -1,3 +1,6 @@
 {
-  "hello": "Hello!  {userName}"
+  "hello": "Hello!  {userName}",
+  "@signIn": {
+    "privacy": "By continuing, you are agreeing to our \\[[:link]]Terms of Service[[/:link]] & [[:link]]Privacy Policy[[/:link]]"
+  }
 }
