@@ -30,6 +30,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     });
   }
 
+// ignore: avoid_build_context_in_providers
   String? redirect(BuildContext context, GoRouterState state) {
     //TODO: check that its part of intro navigation flow
     final bool isAuthInProgress =
