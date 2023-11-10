@@ -43,6 +43,9 @@ class Button extends StatelessWidget {
     ButtonStyle? style,
     Color? backgroundColor,
     Color? iconTintColor,
+    Color? borderColor,
+    double borderWidth = 0.0,
+    BorderRadius? borderRadius,
   }) {
     final IconButtonThemeData iconButtonTheme = context.theme.iconButtonTheme;
     final IconThemeData iconTheme = context.theme.iconTheme;
@@ -54,8 +57,11 @@ class Button extends StatelessWidget {
       decoration: BoxDecoration(
         // color:
         //     iconButtonTheme.style?.backgroundColor?.resolve(<MaterialState>{}),
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(8),
+        color: backgroundColor ?? Colors.transparent,
+        borderRadius: borderRadius ?? BorderRadius.circular(16),
+        border: borderColor != null
+            ? Border.all(color: borderColor, width: borderWidth)
+            : null,
       ),
       child: Material(
         color: Colors.transparent,
@@ -121,6 +127,8 @@ class Button extends StatelessWidget {
       iconData: iconData,
       backgroundColor: Colors.transparent,
       iconTintColor: context.theme.appColors.secondaryText,
+      borderColor: context.theme.appColors.strokeElements,
+      borderWidth: 1.0,
     );
   }
 
