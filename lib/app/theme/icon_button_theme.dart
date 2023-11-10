@@ -12,6 +12,9 @@ IconButtonThemeData buildIconButtonTheme(
       fixedSize: MaterialStateProperty.all<Size>(
         Size(template.iconButton.width, template.iconButton.height),
       ),
+      iconSize: MaterialStateProperty.all<double>(
+        template.iconButton.width,
+      ),
       backgroundColor: MaterialStateProperty.all<Color>(
         HexColor(template.iconButton.backgroundColor),
       ),

@@ -39,7 +39,8 @@ class Button extends StatelessWidget {
   static Widget iconButton({
     required BuildContext context,
     required VoidCallback onPressed,
-    required IconData iconData,
+    IconData? iconData,
+    String? imagePath,
     ButtonStyle? style,
     Color? backgroundColor,
     Color? iconTintColor,
@@ -47,11 +48,30 @@ class Button extends StatelessWidget {
     double borderWidth = 0.0,
     BorderRadius? borderRadius,
   }) {
+    assert(
+      iconData != null || imagePath != null,
+      'You must provide either an iconData or an imagePath',
+    );
     final IconButtonThemeData iconButtonTheme = context.theme.iconButtonTheme;
     final IconThemeData iconTheme = context.theme.iconTheme;
 
     final ButtonStyle mergedButtonStyle =
         iconButtonTheme.style?.merge(style) ?? style ?? const ButtonStyle();
+
+    Widget iconWidget;
+    if (iconData != null) {
+      iconWidget = Icon(
+        iconData,
+        size: iconTheme.size,
+        color: iconTintColor,
+      );
+    } else {
+      iconWidget = Image.asset(
+        imagePath!,
+        width: iconTheme.size,
+        height: iconTheme.size,
+      );
+    }
 
     return Container(
       decoration: BoxDecoration(
@@ -66,7 +86,7 @@ class Button extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: IconButton(
-          icon: Icon(iconData, size: iconTheme.size, color: iconTintColor),
+          icon: iconWidget,
           onPressed: onPressed,
           style: mergedButtonStyle,
         ),
@@ -77,12 +97,14 @@ class Button extends StatelessWidget {
   static Widget primaryIconButton({
     required BuildContext context,
     required VoidCallback onPressed,
-    required IconData iconData,
+    IconData? iconData,
+    String? imagePath,
   }) {
     return iconButton(
       context: context,
       onPressed: onPressed,
       iconData: iconData,
+      imagePath: imagePath,
       backgroundColor: context.theme.appColors.primaryAccent,
       iconTintColor: context.theme.appColors.onPrimaryAccent,
     );
@@ -91,12 +113,14 @@ class Button extends StatelessWidget {
   static Widget secondaryIconButton({
     required BuildContext context,
     required VoidCallback onPressed,
-    required IconData iconData,
+    IconData? iconData,
+    String? imagePath,
   }) {
     return iconButton(
       context: context,
       onPressed: onPressed,
       iconData: iconData,
+      imagePath: imagePath,
       backgroundColor: context.theme.appColors.onPrimaryAccent,
       iconTintColor: context.theme.appColors.secondaryText,
     );
@@ -105,12 +129,14 @@ class Button extends StatelessWidget {
   static Widget disabledIconButton({
     required BuildContext context,
     required VoidCallback onPressed,
-    required IconData iconData,
+    IconData? iconData,
+    String? imagePath,
   }) {
     return iconButton(
       context: context,
       onPressed: onPressed,
       iconData: iconData,
+      imagePath: imagePath,
       backgroundColor: context.theme.appColors.sheetLine,
       iconTintColor: context.theme.appColors.secondaryBackground,
     );
@@ -119,12 +145,14 @@ class Button extends StatelessWidget {
   static Widget outlinedIconButton({
     required BuildContext context,
     required VoidCallback onPressed,
-    required IconData iconData,
+    IconData? iconData,
+    String? imagePath,
   }) {
     return iconButton(
       context: context,
       onPressed: onPressed,
       iconData: iconData,
+      imagePath: imagePath,
       backgroundColor: Colors.transparent,
       iconTintColor: context.theme.appColors.secondaryText,
       borderColor: context.theme.appColors.strokeElements,

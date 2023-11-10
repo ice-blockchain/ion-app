@@ -7,6 +7,7 @@ import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/shared/widgets/email_input.dart';
 import 'package:ice/app/shared/widgets/secured_by/secured_by.dart';
+import 'package:ice/app/shared/widgets/socials/socials.dart';
 import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -82,6 +83,10 @@ class AuthPage extends HookConsumerWidget {
                 },
               ),
             ),
+            const SizedBox(
+              height: 22,
+            ),
+            Socials(),
             const SizedBox(
               height: 22,
             ),
