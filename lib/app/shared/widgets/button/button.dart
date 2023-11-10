@@ -43,16 +43,22 @@ class Button extends StatelessWidget {
     final IconButtonThemeData iconButtonTheme = context.theme.iconButtonTheme;
     final IconThemeData iconTheme = context.theme.iconTheme;
 
-    return IconButton(
-      icon: Icon(
-        iconData,
-        size: iconTheme.size,
-        // color: iconTheme.color,
+    return Container(
+      decoration: BoxDecoration(
+        color:
+            iconButtonTheme.style?.backgroundColor?.resolve(<MaterialState>{}),
+        borderRadius:
+            BorderRadius.circular(8), // Optional: if you want rounded corners
       ),
-      onPressed: onPressed,
-      style: iconButtonTheme.style,
-      // padding: iconButtonTheme.padding,
-      // alignment: iconButtonTheme.alignment,
+      child: IconButton(
+        icon: Icon(
+          iconData,
+          size: iconTheme.size,
+          color: iconTheme.color,
+        ),
+        onPressed: onPressed,
+        style: iconButtonTheme.style,
+      ),
     );
   }
 

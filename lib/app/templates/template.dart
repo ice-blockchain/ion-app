@@ -188,6 +188,7 @@ class TemplateIconButtonTheme {
   TemplateIconButtonTheme({
     required this.width,
     required this.height,
+    required this.backgroundColor,
   });
 
   factory TemplateIconButtonTheme.fromJson(Map<String, dynamic> json) =>
@@ -195,6 +196,7 @@ class TemplateIconButtonTheme {
 
   final double width;
   final double height;
+  final String backgroundColor;
 
   Map<String, dynamic> toJson() => _$TemplateIconButtonThemeToJson(this);
 }

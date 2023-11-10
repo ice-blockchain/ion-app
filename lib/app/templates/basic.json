@@ -73,7 +73,8 @@
   },
   "iconButton": {
     "width": 56,
-    "height": 56
+    "height": 56,
+    "backgroundColor": "#0166FF"
   },
   "icon": {
     "width": 24,
