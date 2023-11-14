@@ -184,21 +184,35 @@ class MenuAnchor {
 }
 
 @JsonSerializable()
-class TemplateFilledButtonTheme {
-  TemplateFilledButtonTheme(
-    this.iconSize,
-    this.minHeight,
-    this.paddingTop,
-    this.paddingBottom,
-  );
+class TemplateIconButtonTheme {
+  TemplateIconButtonTheme({
+    required this.width,
+    required this.height,
+  });
 
-  factory TemplateFilledButtonTheme.fromJson(Map<String, dynamic> json) =>
-      _$TemplateFilledButtonThemeFromJson(json);
+  factory TemplateIconButtonTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateIconButtonThemeFromJson(json);
 
-  double iconSize;
-  double minHeight;
-  double paddingTop;
-  double paddingBottom;
+  final double width;
+  final double height;
+
+  Map<String, dynamic> toJson() => _$TemplateIconButtonThemeToJson(this);
+}
+
+@JsonSerializable()
+class TemplateIconTheme {
+  TemplateIconTheme({
+    required this.width,
+    required this.height,
+  });
+
+  factory TemplateIconTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateIconThemeFromJson(json);
+
+  final double width;
+  final double height;
+
+  Map<String, dynamic> toJson() => _$TemplateIconThemeToJson(this);
 }
 
 @JsonSerializable()
@@ -210,7 +224,8 @@ class Template {
     this.menuAnchor,
     this.menu,
     this.menuButton,
-    this.filledButton,
+    this.iconButton,
+    this.icon,
   );
 
   factory Template.fromJson(Map<String, dynamic> json) =>
@@ -222,5 +237,6 @@ class Template {
   MenuAnchor menuAnchor;
   TemplateMenuTheme menu;
   TemplateMenuButtonTheme menuButton;
-  TemplateFilledButtonTheme filledButton;
+  TemplateIconButtonTheme iconButton;
+  TemplateIconTheme icon;
 }

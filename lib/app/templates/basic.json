@@ -71,10 +71,12 @@
     "paddingRight": 13,
     "paddingBottom": 0
   },
-  "filledButton": {
-    "iconSize": 24,
-    "minHeight": 56,
-    "paddingTop": 16,
-    "paddingBottom": 16
+  "iconButton": {
+    "width": 56,
+    "height": 56
+  },
+  "icon": {
+    "width": 24,
+    "height": 24
   }
 }

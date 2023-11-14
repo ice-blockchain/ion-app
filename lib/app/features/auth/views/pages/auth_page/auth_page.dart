@@ -29,7 +29,7 @@ class AuthPage extends HookConsumerWidget {
             Image.asset(
               Assets.images.iceRound.path,
             ),
-            // ActionButton(
+            // Button(
             //   onPressed: () {},
             //   style: outlined(context),
             //   label: const Text('Hello'),
