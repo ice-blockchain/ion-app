@@ -65,11 +65,36 @@ class WalletPage extends HookConsumerWidget {
                   ],
                 ),
               ),
-              Button.iconButton(
+              Button.primaryIconButton(
                 context: context,
                 iconData: Icons.add,
                 onPressed: () {},
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              Button.secondaryIconButton(
+                context: context,
+                iconData: Icons.add,
+                onPressed: () {},
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Button.disabledIconButton(
+                context: context,
+                iconData: Icons.add,
+                onPressed: () {},
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Button.outlinedIconButton(
+                context: context,
+                iconData: Icons.add,
+                onPressed: () {},
+              ),
+
               // Button(
               //   label: const Icon(
               //     Icons.add,
@@ -93,6 +118,8 @@ class WalletPage extends HookConsumerWidget {
                       }
                     },
                     iconData: Icons.add_alert_sharp,
+                    iconTintColor: Colors.white,
+                    backgroundColor: Colors.red,
                   );
                   // return Button(
                   //   leadingIcon: Image.asset(

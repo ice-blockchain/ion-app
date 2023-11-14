@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/theme_data.dart';
 
 // ButtonStyle outlined(BuildContext context) {
 //   return FilledButton.styleFrom(
@@ -39,26 +40,87 @@ class Button extends StatelessWidget {
     required BuildContext context,
     required VoidCallback onPressed,
     required IconData iconData,
+    ButtonStyle? style,
+    Color? backgroundColor,
+    Color? iconTintColor,
   }) {
     final IconButtonThemeData iconButtonTheme = context.theme.iconButtonTheme;
     final IconThemeData iconTheme = context.theme.iconTheme;
 
+    final ButtonStyle mergedButtonStyle =
+        iconButtonTheme.style?.merge(style) ?? style ?? const ButtonStyle();
+
     return Container(
       decoration: BoxDecoration(
-        color:
-            iconButtonTheme.style?.backgroundColor?.resolve(<MaterialState>{}),
-        borderRadius:
-            BorderRadius.circular(8), // Optional: if you want rounded corners
+        // color:
+        //     iconButtonTheme.style?.backgroundColor?.resolve(<MaterialState>{}),
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(8),
       ),
-      child: IconButton(
-        icon: Icon(
-          iconData,
-          size: iconTheme.size,
-          color: iconTheme.color,
+      child: Material(
+        color: Colors.transparent,
+        child: IconButton(
+          icon: Icon(iconData, size: iconTheme.size, color: iconTintColor),
+          onPressed: onPressed,
+          style: mergedButtonStyle,
         ),
-        onPressed: onPressed,
-        style: iconButtonTheme.style,
       ),
+    );
+  }
+
+  static Widget primaryIconButton({
+    required BuildContext context,
+    required VoidCallback onPressed,
+    required IconData iconData,
+  }) {
+    return iconButton(
+      context: context,
+      onPressed: onPressed,
+      iconData: iconData,
+      backgroundColor: context.theme.appColors.primaryAccent,
+      iconTintColor: context.theme.appColors.onPrimaryAccent,
+    );
+  }
+
+  static Widget secondaryIconButton({
+    required BuildContext context,
+    required VoidCallback onPressed,
+    required IconData iconData,
+  }) {
+    return iconButton(
+      context: context,
+      onPressed: onPressed,
+      iconData: iconData,
+      backgroundColor: context.theme.appColors.onPrimaryAccent,
+      iconTintColor: context.theme.appColors.secondaryText,
+    );
+  }
+
+  static Widget disabledIconButton({
+    required BuildContext context,
+    required VoidCallback onPressed,
+    required IconData iconData,
+  }) {
+    return iconButton(
+      context: context,
+      onPressed: onPressed,
+      iconData: iconData,
+      backgroundColor: context.theme.appColors.sheetLine,
+      iconTintColor: context.theme.appColors.secondaryBackground,
+    );
+  }
+
+  static Widget outlinedIconButton({
+    required BuildContext context,
+    required VoidCallback onPressed,
+    required IconData iconData,
+  }) {
+    return iconButton(
+      context: context,
+      onPressed: onPressed,
+      iconData: iconData,
+      backgroundColor: Colors.transparent,
+      iconTintColor: context.theme.appColors.secondaryText,
     );
   }
 
