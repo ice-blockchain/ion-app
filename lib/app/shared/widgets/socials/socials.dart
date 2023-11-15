@@ -22,7 +22,8 @@ class Socials extends StatelessWidget {
             4,
             (int index) => Button.icon(
               type: ButtonType.outlined,
-              image: Image.asset(Assets.images.facebook.path),
+              icon: Image.asset(Assets.images.facebook.path),
+              onPressed: () {},
             ),
           ),
         ),
@@ -33,7 +34,8 @@ class Socials extends StatelessWidget {
             4,
             (int index) => Button.icon(
               type: ButtonType.outlined,
-              image: Image.asset(Assets.images.x.path),
+              icon: Image.asset(Assets.images.x.path),
+              onPressed: () {},
             ),
           ),
         ),

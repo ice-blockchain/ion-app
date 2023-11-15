@@ -66,30 +66,67 @@ class WalletPage extends HookConsumerWidget {
                 ),
               ),
               Button.icon(
-                type: ButtonType.primary,
-                image: const Icon(Icons.add),
-              ),
-              const SizedBox(
-                height: 10,
+                icon: const Icon(Icons.add),
+                onPressed: () {},
               ),
               Button.icon(
+                icon: const Icon(Icons.add),
                 type: ButtonType.secondary,
-                image: const Icon(Icons.add),
-              ),
-              const SizedBox(
-                height: 10,
+                onPressed: () {},
               ),
               Button.icon(
+                icon: const Icon(Icons.add),
                 type: ButtonType.outlined,
-                image: const Icon(Icons.add),
-              ),
-              const SizedBox(
-                height: 10,
+                onPressed: () {},
               ),
               Button.icon(
+                icon: const Icon(Icons.add),
                 type: ButtonType.disabled,
-                image: const Icon(Icons.add),
+                onPressed: () {},
               ),
+              // Button(
+              //   leadingIcon: ImageIcon(AssetImage(Assets.images.facebook.path)),
+              //   onPressed: () {},
+              //   mainAxisSize: MainAxisSize.max,
+              // ),
+              // Button(
+              //   label: const Text('Add'),
+              //   onPressed: () {},
+              // ),
+              // Button(
+              //   leadingIcon: Image.asset(Assets.images.facebook.path),
+              //   label: const Text('Add'),
+              //   onPressed: () {},
+              // ),
+              // Button(
+              //   trailingIcon: Image.asset(Assets.images.github.path),
+              //   label: const Text('Remove'),
+              //   onPressed: () {},
+              // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // Button.icon(
+              //   type: ButtonType.secondary,
+              //   icon: const Icon(Icons.add),
+              //   onPressed: () {},
+              // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // Button.icon(
+              //   type: ButtonType.outlined,
+              //   icon: const Icon(Icons.add),
+              //   onPressed: () {},
+              // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // Button.icon(
+              //   type: ButtonType.disabled,
+              //   icon: const Icon(Icons.add),
+              //   onPressed: () {},
+              // ),
               const SizedBox(
                 height: 10,
               ),
@@ -100,8 +137,8 @@ class WalletPage extends HookConsumerWidget {
                   Widget? child,
                 ) {
                   return Button.icon(
-                    type: ButtonType.primary,
-                    image: const Icon(Icons.add),
+                    icon: const Icon(Icons.add),
+                    onPressed: () {},
                   );
                   // return Button.icon(
                   //   context: context,
