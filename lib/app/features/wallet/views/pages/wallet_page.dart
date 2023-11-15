@@ -65,68 +65,115 @@ class WalletPage extends HookConsumerWidget {
                   ],
                 ),
               ),
-              Button.icon(
-                icon: const Icon(Icons.add),
-                onPressed: () {},
-              ),
-              Button.icon(
-                icon: const Icon(Icons.add),
-                type: ButtonType.secondary,
-                onPressed: () {},
-              ),
-              Button.icon(
-                icon: const Icon(Icons.add),
-                type: ButtonType.outlined,
-                onPressed: () {},
-              ),
-              Button.icon(
-                icon: const Icon(Icons.add),
-                type: ButtonType.disabled,
-                onPressed: () {},
-              ),
+
+              // ICON BUTTONS
+
+              // Button.icon(
+              //   icon: const Icon(Icons.add),
+              //   onPressed: () {},
+              // ),
+              // Button.icon(
+              //   icon: const Icon(Icons.add),
+              //   type: ButtonType.secondary,
+              //   onPressed: () {},
+              // ),
+              // Button.icon(
+              //   icon: const Icon(Icons.add),
+              //   type: ButtonType.outlined,
+              //   onPressed: () {},
+              // ),
+              // Button.icon(
+              //   icon: const Icon(Icons.add),
+              //   type: ButtonType.disabled,
+              //   onPressed: () {},
+              // ),
+
+              // (LEADING ICON + LABEL) BUTTONS
               // Button(
               //   leadingIcon: ImageIcon(AssetImage(Assets.images.facebook.path)),
               //   onPressed: () {},
+              //   label: const Text('Add'),
               //   mainAxisSize: MainAxisSize.max,
               // ),
               // Button(
-              //   label: const Text('Add'),
+              //   leadingIcon: ImageIcon(AssetImage(Assets.images.x.path)),
               //   onPressed: () {},
-              // ),
-              // Button(
-              //   leadingIcon: Image.asset(Assets.images.facebook.path),
-              //   label: const Text('Add'),
-              //   onPressed: () {},
-              // ),
-              // Button(
-              //   trailingIcon: Image.asset(Assets.images.github.path),
               //   label: const Text('Remove'),
-              //   onPressed: () {},
-              // ),
-              // const SizedBox(
-              //   height: 10,
-              // ),
-              // Button.icon(
               //   type: ButtonType.secondary,
-              //   icon: const Icon(Icons.add),
+              //   mainAxisSize: MainAxisSize.max,
+              // ),
+              // Button(
+              //   leadingIcon:
+              //       ImageIcon(AssetImage(Assets.images.backArrow.path)),
               //   onPressed: () {},
-              // ),
-              // const SizedBox(
-              //   height: 10,
-              // ),
-              // Button.icon(
+              //   label: const Text('Outlined'),
               //   type: ButtonType.outlined,
-              //   icon: const Icon(Icons.add),
+              //   mainAxisSize: MainAxisSize.max,
+              // ),
+              // Button(
+              //   leadingIcon: ImageIcon(AssetImage(Assets.images.coins.path)),
               //   onPressed: () {},
-              // ),
-              // const SizedBox(
-              //   height: 10,
-              // ),
-              // Button.icon(
+              //   label: const Text('Disabled'),
               //   type: ButtonType.disabled,
-              //   icon: const Icon(Icons.add),
-              //   onPressed: () {},
+              //   mainAxisSize: MainAxisSize.max,
               // ),
+
+              // (TRAILING ICON + LABEL) BUTTONS
+              // Button(
+              //   trailingIcon:
+              //       ImageIcon(AssetImage(Assets.images.facebook.path)),
+              //   onPressed: () {},
+              //   label: const Text('Add'),
+              //   mainAxisSize: MainAxisSize.max,
+              // ),
+              // Button(
+              //   trailingIcon: ImageIcon(AssetImage(Assets.images.x.path)),
+              //   onPressed: () {},
+              //   label: const Text('Remove'),
+              //   type: ButtonType.secondary,
+              //   mainAxisSize: MainAxisSize.max,
+              // ),
+              // Button(
+              //   trailingIcon:
+              //       ImageIcon(AssetImage(Assets.images.backArrow.path)),
+              //   onPressed: () {},
+              //   label: const Text('Outlined'),
+              //   type: ButtonType.outlined,
+              //   mainAxisSize: MainAxisSize.max,
+              // ),
+              // Button(
+              //   trailingIcon: ImageIcon(AssetImage(Assets.images.coins.path)),
+              //   onPressed: () {},
+              //   label: const Text('Disabled'),
+              //   type: ButtonType.disabled,
+              //   mainAxisSize: MainAxisSize.max,
+              // ),
+
+              // JUST LABEL BUTTONS
+              Button(
+                onPressed: () {},
+                label: const Text('Add'),
+                mainAxisSize: MainAxisSize.max,
+              ),
+              Button(
+                onPressed: () {},
+                label: const Text('Remove'),
+                type: ButtonType.secondary,
+                mainAxisSize: MainAxisSize.max,
+              ),
+              Button(
+                onPressed: () {},
+                label: const Text('Outlined'),
+                type: ButtonType.outlined,
+                mainAxisSize: MainAxisSize.max,
+              ),
+              Button(
+                onPressed: () {},
+                label: const Text('Disabled'),
+                type: ButtonType.disabled,
+                mainAxisSize: MainAxisSize.max,
+              ),
+
               const SizedBox(
                 height: 10,
               ),

@@ -42,13 +42,6 @@ class Button extends StatelessWidget {
   final ButtonType type;
   final ButtonStyle style;
 
-  @protected
-  Widget? buildLeadingIcon(
-    BuildContext context,
-  ) {
-    return leadingIcon;
-  }
-
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
@@ -74,6 +67,7 @@ class Button extends StatelessWidget {
               .copyWith(color: _getLabelColor(context, type)),
           child: Row(
             mainAxisSize: mainAxisSize,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               if (leadingIcon != null) leadingIcon!,
               if (label != null)
