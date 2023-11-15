@@ -65,62 +65,57 @@ class WalletPage extends HookConsumerWidget {
                   ],
                 ),
               ),
-              Button.primaryIconButton(
-                context: context,
-                iconData: Icons.add,
-                onPressed: () {},
+              Button.icon(
+                type: ButtonType.primary,
+                image: const Icon(Icons.add),
               ),
               const SizedBox(
                 height: 10,
               ),
-              Button.secondaryIconButton(
-                context: context,
-                iconData: Icons.add,
-                onPressed: () {},
+              Button.icon(
+                type: ButtonType.secondary,
+                image: const Icon(Icons.add),
               ),
               const SizedBox(
                 height: 10,
               ),
-              Button.disabledIconButton(
-                context: context,
-                iconData: Icons.add,
-                onPressed: () {},
+              Button.icon(
+                type: ButtonType.outlined,
+                image: const Icon(Icons.add),
               ),
               const SizedBox(
                 height: 10,
               ),
-              Button.outlinedIconButton(
-                context: context,
-                iconData: Icons.add,
-                onPressed: () {},
+              Button.icon(
+                type: ButtonType.disabled,
+                image: const Icon(Icons.add),
               ),
-
-              // Button(
-              //   label: const Icon(
-              //     Icons.add,
-              //     size: 24,
-              //   ),
-              //   onPressed: () {},
-              // ),
+              const SizedBox(
+                height: 10,
+              ),
               DropDownMenu(
                 builder: (
                   BuildContext context,
                   MenuController controller,
                   Widget? child,
                 ) {
-                  return Button.iconButton(
-                    context: context,
-                    onPressed: () {
-                      if (controller.isOpen) {
-                        controller.close();
-                      } else {
-                        controller.open();
-                      }
-                    },
-                    iconData: Icons.add_alert_sharp,
-                    iconTintColor: Colors.white,
-                    backgroundColor: Colors.red,
+                  return Button.icon(
+                    type: ButtonType.primary,
+                    image: const Icon(Icons.add),
                   );
+                  // return Button.icon(
+                  //   context: context,
+                  //   onPressed: () {
+                  //     if (controller.isOpen) {
+                  //       controller.close();
+                  //     } else {
+                  //       controller.open();
+                  //     }
+                  //   },
+                  //   iconData: Icons.add_alert_sharp,
+                  //   iconTintColor: Colors.white,
+                  //   backgroundColor: Colors.red,
+                  // );
                   // return Button(
                   //   leadingIcon: Image.asset(
                   //     Assets.images.foo.path,

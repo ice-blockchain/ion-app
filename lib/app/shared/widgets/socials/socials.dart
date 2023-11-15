@@ -20,10 +20,9 @@ class Socials extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List<Widget>.generate(
             4,
-            (int index) => Button.outlinedIconButton(
-              context: context,
-              onPressed: () {},
-              imagePath: Assets.images.facebook.path,
+            (int index) => Button.icon(
+              type: ButtonType.outlined,
+              image: Image.asset(Assets.images.facebook.path),
             ),
           ),
         ),
@@ -32,10 +31,9 @@ class Socials extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List<Widget>.generate(
             4,
-            (int index) => Button.outlinedIconButton(
-              context: context,
-              onPressed: () {},
-              imagePath: Assets.images.x.path,
+            (int index) => Button.icon(
+              type: ButtonType.outlined,
+              image: Image.asset(Assets.images.x.path),
             ),
           ),
         ),
