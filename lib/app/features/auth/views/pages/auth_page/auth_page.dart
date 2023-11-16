@@ -5,8 +5,10 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/email_input.dart';
+import 'package:ice/app/shared/widgets/modal_wrapper.dart';
 import 'package:ice/app/shared/widgets/secured_by/secured_by.dart';
 import 'package:ice/app/shared/widgets/socials/socials.dart';
 import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
@@ -14,6 +16,17 @@ import 'package:ice/generated/assets.gen.dart';
 
 class AuthPage extends HookConsumerWidget {
   const AuthPage({super.key});
+
+  void showCheckEmail(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) => const ModalWrapper(
+        child: CheckEmail(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -91,7 +104,9 @@ class AuthPage extends HookConsumerWidget {
                   size: 24,
                   color: context.theme.appColors.secondaryText,
                 ),
-                onPressed: () => <void>{},
+                onPressed: () {
+                  showCheckEmail(context);
+                },
                 label: const Text('Continue with Phone'),
                 mainAxisSize: MainAxisSize.max,
               ),
