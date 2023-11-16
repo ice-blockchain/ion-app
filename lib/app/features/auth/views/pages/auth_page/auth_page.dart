@@ -5,6 +5,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/email_input.dart';
 import 'package:ice/app/shared/widgets/secured_by/secured_by.dart';
 import 'package:ice/app/shared/widgets/socials/socials.dart';
@@ -30,15 +31,6 @@ class AuthPage extends HookConsumerWidget {
             Image.asset(
               Assets.images.iceRound.path,
             ),
-            // Button(
-            //   onPressed: () {},
-            //   style: outlined(context),
-            //   label: const Text('Hello'),
-            //   trailingIcon: Image.asset(
-            //     Assets.images.camera.path,
-            //     color: Colors.amber,
-            //   ),
-            // ),
             const SizedBox(
               height: 19,
             ),
@@ -60,8 +52,8 @@ class AuthPage extends HookConsumerWidget {
               height: 16,
             ),
             Center(
-              child: ElevatedButton.icon(
-                icon: authState is AuthenticationLoading
+              child: Button(
+                trailingIcon: authState is AuthenticationLoading
                     ? const SizedBox(
                         height: 10,
                         width: 10,
@@ -69,26 +61,44 @@ class AuthPage extends HookConsumerWidget {
                           color: Colors.white,
                         ),
                       )
-                    : const Icon(
-                        Icons.login,
+                    : ImageIcon(
+                        AssetImage(Assets.images.buttonNext.path),
+                        size: 16,
                       ),
-                label: const Text(
-                  'Continue',
-                ),
                 onPressed: () => <void>{
                   emailFormKey.currentState?.reset(),
                   ref
                       .read(authProvider.notifier)
                       .signIn(email: 'foo@bar.baz', password: '123'),
                 },
+                label: const Text('Continue'),
+                mainAxisSize: MainAxisSize.max,
               ),
             ),
-            const SizedBox(
-              height: 22,
+            Padding(
+              padding: const EdgeInsets.only(top: 14, bottom: 14),
+              child: Text(
+                'or',
+                style: context.theme.appTextThemes.caption
+                    .copyWith(color: context.theme.appColors.tertararyText),
+              ),
             ),
-            Socials(),
-            const SizedBox(
-              height: 22,
+            Center(
+              child: Button(
+                type: ButtonType.outlined,
+                leadingIcon: ImageIcon(
+                  AssetImage(Assets.images.phone.path),
+                  size: 24,
+                  color: context.theme.appColors.secondaryText,
+                ),
+                onPressed: () => <void>{},
+                label: const Text('Continue with Phone'),
+                mainAxisSize: MainAxisSize.max,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16, bottom: 22),
+              child: Socials(),
             ),
             const SecuredBy(),
             const SizedBox(
