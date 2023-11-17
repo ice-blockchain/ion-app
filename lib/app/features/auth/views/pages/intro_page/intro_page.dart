@@ -12,7 +12,6 @@ class IntroPage extends HookConsumerWidget {
   const IntroPage({super.key});
 
   void showMyBottomSheet(BuildContext context) {
-    // const AuthRoute().go(context);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
