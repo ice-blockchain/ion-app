@@ -23,6 +23,7 @@ dependencies:
   lottie: ^2.6.0
   riverpod_annotation: ^2.1.4
   email_validator: "^2.1.16"
+  cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:
@@ -55,7 +56,7 @@ flutter:
     - assets/images/checkboxoff.png
     - assets/images/checkboxon.png
     - assets/images/checkgreen.png
-    - assets/images/clear.png
+    - assets/images/clearall.png
     - assets/images/closesheet.png
     - assets/images/coins.png
     - assets/images/comment.png
