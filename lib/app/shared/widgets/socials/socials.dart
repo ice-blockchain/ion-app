@@ -4,13 +4,12 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-enum SocialButtonType { apple, nostr, x, up, fb, github, discord, linkedin }
+enum SocialButtonType { apple, nostr, x, expand, fb, github, discord, linkedin }
 
 Map<SocialButtonType, String> socialIcons = <SocialButtonType, String>{
   SocialButtonType.apple: Assets.images.apple.path,
   SocialButtonType.nostr: Assets.images.nostr.path,
   SocialButtonType.x: Assets.images.x.path,
-  SocialButtonType.up: Assets.images.loginDropdown.path,
   SocialButtonType.fb: Assets.images.facebook.path,
   SocialButtonType.github: Assets.images.github.path,
   SocialButtonType.discord: Assets.images.discord.path,
@@ -29,7 +28,7 @@ class _SocialsState extends State<Socials> {
     SocialButtonType.apple,
     SocialButtonType.nostr,
     SocialButtonType.x,
-    SocialButtonType.up,
+    SocialButtonType.expand,
   ];
 
   final List<SocialButtonType> secondRowButtons = <SocialButtonType>[
@@ -67,15 +66,23 @@ class _SocialsState extends State<Socials> {
   }
 
   Widget buildSocialButton(SocialButtonType type) {
+    String? socialIcon = socialIcons[type];
+
+    if (type == SocialButtonType.expand) {
+      socialIcon = isSecondRowVisible
+          ? Assets.images.loginDropup.path
+          : Assets.images.loginDropdown.path;
+    }
+
     return Button.icon(
       type: ButtonType.outlined,
-      icon: Image.asset(socialIcons[type]!),
+      icon: Image.asset(socialIcon!),
       onPressed: () => handleButtonPress(type),
     );
   }
 
   void handleButtonPress(SocialButtonType type) {
-    if (type == SocialButtonType.up) {
+    if (type == SocialButtonType.expand) {
       setState(() {
         isSecondRowVisible = !isSecondRowVisible;
       });

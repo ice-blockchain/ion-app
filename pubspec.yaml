@@ -24,6 +24,8 @@ dependencies:
   riverpod_annotation: ^2.1.4
   email_validator: "^2.1.16"
   cupertino_icons: ^1.0.6
+  image_picker: ^1.0.4
+  image_cropper: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +82,7 @@ flutter:
     - assets/images/linkcontacts.png
     - assets/images/linkedin.png
     - assets/images/login_dropdown.png
+    - assets/images/login_dropup.png
     - assets/images/login_email.png
     - assets/images/logoloader.png
     - assets/images/managewallet.png

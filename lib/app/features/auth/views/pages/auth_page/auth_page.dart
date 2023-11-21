@@ -6,6 +6,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
+import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/email_input.dart';
@@ -36,6 +37,17 @@ class AuthPage extends HookConsumerWidget {
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) => const ModalWrapper(
         child: SelectCountries(),
+      ),
+    );
+  }
+
+  void showFillProfile(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) => const ModalWrapper(
+        child: FillProfile(),
       ),
     );
   }
@@ -118,7 +130,8 @@ class AuthPage extends HookConsumerWidget {
                 ),
                 onPressed: () {
                   // showCheckEmail(context);
-                  showSelectCountries(context);
+                  // showSelectCountries(context);
+                  showFillProfile(context);
                 },
                 label: const Text('Continue with Phone'),
                 mainAxisSize: MainAxisSize.max,
