@@ -5,6 +5,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/shared/utility/image_picker_and_cropper/image_picker_and_cropper.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
+import 'package:ice/app/shared/widgets/text_field_wrapper/text_field_wrapper.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:image_cropper/image_cropper.dart';
 
@@ -40,10 +41,17 @@ class FillProfile extends HookConsumerWidget {
             const SizedBox(
               height: 20,
             ),
+            TextFieldWrapper(
+              defaultIcon: Icons.person,
+              onTextChanged: (String text) {},
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             Center(
               child: Button(
                 trailingIcon: ImageIcon(
-                  AssetImage(Assets.images.send.path),
+                  AssetImage(Assets.images.profilePaste.path),
                   size: 16,
                 ),
                 onPressed: () async {
