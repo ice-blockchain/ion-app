@@ -114,6 +114,10 @@ flutter:
     - assets/images/iceIcon.png
     - assets/images/button_next.png
     - assets/images/profile_paste.png
+    - assets/images/profile_save.png
+    - assets/images/field_name.png
+    - assets/images/field_inviter.png
+    - assets/images/field_nickname.png
 
     - assets/lottie/splash-logo.json
     - assets/lottie/intro.json

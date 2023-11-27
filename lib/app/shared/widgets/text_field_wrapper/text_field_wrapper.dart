@@ -116,11 +116,14 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
         ),
         Positioned(
           left: _focusNode.hasFocus ? 16 : 73,
-          top: _controller.text.isEmpty && !_focusNode.hasFocus ? 20 : 6,
+          top: _controller.text.isEmpty && !_focusNode.hasFocus ? 21 : 6,
           child: Text(
             widget.placeholder,
-            style: TextStyle(
-              color: _getBorderColor(), // Use the color you desire
+            style: context.theme.appTextThemes.body.copyWith(
+              color: _focusNode.hasFocus
+                  ? context.theme.appColors.primaryAccent
+                  : context.theme.appColors
+                      .tertararyText, // Use the color you desire
             ),
           ),
         ),

@@ -42,34 +42,34 @@ class FillProfile extends HookConsumerWidget {
               height: 20,
             ),
             TextFieldWrapper(
-              defaultIcon: AssetImage(Assets.images.phone.path),
+              defaultIcon: AssetImage(Assets.images.fieldName.path),
               onTextChanged: (String text) {},
               placeholder: 'Name',
             ),
             const SizedBox(
               height: 16,
             ),
-            // TextFieldWrapper(
-            //   defaultIcon: ImageD,
-            //   onTextChanged: (String text) {},
-            //   placeholder: 'Nickname',
-            // ),
-            // const SizedBox(
-            //   height: 16,
-            // ),
-            // TextFieldWrapper(
-            //   defaultIcon: Icons.person,
-            //   onTextChanged: (String text) {},
-            //   placeholder: 'Who invited you',
-            // ),
+            TextFieldWrapper(
+              defaultIcon: AssetImage(Assets.images.fieldNickname.path),
+              onTextChanged: (String text) {},
+              placeholder: 'Nickname',
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            TextFieldWrapper(
+              defaultIcon: AssetImage(Assets.images.fieldInviter.path),
+              onTextChanged: (String text) {},
+              placeholder: 'Who invited you',
+            ),
             const SizedBox(
               height: 20,
             ),
             Center(
               child: Button(
-                trailingIcon: ImageIcon(
-                  AssetImage(Assets.images.profilePaste.path),
-                  size: 16,
+                leadingIcon: ImageIcon(
+                  AssetImage(Assets.images.profileSave.path),
+                  size: 24,
                 ),
                 onPressed: () async {
                   final CroppedFile? croppedFile =
