@@ -42,9 +42,26 @@ class FillProfile extends HookConsumerWidget {
               height: 20,
             ),
             TextFieldWrapper(
-              defaultIcon: Icons.person,
+              defaultIcon: AssetImage(Assets.images.phone.path),
               onTextChanged: (String text) {},
+              placeholder: 'Name',
             ),
+            const SizedBox(
+              height: 16,
+            ),
+            // TextFieldWrapper(
+            //   defaultIcon: ImageD,
+            //   onTextChanged: (String text) {},
+            //   placeholder: 'Nickname',
+            // ),
+            // const SizedBox(
+            //   height: 16,
+            // ),
+            // TextFieldWrapper(
+            //   defaultIcon: Icons.person,
+            //   onTextChanged: (String text) {},
+            //   placeholder: 'Who invited you',
+            // ),
             const SizedBox(
               height: 20,
             ),

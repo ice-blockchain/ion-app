@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/theme_data.dart';
 
 enum TextFieldState { defaultState, errorState, successState, focusedState }
 
@@ -9,9 +11,12 @@ class TextFieldWrapper extends StatefulWidget {
     super.key,
     required this.defaultIcon,
     required this.onTextChanged,
+    required this.placeholder,
   });
-  final IconData defaultIcon;
+
+  final ImageProvider<Object> defaultIcon;
   final OnTextChanged onTextChanged;
+  final String placeholder;
 
   @override
   _TextFieldWrapperState createState() => _TextFieldWrapperState();
@@ -29,20 +34,20 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
   }
 
   void _handleFocusChange() {
-    if (_focusNode.hasFocus) {
-      setState(() => _state = TextFieldState.focusedState);
-    } else {
-      setState(
-        () => _state = _controller.text.isEmpty
+    setState(() {
+      if (_focusNode.hasFocus) {
+        _state = TextFieldState.focusedState;
+      } else {
+        _state = _controller.text.isEmpty
             ? TextFieldState.errorState
-            : TextFieldState.successState,
-      );
-    }
+            : TextFieldState.successState;
+      }
+    });
   }
 
   bool _validate(String text) {
     // TODO: Implement validation logic
-    // For now, any non-empty text as valid
+    // For now, any non-empty text is considered valid
     return text.isNotEmpty;
   }
 
@@ -59,31 +64,67 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
     }
   }
 
+  Widget? _buildPrefixIcon() {
+    if (!_focusNode.hasFocus) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const SizedBox(width: 16),
+          ImageIcon(
+            widget.defaultIcon,
+            size: 24,
+            color: context.theme.appColors.secondaryText,
+          ),
+          Container(
+            width: 1,
+            height: 26,
+            color: const Color(0xFFCCCCCC),
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+          ),
+        ],
+      );
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: _controller,
-      focusNode: _focusNode,
-      decoration: InputDecoration(
-        labelText: 'Name',
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: _getBorderColor()),
+    return Stack(
+      children: <Widget>[
+        TextField(
+          controller: _controller,
+          focusNode: _focusNode,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: _getBorderColor()),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            prefixIcon: _buildPrefixIcon(),
+            suffixIcon: _state == TextFieldState.successState
+                ? const Icon(Icons.check_circle, color: Colors.green)
+                : null,
+          ),
+          onChanged: (String text) {
+            setState(() {
+              _state = _validate(text)
+                  ? TextFieldState.successState
+                  : TextFieldState.errorState;
+            });
+            widget.onTextChanged(text);
+          },
         ),
-        prefixIcon: _state == TextFieldState.defaultState
-            ? Icon(widget.defaultIcon)
-            : null,
-        suffixIcon: _state == TextFieldState.successState
-            ? const Icon(Icons.check_circle, color: Colors.green)
-            : null,
-      ),
-      onChanged: (String text) {
-        setState(() {
-          _state = _validate(text)
-              ? TextFieldState.successState
-              : TextFieldState.errorState;
-        });
-        widget.onTextChanged(text);
-      },
+        Positioned(
+          left: _focusNode.hasFocus ? 16 : 73,
+          top: _controller.text.isEmpty && !_focusNode.hasFocus ? 20 : 6,
+          child: Text(
+            widget.placeholder,
+            style: TextStyle(
+              color: _getBorderColor(), // Use the color you desire
+            ),
+          ),
+        ),
+      ],
     );
   }
 
