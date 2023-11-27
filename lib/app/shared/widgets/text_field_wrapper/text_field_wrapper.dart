@@ -65,7 +65,8 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
   }
 
   Widget? _buildPrefixIcon() {
-    if (!_focusNode.hasFocus) {
+    final String trimmedText = _controller.text.trim();
+    if (!_focusNode.hasFocus && trimmedText.isEmpty) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
