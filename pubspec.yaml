@@ -118,6 +118,8 @@ flutter:
     - assets/images/field_name.png
     - assets/images/field_inviter.png
     - assets/images/field_nickname.png
+    - assets/images/profile_camera.png
+    - assets/images/profile_photo_placeholder.png
 
     - assets/lottie/splash-logo.json
     - assets/lottie/intro.json

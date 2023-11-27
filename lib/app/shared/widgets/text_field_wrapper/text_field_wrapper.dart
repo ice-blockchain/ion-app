@@ -51,16 +51,16 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
     return text.isNotEmpty;
   }
 
-  Color _getBorderColor() {
+  Color _getBorderColor(BuildContext context) {
     switch (_state) {
       case TextFieldState.errorState:
-        return Colors.red;
+        return context.theme.appColors.attentionRed;
       case TextFieldState.successState:
-        return Colors.green;
+        return context.theme.appColors.success;
       case TextFieldState.focusedState:
-        return Colors.blue;
+        return context.theme.appColors.primaryAccent;
       default:
-        return Colors.grey;
+        return context.theme.appColors.strokeElements;
     }
   }
 
@@ -78,7 +78,7 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
           Container(
             width: 1,
             height: 26,
-            color: const Color(0xFFCCCCCC),
+            color: context.theme.appColors.strokeElements,
             margin: const EdgeInsets.symmetric(horizontal: 16),
           ),
         ],
@@ -96,14 +96,26 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
           controller: _controller,
           focusNode: _focusNode,
           decoration: InputDecoration(
+            label: Text(
+              widget.placeholder,
+              style: context.theme.appTextThemes.body.copyWith(
+                color: _focusNode.hasFocus
+                    ? context.theme.appColors.primaryAccent
+                    : context.theme.appColors
+                        .tertararyText, // Use the color you desire
+              ),
+            ),
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: _getBorderColor()),
+              borderSide: BorderSide(
+                color: _getBorderColor(context),
+              ),
               borderRadius: BorderRadius.circular(16),
             ),
             prefixIcon: _buildPrefixIcon(),
             suffixIcon: _state == TextFieldState.successState
                 ? const Icon(Icons.check_circle, color: Colors.green)
                 : null,
+            contentPadding: const EdgeInsets.only(left: 16),
           ),
           onChanged: (String text) {
             setState(() {
@@ -114,19 +126,19 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
             widget.onTextChanged(text);
           },
         ),
-        Positioned(
-          left: _focusNode.hasFocus ? 16 : 73,
-          top: _controller.text.isEmpty && !_focusNode.hasFocus ? 21 : 6,
-          child: Text(
-            widget.placeholder,
-            style: context.theme.appTextThemes.body.copyWith(
-              color: _focusNode.hasFocus
-                  ? context.theme.appColors.primaryAccent
-                  : context.theme.appColors
-                      .tertararyText, // Use the color you desire
-            ),
-          ),
-        ),
+        // Positioned(
+        //   left: _focusNode.hasFocus ? 16 : 73,
+        //   top: _controller.text.isEmpty && !_focusNode.hasFocus ? 14 : 0,
+        //   child: Text(
+        //     widget.placeholder,
+        //     style: context.theme.appTextThemes.body.copyWith(
+        //       color: _focusNode.hasFocus
+        //           ? context.theme.appColors.primaryAccent
+        //           : context.theme.appColors
+        //               .tertararyText, // Use the color you desire
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
