@@ -1,11 +1,30 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/shared/utility/image_picker_and_cropper/image_picker_and_cropper.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/text_field_wrapper/text_field_wrapper.dart';
 import 'package:ice/generated/assets.gen.dart';
+import 'package:image_cropper/image_cropper.dart';
+
+class CroppedFileNotifier extends StateNotifier<CroppedFile?> {
+  CroppedFileNotifier() : super(null);
+
+  set croppedFile(CroppedFile? value) {
+    state = value;
+  }
+}
+
+final StateNotifierProvider<CroppedFileNotifier, CroppedFile?>
+    croppedFileProvider =
+    StateNotifierProvider<CroppedFileNotifier, CroppedFile?>(
+  (StateNotifierProviderRef<CroppedFileNotifier, CroppedFile?> ref) =>
+      CroppedFileNotifier(),
+);
 
 class FillProfile extends HookConsumerWidget {
   FillProfile({super.key});
@@ -17,18 +36,12 @@ class FillProfile extends HookConsumerWidget {
   final GlobalKey<TextFieldWrapperState> inviterFieldKey =
       GlobalKey<TextFieldWrapperState>();
 
-  Future<void> onSave() async {
+  void onSave() {
     nameFieldKey.currentState!.validateText();
     nicknameFieldKey.currentState!.validateText();
     inviterFieldKey.currentState!.validateText();
+    // final CroppedFile? croppedFile = ref.read(croppedFileProvider);
   }
-
-  // final CroppedFile? croppedFile =
-  //                   await ImagePickerAndCropper.pickImageFromGallery();
-  //               // CroppedFile? croppedFile = await ImagePickerAndCropper.takePhoto();
-  //               if (croppedFile != null) {
-  //                 // Use the cropped image file
-  //               }
 
   bool validateName(String text) {
     return text.trim().isNotEmpty;
@@ -44,6 +57,34 @@ class FillProfile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Future<void> addPhoto() async {
+      final CroppedFile? croppedFile = await ImagePickerAndCropper.takePhoto();
+      if (croppedFile != null) {
+        ref.read(croppedFileProvider.notifier).croppedFile = croppedFile;
+      }
+    }
+
+    final Widget profileImage = ref.watch(croppedFileProvider) != null
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.file(
+              File(ref.watch(croppedFileProvider)!.path),
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
+            ),
+          )
+        : Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(Assets.images.profilePhotoPlaceholder.path),
+                fit: BoxFit.cover,
+              ),
+            ),
+          );
+
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: defaultEdgeInset),
@@ -70,6 +111,31 @@ class FillProfile extends HookConsumerWidget {
             ),
             const SizedBox(
               height: 20,
+            ),
+            Stack(
+              children: <Widget>[
+                profileImage,
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: addPhoto,
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      decoration: const BoxDecoration(),
+                      child: Image.asset(
+                        Assets.images.profileCamera.path,
+                        width: 36,
+                        height: 36,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 28,
             ),
             TextFieldWrapper(
               defaultIcon: AssetImage(Assets.images.fieldName.path),
