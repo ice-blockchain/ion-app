@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 enum TextFieldState { defaultState, errorState, successState, focusedState }
 
@@ -22,10 +23,10 @@ class TextFieldWrapper extends StatefulWidget {
   final Validator validator;
 
   @override
-  _TextFieldWrapperState createState() => _TextFieldWrapperState();
+  TextFieldWrapperState createState() => TextFieldWrapperState();
 }
 
-class _TextFieldWrapperState extends State<TextFieldWrapper> {
+class TextFieldWrapperState extends State<TextFieldWrapper> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   TextFieldState _state = TextFieldState.defaultState;
@@ -41,11 +42,20 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
       if (_focusNode.hasFocus) {
         _state = TextFieldState.focusedState;
       } else {
-        _state = widget.validator(_controller.text)
-            ? TextFieldState.successState
-            : TextFieldState.errorState;
+        _state = TextFieldState.defaultState;
       }
     });
+  }
+
+  void validateText() {
+    setState(() {
+      _state = _controller.text.isNotEmpty
+          ? widget.validator(_controller.text)
+              ? TextFieldState.successState
+              : TextFieldState.errorState
+          : TextFieldState.defaultState;
+    });
+    _focusNode.unfocus();
   }
 
   Color _getBorderColor(BuildContext context) {
@@ -94,6 +104,24 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
           controller: _controller,
           focusNode: _focusNode,
           decoration: InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: _getBorderColor(context),
+              ),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: context.theme.appColors.primaryAccent,
+              ),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: context.theme.appColors.attentionRed,
+              ),
+              borderRadius: BorderRadius.circular(16),
+            ),
             label: Text(
               widget.placeholder,
               style: context.theme.appTextThemes.body.copyWith(
@@ -103,27 +131,33 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
                         .tertararyText, // Use the color you desire
               ),
             ),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: _getBorderColor(context),
-              ),
-              borderRadius: BorderRadius.circular(16),
-            ),
+            // border: OutlineInputBorder(
+            //   borderSide: BorderSide(
+            //     color: _getBorderColor(context),
+            //   ),
+            //   borderRadius: BorderRadius.circular(16),
+            // ),
             prefixIcon: _buildPrefixIcon(),
-            suffixIcon: _state == TextFieldState.successState
-                ? const Icon(Icons.check_circle, color: Colors.green)
-                : null,
+            suffixIconConstraints: const BoxConstraints(
+              maxHeight: 15, // Adjust the maxHeight as needed
+              maxWidth: 15, // Adjust the maxWidth as needed
+            ),
             contentPadding: const EdgeInsets.only(left: 16),
           ),
           onChanged: (String text) {
-            setState(() {
-              _state = widget.validator(text)
-                  ? TextFieldState.successState
-                  : TextFieldState.errorState;
-            });
             widget.onTextChanged(text);
           },
         ),
+        if (_state == TextFieldState.successState)
+          Positioned(
+            right: 16,
+            top: 12,
+            child: Image.asset(
+              Assets.images.blockCheckboxOn.path,
+              width: 24,
+              height: 24,
+            ),
+          ),
         // Positioned(
         //   left: _focusNode.hasFocus ? 16 : 73,
         //   top: _controller.text.isEmpty && !_focusNode.hasFocus ? 14 : 0,

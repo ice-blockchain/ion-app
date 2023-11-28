@@ -120,6 +120,7 @@ flutter:
     - assets/images/field_nickname.png
     - assets/images/profile_camera.png
     - assets/images/profile_photo_placeholder.png
+    - assets/images/block_checkbox_on.png
 
     - assets/lottie/splash-logo.json
     - assets/lottie/intro.json

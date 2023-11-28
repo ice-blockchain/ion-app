@@ -3,14 +3,32 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/shared/utility/image_picker_and_cropper/image_picker_and_cropper.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/text_field_wrapper/text_field_wrapper.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:image_cropper/image_cropper.dart';
 
 class FillProfile extends HookConsumerWidget {
-  const FillProfile({super.key});
+  FillProfile({super.key});
+
+  final GlobalKey<TextFieldWrapperState> nameFieldKey =
+      GlobalKey<TextFieldWrapperState>();
+  final GlobalKey<TextFieldWrapperState> nicknameFieldKey =
+      GlobalKey<TextFieldWrapperState>();
+  final GlobalKey<TextFieldWrapperState> inviterFieldKey =
+      GlobalKey<TextFieldWrapperState>();
+
+  Future<void> onSave() async {
+    nameFieldKey.currentState!.validateText();
+    nicknameFieldKey.currentState!.validateText();
+    inviterFieldKey.currentState!.validateText();
+  }
+
+  // final CroppedFile? croppedFile =
+  //                   await ImagePickerAndCropper.pickImageFromGallery();
+  //               // CroppedFile? croppedFile = await ImagePickerAndCropper.takePhoto();
+  //               if (croppedFile != null) {
+  //                 // Use the cropped image file
+  //               }
 
   bool validateName(String text) {
     return text.trim().isNotEmpty;
@@ -58,6 +76,7 @@ class FillProfile extends HookConsumerWidget {
               onTextChanged: (String text) {},
               placeholder: 'Name',
               validator: validateName,
+              key: nameFieldKey,
             ),
             const SizedBox(
               height: 16,
@@ -67,6 +86,7 @@ class FillProfile extends HookConsumerWidget {
               onTextChanged: (String text) {},
               placeholder: 'Nickname',
               validator: validateNickname,
+              key: nicknameFieldKey,
             ),
             const SizedBox(
               height: 16,
@@ -76,6 +96,7 @@ class FillProfile extends HookConsumerWidget {
               onTextChanged: (String text) {},
               placeholder: 'Who invited you',
               validator: validateWhoInvited,
+              key: inviterFieldKey,
             ),
             const SizedBox(
               height: 20,
@@ -86,14 +107,7 @@ class FillProfile extends HookConsumerWidget {
                   AssetImage(Assets.images.profileSave.path),
                   size: 24,
                 ),
-                onPressed: () async {
-                  final CroppedFile? croppedFile =
-                      await ImagePickerAndCropper.pickImageFromGallery();
-                  // CroppedFile? croppedFile = await ImagePickerAndCropper.takePhoto();
-                  if (croppedFile != null) {
-                    // Use the cropped image file
-                  }
-                },
+                onPressed: onSave,
                 label: const Text('Save'),
                 mainAxisSize: MainAxisSize.max,
               ),
