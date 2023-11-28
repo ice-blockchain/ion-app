@@ -5,6 +5,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 enum TextFieldState { defaultState, errorState, successState, focusedState }
 
 typedef OnTextChanged = void Function(String text);
+typedef Validator = bool Function(String text);
 
 class TextFieldWrapper extends StatefulWidget {
   const TextFieldWrapper({
@@ -12,11 +13,13 @@ class TextFieldWrapper extends StatefulWidget {
     required this.defaultIcon,
     required this.onTextChanged,
     required this.placeholder,
+    required this.validator,
   });
 
   final ImageProvider<Object> defaultIcon;
   final OnTextChanged onTextChanged;
   final String placeholder;
+  final Validator validator;
 
   @override
   _TextFieldWrapperState createState() => _TextFieldWrapperState();
@@ -38,17 +41,11 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
       if (_focusNode.hasFocus) {
         _state = TextFieldState.focusedState;
       } else {
-        _state = _controller.text.isEmpty
-            ? TextFieldState.errorState
-            : TextFieldState.successState;
+        _state = widget.validator(_controller.text)
+            ? TextFieldState.successState
+            : TextFieldState.errorState;
       }
     });
-  }
-
-  bool _validate(String text) {
-    // TODO: Implement validation logic
-    // For now, any non-empty text is considered valid
-    return text.isNotEmpty;
   }
 
   Color _getBorderColor(BuildContext context) {
@@ -120,7 +117,7 @@ class _TextFieldWrapperState extends State<TextFieldWrapper> {
           ),
           onChanged: (String text) {
             setState(() {
-              _state = _validate(text)
+              _state = widget.validator(text)
                   ? TextFieldState.successState
                   : TextFieldState.errorState;
             });

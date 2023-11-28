@@ -12,6 +12,18 @@ import 'package:image_cropper/image_cropper.dart';
 class FillProfile extends HookConsumerWidget {
   const FillProfile({super.key});
 
+  bool validateName(String text) {
+    return text.trim().isNotEmpty;
+  }
+
+  bool validateNickname(String text) {
+    return text.trim().isNotEmpty && text.contains('@') && text.length > 1;
+  }
+
+  bool validateWhoInvited(String text) {
+    return text.trim().isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -45,6 +57,7 @@ class FillProfile extends HookConsumerWidget {
               defaultIcon: AssetImage(Assets.images.fieldName.path),
               onTextChanged: (String text) {},
               placeholder: 'Name',
+              validator: validateName,
             ),
             const SizedBox(
               height: 16,
@@ -53,6 +66,7 @@ class FillProfile extends HookConsumerWidget {
               defaultIcon: AssetImage(Assets.images.fieldNickname.path),
               onTextChanged: (String text) {},
               placeholder: 'Nickname',
+              validator: validateNickname,
             ),
             const SizedBox(
               height: 16,
@@ -61,6 +75,7 @@ class FillProfile extends HookConsumerWidget {
               defaultIcon: AssetImage(Assets.images.fieldInviter.path),
               onTextChanged: (String text) {},
               placeholder: 'Who invited you',
+              validator: validateWhoInvited,
             ),
             const SizedBox(
               height: 20,
