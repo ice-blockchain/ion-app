@@ -12,15 +12,19 @@ class TextFieldWrapper extends StatefulWidget {
   const TextFieldWrapper({
     super.key,
     required this.defaultIcon,
-    required this.onTextChanged,
     required this.placeholder,
     required this.validator,
+    required this.textInputAction,
+    required this.focusNode,
+    required this.onEditingComplete,
   });
 
   final ImageProvider<Object> defaultIcon;
-  final OnTextChanged onTextChanged;
   final String placeholder;
   final Validator validator;
+  final TextInputAction textInputAction;
+  final FocusNode focusNode;
+  final VoidCallback onEditingComplete;
 
   @override
   TextFieldWrapperState createState() => TextFieldWrapperState();
@@ -28,18 +32,17 @@ class TextFieldWrapper extends StatefulWidget {
 
 class TextFieldWrapperState extends State<TextFieldWrapper> {
   final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
   TextFieldState _state = TextFieldState.defaultState;
 
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(_handleFocusChange);
+    widget.focusNode.addListener(_handleFocusChange);
   }
 
   void _handleFocusChange() {
     setState(() {
-      if (_focusNode.hasFocus) {
+      if (widget.focusNode.hasFocus) {
         _state = TextFieldState.focusedState;
       } else {
         _state = TextFieldState.defaultState;
@@ -55,7 +58,7 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
               : TextFieldState.errorState
           : TextFieldState.defaultState;
     });
-    _focusNode.unfocus();
+    widget.focusNode.unfocus();
   }
 
   Color _getBorderColor(BuildContext context) {
@@ -73,7 +76,7 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
 
   Widget? _buildPrefixIcon() {
     final String trimmedText = _controller.text.trim();
-    if (!_focusNode.hasFocus && trimmedText.isEmpty) {
+    if (!widget.focusNode.hasFocus && trimmedText.isEmpty) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -102,7 +105,9 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
       children: <Widget>[
         TextField(
           controller: _controller,
-          focusNode: _focusNode,
+          focusNode: widget.focusNode,
+          textInputAction: widget.textInputAction,
+          onEditingComplete: widget.onEditingComplete,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
@@ -125,7 +130,7 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
             label: Text(
               widget.placeholder,
               style: context.theme.appTextThemes.body.copyWith(
-                color: _focusNode.hasFocus
+                color: widget.focusNode.hasFocus
                     ? context.theme.appColors.primaryAccent
                     : context.theme.appColors
                         .tertararyText, // Use the color you desire
@@ -144,9 +149,6 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
             ),
             contentPadding: const EdgeInsets.only(left: 16),
           ),
-          onChanged: (String text) {
-            widget.onTextChanged(text);
-          },
         ),
         if (_state == TextFieldState.successState)
           Positioned(
@@ -178,8 +180,8 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
   @override
   void dispose() {
     _controller.dispose();
-    _focusNode.removeListener(_handleFocusChange);
-    _focusNode.dispose();
+    widget.focusNode.removeListener(_handleFocusChange);
+    widget.focusNode.dispose();
     super.dispose();
   }
 }
