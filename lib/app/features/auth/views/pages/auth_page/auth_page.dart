@@ -46,7 +46,7 @@ class AuthPage extends HookConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (BuildContext context) => ModalWrapper(
+      builder: (BuildContext context) => const ModalWrapper(
         child: FillProfile(),
       ),
     );
