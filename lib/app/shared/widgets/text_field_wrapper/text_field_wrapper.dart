@@ -6,7 +6,7 @@ import 'package:ice/generated/assets.gen.dart';
 enum TextFieldState { defaultState, errorState, successState, focusedState }
 
 typedef OnTextChanged = void Function(String text);
-typedef Validator = bool Function(String text);
+typedef Validator = String? Function(String text);
 
 class TextFieldWrapper extends StatefulWidget {
   const TextFieldWrapper({
@@ -52,13 +52,24 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
 
   void validateText() {
     setState(() {
-      _state = _controller.text.isNotEmpty
-          ? widget.validator(_controller.text)
-              ? TextFieldState.successState
-              : TextFieldState.errorState
-          : TextFieldState.defaultState;
+      final String? validationError = widget.validator(_controller.text);
+
+      _state = (validationError == null)
+          ? TextFieldState.successState
+          : TextFieldState.errorState;
     });
     widget.focusNode.unfocus();
+  }
+
+  Color _labelColorForState(BuildContext context) {
+    switch (_state) {
+      case TextFieldState.errorState:
+        return context.theme.appColors.attentionRed;
+      case TextFieldState.focusedState:
+        return context.theme.appColors.primaryAccent;
+      default:
+        return context.theme.appColors.tertararyText;
+    }
   }
 
   Color _getBorderColor(BuildContext context) {
@@ -72,6 +83,14 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
       default:
         return context.theme.appColors.strokeElements;
     }
+  }
+
+  String placeholder() {
+    final String? validationError = widget.validator(_controller.text);
+    if (_state == TextFieldState.errorState && validationError != null) {
+      return validationError;
+    }
+    return widget.placeholder;
   }
 
   Widget? _buildPrefixIcon() {
@@ -128,20 +147,12 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
               borderRadius: BorderRadius.circular(16),
             ),
             label: Text(
-              widget.placeholder,
+              placeholder(),
               style: context.theme.appTextThemes.body.copyWith(
-                color: widget.focusNode.hasFocus
-                    ? context.theme.appColors.primaryAccent
-                    : context.theme.appColors
-                        .tertararyText, // Use the color you desire
+                color: _labelColorForState(context) // Use the color you desire
+                ,
               ),
             ),
-            // border: OutlineInputBorder(
-            //   borderSide: BorderSide(
-            //     color: _getBorderColor(context),
-            //   ),
-            //   borderRadius: BorderRadius.circular(16),
-            // ),
             prefixIcon: _buildPrefixIcon(),
             suffixIconConstraints: const BoxConstraints(
               maxHeight: 15, // Adjust the maxHeight as needed

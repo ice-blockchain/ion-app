@@ -1,11 +1,25 @@
-bool validateName(String text) {
-  return text.trim().isNotEmpty;
+String? validateName(String text) {
+  if (text.trim().isEmpty) {
+    return 'Field is required';
+  }
+
+  return null;
 }
 
-bool validateNickname(String text) {
-  return text.trim().isNotEmpty && text.contains('@') && text.length > 1;
+String? validateNickname(String text) {
+  if (text.trim().isEmpty) {
+    return 'Field is required';
+  } else if (!text.contains('@')) {
+    return 'Nickname must contain @';
+  } else if (text.length <= 1) {
+    return 'Nickname too short';
+  }
+  return null;
 }
 
-bool validateWhoInvited(String text) {
-  return text.trim().isNotEmpty;
+String? validateWhoInvited(String text) {
+  if (text.trim().isEmpty) {
+    return 'Field is required';
+  }
+  return null;
 }
