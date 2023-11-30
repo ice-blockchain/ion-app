@@ -150,28 +150,47 @@ class WalletPage extends HookConsumerWidget {
               // ),
 
               // JUST LABEL BUTTONS
-              Button(
-                onPressed: () {},
-                label: const Text('Add'),
-                mainAxisSize: MainAxisSize.max,
-              ),
-              Button(
-                onPressed: () {},
-                label: const Text('Remove'),
-                type: ButtonType.secondary,
-                mainAxisSize: MainAxisSize.max,
-              ),
-              Button(
-                onPressed: () {},
-                label: const Text('Outlined'),
-                type: ButtonType.outlined,
-                mainAxisSize: MainAxisSize.max,
-              ),
-              Button(
-                onPressed: () {},
-                label: const Text('Disabled'),
-                type: ButtonType.disabled,
-                mainAxisSize: MainAxisSize.max,
+              ColoredBox(
+                color: const Color.fromARGB(255, 207, 207, 207),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: <Widget>[
+                      Button(
+                        onPressed: () {},
+                        label: const Text('Add'),
+                        mainAxisSize: MainAxisSize.max,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Button(
+                        onPressed: () {},
+                        label: const Text('Remove'),
+                        type: ButtonType.secondary,
+                        mainAxisSize: MainAxisSize.max,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Button(
+                        onPressed: () {},
+                        label: const Text('Outlined'),
+                        type: ButtonType.outlined,
+                        mainAxisSize: MainAxisSize.max,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Button(
+                        onPressed: () {},
+                        label: const Text('Disabled'),
+                        type: ButtonType.disabled,
+                        mainAxisSize: MainAxisSize.max,
+                      ),
+                    ],
+                  ),
+                ),
               ),
 
               const SizedBox(

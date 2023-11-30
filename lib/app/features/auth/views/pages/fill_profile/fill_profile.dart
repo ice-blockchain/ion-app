@@ -51,6 +51,9 @@ class FillProfile extends HookConsumerWidget {
     }
 
     void onSave() {
+      nameFieldFocusNode.unfocus();
+      nicknameFieldFocusNode.unfocus();
+      inviterFieldFocusNode.unfocus();
       nameFieldKey.currentState!.validateText();
       nicknameFieldKey.currentState!.validateText();
       inviterFieldKey.currentState!.validateText();
