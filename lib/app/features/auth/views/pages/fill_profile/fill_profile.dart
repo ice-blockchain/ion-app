@@ -39,10 +39,6 @@ class FillProfile extends HookConsumerWidget {
     final GlobalKey<TextFieldWrapperState> inviterFieldKey =
         GlobalKey<TextFieldWrapperState>();
 
-    final FocusNode nameFieldFocusNode = FocusNode();
-    final FocusNode nicknameFieldFocusNode = FocusNode();
-    final FocusNode inviterFieldFocusNode = FocusNode();
-
     Future<void> addPhoto() async {
       final CroppedFile? croppedFile = await ImagePickerAndCropper.takePhoto();
       if (croppedFile != null) {
@@ -51,9 +47,6 @@ class FillProfile extends HookConsumerWidget {
     }
 
     void onSave() {
-      nameFieldFocusNode.unfocus();
-      nicknameFieldFocusNode.unfocus();
-      inviterFieldFocusNode.unfocus();
       nameFieldKey.currentState!.validateText();
       nicknameFieldKey.currentState!.validateText();
       inviterFieldKey.currentState!.validateText();
@@ -139,10 +132,6 @@ class FillProfile extends HookConsumerWidget {
                 validator: validateName,
                 key: nameFieldKey,
                 textInputAction: TextInputAction.next,
-                focusNode: nameFieldFocusNode,
-                onEditingComplete: () {
-                  FocusScope.of(context).requestFocus(nicknameFieldFocusNode);
-                },
               ),
               const SizedBox(
                 height: 16,
@@ -153,10 +142,6 @@ class FillProfile extends HookConsumerWidget {
                 validator: validateNickname,
                 key: nicknameFieldKey,
                 textInputAction: TextInputAction.next,
-                focusNode: nicknameFieldFocusNode,
-                onEditingComplete: () {
-                  FocusScope.of(context).requestFocus(inviterFieldFocusNode);
-                },
               ),
               const SizedBox(
                 height: 16,
@@ -167,10 +152,6 @@ class FillProfile extends HookConsumerWidget {
                 validator: validateWhoInvited,
                 key: inviterFieldKey,
                 textInputAction: TextInputAction.done,
-                focusNode: inviterFieldFocusNode,
-                onEditingComplete: () {
-                  inviterFieldFocusNode.unfocus();
-                },
               ),
               const SizedBox(
                 height: 20,

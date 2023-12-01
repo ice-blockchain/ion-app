@@ -15,16 +15,12 @@ class TextFieldWrapper extends StatefulWidget {
     required this.placeholder,
     required this.validator,
     required this.textInputAction,
-    required this.focusNode,
-    required this.onEditingComplete,
   });
 
   final ImageProvider<Object> defaultIcon;
   final String placeholder;
   final Validator validator;
   final TextInputAction textInputAction;
-  final FocusNode focusNode;
-  final VoidCallback onEditingComplete;
 
   @override
   TextFieldWrapperState createState() => TextFieldWrapperState();
@@ -33,16 +29,17 @@ class TextFieldWrapper extends StatefulWidget {
 class TextFieldWrapperState extends State<TextFieldWrapper> {
   final TextEditingController _controller = TextEditingController();
   TextFieldState _state = TextFieldState.defaultState;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    widget.focusNode.addListener(_handleFocusChange);
+    _focusNode.addListener(_handleFocusChange);
   }
 
   void _handleFocusChange() {
     setState(() {
-      if (widget.focusNode.hasFocus) {
+      if (_focusNode.hasFocus) {
         _state = TextFieldState.focusedState;
       } else {
         _state = TextFieldState.defaultState;
@@ -58,7 +55,7 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
           ? TextFieldState.successState
           : TextFieldState.errorState;
     });
-    widget.focusNode.unfocus();
+    _focusNode.unfocus();
   }
 
   Color _labelColorForState(BuildContext context) {
@@ -95,7 +92,7 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
 
   Widget? _buildPrefixIcon() {
     final String trimmedText = _controller.text.trim();
-    if (!widget.focusNode.hasFocus && trimmedText.isEmpty) {
+    if (!_focusNode.hasFocus && trimmedText.isEmpty) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -124,9 +121,8 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
       children: <Widget>[
         TextField(
           controller: _controller,
-          focusNode: widget.focusNode,
+          focusNode: _focusNode,
           textInputAction: widget.textInputAction,
-          onEditingComplete: widget.onEditingComplete,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
@@ -191,8 +187,8 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
   @override
   void dispose() {
     _controller.dispose();
-    widget.focusNode.removeListener(_handleFocusChange);
-    widget.focusNode.dispose();
+    _focusNode.removeListener(_handleFocusChange);
+    _focusNode.dispose();
     super.dispose();
   }
 }
