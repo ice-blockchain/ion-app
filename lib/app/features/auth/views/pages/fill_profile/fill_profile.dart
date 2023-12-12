@@ -76,7 +76,7 @@ class FillProfile extends HookConsumerWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: defaultEdgeInset),
+          margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
           child: Column(
             children: <Widget>[
               const SizedBox(

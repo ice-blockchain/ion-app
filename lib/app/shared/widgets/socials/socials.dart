@@ -43,9 +43,9 @@ class _SocialsState extends State<Socials> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double buttonWidth = context.theme.iconButtonTheme.style?.iconSize
             ?.resolve(<MaterialState>{}) ??
-        defaultIconButtonSide;
+        kDefaultIconButtonSide;
     final double spaceBetweenButtons =
-        (screenWidth - 2 * defaultEdgeInset - 4 * buttonWidth) / 3;
+        (screenWidth - 2 * kDefaultPadding - 4 * buttonWidth) / 3;
 
     return Column(
       children: <Widget>[

@@ -14,7 +14,7 @@ class CheckEmail extends HookConsumerWidget {
     const String email = 'hello@ice.io';
     return Scaffold(
       body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: defaultEdgeInset),
+        margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

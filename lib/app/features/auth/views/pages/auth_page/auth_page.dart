@@ -59,7 +59,7 @@ class AuthPage extends HookConsumerWidget {
 
     return Scaffold(
       body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: defaultEdgeInset),
+        margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
         child: Column(
           children: <Widget>[
             const SizedBox(
