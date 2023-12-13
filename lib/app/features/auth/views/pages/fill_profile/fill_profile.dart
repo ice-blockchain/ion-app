@@ -5,9 +5,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/name_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/validators.dart';
 import 'package:ice/app/shared/utility/image_picker_and_cropper/image_picker_and_cropper.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
+import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
 import 'package:ice/app/shared/widgets/text_field_wrapper/text_field_wrapper.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -38,6 +40,8 @@ class FillProfile extends HookConsumerWidget {
         GlobalKey<TextFieldWrapperState>();
     final GlobalKey<TextFieldWrapperState> inviterFieldKey =
         GlobalKey<TextFieldWrapperState>();
+
+    final NameController controller = NameController();
 
     Future<void> addPhoto() async {
       final CroppedFile? croppedFile = await ImagePickerAndCropper.takePhoto();
@@ -126,13 +130,22 @@ class FillProfile extends HookConsumerWidget {
               const SizedBox(
                 height: 28,
               ),
-              TextFieldWrapper(
-                defaultIcon: AssetImage(Assets.images.fieldName.path),
-                placeholder: 'Name',
-                validator: validateName,
-                key: nameFieldKey,
-                textInputAction: TextInputAction.next,
+
+              InputField(
+                autofocus: true,
+                leadingIcon:
+                    ImageIcon(AssetImage(Assets.images.fieldName.path)),
+                label: 'Name',
+                controller: controller.nameController,
+                validator: (String? value) => validateName(value!),
               ),
+              // TextFieldWrapper(
+              //   defaultIcon: AssetImage(Assets.images.fieldName.path),
+              //   placeholder: 'Name',
+              //   validator: validateName,
+              //   key: nameFieldKey,
+              //   textInputAction: TextInputAction.next,
+              // ),
               const SizedBox(
                 height: 16,
               ),
