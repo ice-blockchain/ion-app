@@ -168,7 +168,7 @@ class InputFormField extends FormField<String> {
     final Widget field = GestureDetector(
       onTap: onTap ?? () => controller.focusNode.requestFocus(),
       child: RoundedContainer(
-        height: kDefaultFieldHeight,
+        height: kDefaultTextInputHeight,
         border: _buildBorder(
           controller,
           error.isEmpty,
@@ -177,10 +177,10 @@ class InputFormField extends FormField<String> {
         color: _kBackgroundColor,
         child: Row(
           children: <Widget>[
-            const SizedBox(width: kDefaultPadding),
+            const SizedBox(width: kTextInputPadding),
             if (leadingIcon != null)
               Padding(
-                padding: EdgeInsets.only(right: 6.0.s),
+                padding: EdgeInsets.only(right: 32.0.s),
                 child: leadingIcon,
               ),
             Expanded(
@@ -218,7 +218,8 @@ class InputFormField extends FormField<String> {
                       errorBorder: InputFieldBorder(),
                       focusedErrorBorder: InputFieldBorder(),
                       label: Padding(
-                        padding: const EdgeInsets.only(bottom: kDefaultPadding),
+                        padding:
+                            const EdgeInsets.only(bottom: kDefaultPadding / 2),
                         child: Text(
                           label,
                           style: context.theme.appTextThemes.subtitle.copyWith(
