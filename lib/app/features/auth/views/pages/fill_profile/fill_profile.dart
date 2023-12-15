@@ -5,7 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/inviter_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/name_controller.dart';
+import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/nickname_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/validators.dart';
 import 'package:ice/app/shared/utility/image_picker_and_cropper/image_picker_and_cropper.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
@@ -41,7 +43,9 @@ class FillProfile extends HookConsumerWidget {
     final GlobalKey<TextFieldWrapperState> inviterFieldKey =
         GlobalKey<TextFieldWrapperState>();
 
-    final NameController controller = NameController();
+    final NameController nameController = NameController();
+    final NicknameController nicknameController = NicknameController();
+    final InviterController inviterController = InviterController();
 
     Future<void> addPhoto() async {
       final CroppedFile? croppedFile = await ImagePickerAndCropper.takePhoto();
@@ -130,42 +134,35 @@ class FillProfile extends HookConsumerWidget {
               const SizedBox(
                 height: 28,
               ),
-
               InputField(
-                autofocus: true,
+                // autofocus: true,
                 leadingIcon:
                     ImageIcon(AssetImage(Assets.images.fieldName.path)),
                 label: 'Name',
-                controller: controller.nameController,
+                controller: nameController.controller,
                 validator: (String? value) => validateName(value!),
                 showLeadingSeparator: true,
+                // key: nameFieldKey,
               ),
-              // TextFieldWrapper(
-              //   defaultIcon: AssetImage(Assets.images.fieldName.path),
-              //   placeholder: 'Name',
-              //   validator: validateName,
-              //   key: nameFieldKey,
-              //   textInputAction: TextInputAction.next,
-              // ),
-              const SizedBox(
-                height: 16,
+              InputField(
+                leadingIcon:
+                    ImageIcon(AssetImage(Assets.images.fieldNickname.path)),
+                label: 'Nickname',
+                controller: nicknameController.controller,
+                validator: (String? value) => validateNickname(value!),
+                showLeadingSeparator: true,
+                // key: nicknameFieldKey,
+                // textInputAction: TextInputAction.next,
               ),
-              TextFieldWrapper(
-                defaultIcon: AssetImage(Assets.images.fieldNickname.path),
-                placeholder: 'Nickname',
-                validator: validateNickname,
-                key: nicknameFieldKey,
-                textInputAction: TextInputAction.next,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              TextFieldWrapper(
-                defaultIcon: AssetImage(Assets.images.fieldInviter.path),
-                placeholder: 'Who invited you',
-                validator: validateWhoInvited,
-                key: inviterFieldKey,
-                textInputAction: TextInputAction.done,
+              InputField(
+                leadingIcon:
+                    ImageIcon(AssetImage(Assets.images.fieldInviter.path)),
+                label: 'Who invited you',
+                controller: inviterController.controller,
+                validator: (String? value) => validateWhoInvited(value!),
+                showLeadingSeparator: true,
+                // key: inviterFieldKey,
+                // textInputAction: TextInputAction.done
               ),
               const SizedBox(
                 height: 20,

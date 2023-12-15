@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class NameController {
+class NicknameController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final TextEditingController controller = TextEditingController();
@@ -8,9 +8,9 @@ class NameController {
   String errorMessage = '';
 
   void onVerify() {
-    final String trimmedName = controller.text.trim();
+    final String trimmedNickname = controller.text.trim();
 
-    if (trimmedName.length <= 5) {
+    if (trimmedNickname.length <= 5) {
       errorMessage = 'Text is too short, should be more than 5 characters';
     }
   }
