@@ -10,7 +10,7 @@ import 'package:ice/app/values/borders.dart';
 import 'package:ice/app/values/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-const Color _kBackgroundColor = Color(0xFFF3F4F4);
+const Color _kBackgroundColor = Color(0xFFFFFFFF);
 
 class InputField extends StatefulWidget {
   InputField({
@@ -28,6 +28,8 @@ class InputField extends StatefulWidget {
     this.errorText,
     this.onTap,
     this.numbersOnly = false,
+    this.showLeadingSeparator = false,
+    this.showTrailingSeparator = false,
   })  : _textController = controller,
         _controller = InputFieldController(
           focusNode: focusNode,
@@ -48,6 +50,8 @@ class InputField extends StatefulWidget {
   final String? errorText;
   final VoidCallback? onTap;
   final bool numbersOnly;
+  final bool? showLeadingSeparator;
+  final bool? showTrailingSeparator;
 
   final InputFieldController _controller;
 
@@ -84,6 +88,8 @@ class _InputFieldState extends State<InputField> {
       onTap: widget.onTap,
       numbersOnly: widget.numbersOnly,
       context: context,
+      showLeadingSeparator: widget.showLeadingSeparator,
+      showTrailingSeparator: widget.showTrailingSeparator,
     );
   }
 }
@@ -103,6 +109,8 @@ class InputFormField extends FormField<String> {
     VoidCallback? onTap,
     required bool numbersOnly,
     required this.context,
+    bool? showLeadingSeparator,
+    bool? showTrailingSeparator,
   }) : super(
           builder: (FormFieldState<String> state) {
             return _buildField<String>(
@@ -119,6 +127,8 @@ class InputFormField extends FormField<String> {
               errorText: errorText,
               onTap: onTap,
               numbersOnly: numbersOnly,
+              showLeadingSeparator: showLeadingSeparator,
+              showTrailingSeparator: showTrailingSeparator,
             );
           },
         );
@@ -133,13 +143,11 @@ class InputFormField extends FormField<String> {
   ) {
     late final Color borderColor;
 
+    // TODO: handle isValid
     // Access the controller's state directly
     switch (controller.state) {
       case InputFieldState.enabled:
-        if (isValid) {
-          return null;
-        }
-        borderColor = context.theme.appColors.success;
+        borderColor = context.theme.appColors.strokeElements;
       case InputFieldState.disabled:
         return null;
       case InputFieldState.focused:
@@ -163,6 +171,8 @@ class InputFormField extends FormField<String> {
     String? errorText,
     VoidCallback? onTap,
     required bool numbersOnly,
+    bool? showLeadingSeparator,
+    bool? showTrailingSeparator,
   }) {
     final String error = _error(state, errorText);
     final Widget field = GestureDetector(
@@ -177,11 +187,26 @@ class InputFormField extends FormField<String> {
         color: _kBackgroundColor,
         child: Row(
           children: <Widget>[
-            const SizedBox(width: kTextInputPadding),
             if (leadingIcon != null)
               Padding(
-                padding: EdgeInsets.only(right: 32.0.s),
-                child: leadingIcon,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kTextInputLeadingPadding,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    leadingIcon,
+                    if (showLeadingSeparator != null && showLeadingSeparator)
+                      Container(
+                        width: 1,
+                        height: 26,
+                        color: context.theme.appColors.strokeElements,
+                        margin: const EdgeInsets.only(
+                          left: kTextInputLeadingPadding,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             Expanded(
               child: Padding(
@@ -234,10 +259,25 @@ class InputFormField extends FormField<String> {
             ),
             if (suffix != null)
               Padding(
-                padding: EdgeInsets.only(left: 6.0.s),
-                child: suffix,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kTextInputTrailingPadding,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    if (showTrailingSeparator != null && showTrailingSeparator)
+                      Container(
+                        width: 1,
+                        height: 26,
+                        color: context.theme.appColors.strokeElements,
+                        margin: const EdgeInsets.only(
+                          right: kTextInputTrailingPadding,
+                        ),
+                      ),
+                    suffix,
+                  ],
+                ),
               ),
-            const SizedBox(width: kDefaultPadding),
           ],
         ),
       ),

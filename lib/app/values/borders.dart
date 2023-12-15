@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/values/constants.dart';
 
 final Radius kDefaultRadius = Radius.circular(kDefaultBorderRadiusValue);
@@ -11,21 +12,24 @@ final BorderRadius defaultBorderRadius =
     BorderRadius.circular(kDefaultBorderRadiusValue);
 final BoxDecoration defaultBoxDecoration =
     BoxDecoration(borderRadius: defaultBorderRadius);
+const BorderSide defaultBorderSide = BorderSide(color: Colors.transparent);
 
 final BorderRadius kFieldBorderRadius =
     BorderRadius.all(Radius.circular(kDefaultBorderRadiusValue));
 
 class InputFieldBorder extends OutlineInputBorder {
   InputFieldBorder({
-    super.borderSide = const BorderSide(color: Colors.transparent),
-  }) : super(borderRadius: kFieldBorderRadius);
+    BorderSide? borderSide,
+  }) : super(
+          borderSide: borderSide ?? defaultBorderSide,
+          borderRadius: kFieldBorderRadius,
+        );
 
   factory InputFieldBorder.focused() => InputFieldBorder(
-        // TODO: get this color from context
-        borderSide: const BorderSide(color: Color.fromARGB(255, 206, 206, 206)),
+        borderSide: BorderSide(color: appTemplate.colors.light.primaryAccent),
       );
 
-  factory InputFieldBorder.error() =>
-      // TODO: get this color from context
-      InputFieldBorder(borderSide: const BorderSide(color: Colors.red));
+  factory InputFieldBorder.error() => InputFieldBorder(
+        borderSide: BorderSide(color: appTemplate.colors.light.attentionRed),
+      );
 }

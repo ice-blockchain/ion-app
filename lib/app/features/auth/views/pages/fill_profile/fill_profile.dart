@@ -138,6 +138,7 @@ class FillProfile extends HookConsumerWidget {
                 label: 'Name',
                 controller: controller.nameController,
                 validator: (String? value) => validateName(value!),
+                showLeadingSeparator: true,
               ),
               // TextFieldWrapper(
               //   defaultIcon: AssetImage(Assets.images.fieldName.path),
