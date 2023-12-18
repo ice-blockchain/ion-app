@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
 import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
+import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/intro_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
@@ -49,6 +50,9 @@ class ErrorRoute extends GoRouteData {
     TypedGoRoute<CheckEmailRoute>(
       path: 'checkEmail',
     ),
+    TypedGoRoute<FillProfileRoute>(
+      path: 'fillProfile',
+    ),
   ],
 )
 class IntroRoute extends GoRouteData {
@@ -72,6 +76,14 @@ class CheckEmailRoute extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return const NoTransitionPage<void>(child: CheckEmail());
+  }
+}
+
+class FillProfileRoute extends GoRouteData {
+  const FillProfileRoute();
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage<void>(child: FillProfile());
   }
 }
 

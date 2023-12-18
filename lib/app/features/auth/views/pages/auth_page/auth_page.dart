@@ -129,9 +129,9 @@ class AuthPage extends HookConsumerWidget {
                   color: context.theme.appColors.secondaryText,
                 ),
                 onPressed: () {
-                  // showCheckEmail(context);
+                  showCheckEmail(context);
                   // showSelectCountries(context);
-                  showFillProfile(context);
+                  // showFillProfile(context);
                 },
                 label: const Text('Continue with Phone'),
                 mainAxisSize: MainAxisSize.max,

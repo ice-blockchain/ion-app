@@ -28,6 +28,7 @@ dependencies:
   image_cropper: ^5.0.0
   flutter_keyboard_visibility: ^5.4.1
   flutter_screenutil: ^5.9.0
+  pin_code_fields: ^8.0.1
 
 dev_dependencies:
   flutter_test:
