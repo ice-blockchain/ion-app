@@ -8,6 +8,7 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
+import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/email_input.dart';
 import 'package:ice/app/shared/widgets/modal_wrapper.dart';
@@ -62,27 +63,9 @@ class AuthPage extends HookConsumerWidget {
         margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
         child: Column(
           children: <Widget>[
-            const SizedBox(
-              height: 65,
-            ),
-            Image.asset(
-              Assets.images.iceRound.path,
-            ),
-            const SizedBox(
-              height: 19,
-            ),
-            Text(
-              'Get started',
-              style: context.theme.appTextThemes.headline1,
-            ),
-            Text(
-              'Choose your login method',
-              style: context.theme.appTextThemes.body2.copyWith(
-                color: context.theme.appColors.tertararyText,
-              ),
-            ),
-            const SizedBox(
-              height: 35,
+            AuthHeaderWidget(
+              title: 'Get started',
+              description: 'Choose your login method',
             ),
             EmailInput(formKey: emailFormKey),
             const SizedBox(
