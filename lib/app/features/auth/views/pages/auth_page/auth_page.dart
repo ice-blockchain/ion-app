@@ -5,9 +5,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
-import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
-import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
+import 'package:ice/app/features/auth/views/pages/enter_code/enter_code.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/email_input.dart';
@@ -20,35 +18,16 @@ import 'package:ice/generated/assets.gen.dart';
 class AuthPage extends HookConsumerWidget {
   const AuthPage({super.key});
 
-  void showCheckEmail(BuildContext context) {
+  void showModalScreen(
+    Widget screen,
+    BuildContext context,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (BuildContext context) => const ModalWrapper(
-        child: CheckEmail(),
-      ),
-    );
-  }
-
-  void showSelectCountries(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) => const ModalWrapper(
-        child: SelectCountries(),
-      ),
-    );
-  }
-
-  void showFillProfile(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) => const ModalWrapper(
-        child: FillProfile(),
+      builder: (BuildContext context) => ModalWrapper(
+        child: screen,
       ),
     );
   }
@@ -112,9 +91,10 @@ class AuthPage extends HookConsumerWidget {
                   color: context.theme.appColors.secondaryText,
                 ),
                 onPressed: () {
-                  showCheckEmail(context);
-                  // showSelectCountries(context);
-                  // showFillProfile(context);
+                  // showModalScreen(const CheckEmail(), context);
+                  // showModalScreen(const SelectCountries(), context);
+                  // showModalScreen(const FillProfile(), context);
+                  showModalScreen(const EnterCode(), context);
                 },
                 label: const Text('Continue with Phone'),
                 mainAxisSize: MainAxisSize.max,
