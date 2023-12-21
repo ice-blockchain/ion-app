@@ -8,6 +8,9 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/providers/ui_auth_provider.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/controllers/email_controller.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/controllers/phone_number_controller.dart';
+import 'package:ice/app/features/auth/views/pages/auth_page/widgets/country_code_input.dart';
+import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
+import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
@@ -66,9 +69,12 @@ class AuthPage extends HookConsumerWidget {
               ),
             if (!isEmailMode)
               InputField(
-                leadingIcon: Image.asset(
-                  Assets.images.fieldEmail.path,
-                  color: context.theme.appColors.primaryText,
+                leadingIcon: CountryCodeInput(
+                  country: countries[1],
+                  onTap: () => showModalScreen(
+                    const SelectCountries(),
+                    context,
+                  ),
                 ),
                 label: 'Phone number',
                 controller: numberController.controller,
