@@ -5,7 +5,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/auth/views/pages/enter_code/enter_code.dart';
+import 'package:ice/app/features/auth/providers/ui_auth_provider.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/email_input.dart';
@@ -35,6 +35,7 @@ class AuthPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AuthState authState = ref.watch(authProvider);
+    final bool isEmailMode = ref.watch(isEmailModeProvider);
     final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
 
     return Scaffold(
@@ -94,9 +95,12 @@ class AuthPage extends HookConsumerWidget {
                   // showModalScreen(const CheckEmail(), context);
                   // showModalScreen(const SelectCountries(), context);
                   // showModalScreen(const FillProfile(), context);
-                  showModalScreen(const EnterCode(), context);
+                  // showModalScreen(const EnterCode(), context);
+                  ref.read(isEmailModeProvider.notifier).state = !isEmailMode;
                 },
-                label: const Text('Continue with Phone'),
+                label: Text(
+                  isEmailMode ? 'Continue with Email' : 'Continue with Phone',
+                ),
                 mainAxisSize: MainAxisSize.max,
               ),
             ),
