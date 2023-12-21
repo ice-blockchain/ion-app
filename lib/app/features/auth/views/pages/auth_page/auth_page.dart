@@ -6,9 +6,11 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/providers/ui_auth_provider.dart';
+import 'package:ice/app/features/auth/views/pages/auth_page/controllers/email_controller.dart';
+import 'package:ice/app/features/auth/views/pages/auth_page/controllers/phone_number_controller.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
-import 'package:ice/app/shared/widgets/email_input.dart';
+import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
 import 'package:ice/app/shared/widgets/modal_wrapper.dart';
 import 'package:ice/app/shared/widgets/secured_by/secured_by.dart';
 import 'package:ice/app/shared/widgets/socials/socials.dart';
@@ -38,6 +40,9 @@ class AuthPage extends HookConsumerWidget {
     final bool isEmailMode = ref.watch(isEmailModeProvider);
     final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
 
+    final EmailController emailController = EmailController();
+    final PhoneNumberController numberController = PhoneNumberController();
+
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
@@ -47,7 +52,30 @@ class AuthPage extends HookConsumerWidget {
               title: 'Get started',
               description: 'Choose your login method',
             ),
-            EmailInput(formKey: emailFormKey),
+            // EmailInput(formKey: emailFormKey),
+            if (isEmailMode)
+              InputField(
+                leadingIcon: Image.asset(
+                  Assets.images.fieldEmail.path,
+                  color: context.theme.appColors.primaryText,
+                ),
+                label: 'Email address',
+                controller: emailController.controller,
+                validator: (String? value) => emailController.onVerify(),
+                showLeadingSeparator: true,
+              ),
+            if (!isEmailMode)
+              InputField(
+                leadingIcon: Image.asset(
+                  Assets.images.fieldEmail.path,
+                  color: context.theme.appColors.primaryText,
+                ),
+                label: 'Phone number',
+                controller: numberController.controller,
+                validator: (String? value) => numberController.onVerify(),
+                showLeadingSeparator: true,
+              ),
+
             const SizedBox(
               height: 16,
             ),
