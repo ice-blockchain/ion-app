@@ -10,9 +10,13 @@ class PrivateKeyController {
   String? onVerify() {
     final String trimmed = controller.text.trim();
 
-    if (trimmed.length <= 10) {
-      errorMessage =
-          'Private key is too short, should be more than 10 characters';
+    if (trimmed.length != 64) {
+      errorMessage = 'Private key must be 64 characters long';
+    }
+
+    final RegExp validFormat = RegExp(r'^nsec[0-9a-fA-F]+$');
+    if (!validFormat.hasMatch(trimmed)) {
+      errorMessage = 'Invalid private key format';
     }
 
     return errorMessage.isEmpty ? null : errorMessage;
