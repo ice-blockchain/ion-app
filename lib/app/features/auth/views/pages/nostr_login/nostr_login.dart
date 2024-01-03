@@ -23,9 +23,16 @@ class NostrLogin extends HookConsumerWidget {
                 title: 'Nostr',
                 description: 'Enter your Nostr private key',
               ),
-              ImageIcon(
-                AssetImage(Assets.images.loginNostr.path),
-                size: 99,
+              const SizedBox(
+                height: 15,
+              ),
+              Image.asset(
+                Assets.images.ostrichlogo.path,
+                width: 256,
+                height: 160,
+              ),
+              const SizedBox(
+                height: 80,
               ),
               Column(
                 children: <Widget>[

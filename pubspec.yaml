@@ -129,6 +129,7 @@ flutter:
     - assets/images/login_createacc.png
     - assets/images/profile_login.png
     - assets/images/field_privatekey.png
+    - assets/images/ostrichlogo.png
 
     - assets/lottie/splash-logo.json
     - assets/lottie/intro.json
