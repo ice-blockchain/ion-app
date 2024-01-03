@@ -16,7 +16,13 @@ Map<SocialButtonType, String> socialIcons = <SocialButtonType, String>{
   SocialButtonType.linkedin: Assets.images.linkedin.path,
 };
 
+typedef SocialButtonCallback = void Function(SocialButtonType type);
+
 class Socials extends StatefulWidget {
+  const Socials({this.onSocialButtonPressed});
+
+  final SocialButtonCallback? onSocialButtonPressed;
+
   @override
   _SocialsState createState() => _SocialsState();
 }
@@ -87,9 +93,9 @@ class _SocialsState extends State<Socials> {
         isSecondRowVisible = !isSecondRowVisible;
       });
     } else {
-      performSocialAction(type);
+      if (widget.onSocialButtonPressed != null) {
+        widget.onSocialButtonPressed?.call(type);
+      }
     }
   }
-
-  void performSocialAction(SocialButtonType type) {}
 }

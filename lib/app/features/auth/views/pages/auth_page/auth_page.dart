@@ -9,6 +9,10 @@ import 'package:ice/app/features/auth/providers/ui_auth_provider.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/controllers/email_controller.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/controllers/phone_number_controller.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/widgets/country_code_input.dart';
+import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
+import 'package:ice/app/features/auth/views/pages/enter_code/enter_code.dart';
+import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
+import 'package:ice/app/features/auth/views/pages/nostr_auth/nostr_auth.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
@@ -126,10 +130,6 @@ class AuthPage extends HookConsumerWidget {
                   color: context.theme.appColors.secondaryText,
                 ),
                 onPressed: () {
-                  // showModalScreen(const CheckEmail(), context);
-                  // showModalScreen(const SelectCountries(), context);
-                  // showModalScreen(const FillProfile(), context);
-                  // showModalScreen(const EnterCode(), context);
                   ref.read(isEmailModeProvider.notifier).state = !isEmailMode;
                 },
                 label: Text(
@@ -140,7 +140,28 @@ class AuthPage extends HookConsumerWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 16, bottom: 22),
-              child: Socials(),
+              child: Socials(
+                onSocialButtonPressed: (SocialButtonType type) {
+                  switch (type) {
+                    case SocialButtonType.apple:
+                      showModalScreen(const CheckEmail(), context);
+                    case SocialButtonType.nostr:
+                      showModalScreen(const NostrAuth(), context);
+                    case SocialButtonType.x:
+                      showModalScreen(const FillProfile(), context);
+                    case SocialButtonType.fb:
+                      showModalScreen(const EnterCode(), context);
+                    case SocialButtonType.github:
+                      break;
+                    case SocialButtonType.discord:
+                      break;
+                    case SocialButtonType.linkedin:
+                      break;
+                    default:
+                      break;
+                  }
+                },
+              ),
             ),
             const SecuredBy(),
             const SizedBox(

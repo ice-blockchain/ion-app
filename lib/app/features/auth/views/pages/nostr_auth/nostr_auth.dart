@@ -38,7 +38,7 @@ class NostrAuth extends HookConsumerWidget {
               ),
               ImageIcon(
                 AssetImage(Assets.images.loginNostr.path),
-                size: 24,
+                size: 99,
               ),
               Column(
                 children: <Widget>[
@@ -46,7 +46,7 @@ class NostrAuth extends HookConsumerWidget {
                     child: Button(
                       leadingIcon: ImageIcon(
                         AssetImage(Assets.images.loginCreateacc.path),
-                        size: 99,
+                        size: 24,
                       ),
                       onPressed: () {
                         // showModalScreen(
