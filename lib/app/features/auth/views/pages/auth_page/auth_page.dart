@@ -15,6 +15,7 @@ import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart
 import 'package:ice/app/features/auth/views/pages/nostr_auth/nostr_auth.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
+import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
@@ -152,7 +153,7 @@ class AuthPage extends HookConsumerWidget {
                     case SocialButtonType.fb:
                       showModalScreen(const EnterCode(), context);
                     case SocialButtonType.github:
-                      break;
+                      showModalScreen(const SelectLanguages(), context);
                     case SocialButtonType.discord:
                       break;
                     case SocialButtonType.linkedin:

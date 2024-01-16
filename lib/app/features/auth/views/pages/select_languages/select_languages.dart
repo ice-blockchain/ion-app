@@ -6,6 +6,8 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
 import 'package:ice/app/shared/widgets/navigation_header/navigation_header.dart';
 import 'package:ice/app/shared/widgets/search/search.dart';
+import 'package:ice/app/shared/widgets/title_description_header/title_description_header.dart';
+import 'package:ice/app/values/constants.dart';
 
 class SelectLanguages extends HookConsumerWidget {
   const SelectLanguages({super.key});
@@ -29,14 +31,19 @@ class SelectLanguages extends HookConsumerWidget {
         color: context.theme.appColors.secondaryBackground,
         child: Stack(
           children: <Widget>[
-            const NavigationHeader(title: 'Select languages'),
+            const NavigationHeader(title: ''),
             Padding(
-              padding: const EdgeInsets.only(top: navigationHeaderHeight),
+              padding: const EdgeInsets.only(
+                top: navigationHeaderHeight,
+                left: kDefaultSidePadding,
+                right: kDefaultSidePadding,
+              ),
               child: Column(
                 children: <Widget>[
-                  Text(
-                    'You’ll be shown content in the selected language',
-                    style: context.theme.appTextThemes.body2,
+                  const TitleDescription(
+                    title: 'Select languages',
+                    description:
+                        'You’ll be shown content in the selected language',
                   ),
                   Search(
                     onTextChanged: (String value) => searchText.value = value,
