@@ -8,6 +8,7 @@ import 'package:ice/app/shared/widgets/navigation_header/navigation_header.dart'
 import 'package:ice/app/shared/widgets/search/search.dart';
 import 'package:ice/app/shared/widgets/title_description_header/title_description_header.dart';
 import 'package:ice/app/values/constants.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 class SelectLanguages extends HookConsumerWidget {
   const SelectLanguages({super.key});
@@ -15,13 +16,14 @@ class SelectLanguages extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ValueNotifier<String> searchText = useState('');
+    final Set<Language> selectedLanguages =
+        useState<Set<Language>>(<Language>{}).value;
 
     final List<Language> filteredLanguages = searchText.value.isEmpty
         ? languages
         : languages.where((Language country) {
             final String searchLower = searchText.value.toLowerCase().trim();
             final String nameLower = country.name.toLowerCase();
-
             return nameLower.contains(searchLower);
           }).toList();
 
@@ -45,29 +47,58 @@ class SelectLanguages extends HookConsumerWidget {
                     description:
                         'You’ll be shown content in the selected language',
                   ),
-                  Search(
-                    onTextChanged: (String value) => searchText.value = value,
-                    onClearText: () => searchText.value = '',
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Search(
+                      onTextChanged: (String value) => searchText.value = value,
+                      onClearText: () {
+                        searchText.value = '';
+                        selectedLanguages.clear();
+                      },
+                    ),
                   ),
                   Expanded(
                     child: ListView.builder(
                       itemCount: filteredLanguages.length,
                       itemBuilder: (BuildContext context, int index) {
                         final Language country = filteredLanguages[index];
+                        final bool isSelected =
+                            selectedLanguages.contains(country);
+
                         return InkWell(
                           onTap: () {
-                            Navigator.pop(context);
+                            if (isSelected) {
+                              selectedLanguages.remove(country); // Deselect
+                            } else {
+                              selectedLanguages.add(country); // Select
+                            }
                           },
                           child: Container(
-                            height: 40,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color:
+                                  context.theme.appColors.tertararyBackground,
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            margin: const EdgeInsets.only(
+                              bottom: 12,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kDefaultSidePadding,
+                            ),
                             child: Row(
                               children: <Widget>[
                                 Text(
                                   country.flag,
-                                  style: context.theme.appTextThemes.subtitle2,
+                                  style: context.theme.appTextThemes.subtitle2
+                                      .copyWith(
+                                    color: context.theme.appColors.primaryText,
+                                    fontSize: 24,
+                                  ),
                                 ),
-                                const SizedBox(width: 16),
+                                const SizedBox(
+                                  width: 16,
+                                ), // Space between flag and name
                                 Expanded(
                                   child: Text(
                                     country.name,
@@ -77,6 +108,16 @@ class SelectLanguages extends HookConsumerWidget {
                                           context.theme.appColors.primaryText,
                                     ),
                                   ),
+                                ),
+                                SizedBox(
+                                  width: 30, // Adjust as needed
+                                  child: isSelected
+                                      ? Image.asset(
+                                          Assets.images.checkboxon.path,
+                                        )
+                                      : Image.asset(
+                                          Assets.images.checkboxoff.path,
+                                        ),
                                 ),
                               ],
                             ),
