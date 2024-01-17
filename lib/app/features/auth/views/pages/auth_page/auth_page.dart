@@ -10,6 +10,7 @@ import 'package:ice/app/features/auth/views/pages/auth_page/controllers/email_co
 import 'package:ice/app/features/auth/views/pages/auth_page/controllers/phone_number_controller.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/widgets/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
+import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
 import 'package:ice/app/features/auth/views/pages/enter_code/enter_code.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_auth/nostr_auth.dart';
@@ -155,7 +156,7 @@ class AuthPage extends HookConsumerWidget {
                     case SocialButtonType.github:
                       showModalScreen(const SelectLanguages(), context);
                     case SocialButtonType.discord:
-                      break;
+                      showModalScreen(const DiscoverCreators(), context);
                     case SocialButtonType.linkedin:
                       break;
                     default:

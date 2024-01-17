@@ -3,30 +3,32 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
+import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
 import 'package:ice/app/shared/widgets/navigation_header/navigation_header.dart';
 import 'package:ice/app/shared/widgets/search/search.dart';
 import 'package:ice/app/shared/widgets/title_description_header/title_description_header.dart';
 import 'package:ice/app/values/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SelectLanguages extends HookConsumerWidget {
-  const SelectLanguages({super.key});
+class DiscoverCreators extends HookConsumerWidget {
+  const DiscoverCreators({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ValueNotifier<String> searchText = useState('');
 
-    final ValueNotifier<Set<Language>> selectedLanguagesNotifier =
-        useState<Set<Language>>(<Language>{});
-    final Set<Language> selectedLanguages = selectedLanguagesNotifier.value;
+    final ValueNotifier<Set<User>> selectedCreatorsNotifier =
+        useState<Set<User>>(<User>{});
+    final Set<User> selectedCreators = selectedCreatorsNotifier.value;
 
-    final List<Language> filteredLanguages = searchText.value.isEmpty
-        ? languages
-        : languages.where((Language country) {
+    final List<User> filteredCreators = searchText.value.isEmpty
+        ? creators
+        : creators.where((User creator) {
             final String searchLower = searchText.value.toLowerCase().trim();
-            final String nameLower = country.name.toLowerCase();
-            return nameLower.contains(searchLower);
+            final String nameLower = creator.name.toLowerCase();
+            final String nicknameLower = creator.nickname.toLowerCase();
+            return nameLower.contains(searchLower) ||
+                nicknameLower.contains(searchLower);
           }).toList();
 
     return Scaffold(
@@ -45,9 +47,9 @@ class SelectLanguages extends HookConsumerWidget {
               child: Column(
                 children: <Widget>[
                   const TitleDescription(
-                    title: 'Select languages',
+                    title: 'Discover creators',
                     description:
-                        'You’ll be shown content in the selected language',
+                        'Connect with visionaries and inspiring voices',
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),
@@ -60,26 +62,26 @@ class SelectLanguages extends HookConsumerWidget {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: filteredLanguages.length,
+                      itemCount: filteredCreators.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final Language country = filteredLanguages[index];
+                        final User creator = filteredCreators[index];
                         final bool isSelected =
-                            selectedLanguages.contains(country);
+                            selectedCreators.contains(creator);
 
                         return InkWell(
                           onTap: () {
-                            final Set<Language> newSelectedLanguages =
-                                Set<Language>.from(selectedLanguages);
+                            final Set<User> newSelectedCreators =
+                                Set<User>.from(selectedCreators);
                             if (isSelected) {
-                              newSelectedLanguages.remove(country);
+                              newSelectedCreators.remove(creator);
                             } else {
-                              newSelectedLanguages.add(country);
+                              newSelectedCreators.add(creator);
                             }
-                            selectedLanguagesNotifier.value =
-                                newSelectedLanguages;
+                            selectedCreatorsNotifier.value =
+                                newSelectedCreators;
                           },
                           child: Container(
-                            height: 44,
+                            height: 66,
                             decoration: BoxDecoration(
                               color:
                                   context.theme.appColors.tertararyBackground,
@@ -93,20 +95,28 @@ class SelectLanguages extends HookConsumerWidget {
                             ),
                             child: Row(
                               children: <Widget>[
-                                Text(
-                                  country.flag,
-                                  style: context.theme.appTextThemes.subtitle2
-                                      .copyWith(
-                                    color: context.theme.appColors.primaryText,
-                                    fontSize: 24,
+                                if (creator.imageUrl != null &&
+                                    creator.imageUrl!.isNotEmpty)
+                                  Container(
+                                    width: 30,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: Image.network(
+                                      creator.imageUrl!,
+                                      width: 30,
+                                      height: 30,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
                                 const SizedBox(
                                   width: 16,
                                 ),
                                 Expanded(
                                   child: Text(
-                                    country.name,
+                                    creator.name,
                                     style: context.theme.appTextThemes.subtitle2
                                         .copyWith(
                                       color:
