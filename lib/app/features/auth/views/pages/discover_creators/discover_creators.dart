@@ -115,29 +115,47 @@ class DiscoverCreators extends HookConsumerWidget {
                                   width: 16,
                                 ),
                                 Expanded(
-                                  child: Row(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            creator.name,
+                                            style: context
+                                                .theme.appTextThemes.subtitle2
+                                                .copyWith(
+                                              color: context
+                                                  .theme.appColors.primaryText,
+                                            ),
+                                          ),
+                                          if (creator.isVerified ?? false)
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 4,
+                                                top: 2,
+                                              ),
+                                              child: Image.asset(
+                                                Assets
+                                                    .images.verifiedBadge.path,
+                                                width: 16,
+                                                height: 16,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 2),
                                       Text(
-                                        creator.name,
+                                        creator.nickname,
                                         style: context
-                                            .theme.appTextThemes.subtitle2
+                                            .theme.appTextThemes.caption
                                             .copyWith(
                                           color: context
-                                              .theme.appColors.primaryText,
+                                              .theme.appColors.tertararyText,
                                         ),
                                       ),
-                                      if (creator.isVerified ?? false)
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: 4,
-                                            top: 2,
-                                          ),
-                                          child: Image.asset(
-                                            Assets.images.verifiedBadge.path,
-                                            width: 16,
-                                            height: 16,
-                                          ),
-                                        ),
                                     ],
                                   ),
                                 ),
