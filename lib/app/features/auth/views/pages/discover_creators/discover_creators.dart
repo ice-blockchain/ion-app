@@ -115,13 +115,30 @@ class DiscoverCreators extends HookConsumerWidget {
                                   width: 16,
                                 ),
                                 Expanded(
-                                  child: Text(
-                                    creator.name,
-                                    style: context.theme.appTextThemes.subtitle2
-                                        .copyWith(
-                                      color:
-                                          context.theme.appColors.primaryText,
-                                    ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        creator.name,
+                                        style: context
+                                            .theme.appTextThemes.subtitle2
+                                            .copyWith(
+                                          color: context
+                                              .theme.appColors.primaryText,
+                                        ),
+                                      ),
+                                      if (creator.isVerified ?? false)
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 4,
+                                            top: 2,
+                                          ),
+                                          child: Image.asset(
+                                            Assets.images.verifiedBadge.path,
+                                            width: 16,
+                                            height: 16,
+                                          ),
+                                        ),
+                                    ],
                                   ),
                                 ),
                                 SizedBox(
