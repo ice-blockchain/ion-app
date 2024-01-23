@@ -23,6 +23,7 @@ class Button extends StatelessWidget {
     this.style = const ButtonStyle(),
     this.mainAxisSize = MainAxisSize.min,
     this.type = ButtonType.primary,
+    this.tintColor,
   });
 
   factory Button.icon({
@@ -41,6 +42,7 @@ class Button extends StatelessWidget {
   final MainAxisSize mainAxisSize;
   final ButtonType type;
   final ButtonStyle style;
+  final Color? tintColor;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +103,7 @@ class Button extends StatelessWidget {
     final Map<ButtonType, Color> colorMap = <ButtonType, Color>{
       ButtonType.primary: context.theme.appColors.onPrimaryAccent,
       ButtonType.secondary: context.theme.appColors.tertararyBackground,
-      ButtonType.outlined: context.theme.appColors.strokeElements,
+      ButtonType.outlined: tintColor ?? context.theme.appColors.strokeElements,
       ButtonType.disabled: context.theme.appColors.sheetLine,
     };
 
@@ -112,7 +114,7 @@ class Button extends StatelessWidget {
     final Map<ButtonType, Color> colorMap = <ButtonType, Color>{
       ButtonType.primary: context.theme.appColors.onPrimaryAccent,
       ButtonType.secondary: context.theme.appColors.primaryText,
-      ButtonType.outlined: context.theme.appColors.secondaryText,
+      ButtonType.outlined: tintColor ?? context.theme.appColors.secondaryText,
       ButtonType.disabled: context.theme.appColors.onPrimaryAccent,
     };
 

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
+import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/navigation_header/navigation_header.dart';
 import 'package:ice/app/shared/widgets/search/search.dart';
 import 'package:ice/app/shared/widgets/title_description_header/title_description_header.dart';
@@ -17,19 +18,39 @@ class DiscoverCreators extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ValueNotifier<String> searchText = useState('');
 
-    final ValueNotifier<Set<User>> selectedCreatorsNotifier =
+    final ValueNotifier<Set<User>> followedCreatorsNotifier =
         useState<Set<User>>(<User>{});
-    final Set<User> selectedCreators = selectedCreatorsNotifier.value;
+    final Set<User> followedCreators = followedCreatorsNotifier.value;
+
+    final ValueNotifier<List<User>> creatorsNotifier =
+        useState<List<User>>(<User>[]);
+    useEffect(
+      () {
+        creatorsNotifier.value = creators;
+        return null;
+      },
+      const <Object?>[],
+    );
 
     final List<User> filteredCreators = searchText.value.isEmpty
-        ? creators
-        : creators.where((User creator) {
+        ? creatorsNotifier.value
+        : creatorsNotifier.value.where((User creator) {
             final String searchLower = searchText.value.toLowerCase().trim();
             final String nameLower = creator.name.toLowerCase();
             final String nicknameLower = creator.nickname.toLowerCase();
             return nameLower.contains(searchLower) ||
                 nicknameLower.contains(searchLower);
           }).toList();
+
+    void handleOnTap(User creator, bool isFollowing) {
+      final Set<User> newFollowedCreators = Set<User>.from(followedCreators);
+      if (isFollowing) {
+        newFollowedCreators.remove(creator);
+      } else {
+        newFollowedCreators.add(creator);
+      }
+      followedCreatorsNotifier.value = newFollowedCreators;
+    }
 
     return Scaffold(
       body: Container(
@@ -65,112 +86,117 @@ class DiscoverCreators extends HookConsumerWidget {
                       itemCount: filteredCreators.length,
                       itemBuilder: (BuildContext context, int index) {
                         final User creator = filteredCreators[index];
-                        final bool isSelected =
-                            selectedCreators.contains(creator);
+                        final bool isFollowing =
+                            followedCreators.contains(creator);
 
-                        return InkWell(
-                          onTap: () {
-                            final Set<User> newSelectedCreators =
-                                Set<User>.from(selectedCreators);
-                            if (isSelected) {
-                              newSelectedCreators.remove(creator);
-                            } else {
-                              newSelectedCreators.add(creator);
-                            }
-                            selectedCreatorsNotifier.value =
-                                newSelectedCreators;
-                          },
-                          child: Container(
-                            height: 66,
-                            decoration: BoxDecoration(
-                              color:
-                                  context.theme.appColors.tertararyBackground,
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            margin: const EdgeInsets.only(
-                              bottom: 12,
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kDefaultSidePadding,
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                if (creator.imageUrl != null &&
-                                    creator.imageUrl!.isNotEmpty)
-                                  Container(
+                        return Container(
+                          height: 66,
+                          decoration: BoxDecoration(
+                            color: context.theme.appColors.tertararyBackground,
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          margin: const EdgeInsets.only(
+                            bottom: 12,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kDefaultSidePadding,
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              if (creator.imageUrl != null &&
+                                  creator.imageUrl!.isNotEmpty)
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                  child: Image.network(
+                                    creator.imageUrl!,
                                     width: 30,
                                     height: 30,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    clipBehavior: Clip.hardEdge,
-                                    child: Image.network(
-                                      creator.imageUrl!,
-                                      width: 30,
-                                      height: 30,
-                                      fit: BoxFit.cover,
-                                    ),
+                                    fit: BoxFit.cover,
                                   ),
-                                const SizedBox(
-                                  width: 16,
                                 ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            creator.name,
-                                            style: context
-                                                .theme.appTextThemes.subtitle2
-                                                .copyWith(
-                                              color: context
-                                                  .theme.appColors.primaryText,
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          creator.name,
+                                          style: context
+                                              .theme.appTextThemes.subtitle2
+                                              .copyWith(
+                                            color: context
+                                                .theme.appColors.primaryText,
+                                          ),
+                                        ),
+                                        if (creator.isVerified ?? false)
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 4,
+                                              top: 2,
+                                            ),
+                                            child: Image.asset(
+                                              Assets.images.verifiedBadge.path,
+                                              width: 16,
+                                              height: 16,
                                             ),
                                           ),
-                                          if (creator.isVerified ?? false)
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                left: 4,
-                                                top: 2,
-                                              ),
-                                              child: Image.asset(
-                                                Assets
-                                                    .images.verifiedBadge.path,
-                                                width: 16,
-                                                height: 16,
-                                              ),
-                                            ),
-                                        ],
+                                      ],
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      creator.nickname,
+                                      style: context.theme.appTextThemes.caption
+                                          .copyWith(
+                                        color: context
+                                            .theme.appColors.tertararyText,
                                       ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        creator.nickname,
-                                        style: context
-                                            .theme.appTextThemes.caption
-                                            .copyWith(
-                                          color: context
-                                              .theme.appColors.tertararyText,
-                                        ),
-                                      ),
-                                    ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                child: Button(
+                                  onPressed: () => handleOnTap(
+                                    creator,
+                                    isFollowing,
+                                  ),
+                                  type: isFollowing
+                                      ? ButtonType.primary
+                                      : ButtonType.outlined,
+                                  tintColor: isFollowing
+                                      ? null
+                                      : context.theme.appColors.primaryAccent,
+                                  label: Text(
+                                    isFollowing ? 'Following' : 'Follow',
+                                    style: context.theme.appTextThemes.caption
+                                        .copyWith(
+                                      color: isFollowing
+                                          ? context.theme.appColors
+                                              .secondaryBackground
+                                          : context
+                                              .theme.appColors.primaryAccent,
+                                    ),
+                                  ),
+                                  mainAxisSize: MainAxisSize.max,
+                                  style: OutlinedButton.styleFrom(
+                                    minimumSize: const Size(77, 28),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                    ),
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 30,
-                                  child: isSelected
-                                      ? Image.asset(
-                                          Assets.images.checkboxon.path,
-                                        )
-                                      : Image.asset(
-                                          Assets.images.checkboxoff.path,
-                                        ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         );
                       },
