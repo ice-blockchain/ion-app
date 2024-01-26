@@ -8,6 +8,7 @@ import 'package:ice/app/features/chat/views/pages/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/modal_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
+import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/wallet/views/pages/inner_wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page.dart';
 import 'package:ice/app/router/views/scaffold_with_nested_navigation.dart';
@@ -17,6 +18,8 @@ part 'app_routes.g.dart';
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> shellNavigatorWalletKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellWallet');
+final GlobalKey<NavigatorState> shellNavigatorDAppsKey =
+    GlobalKey<NavigatorState>(debugLabel: 'dApps');
 final GlobalKey<NavigatorState> shellNavigatorChatKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellChat');
 
@@ -101,6 +104,13 @@ class FillProfileRoute extends GoRouteData {
         ),
       ],
     ),
+    TypedStatefulShellBranch<DAppsBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<DAppsRoute>(
+          path: '/dapps',
+        ),
+      ],
+    ),
     TypedStatefulShellBranch<ChatBranch>(
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<ChatRoute>(
@@ -153,6 +163,19 @@ class ChatRoute extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return const NoTransitionPage<void>(child: ChatPage());
+  }
+}
+
+class DAppsBranch extends StatefulShellBranchData {
+  const DAppsBranch();
+  static final GlobalKey<NavigatorState> $navigatorKey = shellNavigatorDAppsKey;
+}
+
+class DAppsRoute extends GoRouteData {
+  const DAppsRoute();
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage<void>(child: DAppsPage());
   }
 }
 

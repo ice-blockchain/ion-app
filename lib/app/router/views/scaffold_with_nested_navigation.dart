@@ -1,12 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ice/app/router/views/tab_icon.dart';
+import 'package:ice/generated/assets.gen.dart';
 
-final List<Widget> destinations = <Widget>[
-  const NavigationDestination(label: 'Wallet', icon: Icon(Icons.wallet)),
-  const NavigationDestination(label: 'Chat2', icon: Icon(Icons.chat)),
-];
+List<NavigationDestination> getDestinations(
+  StatefulNavigationShell navigationShell,
+) {
+  return <NavigationDestination>[
+    NavigationDestination(
+      label: 'DApps',
+      icon: TabIcon(
+        currentIndex: navigationShell.currentIndex,
+        tabIndex: 0,
+        iconOff: Assets.images.itemDappConditionOff.path,
+        iconOn: Assets.images.itemDappConditionOn.path,
+      ),
+    ),
+    NavigationDestination(
+      label: 'Chat2',
+      icon: TabIcon(
+        currentIndex: navigationShell.currentIndex,
+        tabIndex: 1,
+        iconOff: Assets.images.itemChatConditionOff.path,
+        iconOn: Assets.images.itemChatConditionOn.path,
+      ),
+    ),
+    NavigationDestination(
+      label: 'Wallet',
+      icon: TabIcon(
+        currentIndex: navigationShell.currentIndex,
+        tabIndex: 2,
+        iconOff: Assets.images.itemWalletConditionOff.path,
+        iconOn: Assets.images.itemWalletConditionOn.path,
+      ),
+    ),
+  ];
+}
 
-final class ScaffoldWithNestedNavigation extends StatelessWidget {
+class ScaffoldWithNestedNavigation extends StatelessWidget {
   const ScaffoldWithNestedNavigation({
     Key? key,
     required this.navigationShell,
@@ -18,15 +49,15 @@ final class ScaffoldWithNestedNavigation extends StatelessWidget {
   void _goBranch(int index) {
     navigationShell.goBranch(
       index,
-      // A common pattern when using bottom navigation bars is to support
-      // navigating to the initial location when tapping the item that is
-      // already active.
       initialLocation: index == navigationShell.currentIndex,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<NavigationDestination> destinations =
+        getDestinations(navigationShell);
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
@@ -38,14 +69,5 @@ final class ScaffoldWithNestedNavigation extends StatelessWidget {
         indicatorColor: Colors.transparent,
       ),
     );
-  }
-}
-
-class CustomTabBar extends StatelessWidget {
-  const CustomTabBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Icon(Icons.chat);
   }
 }

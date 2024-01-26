@@ -16,7 +16,11 @@ class DAppsPage extends HookConsumerWidget {
       body: Container(
         decoration:
             BoxDecoration(color: context.theme.appColors.primaryBackground),
-        child: const WalletHeader(),
+        child: const Column(
+          children: <Widget>[
+            WalletHeader(),
+          ],
+        ),
       ),
     );
   }
