@@ -24,6 +24,7 @@ class Button extends StatelessWidget {
     this.mainAxisSize = MainAxisSize.min,
     this.type = ButtonType.primary,
     this.tintColor,
+    this.fixedSize,
   });
 
   factory Button.icon({
@@ -43,6 +44,7 @@ class Button extends StatelessWidget {
   final ButtonType type;
   final ButtonStyle style;
   final Color? tintColor;
+  final Size? fixedSize;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,7 @@ class Button extends StatelessWidget {
       onPressed: onPressed,
       style: style.merge(
         OutlinedButton.styleFrom(
+          fixedSize: fixedSize,
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(12)),

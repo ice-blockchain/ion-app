@@ -16,12 +16,12 @@ import 'package:ice/app/router/views/scaffold_with_nested_navigation.dart';
 part 'app_routes.g.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> shellNavigatorWalletKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellWallet');
 final GlobalKey<NavigatorState> shellNavigatorDAppsKey =
     GlobalKey<NavigatorState>(debugLabel: 'dApps');
 final GlobalKey<NavigatorState> shellNavigatorChatKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellChat');
+final GlobalKey<NavigatorState> shellNavigatorWalletKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellWallet');
 
 @TypedGoRoute<SplashRoute>(
   path: '/splash',
@@ -92,18 +92,6 @@ class FillProfileRoute extends GoRouteData {
 
 @TypedStatefulShellRoute<ScaffoldWithNestedNavigationRoute>(
   branches: <TypedStatefulShellBranch<StatefulShellBranchData>>[
-    TypedStatefulShellBranch<WalletBranch>(
-      routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<WalletRoute>(
-          path: '/wallet',
-          routes: <TypedRoute<RouteData>>[
-            TypedGoRoute<InnerWalletRoute>(
-              path: 'inner',
-            ),
-          ],
-        ),
-      ],
-    ),
     TypedStatefulShellBranch<DAppsBranch>(
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<DAppsRoute>(
@@ -115,6 +103,18 @@ class FillProfileRoute extends GoRouteData {
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<ChatRoute>(
           path: '/chat',
+        ),
+      ],
+    ),
+    TypedStatefulShellBranch<WalletBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<WalletRoute>(
+          path: '/wallet',
+          routes: <TypedRoute<RouteData>>[
+            TypedGoRoute<InnerWalletRoute>(
+              path: 'inner',
+            ),
+          ],
         ),
       ],
     ),

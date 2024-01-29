@@ -9,18 +9,13 @@ class DAppsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('dApps Page'),
-      ),
-      body: Container(
-        decoration:
-            BoxDecoration(color: context.theme.appColors.primaryBackground),
-        child: const Column(
-          children: <Widget>[
-            WalletHeader(),
-          ],
-        ),
+    return Container(
+      decoration:
+          BoxDecoration(color: context.theme.appColors.primaryBackground),
+      child: const Column(
+        children: <Widget>[
+          WalletHeader(),
+        ],
       ),
     );
   }
