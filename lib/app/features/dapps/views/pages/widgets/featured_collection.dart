@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui.dart';
+import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_featured.dart';
 
 class FeaturedCollection extends StatelessWidget {
@@ -18,9 +21,11 @@ class FeaturedCollection extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
+          final double leftOffset = index == 0 ? 16.0 : 8.0;
+          final double rightOffset = index == items.length - 1 ? 16.0 : 8.0;
           return Container(
             width: itemWidth,
-            margin: const EdgeInsets.all(8),
+            margin: EdgeInsets.only(right: rightOffset, left: leftOffset),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
@@ -33,9 +38,9 @@ class FeaturedCollection extends StatelessWidget {
             child: Stack(
               children: <Widget>[
                 Positioned(
-                  bottom: 10,
-                  left: 10,
-                  child: Column(
+                  bottom: 14,
+                  left: 14,
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Container(
@@ -46,23 +51,35 @@ class FeaturedCollection extends StatelessWidget {
                         ),
                         child: Image.asset(
                           items[index].iconImage,
-                          width: 40,
+                          width: 30,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        items[index].title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        items[index].description,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        height: 36,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              items[index].title,
+                              style: context.theme.appTextThemes.body
+                                  .copyWith(
+                                    color: context
+                                        .theme.appColors.secondaryBackground,
+                                  )
+                                  .merge(shadowStyle),
+                            ),
+                            Text(
+                              items[index].description,
+                              style: context.theme.appTextThemes.caption3
+                                  .copyWith(
+                                    color: context
+                                        .theme.appColors.secondaryBackground,
+                                  )
+                                  .merge(shadowStyle),
+                            ),
+                          ],
                         ),
                       ),
                     ],
