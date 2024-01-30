@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/values/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SectionHeader extends StatelessWidget {
@@ -18,10 +19,15 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicWidth(
-      child: Container(
+    return Padding(
+      padding: EdgeInsets.only(
+        top: topPadding,
+        bottom: bottomPadding,
+        left: kDefaultSidePadding,
+        right: kDefaultSidePadding,
+      ),
+      child: SizedBox(
         height: 24,
-        padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -29,20 +35,24 @@ class SectionHeader extends StatelessWidget {
               visible: title.isNotEmpty,
               child: Text(
                 title,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.left,
                 style: context.theme.appTextThemes.subtitle.copyWith(
                   color: context.theme.appColors.primaryText,
                 ),
               ),
             ),
             if (onPress != null)
-              IconButton(
-                icon: Image.asset(
-                  Assets.images.buttonNext.path,
-                  width: 24,
-                  height: 24,
+              InkWell(
+                onTap: onPress,
+                child: Ink(
+                  width: 24, // Set the width of the button
+                  height: 24, // Set the height of the button
+                  child: Center(
+                    child: Image.asset(
+                      Assets.images.nextArrow.path,
+                    ),
+                  ),
                 ),
-                onPressed: onPress,
               ),
           ],
         ),
