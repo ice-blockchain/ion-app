@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
+import 'package:ice/app/features/dapps/views/pages/widgets/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/categories.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/featured.dart';
 import 'package:ice/app/shared/widgets/wallet_header/wallet_header.dart';
@@ -11,15 +13,19 @@ class DAppsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      decoration:
-          BoxDecoration(color: context.theme.appColors.secondaryBackground),
-      child: const Column(
-        children: <Widget>[
-          WalletHeader(),
-          Featured(),
-          Categories(),
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        decoration:
+            BoxDecoration(color: context.theme.appColors.secondaryBackground),
+        child: Column(
+          children: <Widget>[
+            const WalletHeader(),
+            const Featured(),
+            const Categories(),
+            Apps(title: 'Highest ranked', items: featured, onPress: () {}),
+            Apps(title: 'Recently added', items: featured, onPress: () {}),
+          ],
+        ),
       ),
     );
   }

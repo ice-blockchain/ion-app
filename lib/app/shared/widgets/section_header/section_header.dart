@@ -8,13 +8,13 @@ class SectionHeader extends StatelessWidget {
   const SectionHeader({
     this.topPadding = 24.0,
     this.bottomPadding = 16.0,
-    this.title = '',
+    this.title,
     this.onPress,
   });
 
   final double topPadding;
   final double bottomPadding;
-  final String title;
+  final String? title;
   final VoidCallback? onPress;
 
   @override
@@ -31,16 +31,14 @@ class SectionHeader extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Visibility(
-              visible: title.isNotEmpty,
-              child: Text(
-                title,
+            if (title != null && title!.isNotEmpty)
+              Text(
+                title!,
                 textAlign: TextAlign.left,
                 style: context.theme.appTextThemes.subtitle.copyWith(
                   color: context.theme.appColors.primaryText,
                 ),
               ),
-            ),
             if (onPress != null)
               InkWell(
                 onTap: onPress,

@@ -58,11 +58,15 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
     final List<NavigationDestination> destinations =
         getDestinations(navigationShell);
 
+    final int defaultTabIndex = destinations.indexWhere(
+      (NavigationDestination destination) => destination.label == 'DApps',
+    );
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        selectedIndex: navigationShell.currentIndex,
+        selectedIndex: defaultTabIndex,
         destinations: destinations,
         backgroundColor: Colors.white,
         onDestinationSelected: _goBranch,

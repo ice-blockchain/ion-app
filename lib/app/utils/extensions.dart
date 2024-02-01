@@ -1,4 +1,5 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 extension NumExtension on num? {
   num get zeroOrValue {
@@ -61,4 +62,9 @@ extension ListExtension<T> on List<T>? {
   List<T> get emptyOrValue => this ?? <T>[];
 
   Type get genericType => T;
+}
+
+String formatDouble(double value) {
+  final NumberFormat formatter = NumberFormat('#,##0.00', 'en_US');
+  return formatter.format(value);
 }
