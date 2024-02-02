@@ -78,31 +78,29 @@ class DAppGridItem extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          SizedBox(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  item.title,
-                  style: context.theme.appTextThemes.body.copyWith(
-                    color: context.theme.appColors.primaryText,
-                  ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                item.title,
+                style: context.theme.appTextThemes.body.copyWith(
+                  color: context.theme.appColors.primaryText,
                 ),
-                Text(
-                  item.description ?? '',
-                  style: context.theme.appTextThemes.caption3.copyWith(
-                    color: context.theme.appColors.secondaryText,
-                  ),
+              ),
+              Text(
+                item.description ?? '',
+                style: context.theme.appTextThemes.caption3.copyWith(
+                  color: context.theme.appColors.secondaryText,
                 ),
-                Text(
-                  item.value != null ? formatDouble(item.value!) : '',
-                  style: context.theme.appTextThemes.caption3.copyWith(
-                    color: context.theme.appColors.tertararyText,
-                  ),
+              ),
+              Text(
+                item.value != null ? formatDouble(item.value!) : '',
+                style: context.theme.appTextThemes.caption3.copyWith(
+                  color: context.theme.appColors.tertararyText,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
