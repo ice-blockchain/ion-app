@@ -5,19 +5,19 @@ import 'package:ice/generated/assets.gen.dart';
 
 const double iconSideDimension = 36.0;
 
-class FavoriteIcon extends StatelessWidget {
-  const FavoriteIcon({
+class FavouriteIcon extends StatelessWidget {
+  const FavouriteIcon({
     super.key,
-    this.isFavorite = false,
+    this.isFavourite = false,
     this.backgroundColor,
   });
 
-  final bool isFavorite;
+  final bool isFavourite;
   final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
-    final String iconPath = isFavorite
+    final String iconPath = isFavourite
         ? Assets.images.bookmarksOn.path
         : Assets.images.bookmarks.path;
 

@@ -5,6 +5,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/categories.dart';
+import 'package:ice/app/features/dapps/views/pages/widgets/favourites.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/featured.dart';
 import 'package:ice/app/shared/widgets/wallet_header/wallet_header.dart';
 
@@ -24,6 +25,7 @@ class DAppsPage extends HookConsumerWidget {
             const Categories(),
             Apps(title: 'Highest ranked', items: featured, onPress: () {}),
             Apps(title: 'Recently added', items: featured, onPress: () {}),
+            const Favourites(),
           ],
         ),
       ),
