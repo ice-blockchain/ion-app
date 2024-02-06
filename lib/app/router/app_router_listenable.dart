@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/init_provider.dart';
+import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -29,27 +30,32 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     });
   }
 
+// ignore: avoid_build_context_in_providers
   String? redirect(BuildContext context, GoRouterState state) {
+    //TODO: check that its part of intro navigation flow
     final bool isAuthInProgress =
-        state.matchedLocation == const AuthRoute().location;
+        state.matchedLocation == const IntroRoute().location ||
+            state.matchedLocation == const AuthRoute().location;
     final bool isSplash = state.matchedLocation == const SplashRoute().location;
     final bool isInitError = _init?.hasError ?? false;
     final bool isInitInProgress = _init?.isLoading ?? true;
+    final bool isAnimationCompleted = ref.watch(splashProvider);
 
     if (isInitError) {
       return const ErrorRoute().location;
     }
 
-    if (isInitInProgress && !isSplash) {
+    if (isInitInProgress && !isSplash || !isAnimationCompleted) {
       return const SplashRoute().location;
     }
 
-    if (isSplash && !isInitInProgress) {
+    if (isSplash && !isInitInProgress && isAnimationCompleted) {
       if (_authState is Authenticated) {
         return const WalletRoute().location;
       }
       if (_authState is UnAuthenticated) {
-        return const AuthRoute().location;
+        /// Navigate to the Intro screen after splash for unauthenticated users
+        return const IntroRoute().location;
       }
     }
 
@@ -58,7 +64,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     }
 
     if (!isAuthInProgress && _authState is UnAuthenticated) {
-      return const AuthRoute().location;
+      return const IntroRoute().location;
     }
 
     return null;

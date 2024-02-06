@@ -1,5 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ice/app/router/views/tab_icon.dart';
+import 'package:ice/generated/assets.gen.dart';
+
+List<NavigationDestination> getDestinations(
+  StatefulNavigationShell navigationShell,
+) {
+  return <NavigationDestination>[
+    NavigationDestination(
+      label: 'DApps',
+      icon: TabIcon(
+        currentIndex: navigationShell.currentIndex,
+        tabIndex: 0,
+        iconOff: Assets.images.itemDappConditionOff.path,
+        iconOn: Assets.images.itemDappConditionOn.path,
+      ),
+    ),
+    NavigationDestination(
+      label: 'Chat2',
+      icon: TabIcon(
+        currentIndex: navigationShell.currentIndex,
+        tabIndex: 1,
+        iconOff: Assets.images.itemChatConditionOff.path,
+        iconOn: Assets.images.itemChatConditionOn.path,
+      ),
+    ),
+    NavigationDestination(
+      label: 'Wallet',
+      icon: TabIcon(
+        currentIndex: navigationShell.currentIndex,
+        tabIndex: 2,
+        iconOff: Assets.images.itemWalletConditionOff.path,
+        iconOn: Assets.images.itemWalletConditionOn.path,
+      ),
+    ),
+  ];
+}
 
 class ScaffoldWithNestedNavigation extends StatelessWidget {
   const ScaffoldWithNestedNavigation({
@@ -13,24 +49,28 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   void _goBranch(int index) {
     navigationShell.goBranch(
       index,
-      // A common pattern when using bottom navigation bars is to support
-      // navigating to the initial location when tapping the item that is
-      // already active.
       initialLocation: index == navigationShell.currentIndex,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<NavigationDestination> destinations =
+        getDestinations(navigationShell);
+
+    final int defaultTabIndex = destinations.indexWhere(
+      (NavigationDestination destination) => destination.label == 'DApps',
+    );
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        destinations: const <NavigationDestination>[
-          NavigationDestination(label: 'Wallet', icon: Icon(Icons.wallet)),
-          NavigationDestination(label: 'Chat', icon: Icon(Icons.chat)),
-        ],
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        selectedIndex: defaultTabIndex,
+        destinations: destinations,
+        backgroundColor: Colors.white,
         onDestinationSelected: _goBranch,
+        indicatorColor: Colors.transparent,
       ),
     );
   }

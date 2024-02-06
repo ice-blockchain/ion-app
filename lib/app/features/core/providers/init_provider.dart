@@ -7,7 +7,6 @@ part 'init_provider.g.dart';
 
 @riverpod
 Future<void> initApp(InitAppRef ref) async {
-  await Future<void>.delayed(const Duration(seconds: 2));
   await ref.read(envProvider.future);
   await Future.wait(<Future<void>>[
     ref.read(templateProvider.future),

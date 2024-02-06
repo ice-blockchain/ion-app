@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/data/models/auth_token.dart';
 import 'package:ice/app/features/core/providers/env_provider.dart';
@@ -18,11 +16,9 @@ class Auth extends _$Auth {
     final String foo = ref.read(envProvider.notifier).get(EnvVariable.FOO);
     // ignore: avoid_print
     print('Env is $foo');
-    state = Random().nextBool()
-        ? const UnAuthenticated()
-        : const Authenticated(
-            authToken: AuthToken(access: 'access', refresh: 'refresh'),
-          );
+    state = const Authenticated(
+      authToken: AuthToken(access: 'access', refresh: 'refresh'),
+    );
   }
 
   Future<void> signIn({required String email, required String password}) async {

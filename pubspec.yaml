@@ -1,12 +1,12 @@
 name: ice
 description: Ice Flutter Project
 
-publish_to: 'none'
+publish_to: "none"
 
 version: 0.0.0+1
 
 environment:
-  sdk: '>=3.0.6 <4.0.0'
+  sdk: ">=3.0.6 <4.0.0"
 
 dependencies:
   flutter:
@@ -16,16 +16,24 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   freezed_annotation: ^2.4.1
-  go_router: ^10.1.2
+  go_router: ^12.1.0
   hooks_riverpod: ^2.3.10
   intl: any
   json_annotation: ^4.8.1
+  lottie: ^2.6.0
   riverpod_annotation: ^2.1.4
+  email_validator: "^2.1.16"
+  cupertino_icons: ^1.0.6
+  image_picker: ^1.0.4
+  image_cropper: ^5.0.0
+  flutter_keyboard_visibility: ^5.4.1
+  flutter_screenutil: ^5.9.0
+  pin_code_fields: ^8.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.2
+  flutter_lints: ^3.0.1
   build_runner: ^2.4.6
   flutter_gen_runner: ^5.3.1
   lint: ^2.1.2
@@ -43,7 +51,8 @@ flutter:
   assets:
     - .app.env
     - lib/app/templates/basic.json
-    - assets/images/foo.jpg
+    - assets/lottie/
+    - assets/images/
 
 flutter_gen:
   output: lib/generated/

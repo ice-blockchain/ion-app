@@ -1,25 +1,83 @@
 {
-	"colors": {
-		"light": {
-			"primary": 4284612846,
-			"background": 4294967278
-		},
-		"dark": {
-			"primary": 4293647865,
-			"background": 4294930176
-		}
-	},
-	"textThemes": {
-		"h1": {
-			"fontSize": 22,
-			"letterSpacing": 1
-		},
-		"body1": {
-			"fontSize": 14,
-			"letterSpacing": 2
-		}
-	},
-	"appBar": {
-		"toolbarHeight": 50
-	}
+  "colors": {
+    "light": {
+      "primaryAccent": "#0166FF",
+      "primaryText": "#0E0E0E",
+      "secondaryText": "#494949",
+      "tertararyText": "#9A9A9A",
+      "primaryBackground": "#F5F7FF",
+      "secondaryBackground": "#FFFFFF",
+      "tertararyBackground": "#FAFBFF",
+      "backgroundSheet": "#B3081532",
+      "onPrimaryAccent": "#FFFFFF",
+      "onTertararyBackground": "#5A5E66",
+      "onTerararyFill": "#E1EAF8",
+      "onSecondaryBackground": "#F5F7FF",
+      "strokeElements": "#CCCCCC",
+      "sheetLine": "#B8BCCA",
+      "attentionRed": "#FD4E4E",
+      "success": "#35D487"
+    },
+    "dark": {
+      "primaryAccent": "#0166FF",
+      "primaryText": "#0E0E0E",
+      "secondaryText": "#494949",
+      "tertararyText": "#9A9A9A",
+      "primaryBackground": "#F5F7FF",
+      "secondaryBackground": "#FFFFFF",
+      "tertararyBackground": "#FAFBFF",
+      "backgroundSheet": "#B3081532",
+      "onPrimaryAccent": "#FFFFFF",
+      "onTertararyBackground": "#5A5E66",
+      "onTerararyFill": "#E1EAF8",
+      "onSecondaryBackground": "#F5F7FF",
+      "strokeElements": "#CCCCCC",
+      "sheetLine": "#B8BCCA",
+      "attentionRed": "#FD4E4E",
+      "success": "#35D487"
+    }
+  },
+  "textThemes": {
+    "headline1": { "fontSize": 28, "fontWeight": 700 },
+    "inputFieldText": { "fontSize": 25, "fontWeight": 700 },
+    "title": { "fontSize": 17, "fontWeight": 500 },
+    "subtitle": { "fontSize": 15, "fontWeight": 600 },
+    "subtitle2": { "fontSize": 15, "fontWeight": 500 },
+    "body": { "fontSize": 13, "height": 1.38, "fontWeight": 600 },
+    "body2": { "fontSize": 13, "fontWeight": 400 },
+    "caption": { "fontSize": 12, "fontWeight": 500 },
+    "caption2": { "fontSize": 12, "fontWeight": 400 },
+    "caption3": { "fontSize": 11, "height": 1.63, "fontWeight": 400 }
+  },
+  "appBar": {
+    "toolbarHeight": 50
+  },
+  "menuAnchor": {
+    "alignmentOffsetY": 8
+  },
+  "menu": {
+    "elevation": 16,
+    "paddingLeft": 0,
+    "paddingTop": 11,
+    "paddingRight": 0,
+    "paddingBottom": 11,
+    "borderRadius": 16
+  },
+  "menuButton": {
+    "iconSize": 28,
+    "minHeight": 46,
+    "paddingLeft": 16,
+    "paddingTop": 0,
+    "paddingRight": 13,
+    "paddingBottom": 0
+  },
+  "iconButton": {
+    "width": 56,
+    "height": 56,
+    "backgroundColor": "#0166FF"
+  },
+  "icon": {
+    "width": 24,
+    "height": 24
+  }
 }

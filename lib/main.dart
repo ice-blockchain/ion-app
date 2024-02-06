@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
@@ -26,17 +27,20 @@ class IceApp extends HookConsumerWidget {
 
     final GoRouter appRouter = useAppRouter(ref);
 
-    return MaterialApp.router(
-      localizationsDelegates: I18n.localizationsDelegates,
-      supportedLocales: I18n.supportedLocales,
-      theme: template.whenOrNull(
-        data: (Template data) => buildLightTheme(data),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      builder: (BuildContext context, Widget? widget) => MaterialApp.router(
+        localizationsDelegates: I18n.localizationsDelegates,
+        supportedLocales: I18n.supportedLocales,
+        theme: template.whenOrNull(
+          data: (Template data) => buildLightTheme(data),
+        ),
+        darkTheme: template.whenOrNull(
+          data: (Template data) => buildDarkTheme(data),
+        ),
+        themeMode: appThemeMode,
+        routerConfig: appRouter,
       ),
-      darkTheme: template.whenOrNull(
-        data: (Template data) => buildDarkTheme(data),
-      ),
-      themeMode: appThemeMode,
-      routerConfig: appRouter,
     );
   }
 }

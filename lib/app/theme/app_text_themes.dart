@@ -3,34 +3,68 @@ import 'package:ice/app/templates/template.dart';
 
 class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   const AppTextThemesExtension({
-    required this.body1,
-    required this.h1,
+    required this.headline1,
+    required this.inputFieldText,
+    required this.title,
+    required this.subtitle,
+    required this.subtitle2,
+    required this.body,
+    required this.body2,
+    required this.caption,
+    required this.caption2,
+    required this.caption3,
   });
 
   factory AppTextThemesExtension.fromTemplate(TemplateTextThemes textThemes) {
     return AppTextThemesExtension(
-      body1: TextStyle(
-        fontSize: textThemes.body1.fontSize,
-        letterSpacing: textThemes.body1.letterSpacing,
-      ),
-      h1: TextStyle(
-        fontSize: textThemes.h1.fontSize,
-        letterSpacing: textThemes.h1.letterSpacing,
-      ),
+      headline1: TemplateTextStyle.fromTemplate(textThemes.headline1),
+      inputFieldText: TemplateTextStyle.fromTemplate(textThemes.inputFieldText),
+      title: TemplateTextStyle.fromTemplate(textThemes.title),
+      subtitle: TemplateTextStyle.fromTemplate(textThemes.subtitle),
+      subtitle2: TemplateTextStyle.fromTemplate(textThemes.subtitle2),
+      body: TemplateTextStyle.fromTemplate(textThemes.body),
+      body2: TemplateTextStyle.fromTemplate(textThemes.body2),
+      caption: TemplateTextStyle.fromTemplate(textThemes.caption),
+      caption2: TemplateTextStyle.fromTemplate(textThemes.caption2),
+      caption3: TemplateTextStyle.fromTemplate(textThemes.caption3),
     );
   }
 
-  final TextStyle body1;
-  final TextStyle h1;
+  final TextStyle headline1;
+  final TextStyle inputFieldText;
+  final TextStyle title;
+  final TextStyle subtitle;
+  final TextStyle subtitle2;
+  final TextStyle body;
+  final TextStyle body2;
+  final TextStyle caption;
+  final TextStyle caption2;
+  final TextStyle caption3;
 
   @override
   ThemeExtension<AppTextThemesExtension> copyWith({
-    TextStyle? body1,
-    TextStyle? h1,
+    TextStyle? headline1,
+    TextStyle? inputFieldText,
+    TextStyle? title,
+    TextStyle? subtitle,
+    TextStyle? subtitle2,
+    TextStyle? body,
+    TextStyle? body2,
+    TextStyle? caption,
+    TextStyle? caption2,
+    TextStyle? caption3,
   }) {
     return AppTextThemesExtension(
-      body1: body1 ?? this.body1,
-      h1: h1 ?? this.h1,
+      headline1: headline1 ?? this.headline1,
+      inputFieldText: inputFieldText ?? this.inputFieldText,
+      title: title ?? this.title,
+      subtitle: subtitle ?? this.subtitle,
+      subtitle2: subtitle2 ?? this.subtitle2,
+      body: body ?? this.body,
+      body2: body2 ?? this.body2,
+      caption: caption ?? this.caption,
+      caption2: caption2 ?? this.caption2,
+      caption3: caption3 ?? this.caption3,
     );
   }
 
@@ -44,14 +78,26 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     }
 
     return AppTextThemesExtension(
-      body1: TextStyle.lerp(body1, other.body1, t)!,
-      h1: TextStyle.lerp(h1, other.h1, t)!,
+      headline1: TextStyle.lerp(headline1, other.headline1, t)!,
+      inputFieldText: TextStyle.lerp(inputFieldText, other.inputFieldText, t)!,
+      title: TextStyle.lerp(title, other.title, t)!,
+      subtitle: TextStyle.lerp(subtitle, other.subtitle, t)!,
+      subtitle2: TextStyle.lerp(subtitle2, other.subtitle2, t)!,
+      body: TextStyle.lerp(body, other.body, t)!,
+      body2: TextStyle.lerp(body2, other.body2, t)!,
+      caption: TextStyle.lerp(caption, other.caption, t)!,
+      caption2: TextStyle.lerp(caption2, other.caption2, t)!,
+      caption3: TextStyle.lerp(caption3, other.caption3, t)!,
     );
   }
 }
 
-extension AppThemeExtension on ThemeData {
-  /// Usage example: Theme.of(context).appTextThemes;
-  AppTextThemesExtension get appTextThemes =>
-      extension<AppTextThemesExtension>()!;
+class TemplateTextStyle extends TextStyle {
+  static TextStyle fromTemplate(TemplateTextTheme theme) {
+    return TextStyle(
+      fontSize: theme.fontSize,
+      fontWeight: theme.fontWeight,
+      height: theme.height,
+    );
+  }
 }
