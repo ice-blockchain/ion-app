@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -14,6 +15,8 @@ class DAppsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final GoRouter router = GoRouter.of(context);
+
     return SingleChildScrollView(
       child: Container(
         decoration:
@@ -23,8 +26,20 @@ class DAppsPage extends HookConsumerWidget {
             const WalletHeader(),
             const Featured(),
             const Categories(),
-            Apps(title: 'Highest ranked', items: featured, onPress: () {}),
-            Apps(title: 'Recently added', items: featured, onPress: () {}),
+            Apps(
+              title: 'Highest ranked',
+              items: featured,
+              onPress: () {
+                router.go('/dapps/appsList');
+              },
+            ),
+            Apps(
+              title: 'Recently added',
+              items: featured,
+              onPress: () {
+                router.go('/dapps/appsList');
+              },
+            ),
             const Favourites(),
           ],
         ),

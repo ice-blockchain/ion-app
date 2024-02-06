@@ -9,6 +9,7 @@ import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/modal_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
+import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ice/app/features/wallet/views/pages/inner_wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page.dart';
 import 'package:ice/app/router/views/scaffold_with_nested_navigation.dart';
@@ -96,6 +97,11 @@ class FillProfileRoute extends GoRouteData {
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<DAppsRoute>(
           path: '/dapps',
+          routes: <TypedRoute<RouteData>>[
+            TypedGoRoute<DAppsListRoute>(
+              path: 'appsList',
+            ),
+          ],
         ),
       ],
     ),
@@ -169,6 +175,12 @@ class ChatRoute extends GoRouteData {
 class DAppsBranch extends StatefulShellBranchData {
   const DAppsBranch();
   static final GlobalKey<NavigatorState> $navigatorKey = shellNavigatorDAppsKey;
+}
+
+class DAppsListRoute extends GoRouteData {
+  const DAppsListRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const DAppsList();
 }
 
 class DAppsRoute extends GoRouteData {

@@ -8,10 +8,15 @@ const double backButtonSide = 24.0;
 const double backButtonPadding = 10.0;
 
 class NavigationHeader extends StatelessWidget {
-  const NavigationHeader({required this.title, this.showBackButton = true});
+  const NavigationHeader({
+    required this.title,
+    this.showBackButton = true,
+    this.onBackPress,
+  });
 
   final String title;
   final bool showBackButton;
+  final VoidCallback? onBackPress;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +33,11 @@ class NavigationHeader extends StatelessWidget {
                 height: backButtonSide,
               ),
               onPressed: () {
-                Navigator.pop(context);
+                if (onBackPress != null) {
+                  onBackPress!();
+                } else {
+                  Navigator.pop(context);
+                }
               },
             )
           else

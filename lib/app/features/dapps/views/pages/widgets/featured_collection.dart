@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/dapps/views/pages/mocks/mocked_featured.dart';
+import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 
 class FeaturedCollection extends StatelessWidget {
   const FeaturedCollection({super.key, required this.items});
 
-  final List<FeaturedItem> items;
+  final List<DAppItem> items;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,7 @@ class FeaturedCollection extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final double leftOffset = index == 0 ? 16.0 : 8.0;
           final double rightOffset = index == items.length - 1 ? 16.0 : 8.0;
+          final String assetBg = items[index].backgroundImage ?? '';
           return Container(
             width: itemWidth,
             margin: EdgeInsets.only(right: rightOffset, left: leftOffset),
@@ -30,7 +31,7 @@ class FeaturedCollection extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
                 image: AssetImage(
-                  items[index].backgroundImage,
+                  assetBg,
                 ),
                 fit: BoxFit.cover,
               ),
@@ -71,7 +72,7 @@ class FeaturedCollection extends StatelessWidget {
                                   .merge(shadowStyle),
                             ),
                             Text(
-                              items[index].description,
+                              items[index].description ?? '',
                               style: context.theme.appTextThemes.caption3
                                   .copyWith(
                                     color: context
