@@ -32,12 +32,8 @@ class IceApp extends HookConsumerWidget {
       builder: (BuildContext context, Widget? widget) => MaterialApp.router(
         localizationsDelegates: I18n.localizationsDelegates,
         supportedLocales: I18n.supportedLocales,
-        theme: template.whenOrNull(
-          data: (Template data) => buildLightTheme(data),
-        ),
-        darkTheme: template.whenOrNull(
-          data: (Template data) => buildDarkTheme(data),
-        ),
+        theme: template.whenOrNull(data: buildLightTheme),
+        darkTheme: template.whenOrNull(data: buildDarkTheme),
         themeMode: appThemeMode,
         routerConfig: appRouter,
       ),

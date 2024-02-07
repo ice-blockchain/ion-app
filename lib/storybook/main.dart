@@ -24,8 +24,6 @@ class WidgetbookApp extends ConsumerWidget {
     final AsyncValue<void> init = ref.watch(initAppProvider);
 
     return init.when(
-      error: (Object err, StackTrace stack) => Text(err.toString()),
-      loading: () => const CircularProgressIndicator(),
       data: (void data) => Widgetbook.material(
         directories: directories,
         appBuilder: (BuildContext context, Widget child) {
@@ -37,18 +35,16 @@ class WidgetbookApp extends ConsumerWidget {
             builder: (BuildContext context, Widget? widget) => MaterialApp(
               localizationsDelegates: I18n.localizationsDelegates,
               supportedLocales: I18n.supportedLocales,
-              theme: template.whenOrNull(
-                data: (Template data) => buildLightTheme(data),
-              ),
-              darkTheme: template.whenOrNull(
-                data: (Template data) => buildDarkTheme(data),
-              ),
+              theme: template.whenOrNull(data: buildLightTheme),
+              darkTheme: template.whenOrNull(data: buildDarkTheme),
               themeMode: appThemeMode,
               home: child,
             ),
           );
         },
       ),
+      error: (Object err, StackTrace stack) => Text(err.toString()),
+      loading: () => const CircularProgressIndicator(),
     );
   }
 }

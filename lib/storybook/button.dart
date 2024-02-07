@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
+import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(
@@ -10,7 +11,12 @@ Widget greenContainerUseCase(BuildContext context) {
   return Center(
     child: Button(
       type: ButtonType.outlined,
-      label: const Text('123'),
+      label: Text(
+        context.knobs.string(
+          label: 'Title',
+          initialValue: 'Controllable Title',
+        ),
+      ),
       onPressed: () {},
     ),
   );
