@@ -3,242 +3,197 @@ import 'dart:ui';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ice/app/templates/converters.dart';
 
+part 'template.freezed.dart';
+
 part 'template.g.dart';
 
-@JsonSerializable()
-class TemplateColors {
-  TemplateColors(
-    this.primaryAccent,
-    this.primaryText,
-    this.secondaryText,
-    this.tertararyText,
-    this.primaryBackground,
-    this.secondaryBackground,
-    this.tertararyBackground,
-    this.backgroundSheet,
-    this.onPrimaryAccent,
-    this.onTertararyBackground,
-    this.onTerararyFill,
-    this.onSecondaryBackground,
-    this.strokeElements,
-    this.sheetLine,
-    this.attentionRed,
-    this.success,
-  );
+@freezed
+class TemplateColors with _$TemplateColors {
+  @JsonSerializable(converters: <JsonConverter<dynamic, String>>[ColorConverter()])
+  const factory TemplateColors(
+      Color primaryAccent,
+      Color primaryText,
+      Color secondaryText,
+      Color tertararyText,
+      Color primaryBackground,
+      Color secondaryBackground,
+      Color tertararyBackground,
+      Color backgroundSheet,
+      Color onPrimaryAccent,
+      Color onTertararyBackground,
+      Color onTerararyFill,
+      Color onSecondaryBackground,
+      Color strokeElements,
+      Color sheetLine,
+      Color attentionRed,
+      Color success,
+      ) = _TemplateColors;
 
-  factory TemplateColors.fromJson(Map<String, dynamic> json) =>
-      _$TemplateColorsFromJson(json);
-
-  @ColorConverter()
-  Color primaryAccent;
-  @ColorConverter()
-  Color primaryText;
-  @ColorConverter()
-  Color secondaryText;
-  @ColorConverter()
-  Color tertararyText;
-  @ColorConverter()
-  Color primaryBackground;
-  @ColorConverter()
-  Color secondaryBackground;
-  @ColorConverter()
-  Color tertararyBackground;
-  @ColorConverter()
-  Color backgroundSheet;
-  @ColorConverter()
-  Color onPrimaryAccent;
-  @ColorConverter()
-  Color onTertararyBackground;
-  @ColorConverter()
-  Color onTerararyFill;
-  @ColorConverter()
-  Color onSecondaryBackground;
-  @ColorConverter()
-  Color strokeElements;
-  @ColorConverter()
-  Color sheetLine;
-  @ColorConverter()
-  Color attentionRed;
-  @ColorConverter()
-  Color success;
+  factory TemplateColors.fromJson(Map<String, dynamic> json) => _$TemplateColorsFromJson(json);
 }
 
-@JsonSerializable()
-class TemplateColorsLightDark {
-  TemplateColorsLightDark(this.light, this.dark);
+@freezed
+class TemplateColorsLightDark with _$TemplateColorsLightDark {
+  const factory TemplateColorsLightDark(
+      TemplateColors light,
+      TemplateColors dark,
+      ) = _TemplateColorsLightDark;
 
-  factory TemplateColorsLightDark.fromJson(Map<String, dynamic> json) =>
-      _$TemplateColorsLightDarkFromJson(json);
-
-  TemplateColors light;
-  TemplateColors dark;
+  factory TemplateColorsLightDark.fromJson(Map<String, dynamic> json) => _$TemplateColorsLightDarkFromJson(json);
 }
 
-@JsonSerializable()
-class TemplateAppBarTheme {
-  TemplateAppBarTheme(this.toolbarHeight);
+@freezed
+class TemplateAppBarTheme with _$TemplateAppBarTheme {
+  const factory TemplateAppBarTheme(double toolbarHeight) = _TemplateAppBarTheme;
 
-  factory TemplateAppBarTheme.fromJson(Map<String, dynamic> json) =>
-      _$TemplateAppBarThemeFromJson(json);
-
-  double toolbarHeight;
+  factory TemplateAppBarTheme.fromJson(Map<String, dynamic> json) => _$TemplateAppBarThemeFromJson(json);
 }
 
-@JsonSerializable()
-class TemplateTextTheme {
-  TemplateTextTheme(this.fontSize, this.height, this.fontWeight);
+@freezed
+class TemplateTextTheme with _$TemplateTextTheme {
+  const factory TemplateTextTheme(
+      double? fontSize,
+      double? height,
+      @FontWeightConverter() FontWeight? fontWeight,
+      ) = _TemplateTextTheme;
 
-  factory TemplateTextTheme.fromJson(Map<String, dynamic> json) =>
-      _$TemplateTextThemeFromJson(json);
-
-  double? fontSize;
-  double? height;
-  @FontWeightConverter()
-  FontWeight? fontWeight;
+  factory TemplateTextTheme.fromJson(Map<String, dynamic> json) => _$TemplateTextThemeFromJson(json);
 }
 
-@JsonSerializable()
-class TemplateTextThemes {
-  TemplateTextThemes(
-    this.headline1,
-    this.inputFieldText,
-    this.title,
-    this.subtitle,
-    this.subtitle2,
-    this.body,
-    this.body2,
-    this.caption,
-    this.caption2,
-    this.caption3,
-  );
+@freezed
+class TemplateTextThemes with _$TemplateTextThemes {
+  const factory TemplateTextThemes(
+      TemplateTextTheme headline1,
+      TemplateTextTheme inputFieldText,
+      TemplateTextTheme title,
+      TemplateTextTheme subtitle,
+      TemplateTextTheme subtitle2,
+      TemplateTextTheme body,
+      TemplateTextTheme body2,
+      TemplateTextTheme caption,
+      TemplateTextTheme caption2,
+      TemplateTextTheme caption3,
+      ) = _TemplateTextThemes;
 
-  factory TemplateTextThemes.fromJson(Map<String, dynamic> json) =>
-      _$TemplateTextThemesFromJson(json);
-
-  TemplateTextTheme headline1;
-  TemplateTextTheme inputFieldText;
-  TemplateTextTheme title;
-  TemplateTextTheme subtitle;
-  TemplateTextTheme subtitle2;
-  TemplateTextTheme body;
-  TemplateTextTheme body2;
-  TemplateTextTheme caption;
-  TemplateTextTheme caption2;
-  TemplateTextTheme caption3;
+  factory TemplateTextThemes.fromJson(Map<String, dynamic> json) => _$TemplateTextThemesFromJson(json);
 }
 
-@JsonSerializable()
-class TemplateMenuTheme {
-  TemplateMenuTheme(
-    this.elevation,
-    this.borderRadius,
-    this.paddingLeft,
-    this.paddingTop,
-    this.paddingRight,
-    this.paddingBottom,
-  );
+@freezed
+class TemplateMenuTheme with _$TemplateMenuTheme {
+  const factory TemplateMenuTheme(
+      double elevation,
+      double borderRadius,
+      double paddingLeft,
+      double paddingTop,
+      double paddingRight,
+      double paddingBottom,
+      ) = _TemplateMenuTheme;
 
-  factory TemplateMenuTheme.fromJson(Map<String, dynamic> json) =>
-      _$TemplateMenuThemeFromJson(json);
-
-  double elevation;
-  double borderRadius;
-  double paddingLeft;
-  double paddingTop;
-  double paddingRight;
-  double paddingBottom;
+  factory TemplateMenuTheme.fromJson(Map<String, dynamic> json) => _$TemplateMenuThemeFromJson(json);
 }
 
-@JsonSerializable()
-class TemplateMenuButtonTheme {
-  TemplateMenuButtonTheme(
-    this.iconSize,
-    this.minHeight,
-    this.paddingLeft,
-    this.paddingTop,
-    this.paddingRight,
-    this.paddingBottom,
-  );
+@freezed
+class TemplateMenuButtonTheme with _$TemplateMenuButtonTheme {
+  const factory TemplateMenuButtonTheme(
+      double iconSize,
+      double minHeight,
+      double paddingLeft,
+      double paddingTop,
+      double paddingRight,
+      double paddingBottom,
+      ) = _TemplateMenuButtonTheme;
 
-  factory TemplateMenuButtonTheme.fromJson(Map<String, dynamic> json) =>
-      _$TemplateMenuButtonThemeFromJson(json);
-
-  double iconSize;
-  double minHeight;
-  double paddingLeft;
-  double paddingTop;
-  double paddingRight;
-  double paddingBottom;
+  factory TemplateMenuButtonTheme.fromJson(Map<String, dynamic> json) => _$TemplateMenuButtonThemeFromJson(json);
 }
 
-@JsonSerializable()
-class MenuAnchor {
-  MenuAnchor(
-    this.alignmentOffsetY,
-  );
+@freezed
+class MenuAnchor with _$MenuAnchor {
+  const factory MenuAnchor(
+      double alignmentOffsetY,
+      ) = _MenuAnchor;
 
-  factory MenuAnchor.fromJson(Map<String, dynamic> json) =>
-      _$MenuAnchorFromJson(json);
-
-  double alignmentOffsetY;
+  factory MenuAnchor.fromJson(Map<String, dynamic> json) => _$MenuAnchorFromJson(json);
 }
 
-@JsonSerializable()
-class TemplateIconButtonTheme {
-  TemplateIconButtonTheme({
-    required this.width,
-    required this.height,
-    required this.backgroundColor,
-  });
+@freezed
+class TemplateIconButtonTheme with _$TemplateIconButtonTheme {
+  const factory TemplateIconButtonTheme({
+    required double width,
+    required double height,
+    required String backgroundColor,
+  }) = _TemplateIconButtonTheme;
 
-  factory TemplateIconButtonTheme.fromJson(Map<String, dynamic> json) =>
-      _$TemplateIconButtonThemeFromJson(json);
-
-  final double width;
-  final double height;
-  final String backgroundColor;
-
-  Map<String, dynamic> toJson() => _$TemplateIconButtonThemeToJson(this);
+  factory TemplateIconButtonTheme.fromJson(Map<String, dynamic> json) => _$TemplateIconButtonThemeFromJson(json);
 }
 
-@JsonSerializable()
-class TemplateIconTheme {
-  TemplateIconTheme({
-    required this.width,
-    required this.height,
-  });
+@freezed
+class TemplateIconTheme with _$TemplateIconTheme {
+  const factory TemplateIconTheme({
+    required double width,
+    required double height,
+  }) = _TemplateIconThem;
 
-  factory TemplateIconTheme.fromJson(Map<String, dynamic> json) =>
-      _$TemplateIconThemeFromJson(json);
-
-  final double width;
-  final double height;
-
-  Map<String, dynamic> toJson() => _$TemplateIconThemeToJson(this);
+  factory TemplateIconTheme.fromJson(Map<String, dynamic> json) => _$TemplateIconThemeFromJson(json);
 }
 
-@JsonSerializable()
-class Template {
-  Template(
-    this.colors,
-    this.textThemes,
-    this.appBar,
-    this.menuAnchor,
-    this.menu,
-    this.menuButton,
-    this.iconButton,
-    this.icon,
-  );
 
-  factory Template.fromJson(Map<String, dynamic> json) =>
-      _$TemplateFromJson(json);
+@freezed
+class TemplateTheme with _$TemplateTheme {
+  const factory TemplateTheme(
+      TemplateColorsLightDark colors,
+      TemplateTextThemes textThemes,
+      TemplateAppBarTheme appBar,
+      MenuAnchor menuAnchor,
+      TemplateMenuTheme menu,
+      TemplateMenuButtonTheme menuButton,
+      TemplateIconButtonTheme iconButton,
+      TemplateIconTheme icon,
+      ) = _TemplateTheme;
 
-  TemplateColorsLightDark colors;
-  TemplateTextThemes textThemes;
-  TemplateAppBarTheme appBar;
-  MenuAnchor menuAnchor;
-  TemplateMenuTheme menu;
-  TemplateMenuButtonTheme menuButton;
-  TemplateIconButtonTheme iconButton;
-  TemplateIconTheme icon;
+  factory TemplateTheme.fromJson(Map<String, dynamic> json) => _$TemplateThemeFromJson(json);
+}
+
+@freezed
+class Template with _$Template {
+  const factory Template(
+      TemplateTheme theme,
+      TemplateConfig config,
+      ) = _Template;
+
+  factory Template.fromJson(Map<String, dynamic> json) => _$TemplateFromJson(json);
+}
+
+
+@freezed
+class TemplateConfig with _$TemplateConfig {
+  const factory TemplateConfig({
+    Map<String, TemplateConfigPage>? pages,
+  }) = _TemplateConfig;
+
+  factory TemplateConfig.fromJson(Map<String, dynamic> json) => _$TemplateConfigFromJson(json);
+}
+
+abstract class TemplateConfigElement {
+
+  bool? get hidden;
+}
+
+@freezed
+class TemplateConfigPage with _$TemplateConfigPage implements TemplateConfigElement {
+  const factory TemplateConfigPage({
+    bool? hidden,
+    Map<String, TemplateConfigControl>? controls,
+  }) = _TemplateConfigPage;
+
+  factory TemplateConfigPage.fromJson(Map<String, dynamic> json) => _$TemplateConfigPageFromJson(json);
+}
+
+@freezed
+class TemplateConfigControl with _$TemplateConfigControl implements TemplateConfigElement {
+  const factory TemplateConfigControl({
+    bool? hidden,
+    int? variant,
+  }) = _TemplateConfigControl;
+
+  factory TemplateConfigControl.fromJson(Map<String, dynamic> json) => _$TemplateConfigControlFromJson(json);
 }

@@ -5,12 +5,12 @@ import 'package:ice/app/theme/app_colors.dart';
 import 'package:ice/app/theme/app_text_themes.dart';
 
 AppBarTheme _buildBaseAppBarTheme(
-  Template template,
+  TemplateTheme templateTheme,
   AppColorsExtension colors,
   AppTextThemesExtension textThemes,
 ) {
   return const AppBarTheme().copyWith(
-    toolbarHeight: template.appBar.toolbarHeight,
+    toolbarHeight: templateTheme.appBar.toolbarHeight,
     backgroundColor: colors.primaryBackground,
     titleTextStyle: textThemes.caption2.copyWith(color: colors.attentionRed),
     iconTheme: IconThemeData(color: colors.attentionRed),
@@ -18,21 +18,21 @@ AppBarTheme _buildBaseAppBarTheme(
 }
 
 AppBarTheme buildLightAppBarTheme(
-  Template template,
+  TemplateTheme templateTheme,
   AppColorsExtension colors,
   AppTextThemesExtension textThemes,
 ) {
-  return _buildBaseAppBarTheme(template, colors, textThemes).copyWith(
+  return _buildBaseAppBarTheme( templateTheme, colors, textThemes).copyWith(
     systemOverlayStyle: SystemUiOverlayStyle.dark,
   );
 }
 
 AppBarTheme buildDarkAppBarTheme(
-  Template template,
+  TemplateTheme templateTheme,
   AppColorsExtension colors,
   AppTextThemesExtension textThemes,
 ) {
-  return _buildBaseAppBarTheme(template, colors, textThemes).copyWith(
+  return _buildBaseAppBarTheme( templateTheme, colors, textThemes).copyWith(
     systemOverlayStyle: SystemUiOverlayStyle.light,
   );
 }

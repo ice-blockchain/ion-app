@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/templates/template.dart';
 
-IconThemeData buildIconTheme(Template template) {
-  final double averageSize = (template.icon.width + template.icon.height) / 2;
+IconThemeData buildIconTheme(TemplateTheme templateTheme) {
+  final double averageSize = ( templateTheme.icon.width +  templateTheme.icon.height) / 2;
 
   return IconThemeData(
     size: averageSize,

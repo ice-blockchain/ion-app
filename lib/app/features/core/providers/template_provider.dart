@@ -9,14 +9,15 @@ part 'template_provider.g.dart';
 Template? _template;
 
 //TODO::discuss this approach
-Template get appTemplate {
-  return _template!;
+TemplateTheme get appTemplateTheme {
+  return _template!.theme;
 }
 
-@Riverpod(keepAlive: true)
-Future<Template> template(TemplateRef ref) async {
-  final String jsonString =
-      await rootBundle.loadString('lib/app/templates/basic.json');
-  return _template =
-      Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
+@riverpod
+class TemplateLoading extends _$TemplateLoading {
+  @override
+  Future<Template> build() async {
+    final String jsonString = await rootBundle.loadString('lib/app/templates/basic.json');
+    return _template = Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
+  }
 }
