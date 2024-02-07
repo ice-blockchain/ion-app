@@ -29,12 +29,14 @@ dependencies:
   flutter_keyboard_visibility: ^5.4.1
   flutter_screenutil: ^5.9.0
   pin_code_fields: ^8.0.1
+  widgetbook_annotation: ^3.1.0
+  widgetbook: ^3.7.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-  build_runner: ^2.4.6
+  build_runner: ^2.4.8
   flutter_gen_runner: ^5.3.1
   lint: ^2.1.2
   freezed: ^2.4.1
@@ -44,6 +46,7 @@ dev_dependencies:
   custom_lint: ^0.5.3
   riverpod_lint: ^2.0.4
   go_router_builder: ^2.3.1
+  widgetbook_generator: ^3.7.0
 
 flutter:
   generate: true
