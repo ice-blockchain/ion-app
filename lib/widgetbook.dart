@@ -7,7 +7,7 @@ import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/theme.dart';
 import 'package:ice/generated/app_localizations.dart';
-import 'package:ice/widgetbook/main.directories.g.dart';
+import 'package:ice/widgetbook.directories.g.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -26,12 +26,17 @@ class WidgetbookApp extends ConsumerWidget {
     return init.when(
       data: (void data) => Widgetbook.material(
         directories: directories,
-        addons: <WidgetbookAddon>[
-          AlignmentAddon(),
-          DeviceFrameAddon(
-            devices: Devices.all,
-          ),
-        ],
+        addons: <WidgetbookAddon>[AlignmentAddon(
+        ),DeviceFrameAddon(
+          devices: Devices.all,
+        ),LocalizationAddon(
+          locales: <Locale>[
+            const Locale('en'),
+          ],
+          localizationsDelegates: <LocalizationsDelegate<WidgetsLocalizations>>[
+            DefaultWidgetsLocalizations.delegate,
+          ],
+        ),],
         appBuilder: (BuildContext context, Widget child) {
           final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
           final AsyncValue<Template> template = ref.watch(templateProvider);

@@ -12,6 +12,7 @@ class TemplateColors {
     this.primaryText,
     this.secondaryText,
     this.tertararyText,
+    this.feedText,
     this.primaryBackground,
     this.secondaryBackground,
     this.tertararyBackground,
@@ -37,6 +38,8 @@ class TemplateColors {
   Color secondaryText;
   @ColorConverter()
   Color tertararyText;
+  @ColorConverter()
+  Color feedText;
   @ColorConverter()
   Color primaryBackground;
   @ColorConverter()
@@ -101,6 +104,7 @@ class TemplateTextTheme {
 class TemplateTextThemes {
   TemplateTextThemes(
     this.headline1,
+    this.headline2,
     this.inputFieldText,
     this.title,
     this.subtitle,
@@ -116,6 +120,7 @@ class TemplateTextThemes {
       _$TemplateTextThemesFromJson(json);
 
   TemplateTextTheme headline1;
+  TemplateTextTheme headline2;
   TemplateTextTheme inputFieldText;
   TemplateTextTheme title;
   TemplateTextTheme subtitle;
@@ -228,6 +233,7 @@ class Template {
     this.menuButton,
     this.iconButton,
     this.icon,
+    this.screenSideOffset,
   );
 
   factory Template.fromJson(Map<String, dynamic> json) =>
@@ -241,4 +247,5 @@ class Template {
   TemplateMenuButtonTheme menuButton;
   TemplateIconButtonTheme iconButton;
   TemplateIconTheme icon;
+  double screenSideOffset;
 }
