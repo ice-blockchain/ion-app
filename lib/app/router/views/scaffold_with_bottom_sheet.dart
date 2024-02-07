@@ -26,7 +26,11 @@ class ScaffoldWithBottomSheetState extends State<ScaffoldWithBottomSheet> {
           builder: (BuildContext context) => ModalWrapper(
             child: widget.child,
           ),
-        ).then((_) => context.pop());
+        ).then((_) {
+          if (context.canPop()) {
+            context.pop();
+          }
+        });
       },
     );
   }
