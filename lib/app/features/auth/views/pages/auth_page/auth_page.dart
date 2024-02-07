@@ -58,17 +58,16 @@ class AuthPage extends HookConsumerWidget {
         child: Column(
           children: <Widget>[
             AuthHeaderWidget(
-              title: 'Get started',
-              description: 'Choose your login method',
+              title: context.i18n.auth_signIn_title,
+              description: context.i18n.auth_signIn_description,
             ),
-            // EmailInput(formKey: emailFormKey),
             if (isEmailMode)
               InputField(
                 leadingIcon: Image.asset(
                   Assets.images.fieldEmail.path,
                   color: context.theme.appColors.primaryText,
                 ),
-                label: 'Email address',
+                label: context.i18n.auth_signIn_input_email,
                 controller: emailController.controller,
                 validator: (String? value) => emailController.onVerify(),
                 showLeadingSeparator: true,
@@ -82,12 +81,11 @@ class AuthPage extends HookConsumerWidget {
                     context,
                   ),
                 ),
-                label: 'Phone number',
+                label: context.i18n.auth_signIn_input_phone_number,
                 controller: numberController.controller,
                 validator: (String? value) => numberController.onVerify(),
                 showLeadingSeparator: true,
               ),
-
             const SizedBox(
               height: 16,
             ),
@@ -111,14 +109,14 @@ class AuthPage extends HookConsumerWidget {
                       .read(authProvider.notifier)
                       .signIn(email: 'foo@bar.baz', password: '123'),
                 },
-                label: const Text('Continue'),
+                label: Text(context.i18n.button_continue),
                 mainAxisSize: MainAxisSize.max,
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 14, bottom: 14),
               child: Text(
-                'or',
+                context.i18n.auth_signIn_or,
                 style: context.theme.appTextThemes.caption
                     .copyWith(color: context.theme.appColors.tertararyText),
               ),
@@ -135,7 +133,9 @@ class AuthPage extends HookConsumerWidget {
                   ref.read(isEmailModeProvider.notifier).state = !isEmailMode;
                 },
                 label: Text(
-                  isEmailMode ? 'Continue with Email' : 'Continue with Phone',
+                  isEmailMode
+                      ? context.i18n.auth_signIn_button_email
+                      : context.i18n.auth_signIn_button_phone_number,
                 ),
                 mainAxisSize: MainAxisSize.max,
               ),

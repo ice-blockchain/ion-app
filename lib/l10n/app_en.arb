@@ -1,6 +1,12 @@
 {
   "hello": "Hello!  {userName}",
-  "@signIn": {
-    "privacy": "By continuing, you are agreeing to our \\[[:link]]Terms of Service[[/:link]] & [[:link]]Privacy Policy[[/:link]]"
-  }
+  "button_continue": "Continue",
+  "auth_privacy": "By continuing, you are agreeing to our [[:link]]Terms of Service[[/:link]] & [[:link]]Privacy Policy[[/:link]]",
+  "auth_signIn_title": "Get started",
+  "auth_signIn_description": "Choose your login method",
+  "auth_signIn_input_email": "Email address",
+  "auth_signIn_input_phone_number": "Phone number",
+  "auth_signIn_button_email": "Continue with Email",
+  "auth_signIn_button_phone_number": "Continue with Phone",
+  "auth_signIn_or": "or"
 }

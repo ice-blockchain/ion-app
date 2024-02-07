@@ -8,7 +8,12 @@ import 'package:ice/generated/assets.gen.dart';
 const double containerHeight = 60.0;
 
 class Favourites extends StatelessWidget {
-  const Favourites({super.key});
+  const Favourites({
+    super.key,
+    this.onPress,
+  });
+
+  final VoidCallback? onPress;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,7 @@ class Favourites extends StatelessWidget {
         vertical: 24,
       ),
       child: GestureDetector(
-        onTap: () {},
+        onTap: onPress,
         child: Container(
           height: containerHeight,
           width: double.infinity,

@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/widgets.dart';
 
 RegExp tagRegex(String tag, {bool isSingular = true}) {
