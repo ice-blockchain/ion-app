@@ -7,7 +7,7 @@ import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/theme.dart';
 import 'package:ice/generated/app_localizations.dart';
-import 'package:ice/storybook/main.directories.g.dart';
+import 'package:ice/widgetbook/main.directories.g.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
