@@ -30,41 +30,50 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     });
   }
 
-// ignore: avoid_build_context_in_providers
+  // ignore: avoid_build_context_in_providers
   String? redirect(BuildContext context, GoRouterState state) {
+    final String? name = _redirectNamed(state);
+    if (name != null) {
+
+      return state.namedLocation(name);  //TODO cache all named locations
+
+    }
+
+    return null;
+  }
+
+  String? _redirectNamed(GoRouterState state) {
     //TODO: check that its part of intro navigation flow
-    final bool isAuthInProgress =
-        state.matchedLocation == const IntroRoute().location ||
-            state.matchedLocation == const AuthRoute().location;
-    final bool isSplash = state.matchedLocation == const SplashRoute().location;
+    final bool isAuthInProgress = state.matchedLocation.startsWith(IcePages.intro.location(state));
+    final bool isSplash = state.matchedLocation == IcePages.splash.location(state);
     final bool isInitError = _init?.hasError ?? false;
     final bool isInitInProgress = _init?.isLoading ?? true;
     final bool isAnimationCompleted = ref.watch(splashProvider);
 
     if (isInitError) {
-      return const ErrorRoute().location;
+      return IcePages.splash.name;
     }
 
     if (isInitInProgress && !isSplash || !isAnimationCompleted) {
-      return const SplashRoute().location;
+      return IcePages.splash.name;
     }
 
     if (isSplash && !isInitInProgress && isAnimationCompleted) {
       if (_authState is Authenticated) {
-        return const WalletRoute().location;
+        return IcePages.wallet.name;
       }
       if (_authState is UnAuthenticated) {
         /// Navigate to the Intro screen after splash for unauthenticated users
-        return const IntroRoute().location;
+        return IcePages.intro.name;
       }
     }
 
     if (isAuthInProgress && _authState is Authenticated) {
-      return const WalletRoute().location;
+      return IcePages.wallet.name;
     }
 
     if (!isAuthInProgress && _authState is UnAuthenticated) {
-      return const IntroRoute().location;
+      return IcePages.intro.name;
     }
 
     return null;

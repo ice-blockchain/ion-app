@@ -9,8 +9,8 @@ part 'template_provider.g.dart';
 Template? _template;
 
 //TODO::discuss this approach
-TemplateTheme get appTemplateTheme {
-  return _template!.theme;
+Template get appTemplate {
+  return _template!;
 }
 
 @riverpod

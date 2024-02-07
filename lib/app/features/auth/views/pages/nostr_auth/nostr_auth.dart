@@ -1,28 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/constants/ui.dart';
-import 'package:ice/app/features/auth/views/pages/nostr_login/nostr_login.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
-import 'package:ice/app/shared/widgets/modal_wrapper.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NostrAuth extends HookConsumerWidget {
   const NostrAuth({super.key});
-
-  void showModalScreen(
-    Widget screen,
-    BuildContext context,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) => ModalWrapper(
-        child: screen,
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -70,10 +56,7 @@ class NostrAuth extends HookConsumerWidget {
                       size: 24,
                     ),
                     onPressed: () {
-                      showModalScreen(
-                        const NostrLogin(),
-                        context,
-                      );
+                      context.goNamed(IcePages.nostrLogin.name);
                     },
                     label: const Text('Login'),
                     mainAxisSize: MainAxisSize.max,

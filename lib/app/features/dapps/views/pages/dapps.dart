@@ -8,6 +8,7 @@ import 'package:ice/app/features/dapps/views/pages/widgets/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/categories.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/favourites.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/featured.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/shared/widgets/wallet_header/wallet_header.dart';
 
 class DAppsPage extends HookConsumerWidget {
@@ -15,12 +16,9 @@ class DAppsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final GoRouter router = GoRouter.of(context);
-
     return SingleChildScrollView(
       child: Container(
-        decoration:
-            BoxDecoration(color: context.theme.appColors.secondaryBackground),
+        decoration: BoxDecoration(color: context.theme.appColors.secondaryBackground),
         child: Column(
           children: <Widget>[
             const WalletHeader(),
@@ -30,14 +28,14 @@ class DAppsPage extends HookConsumerWidget {
               title: 'Highest ranked',
               items: featured,
               onPress: () {
-                router.go('/dapps/appsList');
+                context.goNamed(IcePages.appsList.name);
               },
             ),
             Apps(
               title: 'Recently added',
               items: featured,
               onPress: () {
-                router.go('/dapps/appsList');
+                context.goNamed(IcePages.appsList.name);
               },
             ),
             const Favourites(),

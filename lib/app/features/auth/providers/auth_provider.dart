@@ -16,9 +16,9 @@ class Auth extends _$Auth {
     final String foo = ref.read(envProvider.notifier).get(EnvVariable.FOO);
     // ignore: avoid_print
     print('Env is $foo');
-    state = const Authenticated(
+    state =  true? const UnAuthenticated() : const Authenticated(
       authToken: AuthToken(access: 'access', refresh: 'refresh'),
-    );
+    ); //TODO remove unauth
   }
 
   Future<void> signIn({required String email, required String password}) async {
