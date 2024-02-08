@@ -59,7 +59,7 @@ class _SearchState extends State<Search> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 controller: _controller,
-                placeholder: 'Search',
+                placeholder: context.i18n.search_placeholder,
                 placeholderStyle: context.theme.appTextThemes.body.copyWith(
                   color: context.theme.appColors.tertararyText,
                 ),
@@ -93,7 +93,7 @@ class _SearchState extends State<Search> {
             CupertinoButton(
               onPressed: _onCancelTapped,
               child: Text(
-                'Cancel',
+                context.i18n.button_cancel,
                 style: context.theme.appTextThemes.caption
                     .copyWith(color: context.theme.appColors.primaryAccent),
               ),

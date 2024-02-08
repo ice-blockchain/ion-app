@@ -42,7 +42,7 @@ class EnterCode extends HookConsumerWidget {
                   height: 9,
                 ),
                 Text(
-                  'Enter the code',
+                  context.i18n.enter_code_title,
                   style: context.theme.appTextThemes.headline1,
                 ),
               ],
@@ -50,7 +50,7 @@ class EnterCode extends HookConsumerWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('Please enter the code sent to'),
+                Text(context.i18n.enter_code_description),
                 Text(
                   phoneNumber,
                   style: context.theme.appTextThemes.subtitle,
@@ -117,7 +117,7 @@ class EnterCode extends HookConsumerWidget {
                 ),
                 if (invalidCode.value)
                   Text(
-                    'Invalid code, please try again!',
+                    context.i18n.enter_code_invalid_code,
                     style: context.theme.appTextThemes.body
                         .copyWith(color: context.theme.appColors.attentionRed),
                   ),
@@ -127,11 +127,11 @@ class EnterCode extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'New code available in',
+                  context.i18n.enter_code_available_in,
                   style: context.theme.appTextThemes.subtitle2,
                 ),
                 Text(
-                  ' 30s',
+                  ' 30s', // TODO: Add countdown timer
                   style: context.theme.appTextThemes.subtitle2
                       .copyWith(color: context.theme.appColors.primaryAccent),
                 ),

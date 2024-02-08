@@ -67,10 +67,9 @@ class DiscoverCreators extends HookConsumerWidget {
               ),
               child: Column(
                 children: <Widget>[
-                  const TitleDescription(
-                    title: 'Discover creators',
-                    description:
-                        'Connect with visionaries and inspiring voices',
+                  TitleDescription(
+                    title: context.i18n.discover_creators_title,
+                    description: context.i18n.discover_creators_description,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),
@@ -177,7 +176,9 @@ class DiscoverCreators extends HookConsumerWidget {
                                       ? null
                                       : context.theme.appColors.primaryAccent,
                                   label: Text(
-                                    isFollowing ? 'Following' : 'Follow',
+                                    isFollowing
+                                        ? context.i18n.button_following
+                                        : context.i18n.button_follow,
                                     style: context.theme.appTextThemes.caption
                                         .copyWith(
                                       color: isFollowing

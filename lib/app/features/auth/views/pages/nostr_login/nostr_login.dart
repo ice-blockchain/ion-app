@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/constants/ui.dart';
+import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/controllers/name_controller.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
@@ -20,8 +21,8 @@ class NostrLogin extends HookConsumerWidget {
           child: Column(
             children: <Widget>[
               AuthHeaderWidget(
-                title: 'Nostr',
-                description: 'Enter your Nostr private key',
+                title: context.i18n.nostr_login_title,
+                description: context.i18n.nostr_login_description,
               ),
               const SizedBox(
                 height: 15,
@@ -40,7 +41,7 @@ class NostrLogin extends HookConsumerWidget {
                     leadingIcon: ImageIcon(
                       AssetImage(Assets.images.fieldPrivatekey.path),
                     ),
-                    label: 'Your Private Key',
+                    label: context.i18n.nostr_login_input_private_key,
                     controller: privateKeyController.controller,
                     validator: (String? value) =>
                         privateKeyController.onVerify(),
@@ -57,7 +58,7 @@ class NostrLogin extends HookConsumerWidget {
                       ),
                       onPressed: () {},
                       type: ButtonType.disabled,
-                      label: const Text('Paste from clipboard'),
+                      label: Text(context.i18n.button_paste),
                       mainAxisSize: MainAxisSize.max,
                     ),
                   ),

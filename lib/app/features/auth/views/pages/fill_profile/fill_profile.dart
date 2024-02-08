@@ -97,11 +97,11 @@ class FillProfile extends HookConsumerWidget {
                 height: 19,
               ),
               Text(
-                'Your profile',
+                context.i18n.fill_profile_title,
                 style: context.theme.appTextThemes.headline1,
               ),
               Text(
-                'Customize your account',
+                context.i18n.fill_profile_description,
                 style: context.theme.appTextThemes.body2.copyWith(
                   color: context.theme.appColors.tertararyText,
                 ),
@@ -138,7 +138,7 @@ class FillProfile extends HookConsumerWidget {
                 // autofocus: true,
                 leadingIcon:
                     ImageIcon(AssetImage(Assets.images.fieldName.path)),
-                label: 'Name',
+                label: context.i18n.fill_profile_input_name,
                 controller: nameController.controller,
                 validator: (String? value) => validateName(value!),
                 showLeadingSeparator: true,
@@ -147,7 +147,7 @@ class FillProfile extends HookConsumerWidget {
               InputField(
                 leadingIcon:
                     ImageIcon(AssetImage(Assets.images.fieldNickname.path)),
-                label: 'Nickname',
+                label: context.i18n.fill_profile_input_nickname,
                 controller: nicknameController.controller,
                 validator: (String? value) => validateNickname(value!),
                 showLeadingSeparator: true,
@@ -157,7 +157,7 @@ class FillProfile extends HookConsumerWidget {
               InputField(
                 leadingIcon:
                     ImageIcon(AssetImage(Assets.images.fieldInviter.path)),
-                label: 'Who invited you',
+                label: context.i18n.fill_profile_input_who_invited,
                 controller: inviterController.controller,
                 validator: (String? value) => validateWhoInvited(value!),
                 showLeadingSeparator: true,
@@ -174,7 +174,7 @@ class FillProfile extends HookConsumerWidget {
                     size: 24,
                   ),
                   onPressed: onSave,
-                  label: const Text('Save'),
+                  label: Text(context.i18n.button_save),
                   mainAxisSize: MainAxisSize.max,
                 ),
               ),

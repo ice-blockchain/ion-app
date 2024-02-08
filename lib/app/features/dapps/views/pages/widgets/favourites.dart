@@ -49,13 +49,13 @@ class Favourites extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'Favourites',
+                          context.i18n.dapps_section_title_favourites,
                           style: context.theme.appTextThemes.body.copyWith(
                             color: context.theme.appColors.primaryText,
                           ),
                         ),
                         Text(
-                          '17 added dApps',
+                          context.i18n.dapps_favourites_added(17),
                           style: context.theme.appTextThemes.caption3.copyWith(
                             color: context.theme.appColors.secondaryText,
                           ),

@@ -47,7 +47,7 @@ class IntroPage extends HookConsumerWidget {
                     bottom: 10,
                   ),
                   child: Text(
-                    'The Global Currency Reset',
+                    context.i18n.intro_title,
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.w900,
@@ -59,7 +59,7 @@ class IntroPage extends HookConsumerWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '#DecentralizedFuture',
+                      context.i18n.intro_description,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
@@ -80,7 +80,7 @@ class IntroPage extends HookConsumerWidget {
                   onPressed: () {
                     showMyBottomSheet(context);
                   },
-                  child: const Text('Continue'),
+                  child: Text(context.i18n.button_continue),
                 ),
               ),
             ),

@@ -38,7 +38,7 @@ class CheckEmail extends HookConsumerWidget {
                   height: 12,
                 ),
                 Text(
-                  'Check email',
+                  context.i18n.check_email_title,
                   style: context.theme.appTextThemes.headline1,
                 ),
               ],
@@ -46,7 +46,7 @@ class CheckEmail extends HookConsumerWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('We emailed a magic link to'),
+                Text(context.i18n.check_email_subtitle),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -61,7 +61,7 @@ class CheckEmail extends HookConsumerWidget {
                   padding:
                       const EdgeInsets.symmetric(vertical: 36, horizontal: 20),
                   child: Text(
-                    'Click the link and enter the code to log in or sign up.',
+                    context.i18n.check_email_description,
                     textAlign: TextAlign.center,
                     style: context.theme.appTextThemes.subtitle2.copyWith(
                       color: context.theme.appColors.secondaryText,

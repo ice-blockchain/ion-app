@@ -32,8 +32,8 @@ class DAppsList extends HookConsumerWidget {
         color: context.theme.appColors.secondaryBackground,
         child: Stack(
           children: <Widget>[
-            const NavigationHeader(
-              title: 'DeFi',
+            NavigationHeader(
+              title: context.i18n.dapps_list_defi,
             ),
             Padding(
               padding: const EdgeInsets.only(top: navigationHeaderHeight),

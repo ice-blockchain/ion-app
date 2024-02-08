@@ -63,7 +63,7 @@ class WalletHeader extends HookConsumerWidget {
                   fit: BoxFit.cover,
                 ),
                 const SizedBox(width: 8),
-                const Text('ice.wallet'),
+                Text(context.i18n.wallet_header_ice_wallet),
                 const SizedBox(width: 8),
                 Image.asset(
                   Assets.images.selectArrows.path,
