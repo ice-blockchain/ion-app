@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
-const double iconSize = 16.0;
+double iconSize = 16.0.w;
 
 class ReadTimeTile extends StatelessWidget {
   const ReadTimeTile({super.key, required this.minutesToRead});
@@ -19,9 +20,9 @@ class ReadTimeTile extends StatelessWidget {
           size: iconSize,
           color: context.theme.appColors.feedText,
         ),
-        const SizedBox(width: 3.0),
+        SizedBox(width: 3.0.w),
         Text(
-          '$minutesToRead min read',
+          context.i18n.read_time_in_mins(minutesToRead),
           style: context.theme.appTextThemes.caption
               .copyWith(color: context.theme.appColors.feedText),
         ),

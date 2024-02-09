@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/shared/widgets/core/screen_side_offset.dart';
-import 'package:ice/app/shared/widgets/tiles/read_time/read_time_tile.dart';
+import 'package:ice/app/features/feed/widgets/read_time_tile/read_time_tile.dart';
+import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/utils/Image_utils.dart';
 
-const double borderRadius = 12.0;
+double borderRadius = 12.0.w;
 
 class PostImage extends StatelessWidget {
   const PostImage({
@@ -20,34 +21,27 @@ class PostImage extends StatelessWidget {
   final int? minutesToRead;
   final Alignment? minutesToReadAlignment;
 
-  String getAdaptiveImageUrl(double imageWidth) {
-    return '$imageUrl?width=${imageWidth.toInt()}';
-  }
-
   BorderRadius getOverlayBorderRadius(Alignment alignment) {
     if (alignment == Alignment.bottomRight || alignment == Alignment.topLeft) {
-      return const BorderRadius.only(
+      return BorderRadius.only(
         topLeft: Radius.circular(borderRadius),
         bottomRight: Radius.circular(borderRadius),
       );
     }
     if (alignment == Alignment.topRight || alignment == Alignment.bottomLeft) {
-      return const BorderRadius.only(
+      return BorderRadius.only(
         topRight: Radius.circular(borderRadius),
         bottomLeft: Radius.circular(borderRadius),
       );
     }
-    return const BorderRadius.all(Radius.circular(borderRadius));
+    return BorderRadius.all(Radius.circular(borderRadius));
   }
 
   @override
   Widget build(BuildContext context) {
-    final double paddingHorizontal = ScreenSideOffset.offset;
+    final double paddingHorizontal = ScreenSideOffset.defaultSmallMargin;
     final double imageWidth =
-        MediaQuery
-            .of(context)
-            .size
-            .width - paddingHorizontal * 2;
+        MediaQuery.of(context).size.width - paddingHorizontal * 2;
 
     final Alignment alignment = minutesToReadAlignment ?? Alignment.bottomRight;
 
@@ -59,14 +53,14 @@ class PostImage extends StatelessWidget {
           alignment: alignment,
           children: <Widget>[
             CachedNetworkImage(
-              imageUrl: getAdaptiveImageUrl(imageWidth),
+              imageUrl: ImageUtils.getAdaptiveImageUrl(imageUrl, imageWidth),
               width: imageWidth,
               fit: BoxFit.cover,
             ),
             if (minutesToRead != null) ...<Widget>[
               Container(
                 padding:
-                EdgeInsets.symmetric(horizontal: 8.0.w, vertical: 4.0.w),
+                    EdgeInsets.symmetric(horizontal: 8.0.w, vertical: 4.0.w),
                 decoration: BoxDecoration(
                   color: context.theme.appColors.tertararyBackground,
                   border: Border.all(

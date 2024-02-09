@@ -56,5 +56,6 @@
   "secured_by_ice": "ice",
   "wallet_header_ice_wallet": "ice.wallet",
   "email_input_placeholder": "Email address",
-  "email_input_invalid_email_format": "Invalid email format"
+  "email_input_invalid_email_format": "Invalid email format",
+  "read_time_in_mins": "{mins} min read"
 }

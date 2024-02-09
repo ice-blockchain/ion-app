@@ -233,7 +233,6 @@ class Template {
     this.menuButton,
     this.iconButton,
     this.icon,
-    this.screenSideOffset,
   );
 
   factory Template.fromJson(Map<String, dynamic> json) =>
@@ -247,5 +246,4 @@ class Template {
   TemplateMenuButtonTheme menuButton;
   TemplateIconButtonTheme iconButton;
   TemplateIconTheme icon;
-  double screenSideOffset;
 }
