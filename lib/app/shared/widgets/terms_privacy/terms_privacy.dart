@@ -24,14 +24,11 @@ class TermsPrivacy extends StatelessWidget {
       );
     }
 
-    const String text =
-        'By continuing, you are agreeing to our [[:link]]Terms of Service[[/:link]] & [[:link]]Privacy Policy[[/:link]]';
-
     return SizedBox(
       width: 220,
       child: Text.rich(
         replaceString(
-          text,
+          context.i18n.auth_privacy,
           tagRegex('link', isSingular: false),
           handleMatch,
         ),

@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -21,8 +21,7 @@ class CheckEmail extends HookConsumerWidget {
         TextEditingController(text: '1234');
 
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+      body: ScreenSideOffset.large(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -38,7 +37,7 @@ class CheckEmail extends HookConsumerWidget {
                   height: 12,
                 ),
                 Text(
-                  'Check email',
+                  context.i18n.check_email_title,
                   style: context.theme.appTextThemes.headline1,
                 ),
               ],
@@ -46,7 +45,7 @@ class CheckEmail extends HookConsumerWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('We emailed a magic link to'),
+                Text(context.i18n.check_email_subtitle),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -61,7 +60,7 @@ class CheckEmail extends HookConsumerWidget {
                   padding:
                       const EdgeInsets.symmetric(vertical: 36, horizontal: 20),
                   child: Text(
-                    'Click the link and enter the code to log in or sign up.',
+                    context.i18n.check_email_description,
                     textAlign: TextAlign.center,
                     style: context.theme.appTextThemes.subtitle2.copyWith(
                       color: context.theme.appColors.secondaryText,

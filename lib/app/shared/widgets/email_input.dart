@@ -36,7 +36,7 @@ class EmailInput extends HookWidget {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             focusNode: focusNode,
             decoration: InputDecoration(
-              labelText: 'Email address',
+              labelText: context.i18n.email_input_placeholder,
               prefixIcon: isFocused.value
                   ? null
                   : IntrinsicHeight(
@@ -87,7 +87,7 @@ class EmailInput extends HookWidget {
             ),
             validator: (String? email) {
               if (email != null && !EmailValidator.validate(email)) {
-                return 'Invalid email format';
+                return context.i18n.email_input_invalid_email_format;
               }
               return null;
             },

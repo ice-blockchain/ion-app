@@ -35,7 +35,9 @@ class SelectCountries extends HookConsumerWidget {
         color: context.theme.appColors.secondaryBackground,
         child: Stack(
           children: <Widget>[
-            const NavigationHeader(title: 'Select country'),
+            NavigationHeader(
+              title: context.i18n.select_countries_nav_title,
+            ),
             Padding(
               padding: const EdgeInsets.only(top: navigationHeaderHeight),
               child: Column(

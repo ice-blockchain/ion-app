@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/inviter_controller.dart';
@@ -12,6 +11,7 @@ import 'package:ice/app/features/auth/views/pages/fill_profile/validators.dart';
 import 'package:ice/app/shared/utility/image_picker_and_cropper/image_picker_and_cropper.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
+import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/shared/widgets/text_field_wrapper/text_field_wrapper.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -83,8 +83,7 @@ class FillProfile extends HookConsumerWidget {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+        child: ScreenSideOffset.large(
           child: Column(
             children: <Widget>[
               const SizedBox(
@@ -97,11 +96,11 @@ class FillProfile extends HookConsumerWidget {
                 height: 19,
               ),
               Text(
-                'Your profile',
+                context.i18n.fill_profile_title,
                 style: context.theme.appTextThemes.headline1,
               ),
               Text(
-                'Customize your account',
+                context.i18n.fill_profile_description,
                 style: context.theme.appTextThemes.body2.copyWith(
                   color: context.theme.appColors.tertararyText,
                 ),
@@ -138,7 +137,7 @@ class FillProfile extends HookConsumerWidget {
                 // autofocus: true,
                 leadingIcon:
                     ImageIcon(AssetImage(Assets.images.fieldName.path)),
-                label: 'Name',
+                label: context.i18n.fill_profile_input_name,
                 controller: nameController.controller,
                 validator: (String? value) => validateName(value!),
                 showLeadingSeparator: true,
@@ -147,7 +146,7 @@ class FillProfile extends HookConsumerWidget {
               InputField(
                 leadingIcon:
                     ImageIcon(AssetImage(Assets.images.fieldNickname.path)),
-                label: 'Nickname',
+                label: context.i18n.fill_profile_input_nickname,
                 controller: nicknameController.controller,
                 validator: (String? value) => validateNickname(value!),
                 showLeadingSeparator: true,
@@ -157,7 +156,7 @@ class FillProfile extends HookConsumerWidget {
               InputField(
                 leadingIcon:
                     ImageIcon(AssetImage(Assets.images.fieldInviter.path)),
-                label: 'Who invited you',
+                label: context.i18n.fill_profile_input_who_invited,
                 controller: inviterController.controller,
                 validator: (String? value) => validateWhoInvited(value!),
                 showLeadingSeparator: true,
@@ -174,7 +173,7 @@ class FillProfile extends HookConsumerWidget {
                     size: 24,
                   ),
                   onPressed: onSave,
-                  label: const Text('Save'),
+                  label: Text(context.i18n.button_save),
                   mainAxisSize: MainAxisSize.max,
                 ),
               ),

@@ -44,10 +44,9 @@ class SelectLanguages extends HookConsumerWidget {
               ),
               child: Column(
                 children: <Widget>[
-                  const TitleDescription(
-                    title: 'Select languages',
-                    description:
-                        'You’ll be shown content in the selected language',
+                  TitleDescription(
+                    title: context.i18n.select_languages_title,
+                    description: context.i18n.select_languages_description,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),

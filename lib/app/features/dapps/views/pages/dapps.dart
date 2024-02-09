@@ -27,20 +27,42 @@ class DAppsPage extends HookConsumerWidget {
             const Featured(),
             const Categories(),
             Apps(
-              title: 'Highest ranked',
+              title: context.i18n.dapps_section_title_highest_ranked,
               items: featured,
               onPress: () {
-                router.go('/dapps/appsList');
+                router.go(
+                  '/dapps/appsList',
+                  extra: AppsRouteData(
+                    title: context.i18n.dapps_section_title_highest_ranked,
+                    items: featured,
+                  ),
+                );
               },
             ),
             Apps(
-              title: 'Recently added',
+              title: context.i18n.dapps_section_title_recently_added,
               items: featured,
               onPress: () {
-                router.go('/dapps/appsList');
+                router.go(
+                  '/dapps/appsList',
+                  extra: AppsRouteData(
+                    title: context.i18n.dapps_section_title_recently_added,
+                    items: featured,
+                  ),
+                );
               },
             ),
-            const Favourites(),
+            Favourites(
+              onPress: () {
+                router.go(
+                  '/dapps/appsList',
+                  extra: AppsRouteData(
+                    title: context.i18n.dapps_section_title_favourites,
+                    items: featured,
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),

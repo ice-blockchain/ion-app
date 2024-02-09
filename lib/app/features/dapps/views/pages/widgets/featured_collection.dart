@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
+import 'package:ice/app/shared/ShadowText/shadow_text.dart';
 
 class FeaturedCollection extends StatelessWidget {
   const FeaturedCollection({super.key, required this.items});
@@ -62,23 +62,25 @@ class FeaturedCollection extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Text(
-                              items[index].title,
-                              style: context.theme.appTextThemes.body
-                                  .copyWith(
-                                    color: context
-                                        .theme.appColors.secondaryBackground,
-                                  )
-                                  .merge(shadowStyle),
+                            ShadowText(
+                              child: Text(
+                                items[index].title,
+                                style:
+                                    context.theme.appTextThemes.body.copyWith(
+                                  color: context
+                                      .theme.appColors.secondaryBackground,
+                                ),
+                              ),
                             ),
-                            Text(
-                              items[index].description ?? '',
-                              style: context.theme.appTextThemes.caption3
-                                  .copyWith(
-                                    color: context
-                                        .theme.appColors.secondaryBackground,
-                                  )
-                                  .merge(shadowStyle),
+                            ShadowText(
+                              child: Text(
+                                items[index].description ?? '',
+                                style: context.theme.appTextThemes.caption3
+                                    .copyWith(
+                                  color: context
+                                      .theme.appColors.secondaryBackground,
+                                ),
+                              ),
                             ),
                           ],
                         ),

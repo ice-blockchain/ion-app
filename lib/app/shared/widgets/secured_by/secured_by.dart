@@ -11,12 +11,15 @@ class SecuredBy extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text('Secured by', style: context.theme.appTextThemes.caption),
+        Text(
+          context.i18n.secured_by,
+          style: context.theme.appTextThemes.caption,
+        ),
         const SizedBox(width: 5),
         Image.asset(Assets.images.iceIcon.path),
         const SizedBox(width: 3),
         Text(
-          'ice',
+          context.i18n.secured_by_ice,
           style: context.theme.appTextThemes.headline1.copyWith(fontSize: 17),
         ),
       ],

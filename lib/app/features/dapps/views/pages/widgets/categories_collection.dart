@@ -15,24 +15,26 @@ class CategoryItem {
   final String title;
 }
 
-List<CategoryItem> featured = <CategoryItem>[
-  CategoryItem(
-    iconImage: Assets.images.defi.path,
-    title: 'DeFi',
-  ),
-  CategoryItem(
-    iconImage: Assets.images.marketplace.path,
-    title: 'Marketplaces',
-  ),
-  CategoryItem(
-    iconImage: Assets.images.nft.path,
-    title: 'NFTs',
-  ),
-  CategoryItem(
-    iconImage: Assets.images.games.path,
-    title: 'Games',
-  ),
-];
+List<CategoryItem> getFeaturedCategories(BuildContext context) {
+  return <CategoryItem>[
+    CategoryItem(
+      iconImage: Assets.images.defi.path,
+      title: context.i18n.dapps_category_defi,
+    ),
+    CategoryItem(
+      iconImage: Assets.images.marketplace.path,
+      title: context.i18n.dapps_category_marketplaces,
+    ),
+    CategoryItem(
+      iconImage: Assets.images.nft.path,
+      title: context.i18n.dapps_category_nft,
+    ),
+    CategoryItem(
+      iconImage: Assets.images.games.path,
+      title: context.i18n.dapps_category_games,
+    ),
+  ];
+}
 
 class CategoriesCollection extends StatelessWidget {
   const CategoriesCollection({super.key});
@@ -42,6 +44,7 @@ class CategoriesCollection extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double itemWidth = screenWidth * 0.213;
     final double itemHeight = itemWidth + textContainerHeight;
+    final List<CategoryItem> featured = getFeaturedCategories(context);
 
     return SizedBox(
       height: itemHeight,

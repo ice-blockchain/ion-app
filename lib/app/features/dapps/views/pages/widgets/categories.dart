@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/categories_collection.dart';
 import 'package:ice/app/shared/widgets/section_header/section_header.dart';
 
@@ -7,10 +8,10 @@ class Categories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: <Widget>[
-        SectionHeader(title: 'Categories'),
-        CategoriesCollection(),
+        SectionHeader(title: context.i18n.dapps_section_title_categories),
+        const CategoriesCollection(),
       ],
     );
   }
