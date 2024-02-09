@@ -18,13 +18,13 @@ class ReadTimeTile extends StatelessWidget {
         Icon(
           Icons.access_time,
           size: iconSize,
-          color: context.theme.appColors.feedText,
+          color: context.theme.appColors.sharkText,
         ),
         SizedBox(width: 3.0.w),
         Text(
           context.i18n.read_time_in_mins(minutesToRead),
           style: context.theme.appTextThemes.caption
-              .copyWith(color: context.theme.appColors.feedText),
+              .copyWith(color: context.theme.appColors.sharkText),
         ),
       ],
     );

@@ -12,7 +12,7 @@ class TemplateColors {
     this.primaryText,
     this.secondaryText,
     this.tertararyText,
-    this.feedText,
+    this.sharkText,
     this.primaryBackground,
     this.secondaryBackground,
     this.tertararyBackground,
@@ -39,7 +39,7 @@ class TemplateColors {
   @ColorConverter()
   Color tertararyText;
   @ColorConverter()
-  Color feedText;
+  Color sharkText;
   @ColorConverter()
   Color primaryBackground;
   @ColorConverter()

@@ -14,7 +14,7 @@ class ArticleHeader extends StatelessWidget {
   final bool isMainHeader;
 
   TextStyle getStyle(BuildContext context) {
-    final Color color = context.theme.appColors.feedText;
+    final Color color = context.theme.appColors.sharkText;
     if (isMainHeader) {
       return context.theme.appTextThemes.headline2.copyWith(color: color);
     }

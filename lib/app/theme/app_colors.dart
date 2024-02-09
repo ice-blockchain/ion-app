@@ -7,7 +7,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.primaryText,
     required this.secondaryText,
     required this.tertararyText,
-    required this.feedText,
+    required this.sharkText,
     required this.primaryBackground,
     required this.secondaryBackground,
     required this.tertararyBackground,
@@ -28,7 +28,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       primaryText: templateColors.primaryText,
       secondaryText: templateColors.secondaryText,
       tertararyText: templateColors.tertararyText,
-      feedText: templateColors.feedText,
+      sharkText: templateColors.sharkText,
       primaryBackground: templateColors.primaryBackground,
       secondaryBackground: templateColors.secondaryBackground,
       tertararyBackground: templateColors.tertararyBackground,
@@ -48,7 +48,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color primaryText;
   final Color secondaryText;
   final Color tertararyText;
-  final Color feedText;
+  final Color sharkText;
   final Color primaryBackground;
   final Color secondaryBackground;
   final Color tertararyBackground;
@@ -68,7 +68,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? primaryText,
     Color? secondaryText,
     Color? tertararyText,
-    Color? feedText,
+    Color? sharkText,
     Color? primaryBackground,
     Color? secondaryBackground,
     Color? tertararyBackground,
@@ -87,7 +87,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       primaryText: primaryText ?? this.primaryText,
       secondaryText: secondaryText ?? this.secondaryText,
       tertararyText: tertararyText ?? this.tertararyText,
-      feedText: feedText ?? this.feedText,
+      sharkText: sharkText ?? this.sharkText,
       primaryBackground: primaryBackground ?? this.primaryBackground,
       secondaryBackground: secondaryBackground ?? this.secondaryBackground,
       tertararyBackground: tertararyBackground ?? this.tertararyBackground,
@@ -119,7 +119,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       primaryText: Color.lerp(primaryText, other.primaryText, t)!,
       secondaryText: Color.lerp(secondaryText, other.secondaryText, t)!,
       tertararyText: Color.lerp(tertararyText, other.tertararyText, t)!,
-      feedText: Color.lerp(feedText, other.feedText, t)!,
+      sharkText: Color.lerp(sharkText, other.sharkText, t)!,
       primaryBackground:
           Color.lerp(primaryBackground, other.primaryBackground, t)!,
       secondaryBackground:
