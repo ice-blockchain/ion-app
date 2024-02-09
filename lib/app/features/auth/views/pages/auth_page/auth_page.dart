@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
@@ -21,6 +20,7 @@ import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
 import 'package:ice/app/shared/widgets/modal_wrapper.dart';
+import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/shared/widgets/secured_by/secured_by.dart';
 import 'package:ice/app/shared/widgets/socials/socials.dart';
 import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
@@ -53,8 +53,7 @@ class AuthPage extends HookConsumerWidget {
     final PhoneNumberController numberController = PhoneNumberController();
 
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+      body: ScreenSideOffset(
         child: Column(
           children: <Widget>[
             AuthHeaderWidget(
