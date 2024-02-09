@@ -12,7 +12,6 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 Widget baseUseCase(BuildContext context) {
   return ColoredBox(
     color: context.theme.appColors.onTerararyFill,
-    // Set the background color to white
     child: ReadTimeTile(
       minutesToRead: context.knobs.int.slider(
         label: 'Minutes To Read',

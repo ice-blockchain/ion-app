@@ -20,13 +20,11 @@ class ReadTimeTile extends StatelessWidget {
           color: context.theme.appColors.feedText,
         ),
         const SizedBox(width: 3.0),
-        // Space between icon and text
         Text(
           '$minutesToRead min read',
           style: context.theme.appTextThemes.caption
               .copyWith(color: context.theme.appColors.feedText),
         ),
-        // Text displaying minutes
       ],
     );
   }

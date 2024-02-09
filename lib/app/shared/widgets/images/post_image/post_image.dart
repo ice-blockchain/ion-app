@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/shared/widgets/core/screen_side_offset.dart';
-import 'package:ice/app/shared/widgets/tiles/read_time/read_time_tile.dart'; // Make sure this is correctly imported for your project
+import 'package:ice/app/shared/widgets/tiles/read_time/read_time_tile.dart';
 
 const double borderRadius = 12.0;
 
@@ -44,7 +44,10 @@ class PostImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final double paddingHorizontal = ScreenSideOffset.offset;
     final double imageWidth =
-        MediaQuery.of(context).size.width - paddingHorizontal * 2;
+        MediaQuery
+            .of(context)
+            .size
+            .width - paddingHorizontal * 2;
 
     final Alignment alignment = minutesToReadAlignment ?? Alignment.bottomRight;
 
@@ -58,21 +61,17 @@ class PostImage extends StatelessWidget {
             CachedNetworkImage(
               imageUrl: getAdaptiveImageUrl(imageWidth),
               width: imageWidth,
-              fit: BoxFit.cover, // Cover the widget's bounds
+              fit: BoxFit.cover,
             ),
             if (minutesToRead != null) ...<Widget>[
               Container(
-                // Adjust the overlay margin
                 padding:
-                    EdgeInsets.symmetric(horizontal: 8.0.w, vertical: 4.0.w),
-                // Adjust the overlay padding
+                EdgeInsets.symmetric(horizontal: 8.0.w, vertical: 4.0.w),
                 decoration: BoxDecoration(
                   color: context.theme.appColors.tertararyBackground,
-                  // Background color
                   border: Border.all(
                     color: context.theme.appColors.onTerararyFill,
                   ),
-                  // Border color
                   borderRadius: getOverlayBorderRadius(alignment),
                 ),
                 child: ReadTimeTile(
