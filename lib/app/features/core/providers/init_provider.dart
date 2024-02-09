@@ -9,7 +9,7 @@ part 'init_provider.g.dart';
 Future<void> initApp(InitAppRef ref) async {
   await ref.read(envProvider.future);
   await Future.wait(<Future<void>>[
-    ref.read(templateLoadingProvider.future),
+    ref.read(appTemplateProvider.future),
     ref.read(authProvider.notifier).rehydrate(),
   ]);
 }

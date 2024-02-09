@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
 import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
@@ -17,89 +15,85 @@ import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ice/app/features/wallet/views/pages/inner_wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 
-const IcePages initialPage = IcePages.splash;
+const IceRoutes initialPage = IceRoutes.splash;
 
-List<IcePages> iceRoots = <IcePages>[
-  IcePages.splash,
-  IcePages.error,
-  IcePages.intro,
-  IcePages.home,
+List<IceRoutes> iceRootRoutes = <IceRoutes>[
+  IceRoutes.splash,
+  IceRoutes.error,
+  IceRoutes.intro,
+  IceRoutes.home,
 ];
 
-enum IcePages {
-  splash('splash', SplashPage.new),
-  error('error', ErrorPage.new),
+enum IceRoutes {
+  splash(SplashPage.new),
+  error(ErrorPage.new),
   intro(
-    'intro',
     IntroPage.new,
-    type: IcePageType.bottomSheet,
-    children: <IcePages>[
-      IcePages.auth,
-      IcePages.selectCountries,
-      IcePages.selectLanguages,
-      IcePages.checkEmail,
-      IcePages.fillProfile,
-      IcePages.discoverCreators,
-      IcePages.nostrAuth,
-      IcePages.nostrLogin,
-      IcePages.enterCode,
+    type: IceRouteType.bottomSheet,
+    children: <IceRoutes>[
+      IceRoutes.auth,
+      IceRoutes.selectCountries,
+      IceRoutes.selectLanguages,
+      IceRoutes.checkEmail,
+      IceRoutes.fillProfile,
+      IceRoutes.discoverCreators,
+      IceRoutes.nostrAuth,
+      IceRoutes.nostrLogin,
+      IceRoutes.enterCode,
     ],
   ),
-  auth('auth', AuthPage.new),
-  selectCountries('selectCountries', SelectCountries.new),
-  selectLanguages('selectLanguages', SelectLanguages.new),
-  checkEmail('checkEmail', CheckEmail.new),
-  nostrAuth('nostrAuth', NostrAuth.new),
-  nostrLogin('nostrLogin', NostrLogin.new),
-  enterCode('enterCode', EnterCode.new),
-  discoverCreators('discoverCreators', DiscoverCreators.new),
-  fillProfile('fillProfile', FillProfile.new),
+  auth(AuthPage.new),
+  selectCountries(SelectCountries.new),
+  selectLanguages(SelectLanguages.new),
+  checkEmail(CheckEmail.new),
+  nostrAuth(NostrAuth.new),
+  nostrLogin(NostrLogin.new),
+  enterCode(EnterCode.new),
+  discoverCreators(DiscoverCreators.new),
+  fillProfile(FillProfile.new),
   home(
-    '',
-    SizedBox.shrink,
-    type: IcePageType.bottomTabs,
-    children: <IcePages>[
-      IcePages.dapps,
-      IcePages.chat,
-      IcePages.wallet,
+    AbsentPage.new,
+    type: IceRouteType.bottomTabs,
+    children: <IceRoutes>[
+      IceRoutes.dapps,
+      IceRoutes.chat,
+      IceRoutes.wallet,
     ],
   ),
   dapps(
-    'dapps',
     DAppsPage.new,
-    children: <IcePages>[
-      IcePages.appsList,
+    children: <IceRoutes>[
+      IceRoutes.appsList,
     ],
   ),
-  appsList('appsList', DAppsList.new),
-  chat('chat', ChatPage.new),
+  appsList(DAppsList.new),
+  chat(ChatPage.new),
   wallet(
-    'wallet',
     WalletPage.new,
-    children: <IcePages>[
-      IcePages.innerWallet,
+    children: <IceRoutes>[
+      IceRoutes.innerWallet,
     ],
   ),
-  innerWallet('innerWallet', InnerWalletPage.new),
+  innerWallet(InnerWalletPage.new),
   ;
 
-  const IcePages(
-    this.name,
+  const IceRoutes(
     this.builder, {
-    this.type = IcePageType.single,
+    this.type = IceRouteType.single,
     this.children,
   });
 
-  final String name;
-  final IcePageType type;
-  final List<IcePages>? children;
-  final Widget Function() builder;
-
-  String location(GoRouterState state) => state.namedLocation(name);
+  final IceRouteType type;
+  final List<IceRoutes>? children;
+  final IcePageBuilder builder;
 }
 
-enum IcePageType {
+typedef IcePageBuilder<PayloadType, PageType extends IcePage<PayloadType>> = PageType Function(
+    IceRoutes route, PayloadType? payload,);
+
+enum IceRouteType {
   single,
   bottomSheet,
   bottomTabs,

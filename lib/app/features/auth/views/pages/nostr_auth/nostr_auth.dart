@@ -3,15 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class NostrAuth extends HookConsumerWidget {
-  const NostrAuth({super.key});
+class NostrAuth extends SimplePage {
+  const NostrAuth(super._route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
@@ -56,7 +57,7 @@ class NostrAuth extends HookConsumerWidget {
                       size: 24,
                     ),
                     onPressed: () {
-                      context.goNamed(IcePages.nostrLogin.name);
+                      context.goNamed(IceRoutes.nostrLogin.name);
                     },
                     label: const Text('Login'),
                     mainAxisSize: MainAxisSize.max,

@@ -6,15 +6,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class EnterCode extends HookConsumerWidget {
-  const EnterCode({super.key});
+class EnterCode extends SimplePage {
+  const EnterCode(super.route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     const String phoneNumber = '+101234567890';
     final TextEditingController codeController = TextEditingController();
 

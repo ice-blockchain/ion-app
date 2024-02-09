@@ -12,6 +12,7 @@ import 'package:ice/app/features/auth/views/pages/auth_page/controllers/phone_nu
 import 'package:ice/app/features/auth/views/pages/auth_page/widgets/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
@@ -20,11 +21,11 @@ import 'package:ice/app/shared/widgets/socials/socials.dart';
 import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class AuthPage extends HookConsumerWidget {
-  const AuthPage({super.key});
+class AuthPage extends SimplePage {
+  const AuthPage(super._route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     final AuthState authState = ref.watch(authProvider);
     final bool isEmailMode = ref.watch(isEmailModeProvider);
     final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
@@ -57,7 +58,7 @@ class AuthPage extends HookConsumerWidget {
               InputField(
                 leadingIcon: CountryCodeInput(
                   country: countries[1],
-                  onTap: () => context.goNamed(IcePages.selectCountries.name),
+                  onTap: () => context.goNamed(IceRoutes.selectCountries.name),
                 ),
                 label: 'Phone number',
                 controller: numberController.controller,
@@ -120,17 +121,17 @@ class AuthPage extends HookConsumerWidget {
                 onSocialButtonPressed: (SocialButtonType type) {
                   switch (type) {
                     case SocialButtonType.apple:
-                      context.goNamed(IcePages.checkEmail.name);
+                      context.goNamed(IceRoutes.checkEmail.name);
                     case SocialButtonType.nostr:
-                      context.goNamed(IcePages.nostrAuth.name);
+                      context.goNamed(IceRoutes.nostrAuth.name);
                     case SocialButtonType.x:
-                      context.goNamed(IcePages.fillProfile.name);
+                      context.goNamed(IceRoutes.fillProfile.name);
                     case SocialButtonType.fb:
-                      context.goNamed(IcePages.enterCode.name);
+                      context.goNamed(IceRoutes.enterCode.name);
                     case SocialButtonType.github:
-                      context.goNamed(IcePages.selectLanguages.name);
+                      context.goNamed(IceRoutes.selectLanguages.name);
                     case SocialButtonType.discord:
-                      context.goNamed(IcePages.discoverCreators.name);
+                      context.goNamed(IceRoutes.discoverCreators.name);
                     case SocialButtonType.linkedin:
                       break;
                     default:

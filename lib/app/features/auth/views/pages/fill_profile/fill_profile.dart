@@ -9,6 +9,7 @@ import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/invit
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/name_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/nickname_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/validators.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/utility/image_picker_and_cropper/image_picker_and_cropper.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
@@ -31,11 +32,11 @@ final StateNotifierProvider<CroppedFileNotifier, CroppedFile?>
       CroppedFileNotifier(),
 );
 
-class FillProfile extends HookConsumerWidget {
-  const FillProfile({super.key});
+class FillProfile extends SimplePage {
+  const FillProfile(super.route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     final GlobalKey<TextFieldWrapperState> nameFieldKey =
         GlobalKey<TextFieldWrapperState>();
     final GlobalKey<TextFieldWrapperState> nicknameFieldKey =

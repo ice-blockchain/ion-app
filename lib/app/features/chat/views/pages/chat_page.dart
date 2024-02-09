@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 
-class ChatPage extends HookConsumerWidget {
-  const ChatPage({super.key});
+class ChatPage extends SimplePage {
+  const ChatPage(super.route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat Page'),

@@ -6,14 +6,15 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/apps_collection.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/navigation_header/navigation_header.dart';
 import 'package:ice/app/shared/widgets/search/search.dart';
 
-class DAppsList extends HookConsumerWidget {
-  const DAppsList({super.key});
+class DAppsList extends SimplePage {
+  const DAppsList(super.route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     final ValueNotifier<String> searchText = useState('');
 
     final List<DAppItem> filteredApps = searchText.value.isEmpty

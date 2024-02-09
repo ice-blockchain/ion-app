@@ -17,6 +17,8 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   AuthState _authState = const AuthenticationUnknown();
   AsyncValue<void>? _init;
 
+  final Map<IceRoutes, String> _routesLocations = <IceRoutes, String>{};
+
   @override
   Future<void> build() async {
     _authState = ref.watch(authProvider);
@@ -30,50 +32,57 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     });
   }
 
+  String _location(IceRoutes route, GoRouterState state) {
+    final String? location = _routesLocations[route];
+    if (location == null) {
+      return _routesLocations[route] = state.namedLocation(route.name); //TODO avoid hardcoded route.name
+    }
+
+    return location;
+  }
+
   // ignore: avoid_build_context_in_providers
   String? redirect(BuildContext context, GoRouterState state) {
-    final String? name = _redirectNamed(state);
-    if (name != null) {
-
-      return state.namedLocation(name);  //TODO cache all named locations
-
+    final IceRoutes? route = _redirectNamed(state);
+    if (route != null) {
+      return _location(route, state);
     }
 
     return null;
   }
 
-  String? _redirectNamed(GoRouterState state) {
+  IceRoutes? _redirectNamed(GoRouterState state) {
     //TODO: check that its part of intro navigation flow
-    final bool isAuthInProgress = state.matchedLocation.startsWith(IcePages.intro.location(state));
-    final bool isSplash = state.matchedLocation == IcePages.splash.location(state);
+    final bool isAuthInProgress = state.matchedLocation.startsWith(_location(IceRoutes.intro, state));
+    final bool isSplash = state.matchedLocation == _location(IceRoutes.splash, state);
     final bool isInitError = _init?.hasError ?? false;
     final bool isInitInProgress = _init?.isLoading ?? true;
     final bool isAnimationCompleted = ref.watch(splashProvider);
 
     if (isInitError) {
-      return IcePages.splash.name;
+      return IceRoutes.splash;
     }
 
     if (isInitInProgress && !isSplash || !isAnimationCompleted) {
-      return IcePages.splash.name;
+      return IceRoutes.splash;
     }
 
     if (isSplash && !isInitInProgress && isAnimationCompleted) {
       if (_authState is Authenticated) {
-        return IcePages.wallet.name;
+        return IceRoutes.wallet;
       }
       if (_authState is UnAuthenticated) {
         /// Navigate to the Intro screen after splash for unauthenticated users
-        return IcePages.intro.name;
+        return IceRoutes.intro;
       }
     }
 
     if (isAuthInProgress && _authState is Authenticated) {
-      return IcePages.wallet.name;
+      return IceRoutes.wallet;
     }
 
     if (!isAuthInProgress && _authState is UnAuthenticated) {
-      return IcePages.intro.name;
+      return IceRoutes.intro;
     }
 
     return null;

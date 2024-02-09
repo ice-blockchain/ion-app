@@ -5,14 +5,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/navigation_header/navigation_header.dart';
 import 'package:ice/app/shared/widgets/search/search.dart';
 
-class SelectCountries extends HookConsumerWidget {
-  const SelectCountries({super.key});
+class SelectCountries extends SimplePage {
+  const SelectCountries(super._route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     final ValueNotifier<String> searchText = useState('');
 
     final List<Country> filteredCountries = searchText.value.isEmpty

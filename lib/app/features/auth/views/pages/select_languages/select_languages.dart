@@ -4,17 +4,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/navigation_header/navigation_header.dart';
 import 'package:ice/app/shared/widgets/search/search.dart';
 import 'package:ice/app/shared/widgets/title_description_header/title_description_header.dart';
 import 'package:ice/app/values/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SelectLanguages extends HookConsumerWidget {
-  const SelectLanguages({super.key});
+class SelectLanguages extends SimplePage {
+  const SelectLanguages(super._route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     final ValueNotifier<String> searchText = useState('');
 
     final ValueNotifier<Set<Language>> selectedLanguagesNotifier =

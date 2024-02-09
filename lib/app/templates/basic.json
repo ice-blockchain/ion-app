@@ -116,7 +116,7 @@
   },
   "config": {
     "pages": {
-      "auth_page": {
+      "auth": {
         "controls": {
           "login_button": {
             "hide": false,

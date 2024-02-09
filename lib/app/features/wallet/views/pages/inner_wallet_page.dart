@@ -5,12 +5,13 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 
-class InnerWalletPage extends HookConsumerWidget {
-  const InnerWalletPage({super.key});
+class InnerWalletPage extends SimplePage {
+  const InnerWalletPage(super.route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     final AuthState authState = ref.watch(authProvider);
     final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
 

@@ -9,13 +9,14 @@ import 'package:ice/app/features/dapps/views/pages/widgets/categories.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/favourites.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/featured.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/wallet_header/wallet_header.dart';
 
-class DAppsPage extends HookConsumerWidget {
-  const DAppsPage({super.key});
+class DAppsPage extends SimplePage {
+  const DAppsPage(super.route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(color: context.theme.appColors.secondaryBackground),
@@ -28,14 +29,14 @@ class DAppsPage extends HookConsumerWidget {
               title: 'Highest ranked',
               items: featured,
               onPress: () {
-                context.goNamed(IcePages.appsList.name);
+                context.goNamed(IceRoutes.appsList.name);
               },
             ),
             Apps(
               title: 'Recently added',
               items: featured,
               onPress: () {
-                context.goNamed(IcePages.appsList.name);
+                context.goNamed(IceRoutes.appsList.name);
               },
             ),
             const Favourites(),

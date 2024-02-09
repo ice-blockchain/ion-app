@@ -23,7 +23,7 @@ class IceApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
-    final AsyncValue<Template> template = ref.watch(templateLoadingProvider);
+    final AsyncValue<Template> template = ref.watch(appTemplateProvider);
 
     final GoRouter appRouter = useAppRouter(ref);
 

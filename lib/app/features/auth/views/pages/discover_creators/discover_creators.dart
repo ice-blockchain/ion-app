@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/navigation_header/navigation_header.dart';
 import 'package:ice/app/shared/widgets/search/search.dart';
@@ -11,11 +12,11 @@ import 'package:ice/app/shared/widgets/title_description_header/title_descriptio
 import 'package:ice/app/values/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class DiscoverCreators extends HookConsumerWidget {
-  const DiscoverCreators({super.key});
+class DiscoverCreators extends SimplePage {
+  const DiscoverCreators(super.route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     final ValueNotifier<String> searchText = useState('');
 
     final ValueNotifier<Set<User>> followedCreatorsNotifier =

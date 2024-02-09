@@ -5,16 +5,17 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 enum SampleItem { ice, eth, bnb }
 
-class WalletPage extends HookConsumerWidget {
-  const WalletPage({super.key});
+class WalletPage extends SimplePage {
+  const WalletPage(super.route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
     final AuthState authState = ref.watch(authProvider);
     final ValueNotifier<SampleItem> selected = useState(SampleItem.ice);
 
