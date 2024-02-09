@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/shared/widgets/decorators.dart';
 import 'package:ice/app/shared/widgets/inputs/input_field_controller.dart';
-import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/utils/extensions.dart';
 import 'package:ice/app/values/borders.dart';
 import 'package:ice/app/values/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 const Color _kBackgroundColor = Color(0xFFFFFFFF);
+double defaultTextFieldMargin = 44.0.w;
 
 class InputField extends StatefulWidget {
   InputField({
@@ -215,8 +216,8 @@ class InputFormField extends FormField<String> {
                   height: 34,
                   child: TextFormField(
                     scrollPadding: EdgeInsets.only(
-                      bottom:
-                          controller.scrollPadding.zeroOrValue + kDefaultMargin,
+                      bottom: controller.scrollPadding.zeroOrValue +
+                          defaultTextFieldMargin,
                     ),
                     enabled: controller.enabled,
                     controller: textController,
@@ -243,8 +244,9 @@ class InputFormField extends FormField<String> {
                       errorBorder: InputFieldBorder(),
                       focusedErrorBorder: InputFieldBorder(),
                       label: Padding(
-                        padding:
-                            const EdgeInsets.only(bottom: kDefaultMargin / 2),
+                        padding: EdgeInsets.only(
+                          bottom: defaultTextFieldMargin / 2,
+                        ),
                         child: Text(
                           label,
                           style: context.theme.appTextThemes.subtitle.copyWith(
@@ -292,7 +294,7 @@ class InputFormField extends FormField<String> {
       children: <Widget>[
         field,
         Padding(
-          padding: EdgeInsets.only(left: kDefaultMargin, top: 4.0.s),
+          padding: EdgeInsets.only(left: defaultTextFieldMargin, top: 4.0.s),
           child: Text(
             error,
             overflow: TextOverflow.ellipsis,
@@ -357,7 +359,7 @@ class TextFieldToEdit extends StatelessWidget {
         height: 56.0.s,
         color: _kBackgroundColor,
         child: Padding(
-          padding: const EdgeInsets.all(kDefaultMargin),
+          padding: EdgeInsets.all(defaultTextFieldMargin),
           child: Row(
             children: <Widget>[
               Expanded(

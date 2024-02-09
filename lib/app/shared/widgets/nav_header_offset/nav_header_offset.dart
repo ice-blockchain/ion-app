@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-const double kDefaultNavHeaderTopPadding = 50.0;
-const EdgeInsets defaultInsets =
-    EdgeInsets.only(top: kDefaultNavHeaderTopPadding);
+double defaultNavHeaderTopPadding = 50.0.w;
+EdgeInsets defaultInsets = EdgeInsets.only(top: defaultNavHeaderTopPadding);
 
 class NavHeaderOffset extends StatelessWidget {
-  const NavHeaderOffset({
+  NavHeaderOffset({
     super.key,
     required this.child,
     EdgeInsets? insets,

@@ -21,7 +21,7 @@ class CheckEmail extends HookConsumerWidget {
         TextEditingController(text: '1234');
 
     return Scaffold(
-      body: ScreenSideOffset(
+      body: ScreenSideOffset.large(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

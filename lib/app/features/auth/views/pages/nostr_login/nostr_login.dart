@@ -16,7 +16,7 @@ class NostrLogin extends HookConsumerWidget {
     final PrivateKeyController privateKeyController = PrivateKeyController();
     return Scaffold(
       body: SingleChildScrollView(
-        child: ScreenSideOffset(
+        child: ScreenSideOffset.large(
           child: Column(
             children: <Widget>[
               AuthHeaderWidget(

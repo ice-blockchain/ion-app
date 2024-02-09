@@ -24,7 +24,7 @@ class EnterCode extends HookConsumerWidget {
     final ValueNotifier<bool> invalidCode = useState(false);
 
     return Scaffold(
-      body: ScreenSideOffset(
+      body: ScreenSideOffset.large(
         child: Container(
           alignment: Alignment.center,
           child: Column(

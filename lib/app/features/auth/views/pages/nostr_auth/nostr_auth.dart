@@ -28,7 +28,7 @@ class NostrAuth extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: ScreenSideOffset(
+      body: ScreenSideOffset.large(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

@@ -53,7 +53,7 @@ class AuthPage extends HookConsumerWidget {
     final PhoneNumberController numberController = PhoneNumberController();
 
     return Scaffold(
-      body: ScreenSideOffset(
+      body: ScreenSideOffset.large(
         child: Column(
           children: <Widget>[
             AuthHeaderWidget(

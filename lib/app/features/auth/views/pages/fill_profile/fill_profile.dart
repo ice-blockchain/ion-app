@@ -83,7 +83,7 @@ class FillProfile extends HookConsumerWidget {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: ScreenSideOffset(
+        child: ScreenSideOffset.large(
           child: Column(
             children: <Widget>[
               const SizedBox(

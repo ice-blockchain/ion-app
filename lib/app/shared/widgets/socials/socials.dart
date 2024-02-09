@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
@@ -6,7 +7,7 @@ import 'package:ice/generated/assets.gen.dart';
 
 enum SocialButtonType { apple, nostr, x, expand, fb, github, discord, linkedin }
 
-const double kDefaultSocialIconButtonSide = 44.0;
+double defaultSocialIconButtonSide = 44.0.w;
 
 Map<SocialButtonType, String> socialIcons = <SocialButtonType, String>{
   SocialButtonType.apple: Assets.images.apple.path,
@@ -51,9 +52,9 @@ class _SocialsState extends State<Socials> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double buttonWidth = context.theme.iconButtonTheme.style?.iconSize
             ?.resolve(<MaterialState>{}) ??
-        kDefaultSocialIconButtonSide;
+        defaultSocialIconButtonSide;
     final double spaceBetweenButtons =
-        (screenWidth - 2 * kDefaultMargin - 4 * buttonWidth) / 3;
+        (screenWidth - 2 * defaultLargeMargin - 4 * buttonWidth) / 3;
 
     return Column(
       children: <Widget>[
