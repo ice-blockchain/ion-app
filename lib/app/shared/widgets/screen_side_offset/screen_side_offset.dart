@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-double defaultLargeMargin = 44.0.w;
-double defaultSmallMargin = 16.0.w;
-
 class ScreenSideOffset extends StatelessWidget {
   const ScreenSideOffset._({
     super.key,
@@ -38,6 +35,11 @@ class ScreenSideOffset extends StatelessWidget {
       child: child,
     );
   }
+
+  static double get defaultSmallMargin => 16.0.w;
+
+  static double get defaultLargeMargin => 44.0.w;
+
   final Widget child;
   final EdgeInsets insets;
 

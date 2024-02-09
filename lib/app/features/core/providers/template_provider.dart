@@ -6,11 +6,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'template_provider.g.dart';
 
-Template? _template;
+late Template _template;
 
 //TODO::discuss this approach
 Template get appTemplate {
-  return _template!;
+  return _template;
 }
 
 @Riverpod(keepAlive: true)

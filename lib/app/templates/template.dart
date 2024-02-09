@@ -12,6 +12,7 @@ class TemplateColors {
     this.primaryText,
     this.secondaryText,
     this.tertararyText,
+    this.sharkText,
     this.primaryBackground,
     this.secondaryBackground,
     this.tertararyBackground,
@@ -37,6 +38,8 @@ class TemplateColors {
   Color secondaryText;
   @ColorConverter()
   Color tertararyText;
+  @ColorConverter()
+  Color sharkText;
   @ColorConverter()
   Color primaryBackground;
   @ColorConverter()
@@ -101,6 +104,7 @@ class TemplateTextTheme {
 class TemplateTextThemes {
   TemplateTextThemes(
     this.headline1,
+    this.headline2,
     this.inputFieldText,
     this.title,
     this.subtitle,
@@ -116,6 +120,7 @@ class TemplateTextThemes {
       _$TemplateTextThemesFromJson(json);
 
   TemplateTextTheme headline1;
+  TemplateTextTheme headline2;
   TemplateTextTheme inputFieldText;
   TemplateTextTheme title;
   TemplateTextTheme subtitle;
