@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ice/app/components/decorators.dart';
+import 'package:ice/app/components/inputs/borders.dart';
 import 'package:ice/app/components/inputs/input_field_controller.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/string.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/values/borders.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 const Color _kBackgroundColor = Color(0xFFFFFFFF);
