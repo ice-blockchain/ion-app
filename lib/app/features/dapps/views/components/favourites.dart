@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/favourite_icon/favorite_icon.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/dapps/views/components/favourite_icon/favorite_icon.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 double containerHeight = 60.0.s;

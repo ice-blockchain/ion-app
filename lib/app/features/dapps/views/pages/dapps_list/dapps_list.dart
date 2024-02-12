@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/nav_header_offset/nav_header_offset.dart';
 import 'package:ice/app/components/navigation_header/navigation_header.dart';
 import 'package:ice/app/components/search/search.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/dapps/views/pages/components/apps_collection.dart';
+import 'package:ice/app/features/dapps/views/components/apps_collection.dart';
+import 'package:ice/app/features/dapps/views/components/nav_header_offset/nav_header_offset.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 
 class DAppsList extends HookConsumerWidget {

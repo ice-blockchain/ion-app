@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/section_header/section_header.dart';
-import 'package:ice/app/features/dapps/views/pages/components/apps_collection.dart';
+import 'package:ice/app/features/dapps/views/components/apps_collection.dart';
+import 'package:ice/app/features/dapps/views/components/section_header/section_header.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 
 class AppsRouteData {
