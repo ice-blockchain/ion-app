@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/keyboard_hider.dart';
+import 'package:ice/app/components/keyboard_hider/keyboard_hider.dart';
 
 class ModalWrapper extends StatelessWidget {
   const ModalWrapper({super.key, required this.child});

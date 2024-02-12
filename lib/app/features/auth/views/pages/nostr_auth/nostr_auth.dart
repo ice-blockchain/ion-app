@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/auth_header/auth_header.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/modal_wrapper.dart';
+import 'package:ice/app/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/nostr_login.dart';

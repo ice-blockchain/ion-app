@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ice/app/components/decorators.dart';
 import 'package:ice/app/components/inputs/borders.dart';
+import 'package:ice/app/components/inputs/decorators.dart';
 import 'package:ice/app/components/inputs/input_field_controller.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';

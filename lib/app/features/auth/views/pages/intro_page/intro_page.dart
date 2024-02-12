@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/modal_wrapper.dart';
-import 'package:ice/app/components/side_padding.dart';
+import 'package:ice/app/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
@@ -55,7 +54,8 @@ class IntroPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                SidePadding(
+                Padding(
+                  padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
