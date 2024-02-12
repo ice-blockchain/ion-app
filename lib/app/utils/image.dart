@@ -6,10 +6,12 @@ String getAdaptiveImageUrl(String imageUrl, double imageWidth) {
   return '$imageUrl?width=${imageWidth.toInt()}';
 }
 
+const int pickerImageQuality = 50;
+
 Future<CroppedFile?> pickImageFromGallery() async {
   final XFile? pickedFile = await ImagePicker().pickImage(
     source: ImageSource.gallery,
-    imageQuality: 50,
+    imageQuality: pickerImageQuality,
   );
   return _cropImage(pickedFile?.path);
 }
@@ -17,7 +19,7 @@ Future<CroppedFile?> pickImageFromGallery() async {
 Future<CroppedFile?> takePhoto() async {
   final XFile? capturedFile = await ImagePicker().pickImage(
     source: ImageSource.camera,
-    imageQuality: 50,
+    imageQuality: pickerImageQuality,
   );
   return _cropImage(capturedFile?.path);
 }
