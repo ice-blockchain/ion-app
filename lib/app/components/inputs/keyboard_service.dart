@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
-//TODO::reconsider during input refactoring
+//TODO::reconsider during input refactoring (to riverpod?)
 class KeyboardService {
   final KeyboardVisibilityController keyboardVisibilityController =
       KeyboardVisibilityController();

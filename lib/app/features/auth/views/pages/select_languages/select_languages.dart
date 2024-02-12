@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/navigation_header/navigation_header.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/search/search.dart';
 import 'package:ice/app/components/title_description_header/title_description_header.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
-import 'package:ice/app/values/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SelectLanguages extends HookConsumerWidget {
@@ -36,101 +36,104 @@ class SelectLanguages extends HookConsumerWidget {
         child: Stack(
           children: <Widget>[
             const NavigationHeader(title: ''),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: navigationHeaderHeight,
-                left: kDefaultSidePadding,
-                right: kDefaultSidePadding,
-              ),
-              child: Column(
-                children: <Widget>[
-                  TitleDescription(
-                    title: context.i18n.select_languages_title,
-                    description: context.i18n.select_languages_description,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Search(
-                      onTextChanged: (String value) => searchText.value = value,
-                      onClearText: () {
-                        searchText.value = '';
-                      },
+            ScreenSideOffset.small(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: navigationHeaderHeight,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    TitleDescription(
+                      title: context.i18n.select_languages_title,
+                      description: context.i18n.select_languages_description,
                     ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: filteredLanguages.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final Language country = filteredLanguages[index];
-                        final bool isSelected =
-                            selectedLanguages.contains(country);
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Search(
+                        onTextChanged: (String value) =>
+                            searchText.value = value,
+                        onClearText: () {
+                          searchText.value = '';
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: filteredLanguages.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final Language country = filteredLanguages[index];
+                          final bool isSelected =
+                              selectedLanguages.contains(country);
 
-                        return InkWell(
-                          onTap: () {
-                            final Set<Language> newSelectedLanguages =
-                                Set<Language>.from(selectedLanguages);
-                            if (isSelected) {
-                              newSelectedLanguages.remove(country);
-                            } else {
-                              newSelectedLanguages.add(country);
-                            }
-                            selectedLanguagesNotifier.value =
-                                newSelectedLanguages;
-                          },
-                          child: Container(
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color:
-                                  context.theme.appColors.tertararyBackground,
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            margin: const EdgeInsets.only(
-                              bottom: 12,
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kDefaultSidePadding,
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  country.flag,
-                                  style: context.theme.appTextThemes.subtitle2
-                                      .copyWith(
-                                    color: context.theme.appColors.primaryText,
-                                    fontSize: 24,
-                                  ),
+                          return InkWell(
+                            onTap: () {
+                              final Set<Language> newSelectedLanguages =
+                                  Set<Language>.from(selectedLanguages);
+                              if (isSelected) {
+                                newSelectedLanguages.remove(country);
+                              } else {
+                                newSelectedLanguages.add(country);
+                              }
+                              selectedLanguagesNotifier.value =
+                                  newSelectedLanguages;
+                            },
+                            child: ScreenSideOffset.small(
+                              child: Container(
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: context
+                                      .theme.appColors.tertararyBackground,
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
-                                const SizedBox(
-                                  width: 16,
+                                margin: const EdgeInsets.only(
+                                  bottom: 12,
                                 ),
-                                Expanded(
-                                  child: Text(
-                                    country.name,
-                                    style: context.theme.appTextThemes.subtitle2
-                                        .copyWith(
-                                      color:
-                                          context.theme.appColors.primaryText,
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      country.flag,
+                                      style: context
+                                          .theme.appTextThemes.subtitle2
+                                          .copyWith(
+                                        color:
+                                            context.theme.appColors.primaryText,
+                                        fontSize: 24,
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 30,
-                                  child: isSelected
-                                      ? Image.asset(
-                                          Assets.images.checkboxon.path,
-                                        )
-                                      : Image.asset(
-                                          Assets.images.checkboxoff.path,
+                                    const SizedBox(
+                                      width: 16,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        country.name,
+                                        style: context
+                                            .theme.appTextThemes.subtitle2
+                                            .copyWith(
+                                          color: context
+                                              .theme.appColors.primaryText,
                                         ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 30,
+                                      child: isSelected
+                                          ? Image.asset(
+                                              Assets.images.checkboxon.path,
+                                            )
+                                          : Image.asset(
+                                              Assets.images.checkboxoff.path,
+                                            ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

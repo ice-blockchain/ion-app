@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/values/constants.dart';
+import 'package:ice/app/extensions/num.dart';
 
 class RoundedContainer extends Container {
   RoundedContainer({
@@ -16,7 +16,7 @@ class RoundedContainer extends Container {
           decoration: BoxDecoration(
             border: border,
             borderRadius: BorderRadius.all(
-              Radius.circular(radius ?? kDefaultBorderRadiusValue),
+              Radius.circular(radius ?? 16.0.s),
             ),
             color: color,
           ),

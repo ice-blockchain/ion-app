@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ice/app/components/decorators.dart';
 import 'package:ice/app/components/inputs/input_field_controller.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -8,11 +7,13 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/string.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/values/borders.dart';
-import 'package:ice/app/values/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 const Color _kBackgroundColor = Color(0xFFFFFFFF);
-double defaultTextFieldMargin = 44.0.w;
+double defaultTextFieldMargin = 44.0.s;
+double textInputLeadingPadding = 16.0.s;
+double textInputTrailingPadding = 12.0.s;
+double defaultTextInputHeight = 58.0.s;
 
 class InputField extends StatefulWidget {
   InputField({
@@ -180,7 +181,7 @@ class InputFormField extends FormField<String> {
     final Widget field = GestureDetector(
       onTap: onTap ?? () => controller.focusNode.requestFocus(),
       child: RoundedContainer(
-        height: kDefaultTextInputHeight,
+        height: defaultTextInputHeight,
         border: _buildBorder(
           controller,
           error.isEmpty,
@@ -191,8 +192,8 @@ class InputFormField extends FormField<String> {
           children: <Widget>[
             if (leadingIcon != null)
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: kTextInputLeadingPadding,
+                padding: EdgeInsets.symmetric(
+                  horizontal: textInputLeadingPadding,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -203,8 +204,8 @@ class InputFormField extends FormField<String> {
                         width: 1,
                         height: 26,
                         color: context.theme.appColors.strokeElements,
-                        margin: const EdgeInsets.only(
-                          left: kTextInputLeadingPadding,
+                        margin: EdgeInsets.only(
+                          left: textInputLeadingPadding,
                         ),
                       ),
                   ],
@@ -262,8 +263,8 @@ class InputFormField extends FormField<String> {
             ),
             if (suffix != null)
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: kTextInputTrailingPadding,
+                padding: EdgeInsets.symmetric(
+                  horizontal: textInputTrailingPadding,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -273,8 +274,8 @@ class InputFormField extends FormField<String> {
                         width: 1,
                         height: 26,
                         color: context.theme.appColors.strokeElements,
-                        margin: const EdgeInsets.only(
-                          right: kTextInputTrailingPadding,
+                        margin: EdgeInsets.only(
+                          right: textInputTrailingPadding,
                         ),
                       ),
                     suffix,
