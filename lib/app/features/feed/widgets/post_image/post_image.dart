@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/widgets/read_time_tile/read_time_tile.dart';
-import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/utils/Image_utils.dart';
 
 double borderRadius = 12.0.w;

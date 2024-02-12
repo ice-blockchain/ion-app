@@ -9,10 +9,10 @@ import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/name_
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/nickname_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/validators.dart';
 import 'package:ice/app/shared/utility/image_picker_and_cropper/image_picker_and_cropper.dart';
-import 'package:ice/app/shared/widgets/button/button.dart';
-import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
-import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
-import 'package:ice/app/shared/widgets/text_field_wrapper/text_field_wrapper.dart';
+import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/inputs/text_fields.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/text_field_wrapper/text_field_wrapper.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:image_cropper/image_cropper.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/shadow_text/shadow_text.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
-import 'package:ice/app/shared/ShadowText/shadow_text.dart';
 
 class FeaturedCollection extends StatelessWidget {
   const FeaturedCollection({super.key, required this.items});

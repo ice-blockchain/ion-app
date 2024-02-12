@@ -5,7 +5,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/shared/widgets/button/button.dart';
+import 'package:ice/app/components/button/button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 enum SampleItem { ice, eth, bnb }

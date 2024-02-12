@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/apps_collection.dart';
-import 'package:ice/app/shared/widgets/section_header/section_header.dart';
+import 'package:ice/app/components/section_header/section_header.dart';
 
 class AppsRouteData {
   AppsRouteData({required this.title, this.items = const <DAppItem>[]});

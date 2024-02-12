@@ -8,7 +8,7 @@ import 'package:ice/app/features/dapps/views/pages/widgets/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/categories.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/favourites.dart';
 import 'package:ice/app/features/dapps/views/pages/widgets/featured.dart';
-import 'package:ice/app/shared/widgets/wallet_header/wallet_header.dart';
+import 'package:ice/app/components/wallet_header/wallet_header.dart';
 
 class DAppsPage extends HookConsumerWidget {
   const DAppsPage({super.key});

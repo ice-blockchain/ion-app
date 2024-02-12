@@ -16,14 +16,14 @@ import 'package:ice/app/features/auth/views/pages/nostr_auth/nostr_auth.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
-import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
-import 'package:ice/app/shared/widgets/button/button.dart';
-import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
-import 'package:ice/app/shared/widgets/modal_wrapper.dart';
-import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
-import 'package:ice/app/shared/widgets/secured_by/secured_by.dart';
-import 'package:ice/app/shared/widgets/socials/socials.dart';
-import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
+import 'package:ice/app/components/auth_header/auth_header.dart';
+import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/inputs/text_fields.dart';
+import 'package:ice/app/components/modal_wrapper.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/secured_by/secured_by.dart';
+import 'package:ice/app/components/socials/socials.dart';
+import 'package:ice/app/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class AuthPage extends HookConsumerWidget {

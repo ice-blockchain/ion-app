@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/shared/widgets/button/button.dart';
-import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 enum SocialButtonType { apple, nostr, x, expand, fb, github, discord, linkedin }
