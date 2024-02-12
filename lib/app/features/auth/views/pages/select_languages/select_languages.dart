@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
 import 'package:ice/app/components/navigation_header/navigation_header.dart';
 import 'package:ice/app/components/search/search.dart';
 import 'package:ice/app/components/title_description_header/title_description_header.dart';
+import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
 import 'package:ice/app/values/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 

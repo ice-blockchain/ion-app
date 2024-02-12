@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
-part './widgets/list_item_checkbox.dart';
+part './variants/list_item_checkbox.dart';
 
 class ListItem extends StatelessWidget {
   const ListItem({
