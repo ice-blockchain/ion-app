@@ -77,55 +77,55 @@ class SelectLanguages extends HookConsumerWidget {
                               selectedLanguagesNotifier.value =
                                   newSelectedLanguages;
                             },
-                            child: ScreenSideOffset.small(
-                              child: Container(
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: context
-                                      .theme.appColors.tertararyBackground,
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                margin: const EdgeInsets.only(
-                                  bottom: 12,
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      country.flag,
+                            child: Container(
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color:
+                                    context.theme.appColors.tertararyBackground,
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              margin: const EdgeInsets.only(
+                                bottom: 12,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    country.flag,
+                                    style: context.theme.appTextThemes.subtitle2
+                                        .copyWith(
+                                      color:
+                                          context.theme.appColors.primaryText,
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 16,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      country.name,
                                       style: context
                                           .theme.appTextThemes.subtitle2
                                           .copyWith(
                                         color:
                                             context.theme.appColors.primaryText,
-                                        fontSize: 24,
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 16,
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        country.name,
-                                        style: context
-                                            .theme.appTextThemes.subtitle2
-                                            .copyWith(
-                                          color: context
-                                              .theme.appColors.primaryText,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 30,
-                                      child: isSelected
-                                          ? Image.asset(
-                                              Assets.images.checkboxon.path,
-                                            )
-                                          : Image.asset(
-                                              Assets.images.checkboxoff.path,
-                                            ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  SizedBox(
+                                    width: 30,
+                                    child: isSelected
+                                        ? Image.asset(
+                                            Assets.images.checkboxon.path,
+                                          )
+                                        : Image.asset(
+                                            Assets.images.checkboxoff.path,
+                                          ),
+                                  ),
+                                ],
                               ),
                             ),
                           );

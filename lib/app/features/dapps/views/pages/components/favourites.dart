@@ -24,54 +24,55 @@ class Favourites extends StatelessWidget {
         ),
         child: GestureDetector(
           onTap: onPress,
-          child: ScreenSideOffset.small(
-            child: Container(
-              height: containerHeight,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: context.theme.appColors.tertararyBackground,
-                border: Border.all(
-                  color: context.theme.appColors.onTerararyFill,
-                ),
+          child: Container(
+            height: containerHeight,
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(
+              horizontal: ScreenSideOffset.defaultSmallMargin,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: context.theme.appColors.tertararyBackground,
+              border: Border.all(
+                color: context.theme.appColors.onTerararyFill,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      const FavouriteIcon(),
-                      const SizedBox(width: 8),
-                      SizedBox(
-                        height: 36,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              context.i18n.dapps_section_title_favourites,
-                              style: context.theme.appTextThemes.body.copyWith(
-                                color: context.theme.appColors.primaryText,
-                              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    const FavouriteIcon(),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 36,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            context.i18n.dapps_section_title_favourites,
+                            style: context.theme.appTextThemes.body.copyWith(
+                              color: context.theme.appColors.primaryText,
                             ),
-                            Text(
-                              context.i18n.dapps_favourites_added(17),
-                              style:
-                                  context.theme.appTextThemes.caption3.copyWith(
-                                color: context.theme.appColors.secondaryText,
-                              ),
+                          ),
+                          Text(
+                            context.i18n.dapps_favourites_added(17),
+                            style:
+                                context.theme.appTextThemes.caption3.copyWith(
+                              color: context.theme.appColors.secondaryText,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  Image.asset(
-                    Assets.images.forwardArrow.path,
-                    width: 12,
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+                Image.asset(
+                  Assets.images.forwardArrow.path,
+                  width: 12,
+                ),
+              ],
             ),
           ),
         ),
