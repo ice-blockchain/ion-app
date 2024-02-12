@@ -25,8 +25,8 @@ class InnerWalletPage extends HookConsumerWidget {
             label: const Text('Sign Out'),
             icon: authState is AuthenticationLoading
                 ? SizedBox(
-                    height: 10.s,
-                    width: 10.s,
+                    height: 10.0.s,
+                    width: 10.0.s,
                     child: const CircularProgressIndicator(color: Colors.white),
                   )
                 : const Icon(Icons.logout),

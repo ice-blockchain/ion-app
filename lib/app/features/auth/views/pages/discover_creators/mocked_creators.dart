@@ -45,13 +45,13 @@ const List<User> creators = <User>[
     name: 'Sophie Anderson',
     nickname: '@sophieanderson',
     imageUrl:
-        'https://www.creativefabrica.com/wp-content/uploads/2022/10/19/Sophie-Andersons-Beautiful-Dark-Skin-African-Queen-Wearing-Traditional-Crown-42396595-1.png',
+        'https://www.creativefabrica.com/wp-content/uploads/2022/10/19.0.sophie-Andersons-Beautiful-Dark-Skin-African-Queen-Wearing-Traditional-Crown-42396595-1.png',
   ),
   User(
     name: 'Dan Scott',
     nickname: '@danscott',
     imageUrl:
-        'https://i0.wp.com/fashionablymale.net/wp-content/uploads/2014/08/david-koch-by-alinejaqueline-tappia2.jpg?fit=640%2C960&ssl=1&resize=350%2C200',
+        'https://i0.wp.com/fashionablymale.net/wp-content/uploads/2014/08/david-koch-by-alinejaqueline-tappia2.jpg?fit=640%2C960.0.ssl=1&resize=350%2C200',
     isVerified: true,
   ),
   User(

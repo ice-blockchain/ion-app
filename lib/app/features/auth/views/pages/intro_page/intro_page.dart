@@ -42,9 +42,9 @@ class IntroPage extends HookConsumerWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    left: 40.s,
-                    right: 85.s,
-                    bottom: 10.s,
+                    left: 40.0.s,
+                    right: 85.0.s,
+                    bottom: 10.0.s,
                   ),
                   child: Text(
                     context.i18n.intro_title,
@@ -56,7 +56,7 @@ class IntroPage extends HookConsumerWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 40.s, right: 40.s),
+                  padding: EdgeInsets.only(left: 40.0.s, right: 40.0.s),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(

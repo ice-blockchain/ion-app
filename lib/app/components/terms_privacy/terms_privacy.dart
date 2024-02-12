@@ -26,7 +26,7 @@ class TermsPrivacy extends StatelessWidget {
     }
 
     return SizedBox(
-      width: 220.s,
+      width: 220.0.s,
       child: Text.rich(
         replaceString(
           context.i18n.auth_privacy,

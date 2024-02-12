@@ -56,10 +56,10 @@ class Button extends StatelessWidget {
           fixedSize: fixedSize,
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12.s)),
+            borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
           ),
-          minimumSize: Size(56.s, 56.s),
-          padding: EdgeInsets.symmetric(horizontal: 16.s),
+          minimumSize: Size(56.0.s, 56.0.s),
+          padding: EdgeInsets.symmetric(horizontal: 16.0.s),
           backgroundColor: _getBackgroundColor(context, type),
           side: BorderSide(
             color: _getBorderColor(context, type),
@@ -79,8 +79,9 @@ class Button extends StatelessWidget {
               if (label != null)
                 Padding(
                   padding: EdgeInsets.only(
-                    left: leadingIcon == null ? 0 : 8.s, // 8 move to constants
-                    right: trailingIcon == null ? 0 : 8.s,
+                    left:
+                        leadingIcon == null ? 0 : 8.0.s, // 8 move to constants
+                    right: trailingIcon == null ? 0 : 8.0.s,
                   ),
                   child: label,
                 ),

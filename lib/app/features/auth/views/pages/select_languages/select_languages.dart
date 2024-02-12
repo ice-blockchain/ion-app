@@ -49,7 +49,7 @@ class SelectLanguages extends HookConsumerWidget {
                       description: context.i18n.select_languages_description,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 12.s),
+                      padding: EdgeInsets.only(bottom: 12.0.s),
                       child: Search(
                         onTextChanged: (String value) =>
                             searchText.value = value,
@@ -79,17 +79,17 @@ class SelectLanguages extends HookConsumerWidget {
                                   newSelectedLanguages;
                             },
                             child: Container(
-                              height: 44.s,
+                              height: 44.0.s,
                               decoration: BoxDecoration(
                                 color:
                                     context.theme.appColors.tertararyBackground,
-                                borderRadius: BorderRadius.circular(12.s),
+                                borderRadius: BorderRadius.circular(12.0.s),
                               ),
                               margin: EdgeInsets.only(
-                                bottom: 12.s,
+                                bottom: 12.0.s,
                               ),
                               padding: EdgeInsets.symmetric(
-                                horizontal: 16.s,
+                                horizontal: 16.0.s,
                               ),
                               child: Row(
                                 children: <Widget>[
@@ -103,7 +103,7 @@ class SelectLanguages extends HookConsumerWidget {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 16.s,
+                                    width: 16.0.s,
                                   ),
                                   Expanded(
                                     child: Text(
@@ -117,7 +117,7 @@ class SelectLanguages extends HookConsumerWidget {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 30.s,
+                                    width: 30.0.s,
                                     child: isSelected
                                         ? Image.asset(
                                             Assets.images.checkboxon.path,

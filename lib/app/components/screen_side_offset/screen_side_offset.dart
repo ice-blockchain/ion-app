@@ -36,9 +36,9 @@ class ScreenSideOffset extends StatelessWidget {
     );
   }
 
-  static double get defaultSmallMargin => 16.s;
+  static double get defaultSmallMargin => 16.0.s;
 
-  static double get defaultLargeMargin => 44.s;
+  static double get defaultLargeMargin => 44.0.s;
 
   final Widget child;
   final EdgeInsets insets;

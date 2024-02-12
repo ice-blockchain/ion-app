@@ -31,7 +31,7 @@ extension DoubleNullableExtension on double? {
   }
 }
 
-extension SizeExtension on num {
+extension SizeExtension on double {
   double get s {
     return w;
   }

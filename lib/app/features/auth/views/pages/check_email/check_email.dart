@@ -29,13 +29,13 @@ class CheckEmail extends HookConsumerWidget {
             Column(
               children: <Widget>[
                 SizedBox(
-                  height: 65.s,
+                  height: 65.0.s,
                 ),
                 Image.asset(
                   Assets.images.iceRound.path,
                 ),
                 SizedBox(
-                  height: 12.s,
+                  height: 12.0.s,
                 ),
                 Text(
                   context.i18n.check_email_title,
@@ -58,8 +58,10 @@ class CheckEmail extends HookConsumerWidget {
                   ],
                 ),
                 Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 36.s, horizontal: 20.s),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 36.0.s,
+                    horizontal: 20.0.s,
+                  ),
                   child: Text(
                     context.i18n.check_email_description,
                     textAlign: TextAlign.center,
@@ -69,21 +71,21 @@ class CheckEmail extends HookConsumerWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 248.s,
+                  width: 248.0.s,
                   child: PinCodeTextField(
                     appContext: context,
                     length: 4,
                     animationType: AnimationType.fade,
                     enabled: false,
                     cursorColor: Colors.black,
-                    cursorWidth: 3.s,
-                    cursorHeight: 25.s,
+                    cursorWidth: 3.0.s,
+                    cursorHeight: 25.0.s,
                     textStyle: context.theme.appTextThemes.inputFieldText,
                     pinTheme: PinTheme(
                       shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(16.s),
-                      fieldHeight: 56.s,
-                      fieldWidth: 50.s,
+                      borderRadius: BorderRadius.circular(16.0.s),
+                      fieldHeight: 56.0.s,
+                      fieldWidth: 50.0.s,
                       borderWidth: 1,
                       inactiveColor: context.theme.appColors.strokeElements,
                       disabledColor: context.theme.appColors.strokeElements,
@@ -116,7 +118,7 @@ class CheckEmail extends HookConsumerWidget {
               Assets.images.iceRound.path,
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 48.s),
+              padding: EdgeInsets.only(bottom: 48.0.s),
               child: const TermsPrivacy(),
             ),
           ],

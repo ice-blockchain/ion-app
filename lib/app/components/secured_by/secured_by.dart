@@ -16,9 +16,9 @@ class SecuredBy extends StatelessWidget {
           context.i18n.secured_by,
           style: context.theme.appTextThemes.caption,
         ),
-        SizedBox(width: 5.s),
+        SizedBox(width: 5.0.s),
         Image.asset(Assets.images.iceIcon.path),
-        SizedBox(width: 3.s),
+        SizedBox(width: 3.0.s),
         Text(
           context.i18n.secured_by_ice,
           style: context.theme.appTextThemes.headline1

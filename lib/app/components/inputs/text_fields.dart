@@ -10,10 +10,10 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 const Color _kBackgroundColor = Color(0xFFFFFFFF);
-double defaultTextFieldMargin = 44.s;
-double textInputLeadingPadding = 16.s;
-double textInputTrailingPadding = 12.s;
-double defaultTextInputHeight = 58.s;
+double defaultTextFieldMargin = 44.0.s;
+double textInputLeadingPadding = 16.0.s;
+double textInputTrailingPadding = 12.0.s;
+double defaultTextInputHeight = 58.0.s;
 
 class InputField extends StatefulWidget {
   InputField({
@@ -201,8 +201,8 @@ class InputFormField extends FormField<String> {
                     leadingIcon,
                     if (showLeadingSeparator != null && showLeadingSeparator)
                       Container(
-                        width: 1.s,
-                        height: 26.s,
+                        width: 1.0.s,
+                        height: 26.0.s,
                         color: context.theme.appColors.strokeElements,
                         margin: EdgeInsets.only(
                           left: textInputLeadingPadding,
@@ -215,7 +215,7 @@ class InputFormField extends FormField<String> {
               child: Padding(
                 padding: EdgeInsets.only(top: 19.5.s),
                 child: SizedBox(
-                  height: 34.s,
+                  height: 34.0.s,
                   child: TextFormField(
                     scrollPadding: EdgeInsets.only(
                       bottom: controller.scrollPadding.zeroOrValue +
@@ -271,8 +271,8 @@ class InputFormField extends FormField<String> {
                   children: <Widget>[
                     if (showTrailingSeparator != null && showTrailingSeparator)
                       Container(
-                        width: 1.s,
-                        height: 26.s,
+                        width: 1.0.s,
+                        height: 26.0.s,
                         color: context.theme.appColors.strokeElements,
                         margin: EdgeInsets.only(
                           right: textInputTrailingPadding,
@@ -296,7 +296,7 @@ class InputFormField extends FormField<String> {
       children: <Widget>[
         field,
         Padding(
-          padding: EdgeInsets.only(left: defaultTextFieldMargin, top: 4.s),
+          padding: EdgeInsets.only(left: defaultTextFieldMargin, top: 4.0.s),
           child: Text(
             error,
             overflow: TextOverflow.ellipsis,
@@ -358,7 +358,7 @@ class TextFieldToEdit extends StatelessWidget {
     return GestureDetector(
       onTap: onEdit,
       child: RoundedContainer(
-        height: 56.s,
+        height: 56.0.s,
         color: _kBackgroundColor,
         child: Padding(
           padding: EdgeInsets.all(defaultTextFieldMargin),
@@ -373,7 +373,7 @@ class TextFieldToEdit extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 10.s),
+              SizedBox(width: 10.0.s),
               Image.asset(
                 Assets.images.iceRound.path,
               ),

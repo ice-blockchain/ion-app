@@ -19,11 +19,12 @@ class ListItem extends StatelessWidget {
     EdgeInsets? leadingPadding,
     EdgeInsets? trailingPadding,
     BoxConstraints? constraints,
-  })  : borderRadius = borderRadius ?? BorderRadius.all(Radius.circular(16.s)),
-        contentPadding = contentPadding ?? EdgeInsets.all(12.s),
-        leadingPadding = leadingPadding ?? EdgeInsets.only(right: 10.s),
-        trailingPadding = trailingPadding ?? EdgeInsets.only(left: 10.s),
-        constraints = constraints ?? BoxConstraints(minHeight: 60.s);
+  })  : borderRadius =
+            borderRadius ?? BorderRadius.all(Radius.circular(16.0.s)),
+        contentPadding = contentPadding ?? EdgeInsets.all(12.0.s),
+        leadingPadding = leadingPadding ?? EdgeInsets.only(right: 10.0.s),
+        trailingPadding = trailingPadding ?? EdgeInsets.only(left: 10.0.s),
+        constraints = constraints ?? BoxConstraints(minHeight: 60.0.s);
 
   factory ListItem.checkbox({
     Key? key,

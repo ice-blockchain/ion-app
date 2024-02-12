@@ -8,7 +8,7 @@ import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/utils/string.dart';
 
 const double columnWidthPercentage = 0.68;
-double sectionHeight = 200.s;
+double sectionHeight = 200.0.s;
 const int itemsPerColumn = 3;
 
 class AppsCollection extends StatelessWidget {
@@ -66,7 +66,7 @@ class DAppGridItem extends StatelessWidget {
     return ScreenSideOffset.small(
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: 6.s,
+          vertical: 6.0.s,
         ),
         width: double.infinity,
         child: Row(
@@ -75,19 +75,19 @@ class DAppGridItem extends StatelessWidget {
             Row(
               children: <Widget>[
                 Container(
-                  width: 48.s,
-                  height: 48.s,
+                  width: 48.0.s,
+                  height: 48.0.s,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Image.asset(
                     item.iconImage,
-                    width: 48.s,
+                    width: 48.0.s,
                     fit: BoxFit.contain,
                   ),
                 ),
-                SizedBox(width: 8.s),
+                SizedBox(width: 8.0.s),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,

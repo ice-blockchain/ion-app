@@ -11,8 +11,8 @@ class SectionHeader extends StatelessWidget {
     this.onPress,
     double? topPadding,
     double? bottomPadding,
-  })  : topPadding = topPadding ?? 24.s,
-        bottomPadding = bottomPadding ?? 16.s;
+  })  : topPadding = topPadding ?? 24.0.s,
+        bottomPadding = bottomPadding ?? 16.0.s;
 
   final double topPadding;
   final double bottomPadding;
@@ -28,7 +28,7 @@ class SectionHeader extends StatelessWidget {
           bottom: bottomPadding,
         ),
         child: SizedBox(
-          height: 24.s,
+          height: 24.0.s,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -45,8 +45,8 @@ class SectionHeader extends StatelessWidget {
                 InkWell(
                   onTap: onPress,
                   child: Ink(
-                    width: 24.s, // Set the width of the button
-                    height: 24.s, // Set the height of the button
+                    width: 24.0.s, // Set the width of the button
+                    height: 24.0.s, // Set the height of the button
                     child: Center(
                       child: Image.asset(
                         Assets.images.nextArrow.path,

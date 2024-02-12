@@ -97,17 +97,17 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(width: 16.s),
+          SizedBox(width: 16.0.s),
           ImageIcon(
             widget.defaultIcon,
-            size: 24.s,
+            size: 24.0.s,
             color: context.theme.appColors.secondaryText,
           ),
           Container(
             width: 1,
-            height: 26.s,
+            height: 26.0.s,
             color: context.theme.appColors.strokeElements,
-            margin: EdgeInsets.symmetric(horizontal: 16.s),
+            margin: EdgeInsets.symmetric(horizontal: 16.0.s),
           ),
         ],
       );
@@ -129,19 +129,19 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
               borderSide: BorderSide(
                 color: _getBorderColor(context),
               ),
-              borderRadius: BorderRadius.circular(16.s),
+              borderRadius: BorderRadius.circular(16.0.s),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: context.theme.appColors.primaryAccent,
               ),
-              borderRadius: BorderRadius.circular(16.s),
+              borderRadius: BorderRadius.circular(16.0.s),
             ),
             errorBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: context.theme.appColors.attentionRed,
               ),
-              borderRadius: BorderRadius.circular(16.s),
+              borderRadius: BorderRadius.circular(16.0.s),
             ),
             label: Text(
               placeholder(),
@@ -152,20 +152,20 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
             ),
             prefixIcon: _buildPrefixIcon(),
             suffixIconConstraints: BoxConstraints(
-              maxHeight: 15.s, // Adjust the maxHeight as needed
-              maxWidth: 15.s, // Adjust the maxWidth as needed
+              maxHeight: 15.0.s, // Adjust the maxHeight as needed
+              maxWidth: 15.0.s, // Adjust the maxWidth as needed
             ),
-            contentPadding: EdgeInsets.only(left: 16.s),
+            contentPadding: EdgeInsets.only(left: 16.0.s),
           ),
         ),
         if (_state == TextFieldState.successState)
           Positioned(
-            right: 16.s,
-            top: 12.s,
+            right: 16.0.s,
+            top: 12.0.s,
             child: Image.asset(
               Assets.images.blockCheckboxOn.path,
-              width: 24.s,
-              height: 24.s,
+              width: 24.0.s,
+              height: 24.0.s,
             ),
           ),
       ],

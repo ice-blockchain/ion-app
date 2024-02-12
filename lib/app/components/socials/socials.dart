@@ -7,7 +7,7 @@ import 'package:ice/generated/assets.gen.dart';
 
 enum SocialButtonType { apple, nostr, x, expand, fb, github, discord, linkedin }
 
-double defaultSocialIconButtonSide = 44.s;
+double defaultSocialIconButtonSide = 44.0.s;
 
 Map<SocialButtonType, String> socialIcons = <SocialButtonType, String>{
   SocialButtonType.apple: Assets.images.apple.path,

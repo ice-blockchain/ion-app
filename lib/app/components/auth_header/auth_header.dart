@@ -11,8 +11,8 @@ class AuthHeaderWidget extends StatelessWidget {
     double? bottomPadding,
     String? description,
     String? imagePath,
-  })  : topPadding = topPadding ?? 65.s,
-        bottomPadding = bottomPadding ?? 30.s,
+  })  : topPadding = topPadding ?? 65.0.s,
+        bottomPadding = bottomPadding ?? 30.0.s,
         description = description ?? '', // Ensure description is not null
         imagePath = imagePath ?? Assets.images.iceRound.path;
 
@@ -33,7 +33,7 @@ class AuthHeaderWidget extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 19.s, bottom: 3.s),
+          padding: EdgeInsets.only(top: 19.0.s, bottom: 3.0.s),
           child: Text(
             title,
             style: context.theme.appTextThemes.headline1,

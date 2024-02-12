@@ -10,7 +10,7 @@ class TitleDescription extends StatelessWidget {
     double? topPadding,
     double? bottomPadding,
   })  : topPadding = topPadding ?? 0,
-        bottomPadding = bottomPadding ?? 16.s;
+        bottomPadding = bottomPadding ?? 16.0.s;
 
   final double topPadding;
   final double bottomPadding;
@@ -23,7 +23,7 @@ class TitleDescription extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: topPadding, bottom: 8.s),
+            padding: EdgeInsets.only(top: topPadding, bottom: 8.0.s),
             child: Visibility(
               visible: title.isNotEmpty,
               child: Text(
@@ -38,7 +38,7 @@ class TitleDescription extends StatelessWidget {
           Visibility(
             visible: description.isNotEmpty,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 52.s),
+              padding: EdgeInsets.symmetric(horizontal: 52.0.s),
               child: Text(
                 description,
                 textAlign: TextAlign.center,

@@ -25,15 +25,15 @@ class NostrLogin extends HookConsumerWidget {
                 description: context.i18n.nostr_login_description,
               ),
               SizedBox(
-                height: 15.s,
+                height: 15.0.s,
               ),
               Image.asset(
                 Assets.images.ostrichlogo.path,
-                width: 256.s,
-                height: 160.s,
+                width: 256.0.s,
+                height: 160.0.s,
               ),
               SizedBox(
-                height: 80.s,
+                height: 80.0.s,
               ),
               Column(
                 children: <Widget>[
@@ -48,13 +48,13 @@ class NostrLogin extends HookConsumerWidget {
                     showLeadingSeparator: true,
                   ),
                   SizedBox(
-                    height: 26.s,
+                    height: 26.0.s,
                   ),
                   Center(
                     child: Button(
                       leadingIcon: ImageIcon(
                         AssetImage(Assets.images.profilePaste.path),
-                        size: 24.s,
+                        size: 24.0.s,
                       ),
                       onPressed: () {},
                       type: ButtonType.disabled,

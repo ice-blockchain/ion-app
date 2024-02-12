@@ -57,15 +57,15 @@ class SelectCountries extends HookConsumerWidget {
                             Navigator.pop(context);
                           },
                           child: Container(
-                            height: 40.s,
-                            padding: EdgeInsets.symmetric(horizontal: 16.s),
+                            height: 40.0.s,
+                            padding: EdgeInsets.symmetric(horizontal: 16.0.s),
                             child: Row(
                               children: <Widget>[
                                 Text(
                                   country.flag,
                                   style: context.theme.appTextThemes.subtitle2,
                                 ),
-                                SizedBox(width: 16.s),
+                                SizedBox(width: 16.0.s),
                                 Expanded(
                                   child: Text(
                                     country.name,

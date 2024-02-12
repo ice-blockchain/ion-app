@@ -4,7 +4,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-final double iconSideDimension = 36.s;
+final double iconSideDimension = 36.0.s;
 
 class FavouriteIcon extends StatelessWidget {
   const FavouriteIcon({
@@ -28,7 +28,7 @@ class FavouriteIcon extends StatelessWidget {
       width: iconSideDimension,
       height: iconSideDimension,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.s),
+        borderRadius: BorderRadius.circular(12.0.s),
         color: iconBackgroundColor,
         border: Border.all(
           color: context.theme.appColors.onTerararyFill,
@@ -39,7 +39,7 @@ class FavouriteIcon extends StatelessWidget {
         children: <Widget>[
           Image.asset(
             iconPath,
-            width: 24.s,
+            width: 24.0.s,
           ),
         ],
       ),

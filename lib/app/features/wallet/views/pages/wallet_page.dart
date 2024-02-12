@@ -35,8 +35,8 @@ class WalletPage extends HookConsumerWidget {
                 ),
                 leadingIcon: Image.asset(
                   Assets.images.foo.path,
-                  width: 30.s,
-                  height: 30.s,
+                  width: 30.0.s,
+                  height: 30.0.s,
                   fit: BoxFit.cover,
                 ),
                 label: Text(
@@ -48,8 +48,8 @@ class WalletPage extends HookConsumerWidget {
                 label: const Text('Sign Out'),
                 icon: authState is AuthenticationLoading
                     ? SizedBox(
-                        height: 10.s,
-                        width: 10.s,
+                        height: 10.0.s,
+                        width: 10.0.s,
                         child: const CircularProgressIndicator(
                           color: Colors.white,
                         ),

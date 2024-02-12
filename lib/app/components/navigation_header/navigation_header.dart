@@ -4,9 +4,9 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-double navigationHeaderHeight = 50.s;
-double backButtonSide = 24.s;
-double backButtonPadding = 10.s;
+double navigationHeaderHeight = 50.0.s;
+double backButtonSide = 24.0.s;
+double backButtonPadding = 10.0.s;
 
 class NavigationHeader extends StatelessWidget {
   const NavigationHeader({

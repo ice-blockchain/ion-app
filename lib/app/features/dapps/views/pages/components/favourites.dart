@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-double containerHeight = 60.s;
+double containerHeight = 60.0.s;
 
 class Favourites extends StatelessWidget {
   const Favourites({
@@ -21,7 +21,7 @@ class Favourites extends StatelessWidget {
     return ScreenSideOffset.small(
       child: Padding(
         padding: EdgeInsets.symmetric(
-          vertical: 24.s,
+          vertical: 24.0.s,
         ),
         child: GestureDetector(
           onTap: onPress,
@@ -32,7 +32,7 @@ class Favourites extends StatelessWidget {
               horizontal: ScreenSideOffset.defaultSmallMargin,
             ),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.s),
+              borderRadius: BorderRadius.circular(16.0.s),
               color: context.theme.appColors.tertararyBackground,
               border: Border.all(
                 color: context.theme.appColors.onTerararyFill,
@@ -44,9 +44,9 @@ class Favourites extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     const FavouriteIcon(),
-                    SizedBox(width: 8.s),
+                    SizedBox(width: 8.0.s),
                     SizedBox(
-                      height: 36.s,
+                      height: 36.0.s,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -71,7 +71,7 @@ class Favourites extends StatelessWidget {
                 ),
                 Image.asset(
                   Assets.images.forwardArrow.path,
-                  width: 12.s,
+                  width: 12.0.s,
                 ),
               ],
             ),

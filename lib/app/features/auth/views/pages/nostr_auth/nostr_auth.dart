@@ -39,8 +39,8 @@ class NostrAuth extends HookConsumerWidget {
             ),
             Image.asset(
               Assets.images.ostrichlogo.path,
-              width: 256.s,
-              height: 160.s,
+              width: 256.0.s,
+              height: 160.0.s,
             ),
             Column(
               children: <Widget>[
@@ -48,7 +48,7 @@ class NostrAuth extends HookConsumerWidget {
                   child: Button(
                     leadingIcon: ImageIcon(
                       AssetImage(Assets.images.loginCreateacc.path),
-                      size: 24.s,
+                      size: 24.0.s,
                     ),
                     onPressed: () {
                       // showModalScreen(
@@ -62,13 +62,13 @@ class NostrAuth extends HookConsumerWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 26.s,
+                  height: 26.0.s,
                 ),
                 Center(
                   child: Button(
                     leadingIcon: ImageIcon(
                       AssetImage(Assets.images.profileSave.path),
-                      size: 24.s,
+                      size: 24.0.s,
                     ),
                     onPressed: () {
                       showModalScreen(
@@ -81,7 +81,7 @@ class NostrAuth extends HookConsumerWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 91.s,
+                  height: 91.0.s,
                 ),
               ],
             ),

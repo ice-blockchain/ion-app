@@ -12,21 +12,21 @@ class ModalWrapper extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: KeyboardHider(
         child: Container(
-          height: MediaQuery.of(context).size.height - 74.s,
+          height: MediaQuery.of(context).size.height - 74.0.s,
           decoration: BoxDecoration(
             color: Colors.black,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30.s)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0.s)),
             boxShadow: <BoxShadow>[
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5.s,
-                blurRadius: 7.s,
-                offset: Offset(0, 3.s),
+                spreadRadius: 5.0.s,
+                blurRadius: 7.0.s,
+                offset: Offset(0, 3.0.s),
               ),
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30.s)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0.s)),
             child: child,
           ),
         ),

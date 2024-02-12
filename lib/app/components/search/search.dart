@@ -47,17 +47,17 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.s, vertical: 5.s),
+      padding: EdgeInsets.symmetric(horizontal: 10.0.s, vertical: 5.0.s),
       child: Row(
         children: <Widget>[
           Expanded(
             child: SizedBox(
-              height: 42.s,
+              height: 42.0.s,
               child: CupertinoTextField(
                 focusNode: _focusNode,
                 decoration: BoxDecoration(
                   color: context.theme.appColors.primaryBackground,
-                  borderRadius: BorderRadius.circular(16.s),
+                  borderRadius: BorderRadius.circular(16.0.s),
                 ),
                 controller: _controller,
                 placeholder: context.i18n.search_placeholder,
@@ -65,11 +65,11 @@ class _SearchState extends State<Search> {
                   color: context.theme.appColors.tertararyText,
                 ),
                 prefix: Padding(
-                  padding: EdgeInsets.only(left: 12.s),
+                  padding: EdgeInsets.only(left: 12.0.s),
                   child: ImageIcon(
                     AssetImage(Assets.images.search.path),
                     color: context.theme.appColors.tertararyText,
-                    size: 14.s,
+                    size: 14.0.s,
                   ),
                 ),
                 clearButtonMode: OverlayVisibilityMode.editing,
@@ -79,7 +79,7 @@ class _SearchState extends State<Search> {
                     ? GestureDetector(
                         onTap: _onClearTapped,
                         child: Padding(
-                          padding: EdgeInsets.only(right: 12.s),
+                          padding: EdgeInsets.only(right: 12.0.s),
                           child: const Icon(
                             CupertinoIcons.clear_circled,
                             color: Colors.grey,

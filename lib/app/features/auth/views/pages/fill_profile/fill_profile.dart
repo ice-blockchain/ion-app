@@ -63,17 +63,17 @@ class FillProfile extends HookConsumerWidget {
 
     final Widget profileImage = ref.watch(croppedFileProvider) != null
         ? ClipRRect(
-            borderRadius: BorderRadius.circular(50.s),
+            borderRadius: BorderRadius.circular(50.0.s),
             child: Image.file(
               File(ref.watch(croppedFileProvider)!.path),
-              width: 100.s,
-              height: 100.s,
+              width: 100.0.s,
+              height: 100.0.s,
               fit: BoxFit.cover,
             ),
           )
         : Container(
-            width: 100.s,
-            height: 100.s,
+            width: 100.0.s,
+            height: 100.0.s,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(Assets.images.profilePhotoPlaceholder.path),
@@ -88,13 +88,13 @@ class FillProfile extends HookConsumerWidget {
           child: Column(
             children: <Widget>[
               SizedBox(
-                height: 65.s,
+                height: 65.0.s,
               ),
               Image.asset(
                 Assets.images.iceRound.path,
               ),
               SizedBox(
-                height: 19.s,
+                height: 19.0.s,
               ),
               Text(
                 context.i18n.fill_profile_title,
@@ -107,7 +107,7 @@ class FillProfile extends HookConsumerWidget {
                 ),
               ),
               SizedBox(
-                height: 20.s,
+                height: 20.0.s,
               ),
               Stack(
                 children: <Widget>[
@@ -118,13 +118,13 @@ class FillProfile extends HookConsumerWidget {
                     child: GestureDetector(
                       onTap: addPhoto,
                       child: Container(
-                        width: 36.s,
-                        height: 36.s,
+                        width: 36.0.s,
+                        height: 36.0.s,
                         decoration: const BoxDecoration(),
                         child: Image.asset(
                           Assets.images.profileCamera.path,
-                          width: 36.s,
-                          height: 36.s,
+                          width: 36.0.s,
+                          height: 36.0.s,
                         ),
                       ),
                     ),
@@ -132,7 +132,7 @@ class FillProfile extends HookConsumerWidget {
                 ],
               ),
               SizedBox(
-                height: 28.s,
+                height: 28.0.s,
               ),
               InputField(
                 // autofocus: true,
@@ -165,13 +165,13 @@ class FillProfile extends HookConsumerWidget {
                 // textInputAction: TextInputAction.done
               ),
               SizedBox(
-                height: 20.s,
+                height: 20.0.s,
               ),
               Center(
                 child: Button(
                   leadingIcon: ImageIcon(
                     AssetImage(Assets.images.profileSave.path),
-                    size: 24.s,
+                    size: 24.0.s,
                   ),
                   onPressed: onSave,
                   label: Text(context.i18n.button_save),

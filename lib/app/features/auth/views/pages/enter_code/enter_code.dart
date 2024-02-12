@@ -34,13 +34,13 @@ class EnterCode extends HookConsumerWidget {
               Column(
                 children: <Widget>[
                   SizedBox(
-                    height: 65.s,
+                    height: 65.0.s,
                   ),
                   Image.asset(
                     Assets.images.enterCode.path,
                   ),
                   SizedBox(
-                    height: 9.s,
+                    height: 9.0.s,
                   ),
                   Text(
                     context.i18n.enter_code_title,
@@ -57,22 +57,22 @@ class EnterCode extends HookConsumerWidget {
                     style: context.theme.appTextThemes.subtitle,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 30.s, bottom: 19.s),
+                    padding: EdgeInsets.only(top: 30.0.s, bottom: 19.0.s),
                     child: SizedBox(
-                      width: 248.s,
+                      width: 248.0.s,
                       child: PinCodeTextField(
                         appContext: context,
                         length: 4,
                         animationType: AnimationType.fade,
                         cursorColor: Colors.black,
-                        cursorWidth: 3.s,
-                        cursorHeight: 25.s,
+                        cursorWidth: 3.0.s,
+                        cursorHeight: 25.0.s,
                         textStyle: context.theme.appTextThemes.inputFieldText,
                         pinTheme: PinTheme(
                           shape: PinCodeFieldShape.box,
-                          borderRadius: BorderRadius.circular(16.s),
-                          fieldHeight: 56.s,
-                          fieldWidth: 50.s,
+                          borderRadius: BorderRadius.circular(16.0.s),
+                          fieldHeight: 56.0.s,
+                          fieldWidth: 50.0.s,
                           borderWidth: 1,
                           inactiveColor: invalidCode.value
                               ? context.theme.appColors.attentionRed
@@ -134,7 +134,7 @@ class EnterCode extends HookConsumerWidget {
                     style: context.theme.appTextThemes.subtitle2,
                   ),
                   Text(
-                    ' 30s', // TODO: Add countdown timer
+                    ' 3.0.s', // TODO: Add countdown timer
                     style: context.theme.appTextThemes.subtitle2
                         .copyWith(color: context.theme.appColors.primaryAccent),
                   ),
@@ -144,7 +144,7 @@ class EnterCode extends HookConsumerWidget {
                 Assets.images.iceRound.path,
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 48.s),
+                padding: EdgeInsets.only(bottom: 48.0.s),
                 child: const TermsPrivacy(),
               ),
             ],

@@ -4,7 +4,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-double textContainerHeight = 24.s;
+double textContainerHeight = 24.0.s;
 
 class CategoryItem {
   CategoryItem({
@@ -53,8 +53,9 @@ class CategoriesCollection extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: featured.length,
         itemBuilder: (BuildContext context, int index) {
-          final double leftOffset = index == 0 ? 16.s : 8.s;
-          final double rightOffset = index == featured.length - 1 ? 16.s : 8.s;
+          final double leftOffset = index == 0 ? 16.0.s : 8.0.s;
+          final double rightOffset =
+              index == featured.length - 1 ? 16.0.s : 8.0.s;
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -74,7 +75,7 @@ class CategoriesCollection extends StatelessWidget {
                   children: <Widget>[
                     Image.asset(
                       featured[index].iconImage,
-                      width: 50.s,
+                      width: 50.0.s,
                     ),
                   ],
                 ),

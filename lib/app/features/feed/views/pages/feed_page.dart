@@ -42,8 +42,8 @@ class FeedPage extends HookConsumerWidget {
                     ),
                     leadingIcon: Image.asset(
                       Assets.images.foo.path,
-                      width: 30.s,
-                      height: 30.s,
+                      width: 30.0.s,
+                      height: 30.0.s,
                       fit: BoxFit.cover,
                     ),
                     label: Text(

@@ -87,21 +87,21 @@ class AuthPage extends HookConsumerWidget {
                 showLeadingSeparator: true,
               ),
             SizedBox(
-              height: 16.s,
+              height: 16.0.s,
             ),
             Center(
               child: Button(
                 trailingIcon: authState is AuthenticationLoading
                     ? SizedBox(
-                        height: 10.s,
-                        width: 10.s,
+                        height: 10.0.s,
+                        width: 10.0.s,
                         child: const CircularProgressIndicator(
                           color: Colors.white,
                         ),
                       )
                     : ImageIcon(
                         AssetImage(Assets.images.buttonNext.path),
-                        size: 16.s,
+                        size: 16.0.s,
                       ),
                 onPressed: () => <void>{
                   emailFormKey.currentState?.reset(),
@@ -114,7 +114,7 @@ class AuthPage extends HookConsumerWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 14.s, bottom: 14.s),
+              padding: EdgeInsets.only(top: 14.0.s, bottom: 14.0.s),
               child: Text(
                 context.i18n.auth_signIn_or,
                 style: context.theme.appTextThemes.caption
@@ -126,7 +126,7 @@ class AuthPage extends HookConsumerWidget {
                 type: ButtonType.outlined,
                 leadingIcon: ImageIcon(
                   AssetImage(Assets.images.phone.path),
-                  size: 24.s,
+                  size: 24.0.s,
                   color: context.theme.appColors.secondaryText,
                 ),
                 onPressed: () {
@@ -141,7 +141,7 @@ class AuthPage extends HookConsumerWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 16.s, bottom: 22.s),
+              padding: EdgeInsets.only(top: 16.0.s, bottom: 22.0.s),
               child: Socials(
                 onSocialButtonPressed: (SocialButtonType type) {
                   switch (type) {
@@ -167,7 +167,7 @@ class AuthPage extends HookConsumerWidget {
             ),
             const SecuredBy(),
             SizedBox(
-              height: 20.s,
+              height: 20.0.s,
             ),
             const TermsPrivacy(),
           ],

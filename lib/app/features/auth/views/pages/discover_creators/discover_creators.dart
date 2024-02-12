@@ -72,7 +72,7 @@ class DiscoverCreators extends HookConsumerWidget {
                       description: context.i18n.discover_creators_description,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 12.s),
+                      padding: EdgeInsets.only(bottom: 12.0.s),
                       child: Search(
                         onTextChanged: (String value) =>
                             searchText.value = value,
@@ -90,38 +90,39 @@ class DiscoverCreators extends HookConsumerWidget {
                               followedCreators.contains(creator);
 
                           return Container(
-                            height: 66.s,
+                            height: 66.0.s,
                             decoration: BoxDecoration(
                               color:
                                   context.theme.appColors.tertararyBackground,
-                              borderRadius: BorderRadius.circular(12.s),
+                              borderRadius: BorderRadius.circular(12.0.s),
                             ),
                             margin: EdgeInsets.only(
-                              bottom: 12.s,
+                              bottom: 12.0.s,
                             ),
                             padding: EdgeInsets.symmetric(
-                              horizontal: 16.s,
+                              horizontal: 16.0.s,
                             ),
                             child: Row(
                               children: <Widget>[
                                 if (creator.imageUrl != null &&
                                     creator.imageUrl!.isNotEmpty)
                                   Container(
-                                    width: 30.s,
-                                    height: 30.s,
+                                    width: 30.0.s,
+                                    height: 30.0.s,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.s),
+                                      borderRadius:
+                                          BorderRadius.circular(10.0.s),
                                     ),
                                     clipBehavior: Clip.hardEdge,
                                     child: Image.network(
                                       creator.imageUrl!,
-                                      width: 30.s,
-                                      height: 30.s,
+                                      width: 30.0.s,
+                                      height: 30.0.s,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                 SizedBox(
-                                  width: 16.s,
+                                  width: 16.0.s,
                                 ),
                                 Expanded(
                                   child: Column(
@@ -143,19 +144,19 @@ class DiscoverCreators extends HookConsumerWidget {
                                           if (creator.isVerified ?? false)
                                             Padding(
                                               padding: EdgeInsets.only(
-                                                left: 4.s,
-                                                top: 2.s,
+                                                left: 4.0.s,
+                                                top: 2.0.s,
                                               ),
                                               child: Image.asset(
                                                 Assets
                                                     .images.verifiedBadge.path,
-                                                width: 16.s,
-                                                height: 16.s,
+                                                width: 16.0.s,
+                                                height: 16.0.s,
                                               ),
                                             ),
                                         ],
                                       ),
-                                      SizedBox(height: 2.s),
+                                      SizedBox(height: 2.0.s),
                                       Text(
                                         creator.nickname,
                                         style: context
@@ -195,9 +196,9 @@ class DiscoverCreators extends HookConsumerWidget {
                                     ),
                                     mainAxisSize: MainAxisSize.max,
                                     style: OutlinedButton.styleFrom(
-                                      minimumSize: Size(77.s, 28.s),
+                                      minimumSize: Size(77.0.s, 28.0.s),
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: 5.s,
+                                        horizontal: 5.0.s,
                                       ),
                                     ),
                                   ),

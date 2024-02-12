@@ -22,14 +22,14 @@ class FeaturedCollection extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          final double leftOffset = index == 0 ? 16.s : 8.s;
-          final double rightOffset = index == items.length - 1 ? 16.s : 8.s;
+          final double leftOffset = index == 0 ? 16.0.s : 8.0.s;
+          final double rightOffset = index == items.length - 1 ? 16.0.s : 8.0.s;
           final String assetBg = items[index].backgroundImage ?? '';
           return Container(
             width: itemWidth,
             margin: EdgeInsets.only(right: rightOffset, left: leftOffset),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.s),
+              borderRadius: BorderRadius.circular(12.0.s),
               image: DecorationImage(
                 image: AssetImage(
                   assetBg,
@@ -40,8 +40,8 @@ class FeaturedCollection extends StatelessWidget {
             child: Stack(
               children: <Widget>[
                 Positioned(
-                  bottom: 14.s,
-                  left: 14.s,
+                  bottom: 14.0.s,
+                  left: 14.0.s,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -49,16 +49,16 @@ class FeaturedCollection extends StatelessWidget {
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.s),
+                          borderRadius: BorderRadius.circular(8.0.s),
                         ),
                         child: Image.asset(
                           items[index].iconImage,
-                          width: 30.s,
+                          width: 30.0.s,
                         ),
                       ),
-                      SizedBox(width: 8.s),
+                      SizedBox(width: 8.0.s),
                       SizedBox(
-                        height: 36.s,
+                        height: 36.0.s,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,

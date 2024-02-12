@@ -15,7 +15,7 @@ class WalletHeader extends HookConsumerWidget {
     return ScreenSideOffset.small(
       child: Padding(
         padding: EdgeInsets.only(
-          top: 56.s,
+          top: 56.0.s,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -38,15 +38,15 @@ class WalletHeader extends HookConsumerWidget {
                 ),
                 padding: MaterialStateProperty.all<EdgeInsets>(
                   EdgeInsets.only(
-                    left: 6.s,
-                    top: 6.s,
-                    bottom: 6.s,
-                    right: 12.s,
+                    left: 6.0.s,
+                    top: 6.0.s,
+                    bottom: 6.0.s,
+                    right: 12.0.s,
                   ),
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.s),
+                    borderRadius: BorderRadius.circular(12.0.s),
                     side: BorderSide(
                       color: context.theme.appColors.onTerararyFill,
                     ),
@@ -63,17 +63,17 @@ class WalletHeader extends HookConsumerWidget {
                 children: <Widget>[
                   Image.asset(
                     Assets.images.walletWalletblue.path,
-                    width: 28.s,
-                    height: 28.s,
+                    width: 28.0.s,
+                    height: 28.0.s,
                     fit: BoxFit.cover,
                   ),
-                  SizedBox(width: 8.s),
+                  SizedBox(width: 8.0.s),
                   Text(context.i18n.wallet_header_ice_wallet),
-                  SizedBox(width: 8.s),
+                  SizedBox(width: 8.0.s),
                   Image.asset(
                     Assets.images.selectArrows.path,
-                    width: 12.s,
-                    height: 12.s,
+                    width: 12.0.s,
+                    height: 12.0.s,
                   ),
                 ],
               ),
@@ -84,34 +84,34 @@ class WalletHeader extends HookConsumerWidget {
                   onPressed: () {},
                   icon: Image.asset(
                     Assets.images.fieldSearch.path,
-                    width: 24.s,
-                    height: 24.s,
+                    width: 24.0.s,
+                    height: 24.0.s,
                   ),
                   type: ButtonType.outlined,
                   style: ButtonStyle(
                     fixedSize: MaterialStateProperty.all<Size>(
-                      Size(40.s, 40.s),
+                      Size(40.0.s, 40.0.s),
                     ),
                     minimumSize: MaterialStateProperty.all<Size>(
-                      Size(40.s, 40.s),
+                      Size(40.0.s, 40.0.s),
                     ),
                   ),
                 ),
-                SizedBox(width: 12.s),
+                SizedBox(width: 12.0.s),
                 Button.icon(
                   onPressed: () {},
                   icon: Image.asset(
                     Assets.images.filter.path,
-                    width: 24.s,
-                    height: 24.s,
+                    width: 24.0.s,
+                    height: 24.0.s,
                   ),
                   type: ButtonType.outlined,
                   style: ButtonStyle(
                     fixedSize: MaterialStateProperty.all<Size>(
-                      Size(40.s, 40.s),
+                      Size(40.0.s, 40.0.s),
                     ),
                     minimumSize: MaterialStateProperty.all<Size>(
-                      Size(40.s, 40.s),
+                      Size(40.0.s, 40.0.s),
                     ),
                   ),
                 ),

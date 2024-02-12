@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/num.dart';
 
-double defaultNavHeaderTopPadding = 50.s;
+double defaultNavHeaderTopPadding = 50.0.s;
 EdgeInsets defaultInsets = EdgeInsets.only(top: defaultNavHeaderTopPadding);
 
 class NavHeaderOffset extends StatelessWidget {
