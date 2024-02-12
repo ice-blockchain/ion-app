@@ -3,7 +3,7 @@ import 'package:ice/app/components/favourite_icon/favorite_icon.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
-import 'package:ice/app/utils/extensions.dart';
+import 'package:ice/app/utils/string.dart';
 import 'package:ice/app/values/constants.dart';
 
 const double columnWidthPercentage = 0.68;

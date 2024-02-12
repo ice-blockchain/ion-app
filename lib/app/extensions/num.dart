@@ -1,5 +1,4 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 
 extension NumExtension on num? {
   num get zeroOrValue {
@@ -36,35 +35,4 @@ extension DoubleExtension on double {
   double get s {
     return w;
   }
-}
-
-extension BooleanExtension on bool? {
-  bool get falseOrValue {
-    return this ?? false;
-  }
-}
-
-extension StringExtension on String? {
-  String get emptyOrValue {
-    return this ?? '';
-  }
-
-  bool get isEmpty {
-    return emptyOrValue.isEmpty;
-  }
-
-  bool get isNotEmpty {
-    return emptyOrValue.isNotEmpty;
-  }
-}
-
-extension ListExtension<T> on List<T>? {
-  List<T> get emptyOrValue => this ?? <T>[];
-
-  Type get genericType => T;
-}
-
-String formatDouble(double value) {
-  final NumberFormat formatter = NumberFormat('#,##0.00', 'en_US');
-  return formatter.format(value);
 }

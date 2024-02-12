@@ -12,7 +12,7 @@ import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/invit
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/name_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/nickname_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/validators.dart';
-import 'package:ice/app/shared/utility/image_picker_and_cropper/image_picker_and_cropper.dart';
+import 'package:ice/app/utils/image.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:image_cropper/image_cropper.dart';
 
@@ -48,7 +48,7 @@ class FillProfile extends HookConsumerWidget {
     final InviterController inviterController = InviterController();
 
     Future<void> addPhoto() async {
-      final CroppedFile? croppedFile = await ImagePickerAndCropper.takePhoto();
+      final CroppedFile? croppedFile = await takePhoto();
       if (croppedFile != null) {
         ref.read(croppedFileProvider.notifier).croppedFile = croppedFile;
       }

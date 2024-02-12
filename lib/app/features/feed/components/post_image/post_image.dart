@@ -5,7 +5,7 @@ import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/components/read_time_tile/read_time_tile.dart';
-import 'package:ice/utils/Image_utils.dart';
+import 'package:ice/app/utils/image.dart';
 
 double borderRadius = 12.0.w;
 
@@ -53,7 +53,7 @@ class PostImage extends StatelessWidget {
           alignment: alignment,
           children: <Widget>[
             CachedNetworkImage(
-              imageUrl: ImageUtils.getAdaptiveImageUrl(imageUrl, imageWidth),
+              imageUrl: getAdaptiveImageUrl(imageUrl, imageWidth),
               width: imageWidth,
               fit: BoxFit.cover,
             ),

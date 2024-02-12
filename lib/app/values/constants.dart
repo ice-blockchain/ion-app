@@ -1,4 +1,4 @@
-import 'package:ice/app/utils/extensions.dart';
+import 'package:ice/app/extensions/num.dart';
 
 final double kDefaultTextInputHeight = 58.0.s;
 final double kDefaultBorderRadiusValue = 16.0.s;
