@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -15,12 +16,13 @@ class SecuredBy extends StatelessWidget {
           context.i18n.secured_by,
           style: context.theme.appTextThemes.caption,
         ),
-        const SizedBox(width: 5),
+        SizedBox(width: 5.s),
         Image.asset(Assets.images.iceIcon.path),
-        const SizedBox(width: 3),
+        SizedBox(width: 3.s),
         Text(
           context.i18n.secured_by_ice,
-          style: context.theme.appTextThemes.headline1.copyWith(fontSize: 17),
+          style: context.theme.appTextThemes.headline1
+              .copyWith(fontSize: 17), //TODO::why fixed size here
         ),
       ],
     );

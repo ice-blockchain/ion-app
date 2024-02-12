@@ -7,6 +7,7 @@ import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/search/search.dart';
 import 'package:ice/app/components/title_description_header/title_description_header.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -61,7 +62,7 @@ class DiscoverCreators extends HookConsumerWidget {
             const NavigationHeader(title: ''),
             ScreenSideOffset.small(
               child: Padding(
-                padding: const EdgeInsets.only(
+                padding: EdgeInsets.only(
                   top: navigationHeaderHeight,
                 ),
                 child: Column(
@@ -71,7 +72,7 @@ class DiscoverCreators extends HookConsumerWidget {
                       description: context.i18n.discover_creators_description,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
+                      padding: EdgeInsets.only(bottom: 12.s),
                       child: Search(
                         onTextChanged: (String value) =>
                             searchText.value = value,
@@ -89,38 +90,38 @@ class DiscoverCreators extends HookConsumerWidget {
                               followedCreators.contains(creator);
 
                           return Container(
-                            height: 66,
+                            height: 66.s,
                             decoration: BoxDecoration(
                               color:
                                   context.theme.appColors.tertararyBackground,
-                              borderRadius: BorderRadius.circular(12.0),
+                              borderRadius: BorderRadius.circular(12.s),
                             ),
-                            margin: const EdgeInsets.only(
-                              bottom: 12,
+                            margin: EdgeInsets.only(
+                              bottom: 12.s,
                             ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.s,
                             ),
                             child: Row(
                               children: <Widget>[
                                 if (creator.imageUrl != null &&
                                     creator.imageUrl!.isNotEmpty)
                                   Container(
-                                    width: 30,
-                                    height: 30,
+                                    width: 30.s,
+                                    height: 30.s,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10.s),
                                     ),
                                     clipBehavior: Clip.hardEdge,
                                     child: Image.network(
                                       creator.imageUrl!,
-                                      width: 30,
-                                      height: 30,
+                                      width: 30.s,
+                                      height: 30.s,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
-                                const SizedBox(
-                                  width: 16,
+                                SizedBox(
+                                  width: 16.s,
                                 ),
                                 Expanded(
                                   child: Column(
@@ -141,20 +142,20 @@ class DiscoverCreators extends HookConsumerWidget {
                                           ),
                                           if (creator.isVerified ?? false)
                                             Padding(
-                                              padding: const EdgeInsets.only(
-                                                left: 4,
-                                                top: 2,
+                                              padding: EdgeInsets.only(
+                                                left: 4.s,
+                                                top: 2.s,
                                               ),
                                               child: Image.asset(
                                                 Assets
                                                     .images.verifiedBadge.path,
-                                                width: 16,
-                                                height: 16,
+                                                width: 16.s,
+                                                height: 16.s,
                                               ),
                                             ),
                                         ],
                                       ),
-                                      const SizedBox(height: 2),
+                                      SizedBox(height: 2.s),
                                       Text(
                                         creator.nickname,
                                         style: context
@@ -194,9 +195,9 @@ class DiscoverCreators extends HookConsumerWidget {
                                     ),
                                     mainAxisSize: MainAxisSize.max,
                                     style: OutlinedButton.styleFrom(
-                                      minimumSize: const Size(77, 28),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 5,
+                                      minimumSize: Size(77.s, 28.s),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5.s,
                                       ),
                                     ),
                                   ),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 enum SocialButtonType { apple, nostr, x, expand, fb, github, discord, linkedin }
 
-double defaultSocialIconButtonSide = 44.0.w;
+double defaultSocialIconButtonSide = 44.s;
 
 Map<SocialButtonType, String> socialIcons = <SocialButtonType, String>{
   SocialButtonType.apple: Assets.images.apple.path,

@@ -6,6 +6,7 @@ import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/search/search.dart';
 import 'package:ice/app/components/title_description_header/title_description_header.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -38,7 +39,7 @@ class SelectLanguages extends HookConsumerWidget {
             const NavigationHeader(title: ''),
             ScreenSideOffset.small(
               child: Padding(
-                padding: const EdgeInsets.only(
+                padding: EdgeInsets.only(
                   top: navigationHeaderHeight,
                 ),
                 child: Column(
@@ -48,7 +49,7 @@ class SelectLanguages extends HookConsumerWidget {
                       description: context.i18n.select_languages_description,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
+                      padding: EdgeInsets.only(bottom: 12.s),
                       child: Search(
                         onTextChanged: (String value) =>
                             searchText.value = value,
@@ -78,17 +79,17 @@ class SelectLanguages extends HookConsumerWidget {
                                   newSelectedLanguages;
                             },
                             child: Container(
-                              height: 44,
+                              height: 44.s,
                               decoration: BoxDecoration(
                                 color:
                                     context.theme.appColors.tertararyBackground,
-                                borderRadius: BorderRadius.circular(12.0),
+                                borderRadius: BorderRadius.circular(12.s),
                               ),
-                              margin: const EdgeInsets.only(
-                                bottom: 12,
+                              margin: EdgeInsets.only(
+                                bottom: 12.s,
                               ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.s,
                               ),
                               child: Row(
                                 children: <Widget>[
@@ -101,8 +102,8 @@ class SelectLanguages extends HookConsumerWidget {
                                       fontSize: 24,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 16,
+                                  SizedBox(
+                                    width: 16.s,
                                   ),
                                   Expanded(
                                     child: Text(
@@ -116,7 +117,7 @@ class SelectLanguages extends HookConsumerWidget {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 30,
+                                    width: 30.s,
                                     child: isSelected
                                         ? Image.asset(
                                             Assets.images.checkboxon.path,

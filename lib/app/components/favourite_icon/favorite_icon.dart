@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-const double iconSideDimension = 36.0;
+final double iconSideDimension = 36.s;
 
 class FavouriteIcon extends StatelessWidget {
   const FavouriteIcon({
@@ -27,7 +28,7 @@ class FavouriteIcon extends StatelessWidget {
       width: iconSideDimension,
       height: iconSideDimension,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.s),
         color: iconBackgroundColor,
         border: Border.all(
           color: context.theme.appColors.onTerararyFill,
@@ -38,7 +39,7 @@ class FavouriteIcon extends StatelessWidget {
         children: <Widget>[
           Image.asset(
             iconPath,
-            width: 24,
+            width: 24.s,
           ),
         ],
       ),

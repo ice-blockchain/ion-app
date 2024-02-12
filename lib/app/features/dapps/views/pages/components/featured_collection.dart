@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/shadow_text/shadow_text.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 
@@ -21,14 +22,14 @@ class FeaturedCollection extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          final double leftOffset = index == 0 ? 16.0 : 8.0;
-          final double rightOffset = index == items.length - 1 ? 16.0 : 8.0;
+          final double leftOffset = index == 0 ? 16.s : 8.s;
+          final double rightOffset = index == items.length - 1 ? 16.s : 8.s;
           final String assetBg = items[index].backgroundImage ?? '';
           return Container(
             width: itemWidth,
             margin: EdgeInsets.only(right: rightOffset, left: leftOffset),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.s),
               image: DecorationImage(
                 image: AssetImage(
                   assetBg,
@@ -39,8 +40,8 @@ class FeaturedCollection extends StatelessWidget {
             child: Stack(
               children: <Widget>[
                 Positioned(
-                  bottom: 14,
-                  left: 14,
+                  bottom: 14.s,
+                  left: 14.s,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -48,16 +49,16 @@ class FeaturedCollection extends StatelessWidget {
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.s),
                         ),
                         child: Image.asset(
                           items[index].iconImage,
-                          width: 30,
+                          width: 30.s,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8.s),
                       SizedBox(
-                        height: 36,
+                        height: 36.s,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,

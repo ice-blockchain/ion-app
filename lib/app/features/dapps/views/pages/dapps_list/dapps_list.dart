@@ -36,7 +36,7 @@ class DAppsList extends HookConsumerWidget {
                 title: context.i18n.dapps_list_defi,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: navigationHeaderHeight),
+                padding: EdgeInsets.only(top: navigationHeaderHeight),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[

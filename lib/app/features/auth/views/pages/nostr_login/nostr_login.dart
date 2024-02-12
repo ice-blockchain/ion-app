@@ -5,6 +5,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_fields.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/controllers/name_controller.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -23,16 +24,16 @@ class NostrLogin extends HookConsumerWidget {
                 title: context.i18n.nostr_login_title,
                 description: context.i18n.nostr_login_description,
               ),
-              const SizedBox(
-                height: 15,
+              SizedBox(
+                height: 15.s,
               ),
               Image.asset(
                 Assets.images.ostrichlogo.path,
-                width: 256,
-                height: 160,
+                width: 256.s,
+                height: 160.s,
               ),
-              const SizedBox(
-                height: 80,
+              SizedBox(
+                height: 80.s,
               ),
               Column(
                 children: <Widget>[
@@ -46,14 +47,14 @@ class NostrLogin extends HookConsumerWidget {
                         privateKeyController.onVerify(),
                     showLeadingSeparator: true,
                   ),
-                  const SizedBox(
-                    height: 26,
+                  SizedBox(
+                    height: 26.s,
                   ),
                   Center(
                     child: Button(
                       leadingIcon: ImageIcon(
                         AssetImage(Assets.images.profilePaste.path),
-                        size: 24,
+                        size: 24.s,
                       ),
                       onPressed: () {},
                       type: ButtonType.disabled,

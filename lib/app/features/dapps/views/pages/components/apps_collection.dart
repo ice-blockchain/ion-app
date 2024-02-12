@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/favourite_icon/favorite_icon.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/utils/string.dart';
 
 const double columnWidthPercentage = 0.68;
-const double sectionHeight = 200.0;
+double sectionHeight = 200.s;
 const int itemsPerColumn = 3;
 
 class AppsCollection extends StatelessWidget {
@@ -64,8 +65,8 @@ class DAppGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenSideOffset.small(
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: 6,
+        padding: EdgeInsets.symmetric(
+          vertical: 6.s,
         ),
         width: double.infinity,
         child: Row(
@@ -74,19 +75,19 @@ class DAppGridItem extends StatelessWidget {
             Row(
               children: <Widget>[
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 48.s,
+                  height: 48.s,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Image.asset(
                     item.iconImage,
-                    width: 48,
+                    width: 48.s,
                     fit: BoxFit.contain,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.s),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,

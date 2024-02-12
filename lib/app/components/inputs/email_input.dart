@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -43,19 +44,19 @@ class EmailInput extends HookWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20.s),
                           Image.asset(
                             Assets.images.fieldEmail.path,
                             color: context.theme.appColors.primaryText,
                           ),
-                          const SizedBox(width: 6),
+                          SizedBox(width: 6.s),
                           VerticalDivider(
                             color: context.theme.appColors.strokeElements,
                             thickness: 1,
-                            indent: 14,
-                            endIndent: 14,
+                            indent: 14.s,
+                            endIndent: 14.s,
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8.s),
                         ],
                       ),
                     ),
@@ -66,22 +67,22 @@ class EmailInput extends HookWidget {
               // or extend the InputBorder class to create your own
               // the default is UnderlineInputBorder
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.s),
               ),
               // you can also define different border styles for different states
               // e.g. when the field is enabled / focused / has error
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.s),
                 borderSide:
                     BorderSide(color: context.theme.appColors.strokeElements),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.s),
                 borderSide:
                     BorderSide(color: context.theme.appColors.primaryAccent),
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.s),
                 borderSide: const BorderSide(color: Colors.red),
               ),
             ),

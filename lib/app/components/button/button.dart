@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 part 'variants/button_icon.dart';
 
@@ -54,11 +55,11 @@ class Button extends StatelessWidget {
         OutlinedButton.styleFrom(
           fixedSize: fixedSize,
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12.s)),
           ),
-          minimumSize: const Size(56, 56),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          minimumSize: Size(56.s, 56.s),
+          padding: EdgeInsets.symmetric(horizontal: 16.s),
           backgroundColor: _getBackgroundColor(context, type),
           side: BorderSide(
             color: _getBorderColor(context, type),
@@ -78,8 +79,8 @@ class Button extends StatelessWidget {
               if (label != null)
                 Padding(
                   padding: EdgeInsets.only(
-                    left: leadingIcon == null ? 0 : 8, // 8 move to constants
-                    right: trailingIcon == null ? 0 : 8,
+                    left: leadingIcon == null ? 0 : 8.s, // 8 move to constants
+                    right: trailingIcon == null ? 0 : 8.s,
                   ),
                   child: label,
                 ),

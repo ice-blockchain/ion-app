@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ice/app/extensions/num.dart';
 
 class ScreenSideOffset extends StatelessWidget {
   const ScreenSideOffset._({
@@ -36,9 +36,9 @@ class ScreenSideOffset extends StatelessWidget {
     );
   }
 
-  static double get defaultSmallMargin => 16.0.w;
+  static double get defaultSmallMargin => 16.s;
 
-  static double get defaultLargeMargin => 44.0.w;
+  static double get defaultLargeMargin => 44.s;
 
   final Widget child;
   final EdgeInsets insets;

@@ -7,6 +7,7 @@ import 'package:ice/app/components/inputs/text_fields.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/text_field_wrapper/text_field_wrapper.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/inviter_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/name_controller.dart';
@@ -62,17 +63,17 @@ class FillProfile extends HookConsumerWidget {
 
     final Widget profileImage = ref.watch(croppedFileProvider) != null
         ? ClipRRect(
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(50.s),
             child: Image.file(
               File(ref.watch(croppedFileProvider)!.path),
-              width: 100,
-              height: 100,
+              width: 100.s,
+              height: 100.s,
               fit: BoxFit.cover,
             ),
           )
         : Container(
-            width: 100,
-            height: 100,
+            width: 100.s,
+            height: 100.s,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(Assets.images.profilePhotoPlaceholder.path),
@@ -86,14 +87,14 @@ class FillProfile extends HookConsumerWidget {
         child: ScreenSideOffset.large(
           child: Column(
             children: <Widget>[
-              const SizedBox(
-                height: 65,
+              SizedBox(
+                height: 65.s,
               ),
               Image.asset(
                 Assets.images.iceRound.path,
               ),
-              const SizedBox(
-                height: 19,
+              SizedBox(
+                height: 19.s,
               ),
               Text(
                 context.i18n.fill_profile_title,
@@ -105,8 +106,8 @@ class FillProfile extends HookConsumerWidget {
                   color: context.theme.appColors.tertararyText,
                 ),
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: 20.s,
               ),
               Stack(
                 children: <Widget>[
@@ -117,21 +118,21 @@ class FillProfile extends HookConsumerWidget {
                     child: GestureDetector(
                       onTap: addPhoto,
                       child: Container(
-                        width: 36,
-                        height: 36,
+                        width: 36.s,
+                        height: 36.s,
                         decoration: const BoxDecoration(),
                         child: Image.asset(
                           Assets.images.profileCamera.path,
-                          width: 36,
-                          height: 36,
+                          width: 36.s,
+                          height: 36.s,
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 28,
+              SizedBox(
+                height: 28.s,
               ),
               InputField(
                 // autofocus: true,
@@ -163,14 +164,14 @@ class FillProfile extends HookConsumerWidget {
                 // key: inviterFieldKey,
                 // textInputAction: TextInputAction.done
               ),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: 20.s,
               ),
               Center(
                 child: Button(
                   leadingIcon: ImageIcon(
                     AssetImage(Assets.images.profileSave.path),
-                    size: 24,
+                    size: 24.s,
                   ),
                   onPressed: onSave,
                   label: Text(context.i18n.button_save),

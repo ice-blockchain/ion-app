@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-const double navigationHeaderHeight = 50;
-const double backButtonSide = 24.0;
-const double backButtonPadding = 10.0;
+double navigationHeaderHeight = 50.s;
+double backButtonSide = 24.s;
+double backButtonPadding = 10.s;
 
 class NavigationHeader extends StatelessWidget {
   const NavigationHeader({
@@ -41,7 +42,7 @@ class NavigationHeader extends StatelessWidget {
               },
             )
           else
-            const SizedBox(width: backButtonSide + backButtonPadding * 2),
+            SizedBox(width: backButtonSide + backButtonPadding * 2),
           Expanded(
             child: Text(
               title,
@@ -49,7 +50,7 @@ class NavigationHeader extends StatelessWidget {
               style: context.theme.appTextThemes.title,
             ),
           ),
-          const SizedBox(width: backButtonSide + backButtonPadding * 2),
+          SizedBox(width: backButtonSide + backButtonPadding * 2),
         ],
       ),
     );

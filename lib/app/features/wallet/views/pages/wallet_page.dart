@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
@@ -34,8 +35,8 @@ class WalletPage extends HookConsumerWidget {
                 ),
                 leadingIcon: Image.asset(
                   Assets.images.foo.path,
-                  width: 30,
-                  height: 30,
+                  width: 30.s,
+                  height: 30.s,
                   fit: BoxFit.cover,
                 ),
                 label: Text(
@@ -46,10 +47,12 @@ class WalletPage extends HookConsumerWidget {
               ElevatedButton.icon(
                 label: const Text('Sign Out'),
                 icon: authState is AuthenticationLoading
-                    ? const SizedBox(
-                        height: 10,
-                        width: 10,
-                        child: CircularProgressIndicator(color: Colors.white),
+                    ? SizedBox(
+                        height: 10.s,
+                        width: 10.s,
+                        child: const CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
                       )
                     : const Icon(Icons.logout),
                 onPressed: ref.read(authProvider.notifier).signOut,

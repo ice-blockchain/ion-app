@@ -1,7 +1,7 @@
 part of '../list_item.dart';
 
 class _ListItemWithCheckbox extends ListItem {
-  const _ListItemWithCheckbox({
+  _ListItemWithCheckbox({
     super.key,
     super.leading,
     super.title,

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/favourite_icon/favorite_icon.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-const double containerHeight = 60.0;
+double containerHeight = 60.s;
 
 class Favourites extends StatelessWidget {
   const Favourites({
@@ -19,8 +20,8 @@ class Favourites extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenSideOffset.small(
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 24,
+        padding: EdgeInsets.symmetric(
+          vertical: 24.s,
         ),
         child: GestureDetector(
           onTap: onPress,
@@ -31,7 +32,7 @@ class Favourites extends StatelessWidget {
               horizontal: ScreenSideOffset.defaultSmallMargin,
             ),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.s),
               color: context.theme.appColors.tertararyBackground,
               border: Border.all(
                 color: context.theme.appColors.onTerararyFill,
@@ -43,9 +44,9 @@ class Favourites extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     const FavouriteIcon(),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8.s),
                     SizedBox(
-                      height: 36,
+                      height: 36.s,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +71,7 @@ class Favourites extends StatelessWidget {
                 ),
                 Image.asset(
                   Assets.images.forwardArrow.path,
-                  width: 12,
+                  width: 12.s,
                 ),
               ],
             ),

@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -13,8 +14,8 @@ class WalletHeader extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ScreenSideOffset.small(
       child: Padding(
-        padding: const EdgeInsets.only(
-          top: 56,
+        padding: EdgeInsets.only(
+          top: 56.s,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,11 +37,16 @@ class WalletHeader extends HookConsumerWidget {
                   },
                 ),
                 padding: MaterialStateProperty.all<EdgeInsets>(
-                  const EdgeInsets.only(left: 6, top: 6, bottom: 6, right: 12),
+                  EdgeInsets.only(
+                    left: 6.s,
+                    top: 6.s,
+                    bottom: 6.s,
+                    right: 12.s,
+                  ),
                 ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.s),
                     side: BorderSide(
                       color: context.theme.appColors.onTerararyFill,
                     ),
@@ -57,17 +63,17 @@ class WalletHeader extends HookConsumerWidget {
                 children: <Widget>[
                   Image.asset(
                     Assets.images.walletWalletblue.path,
-                    width: 28,
-                    height: 28,
+                    width: 28.s,
+                    height: 28.s,
                     fit: BoxFit.cover,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8.s),
                   Text(context.i18n.wallet_header_ice_wallet),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8.s),
                   Image.asset(
                     Assets.images.selectArrows.path,
-                    width: 12,
-                    height: 12,
+                    width: 12.s,
+                    height: 12.s,
                   ),
                 ],
               ),
@@ -78,34 +84,34 @@ class WalletHeader extends HookConsumerWidget {
                   onPressed: () {},
                   icon: Image.asset(
                     Assets.images.fieldSearch.path,
-                    width: 24,
-                    height: 24,
+                    width: 24.s,
+                    height: 24.s,
                   ),
                   type: ButtonType.outlined,
                   style: ButtonStyle(
                     fixedSize: MaterialStateProperty.all<Size>(
-                      const Size(40, 40),
+                      Size(40.s, 40.s),
                     ),
                     minimumSize: MaterialStateProperty.all<Size>(
-                      const Size(40, 40),
+                      Size(40.s, 40.s),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12.s),
                 Button.icon(
                   onPressed: () {},
                   icon: Image.asset(
                     Assets.images.filter.path,
-                    width: 24,
-                    height: 24,
+                    width: 24.s,
+                    height: 24.s,
                   ),
                   type: ButtonType.outlined,
                   style: ButtonStyle(
                     fixedSize: MaterialStateProperty.all<Size>(
-                      const Size(40, 40),
+                      Size(40.s, 40.s),
                     ),
                     minimumSize: MaterialStateProperty.all<Size>(
-                      const Size(40, 40),
+                      Size(40.s, 40.s),
                     ),
                   ),
                 ),

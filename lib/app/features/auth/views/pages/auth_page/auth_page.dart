@@ -9,6 +9,7 @@ import 'package:ice/app/components/secured_by/secured_by.dart';
 import 'package:ice/app/components/socials/socials.dart';
 import 'package:ice/app/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
@@ -85,22 +86,22 @@ class AuthPage extends HookConsumerWidget {
                 validator: (String? value) => numberController.onVerify(),
                 showLeadingSeparator: true,
               ),
-            const SizedBox(
-              height: 16,
+            SizedBox(
+              height: 16.s,
             ),
             Center(
               child: Button(
                 trailingIcon: authState is AuthenticationLoading
-                    ? const SizedBox(
-                        height: 10,
-                        width: 10,
-                        child: CircularProgressIndicator(
+                    ? SizedBox(
+                        height: 10.s,
+                        width: 10.s,
+                        child: const CircularProgressIndicator(
                           color: Colors.white,
                         ),
                       )
                     : ImageIcon(
                         AssetImage(Assets.images.buttonNext.path),
-                        size: 16,
+                        size: 16.s,
                       ),
                 onPressed: () => <void>{
                   emailFormKey.currentState?.reset(),
@@ -113,7 +114,7 @@ class AuthPage extends HookConsumerWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 14, bottom: 14),
+              padding: EdgeInsets.only(top: 14.s, bottom: 14.s),
               child: Text(
                 context.i18n.auth_signIn_or,
                 style: context.theme.appTextThemes.caption
@@ -125,7 +126,7 @@ class AuthPage extends HookConsumerWidget {
                 type: ButtonType.outlined,
                 leadingIcon: ImageIcon(
                   AssetImage(Assets.images.phone.path),
-                  size: 24,
+                  size: 24.s,
                   color: context.theme.appColors.secondaryText,
                 ),
                 onPressed: () {
@@ -140,7 +141,7 @@ class AuthPage extends HookConsumerWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 16, bottom: 22),
+              padding: EdgeInsets.only(top: 16.s, bottom: 22.s),
               child: Socials(
                 onSocialButtonPressed: (SocialButtonType type) {
                   switch (type) {
@@ -165,8 +166,8 @@ class AuthPage extends HookConsumerWidget {
               ),
             ),
             const SecuredBy(),
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: 20.s,
             ),
             const TermsPrivacy(),
           ],

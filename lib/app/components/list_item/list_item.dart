@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
 part './variants/list_item_checkbox.dart';
 
 class ListItem extends StatelessWidget {
-  const ListItem({
+  ListItem({
     super.key,
     this.leading,
     this.title,
     this.subtitle,
     this.trailing,
     this.border,
-    this.borderRadius = const BorderRadius.all(Radius.circular(16)),
-    this.contentPadding = const EdgeInsets.all(12),
-    this.leadingPadding = const EdgeInsets.only(right: 10),
-    this.trailingPadding = const EdgeInsets.only(left: 10),
-    this.constraints = const BoxConstraints(minHeight: 60),
     this.backgroundColor,
-  });
+    BorderRadius? borderRadius,
+    EdgeInsets? contentPadding,
+    EdgeInsets? leadingPadding,
+    EdgeInsets? trailingPadding,
+    BoxConstraints? constraints,
+  })  : borderRadius = borderRadius ?? BorderRadius.all(Radius.circular(16.s)),
+        contentPadding = contentPadding ?? EdgeInsets.all(12.s),
+        leadingPadding = leadingPadding ?? EdgeInsets.only(right: 10.s),
+        trailingPadding = trailingPadding ?? EdgeInsets.only(left: 10.s),
+        constraints = constraints ?? BoxConstraints(minHeight: 60.s);
 
-  const factory ListItem.checkbox({
+  factory ListItem.checkbox({
     Key? key,
     Widget? leading,
     Widget? title,

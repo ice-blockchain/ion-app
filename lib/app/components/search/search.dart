@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -46,17 +47,17 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 10.s, vertical: 5.s),
       child: Row(
         children: <Widget>[
           Expanded(
             child: SizedBox(
-              height: 42,
+              height: 42.s,
               child: CupertinoTextField(
                 focusNode: _focusNode,
                 decoration: BoxDecoration(
                   color: context.theme.appColors.primaryBackground,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.s),
                 ),
                 controller: _controller,
                 placeholder: context.i18n.search_placeholder,
@@ -64,11 +65,11 @@ class _SearchState extends State<Search> {
                   color: context.theme.appColors.tertararyText,
                 ),
                 prefix: Padding(
-                  padding: const EdgeInsets.only(left: 12),
+                  padding: EdgeInsets.only(left: 12.s),
                   child: ImageIcon(
                     AssetImage(Assets.images.search.path),
                     color: context.theme.appColors.tertararyText,
-                    size: 14,
+                    size: 14.s,
                   ),
                 ),
                 clearButtonMode: OverlayVisibilityMode.editing,
@@ -77,9 +78,9 @@ class _SearchState extends State<Search> {
                 suffix: _controller.text.isNotEmpty
                     ? GestureDetector(
                         onTap: _onClearTapped,
-                        child: const Padding(
-                          padding: EdgeInsets.only(right: 12.0),
-                          child: Icon(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 12.s),
+                          child: const Icon(
                             CupertinoIcons.clear_circled,
                             color: Colors.grey,
                           ),

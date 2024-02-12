@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-const double textContainerHeight = 24.0;
+double textContainerHeight = 24.s;
 
 class CategoryItem {
   CategoryItem({
@@ -52,8 +53,8 @@ class CategoriesCollection extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: featured.length,
         itemBuilder: (BuildContext context, int index) {
-          final double leftOffset = index == 0 ? 16.0 : 8.0;
-          final double rightOffset = index == featured.length - 1 ? 16.0 : 8.0;
+          final double leftOffset = index == 0 ? 16.s : 8.s;
+          final double rightOffset = index == featured.length - 1 ? 16.s : 8.s;
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -62,7 +63,7 @@ class CategoriesCollection extends StatelessWidget {
                 height: itemWidth,
                 margin: EdgeInsets.only(right: rightOffset, left: leftOffset),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9.6),
+                  borderRadius: BorderRadius.circular(9.6.s),
                   color: context.theme.appColors.tertararyBackground,
                   border: Border.all(
                     color: context.theme.appColors.onTerararyFill,
@@ -73,7 +74,7 @@ class CategoriesCollection extends StatelessWidget {
                   children: <Widget>[
                     Image.asset(
                       featured[index].iconImage,
-                      width: 50,
+                      width: 50.s,
                     ),
                   ],
                 ),

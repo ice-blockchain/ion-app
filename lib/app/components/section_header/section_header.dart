@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SectionHeader extends StatelessWidget {
-  const SectionHeader({
-    this.topPadding = 24.0,
-    this.bottomPadding = 16.0,
+  SectionHeader({
     this.title,
     this.onPress,
-  });
+    double? topPadding,
+    double? bottomPadding,
+  })  : topPadding = topPadding ?? 24.s,
+        bottomPadding = bottomPadding ?? 16.s;
 
   final double topPadding;
   final double bottomPadding;
@@ -26,7 +28,7 @@ class SectionHeader extends StatelessWidget {
           bottom: bottomPadding,
         ),
         child: SizedBox(
-          height: 24,
+          height: 24.s,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -39,11 +41,12 @@ class SectionHeader extends StatelessWidget {
                   ),
                 ),
               if (onPress != null)
+                // TODO::why not Button component
                 InkWell(
                   onTap: onPress,
                   child: Ink(
-                    width: 24, // Set the width of the button
-                    height: 24, // Set the height of the button
+                    width: 24.s, // Set the width of the button
+                    height: 24.s, // Set the height of the button
                     child: Center(
                       child: Image.asset(
                         Assets.images.nextArrow.path,

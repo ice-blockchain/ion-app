@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -32,14 +33,14 @@ class EnterCode extends HookConsumerWidget {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  const SizedBox(
-                    height: 65,
+                  SizedBox(
+                    height: 65.s,
                   ),
                   Image.asset(
                     Assets.images.enterCode.path,
                   ),
-                  const SizedBox(
-                    height: 9,
+                  SizedBox(
+                    height: 9.s,
                   ),
                   Text(
                     context.i18n.enter_code_title,
@@ -56,22 +57,22 @@ class EnterCode extends HookConsumerWidget {
                     style: context.theme.appTextThemes.subtitle,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 30, bottom: 19),
+                    padding: EdgeInsets.only(top: 30.s, bottom: 19.s),
                     child: SizedBox(
-                      width: 248,
+                      width: 248.s,
                       child: PinCodeTextField(
                         appContext: context,
                         length: 4,
                         animationType: AnimationType.fade,
                         cursorColor: Colors.black,
-                        cursorWidth: 3,
-                        cursorHeight: 25,
+                        cursorWidth: 3.s,
+                        cursorHeight: 25.s,
                         textStyle: context.theme.appTextThemes.inputFieldText,
                         pinTheme: PinTheme(
                           shape: PinCodeFieldShape.box,
-                          borderRadius: BorderRadius.circular(16),
-                          fieldHeight: 56,
-                          fieldWidth: 50,
+                          borderRadius: BorderRadius.circular(16.s),
+                          fieldHeight: 56.s,
+                          fieldWidth: 50.s,
                           borderWidth: 1,
                           inactiveColor: invalidCode.value
                               ? context.theme.appColors.attentionRed
@@ -142,9 +143,9 @@ class EnterCode extends HookConsumerWidget {
               Image.asset(
                 Assets.images.iceRound.path,
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 48),
-                child: TermsPrivacy(),
+              Padding(
+                padding: EdgeInsets.only(bottom: 48.s),
+                child: const TermsPrivacy(),
               ),
             ],
           ),

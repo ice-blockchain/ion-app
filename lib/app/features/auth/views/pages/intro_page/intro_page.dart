@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -40,10 +41,10 @@ class IntroPage extends HookConsumerWidget {
                   repeat: false,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                    left: 40,
-                    right: 85,
-                    bottom: 10,
+                  padding: EdgeInsets.only(
+                    left: 40.s,
+                    right: 85.s,
+                    bottom: 10.s,
                   ),
                   child: Text(
                     context.i18n.intro_title,
@@ -55,7 +56,7 @@ class IntroPage extends HookConsumerWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 40.0, right: 40.0),
+                  padding: EdgeInsets.only(left: 40.s, right: 40.s),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(

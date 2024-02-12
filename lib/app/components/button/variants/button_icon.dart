@@ -7,12 +7,12 @@ class _ButtonWithIcon extends Button {
     required super.onPressed,
     required Widget icon,
     ButtonStyle style = const ButtonStyle(),
-    double size = 56,
+    double? size,
   }) : super(
           leadingIcon: icon,
           style: style.merge(
             OutlinedButton.styleFrom(
-              fixedSize: Size.square(size),
+              fixedSize: Size.square(size ?? 56.s),
               padding: EdgeInsets.zero,
             ),
           ),

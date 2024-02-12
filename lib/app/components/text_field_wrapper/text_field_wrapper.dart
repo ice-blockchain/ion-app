@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -96,17 +97,17 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const SizedBox(width: 16),
+          SizedBox(width: 16.s),
           ImageIcon(
             widget.defaultIcon,
-            size: 24,
+            size: 24.s,
             color: context.theme.appColors.secondaryText,
           ),
           Container(
             width: 1,
-            height: 26,
+            height: 26.s,
             color: context.theme.appColors.strokeElements,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
+            margin: EdgeInsets.symmetric(horizontal: 16.s),
           ),
         ],
       );
@@ -128,19 +129,19 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
               borderSide: BorderSide(
                 color: _getBorderColor(context),
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.s),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: context.theme.appColors.primaryAccent,
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.s),
             ),
             errorBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: context.theme.appColors.attentionRed,
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.s),
             ),
             label: Text(
               placeholder(),
@@ -150,36 +151,23 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
               ),
             ),
             prefixIcon: _buildPrefixIcon(),
-            suffixIconConstraints: const BoxConstraints(
-              maxHeight: 15, // Adjust the maxHeight as needed
-              maxWidth: 15, // Adjust the maxWidth as needed
+            suffixIconConstraints: BoxConstraints(
+              maxHeight: 15.s, // Adjust the maxHeight as needed
+              maxWidth: 15.s, // Adjust the maxWidth as needed
             ),
-            contentPadding: const EdgeInsets.only(left: 16),
+            contentPadding: EdgeInsets.only(left: 16.s),
           ),
         ),
         if (_state == TextFieldState.successState)
           Positioned(
-            right: 16,
-            top: 12,
+            right: 16.s,
+            top: 12.s,
             child: Image.asset(
               Assets.images.blockCheckboxOn.path,
-              width: 24,
-              height: 24,
+              width: 24.s,
+              height: 24.s,
             ),
           ),
-        // Positioned(
-        //   left: _focusNode.hasFocus ? 16 : 73,
-        //   top: _controller.text.isEmpty && !_focusNode.hasFocus ? 14 : 0,
-        //   child: Text(
-        //     widget.placeholder,
-        //     style: context.theme.appTextThemes.body.copyWith(
-        //       color: _focusNode.hasFocus
-        //           ? context.theme.appColors.primaryAccent
-        //           : context.theme.appColors
-        //               .tertararyText, // Use the color you desire
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }

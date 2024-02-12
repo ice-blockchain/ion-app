@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -27,14 +28,14 @@ class CheckEmail extends HookConsumerWidget {
           children: <Widget>[
             Column(
               children: <Widget>[
-                const SizedBox(
-                  height: 65,
+                SizedBox(
+                  height: 65.s,
                 ),
                 Image.asset(
                   Assets.images.iceRound.path,
                 ),
-                const SizedBox(
-                  height: 12,
+                SizedBox(
+                  height: 12.s,
                 ),
                 Text(
                   context.i18n.check_email_title,
@@ -58,7 +59,7 @@ class CheckEmail extends HookConsumerWidget {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 36, horizontal: 20),
+                      EdgeInsets.symmetric(vertical: 36.s, horizontal: 20.s),
                   child: Text(
                     context.i18n.check_email_description,
                     textAlign: TextAlign.center,
@@ -68,21 +69,21 @@ class CheckEmail extends HookConsumerWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 248,
+                  width: 248.s,
                   child: PinCodeTextField(
                     appContext: context,
                     length: 4,
                     animationType: AnimationType.fade,
                     enabled: false,
                     cursorColor: Colors.black,
-                    cursorWidth: 3,
-                    cursorHeight: 25,
+                    cursorWidth: 3.s,
+                    cursorHeight: 25.s,
                     textStyle: context.theme.appTextThemes.inputFieldText,
                     pinTheme: PinTheme(
                       shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(16),
-                      fieldHeight: 56,
-                      fieldWidth: 50,
+                      borderRadius: BorderRadius.circular(16.s),
+                      fieldHeight: 56.s,
+                      fieldWidth: 50.s,
                       borderWidth: 1,
                       inactiveColor: context.theme.appColors.strokeElements,
                       disabledColor: context.theme.appColors.strokeElements,
@@ -114,9 +115,9 @@ class CheckEmail extends HookConsumerWidget {
             Image.asset(
               Assets.images.iceRound.path,
             ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 48),
-              child: TermsPrivacy(),
+            Padding(
+              padding: EdgeInsets.only(bottom: 48.s),
+              child: const TermsPrivacy(),
             ),
           ],
         ),

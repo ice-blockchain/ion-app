@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/navigation_header/navigation_header.dart';
 import 'package:ice/app/components/search/search.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
 
@@ -39,7 +40,7 @@ class SelectCountries extends HookConsumerWidget {
               title: context.i18n.select_countries_nav_title,
             ),
             Padding(
-              padding: const EdgeInsets.only(top: navigationHeaderHeight),
+              padding: EdgeInsets.only(top: navigationHeaderHeight),
               child: Column(
                 children: <Widget>[
                   Search(
@@ -56,15 +57,15 @@ class SelectCountries extends HookConsumerWidget {
                             Navigator.pop(context);
                           },
                           child: Container(
-                            height: 40,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            height: 40.s,
+                            padding: EdgeInsets.symmetric(horizontal: 16.s),
                             child: Row(
                               children: <Widget>[
                                 Text(
                                   country.flag,
                                   style: context.theme.appTextThemes.subtitle2,
                                 ),
-                                const SizedBox(width: 16),
+                                SizedBox(width: 16.s),
                                 Expanded(
                                   child: Text(
                                     country.name,
