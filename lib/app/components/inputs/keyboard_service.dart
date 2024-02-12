@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
+//TODO::reconsider during input refactoring
 class KeyboardService {
   final KeyboardVisibilityController keyboardVisibilityController =
       KeyboardVisibilityController();

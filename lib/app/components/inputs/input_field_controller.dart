@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/services/keyboard_service.dart';
+import 'package:ice/app/components/inputs/keyboard_service.dart';
 
 class InputFieldController {
   InputFieldController({
