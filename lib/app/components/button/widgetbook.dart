@@ -134,3 +134,53 @@ Widget iconButtonUseCase(BuildContext context) {
     ),
   );
 }
+
+@widgetbook.UseCase(
+  name: 'compact',
+  type: Button,
+)
+Widget compactButtonUseCase(BuildContext context) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: Button.compact(
+                leadingIcon: ImageIcon(
+                  AssetImage(Assets.images.receive.path),
+                ),
+                label: Text(
+                  context.knobs.string(
+                    label: 'Label',
+                    initialValue: 'Default',
+                  ),
+                ),
+                onPressed: () {},
+              ),
+            ),
+            SizedBox(
+              width: 16.0.s,
+            ),
+            Expanded(
+              child: Button.compact(
+                leadingIcon: ImageIcon(
+                  AssetImage(Assets.images.send.path),
+                ),
+                label: Text(
+                  context.knobs.string(
+                    label: 'Label',
+                    initialValue: 'Default',
+                  ),
+                ),
+                onPressed: () {},
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}

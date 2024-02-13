@@ -6,6 +6,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
 part 'variants/button_icon.dart';
+part 'variants/button_compact.dart';
 
 enum ButtonType {
   primary,
@@ -37,6 +38,19 @@ class Button extends StatelessWidget {
     double size,
   }) = _ButtonWithIcon;
 
+  factory Button.compact({
+    Key? key,
+    required VoidCallback onPressed,
+    Widget? trailingIcon,
+    Widget? leadingIcon,
+    Widget? label,
+    ButtonStyle style,
+    MainAxisSize mainAxisSize,
+    ButtonType type,
+    bool disabled,
+    Color? tintColor,
+  }) = _ButtonCompact;
+
   final VoidCallback onPressed;
   final Widget? leadingIcon;
   final Widget? trailingIcon;
@@ -55,7 +69,7 @@ class Button extends StatelessWidget {
         OutlinedButton.styleFrom(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
+            borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
           ),
           minimumSize: Size(56.0.s, 56.0.s),
           padding: EdgeInsets.symmetric(horizontal: 16.0.s),
@@ -68,7 +82,7 @@ class Button extends StatelessWidget {
       child: IconTheme(
         data: IconThemeData(color: _getIconTintColor(context, type)),
         child: DefaultTextStyle(
-          style: context.theme.appTextThemes.subtitle2
+          style: context.theme.appTextThemes.body
               .copyWith(color: _getLabelColor(context, type)),
           child: Row(
             mainAxisSize: mainAxisSize,
