@@ -5,19 +5,31 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-enum SocialButtonType { apple, nostr, x, expand, fb, github, discord, linkedin }
+enum SocialButtonType {
+  apple,
+  nostr,
+  x,
+  expand,
+  fb,
+  github,
+  discord,
+  linkedin;
+
+  String get buttonIcon {
+    return switch (this) {
+      SocialButtonType.apple => Assets.images.apple.path,
+      SocialButtonType.nostr => Assets.images.nostr.path,
+      SocialButtonType.x => Assets.images.x.path,
+      SocialButtonType.fb => Assets.images.facebook.path,
+      SocialButtonType.github => Assets.images.github.path,
+      SocialButtonType.discord => Assets.images.discord.path,
+      SocialButtonType.linkedin => Assets.images.linkedin.path,
+      SocialButtonType.expand => Assets.images.loginDropup.path,
+    };
+  }
+}
 
 double defaultSocialIconButtonSide = 44.0.s;
-
-Map<SocialButtonType, String> socialIcons = <SocialButtonType, String>{
-  SocialButtonType.apple: Assets.images.apple.path,
-  SocialButtonType.nostr: Assets.images.nostr.path,
-  SocialButtonType.x: Assets.images.x.path,
-  SocialButtonType.fb: Assets.images.facebook.path,
-  SocialButtonType.github: Assets.images.github.path,
-  SocialButtonType.discord: Assets.images.discord.path,
-  SocialButtonType.linkedin: Assets.images.linkedin.path,
-};
 
 typedef SocialButtonCallback = void Function(SocialButtonType type);
 
@@ -77,7 +89,7 @@ class _SocialsState extends State<Socials> {
   }
 
   Widget buildSocialButton(SocialButtonType type) {
-    String? socialIcon = socialIcons[type];
+    String socialIcon = type.buttonIcon;
 
     if (type == SocialButtonType.expand) {
       socialIcon = isSecondRowVisible
@@ -87,7 +99,7 @@ class _SocialsState extends State<Socials> {
 
     return Button.icon(
       type: ButtonType.outlined,
-      icon: ButtonIcon(socialIcon!),
+      icon: ButtonIcon(socialIcon),
       onPressed: () => handleButtonPress(type),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/app_colors.dart';
 import 'package:ice/app/theme/app_text_themes.dart';
@@ -10,7 +11,7 @@ AppBarTheme _buildBaseAppBarTheme(
   AppTextThemesExtension textThemes,
 ) {
   return const AppBarTheme().copyWith(
-    toolbarHeight: templateTheme.appBar.toolbarHeight,
+    toolbarHeight: templateTheme.appBar.toolbarHeight.s,
     backgroundColor: colors.primaryBackground,
     titleTextStyle: textThemes.caption2.copyWith(color: colors.attentionRed),
     iconTheme: IconThemeData(color: colors.attentionRed),
