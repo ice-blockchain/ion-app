@@ -166,3 +166,25 @@ class ButtonLoadingIndicator extends StatelessWidget {
     );
   }
 }
+
+class ButtonIcon extends StatelessWidget {
+  ButtonIcon({
+    super.key,
+    required this.path,
+    double? size,
+  }) : size = size ?? 24.0.s;
+
+  final String path;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: FittedBox(
+        child: ImageIcon(AssetImage(path)),
+      ),
+    );
+  }
+}
