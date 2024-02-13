@@ -168,14 +168,16 @@ class ButtonLoadingIndicator extends StatelessWidget {
 }
 
 class ButtonIcon extends StatelessWidget {
-  ButtonIcon({
+  ButtonIcon(
+    this.path, {
     super.key,
-    required this.path,
     double? size,
+    this.color,
   }) : size = size ?? 24.0.s;
 
   final String path;
   final double size;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +185,7 @@ class ButtonIcon extends StatelessWidget {
       width: size,
       height: size,
       child: FittedBox(
-        child: ImageIcon(AssetImage(path)),
+        child: ImageIcon(AssetImage(path), color: color),
       ),
     );
   }

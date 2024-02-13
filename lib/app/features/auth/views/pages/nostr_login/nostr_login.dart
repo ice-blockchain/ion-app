@@ -53,9 +53,8 @@ class NostrLogin extends IceSimplePage {
                   ),
                   Center(
                     child: Button(
-                      leadingIcon: ImageIcon(
-                        AssetImage(Assets.images.profilePaste.path),
-                        size: 24.0.s,
+                      leadingIcon: ButtonIcon(
+                        Assets.images.profilePaste.path,
                       ),
                       onPressed: () {},
                       type: ButtonType.disabled,

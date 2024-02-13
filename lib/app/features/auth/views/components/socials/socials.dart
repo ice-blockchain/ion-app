@@ -87,7 +87,7 @@ class _SocialsState extends State<Socials> {
 
     return Button.icon(
       type: ButtonType.outlined,
-      icon: Image.asset(socialIcon!),
+      icon: ButtonIcon(socialIcon!),
       onPressed: () => handleButtonPress(type),
     );
   }

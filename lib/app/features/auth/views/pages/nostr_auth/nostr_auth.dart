@@ -33,9 +33,8 @@ class NostrAuth extends IceSimplePage {
               children: <Widget>[
                 Center(
                   child: Button(
-                    leadingIcon: ImageIcon(
-                      AssetImage(Assets.images.loginCreateacc.path),
-                      size: 24.0.s,
+                    leadingIcon: ButtonIcon(
+                      Assets.images.loginCreateacc.path,
                     ),
                     onPressed: () {
                       // showModalScreen(
@@ -53,9 +52,8 @@ class NostrAuth extends IceSimplePage {
                 ),
                 Center(
                   child: Button(
-                    leadingIcon: ImageIcon(
-                      AssetImage(Assets.images.profileSave.path),
-                      size: 24.0.s,
+                    leadingIcon: ButtonIcon(
+                      Assets.images.profileSave.path,
                     ),
                     onPressed: () {
                       context.goNamed(IceRoutes.nostrLogin.name);

@@ -170,10 +170,7 @@ class FillProfile extends IceSimplePage {
               ),
               Center(
                 child: Button(
-                  leadingIcon: ImageIcon(
-                    AssetImage(Assets.images.profileSave.path),
-                    size: 24.0.s,
-                  ),
+                  leadingIcon: ButtonIcon(Assets.images.profileSave.path),
                   onPressed: onSave,
                   label: Text(context.i18n.button_save),
                   mainAxisSize: MainAxisSize.max,
