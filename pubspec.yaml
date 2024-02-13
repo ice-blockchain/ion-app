@@ -59,6 +59,7 @@ flutter:
     - assets/images/
     - assets/images/icons/
     - assets/images/wallet/
+    - assets/images/categories/
 
 flutter_gen:
   output: lib/generated/
