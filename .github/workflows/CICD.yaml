@@ -1,13 +1,7 @@
 name: CI/CD
 on:
-  push:
-    branches:
-      - master
-      - 'release/v*'
-  pull_request:
-    branches:
-      - master
-      - 'release/v*'
+  workflow_dispatch:
+
 jobs:
   flutter:
     name: Flutter -- verify, build, test
