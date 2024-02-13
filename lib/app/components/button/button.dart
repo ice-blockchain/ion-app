@@ -35,6 +35,7 @@ class Button extends StatelessWidget {
     required Widget icon,
     ButtonType type,
     ButtonStyle style,
+    Color? tintColor,
     double size,
   }) = _ButtonWithIcon;
 
@@ -82,6 +83,7 @@ class Button extends StatelessWidget {
       child: IconTheme(
         data: IconThemeData(color: _getIconTintColor(context, type)),
         child: DefaultTextStyle(
+          overflow: TextOverflow.ellipsis,
           style: context.theme.appTextThemes.body
               .copyWith(color: _getLabelColor(context, type)),
           child: Row(
@@ -90,13 +92,16 @@ class Button extends StatelessWidget {
             children: <Widget>[
               if (leadingIcon != null) leadingIcon!,
               if (label != null)
-                Padding(
-                  padding: EdgeInsets.only(
-                    left:
-                        leadingIcon == null ? 0 : 8.0.s, // 8 move to constants
-                    right: trailingIcon == null ? 0 : 8.0.s,
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: leadingIcon == null
+                          ? 0
+                          : 8.0.s, // 8 move to constants
+                      right: trailingIcon == null ? 0 : 8.0.s,
+                    ),
+                    child: label,
                   ),
-                  child: label,
                 ),
               if (trailingIcon != null) trailingIcon!,
             ],

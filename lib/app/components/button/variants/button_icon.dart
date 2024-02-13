@@ -4,6 +4,7 @@ class _ButtonWithIcon extends Button {
   _ButtonWithIcon({
     super.key,
     super.type,
+    super.tintColor,
     required super.onPressed,
     required Widget icon,
     ButtonStyle style = const ButtonStyle(),

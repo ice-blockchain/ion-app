@@ -123,6 +123,7 @@ Widget iconButtonUseCase(BuildContext context) {
         ),
         Button.icon(
           size: 40.0.s,
+          tintColor: context.theme.appColors.attentionRed,
           type: ButtonType.outlined,
           icon: ImageIcon(
             AssetImage(Assets.images.filter.path),
