@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/navigation_header/navigation_header.dart';
 import 'package:ice/app/components/search/search.dart';
@@ -7,12 +8,13 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 
-class SelectCountries extends HookConsumerWidget {
-  const SelectCountries({super.key});
+class SelectCountries extends IceSimplePage {
+  const SelectCountries(super._route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ValueNotifier<String> searchText = useState('');
 
     final List<Country> filteredCountries = searchText.value.isEmpty
@@ -53,9 +55,7 @@ class SelectCountries extends HookConsumerWidget {
                       itemBuilder: (BuildContext context, int index) {
                         final Country country = filteredCountries[index];
                         return InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
+                          onTap: context.pop,
                           child: Container(
                             height: 40.0.s,
                             padding: EdgeInsets.symmetric(horizontal: 16.0.s),

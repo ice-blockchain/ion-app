@@ -3,6 +3,16 @@
 printf "\e[33;1m%s\e[0m\n" 'Pre-Commit'
 
 # Generate Code
+printf "\e[33;1m%s\e[0m\n" '=== Format Code ==='
+scripts/format_code.sh
+if [ $? -ne 0 ]; then
+  printf "\e[31;1m%s\e[0m\n" '=== Format Code changes ==='
+  exit 1
+fi
+printf "\e[33;1m%s\e[0m\n" 'Finished running Format Code'
+printf '%s\n' "${avar}"
+
+# Generate Code
 printf "\e[33;1m%s\e[0m\n" '=== Generate Code ==='
 scripts/generate_code.sh
 if [ $? -ne 0 ]; then

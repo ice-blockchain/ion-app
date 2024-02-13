@@ -17,6 +17,9 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   AuthState _authState = const AuthenticationUnknown();
   AsyncValue<void>? _init;
 
+  final Map<IceRoutes, String> _routesLocations = <IceRoutes, String>{};
+
+  // ignore_for_file: avoid_manual_providers_as_generated_provider_dependency
   @override
   Future<void> build() async {
     _authState = ref.watch(authProvider);
@@ -30,41 +33,60 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     });
   }
 
-// ignore: avoid_build_context_in_providers
+  String _location(IceRoutes route, GoRouterState state) {
+    final String? location = _routesLocations[route];
+    if (location == null) {
+      return _routesLocations[route] =
+          state.namedLocation(route.name); //TODO avoid hardcoded route.name
+    }
+
+    return location;
+  }
+
+  // ignore: avoid_build_context_in_providers
   String? redirect(BuildContext context, GoRouterState state) {
+    final IceRoutes? route = _redirectNamed(state);
+    if (route != null) {
+      return _location(route, state);
+    }
+
+    return null;
+  }
+
+  IceRoutes? _redirectNamed(GoRouterState state) {
     //TODO: check that its part of intro navigation flow
     final bool isAuthInProgress =
-        state.matchedLocation == const IntroRoute().location ||
-            state.matchedLocation == const AuthRoute().location;
-    final bool isSplash = state.matchedLocation == const SplashRoute().location;
+        state.matchedLocation.startsWith(_location(IceRoutes.intro, state));
+    final bool isSplash =
+        state.matchedLocation == _location(IceRoutes.splash, state);
     final bool isInitError = _init?.hasError ?? false;
     final bool isInitInProgress = _init?.isLoading ?? true;
     final bool isAnimationCompleted = ref.watch(splashProvider);
 
     if (isInitError) {
-      return const ErrorRoute().location;
+      return IceRoutes.splash;
     }
 
     if (isInitInProgress && !isSplash || !isAnimationCompleted) {
-      return const SplashRoute().location;
+      return IceRoutes.splash;
     }
 
     if (isSplash && !isInitInProgress && isAnimationCompleted) {
       if (_authState is Authenticated) {
-        return const WalletRoute().location;
+        return IceRoutes.wallet;
       }
       if (_authState is UnAuthenticated) {
         /// Navigate to the Intro screen after splash for unauthenticated users
-        return const IntroRoute().location;
+        return IceRoutes.intro;
       }
     }
 
     if (isAuthInProgress && _authState is Authenticated) {
-      return const WalletRoute().location;
+      return IceRoutes.wallet;
     }
 
     if (!isAuthInProgress && _authState is UnAuthenticated) {
-      return const IntroRoute().location;
+      return IceRoutes.intro;
     }
 
     return null;

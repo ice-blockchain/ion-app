@@ -6,7 +6,7 @@ analyzer:
 
   exclude:
     - lib/**.g.dart
-    - lib/*.freezed.dart
+    - lib/**.freezed.dart
     - build/**
     - lib/generated/**
 

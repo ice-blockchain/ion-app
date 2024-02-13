@@ -7,13 +7,14 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/controllers/name_controller.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class NostrLogin extends HookConsumerWidget {
-  const NostrLogin({super.key});
+class NostrLogin extends IceSimplePage {
+  const NostrLogin(super._route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final PrivateKeyController privateKeyController = PrivateKeyController();
     return Scaffold(
       body: SingleChildScrollView(

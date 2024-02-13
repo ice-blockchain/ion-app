@@ -6,15 +6,16 @@ import 'package:ice/app/components/drop_down_menu/drop_down_menu.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 enum FeedType { feed, videos, stories }
 
-class FeedPage extends HookConsumerWidget {
-  const FeedPage({super.key});
+class FeedPage extends IceSimplePage {
+  const FeedPage(super.route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ValueNotifier<FeedType> selected = useState(FeedType.feed);
 
     return Scaffold(

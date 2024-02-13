@@ -1,33 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
-import 'package:ice/app/features/auth/views/pages/nostr_login/nostr_login.dart';
+import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class NostrAuth extends HookConsumerWidget {
-  const NostrAuth({super.key});
-
-  void showModalScreen(
-    Widget screen,
-    BuildContext context,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) => ModalWrapper(
-        child: screen,
-      ),
-    );
-  }
+class NostrAuth extends IceSimplePage {
+  const NostrAuth(super._route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return Scaffold(
       body: ScreenSideOffset.large(
         child: Column(
@@ -71,10 +58,7 @@ class NostrAuth extends HookConsumerWidget {
                       size: 24.0.s,
                     ),
                     onPressed: () {
-                      showModalScreen(
-                        const NostrLogin(),
-                        context,
-                      );
+                      context.goNamed(IceRoutes.nostrLogin.name);
                     },
                     label: Text(context.i18n.button_login),
                     mainAxisSize: MainAxisSize.max,

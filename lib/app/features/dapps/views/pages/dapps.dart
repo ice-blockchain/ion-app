@@ -9,14 +9,14 @@ import 'package:ice/app/features/dapps/views/components/favourites.dart';
 import 'package:ice/app/features/dapps/views/components/featured.dart';
 import 'package:ice/app/features/dapps/views/components/wallet_header/wallet_header.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
+import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 
-class DAppsPage extends HookConsumerWidget {
-  const DAppsPage({super.key});
+class DAppsPage extends IceSimplePage {
+  const DAppsPage(super.route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final GoRouter router = GoRouter.of(context);
-
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return SingleChildScrollView(
       child: Container(
         decoration:
@@ -30,8 +30,8 @@ class DAppsPage extends HookConsumerWidget {
               title: context.i18n.dapps_section_title_highest_ranked,
               items: featured,
               onPress: () {
-                router.go(
-                  '/dapps/appsList',
+                context.goNamed(
+                  IceRoutes.appsList.name,
                   extra: AppsRouteData(
                     title: context.i18n.dapps_section_title_highest_ranked,
                     items: featured,
@@ -43,8 +43,8 @@ class DAppsPage extends HookConsumerWidget {
               title: context.i18n.dapps_section_title_recently_added,
               items: featured,
               onPress: () {
-                router.go(
-                  '/dapps/appsList',
+                context.goNamed(
+                  IceRoutes.appsList.name,
                   extra: AppsRouteData(
                     title: context.i18n.dapps_section_title_recently_added,
                     items: featured,
@@ -54,8 +54,8 @@ class DAppsPage extends HookConsumerWidget {
             ),
             Favourites(
               onPress: () {
-                router.go(
-                  '/dapps/appsList',
+                context.goNamed(
+                  IceRoutes.appsList.name,
                   extra: AppsRouteData(
                     title: context.i18n.dapps_section_title_favourites,
                     items: featured,

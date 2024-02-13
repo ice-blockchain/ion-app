@@ -1,29 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
+import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
 
-class IntroPage extends HookConsumerWidget {
-  const IntroPage({super.key});
-
-  void showMyBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) => const ModalWrapper(
-        child: AuthPage(),
-      ),
-    );
-  }
+class IntroPage extends IceSimplePage {
+  const IntroPage(super._route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -79,7 +69,7 @@ class IntroPage extends HookConsumerWidget {
               child: Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    showMyBottomSheet(context);
+                    context.goNamed(IceRoutes.auth.name);
                   },
                   child: Text(context.i18n.button_continue),
                 ),

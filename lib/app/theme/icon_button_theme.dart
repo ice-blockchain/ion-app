@@ -4,19 +4,19 @@ import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/app_text_themes.dart';
 
 IconButtonThemeData buildIconButtonTheme(
-  Template template,
+  TemplateTheme templateTheme,
   AppTextThemesExtension textThemes,
 ) {
   return IconButtonThemeData(
     style: ButtonStyle(
       fixedSize: MaterialStateProperty.all<Size>(
-        Size(template.iconButton.width, template.iconButton.height),
+        Size(templateTheme.iconButton.width, templateTheme.iconButton.height),
       ),
       iconSize: MaterialStateProperty.all<double>(
-        template.iconButton.width,
+        templateTheme.iconButton.width,
       ),
       backgroundColor: MaterialStateProperty.all<Color>(
-        HexColor(template.iconButton.backgroundColor),
+        HexColor(templateTheme.iconButton.backgroundColor),
       ),
     ),
   );

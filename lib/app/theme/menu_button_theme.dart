@@ -4,23 +4,24 @@ import 'package:ice/app/theme/app_colors.dart';
 import 'package:ice/app/theme/app_text_themes.dart';
 
 MenuButtonThemeData buildMenuButtonTheme(
-  Template template,
+  TemplateTheme templateTheme,
   AppColorsExtension colors,
   AppTextThemesExtension textThemes,
 ) {
   return MenuButtonThemeData(
     style: ButtonStyle(
-      iconSize: MaterialStatePropertyAll<double>(template.menuButton.iconSize),
+      iconSize:
+          MaterialStatePropertyAll<double>(templateTheme.menuButton.iconSize),
       minimumSize: MaterialStatePropertyAll<Size>(
-        Size(100, template.menuButton.minHeight),
+        Size(100, templateTheme.menuButton.minHeight),
       ),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
         EdgeInsets.fromLTRB(
-          template.menuButton.paddingLeft,
-          template.menuButton.paddingTop,
-          template.menuButton.paddingRight,
-          template.menuButton.paddingBottom,
+          templateTheme.menuButton.paddingLeft,
+          templateTheme.menuButton.paddingTop,
+          templateTheme.menuButton.paddingRight,
+          templateTheme.menuButton.paddingBottom,
         ),
       ),
       textStyle: MaterialStatePropertyAll<TextStyle>(textThemes.subtitle2),

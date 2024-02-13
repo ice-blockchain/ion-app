@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_fields.dart';
-import 'package:ice/app/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -17,35 +17,16 @@ import 'package:ice/app/features/auth/views/components/terms_privacy/terms_priva
 import 'package:ice/app/features/auth/views/pages/auth_page/components/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/controllers/email_controller.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/controllers/phone_number_controller.dart';
-import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
-import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
-import 'package:ice/app/features/auth/views/pages/enter_code/enter_code.dart';
-import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
-import 'package:ice/app/features/auth/views/pages/nostr_auth/nostr_auth.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
-import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
-import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
+import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class AuthPage extends HookConsumerWidget {
-  const AuthPage({super.key});
-
-  void showModalScreen(
-    Widget screen,
-    BuildContext context,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) => ModalWrapper(
-        child: screen,
-      ),
-    );
-  }
+class AuthPage extends IceSimplePage {
+  const AuthPage(super._route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final AuthState authState = ref.watch(authProvider);
     final bool isEmailMode = ref.watch(isEmailModeProvider);
     final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
@@ -76,10 +57,7 @@ class AuthPage extends HookConsumerWidget {
               InputField(
                 leadingIcon: CountryCodeInput(
                   country: countries[1],
-                  onTap: () => showModalScreen(
-                    const SelectCountries(),
-                    context,
-                  ),
+                  onTap: () => context.goNamed(IceRoutes.selectCountries.name),
                 ),
                 label: context.i18n.auth_signIn_input_phone_number,
                 controller: numberController.controller,
@@ -146,17 +124,17 @@ class AuthPage extends HookConsumerWidget {
                 onSocialButtonPressed: (SocialButtonType type) {
                   switch (type) {
                     case SocialButtonType.apple:
-                      showModalScreen(const CheckEmail(), context);
+                      context.goNamed(IceRoutes.checkEmail.name);
                     case SocialButtonType.nostr:
-                      showModalScreen(const NostrAuth(), context);
+                      context.goNamed(IceRoutes.nostrAuth.name);
                     case SocialButtonType.x:
-                      showModalScreen(const FillProfile(), context);
+                      context.goNamed(IceRoutes.fillProfile.name);
                     case SocialButtonType.fb:
-                      showModalScreen(const EnterCode(), context);
+                      context.goNamed(IceRoutes.enterCode.name);
                     case SocialButtonType.github:
-                      showModalScreen(const SelectLanguages(), context);
+                      context.goNamed(IceRoutes.selectLanguages.name);
                     case SocialButtonType.discord:
-                      showModalScreen(const DiscoverCreators(), context);
+                      context.goNamed(IceRoutes.discoverCreators.name);
                     case SocialButtonType.linkedin:
                       break;
                     default:

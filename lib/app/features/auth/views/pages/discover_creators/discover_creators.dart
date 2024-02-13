@@ -10,13 +10,14 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/title_description_header/title_description_header.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class DiscoverCreators extends HookConsumerWidget {
-  const DiscoverCreators({super.key});
+class DiscoverCreators extends IceSimplePage {
+  const DiscoverCreators(super.route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ValueNotifier<String> searchText = useState('');
 
     final ValueNotifier<Set<User>> followedCreatorsNotifier =

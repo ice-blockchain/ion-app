@@ -11,10 +11,12 @@ class InputFieldBorder extends OutlineInputBorder {
         );
 
   factory InputFieldBorder.focused() => InputFieldBorder(
-        borderSide: BorderSide(color: appTemplate.colors.light.primaryAccent),
+        borderSide:
+            BorderSide(color: appTemplateTheme.colors.light.primaryAccent),
       );
 
   factory InputFieldBorder.error() => InputFieldBorder(
-        borderSide: BorderSide(color: appTemplate.colors.light.attentionRed),
+        borderSide:
+            BorderSide(color: appTemplateTheme.colors.light.attentionRed),
       );
 }

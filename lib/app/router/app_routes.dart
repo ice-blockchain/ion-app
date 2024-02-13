@@ -1,213 +1,104 @@
-import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
 import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
+import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
+import 'package:ice/app/features/auth/views/pages/enter_code/enter_code.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/intro_page.dart';
+import 'package:ice/app/features/auth/views/pages/nostr_auth/nostr_auth.dart';
+import 'package:ice/app/features/auth/views/pages/nostr_login/nostr_login.dart';
+import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
+import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
-import 'package:ice/app/features/core/views/pages/modal_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ice/app/features/wallet/views/pages/inner_wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page.dart';
-import 'package:ice/app/router/views/scaffold_with_nested_navigation.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 
-part 'app_routes.g.dart';
+const IceRoutes initialPage = IceRoutes.splash;
 
-final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> shellNavigatorDAppsKey =
-    GlobalKey<NavigatorState>(debugLabel: 'dApps');
-final GlobalKey<NavigatorState> shellNavigatorChatKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellChat');
-final GlobalKey<NavigatorState> shellNavigatorWalletKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellWallet');
+List<IceRoutes> iceRootRoutes = <IceRoutes>[
+  IceRoutes.splash,
+  IceRoutes.error,
+  IceRoutes.intro,
+  IceRoutes.home,
+];
 
-@TypedGoRoute<SplashRoute>(
-  path: '/splash',
-)
-class SplashRoute extends GoRouteData {
-  const SplashRoute();
+enum IceRoutes {
+  splash(SplashPage.new),
+  error(ErrorPage.new),
+  intro(
+    IntroPage.new,
+    type: IceRouteType.bottomSheet,
+    children: <IceRoutes>[
+      IceRoutes.auth,
+      IceRoutes.selectCountries,
+      IceRoutes.selectLanguages,
+      IceRoutes.checkEmail,
+      IceRoutes.fillProfile,
+      IceRoutes.discoverCreators,
+      IceRoutes.nostrAuth,
+      IceRoutes.nostrLogin,
+      IceRoutes.enterCode,
+    ],
+  ),
+  auth(AuthPage.new),
+  selectCountries(SelectCountries.new),
+  selectLanguages(SelectLanguages.new),
+  checkEmail(CheckEmail.new),
+  nostrAuth(NostrAuth.new),
+  nostrLogin(NostrLogin.new),
+  enterCode(EnterCode.new),
+  discoverCreators(DiscoverCreators.new),
+  fillProfile(FillProfile.new),
+  home(
+    AbsentPage.new,
+    type: IceRouteType.bottomTabs,
+    children: <IceRoutes>[
+      IceRoutes.dapps,
+      IceRoutes.chat,
+      IceRoutes.wallet,
+    ],
+  ),
+  dapps(
+    DAppsPage.new,
+    children: <IceRoutes>[
+      IceRoutes.appsList,
+    ],
+  ),
+  appsList(DAppsList.new),
+  chat(ChatPage.new),
+  wallet(
+    WalletPage.new,
+    children: <IceRoutes>[
+      IceRoutes.innerWallet,
+    ],
+  ),
+  innerWallet(InnerWalletPage.new),
+  ;
 
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return SplashPage();
-  }
+  const IceRoutes(
+    this.builder, {
+    this.type = IceRouteType.single,
+    this.children,
+  });
+
+  final IceRouteType type;
+  final List<IceRoutes>? children;
+  final IcePageBuilder builder;
 }
 
-@TypedGoRoute<ErrorRoute>(
-  path: '/error',
-)
-class ErrorRoute extends GoRouteData {
-  const ErrorRoute();
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const ErrorPage();
-}
+typedef IcePageBuilder<PayloadType, PageType extends IcePage<PayloadType>>
+    = PageType Function(
+  IceRoutes route,
+  PayloadType? payload,
+);
 
-@TypedGoRoute<IntroRoute>(
-  path: '/intro',
-  routes: <TypedRoute<RouteData>>[
-    TypedGoRoute<AuthRoute>(
-      path: 'auth',
-    ),
-    TypedGoRoute<CheckEmailRoute>(
-      path: 'checkEmail',
-    ),
-    TypedGoRoute<FillProfileRoute>(
-      path: 'fillProfile',
-    ),
-  ],
-)
-class IntroRoute extends GoRouteData {
-  const IntroRoute();
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage<void>(child: IntroPage());
-  }
-}
-
-class AuthRoute extends GoRouteData {
-  const AuthRoute();
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage<void>(child: AuthPage());
-  }
-}
-
-class CheckEmailRoute extends GoRouteData {
-  const CheckEmailRoute();
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage<void>(child: CheckEmail());
-  }
-}
-
-class FillProfileRoute extends GoRouteData {
-  const FillProfileRoute();
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage<void>(child: FillProfile());
-  }
-}
-
-@TypedStatefulShellRoute<ScaffoldWithNestedNavigationRoute>(
-  branches: <TypedStatefulShellBranch<StatefulShellBranchData>>[
-    TypedStatefulShellBranch<DAppsBranch>(
-      routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<DAppsRoute>(
-          path: '/dapps',
-          routes: <TypedRoute<RouteData>>[
-            TypedGoRoute<DAppsListRoute>(
-              path: 'appsList',
-            ),
-          ],
-        ),
-      ],
-    ),
-    TypedStatefulShellBranch<ChatBranch>(
-      routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<ChatRoute>(
-          path: '/chat',
-        ),
-      ],
-    ),
-    TypedStatefulShellBranch<WalletBranch>(
-      routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<WalletRoute>(
-          path: '/wallet',
-          routes: <TypedRoute<RouteData>>[
-            TypedGoRoute<InnerWalletRoute>(
-              path: 'inner',
-            ),
-          ],
-        ),
-      ],
-    ),
-  ],
-)
-class ScaffoldWithNestedNavigationRoute extends StatefulShellRouteData {
-  const ScaffoldWithNestedNavigationRoute();
-  @override
-  Widget builder(
-    BuildContext context,
-    GoRouterState state,
-    StatefulNavigationShell navigationShell,
-  ) {
-    return ScaffoldWithNestedNavigation(navigationShell: navigationShell);
-  }
-}
-
-class WalletBranch extends StatefulShellBranchData {
-  const WalletBranch();
-  static final GlobalKey<NavigatorState> $navigatorKey =
-      shellNavigatorWalletKey;
-}
-
-class WalletRoute extends GoRouteData {
-  const WalletRoute();
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage<void>(child: WalletPage());
-  }
-}
-
-class InnerWalletRoute extends GoRouteData {
-  const InnerWalletRoute();
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const InnerWalletPage();
-}
-
-class ChatBranch extends StatefulShellBranchData {
-  const ChatBranch();
-  static final GlobalKey<NavigatorState> $navigatorKey = shellNavigatorChatKey;
-}
-
-class ChatRoute extends GoRouteData {
-  const ChatRoute();
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage<void>(child: ChatPage());
-  }
-}
-
-class DAppsBranch extends StatefulShellBranchData {
-  const DAppsBranch();
-  static final GlobalKey<NavigatorState> $navigatorKey = shellNavigatorDAppsKey;
-}
-
-class DAppsListRoute extends GoRouteData {
-  const DAppsListRoute();
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const DAppsList();
-}
-
-class DAppsRoute extends GoRouteData {
-  const DAppsRoute();
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage<void>(child: DAppsPage());
-  }
-}
-
-@TypedGoRoute<ModalExampleRoute>(
-  path: '/modal',
-)
-class ModalExampleRoute extends GoRouteData {
-  const ModalExampleRoute();
-  static final GlobalKey<NavigatorState> $parentNavigatorKey = rootNavigatorKey;
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return CustomTransitionPage<void>(
-      child: const ModalPage(),
-      transitionsBuilder: (
-        BuildContext context,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-        Widget child,
-      ) =>
-          FadeTransition(opacity: animation, child: child),
-    );
-  }
+enum IceRouteType {
+  single,
+  bottomSheet,
+  bottomTabs,
+  ;
 }

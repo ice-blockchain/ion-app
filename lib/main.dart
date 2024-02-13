@@ -23,7 +23,7 @@ class IceApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
-    final AsyncValue<Template> template = ref.watch(templateProvider);
+    final AsyncValue<Template> template = ref.watch(appTemplateProvider);
 
     final GoRouter appRouter = useAppRouter(ref);
 
@@ -35,8 +35,12 @@ class IceApp extends HookConsumerWidget {
         child: MaterialApp.router(
           localizationsDelegates: I18n.localizationsDelegates,
           supportedLocales: I18n.supportedLocales,
-          theme: template.whenOrNull(data: buildLightTheme),
-          darkTheme: template.whenOrNull(data: buildDarkTheme),
+          theme: template.whenOrNull(
+            data: (Template data) => buildLightTheme(data.theme),
+          ),
+          darkTheme: template.whenOrNull(
+            data: (Template data) => buildDarkTheme(data.theme),
+          ),
           themeMode: appThemeMode,
           routerConfig: appRouter,
         ),

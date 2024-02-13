@@ -7,14 +7,15 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class CheckEmail extends HookConsumerWidget {
-  const CheckEmail({super.key});
+class CheckEmail extends IceSimplePage {
+  const CheckEmail(super._route, super.payload);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final StreamController<ErrorAnimationType> errorController =
         StreamController<ErrorAnimationType>();
     const String email = 'hello@ice.io';
