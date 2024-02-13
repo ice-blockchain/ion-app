@@ -4,12 +4,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/side_padding.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
 
-class IntroPage extends SimplePage {
+class IntroPage extends IceSimplePage {
   const IntroPage(super._route, super.payload);
 
   @override

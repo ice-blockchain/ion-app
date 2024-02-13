@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/router/views/scaffold_with_bottom_sheet.dart';
 import 'package:ice/app/router/views/scaffold_with_nested_navigation.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/utils/extensions.dart';
-
-final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 List<RouteBase> get appRoutes {
   return iceRootRoutes.map(_convertIntoRoute).toList();

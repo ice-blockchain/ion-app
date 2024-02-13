@@ -5,7 +5,7 @@ import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:lottie/lottie.dart';
 
-class SplashPage extends SimplePage {
+class SplashPage extends IceSimplePage {
   const SplashPage(super.route, super.payload);
 
   @override

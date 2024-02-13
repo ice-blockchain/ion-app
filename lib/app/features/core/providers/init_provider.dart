@@ -1,9 +1,12 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/env_provider.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'init_provider.g.dart';
+
+final ProviderContainer providerContainer = ProviderContainer();
 
 @riverpod
 Future<void> initApp(InitAppRef ref) async {

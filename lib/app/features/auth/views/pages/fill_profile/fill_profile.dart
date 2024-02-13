@@ -9,10 +9,10 @@ import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/invit
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/name_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/nickname_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/validators.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/utility/image_picker_and_cropper/image_picker_and_cropper.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/text_field_wrapper/text_field_wrapper.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -32,7 +32,7 @@ final StateNotifierProvider<CroppedFileNotifier, CroppedFile?>
       CroppedFileNotifier(),
 );
 
-class FillProfile extends SimplePage {
+class FillProfile extends IceSimplePage {
   const FillProfile(super.route, super.payload);
 
   @override

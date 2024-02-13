@@ -12,7 +12,7 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/wallet_header/wallet_header.dart';
 
-class DAppsPage extends SimplePage {
+class DAppsPage extends IceSimplePage {
   const DAppsPage(super.route, super.payload);
 
   @override

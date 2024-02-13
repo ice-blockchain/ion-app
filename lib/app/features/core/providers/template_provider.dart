@@ -2,17 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/templates/template.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'template_provider.g.dart';
 
-//TODO::remove alongside with usages
-Template? _template;
-
-Template get appTemplate {
-  return _template!;
-}
+TemplateTheme get appTemplateTheme => providerContainer.read(themeProvider);
 
 @riverpod
 class AppTemplate extends _$AppTemplate {
@@ -23,18 +19,31 @@ class AppTemplate extends _$AppTemplate {
     final String jsonString = await rootBundle.loadString('lib/app/templates/basic.json');
     final Template data = Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
     state = AsyncValue<Template>.data(data);
-// ignore: avoid_manual_providers_as_generated_provider_dependency
-    ref.read(pagesProvider.notifier)._savePages(data);
-    return _template = data;
+    _fillData(data);
+    return data;
+  }
+
+  // ignore_for_file: avoid_manual_providers_as_generated_provider_dependency
+  void _fillData(Template template) {
+    ref.read(pagesProvider.notifier)._savePages(template);
+    ref.read(themeProvider.notifier)._saveTheme(template);
+  }
+}
+
+@Riverpod(keepAlive: true)
+class Theme extends _$Theme {
+  @override
+  TemplateTheme build() => TemplateTheme.empty();
+
+  void _saveTheme(Template template) {
+    state = template.theme;
   }
 }
 
 @Riverpod(keepAlive: true)
 class Pages extends _$Pages {
   @override
-  Map<String, TemplateConfigPage> build() {
-    return <String, TemplateConfigPage>{};
-  }
+  Map<String, TemplateConfigPage> build() => <String, TemplateConfigPage>{};
 
   void _savePages(Template template) {
     state.clear();

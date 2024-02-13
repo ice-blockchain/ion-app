@@ -30,9 +30,9 @@ abstract class IcePage<Payload> extends HookConsumerWidget {
   );
 }
 
-typedef SimplePage = IcePage<void>;
+typedef IceSimplePage = IcePage<void>;
 
-class AbsentPage extends SimplePage {
+class AbsentPage extends IceSimplePage {
   const AbsentPage(super.route, super.payload);
 
   @override

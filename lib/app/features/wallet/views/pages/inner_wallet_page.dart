@@ -7,7 +7,7 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/shared/widgets/template/ice_page.dart';
 
-class InnerWalletPage extends SimplePage {
+class InnerWalletPage extends IceSimplePage {
   const InnerWalletPage(super.route, super.payload);
 
   @override

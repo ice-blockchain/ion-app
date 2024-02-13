@@ -11,7 +11,7 @@ import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class EnterCode extends SimplePage {
+class EnterCode extends IceSimplePage {
   const EnterCode(super.route, super.payload);
 
   @override

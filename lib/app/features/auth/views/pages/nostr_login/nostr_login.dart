@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/controllers/name_controller.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class NostrLogin extends SimplePage {
+class NostrLogin extends IceSimplePage {
   const NostrLogin(super._route, super.payload);
 
   @override

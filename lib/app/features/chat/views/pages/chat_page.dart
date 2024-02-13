@@ -4,7 +4,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/shared/widgets/template/ice_page.dart';
 
-class ChatPage extends SimplePage {
+class ChatPage extends IceSimplePage {
   const ChatPage(super.route, super.payload);
 
   @override

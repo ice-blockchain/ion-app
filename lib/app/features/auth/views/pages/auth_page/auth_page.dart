@@ -12,16 +12,16 @@ import 'package:ice/app/features/auth/views/pages/auth_page/controllers/phone_nu
 import 'package:ice/app/features/auth/views/pages/auth_page/widgets/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
 import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
 import 'package:ice/app/shared/widgets/secured_by/secured_by.dart';
 import 'package:ice/app/shared/widgets/socials/socials.dart';
+import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class AuthPage extends SimplePage {
+class AuthPage extends IceSimplePage {
   const AuthPage(super._route, super.payload);
 
   @override

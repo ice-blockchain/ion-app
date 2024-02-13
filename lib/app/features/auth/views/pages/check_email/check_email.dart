@@ -10,7 +10,7 @@ import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class CheckEmail extends SimplePage {
+class CheckEmail extends IceSimplePage {
   const CheckEmail(super._route, super.payload);
 
   @override

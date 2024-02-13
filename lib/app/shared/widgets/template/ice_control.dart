@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/templates/template.dart';
 
-abstract class IceWidget extends HookConsumerWidget {
-  IceWidget(Map<String, TemplateConfigControl>? controlsConfig) : _controlsConfig = controlsConfig;
+abstract class IceControl extends HookConsumerWidget {
+  IceControl(Map<String, TemplateConfigControl>? controlsConfig) : _controlsConfig = controlsConfig;
 
   String get name => runtimeType.toString();
 
@@ -16,9 +16,9 @@ abstract class IceWidget extends HookConsumerWidget {
     if (_config?.hidden ?? false) {
       return const SizedBox.shrink();
     } else {
-      return buildWidget(context, ref, _config);
+      return buildControl(context, ref, _config);
     }
   }
 
-  Widget buildWidget(BuildContext context, WidgetRef ref, TemplateConfigControl? config);
+  Widget buildControl(BuildContext context, WidgetRef ref, TemplateConfigControl? config);
 }

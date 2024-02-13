@@ -1,44 +1,68 @@
-import 'dart:ui';
-
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ice/app/templates/converters.dart';
 
 part 'template.freezed.dart';
+
 part 'template.g.dart';
 
 @freezed
 class TemplateColors with _$TemplateColors {
   @JsonSerializable(converters: <JsonConverter<dynamic, String>>[ColorConverter()])
   const factory TemplateColors(
-      Color primaryAccent,
-      Color primaryText,
-      Color secondaryText,
-      Color tertararyText,
-      Color primaryBackground,
-      Color secondaryBackground,
-      Color tertararyBackground,
-      Color backgroundSheet,
-      Color onPrimaryAccent,
-      Color onTertararyBackground,
-      Color onTerararyFill,
-      Color onSecondaryBackground,
-      Color strokeElements,
-      Color sheetLine,
-      Color attentionRed,
-      Color success,
-      ) = _TemplateColors;
+    Color primaryAccent,
+    Color primaryText,
+    Color secondaryText,
+    Color tertararyText,
+    Color primaryBackground,
+    Color secondaryBackground,
+    Color tertararyBackground,
+    Color backgroundSheet,
+    Color onPrimaryAccent,
+    Color onTertararyBackground,
+    Color onTerararyFill,
+    Color onSecondaryBackground,
+    Color strokeElements,
+    Color sheetLine,
+    Color attentionRed,
+    Color success,
+  ) = _TemplateColors;
 
   factory TemplateColors.fromJson(Map<String, dynamic> json) => _$TemplateColorsFromJson(json);
+
+  factory TemplateColors.empty() => const TemplateColors(
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+        Colors.transparent,
+      );
 }
 
 @freezed
 class TemplateColorsLightDark with _$TemplateColorsLightDark {
   const factory TemplateColorsLightDark(
-      TemplateColors light,
-      TemplateColors dark,
-      ) = _TemplateColorsLightDark;
+    TemplateColors light,
+    TemplateColors dark,
+  ) = _TemplateColorsLightDark;
 
   factory TemplateColorsLightDark.fromJson(Map<String, dynamic> json) => _$TemplateColorsLightDarkFromJson(json);
+
+  factory TemplateColorsLightDark.empty() => TemplateColorsLightDark(
+        TemplateColors.empty(),
+        TemplateColors.empty(),
+      );
 }
 
 @freezed
@@ -46,72 +70,113 @@ class TemplateAppBarTheme with _$TemplateAppBarTheme {
   const factory TemplateAppBarTheme(double toolbarHeight) = _TemplateAppBarTheme;
 
   factory TemplateAppBarTheme.fromJson(Map<String, dynamic> json) => _$TemplateAppBarThemeFromJson(json);
+
+  factory TemplateAppBarTheme.empty() => const TemplateAppBarTheme(0.0);
 }
 
 @freezed
 class TemplateTextTheme with _$TemplateTextTheme {
   const factory TemplateTextTheme(
-      double? fontSize,
-      double? height,
-      @FontWeightConverter() FontWeight? fontWeight,
-      ) = _TemplateTextTheme;
+    double? fontSize,
+    double? height,
+    @FontWeightConverter() FontWeight? fontWeight,
+  ) = _TemplateTextTheme;
 
   factory TemplateTextTheme.fromJson(Map<String, dynamic> json) => _$TemplateTextThemeFromJson(json);
+
+  factory TemplateTextTheme.empty() => const TemplateTextTheme(
+        null,
+        null,
+        null,
+      );
 }
 
 @freezed
 class TemplateTextThemes with _$TemplateTextThemes {
   const factory TemplateTextThemes(
-      TemplateTextTheme headline1,
-      TemplateTextTheme inputFieldText,
-      TemplateTextTheme title,
-      TemplateTextTheme subtitle,
-      TemplateTextTheme subtitle2,
-      TemplateTextTheme body,
-      TemplateTextTheme body2,
-      TemplateTextTheme caption,
-      TemplateTextTheme caption2,
-      TemplateTextTheme caption3,
-      ) = _TemplateTextThemes;
+    TemplateTextTheme headline1,
+    TemplateTextTheme inputFieldText,
+    TemplateTextTheme title,
+    TemplateTextTheme subtitle,
+    TemplateTextTheme subtitle2,
+    TemplateTextTheme body,
+    TemplateTextTheme body2,
+    TemplateTextTheme caption,
+    TemplateTextTheme caption2,
+    TemplateTextTheme caption3,
+  ) = _TemplateTextThemes;
 
   factory TemplateTextThemes.fromJson(Map<String, dynamic> json) => _$TemplateTextThemesFromJson(json);
+
+  factory TemplateTextThemes.empty() => TemplateTextThemes(
+        TemplateTextTheme.empty(),
+        TemplateTextTheme.empty(),
+        TemplateTextTheme.empty(),
+        TemplateTextTheme.empty(),
+        TemplateTextTheme.empty(),
+        TemplateTextTheme.empty(),
+        TemplateTextTheme.empty(),
+        TemplateTextTheme.empty(),
+        TemplateTextTheme.empty(),
+        TemplateTextTheme.empty(),
+      );
 }
 
 @freezed
 class TemplateMenuTheme with _$TemplateMenuTheme {
   const factory TemplateMenuTheme(
-      double elevation,
-      double borderRadius,
-      double paddingLeft,
-      double paddingTop,
-      double paddingRight,
-      double paddingBottom,
-      ) = _TemplateMenuTheme;
+    double elevation,
+    double borderRadius,
+    double paddingLeft,
+    double paddingTop,
+    double paddingRight,
+    double paddingBottom,
+  ) = _TemplateMenuTheme;
 
   factory TemplateMenuTheme.fromJson(Map<String, dynamic> json) => _$TemplateMenuThemeFromJson(json);
+
+  factory TemplateMenuTheme.empty() => const TemplateMenuTheme(
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+      );
 }
 
 @freezed
 class TemplateMenuButtonTheme with _$TemplateMenuButtonTheme {
   const factory TemplateMenuButtonTheme(
-      double iconSize,
-      double minHeight,
-      double paddingLeft,
-      double paddingTop,
-      double paddingRight,
-      double paddingBottom,
-      ) = _TemplateMenuButtonTheme;
+    double iconSize,
+    double minHeight,
+    double paddingLeft,
+    double paddingTop,
+    double paddingRight,
+    double paddingBottom,
+  ) = _TemplateMenuButtonTheme;
 
   factory TemplateMenuButtonTheme.fromJson(Map<String, dynamic> json) => _$TemplateMenuButtonThemeFromJson(json);
+
+  factory TemplateMenuButtonTheme.empty() => const TemplateMenuButtonTheme(
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+      );
 }
 
 @freezed
 class MenuAnchor with _$MenuAnchor {
   const factory MenuAnchor(
-      double alignmentOffsetY,
-      ) = _MenuAnchor;
+    double alignmentOffsetY,
+  ) = _MenuAnchor;
 
   factory MenuAnchor.fromJson(Map<String, dynamic> json) => _$MenuAnchorFromJson(json);
+
+  factory MenuAnchor.empty() => const MenuAnchor(0.0);
 }
 
 @freezed
@@ -123,6 +188,12 @@ class TemplateIconButtonTheme with _$TemplateIconButtonTheme {
   }) = _TemplateIconButtonTheme;
 
   factory TemplateIconButtonTheme.fromJson(Map<String, dynamic> json) => _$TemplateIconButtonThemeFromJson(json);
+
+  factory TemplateIconButtonTheme.empty() => const TemplateIconButtonTheme(
+        width: 0.0,
+        height: 0.0,
+        backgroundColor: '',
+      );
 }
 
 @freezed
@@ -133,35 +204,49 @@ class TemplateIconTheme with _$TemplateIconTheme {
   }) = _TemplateIconThem;
 
   factory TemplateIconTheme.fromJson(Map<String, dynamic> json) => _$TemplateIconThemeFromJson(json);
-}
 
+  factory TemplateIconTheme.empty() => const TemplateIconTheme(
+        width: 0.0,
+        height: 0.0,
+      );
+}
 
 @freezed
 class TemplateTheme with _$TemplateTheme {
   const factory TemplateTheme(
-      TemplateColorsLightDark colors,
-      TemplateTextThemes textThemes,
-      TemplateAppBarTheme appBar,
-      MenuAnchor menuAnchor,
-      TemplateMenuTheme menu,
-      TemplateMenuButtonTheme menuButton,
-      TemplateIconButtonTheme iconButton,
-      TemplateIconTheme icon,
-      ) = _TemplateTheme;
+    TemplateColorsLightDark colors,
+    TemplateTextThemes textThemes,
+    TemplateAppBarTheme appBar,
+    MenuAnchor menuAnchor,
+    TemplateMenuTheme menu,
+    TemplateMenuButtonTheme menuButton,
+    TemplateIconButtonTheme iconButton,
+    TemplateIconTheme icon,
+  ) = _TemplateTheme;
 
   factory TemplateTheme.fromJson(Map<String, dynamic> json) => _$TemplateThemeFromJson(json);
+
+  factory TemplateTheme.empty() => TemplateTheme(
+        TemplateColorsLightDark.empty(),
+        TemplateTextThemes.empty(),
+        TemplateAppBarTheme.empty(),
+        MenuAnchor.empty(),
+        TemplateMenuTheme.empty(),
+        TemplateMenuButtonTheme.empty(),
+        TemplateIconButtonTheme.empty(),
+        TemplateIconTheme.empty(),
+      );
 }
 
 @freezed
 class Template with _$Template {
   const factory Template(
-      TemplateTheme theme,
-      TemplateConfig config,
-      ) = _Template;
+    TemplateTheme theme,
+    TemplateConfig config,
+  ) = _Template;
 
   factory Template.fromJson(Map<String, dynamic> json) => _$TemplateFromJson(json);
 }
-
 
 @freezed
 class TemplateConfig with _$TemplateConfig {
@@ -173,7 +258,6 @@ class TemplateConfig with _$TemplateConfig {
 }
 
 abstract class TemplateConfigElement {
-
   bool? get hidden;
 }
 

@@ -19,6 +19,6 @@ class DropDownMenu extends MenuAnchor {
     super.child,
   }) : super(
           alignmentOffset: alignmentOffset ??
-              Offset(0, appTemplate.theme.menuAnchor.alignmentOffsetY),
+              Offset(0, appTemplateTheme.menuAnchor.alignmentOffsetY),
         );
 }
