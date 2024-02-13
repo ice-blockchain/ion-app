@@ -36,7 +36,8 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   String _location(IceRoutes route, GoRouterState state) {
     final String? location = _routesLocations[route];
     if (location == null) {
-      return _routesLocations[route] = state.namedLocation(route.name); //TODO avoid hardcoded route.name
+      return _routesLocations[route] =
+          state.namedLocation(route.name); //TODO avoid hardcoded route.name
     }
 
     return location;
@@ -54,8 +55,10 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
 
   IceRoutes? _redirectNamed(GoRouterState state) {
     //TODO: check that its part of intro navigation flow
-    final bool isAuthInProgress = state.matchedLocation.startsWith(_location(IceRoutes.intro, state));
-    final bool isSplash = state.matchedLocation == _location(IceRoutes.splash, state);
+    final bool isAuthInProgress =
+        state.matchedLocation.startsWith(_location(IceRoutes.intro, state));
+    final bool isSplash =
+        state.matchedLocation == _location(IceRoutes.splash, state);
     final bool isInitError = _init?.hasError ?? false;
     final bool isInitInProgress = _init?.isLoading ?? true;
     final bool isAnimationCompleted = ref.watch(splashProvider);

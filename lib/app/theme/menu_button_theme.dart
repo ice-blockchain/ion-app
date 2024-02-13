@@ -10,17 +10,18 @@ MenuButtonThemeData buildMenuButtonTheme(
 ) {
   return MenuButtonThemeData(
     style: ButtonStyle(
-      iconSize: MaterialStatePropertyAll<double>( templateTheme.menuButton.iconSize),
+      iconSize:
+          MaterialStatePropertyAll<double>(templateTheme.menuButton.iconSize),
       minimumSize: MaterialStatePropertyAll<Size>(
-        Size(100,  templateTheme.menuButton.minHeight),
+        Size(100, templateTheme.menuButton.minHeight),
       ),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
         EdgeInsets.fromLTRB(
-           templateTheme.menuButton.paddingLeft,
-           templateTheme.menuButton.paddingTop,
-           templateTheme.menuButton.paddingRight,
-           templateTheme.menuButton.paddingBottom,
+          templateTheme.menuButton.paddingLeft,
+          templateTheme.menuButton.paddingTop,
+          templateTheme.menuButton.paddingRight,
+          templateTheme.menuButton.paddingBottom,
         ),
       ),
       textStyle: MaterialStatePropertyAll<TextStyle>(textThemes.subtitle2),

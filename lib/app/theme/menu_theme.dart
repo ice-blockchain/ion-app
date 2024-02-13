@@ -10,22 +10,23 @@ MenuThemeData buildMenuTheme(
 ) {
   return MenuThemeData(
     style: MenuStyle(
-      elevation: MaterialStatePropertyAll<double>( templateTheme.menu.elevation),
+      elevation: MaterialStatePropertyAll<double>(templateTheme.menu.elevation),
       shadowColor: MaterialStatePropertyAll<Color>(
         colors.tertararyBackground.withOpacity(0.3),
       ),
       padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
         EdgeInsets.fromLTRB(
-           templateTheme.menu.paddingLeft,
-           templateTheme.menu.paddingTop,
-           templateTheme.menu.paddingRight,
-           templateTheme.menu.paddingBottom,
+          templateTheme.menu.paddingLeft,
+          templateTheme.menu.paddingTop,
+          templateTheme.menu.paddingRight,
+          templateTheme.menu.paddingBottom,
         ),
       ),
       shape: MaterialStatePropertyAll<OutlinedBorder>(
         RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.all(Radius.circular( templateTheme.menu.borderRadius)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(templateTheme.menu.borderRadius),
+          ),
         ),
       ),
       backgroundColor:

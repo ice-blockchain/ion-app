@@ -19,7 +19,8 @@ class DAppsPage extends IceSimplePage {
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return SingleChildScrollView(
       child: Container(
-        decoration: BoxDecoration(color: context.theme.appColors.secondaryBackground),
+        decoration:
+            BoxDecoration(color: context.theme.appColors.secondaryBackground),
         child: Column(
           children: <Widget>[
             const WalletHeader(),

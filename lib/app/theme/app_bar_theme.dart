@@ -22,7 +22,7 @@ AppBarTheme buildLightAppBarTheme(
   AppColorsExtension colors,
   AppTextThemesExtension textThemes,
 ) {
-  return _buildBaseAppBarTheme( templateTheme, colors, textThemes).copyWith(
+  return _buildBaseAppBarTheme(templateTheme, colors, textThemes).copyWith(
     systemOverlayStyle: SystemUiOverlayStyle.dark,
   );
 }
@@ -32,7 +32,7 @@ AppBarTheme buildDarkAppBarTheme(
   AppColorsExtension colors,
   AppTextThemesExtension textThemes,
 ) {
-  return _buildBaseAppBarTheme( templateTheme, colors, textThemes).copyWith(
+  return _buildBaseAppBarTheme(templateTheme, colors, textThemes).copyWith(
     systemOverlayStyle: SystemUiOverlayStyle.light,
   );
 }

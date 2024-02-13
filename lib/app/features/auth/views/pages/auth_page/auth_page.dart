@@ -83,7 +83,9 @@ class AuthPage extends IceSimplePage {
                       ),
                 onPressed: () => <void>{
                   emailFormKey.currentState?.reset(),
-                  ref.read(authProvider.notifier).signIn(email: 'foo@bar.baz', password: '123'),
+                  ref
+                      .read(authProvider.notifier)
+                      .signIn(email: 'foo@bar.baz', password: '123'),
                 },
                 label: Text(context.i18n.button_continue),
                 mainAxisSize: MainAxisSize.max,
@@ -93,7 +95,8 @@ class AuthPage extends IceSimplePage {
               padding: EdgeInsets.only(top: 14.0.s, bottom: 14.0.s),
               child: Text(
                 context.i18n.auth_signIn_or,
-                style: context.theme.appTextThemes.caption.copyWith(color: context.theme.appColors.tertararyText),
+                style: context.theme.appTextThemes.caption
+                    .copyWith(color: context.theme.appColors.tertararyText),
               ),
             ),
             Center(

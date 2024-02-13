@@ -8,7 +8,8 @@ import 'package:ice/app/router/routing_utils.dart';
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 GoRouter useAppRouter(WidgetRef ref) {
-  final AppRouterListenable notifier = ref.watch(appRouterListenableProvider.notifier);
+  final AppRouterListenable notifier =
+      ref.watch(appRouterListenableProvider.notifier);
 
   final GoRouter router = useMemoized(
     () => GoRouter(

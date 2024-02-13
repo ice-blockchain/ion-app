@@ -23,7 +23,10 @@ abstract class IcePage<Payload> extends HookConsumerWidget {
       _payload,
     );
 
-    return ControlsConfigContext(controlsConfig: page(ref, _route.name)?.controls, child: pageWidget);
+    return ControlsConfigContext(
+      controlsConfig: page(ref, _route.name)?.controls,
+      child: pageWidget,
+    );
   }
 
   Widget buildPage(
@@ -35,18 +38,23 @@ abstract class IcePage<Payload> extends HookConsumerWidget {
 
 //TODO::rewrite with ProviderScope
 class ControlsConfigContext extends InheritedWidget {
-  const ControlsConfigContext({required this.controlsConfig, required super.child});
+  const ControlsConfigContext({
+    required this.controlsConfig,
+    required super.child,
+  });
 
   final Map<String, TemplateConfigControl>? controlsConfig;
 
   static ControlsConfigContext of(BuildContext context) {
-    final ControlsConfigContext? result = context.dependOnInheritedWidgetOfExactType<ControlsConfigContext>();
+    final ControlsConfigContext? result =
+        context.dependOnInheritedWidgetOfExactType<ControlsConfigContext>();
     assert(result != null, 'No ControlsConfigContext found in context');
     return result!;
   }
 
   @override
-  bool updateShouldNotify(ControlsConfigContext oldWidget) => controlsConfig != oldWidget.controlsConfig;
+  bool updateShouldNotify(ControlsConfigContext oldWidget) =>
+      controlsConfig != oldWidget.controlsConfig;
 }
 
 typedef IceSimplePage = IcePage<void>;
@@ -56,6 +64,8 @@ class AbsentPage extends IceSimplePage {
 
   @override
   Widget buildPage(_, __, ____) {
-    throw UnsupportedError('AbsentPage is for declaration only, not for building.');
+    throw UnsupportedError(
+      'AbsentPage is for declaration only, not for building.',
+    );
   }
 }

@@ -10,7 +10,8 @@ abstract class IceControl extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Map<String, TemplateConfigControl>? controlsConfig = ControlsConfigContext.of(context).controlsConfig;
+    final Map<String, TemplateConfigControl>? controlsConfig =
+        ControlsConfigContext.of(context).controlsConfig;
     final TemplateConfigControl? config = controlsConfig?[name];
 
     if (config?.hidden ?? false) {

@@ -17,8 +17,10 @@ class AppTemplate extends _$AppTemplate {
   Future<Template> build() => _fetch();
 
   Future<Template> _fetch() async {
-    final String jsonString = await rootBundle.loadString('lib/app/templates/basic.json');
-    final Template data = Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
+    final String jsonString =
+        await rootBundle.loadString('lib/app/templates/basic.json');
+    final Template data =
+        Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
     state = AsyncValue<Template>.data(data);
     _fillData(data);
 
@@ -46,4 +48,5 @@ class Pages extends _$Pages {
   }
 }
 
-TemplateConfigPage? page(WidgetRef ref, String name) => ref.read(pagesProvider)[name];
+TemplateConfigPage? page(WidgetRef ref, String name) =>
+    ref.read(pagesProvider)[name];

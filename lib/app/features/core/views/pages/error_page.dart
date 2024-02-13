@@ -12,5 +12,4 @@ class ErrorPage extends IceSimplePage {
       ),
     );
   }
-
 }

@@ -10,13 +10,13 @@ IconButtonThemeData buildIconButtonTheme(
   return IconButtonThemeData(
     style: ButtonStyle(
       fixedSize: MaterialStateProperty.all<Size>(
-        Size( templateTheme.iconButton.width,  templateTheme.iconButton.height),
+        Size(templateTheme.iconButton.width, templateTheme.iconButton.height),
       ),
       iconSize: MaterialStateProperty.all<double>(
-         templateTheme.iconButton.width,
+        templateTheme.iconButton.width,
       ),
       backgroundColor: MaterialStateProperty.all<Color>(
-        HexColor( templateTheme.iconButton.backgroundColor),
+        HexColor(templateTheme.iconButton.backgroundColor),
       ),
     ),
   );

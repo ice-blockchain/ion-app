@@ -10,30 +10,30 @@ import 'package:ice/app/theme/menu_theme.dart';
 
 ThemeData buildLightTheme(TemplateTheme templateTheme) {
   final AppColorsExtension colors =
-      AppColorsExtension.fromTemplate( templateTheme.colors.light);
+      AppColorsExtension.fromTemplate(templateTheme.colors.light);
   final AppTextThemesExtension textThemes =
-      AppTextThemesExtension.fromTemplate( templateTheme.textThemes);
+      AppTextThemesExtension.fromTemplate(templateTheme.textThemes);
   return ThemeData.light().copyWith(
     extensions: <ThemeExtension<dynamic>>[colors, textThemes],
-    appBarTheme: buildLightAppBarTheme( templateTheme, colors, textThemes),
-    menuTheme: buildMenuTheme( templateTheme, colors, textThemes),
-    menuButtonTheme: buildMenuButtonTheme( templateTheme, colors, textThemes),
-    iconButtonTheme: buildIconButtonTheme( templateTheme, textThemes),
+    appBarTheme: buildLightAppBarTheme(templateTheme, colors, textThemes),
+    menuTheme: buildMenuTheme(templateTheme, colors, textThemes),
+    menuButtonTheme: buildMenuButtonTheme(templateTheme, colors, textThemes),
+    iconButtonTheme: buildIconButtonTheme(templateTheme, textThemes),
     iconTheme: buildIconTheme(templateTheme),
   );
 }
 
 ThemeData buildDarkTheme(TemplateTheme templateTheme) {
   final AppColorsExtension colors =
-      AppColorsExtension.fromTemplate( templateTheme.colors.dark);
+      AppColorsExtension.fromTemplate(templateTheme.colors.dark);
   final AppTextThemesExtension textThemes =
-      AppTextThemesExtension.fromTemplate( templateTheme.textThemes);
+      AppTextThemesExtension.fromTemplate(templateTheme.textThemes);
   return ThemeData.dark().copyWith(
     extensions: <ThemeExtension<dynamic>>[colors, textThemes],
-    appBarTheme: buildDarkAppBarTheme( templateTheme, colors, textThemes),
-    menuTheme: buildMenuTheme( templateTheme, colors, textThemes),
-    menuButtonTheme: buildMenuButtonTheme( templateTheme, colors, textThemes),
-    iconButtonTheme: buildIconButtonTheme( templateTheme, textThemes),
+    appBarTheme: buildDarkAppBarTheme(templateTheme, colors, textThemes),
+    menuTheme: buildMenuTheme(templateTheme, colors, textThemes),
+    menuButtonTheme: buildMenuButtonTheme(templateTheme, colors, textThemes),
+    iconButtonTheme: buildIconButtonTheme(templateTheme, textThemes),
     iconTheme: buildIconTheme(templateTheme),
   );
 }

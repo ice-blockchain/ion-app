@@ -36,11 +36,11 @@ class IceApp extends HookConsumerWidget {
           localizationsDelegates: I18n.localizationsDelegates,
           supportedLocales: I18n.supportedLocales,
           theme: template.whenOrNull(
-          data: (Template data) => buildLightTheme(data.theme),
-        ),
+            data: (Template data) => buildLightTheme(data.theme),
+          ),
           darkTheme: template.whenOrNull(
-          data: (Template data) => buildDarkTheme(data.theme),
-        ),
+            data: (Template data) => buildDarkTheme(data.theme),
+          ),
           themeMode: appThemeMode,
           routerConfig: appRouter,
         ),

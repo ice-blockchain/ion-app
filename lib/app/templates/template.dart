@@ -7,7 +7,9 @@ part 'template.g.dart';
 
 @freezed
 class TemplateColors with _$TemplateColors {
-  @JsonSerializable(converters: <JsonConverter<dynamic, String>>[ColorConverter()])
+  @JsonSerializable(
+    converters: <JsonConverter<dynamic, String>>[ColorConverter()],
+  )
   const factory TemplateColors(
     Color primaryAccent,
     Color primaryText,
@@ -28,7 +30,8 @@ class TemplateColors with _$TemplateColors {
     Color success,
   ) = _TemplateColors;
 
-  factory TemplateColors.fromJson(Map<String, dynamic> json) => _$TemplateColorsFromJson(json);
+  factory TemplateColors.fromJson(Map<String, dynamic> json) =>
+      _$TemplateColorsFromJson(json);
 
   factory TemplateColors.empty() => const TemplateColors(
         Colors.transparent,
@@ -58,7 +61,8 @@ class TemplateColorsLightDark with _$TemplateColorsLightDark {
     TemplateColors dark,
   ) = _TemplateColorsLightDark;
 
-  factory TemplateColorsLightDark.fromJson(Map<String, dynamic> json) => _$TemplateColorsLightDarkFromJson(json);
+  factory TemplateColorsLightDark.fromJson(Map<String, dynamic> json) =>
+      _$TemplateColorsLightDarkFromJson(json);
 
   factory TemplateColorsLightDark.empty() => TemplateColorsLightDark(
         TemplateColors.empty(),
@@ -68,9 +72,11 @@ class TemplateColorsLightDark with _$TemplateColorsLightDark {
 
 @freezed
 class TemplateAppBarTheme with _$TemplateAppBarTheme {
-  const factory TemplateAppBarTheme(double toolbarHeight) = _TemplateAppBarTheme;
+  const factory TemplateAppBarTheme(double toolbarHeight) =
+      _TemplateAppBarTheme;
 
-  factory TemplateAppBarTheme.fromJson(Map<String, dynamic> json) => _$TemplateAppBarThemeFromJson(json);
+  factory TemplateAppBarTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateAppBarThemeFromJson(json);
 
   factory TemplateAppBarTheme.empty() => const TemplateAppBarTheme(0.0);
 }
@@ -83,7 +89,8 @@ class TemplateTextTheme with _$TemplateTextTheme {
     @FontWeightConverter() FontWeight? fontWeight,
   ) = _TemplateTextTheme;
 
-  factory TemplateTextTheme.fromJson(Map<String, dynamic> json) => _$TemplateTextThemeFromJson(json);
+  factory TemplateTextTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateTextThemeFromJson(json);
 
   factory TemplateTextTheme.empty() => const TemplateTextTheme(
         null,
@@ -108,7 +115,8 @@ class TemplateTextThemes with _$TemplateTextThemes {
     TemplateTextTheme caption3,
   ) = _TemplateTextThemes;
 
-  factory TemplateTextThemes.fromJson(Map<String, dynamic> json) => _$TemplateTextThemesFromJson(json);
+  factory TemplateTextThemes.fromJson(Map<String, dynamic> json) =>
+      _$TemplateTextThemesFromJson(json);
 
   factory TemplateTextThemes.empty() => TemplateTextThemes(
         TemplateTextTheme.empty(),
@@ -136,7 +144,8 @@ class TemplateMenuTheme with _$TemplateMenuTheme {
     double paddingBottom,
   ) = _TemplateMenuTheme;
 
-  factory TemplateMenuTheme.fromJson(Map<String, dynamic> json) => _$TemplateMenuThemeFromJson(json);
+  factory TemplateMenuTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateMenuThemeFromJson(json);
 
   factory TemplateMenuTheme.empty() => const TemplateMenuTheme(
         0.0,
@@ -159,7 +168,8 @@ class TemplateMenuButtonTheme with _$TemplateMenuButtonTheme {
     double paddingBottom,
   ) = _TemplateMenuButtonTheme;
 
-  factory TemplateMenuButtonTheme.fromJson(Map<String, dynamic> json) => _$TemplateMenuButtonThemeFromJson(json);
+  factory TemplateMenuButtonTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateMenuButtonThemeFromJson(json);
 
   factory TemplateMenuButtonTheme.empty() => const TemplateMenuButtonTheme(
         0.0,
@@ -177,7 +187,8 @@ class MenuAnchor with _$MenuAnchor {
     double alignmentOffsetY,
   ) = _MenuAnchor;
 
-  factory MenuAnchor.fromJson(Map<String, dynamic> json) => _$MenuAnchorFromJson(json);
+  factory MenuAnchor.fromJson(Map<String, dynamic> json) =>
+      _$MenuAnchorFromJson(json);
 
   factory MenuAnchor.empty() => const MenuAnchor(0.0);
 }
@@ -190,7 +201,8 @@ class TemplateIconButtonTheme with _$TemplateIconButtonTheme {
     required String backgroundColor,
   }) = _TemplateIconButtonTheme;
 
-  factory TemplateIconButtonTheme.fromJson(Map<String, dynamic> json) => _$TemplateIconButtonThemeFromJson(json);
+  factory TemplateIconButtonTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateIconButtonThemeFromJson(json);
 
   factory TemplateIconButtonTheme.empty() => const TemplateIconButtonTheme(
         width: 0.0,
@@ -206,7 +218,8 @@ class TemplateIconTheme with _$TemplateIconTheme {
     required double height,
   }) = _TemplateIconThem;
 
-  factory TemplateIconTheme.fromJson(Map<String, dynamic> json) => _$TemplateIconThemeFromJson(json);
+  factory TemplateIconTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateIconThemeFromJson(json);
 
   factory TemplateIconTheme.empty() => const TemplateIconTheme(
         width: 0.0,
@@ -227,7 +240,8 @@ class TemplateTheme with _$TemplateTheme {
     TemplateIconTheme icon,
   ) = _TemplateTheme;
 
-  factory TemplateTheme.fromJson(Map<String, dynamic> json) => _$TemplateThemeFromJson(json);
+  factory TemplateTheme.fromJson(Map<String, dynamic> json) =>
+      _$TemplateThemeFromJson(json);
 
   factory TemplateTheme.empty() => TemplateTheme(
         TemplateColorsLightDark.empty(),
@@ -248,7 +262,8 @@ class Template with _$Template {
     TemplateConfig config,
   ) = _Template;
 
-  factory Template.fromJson(Map<String, dynamic> json) => _$TemplateFromJson(json);
+  factory Template.fromJson(Map<String, dynamic> json) =>
+      _$TemplateFromJson(json);
 }
 
 @freezed
@@ -257,7 +272,8 @@ class TemplateConfig with _$TemplateConfig {
     Map<String, TemplateConfigPage>? pages,
   }) = _TemplateConfig;
 
-  factory TemplateConfig.fromJson(Map<String, dynamic> json) => _$TemplateConfigFromJson(json);
+  factory TemplateConfig.fromJson(Map<String, dynamic> json) =>
+      _$TemplateConfigFromJson(json);
 }
 
 abstract class TemplateConfigElement {
@@ -265,21 +281,27 @@ abstract class TemplateConfigElement {
 }
 
 @freezed
-class TemplateConfigPage with _$TemplateConfigPage implements TemplateConfigElement {
+class TemplateConfigPage
+    with _$TemplateConfigPage
+    implements TemplateConfigElement {
   const factory TemplateConfigPage({
     bool? hidden,
     Map<String, TemplateConfigControl>? controls,
   }) = _TemplateConfigPage;
 
-  factory TemplateConfigPage.fromJson(Map<String, dynamic> json) => _$TemplateConfigPageFromJson(json);
+  factory TemplateConfigPage.fromJson(Map<String, dynamic> json) =>
+      _$TemplateConfigPageFromJson(json);
 }
 
 @freezed
-class TemplateConfigControl with _$TemplateConfigControl implements TemplateConfigElement {
+class TemplateConfigControl
+    with _$TemplateConfigControl
+    implements TemplateConfigElement {
   const factory TemplateConfigControl({
     bool? hidden,
     int? variant,
   }) = _TemplateConfigControl;
 
-  factory TemplateConfigControl.fromJson(Map<String, dynamic> json) => _$TemplateConfigControlFromJson(json);
+  factory TemplateConfigControl.fromJson(Map<String, dynamic> json) =>
+      _$TemplateConfigControlFromJson(json);
 }

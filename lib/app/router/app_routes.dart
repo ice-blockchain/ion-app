@@ -90,8 +90,11 @@ enum IceRoutes {
   final IcePageBuilder builder;
 }
 
-typedef IcePageBuilder<PayloadType, PageType extends IcePage<PayloadType>> = PageType Function(
-    IceRoutes route, PayloadType? payload,);
+typedef IcePageBuilder<PayloadType, PageType extends IcePage<PayloadType>>
+    = PageType Function(
+  IceRoutes route,
+  PayloadType? payload,
+);
 
 enum IceRouteType {
   single,
