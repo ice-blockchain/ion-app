@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/constants/ui.dart';
+import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
-import 'package:ice/app/shared/widgets/button/button.dart';
 import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -14,19 +16,18 @@ class NostrAuth extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+      body: ScreenSideOffset.large(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             AuthHeaderWidget(
-              title: 'Nostr',
-              description: 'Create an account or login using your existing one',
+              title: context.i18n.nostr_auth_title,
+              description: context.i18n.nostr_auth_description,
             ),
             Image.asset(
               Assets.images.ostrichlogo.path,
-              width: 256,
-              height: 160,
+              width: 256.0.s,
+              height: 160.0.s,
             ),
             Column(
               children: <Widget>[
@@ -34,7 +35,7 @@ class NostrAuth extends IceSimplePage {
                   child: Button(
                     leadingIcon: ImageIcon(
                       AssetImage(Assets.images.loginCreateacc.path),
-                      size: 24,
+                      size: 24.0.s,
                     ),
                     onPressed: () {
                       // showModalScreen(
@@ -43,28 +44,28 @@ class NostrAuth extends IceSimplePage {
                       // );
                     },
                     type: ButtonType.outlined,
-                    label: const Text('Create account'),
+                    label: Text(context.i18n.button_create_account),
                     mainAxisSize: MainAxisSize.max,
                   ),
                 ),
-                const SizedBox(
-                  height: 26,
+                SizedBox(
+                  height: 26.0.s,
                 ),
                 Center(
                   child: Button(
                     leadingIcon: ImageIcon(
                       AssetImage(Assets.images.profileSave.path),
-                      size: 24,
+                      size: 24.0.s,
                     ),
                     onPressed: () {
                       context.goNamed(IceRoutes.nostrLogin.name);
                     },
-                    label: const Text('Login'),
+                    label: Text(context.i18n.button_login),
                     mainAxisSize: MainAxisSize.max,
                   ),
                 ),
-                const SizedBox(
-                  height: 91,
+                SizedBox(
+                  height: 91.0.s,
                 ),
               ],
             ),

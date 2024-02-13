@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ice/app/templates/converters.dart';
 
 part 'template.freezed.dart';
-
 part 'template.g.dart';
 
 @freezed
@@ -24,6 +23,7 @@ class TemplateColors with _$TemplateColors {
     Color onSecondaryBackground,
     Color strokeElements,
     Color sheetLine,
+    Color sharkText,
     Color attentionRed,
     Color success,
   ) = _TemplateColors;
@@ -31,6 +31,7 @@ class TemplateColors with _$TemplateColors {
   factory TemplateColors.fromJson(Map<String, dynamic> json) => _$TemplateColorsFromJson(json);
 
   factory TemplateColors.empty() => const TemplateColors(
+        Colors.transparent,
         Colors.transparent,
         Colors.transparent,
         Colors.transparent,
@@ -95,6 +96,7 @@ class TemplateTextTheme with _$TemplateTextTheme {
 class TemplateTextThemes with _$TemplateTextThemes {
   const factory TemplateTextThemes(
     TemplateTextTheme headline1,
+    TemplateTextTheme headline2,
     TemplateTextTheme inputFieldText,
     TemplateTextTheme title,
     TemplateTextTheme subtitle,
@@ -109,6 +111,7 @@ class TemplateTextThemes with _$TemplateTextThemes {
   factory TemplateTextThemes.fromJson(Map<String, dynamic> json) => _$TemplateTextThemesFromJson(json);
 
   factory TemplateTextThemes.empty() => TemplateTextThemes(
+        TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),

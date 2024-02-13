@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/shared/widgets/modal_wrapper.dart';
+import 'package:ice/app/components/modal_wrapper/modal_wrapper.dart';
 
 class ScaffoldWithBottomSheet extends StatefulWidget {
   const ScaffoldWithBottomSheet({super.key, required this.builder, required this.child});

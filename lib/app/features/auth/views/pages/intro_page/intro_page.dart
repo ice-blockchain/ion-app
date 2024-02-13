@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/shared/widgets/side_padding.dart';
 import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
@@ -31,13 +31,13 @@ class IntroPage extends IceSimplePage {
                   repeat: false,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                    left: 40,
-                    right: 85,
-                    bottom: 10,
+                  padding: EdgeInsets.only(
+                    left: 40.0.s,
+                    right: 85.0.s,
+                    bottom: 10.0.s,
                   ),
                   child: Text(
-                    'The Global Currency Reset',
+                    context.i18n.intro_title,
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.w900,
@@ -45,11 +45,12 @@ class IntroPage extends IceSimplePage {
                     ),
                   ),
                 ),
-                SidePadding(
+                Padding(
+                  padding: EdgeInsets.only(left: 40.0.s, right: 40.0.s),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '#DecentralizedFuture',
+                      context.i18n.intro_description,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
@@ -70,7 +71,7 @@ class IntroPage extends IceSimplePage {
                   onPressed: () {
                     context.goNamed(IceRoutes.auth.name);
                   },
-                  child: const Text('Continue'),
+                  child: Text(context.i18n.button_continue),
                 ),
               ),
             ),

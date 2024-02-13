@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
@@ -24,10 +25,10 @@ class InnerWalletPage extends IceSimplePage {
           ElevatedButton.icon(
             label: const Text('Sign Out'),
             icon: authState is AuthenticationLoading
-                ? const SizedBox(
-                    height: 10,
-                    width: 10,
-                    child: CircularProgressIndicator(color: Colors.white),
+                ? SizedBox(
+                    height: 10.0.s,
+                    width: 10.0.s,
+                    child: const CircularProgressIndicator(color: Colors.white),
                   )
                 : const Icon(Icons.logout),
             onPressed: ref.read(authProvider.notifier).signOut,

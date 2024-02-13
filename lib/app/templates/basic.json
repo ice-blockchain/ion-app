@@ -6,7 +6,8 @@
         "primaryText": "#0E0E0E",
         "secondaryText": "#494949",
         "tertararyText": "#9A9A9A",
-        "primaryBackground": "#F5F7FF",
+        "sharkText": "#333436",
+      "primaryBackground": "#F5F7FF",
         "secondaryBackground": "#FFFFFF",
         "tertararyBackground": "#FAFBFF",
         "backgroundSheet": "#B3081532",
@@ -24,7 +25,8 @@
         "primaryText": "#0E0E0E",
         "secondaryText": "#494949",
         "tertararyText": "#9A9A9A",
-        "primaryBackground": "#F5F7FF",
+        "sharkText": "#333436",
+      "primaryBackground": "#F5F7FF",
         "secondaryBackground": "#FFFFFF",
         "tertararyBackground": "#FAFBFF",
         "backgroundSheet": "#B3081532",
@@ -41,7 +43,10 @@
     "textThemes": {
       "headline1": {
         "fontSize": 28,
-        "fontWeight": 700
+       "fontWeight": 700
+    },
+    "headline2": {
+      "fontSize": 24, "fontWeight": 700
       },
       "inputFieldText": {
         "fontSize": 25,
@@ -49,7 +54,7 @@
       },
       "title": {
         "fontSize": 17,
-        "fontWeight": 500
+        "fontWeight": 600
       },
       "subtitle": {
         "fontSize": 15,
@@ -67,8 +72,8 @@
       "body2": {
         "fontSize": 13,
         "fontWeight": 400
-      },
-      "caption": {
+
+      },"caption": {
         "fontSize": 12,
         "fontWeight": 500
       },
@@ -121,14 +126,6 @@
           "featured": {
             "hidden": false,
             "variant": 1
-          }
-        }
-      },
-      "appsList": {
-        "controls": {
-          "dAppGridItem": {
-            "hidden": false,
-            "variant": 0
           }
         }
       }

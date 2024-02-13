@@ -4,6 +4,7 @@ import 'package:ice/app/templates/template.dart';
 class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   const AppTextThemesExtension({
     required this.headline1,
+    required this.headline2,
     required this.inputFieldText,
     required this.title,
     required this.subtitle,
@@ -18,6 +19,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   factory AppTextThemesExtension.fromTemplate(TemplateTextThemes textThemes) {
     return AppTextThemesExtension(
       headline1: TemplateTextStyle.fromTemplate(textThemes.headline1),
+      headline2: TemplateTextStyle.fromTemplate(textThemes.headline2),
       inputFieldText: TemplateTextStyle.fromTemplate(textThemes.inputFieldText),
       title: TemplateTextStyle.fromTemplate(textThemes.title),
       subtitle: TemplateTextStyle.fromTemplate(textThemes.subtitle),
@@ -31,6 +33,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   }
 
   final TextStyle headline1;
+  final TextStyle headline2;
   final TextStyle inputFieldText;
   final TextStyle title;
   final TextStyle subtitle;
@@ -44,6 +47,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   @override
   ThemeExtension<AppTextThemesExtension> copyWith({
     TextStyle? headline1,
+    TextStyle? headline2,
     TextStyle? inputFieldText,
     TextStyle? title,
     TextStyle? subtitle,
@@ -56,6 +60,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   }) {
     return AppTextThemesExtension(
       headline1: headline1 ?? this.headline1,
+      headline2: headline2 ?? this.headline2,
       inputFieldText: inputFieldText ?? this.inputFieldText,
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
@@ -79,6 +84,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
 
     return AppTextThemesExtension(
       headline1: TextStyle.lerp(headline1, other.headline1, t)!,
+      headline2: TextStyle.lerp(headline2, other.headline2, t)!,
       inputFieldText: TextStyle.lerp(inputFieldText, other.inputFieldText, t)!,
       title: TextStyle.lerp(title, other.title, t)!,
       subtitle: TextStyle.lerp(subtitle, other.subtitle, t)!,

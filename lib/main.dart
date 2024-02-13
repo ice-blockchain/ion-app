@@ -29,17 +29,21 @@ class IceApp extends HookConsumerWidget {
 
     return ScreenUtilInit(
       designSize: const Size(375, 812),
-      builder: (BuildContext context, Widget? widget) => MaterialApp.router(
-        localizationsDelegates: I18n.localizationsDelegates,
-        supportedLocales: I18n.supportedLocales,
-        theme: template.whenOrNull(
+      builder: (BuildContext context, Widget? widget) => MediaQuery(
+        /// Setting font does not change with system font size
+        data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+        child: MaterialApp.router(
+          localizationsDelegates: I18n.localizationsDelegates,
+          supportedLocales: I18n.supportedLocales,
+          theme: template.whenOrNull(
           data: (Template data) => buildLightTheme(data.theme),
         ),
-        darkTheme: template.whenOrNull(
+          darkTheme: template.whenOrNull(
           data: (Template data) => buildDarkTheme(data.theme),
         ),
-        themeMode: appThemeMode,
-        routerConfig: appRouter,
+          themeMode: appThemeMode,
+          routerConfig: appRouter,
+        ),
       ),
     );
   }

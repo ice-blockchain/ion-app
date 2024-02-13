@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/drop_down_menu/drop_down_menu.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/shared/widgets/button/button.dart';
-import 'package:ice/app/shared/widgets/drop_down_menu/drop_down_menu.dart';
 import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -42,8 +43,8 @@ class FeedPage extends IceSimplePage {
                     ),
                     leadingIcon: Image.asset(
                       Assets.images.foo.path,
-                      width: 30,
-                      height: 30,
+                      width: 30.0.s,
+                      height: 30.0.s,
                       fit: BoxFit.cover,
                     ),
                     label: Text(

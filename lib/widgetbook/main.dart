@@ -26,6 +26,12 @@ class WidgetbookApp extends ConsumerWidget {
     return init.when(
       data: (void data) => Widgetbook.material(
         directories: directories,
+        addons: <WidgetbookAddon>[
+          AlignmentAddon(),
+          DeviceFrameAddon(
+            devices: Devices.all,
+          ),
+        ],
         appBuilder: (BuildContext context, Widget child) {
           final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
           final AsyncValue<Template> template = ref.watch(appTemplateProvider);
