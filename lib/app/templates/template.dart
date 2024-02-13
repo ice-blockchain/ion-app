@@ -198,7 +198,6 @@ class TemplateIconButtonTheme with _$TemplateIconButtonTheme {
   const factory TemplateIconButtonTheme({
     required double width,
     required double height,
-    required String backgroundColor,
   }) = _TemplateIconButtonTheme;
 
   factory TemplateIconButtonTheme.fromJson(Map<String, dynamic> json) =>
@@ -207,7 +206,6 @@ class TemplateIconButtonTheme with _$TemplateIconButtonTheme {
   factory TemplateIconButtonTheme.empty() => const TemplateIconButtonTheme(
         width: 0.0,
         height: 0.0,
-        backgroundColor: '',
       );
 }
 

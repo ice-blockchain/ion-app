@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/color.dart';
 import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/app_text_themes.dart';
 
@@ -14,9 +13,6 @@ IconButtonThemeData buildIconButtonTheme(
       ),
       iconSize: MaterialStateProperty.all<double>(
         templateTheme.iconButton.width,
-      ),
-      backgroundColor: MaterialStateProperty.all<Color>(
-        HexColor(templateTheme.iconButton.backgroundColor),
       ),
     ),
   );
