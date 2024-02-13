@@ -1,9 +1,13 @@
 targets:
   $default:
+    sources:
+      exclude:
+        - lib/**/**.g.dart
+
     builders:
-      json_serializable:
-        options:
-          explicit_to_json: true
+
       freezed:
         options:
           explicit_to_json: true
+          copy_with: false
+          equal: false
