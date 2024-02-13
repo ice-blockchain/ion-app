@@ -12,7 +12,7 @@ class NostrLogin extends IceSimplePage {
   const NostrLogin(super._route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final PrivateKeyController privateKeyController = PrivateKeyController();
     return Scaffold(
       body: SingleChildScrollView(

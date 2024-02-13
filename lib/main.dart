@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/router/hooks/use_app_router.dart';
@@ -30,20 +29,17 @@ class IceApp extends HookConsumerWidget {
 
     return ScreenUtilInit(
       designSize: const Size(375, 812),
-      builder: (BuildContext context, Widget? widget) => UncontrolledProviderScope(
-        container: providerContainer,
-        child: MaterialApp.router(
-          localizationsDelegates: I18n.localizationsDelegates,
-          supportedLocales: I18n.supportedLocales,
-          theme: template.whenOrNull(
-            data: (Template data) => buildLightTheme(data.theme),
-          ),
-          darkTheme: template.whenOrNull(
-            data: (Template data) => buildDarkTheme(data.theme),
-          ),
-          themeMode: appThemeMode,
-          routerConfig: appRouter,
+      builder: (BuildContext context, Widget? widget) => MaterialApp.router(
+        localizationsDelegates: I18n.localizationsDelegates,
+        supportedLocales: I18n.supportedLocales,
+        theme: template.whenOrNull(
+          data: (Template data) => buildLightTheme(data.theme),
         ),
+        darkTheme: template.whenOrNull(
+          data: (Template data) => buildDarkTheme(data.theme),
+        ),
+        themeMode: appThemeMode,
+        routerConfig: appRouter,
       ),
     );
   }

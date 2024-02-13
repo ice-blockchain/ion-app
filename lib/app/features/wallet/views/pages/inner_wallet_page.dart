@@ -11,7 +11,7 @@ class InnerWalletPage extends IceSimplePage {
   const InnerWalletPage(super.route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final AuthState authState = ref.watch(authProvider);
     final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
 

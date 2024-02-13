@@ -12,7 +12,7 @@ class NostrAuth extends IceSimplePage {
   const NostrAuth(super._route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: kDefaultPadding),

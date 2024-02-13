@@ -9,7 +9,7 @@ class SplashPage extends IceSimplePage {
   const SplashPage(super.route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final AnimationController animationController = useAnimationController();
 
     useEffect(

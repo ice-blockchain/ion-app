@@ -14,7 +14,7 @@ class CheckEmail extends IceSimplePage {
   const CheckEmail(super._route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final StreamController<ErrorAnimationType> errorController =
         StreamController<ErrorAnimationType>();
     const String email = 'hello@ice.io';

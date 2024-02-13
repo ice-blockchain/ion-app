@@ -25,7 +25,7 @@ class AuthPage extends IceSimplePage {
   const AuthPage(super._route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final AuthState authState = ref.watch(authProvider);
     final bool isEmailMode = ref.watch(isEmailModeProvider);
     final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();

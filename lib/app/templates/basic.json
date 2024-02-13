@@ -116,19 +116,20 @@
   },
   "config": {
     "pages": {
-      "auth": {
+      "dapps": {
         "controls": {
-          "login_button": {
-            "hide": false,
+          "featured": {
+            "hidden": false,
             "variant": 1
-          },
-          "login_email": {
-            "hide": true
           }
         }
       },
-      "s2_page": {
+      "appsList": {
         "controls": {
+          "dAppGridItem": {
+            "hidden": false,
+            "variant": 0
+          }
         }
       }
     }

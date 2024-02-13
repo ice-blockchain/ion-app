@@ -15,7 +15,7 @@ class WalletPage extends IceSimplePage {
   const WalletPage(super.route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final AuthState authState = ref.watch(authProvider);
     final ValueNotifier<SampleItem> selected = useState(SampleItem.ice);
 

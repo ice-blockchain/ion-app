@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/templates/template.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'template_provider.g.dart';
 
-TemplateTheme get appTemplateTheme => providerContainer.read(themeProvider);
+late final TemplateTheme _templateTheme;
+
+TemplateTheme get appTemplateTheme => _templateTheme;
 
 @riverpod
 class AppTemplate extends _$AppTemplate {
@@ -20,23 +21,14 @@ class AppTemplate extends _$AppTemplate {
     final Template data = Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
     state = AsyncValue<Template>.data(data);
     _fillData(data);
+
     return data;
   }
 
   // ignore_for_file: avoid_manual_providers_as_generated_provider_dependency
   void _fillData(Template template) {
     ref.read(pagesProvider.notifier)._savePages(template);
-    ref.read(themeProvider.notifier)._saveTheme(template);
-  }
-}
-
-@Riverpod(keepAlive: true)
-class Theme extends _$Theme {
-  @override
-  TemplateTheme build() => TemplateTheme.empty();
-
-  void _saveTheme(Template template) {
-    state = template.theme;
+    _templateTheme = template.theme;
   }
 }
 

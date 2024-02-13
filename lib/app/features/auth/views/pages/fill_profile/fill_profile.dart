@@ -36,7 +36,7 @@ class FillProfile extends IceSimplePage {
   const FillProfile(super.route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final GlobalKey<TextFieldWrapperState> nameFieldKey =
         GlobalKey<TextFieldWrapperState>();
     final GlobalKey<TextFieldWrapperState> nicknameFieldKey =

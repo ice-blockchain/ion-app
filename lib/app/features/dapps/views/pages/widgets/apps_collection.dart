@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/shared/widgets/favourite_icon/favorite_icon.dart';
+import 'package:ice/app/shared/widgets/template/ice_control.dart';
 import 'package:ice/app/utils/extensions.dart';
 import 'package:ice/app/values/constants.dart';
 
@@ -51,7 +53,7 @@ class AppsCollection extends StatelessWidget {
   }
 }
 
-class DAppGridItem extends StatelessWidget {
+class DAppGridItem extends IceControl {
   const DAppGridItem({
     super.key,
     required this.item,
@@ -61,7 +63,7 @@ class DAppGridItem extends StatelessWidget {
   final bool showIsFavourite;
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildControl(BuildContext context, WidgetRef ref, int variant) {
     return Container(
       padding: const EdgeInsets.symmetric(
         vertical: 6,
@@ -121,4 +123,7 @@ class DAppGridItem extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  String get name => 'dAppGridItem';
 }

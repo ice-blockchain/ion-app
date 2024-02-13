@@ -16,7 +16,7 @@ class DAppsPage extends IceSimplePage {
   const DAppsPage(super.route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return SingleChildScrollView(
       child: Container(
         decoration: BoxDecoration(color: context.theme.appColors.secondaryBackground),

@@ -15,7 +15,7 @@ class SelectLanguages extends IceSimplePage {
   const SelectLanguages(super._route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ValueNotifier<String> searchText = useState('');
 
     final ValueNotifier<Set<Language>> selectedLanguagesNotifier =

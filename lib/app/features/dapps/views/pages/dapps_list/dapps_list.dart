@@ -14,7 +14,7 @@ class DAppsList extends IceSimplePage {
   const DAppsList(super.route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ValueNotifier<String> searchText = useState('');
 
     final List<DAppItem> filteredApps = searchText.value.isEmpty

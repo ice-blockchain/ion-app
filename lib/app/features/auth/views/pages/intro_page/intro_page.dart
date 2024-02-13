@@ -13,7 +13,7 @@ class IntroPage extends IceSimplePage {
   const IntroPage(super._route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return Scaffold(
       body: Container(
         width: double.infinity,

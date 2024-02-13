@@ -14,7 +14,7 @@ class FeedPage extends IceSimplePage {
   const FeedPage(super.route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ValueNotifier<FeedType> selected = useState(FeedType.feed);
 
     return Scaffold(

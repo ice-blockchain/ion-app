@@ -32,20 +32,17 @@ class WidgetbookApp extends ConsumerWidget {
 
           return ScreenUtilInit(
             designSize: const Size(375, 812),
-            builder: (BuildContext context, Widget? widget) => UncontrolledProviderScope(
-              container: providerContainer,
-              child: MaterialApp(
-                localizationsDelegates: I18n.localizationsDelegates,
-                supportedLocales: I18n.supportedLocales,
-                theme: template.whenOrNull(
-                  data: (Template data) => buildLightTheme(data.theme),
-                ),
-                darkTheme: template.whenOrNull(
-                  data: (Template data) => buildDarkTheme(data.theme),
-                ),
-                themeMode: appThemeMode,
-                home: child,
+            builder: (BuildContext context, Widget? widget) => MaterialApp(
+              localizationsDelegates: I18n.localizationsDelegates,
+              supportedLocales: I18n.supportedLocales,
+              theme: template.whenOrNull(
+                data: (Template data) => buildLightTheme(data.theme),
               ),
+              darkTheme: template.whenOrNull(
+                data: (Template data) => buildDarkTheme(data.theme),
+              ),
+              themeMode: appThemeMode,
+              home: child,
             ),
           );
         },

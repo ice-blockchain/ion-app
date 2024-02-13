@@ -16,7 +16,7 @@ class DiscoverCreators extends IceSimplePage {
   const DiscoverCreators(super.route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ValueNotifier<String> searchText = useState('');
 
     final ValueNotifier<Set<User>> followedCreatorsNotifier =

@@ -5,7 +5,7 @@ class ErrorPage extends IceSimplePage {
   const ErrorPage(super._route, super.payload);
 
   @override
-  Widget buildPage(_, __, ___, ____) {
+  Widget buildPage(_, __, ____) {
     return const Scaffold(
       body: Center(
         child: Text('Oops'),

@@ -15,7 +15,7 @@ class EnterCode extends IceSimplePage {
   const EnterCode(super.route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, _, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, __) {
     const String phoneNumber = '+101234567890';
     final TextEditingController codeController = TextEditingController();
 
