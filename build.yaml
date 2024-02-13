@@ -1,13 +1,36 @@
 targets:
   $default:
+
     sources:
       exclude:
-        - lib/**/**.g.dart
+        - lib/app/network/models/parameters/**
+
+    dependencies:
+      - :network_parameters
 
     builders:
+      json_serializable:
+        options:
+          create_to_json: false
 
       freezed:
         options:
-          explicit_to_json: true
+          to_json: false
           copy_with: false
           equal: false
+
+  network_parameters:
+
+    sources:
+      include:
+        - lib/app/network/models/parameters/**
+
+    builders:
+      json_serializable:
+        options:
+          create_to_json: true
+          explicit_to_json: true
+
+      freezed:
+        options:
+          to_json: true
