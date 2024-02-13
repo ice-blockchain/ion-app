@@ -61,7 +61,7 @@ List<DAppItem> featured = <DAppItem>[
   DAppItem(
     iconImage: Assets.images.walletLido.path,
     title: 'Lido',
-    description: 'Decentralized ETH 2.0 staking',
+    description: 'Decentralized ETH 2.0.0.staking',
     value: 497.08,
     isFavourite: true,
   ),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/modal_wrapper/modal_wrapper.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/nostr_login.dart';
-import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
-import 'package:ice/app/shared/widgets/button/button.dart';
-import 'package:ice/app/shared/widgets/modal_wrapper.dart';
-import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NostrAuth extends HookConsumerWidget {
@@ -38,8 +39,8 @@ class NostrAuth extends HookConsumerWidget {
             ),
             Image.asset(
               Assets.images.ostrichlogo.path,
-              width: 256,
-              height: 160,
+              width: 256.0.s,
+              height: 160.0.s,
             ),
             Column(
               children: <Widget>[
@@ -47,7 +48,7 @@ class NostrAuth extends HookConsumerWidget {
                   child: Button(
                     leadingIcon: ImageIcon(
                       AssetImage(Assets.images.loginCreateacc.path),
-                      size: 24,
+                      size: 24.0.s,
                     ),
                     onPressed: () {
                       // showModalScreen(
@@ -60,14 +61,14 @@ class NostrAuth extends HookConsumerWidget {
                     mainAxisSize: MainAxisSize.max,
                   ),
                 ),
-                const SizedBox(
-                  height: 26,
+                SizedBox(
+                  height: 26.0.s,
                 ),
                 Center(
                   child: Button(
                     leadingIcon: ImageIcon(
                       AssetImage(Assets.images.profileSave.path),
-                      size: 24,
+                      size: 24.0.s,
                     ),
                     onPressed: () {
                       showModalScreen(
@@ -79,8 +80,8 @@ class NostrAuth extends HookConsumerWidget {
                     mainAxisSize: MainAxisSize.max,
                   ),
                 ),
-                const SizedBox(
-                  height: 91,
+                SizedBox(
+                  height: 91.0.s,
                 ),
               ],
             ),

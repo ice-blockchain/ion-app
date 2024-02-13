@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/inputs/text_fields.dart';
+import 'package:ice/app/components/modal_wrapper/modal_wrapper.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/providers/ui_auth_provider.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
+import 'package:ice/app/features/auth/views/components/secured_by/secured_by.dart';
+import 'package:ice/app/features/auth/views/components/socials/socials.dart';
+import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
+import 'package:ice/app/features/auth/views/pages/auth_page/components/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/controllers/email_controller.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/controllers/phone_number_controller.dart';
-import 'package:ice/app/features/auth/views/pages/auth_page/widgets/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
 import 'package:ice/app/features/auth/views/pages/enter_code/enter_code.dart';
@@ -16,14 +25,6 @@ import 'package:ice/app/features/auth/views/pages/nostr_auth/nostr_auth.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
-import 'package:ice/app/shared/widgets/auth_header/auth_header.dart';
-import 'package:ice/app/shared/widgets/button/button.dart';
-import 'package:ice/app/shared/widgets/inputs/text_fields.dart';
-import 'package:ice/app/shared/widgets/modal_wrapper.dart';
-import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
-import 'package:ice/app/shared/widgets/secured_by/secured_by.dart';
-import 'package:ice/app/shared/widgets/socials/socials.dart';
-import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class AuthPage extends HookConsumerWidget {
@@ -85,22 +86,22 @@ class AuthPage extends HookConsumerWidget {
                 validator: (String? value) => numberController.onVerify(),
                 showLeadingSeparator: true,
               ),
-            const SizedBox(
-              height: 16,
+            SizedBox(
+              height: 16.0.s,
             ),
             Center(
               child: Button(
                 trailingIcon: authState is AuthenticationLoading
-                    ? const SizedBox(
-                        height: 10,
-                        width: 10,
-                        child: CircularProgressIndicator(
+                    ? SizedBox(
+                        height: 10.0.s,
+                        width: 10.0.s,
+                        child: const CircularProgressIndicator(
                           color: Colors.white,
                         ),
                       )
                     : ImageIcon(
                         AssetImage(Assets.images.buttonNext.path),
-                        size: 16,
+                        size: 16.0.s,
                       ),
                 onPressed: () => <void>{
                   emailFormKey.currentState?.reset(),
@@ -113,7 +114,7 @@ class AuthPage extends HookConsumerWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 14, bottom: 14),
+              padding: EdgeInsets.only(top: 14.0.s, bottom: 14.0.s),
               child: Text(
                 context.i18n.auth_signIn_or,
                 style: context.theme.appTextThemes.caption
@@ -125,7 +126,7 @@ class AuthPage extends HookConsumerWidget {
                 type: ButtonType.outlined,
                 leadingIcon: ImageIcon(
                   AssetImage(Assets.images.phone.path),
-                  size: 24,
+                  size: 24.0.s,
                   color: context.theme.appColors.secondaryText,
                 ),
                 onPressed: () {
@@ -140,7 +141,7 @@ class AuthPage extends HookConsumerWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 16, bottom: 22),
+              padding: EdgeInsets.only(top: 16.0.s, bottom: 22.0.s),
               child: Socials(
                 onSocialButtonPressed: (SocialButtonType type) {
                   switch (type) {
@@ -165,8 +166,8 @@ class AuthPage extends HookConsumerWidget {
               ),
             ),
             const SecuredBy(),
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: 20.0.s,
             ),
             const TermsPrivacy(),
           ],

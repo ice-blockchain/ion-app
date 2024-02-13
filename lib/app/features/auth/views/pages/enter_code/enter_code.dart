@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/shared/widgets/screen_side_offset/screen_side_offset.dart';
-import 'package:ice/app/shared/widgets/terms_privacy/terms_privacy.dart';
+import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -32,14 +33,14 @@ class EnterCode extends HookConsumerWidget {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  const SizedBox(
-                    height: 65,
+                  SizedBox(
+                    height: 65.0.s,
                   ),
                   Image.asset(
                     Assets.images.enterCode.path,
                   ),
-                  const SizedBox(
-                    height: 9,
+                  SizedBox(
+                    height: 9.0.s,
                   ),
                   Text(
                     context.i18n.enter_code_title,
@@ -56,22 +57,22 @@ class EnterCode extends HookConsumerWidget {
                     style: context.theme.appTextThemes.subtitle,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 30, bottom: 19),
+                    padding: EdgeInsets.only(top: 30.0.s, bottom: 19.0.s),
                     child: SizedBox(
-                      width: 248,
+                      width: 248.0.s,
                       child: PinCodeTextField(
                         appContext: context,
                         length: 4,
                         animationType: AnimationType.fade,
                         cursorColor: Colors.black,
-                        cursorWidth: 3,
-                        cursorHeight: 25,
+                        cursorWidth: 3.0.s,
+                        cursorHeight: 25.0.s,
                         textStyle: context.theme.appTextThemes.inputFieldText,
                         pinTheme: PinTheme(
                           shape: PinCodeFieldShape.box,
-                          borderRadius: BorderRadius.circular(16),
-                          fieldHeight: 56,
-                          fieldWidth: 50,
+                          borderRadius: BorderRadius.circular(16.0.s),
+                          fieldHeight: 56.0.s,
+                          fieldWidth: 50.0.s,
                           borderWidth: 1,
                           inactiveColor: invalidCode.value
                               ? context.theme.appColors.attentionRed
@@ -133,7 +134,7 @@ class EnterCode extends HookConsumerWidget {
                     style: context.theme.appTextThemes.subtitle2,
                   ),
                   Text(
-                    ' 30s', // TODO: Add countdown timer
+                    ' 3.0.s', // TODO: Add countdown timer
                     style: context.theme.appTextThemes.subtitle2
                         .copyWith(color: context.theme.appColors.primaryAccent),
                   ),
@@ -142,9 +143,9 @@ class EnterCode extends HookConsumerWidget {
               Image.asset(
                 Assets.images.iceRound.path,
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 48),
-                child: TermsPrivacy(),
+              Padding(
+                padding: EdgeInsets.only(bottom: 48.0.s),
+                child: const TermsPrivacy(),
               ),
             ],
           ),
