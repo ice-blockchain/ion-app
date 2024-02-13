@@ -13,6 +13,7 @@ class _ButtonWithIcon extends Button {
           style: style.merge(
             OutlinedButton.styleFrom(
               fixedSize: Size.square(size ?? 56.0.s),
+              minimumSize: Size.zero,
               padding: EdgeInsets.zero,
             ),
           ),

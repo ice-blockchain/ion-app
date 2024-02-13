@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:widgetbook/widgetbook.dart';
@@ -10,7 +11,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
   name: 'regular',
   type: Button,
 )
-Widget greenContainerUseCase(BuildContext context) {
+Widget regularButtonUseCase(BuildContext context) {
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -85,15 +86,51 @@ Widget greenContainerUseCase(BuildContext context) {
 }
 
 @widgetbook.UseCase(
-  name: 'with red color',
+  name: 'icon',
   type: Button,
 )
-Widget redContainerUseCase(BuildContext context) {
+Widget iconButtonUseCase(BuildContext context) {
   return Center(
-    child: Button(
-      type: ButtonType.disabled,
-      label: const Text('Text'),
-      onPressed: () {},
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        Button.icon(
+          icon: ImageIcon(
+            AssetImage(Assets.images.filter.path),
+          ),
+          onPressed: () {},
+        ),
+        Button.icon(
+          type: ButtonType.outlined,
+          icon: ImageIcon(
+            AssetImage(Assets.images.filter.path),
+          ),
+          onPressed: () {},
+        ),
+        Button.icon(
+          size: 40.0.s,
+          type: ButtonType.outlined,
+          icon: ImageIcon(
+            AssetImage(Assets.images.filter.path),
+            size: 20.0.s,
+          ),
+          style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4.0.s)),
+            ),
+          ),
+          onPressed: () {},
+        ),
+        Button.icon(
+          size: 40.0.s,
+          type: ButtonType.outlined,
+          icon: ImageIcon(
+            AssetImage(Assets.images.filter.path),
+            size: 20.0.s,
+          ),
+          onPressed: () {},
+        ),
+      ],
     ),
   );
 }
