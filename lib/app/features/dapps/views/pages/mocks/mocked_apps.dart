@@ -22,7 +22,7 @@ class DAppItem {
 
 List<DAppItem> featured = <DAppItem>[
   DAppItem(
-    iconImage: Assets.images.walletUniswap.path,
+    iconImage: Assets.images.wallet.walletUniswap.path,
     title: 'Uniswap',
     description: 'Swap ERC-20 tokens',
     value: 4190.77,
@@ -30,7 +30,7 @@ List<DAppItem> featured = <DAppItem>[
     isFavourite: true,
   ),
   DAppItem(
-    iconImage: Assets.images.walletOpensea.path,
+    iconImage: Assets.images.wallet.walletOpensea.path,
     title: 'Opensea',
     description: 'NFT marketplace',
     value: 3938.25,
@@ -38,28 +38,28 @@ List<DAppItem> featured = <DAppItem>[
     isFavourite: true,
   ),
   DAppItem(
-    iconImage: Assets.images.wallet1inch.path,
+    iconImage: Assets.images.wallet.wallet1inch.path,
     title: '1inch',
     description: 'DEX price optimizer',
     value: 2681.49,
     isFavourite: true,
   ),
   DAppItem(
-    iconImage: Assets.images.walletPanecakeswap.path,
+    iconImage: Assets.images.wallet.walletPanecakeswap.path,
     title: 'Pancakeswap',
     description: 'BSC decentralized exchange',
     value: 1348.52,
     isFavourite: true,
   ),
   DAppItem(
-    iconImage: Assets.images.walletStargate.path,
+    iconImage: Assets.images.wallet.walletStargate.path,
     title: 'Stargate',
     description: 'Cross-chain transaction facilitator',
     value: 938.25,
     isFavourite: true,
   ),
   DAppItem(
-    iconImage: Assets.images.walletLido.path,
+    iconImage: Assets.images.wallet.walletLido.path,
     title: 'Lido',
     description: 'Decentralized ETH 2.0.0.staking',
     value: 497.08,

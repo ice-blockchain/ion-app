@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -38,7 +38,7 @@ class EnterCode extends IceSimplePage {
                     height: 65.0.s,
                   ),
                   Image.asset(
-                    Assets.images.enterCode.path,
+                    Assets.images.misc.authEnterCode.path,
                   ),
                   SizedBox(
                     height: 9.0.s,
@@ -142,7 +142,7 @@ class EnterCode extends IceSimplePage {
                 ],
               ),
               Image.asset(
-                Assets.images.iceRound.path,
+                Assets.images.logo.logoIce.path,
               ),
               Padding(
                 padding: EdgeInsets.only(bottom: 48.0.s),

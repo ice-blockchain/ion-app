@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_fields.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -19,7 +20,6 @@ import 'package:ice/app/features/auth/views/pages/auth_page/controllers/email_co
 import 'package:ice/app/features/auth/views/pages/auth_page/controllers/phone_number_controller.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class AuthPage extends IceSimplePage {
@@ -45,7 +45,7 @@ class AuthPage extends IceSimplePage {
             if (isEmailMode)
               InputField(
                 leadingIcon: Image.asset(
-                  Assets.images.fieldEmail.path,
+                  Assets.images.icons.iconFieldEmail.path,
                   color: context.theme.appColors.primaryText,
                 ),
                 label: context.i18n.auth_signIn_input_email,
@@ -71,7 +71,7 @@ class AuthPage extends IceSimplePage {
               child: Button(
                 trailingIcon: authState is AuthenticationLoading
                     ? const ButtonLoadingIndicator()
-                    : ButtonIcon(Assets.images.buttonNext.path),
+                    : ButtonIcon(Assets.images.icons.iconButtonNext.path),
                 onPressed: () => <void>{
                   emailFormKey.currentState?.reset(),
                   ref
@@ -94,7 +94,7 @@ class AuthPage extends IceSimplePage {
               child: Button(
                 type: ButtonType.outlined,
                 leadingIcon: ButtonIcon(
-                  Assets.images.phone.path,
+                  Assets.images.icons.iconFieldPhone.path,
                   color: context.theme.appColors.secondaryText,
                 ),
                 onPressed: () {

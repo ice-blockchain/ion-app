@@ -3,11 +3,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_fields.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/controllers/name_controller.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NostrLogin extends IceSimplePage {
@@ -29,7 +29,7 @@ class NostrLogin extends IceSimplePage {
                 height: 15.0.s,
               ),
               Image.asset(
-                Assets.images.ostrichlogo.path,
+                Assets.images.bg.ostrichlogo.path,
                 width: 256.0.s,
                 height: 160.0.s,
               ),
@@ -40,7 +40,7 @@ class NostrLogin extends IceSimplePage {
                 children: <Widget>[
                   InputField(
                     leadingIcon: ImageIcon(
-                      AssetImage(Assets.images.fieldPrivatekey.path),
+                      AssetImage(Assets.images.icons.iconFieldPrivatekey.path),
                     ),
                     label: context.i18n.nostr_login_input_private_key,
                     controller: privateKeyController.controller,
@@ -54,7 +54,7 @@ class NostrLogin extends IceSimplePage {
                   Center(
                     child: Button(
                       leadingIcon: ButtonIcon(
-                        Assets.images.profilePaste.path,
+                        Assets.images.icons.iconProfilePaste.path,
                       ),
                       onPressed: () {},
                       type: ButtonType.disabled,

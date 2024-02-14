@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/navigation_header/navigation_header.dart';
 import 'package:ice/app/components/search/search.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 
 class SelectCountries extends IceSimplePage {
   const SelectCountries(super._route, super.payload);

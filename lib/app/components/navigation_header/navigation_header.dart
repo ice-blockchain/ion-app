@@ -30,7 +30,7 @@ class NavigationHeader extends StatelessWidget {
           if (showBackButton)
             IconButton(
               icon: Image.asset(
-                Assets.images.backArrow.path,
+                Assets.images.icons.iconBackArrow.path,
                 width: backButtonSide,
                 height: backButtonSide,
               ),

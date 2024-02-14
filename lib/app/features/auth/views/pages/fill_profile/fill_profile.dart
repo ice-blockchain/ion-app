@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_fields.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -13,7 +14,6 @@ import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/invit
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/name_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/controllers/nickname_controller.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/validators.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/app/utils/image.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -77,7 +77,7 @@ class FillProfile extends IceSimplePage {
             height: 100.0.s,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(Assets.images.profilePhotoPlaceholder.path),
+                image: AssetImage(Assets.images.misc.authPhotoPlaceholder.path),
                 fit: BoxFit.cover,
               ),
             ),
@@ -92,7 +92,7 @@ class FillProfile extends IceSimplePage {
                 height: 65.0.s,
               ),
               Image.asset(
-                Assets.images.iceRound.path,
+                Assets.images.logo.logoIce.path,
               ),
               SizedBox(
                 height: 19.0.s,
@@ -123,7 +123,7 @@ class FillProfile extends IceSimplePage {
                         height: 36.0.s,
                         decoration: const BoxDecoration(),
                         child: Image.asset(
-                          Assets.images.profileCamera.path,
+                          Assets.images.misc.iconCamera.path,
                           width: 36.0.s,
                           height: 36.0.s,
                         ),
@@ -137,8 +137,9 @@ class FillProfile extends IceSimplePage {
               ),
               InputField(
                 // autofocus: true,
-                leadingIcon:
-                    ImageIcon(AssetImage(Assets.images.fieldName.path)),
+                leadingIcon: ImageIcon(
+                  AssetImage(Assets.images.icons.iconFieldName.path),
+                ),
                 label: context.i18n.fill_profile_input_name,
                 controller: nameController.controller,
                 validator: (String? value) => validateName(value!),
@@ -146,8 +147,9 @@ class FillProfile extends IceSimplePage {
                 // key: nameFieldKey,
               ),
               InputField(
-                leadingIcon:
-                    ImageIcon(AssetImage(Assets.images.fieldNickname.path)),
+                leadingIcon: ImageIcon(
+                  AssetImage(Assets.images.icons.iconFieldNickname.path),
+                ),
                 label: context.i18n.fill_profile_input_nickname,
                 controller: nicknameController.controller,
                 validator: (String? value) => validateNickname(value!),
@@ -156,8 +158,9 @@ class FillProfile extends IceSimplePage {
                 // textInputAction: TextInputAction.next,
               ),
               InputField(
-                leadingIcon:
-                    ImageIcon(AssetImage(Assets.images.fieldInviter.path)),
+                leadingIcon: ImageIcon(
+                  AssetImage(Assets.images.icons.iconFieldInviter.path),
+                ),
                 label: context.i18n.fill_profile_input_who_invited,
                 controller: inviterController.controller,
                 validator: (String? value) => validateWhoInvited(value!),
@@ -170,7 +173,8 @@ class FillProfile extends IceSimplePage {
               ),
               Center(
                 child: Button(
-                  leadingIcon: ButtonIcon(Assets.images.profileSave.path),
+                  leadingIcon:
+                      ButtonIcon(Assets.images.icons.iconProfileSave.path),
                   onPressed: onSave,
                   label: Text(context.i18n.button_save),
                   mainAxisSize: MainAxisSize.max,

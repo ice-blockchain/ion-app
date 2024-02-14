@@ -24,21 +24,21 @@ Widget regularButtonUseCase(BuildContext context) {
             ),
           ),
           mainAxisSize: MainAxisSize.max,
-          leadingIcon: ButtonIcon(Assets.images.bookmarks.path),
+          leadingIcon: ButtonIcon(Assets.images.icons.iconBookmarks.path),
           onPressed: () {},
         ),
         Button(
           type: ButtonType.secondary,
           label: const Text('Secondary'),
           mainAxisSize: MainAxisSize.max,
-          trailingIcon: ButtonIcon(Assets.images.bookmarks.path),
+          trailingIcon: ButtonIcon(Assets.images.icons.iconBookmarks.path),
           onPressed: () {},
         ),
         Button(
           type: ButtonType.outlined,
           label: const Text('Outlined'),
           mainAxisSize: MainAxisSize.max,
-          leadingIcon: ButtonIcon(Assets.images.bookmarks.path),
+          leadingIcon: ButtonIcon(Assets.images.icons.iconBookmarks.path),
           onPressed: () {},
         ),
         Button(
@@ -46,14 +46,14 @@ Widget regularButtonUseCase(BuildContext context) {
           tintColor: context.theme.appColors.attentionRed,
           label: const Text('Outlined with Tint color'),
           mainAxisSize: MainAxisSize.max,
-          leadingIcon: ButtonIcon(Assets.images.bookmarks.path),
+          leadingIcon: ButtonIcon(Assets.images.icons.iconBookmarks.path),
           onPressed: () {},
         ),
         Button(
           type: ButtonType.disabled,
           label: const Text('Disabled'),
           mainAxisSize: MainAxisSize.max,
-          trailingIcon: ButtonIcon(Assets.images.bookmarks.path),
+          trailingIcon: ButtonIcon(Assets.images.icons.iconBookmarks.path),
           onPressed: () {},
         ),
         Button(
@@ -75,7 +75,7 @@ Widget regularButtonUseCase(BuildContext context) {
           ),
           mainAxisSize: MainAxisSize.max,
           trailingIcon: ImageIcon(
-            AssetImage(Assets.images.bookmarks.path),
+            AssetImage(Assets.images.icons.iconBookmarks.path),
             color: context.theme.appColors.attentionRed,
           ),
           onPressed: () {},
@@ -96,14 +96,14 @@ Widget iconButtonUseCase(BuildContext context) {
       children: <Widget>[
         Button.icon(
           icon: ImageIcon(
-            AssetImage(Assets.images.filter.path),
+            AssetImage(Assets.images.icons.iconHeaderMenu.path),
           ),
           onPressed: () {},
         ),
         Button.icon(
           type: ButtonType.outlined,
           icon: ImageIcon(
-            AssetImage(Assets.images.filter.path),
+            AssetImage(Assets.images.icons.iconHeaderMenu.path),
           ),
           onPressed: () {},
         ),
@@ -111,7 +111,7 @@ Widget iconButtonUseCase(BuildContext context) {
           size: 40.0.s,
           type: ButtonType.outlined,
           icon: ImageIcon(
-            AssetImage(Assets.images.filter.path),
+            AssetImage(Assets.images.icons.iconHeaderMenu.path),
             size: 20.0.s,
           ),
           style: OutlinedButton.styleFrom(
@@ -126,7 +126,7 @@ Widget iconButtonUseCase(BuildContext context) {
           tintColor: context.theme.appColors.attentionRed,
           type: ButtonType.outlined,
           icon: ImageIcon(
-            AssetImage(Assets.images.filter.path),
+            AssetImage(Assets.images.icons.iconHeaderMenu.path),
             size: 20.0.s,
           ),
           onPressed: () {},
@@ -151,7 +151,7 @@ Widget compactButtonUseCase(BuildContext context) {
             Expanded(
               child: Button.compact(
                 leadingIcon: ImageIcon(
-                  AssetImage(Assets.images.receive.path),
+                  AssetImage(Assets.images.icons.iconButtonReceive.path),
                 ),
                 label: Text(
                   context.knobs.string(
@@ -168,7 +168,7 @@ Widget compactButtonUseCase(BuildContext context) {
             Expanded(
               child: Button.compact(
                 leadingIcon: ImageIcon(
-                  AssetImage(Assets.images.send.path),
+                  AssetImage(Assets.images.icons.iconButtonSend.path),
                 ),
                 label: Text(
                   context.knobs.string(

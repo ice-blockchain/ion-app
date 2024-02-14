@@ -19,20 +19,32 @@ class CategoryItem {
 List<CategoryItem> getFeaturedCategories(BuildContext context) {
   return <CategoryItem>[
     CategoryItem(
-      iconImage: Assets.images.defi.path,
+      iconImage: Assets.images.categories.categoriesDefi.path,
       title: context.i18n.dapps_category_defi,
     ),
     CategoryItem(
-      iconImage: Assets.images.marketplace.path,
+      iconImage: Assets.images.categories.categoriesMarketplace.path,
       title: context.i18n.dapps_category_marketplaces,
     ),
     CategoryItem(
-      iconImage: Assets.images.nft.path,
+      iconImage: Assets.images.categories.categoriesNft.path,
       title: context.i18n.dapps_category_nft,
     ),
     CategoryItem(
-      iconImage: Assets.images.games.path,
+      iconImage: Assets.images.categories.categoriesGames.path,
       title: context.i18n.dapps_category_games,
+    ),
+    CategoryItem(
+      iconImage: Assets.images.categories.categoriesSocial.path,
+      title: context.i18n.dapps_category_social,
+    ),
+    CategoryItem(
+      iconImage: Assets.images.categories.categoriesUtilites.path,
+      title: context.i18n.dapps_category_utilities,
+    ),
+    CategoryItem(
+      iconImage: Assets.images.categories.categoriesOther.path,
+      title: context.i18n.dapps_category_other,
     ),
   ];
 }

@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -33,7 +33,7 @@ class CheckEmail extends IceSimplePage {
                   height: 65.0.s,
                 ),
                 Image.asset(
-                  Assets.images.iceRound.path,
+                  Assets.images.logo.logoIce.path,
                 ),
                 SizedBox(
                   height: 12.0.s,
@@ -55,7 +55,7 @@ class CheckEmail extends IceSimplePage {
                       email,
                       style: context.theme.appTextThemes.subtitle,
                     ),
-                    Image.asset(Assets.images.link.path),
+                    Image.asset(Assets.images.icons.iconEditLink.path),
                   ],
                 ),
                 Padding(
@@ -116,7 +116,7 @@ class CheckEmail extends IceSimplePage {
               ],
             ),
             Image.asset(
-              Assets.images.iceRound.path,
+              Assets.images.logo.logoIce.path,
             ),
             Padding(
               padding: EdgeInsets.only(bottom: 48.0.s),

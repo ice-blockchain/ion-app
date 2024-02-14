@@ -3,11 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NostrAuth extends IceSimplePage {
@@ -25,7 +25,7 @@ class NostrAuth extends IceSimplePage {
               description: context.i18n.nostr_auth_description,
             ),
             Image.asset(
-              Assets.images.ostrichlogo.path,
+              Assets.images.bg.ostrichlogo.path,
               width: 256.0.s,
               height: 160.0.s,
             ),
@@ -34,7 +34,7 @@ class NostrAuth extends IceSimplePage {
                 Center(
                   child: Button(
                     leadingIcon: ButtonIcon(
-                      Assets.images.loginCreateacc.path,
+                      Assets.images.icons.iconLoginCreateacc.path,
                     ),
                     onPressed: () {
                       // showModalScreen(
@@ -53,7 +53,7 @@ class NostrAuth extends IceSimplePage {
                 Center(
                   child: Button(
                     leadingIcon: ButtonIcon(
-                      Assets.images.profileSave.path,
+                      Assets.images.icons.iconProfileSave.path,
                     ),
                     onPressed: () {
                       context.goNamed(IceRoutes.nostrLogin.name);

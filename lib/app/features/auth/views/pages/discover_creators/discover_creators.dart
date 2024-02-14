@@ -5,12 +5,12 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/navigation_header/navigation_header.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/search/search.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/title_description_header/title_description_header.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class DiscoverCreators extends IceSimplePage {
@@ -149,8 +149,8 @@ class DiscoverCreators extends IceSimplePage {
                                                 top: 2.0.s,
                                               ),
                                               child: Image.asset(
-                                                Assets
-                                                    .images.verifiedBadge.path,
+                                                Assets.images.icons
+                                                    .iconBadgeVerify.path,
                                                 width: 16.0.s,
                                                 height: 16.0.s,
                                               ),

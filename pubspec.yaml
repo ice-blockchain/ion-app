@@ -57,6 +57,12 @@ flutter:
     - lib/app/templates/basic.json
     - assets/lottie/
     - assets/images/
+    - assets/images/icons/
+    - assets/images/wallet/
+    - assets/images/categories/
+    - assets/images/bg/
+    - assets/images/logo/
+    - assets/images/misc/
 
 flutter_gen:
   output: lib/generated/

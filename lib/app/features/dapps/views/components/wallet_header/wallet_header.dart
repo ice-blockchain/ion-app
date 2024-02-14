@@ -62,7 +62,7 @@ class WalletHeader extends HookConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Image.asset(
-                    Assets.images.walletWalletblue.path,
+                    Assets.images.wallet.walletWalletblue.path,
                     width: 28.0.s,
                     height: 28.0.s,
                     fit: BoxFit.cover,
@@ -71,7 +71,7 @@ class WalletHeader extends HookConsumerWidget {
                   Text(context.i18n.wallet_header_ice_wallet),
                   SizedBox(width: 8.0.s),
                   Image.asset(
-                    Assets.images.selectArrows.path,
+                    Assets.images.icons.iconArrowDown.path,
                     width: 12.0.s,
                     height: 12.0.s,
                   ),
@@ -82,14 +82,14 @@ class WalletHeader extends HookConsumerWidget {
               children: <Widget>[
                 Button.icon(
                   onPressed: () {},
-                  icon: ButtonIcon(Assets.images.fieldSearch.path),
+                  icon: ButtonIcon(Assets.images.icons.iconFieldSearch.path),
                   type: ButtonType.outlined,
                   size: 40.0.s,
                 ),
                 SizedBox(width: 12.0.s),
                 Button.icon(
                   onPressed: () {},
-                  icon: ButtonIcon(Assets.images.filter.path),
+                  icon: ButtonIcon(Assets.images.icons.iconHeaderMenu.path),
                   type: ButtonType.outlined,
                   size: 40.0.s,
                 ),

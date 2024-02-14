@@ -163,7 +163,7 @@ class TextFieldWrapperState extends State<TextFieldWrapper> {
             right: 16.0.s,
             top: 12.0.s,
             child: Image.asset(
-              Assets.images.blockCheckboxOn.path,
+              Assets.images.icons.iconBlockCheckboxOn.path,
               width: 24.0.s,
               height: 24.0.s,
             ),

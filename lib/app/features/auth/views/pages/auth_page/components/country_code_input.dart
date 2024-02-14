@@ -24,7 +24,7 @@ class CountryCodeInput extends StatelessWidget {
           ),
           SizedBox(width: 8.0.s),
           Image.asset(
-            Assets.images.loginDropdown.path,
+            Assets.images.icons.iconLoginDropdown.path,
             color: context.theme.appColors.secondaryText,
             width: 15.0.s,
             height: 15.0.s,

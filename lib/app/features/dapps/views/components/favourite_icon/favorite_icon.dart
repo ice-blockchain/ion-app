@@ -19,8 +19,8 @@ class FavouriteIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String iconPath = isFavourite
-        ? Assets.images.bookmarksOn.path
-        : Assets.images.bookmarks.path;
+        ? Assets.images.icons.iconBookmarksOn.path
+        : Assets.images.icons.iconBookmarks.path;
 
     final Color iconBackgroundColor =
         backgroundColor ?? context.theme.appColors.tertararyBackground;
