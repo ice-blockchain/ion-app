@@ -29,7 +29,7 @@ class NostrLogin extends IceSimplePage {
                 height: 15.0.s,
               ),
               Image.asset(
-                Assets.images.ostrichlogo.path,
+                Assets.images.bg.ostrichlogo.path,
                 width: 256.0.s,
                 height: 160.0.s,
               ),

@@ -25,7 +25,7 @@ class NostrAuth extends IceSimplePage {
               description: context.i18n.nostr_auth_description,
             ),
             Image.asset(
-              Assets.images.ostrichlogo.path,
+              Assets.images.bg.ostrichlogo.path,
               width: 256.0.s,
               height: 160.0.s,
             ),

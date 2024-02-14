@@ -70,7 +70,7 @@ class Favourites extends StatelessWidget {
                   ],
                 ),
                 Image.asset(
-                  Assets.images.forwardArrow.path,
+                  Assets.images.icons.iconArrowRight.path,
                   width: 12.0.s,
                 ),
               ],

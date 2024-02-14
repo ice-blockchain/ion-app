@@ -38,7 +38,7 @@ class EnterCode extends IceSimplePage {
                     height: 65.0.s,
                   ),
                   Image.asset(
-                    Assets.images.enterCode.path,
+                    Assets.images.misc.authEnterCode.path,
                   ),
                   SizedBox(
                     height: 9.0.s,
@@ -142,7 +142,7 @@ class EnterCode extends IceSimplePage {
                 ],
               ),
               Image.asset(
-                Assets.images.iceRound.path,
+                Assets.images.logo.logoIce.path,
               ),
               Padding(
                 padding: EdgeInsets.only(bottom: 48.0.s),

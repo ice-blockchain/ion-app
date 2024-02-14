@@ -96,14 +96,14 @@ Widget iconButtonUseCase(BuildContext context) {
       children: <Widget>[
         Button.icon(
           icon: ImageIcon(
-            AssetImage(Assets.images.filter.path),
+            AssetImage(Assets.images.icons.iconHeaderMenu.path),
           ),
           onPressed: () {},
         ),
         Button.icon(
           type: ButtonType.outlined,
           icon: ImageIcon(
-            AssetImage(Assets.images.filter.path),
+            AssetImage(Assets.images.icons.iconHeaderMenu.path),
           ),
           onPressed: () {},
         ),
@@ -111,7 +111,7 @@ Widget iconButtonUseCase(BuildContext context) {
           size: 40.0.s,
           type: ButtonType.outlined,
           icon: ImageIcon(
-            AssetImage(Assets.images.filter.path),
+            AssetImage(Assets.images.icons.iconHeaderMenu.path),
             size: 20.0.s,
           ),
           style: OutlinedButton.styleFrom(
@@ -126,7 +126,7 @@ Widget iconButtonUseCase(BuildContext context) {
           tintColor: context.theme.appColors.attentionRed,
           type: ButtonType.outlined,
           icon: ImageIcon(
-            AssetImage(Assets.images.filter.path),
+            AssetImage(Assets.images.icons.iconHeaderMenu.path),
             size: 20.0.s,
           ),
           onPressed: () {},

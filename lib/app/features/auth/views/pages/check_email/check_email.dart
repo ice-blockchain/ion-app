@@ -33,7 +33,7 @@ class CheckEmail extends IceSimplePage {
                   height: 65.0.s,
                 ),
                 Image.asset(
-                  Assets.images.iceRound.path,
+                  Assets.images.logo.logoIce.path,
                 ),
                 SizedBox(
                   height: 12.0.s,
@@ -116,7 +116,7 @@ class CheckEmail extends IceSimplePage {
               ],
             ),
             Image.asset(
-              Assets.images.iceRound.path,
+              Assets.images.logo.logoIce.path,
             ),
             Padding(
               padding: EdgeInsets.only(bottom: 48.0.s),

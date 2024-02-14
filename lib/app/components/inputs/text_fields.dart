@@ -375,7 +375,7 @@ class TextFieldToEdit extends StatelessWidget {
               ),
               SizedBox(width: 10.0.s),
               Image.asset(
-                Assets.images.iceRound.path,
+                Assets.images.logo.logoIce.path,
               ),
             ],
           ),

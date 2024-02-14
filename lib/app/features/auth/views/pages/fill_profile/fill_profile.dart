@@ -77,7 +77,7 @@ class FillProfile extends IceSimplePage {
             height: 100.0.s,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(Assets.images.profilePhotoPlaceholder.path),
+                image: AssetImage(Assets.images.misc.authPhotoPlaceholder.path),
                 fit: BoxFit.cover,
               ),
             ),
@@ -92,7 +92,7 @@ class FillProfile extends IceSimplePage {
                 height: 65.0.s,
               ),
               Image.asset(
-                Assets.images.iceRound.path,
+                Assets.images.logo.logoIce.path,
               ),
               SizedBox(
                 height: 19.0.s,
@@ -123,7 +123,7 @@ class FillProfile extends IceSimplePage {
                         height: 36.0.s,
                         decoration: const BoxDecoration(),
                         child: Image.asset(
-                          Assets.images.profileCamera.path,
+                          Assets.images.icons.iconCamera.path,
                           width: 36.0.s,
                           height: 36.0.s,
                         ),

@@ -14,7 +14,7 @@ class AuthHeaderWidget extends StatelessWidget {
   })  : topPadding = topPadding ?? 65.0.s,
         bottomPadding = bottomPadding ?? 30.0.s,
         description = description ?? '', // Ensure description is not null
-        imagePath = imagePath ?? Assets.images.iceRound.path;
+        imagePath = imagePath ?? Assets.images.logo.logoIce.path;
 
   final double topPadding;
   final double bottomPadding;

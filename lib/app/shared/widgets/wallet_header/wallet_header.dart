@@ -65,7 +65,7 @@ class WalletHeader extends HookConsumerWidget {
                   Text(context.i18n.wallet_header_ice_wallet),
                   const SizedBox(width: 8),
                   Image.asset(
-                    Assets.images.selectArrows.path,
+                    Assets.images.icons.iconArrowDown.path,
                     width: 12,
                     height: 12,
                   ),
@@ -95,7 +95,7 @@ class WalletHeader extends HookConsumerWidget {
                 Button.icon(
                   onPressed: () {},
                   icon: Image.asset(
-                    Assets.images.filter.path,
+                    Assets.images.icons.iconHeaderMenu.path,
                     width: 24,
                     height: 24,
                   ),
