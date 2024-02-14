@@ -19,6 +19,7 @@ class ListItem extends StatelessWidget {
     EdgeInsets? leadingPadding,
     EdgeInsets? trailingPadding,
     BoxConstraints? constraints,
+    this.onTap,
   })  : borderRadius =
             borderRadius ?? BorderRadius.all(Radius.circular(16.0.s)),
         contentPadding = contentPadding ?? EdgeInsets.all(12.0.s),
@@ -46,6 +47,7 @@ class ListItem extends StatelessWidget {
   final EdgeInsetsGeometry trailingPadding;
   final BoxConstraints constraints;
   final Color? backgroundColor;
+  final GestureTapCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -87,13 +89,16 @@ class ListItem extends StatelessWidget {
     required BuildContext context,
     required Widget child,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: _getBackgroundColor(context),
-        border: border,
-        borderRadius: borderRadius,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: _getBackgroundColor(context),
+          border: border,
+          borderRadius: borderRadius,
+        ),
+        child: child,
       ),
-      child: child,
     );
   }
 

@@ -27,6 +27,10 @@ class Button extends StatelessWidget {
     this.type = ButtonType.primary,
     this.disabled = false,
     this.tintColor,
+    this.borderColor,
+    this.backgroundColor,
+    this.minimumSize,
+    this.disableRipple,
   });
 
   factory Button.icon({
@@ -36,6 +40,8 @@ class Button extends StatelessWidget {
     ButtonType type,
     ButtonStyle style,
     Color? tintColor,
+    Color? borderColor,
+    Color? backgroundColor,
     double size,
   }) = _ButtonWithIcon;
 
@@ -56,6 +62,10 @@ class Button extends StatelessWidget {
   final Widget? leadingIcon;
   final Widget? trailingIcon;
   final Widget? label;
+  final Color? borderColor;
+  final Color? backgroundColor;
+  final Size? minimumSize;
+  final bool? disableRipple;
   final Color? tintColor;
   final ButtonStyle style;
   final MainAxisSize mainAxisSize;
@@ -66,17 +76,27 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: type == ButtonType.disabled || disabled ? null : onPressed,
-      style: style.merge(
+      style: style
+          .merge(
         OutlinedButton.styleFrom(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
           ),
-          minimumSize: Size(56.0.s, 56.0.s),
+          minimumSize: minimumSize ?? Size(56.0.s, 56.0.s),
           padding: EdgeInsets.symmetric(horizontal: 16.0.s),
           backgroundColor: _getBackgroundColor(context, type),
           side: BorderSide(
             color: _getBorderColor(context, type),
+          ),
+        ),
+      )
+          .merge(
+        ButtonStyle(
+          overlayColor: MaterialStateProperty.resolveWith<Color?>(
+            (Set<MaterialState> states) {
+              return disableRipple == true ? Colors.transparent : null;
+            },
           ),
         ),
       ),
@@ -112,16 +132,18 @@ class Button extends StatelessWidget {
   }
 
   Color _getBackgroundColor(BuildContext context, ButtonType type) {
-    return switch (type) {
-      ButtonType.primary => context.theme.appColors.primaryAccent,
-      ButtonType.secondary => context.theme.appColors.tertararyBackground,
-      ButtonType.outlined => Colors.transparent,
-      ButtonType.disabled => context.theme.appColors.sheetLine,
-    };
+    return backgroundColor ??
+        switch (type) {
+          ButtonType.primary => context.theme.appColors.primaryAccent,
+          ButtonType.secondary => context.theme.appColors.tertararyBackground,
+          ButtonType.outlined => Colors.transparent,
+          ButtonType.disabled => context.theme.appColors.sheetLine,
+        };
   }
 
   Color _getBorderColor(BuildContext context, ButtonType type) {
-    return tintColor ??
+    return borderColor ??
+        tintColor ??
         switch (type) {
           ButtonType.primary => context.theme.appColors.onPrimaryAccent,
           ButtonType.secondary => context.theme.appColors.tertararyBackground,

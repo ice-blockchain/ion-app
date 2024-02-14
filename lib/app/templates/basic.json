@@ -7,7 +7,7 @@
         "secondaryText": "#494949",
         "tertararyText": "#9A9A9A",
         "sharkText": "#333436",
-      "primaryBackground": "#F5F7FF",
+        "primaryBackground": "#F5F7FF",
         "secondaryBackground": "#FFFFFF",
         "tertararyBackground": "#FAFBFF",
         "backgroundSheet": "#B3081532",
@@ -18,7 +18,10 @@
         "strokeElements": "#CCCCCC",
         "sheetLine": "#B8BCCA",
         "attentionRed": "#FD4E4E",
-        "success": "#35D487"
+        "success": "#35D487",
+        "orangePeel": "#FFA143",
+        "purple": "#7D40FF",
+        "raspberry": "#EA3665"
       },
       "dark": {
         "primaryAccent": "#0166FF",
@@ -26,7 +29,7 @@
         "secondaryText": "#494949",
         "tertararyText": "#9A9A9A",
         "sharkText": "#333436",
-      "primaryBackground": "#F5F7FF",
+        "primaryBackground": "#F5F7FF",
         "secondaryBackground": "#FFFFFF",
         "tertararyBackground": "#FAFBFF",
         "backgroundSheet": "#B3081532",
@@ -37,16 +40,20 @@
         "strokeElements": "#CCCCCC",
         "sheetLine": "#B8BCCA",
         "attentionRed": "#FD4E4E",
-        "success": "#35D487"
+        "success": "#35D487",
+        "orangePeel": "#FFA143",
+        "purple": "#7D40FF",
+        "raspberry": "#EA3665"
       }
     },
     "textThemes": {
       "headline1": {
         "fontSize": 28,
-       "fontWeight": 700
-    },
-    "headline2": {
-      "fontSize": 24, "fontWeight": 700
+        "fontWeight": 700
+      },
+      "headline2": {
+        "fontSize": 24,
+        "fontWeight": 700
       },
       "inputFieldText": {
         "fontSize": 25,
@@ -72,8 +79,8 @@
       "body2": {
         "fontSize": 13,
         "fontWeight": 400
-
-      },"caption": {
+      },
+      "caption": {
         "fontSize": 12,
         "fontWeight": 500
       },

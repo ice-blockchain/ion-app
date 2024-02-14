@@ -20,6 +20,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.sheetLine,
     required this.attentionRed,
     required this.success,
+    required this.orangePeel,
+    required this.purple,
+    required this.raspberry,
   });
 
   factory AppColorsExtension.fromTemplate(TemplateColors templateColors) {
@@ -41,6 +44,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       sheetLine: templateColors.sheetLine,
       attentionRed: templateColors.attentionRed,
       success: templateColors.success,
+      orangePeel: templateColors.orangePeel,
+      purple: templateColors.purple,
+      raspberry: templateColors.raspberry,
     );
   }
 
@@ -61,6 +67,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color sheetLine;
   final Color attentionRed;
   final Color success;
+  final Color orangePeel;
+  final Color purple;
+  final Color raspberry;
 
   @override
   ThemeExtension<AppColorsExtension> copyWith({
@@ -81,6 +90,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? sheetLine,
     Color? attentionRed,
     Color? success,
+    Color? orangePeel,
+    Color? purple,
+    Color? raspberry,
   }) {
     return AppColorsExtension(
       primaryAccent: primaryAccent ?? this.primaryAccent,
@@ -102,6 +114,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       sheetLine: sheetLine ?? this.sheetLine,
       attentionRed: attentionRed ?? this.attentionRed,
       success: success ?? this.success,
+      orangePeel: orangePeel ?? this.orangePeel,
+      purple: purple ?? this.purple,
+      raspberry: raspberry ?? this.raspberry,
     );
   }
 
@@ -137,6 +152,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       sheetLine: Color.lerp(sheetLine, other.sheetLine, t)!,
       attentionRed: Color.lerp(attentionRed, other.attentionRed, t)!,
       success: Color.lerp(success, other.success, t)!,
+      orangePeel: Color.lerp(orangePeel, other.orangePeel, t)!,
+      purple: Color.lerp(purple, other.purple, t)!,
+      raspberry: Color.lerp(raspberry, other.raspberry, t)!,
     );
   }
 }

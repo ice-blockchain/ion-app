@@ -17,6 +17,7 @@ import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/dapps/views/components/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
+import 'package:ice/app/features/pull_right_menu/pull_right_menu_page.dart';
 import 'package:ice/app/features/wallet/views/pages/inner_wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page.dart';
 
@@ -72,6 +73,10 @@ enum IceRoutes<PayloadType> {
     ],
   ),
   appsList<AppsRouteData>(DAppsList.new),
+  pullRightManu(
+    PullRightMenuPage.new,
+    children: <IceRoutes<dynamic>>[],
+  ),
   chat(ChatPage.new),
   wallet(
     WalletPage.new,
