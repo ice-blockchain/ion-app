@@ -16,8 +16,8 @@ class BookmarkButton extends HookConsumerWidget {
     return IconButton(
       icon: Image.asset(
         isBookmarked
-            ? Assets.images.bookmarksOn.path
-            : Assets.images.bookmarks.path,
+            ? Assets.images.icons.iconBookmarks.path
+            : Assets.images.icons.iconBookmarksOn.path,
       ),
       onPressed: () {
         ref.read(bookmarkNotifierProvider.notifier).toggleBookmark(id);
