@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/templates/template.dart';
 
 abstract class IceControl extends HookConsumerWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/components/apps.dart';
@@ -10,7 +11,6 @@ import 'package:ice/app/features/dapps/views/components/featured.dart';
 import 'package:ice/app/features/dapps/views/components/wallet_header/wallet_header.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/shared/widgets/template/ice_page.dart';
 
 class DAppsPage extends IceSimplePage {
   const DAppsPage(super.route, super.payload);
