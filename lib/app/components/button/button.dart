@@ -6,6 +6,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
 part 'variants/button_icon.dart';
+part 'variants/button_compact.dart';
 
 enum ButtonType {
   primary,
@@ -18,15 +19,14 @@ class Button extends StatelessWidget {
   const Button({
     super.key,
     required this.onPressed,
-    this.leadingIcon,
-    // this.leadingIconPath,
     this.trailingIcon,
+    this.leadingIcon,
     this.label,
     this.style = const ButtonStyle(),
     this.mainAxisSize = MainAxisSize.min,
     this.type = ButtonType.primary,
+    this.disabled = false,
     this.tintColor,
-    this.fixedSize,
   });
 
   factory Button.icon({
@@ -35,29 +35,42 @@ class Button extends StatelessWidget {
     required Widget icon,
     ButtonType type,
     ButtonStyle style,
+    Color? tintColor,
     double size,
   }) = _ButtonWithIcon;
+
+  factory Button.compact({
+    Key? key,
+    required VoidCallback onPressed,
+    Widget? trailingIcon,
+    Widget? leadingIcon,
+    Widget? label,
+    ButtonStyle style,
+    MainAxisSize mainAxisSize,
+    ButtonType type,
+    bool disabled,
+    Color? tintColor,
+  }) = _ButtonCompact;
 
   final VoidCallback onPressed;
   final Widget? leadingIcon;
   final Widget? trailingIcon;
   final Widget? label;
+  final Color? tintColor;
+  final ButtonStyle style;
   final MainAxisSize mainAxisSize;
   final ButtonType type;
-  final ButtonStyle style;
-  final Color? tintColor;
-  final Size? fixedSize;
+  final bool disabled;
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed: onPressed,
+      onPressed: type == ButtonType.disabled || disabled ? null : onPressed,
       style: style.merge(
         OutlinedButton.styleFrom(
-          fixedSize: fixedSize,
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
+            borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
           ),
           minimumSize: Size(56.0.s, 56.0.s),
           padding: EdgeInsets.symmetric(horizontal: 16.0.s),
@@ -70,7 +83,8 @@ class Button extends StatelessWidget {
       child: IconTheme(
         data: IconThemeData(color: _getIconTintColor(context, type)),
         child: DefaultTextStyle(
-          style: context.theme.appTextThemes.subtitle2 //CHECK FONT
+          overflow: TextOverflow.ellipsis,
+          style: context.theme.appTextThemes.body
               .copyWith(color: _getLabelColor(context, type)),
           child: Row(
             mainAxisSize: mainAxisSize,
@@ -78,13 +92,16 @@ class Button extends StatelessWidget {
             children: <Widget>[
               if (leadingIcon != null) leadingIcon!,
               if (label != null)
-                Padding(
-                  padding: EdgeInsets.only(
-                    left:
-                        leadingIcon == null ? 0 : 8.0.s, // 8 move to constants
-                    right: trailingIcon == null ? 0 : 8.0.s,
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: leadingIcon == null
+                          ? 0
+                          : 8.0.s, // 8 move to constants
+                      right: trailingIcon == null ? 0 : 8.0.s,
+                    ),
+                    child: label,
                   ),
-                  child: label,
                 ),
               if (trailingIcon != null) trailingIcon!,
             ],
@@ -95,46 +112,81 @@ class Button extends StatelessWidget {
   }
 
   Color _getBackgroundColor(BuildContext context, ButtonType type) {
-    final Map<ButtonType, Color> colorMap = <ButtonType, Color>{
-      ButtonType.primary: context.theme.appColors.primaryAccent,
-      ButtonType.secondary: context.theme.appColors.tertararyBackground,
-      ButtonType.outlined: Colors.transparent,
-      ButtonType.disabled: context.theme.appColors.sheetLine,
+    return switch (type) {
+      ButtonType.primary => context.theme.appColors.primaryAccent,
+      ButtonType.secondary => context.theme.appColors.tertararyBackground,
+      ButtonType.outlined => Colors.transparent,
+      ButtonType.disabled => context.theme.appColors.sheetLine,
     };
-
-    return colorMap[type] ?? context.theme.appColors.onPrimaryAccent;
   }
 
   Color _getBorderColor(BuildContext context, ButtonType type) {
-    final Map<ButtonType, Color> colorMap = <ButtonType, Color>{
-      ButtonType.primary: context.theme.appColors.onPrimaryAccent,
-      ButtonType.secondary: context.theme.appColors.tertararyBackground,
-      ButtonType.outlined: tintColor ?? context.theme.appColors.strokeElements,
-      ButtonType.disabled: context.theme.appColors.sheetLine,
-    };
-
-    return colorMap[type] ?? context.theme.appColors.onPrimaryAccent;
+    return tintColor ??
+        switch (type) {
+          ButtonType.primary => context.theme.appColors.onPrimaryAccent,
+          ButtonType.secondary => context.theme.appColors.tertararyBackground,
+          ButtonType.outlined => context.theme.appColors.strokeElements,
+          ButtonType.disabled => context.theme.appColors.sheetLine,
+        };
   }
 
   Color _getLabelColor(BuildContext context, ButtonType type) {
-    final Map<ButtonType, Color> colorMap = <ButtonType, Color>{
-      ButtonType.primary: context.theme.appColors.onPrimaryAccent,
-      ButtonType.secondary: context.theme.appColors.primaryText,
-      ButtonType.outlined: tintColor ?? context.theme.appColors.secondaryText,
-      ButtonType.disabled: context.theme.appColors.onPrimaryAccent,
-    };
-
-    return colorMap[type] ?? context.theme.appColors.onPrimaryAccent;
+    return tintColor ??
+        switch (type) {
+          ButtonType.primary => context.theme.appColors.onPrimaryAccent,
+          ButtonType.secondary => context.theme.appColors.primaryText,
+          ButtonType.outlined => context.theme.appColors.secondaryText,
+          ButtonType.disabled => context.theme.appColors.onPrimaryAccent,
+        };
   }
 
   Color _getIconTintColor(BuildContext context, ButtonType type) {
-    final Map<ButtonType, Color> colorMap = <ButtonType, Color>{
-      ButtonType.primary: context.theme.appColors.onPrimaryAccent,
-      ButtonType.secondary: context.theme.appColors.primaryAccent,
-      ButtonType.outlined: context.theme.appColors.secondaryText,
-      ButtonType.disabled: context.theme.appColors.onPrimaryAccent,
-    };
+    return tintColor ??
+        switch (type) {
+          ButtonType.primary => context.theme.appColors.onPrimaryAccent,
+          ButtonType.secondary => context.theme.appColors.primaryAccent,
+          ButtonType.outlined => context.theme.appColors.secondaryText,
+          ButtonType.disabled => context.theme.appColors.onPrimaryAccent,
+        };
+  }
+}
 
-    return colorMap[type] ?? context.theme.appColors.onPrimaryAccent;
+class ButtonLoadingIndicator extends StatelessWidget {
+  const ButtonLoadingIndicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 12.0.s,
+      height: 12.0.s,
+      child: CircularProgressIndicator(
+        strokeWidth: 2.0,
+        color: context.theme.appColors.onPrimaryAccent,
+      ),
+    );
+  }
+}
+
+class ButtonIcon extends StatelessWidget {
+  ButtonIcon(
+    this.path, {
+    super.key,
+    double? size,
+    this.color,
+  }) : size = size ?? 24.0.s;
+
+  final String path;
+  final double size;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: FittedBox(
+        child: ImageIcon(AssetImage(path), color: color),
+      ),
+    );
   }
 }

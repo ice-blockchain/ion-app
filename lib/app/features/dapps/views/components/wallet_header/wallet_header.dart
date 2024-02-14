@@ -82,38 +82,16 @@ class WalletHeader extends HookConsumerWidget {
               children: <Widget>[
                 Button.icon(
                   onPressed: () {},
-                  icon: Image.asset(
-                    Assets.images.fieldSearch.path,
-                    width: 24.0.s,
-                    height: 24.0.s,
-                  ),
+                  icon: ButtonIcon(Assets.images.fieldSearch.path),
                   type: ButtonType.outlined,
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all<Size>(
-                      Size(40.0.s, 40.0.s),
-                    ),
-                    minimumSize: MaterialStateProperty.all<Size>(
-                      Size(40.0.s, 40.0.s),
-                    ),
-                  ),
+                  size: 40.0.s,
                 ),
                 SizedBox(width: 12.0.s),
                 Button.icon(
                   onPressed: () {},
-                  icon: Image.asset(
-                    Assets.images.filter.path,
-                    width: 24.0.s,
-                    height: 24.0.s,
-                  ),
+                  icon: ButtonIcon(Assets.images.filter.path),
                   type: ButtonType.outlined,
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all<Size>(
-                      Size(40.0.s, 40.0.s),
-                    ),
-                    minimumSize: MaterialStateProperty.all<Size>(
-                      Size(40.0.s, 40.0.s),
-                    ),
-                  ),
+                  size: 40.0.s,
                 ),
               ],
             ),

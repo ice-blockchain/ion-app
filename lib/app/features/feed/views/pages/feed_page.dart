@@ -41,11 +41,9 @@ class FeedPage extends IceSimplePage {
                           ? Icons.arrow_drop_up_rounded
                           : Icons.arrow_drop_down_rounded,
                     ),
-                    leadingIcon: Image.asset(
+                    leadingIcon: ButtonIcon(
                       Assets.images.foo.path,
-                      width: 30.0.s,
-                      height: 30.0.s,
-                      fit: BoxFit.cover,
+                      size: 30.0.s,
                     ),
                     label: Text(
                       selected.value.toString(),

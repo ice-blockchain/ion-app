@@ -4,6 +4,7 @@ class _ButtonWithIcon extends Button {
   _ButtonWithIcon({
     super.key,
     super.type,
+    super.tintColor,
     required super.onPressed,
     required Widget icon,
     ButtonStyle style = const ButtonStyle(),
@@ -13,6 +14,7 @@ class _ButtonWithIcon extends Button {
           style: style.merge(
             OutlinedButton.styleFrom(
               fixedSize: Size.square(size ?? 56.0.s),
+              minimumSize: Size.zero,
               padding: EdgeInsets.zero,
             ),
           ),

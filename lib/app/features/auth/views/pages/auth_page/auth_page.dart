@@ -70,17 +70,8 @@ class AuthPage extends IceSimplePage {
             Center(
               child: Button(
                 trailingIcon: authState is AuthenticationLoading
-                    ? SizedBox(
-                        height: 10.0.s,
-                        width: 10.0.s,
-                        child: const CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                      )
-                    : ImageIcon(
-                        AssetImage(Assets.images.buttonNext.path),
-                        size: 16.0.s,
-                      ),
+                    ? const ButtonLoadingIndicator()
+                    : ButtonIcon(Assets.images.buttonNext.path),
                 onPressed: () => <void>{
                   emailFormKey.currentState?.reset(),
                   ref
@@ -102,9 +93,8 @@ class AuthPage extends IceSimplePage {
             Center(
               child: Button(
                 type: ButtonType.outlined,
-                leadingIcon: ImageIcon(
-                  AssetImage(Assets.images.phone.path),
-                  size: 24.0.s,
+                leadingIcon: ButtonIcon(
+                  Assets.images.phone.path,
                   color: context.theme.appColors.secondaryText,
                 ),
                 onPressed: () {

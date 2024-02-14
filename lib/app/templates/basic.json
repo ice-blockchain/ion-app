@@ -110,9 +110,8 @@
       "paddingBottom": 0
     },
     "iconButton": {
-      "width": 56,
-      "height": 56,
-      "backgroundColor": "#0166FF"
+      "width": 24,
+      "height": 24
     },
     "icon": {
       "width": 24,
