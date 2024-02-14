@@ -23,8 +23,8 @@ abstract class IcePage<Payload> extends HookConsumerWidget {
       _payload,
     );
 
-    return ControlsConfigContext(
-      controlsConfig: page(ref, _route.name)?.controls,
+    return ComponentsConfigContext(
+      componentsConfig: page(ref, _route.name)?.components,
       child: pageWidget,
     );
   }
@@ -37,24 +37,24 @@ abstract class IcePage<Payload> extends HookConsumerWidget {
 }
 
 //TODO::rewrite with ProviderScope
-class ControlsConfigContext extends InheritedWidget {
-  const ControlsConfigContext({
-    required this.controlsConfig,
+class ComponentsConfigContext extends InheritedWidget {
+  const ComponentsConfigContext({
+    required this.componentsConfig,
     required super.child,
   });
 
-  final Map<String, TemplateConfigControl>? controlsConfig;
+  final Map<String, TemplateConfigComponent>? componentsConfig;
 
-  static ControlsConfigContext of(BuildContext context) {
-    final ControlsConfigContext? result =
-        context.dependOnInheritedWidgetOfExactType<ControlsConfigContext>();
+  static ComponentsConfigContext of(BuildContext context) {
+    final ComponentsConfigContext? result =
+        context.dependOnInheritedWidgetOfExactType<ComponentsConfigContext>();
     assert(result != null, 'No ControlsConfigContext found in context');
     return result!;
   }
 
   @override
-  bool updateShouldNotify(ControlsConfigContext oldWidget) =>
-      controlsConfig != oldWidget.controlsConfig;
+  bool updateShouldNotify(ComponentsConfigContext oldWidget) =>
+      componentsConfig != oldWidget.componentsConfig;
 }
 
 typedef IceSimplePage = IcePage<void>;

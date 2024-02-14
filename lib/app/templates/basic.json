@@ -121,7 +121,7 @@
   "config": {
     "pages": {
       "dapps": {
-        "controls": {
+        "components": {
           "featured": {
             "hidden": false,
             "variant": 1
