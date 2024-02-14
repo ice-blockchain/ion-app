@@ -40,7 +40,7 @@ class NostrLogin extends IceSimplePage {
                 children: <Widget>[
                   InputField(
                     leadingIcon: ImageIcon(
-                      AssetImage(Assets.images.fieldPrivatekey.path),
+                      AssetImage(Assets.images.icons.iconFieldPrivatekey.path),
                     ),
                     label: context.i18n.nostr_login_input_private_key,
                     controller: privateKeyController.controller,
@@ -54,7 +54,7 @@ class NostrLogin extends IceSimplePage {
                   Center(
                     child: Button(
                       leadingIcon: ButtonIcon(
-                        Assets.images.profilePaste.path,
+                        Assets.images.icons.iconProfilePaste.path,
                       ),
                       onPressed: () {},
                       type: ButtonType.disabled,

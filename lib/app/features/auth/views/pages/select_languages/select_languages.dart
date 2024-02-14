@@ -121,10 +121,12 @@ class SelectLanguages extends IceSimplePage {
                                     width: 30.0.s,
                                     child: isSelected
                                         ? Image.asset(
-                                            Assets.images.checkboxon.path,
+                                            Assets.images.icons
+                                                .iconBlockCheckboxOn.path,
                                           )
                                         : Image.asset(
-                                            Assets.images.checkboxoff.path,
+                                            Assets.images.icons
+                                                .iconBlockCheckboxOff.path,
                                           ),
                                   ),
                                 ],

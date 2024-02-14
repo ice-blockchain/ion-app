@@ -45,7 +45,7 @@ class AuthPage extends IceSimplePage {
             if (isEmailMode)
               InputField(
                 leadingIcon: Image.asset(
-                  Assets.images.fieldEmail.path,
+                  Assets.images.icons.iconFieldEmail.path,
                   color: context.theme.appColors.primaryText,
                 ),
                 label: context.i18n.auth_signIn_input_email,
@@ -71,7 +71,7 @@ class AuthPage extends IceSimplePage {
               child: Button(
                 trailingIcon: authState is AuthenticationLoading
                     ? const ButtonLoadingIndicator()
-                    : ButtonIcon(Assets.images.buttonNext.path),
+                    : ButtonIcon(Assets.images.icons.iconButtonNext.path),
                 onPressed: () => <void>{
                   emailFormKey.currentState?.reset(),
                   ref
@@ -94,7 +94,7 @@ class AuthPage extends IceSimplePage {
               child: Button(
                 type: ButtonType.outlined,
                 leadingIcon: ButtonIcon(
-                  Assets.images.phone.path,
+                  Assets.images.icons.iconFieldPhone.path,
                   color: context.theme.appColors.secondaryText,
                 ),
                 onPressed: () {

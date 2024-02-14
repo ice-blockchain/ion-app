@@ -12,8 +12,8 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 0,
-        iconOff: Assets.images.itemDappConditionOff.path,
-        iconOn: Assets.images.itemDappConditionOn.path,
+        iconOff: Assets.images.icons.iconDappOff.path,
+        iconOn: Assets.images.icons.iconDappOn.path,
       ),
     ),
     NavigationDestination(
@@ -21,8 +21,8 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 1,
-        iconOff: Assets.images.itemChatConditionOff.path,
-        iconOn: Assets.images.itemChatConditionOn.path,
+        iconOff: Assets.images.icons.iconChatOff.path,
+        iconOn: Assets.images.icons.iconChatOn.path,
       ),
     ),
     NavigationDestination(
@@ -30,8 +30,8 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 2,
-        iconOff: Assets.images.itemWalletConditionOff.path,
-        iconOn: Assets.images.itemWalletConditionOn.path,
+        iconOff: Assets.images.icons.iconButtonManageWallet.path,
+        iconOn: Assets.images.icons.iconButtonManageWallet.path,
       ),
     ),
   ];

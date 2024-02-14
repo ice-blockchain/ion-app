@@ -17,14 +17,14 @@ enum SocialButtonType {
 
   String get buttonIcon {
     return switch (this) {
-      SocialButtonType.apple => Assets.images.apple.path,
-      SocialButtonType.nostr => Assets.images.nostr.path,
-      SocialButtonType.x => Assets.images.x.path,
-      SocialButtonType.fb => Assets.images.facebook.path,
-      SocialButtonType.github => Assets.images.github.path,
-      SocialButtonType.discord => Assets.images.discord.path,
-      SocialButtonType.linkedin => Assets.images.linkedin.path,
-      SocialButtonType.expand => Assets.images.loginDropup.path,
+      SocialButtonType.apple => Assets.images.icons.iconLoginApplelogo.path,
+      SocialButtonType.nostr => Assets.images.icons.iconLoginNostrlogo.path,
+      SocialButtonType.x => Assets.images.icons.iconLoginXlogo.path,
+      SocialButtonType.fb => Assets.images.icons.iconLoginFacebook.path,
+      SocialButtonType.github => Assets.images.icons.iconLoginGithub.path,
+      SocialButtonType.discord => Assets.images.icons.iconLoginDiscord.path,
+      SocialButtonType.linkedin => Assets.images.icons.iconLoginLinkedin.path,
+      SocialButtonType.expand => Assets.images.icons.iconLoginDropup.path,
     };
   }
 }
@@ -93,8 +93,8 @@ class _SocialsState extends State<Socials> {
 
     if (type == SocialButtonType.expand) {
       socialIcon = isSecondRowVisible
-          ? Assets.images.loginDropup.path
-          : Assets.images.loginDropdown.path;
+          ? Assets.images.icons.iconLoginDropup.path
+          : Assets.images.icons.iconLoginDropdown.path;
     }
 
     return Button.icon(

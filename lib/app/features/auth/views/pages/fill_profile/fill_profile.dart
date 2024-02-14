@@ -137,8 +137,9 @@ class FillProfile extends IceSimplePage {
               ),
               InputField(
                 // autofocus: true,
-                leadingIcon:
-                    ImageIcon(AssetImage(Assets.images.fieldName.path)),
+                leadingIcon: ImageIcon(
+                  AssetImage(Assets.images.icons.iconFieldName.path),
+                ),
                 label: context.i18n.fill_profile_input_name,
                 controller: nameController.controller,
                 validator: (String? value) => validateName(value!),
@@ -146,8 +147,9 @@ class FillProfile extends IceSimplePage {
                 // key: nameFieldKey,
               ),
               InputField(
-                leadingIcon:
-                    ImageIcon(AssetImage(Assets.images.fieldNickname.path)),
+                leadingIcon: ImageIcon(
+                  AssetImage(Assets.images.icons.iconFieldNickname.path),
+                ),
                 label: context.i18n.fill_profile_input_nickname,
                 controller: nicknameController.controller,
                 validator: (String? value) => validateNickname(value!),
@@ -156,8 +158,9 @@ class FillProfile extends IceSimplePage {
                 // textInputAction: TextInputAction.next,
               ),
               InputField(
-                leadingIcon:
-                    ImageIcon(AssetImage(Assets.images.fieldInviter.path)),
+                leadingIcon: ImageIcon(
+                  AssetImage(Assets.images.icons.iconFieldInviter.path),
+                ),
                 label: context.i18n.fill_profile_input_who_invited,
                 controller: inviterController.controller,
                 validator: (String? value) => validateWhoInvited(value!),
@@ -170,7 +173,8 @@ class FillProfile extends IceSimplePage {
               ),
               Center(
                 child: Button(
-                  leadingIcon: ButtonIcon(Assets.images.profileSave.path),
+                  leadingIcon:
+                      ButtonIcon(Assets.images.icons.iconProfileSave.path),
                   onPressed: onSave,
                   label: Text(context.i18n.button_save),
                   mainAxisSize: MainAxisSize.max,

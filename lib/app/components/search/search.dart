@@ -67,7 +67,7 @@ class _SearchState extends State<Search> {
                 prefix: Padding(
                   padding: EdgeInsets.only(left: 12.0.s),
                   child: ImageIcon(
-                    AssetImage(Assets.images.search.path),
+                    AssetImage(Assets.images.icons.iconFieldSearch.path),
                     color: context.theme.appColors.tertararyText,
                     size: 14.0.s,
                   ),

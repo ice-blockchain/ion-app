@@ -149,8 +149,8 @@ class DiscoverCreators extends IceSimplePage {
                                                 top: 2.0.s,
                                               ),
                                               child: Image.asset(
-                                                Assets
-                                                    .images.verifiedBadge.path,
+                                                Assets.images.icons
+                                                    .iconBadgeVerify.path,
                                                 width: 16.0.s,
                                                 height: 16.0.s,
                                               ),

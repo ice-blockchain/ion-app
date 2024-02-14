@@ -49,7 +49,7 @@ class SectionHeader extends StatelessWidget {
                     height: 24.0.s, // Set the height of the button
                     child: Center(
                       child: Image.asset(
-                        Assets.images.nextArrow.path,
+                        Assets.images.icons.iconButtonNext.path,
                       ),
                     ),
                   ),

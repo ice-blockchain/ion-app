@@ -55,7 +55,7 @@ class CheckEmail extends IceSimplePage {
                       email,
                       style: context.theme.appTextThemes.subtitle,
                     ),
-                    Image.asset(Assets.images.link.path),
+                    Image.asset(Assets.images.icons.iconEditLink.path),
                   ],
                 ),
                 Padding(

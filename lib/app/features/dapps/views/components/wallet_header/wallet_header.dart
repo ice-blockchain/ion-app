@@ -62,7 +62,7 @@ class WalletHeader extends HookConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Image.asset(
-                    Assets.images.walletWalletblue.path,
+                    Assets.images.wallet.walletWalletblue.path,
                     width: 28.0.s,
                     height: 28.0.s,
                     fit: BoxFit.cover,
@@ -82,7 +82,7 @@ class WalletHeader extends HookConsumerWidget {
               children: <Widget>[
                 Button.icon(
                   onPressed: () {},
-                  icon: ButtonIcon(Assets.images.fieldSearch.path),
+                  icon: ButtonIcon(Assets.images.icons.iconFieldSearch.path),
                   type: ButtonType.outlined,
                   size: 40.0.s,
                 ),

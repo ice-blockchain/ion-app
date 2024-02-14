@@ -46,7 +46,7 @@ class EmailInput extends HookWidget {
                         children: <Widget>[
                           SizedBox(width: 20.0.s),
                           Image.asset(
-                            Assets.images.fieldEmail.path,
+                            Assets.images.icons.iconFieldEmail.path,
                             color: context.theme.appColors.primaryText,
                           ),
                           SizedBox(width: 6.0.s),
