@@ -11,12 +11,12 @@ class TabIcon extends StatelessWidget {
 
   final int currentIndex;
   final int tabIndex;
-  final String iconOff;
-  final String iconOn;
+  final Widget iconOff;
+  final Widget iconOn;
 
   @override
   Widget build(BuildContext context) {
     final bool isSelected = currentIndex == tabIndex;
-    return Image.asset(isSelected ? iconOn : iconOff);
+    return isSelected ? iconOn : iconOff;
   }
 }

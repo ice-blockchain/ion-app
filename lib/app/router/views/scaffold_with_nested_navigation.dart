@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/views/tab_icon.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 List<NavigationDestination> getDestinations(
   StatefulNavigationShell navigationShell,
+  BuildContext context,
 ) {
   return <NavigationDestination>[
     NavigationDestination(
@@ -12,8 +15,14 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 0,
-        iconOff: Assets.images.icons.iconDappOff.path,
-        iconOn: Assets.images.icons.iconDappOn.path,
+        iconOff: Image.asset(
+          Assets.images.icons.iconDappOff.path,
+          color: context.theme.appColors.tertararyText,
+        ),
+        iconOn: Image.asset(
+          Assets.images.icons.iconDappOff.path,
+          color: context.theme.appColors.primaryAccent,
+        ),
       ),
     ),
     NavigationDestination(
@@ -21,8 +30,14 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 1,
-        iconOff: Assets.images.icons.iconChatOff.path,
-        iconOn: Assets.images.icons.iconChatOn.path,
+        iconOff: Image.asset(
+          Assets.images.icons.iconChatOff.path,
+          color: context.theme.appColors.tertararyText,
+        ),
+        iconOn: Image.asset(
+          Assets.images.icons.iconChatOff.path,
+          color: context.theme.appColors.primaryAccent,
+        ),
       ),
     ),
     NavigationDestination(
@@ -30,8 +45,14 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 2,
-        iconOff: Assets.images.icons.iconButtonManageWallet.path,
-        iconOn: Assets.images.icons.iconButtonManageWallet.path,
+        iconOff: Image.asset(
+          Assets.images.icons.iconButtonManageWallet.path,
+          color: context.theme.appColors.tertararyText,
+        ),
+        iconOn: Image.asset(
+          Assets.images.icons.iconButtonManageWallet.path,
+          color: context.theme.appColors.primaryAccent,
+        ),
       ),
     ),
   ];
@@ -55,8 +76,10 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<NavigationDestination> destinations =
-        getDestinations(navigationShell);
+    final List<NavigationDestination> destinations = getDestinations(
+      navigationShell,
+      context,
+    );
 
     final int defaultTabIndex = destinations.indexWhere(
       (NavigationDestination destination) => destination.label == 'DApps',

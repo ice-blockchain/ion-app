@@ -123,7 +123,7 @@ class FillProfile extends IceSimplePage {
                         height: 36.0.s,
                         decoration: const BoxDecoration(),
                         child: Image.asset(
-                          Assets.images.icons.iconCamera.path,
+                          Assets.images.misc.iconCamera.path,
                           width: 36.0.s,
                           height: 36.0.s,
                         ),
