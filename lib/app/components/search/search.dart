@@ -10,10 +10,14 @@ class Search extends StatefulWidget {
     super.key,
     required this.onTextChanged,
     required this.onClearText,
+    this.onFocus,
+    this.onBlur,
   });
 
   final Function(String) onTextChanged;
   final VoidCallback onClearText;
+  final VoidCallback? onFocus;
+  final VoidCallback? onBlur;
 
   @override
   State<Search> createState() => _SearchState();
@@ -28,6 +32,11 @@ class _SearchState extends State<Search> {
   void initState() {
     super.initState();
     _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        widget.onFocus?.call();
+      } else {
+        widget.onBlur?.call();
+      }
       setState(() {
         _isFocused = _focusNode.hasFocus;
       });
@@ -46,63 +55,60 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.0.s, vertical: 5.0.s),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: SizedBox(
-              height: 42.0.s,
-              child: CupertinoTextField(
-                focusNode: _focusNode,
-                decoration: BoxDecoration(
-                  color: context.theme.appColors.primaryBackground,
-                  borderRadius: BorderRadius.circular(16.0.s),
-                ),
-                controller: _controller,
-                placeholder: context.i18n.search_placeholder,
-                placeholderStyle: context.theme.appTextThemes.body.copyWith(
-                  color: context.theme.appColors.tertararyText,
-                ),
-                prefix: Padding(
-                  padding: EdgeInsets.only(left: 12.0.s),
-                  child: ImageIcon(
-                    AssetImage(Assets.images.icons.iconFieldSearch.path),
-                    color: context.theme.appColors.tertararyText,
-                    size: 14.0.s,
-                  ),
-                ),
-                clearButtonMode: OverlayVisibilityMode.editing,
-                onChanged: widget.onTextChanged,
-                suffixMode: OverlayVisibilityMode.editing,
-                suffix: _controller.text.isNotEmpty
-                    ? GestureDetector(
-                        onTap: _onClearTapped,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 12.0.s),
-                          child: const Icon(
-                            CupertinoIcons.clear_circled,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      )
-                    : null,
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: SizedBox(
+            height: 42.0.s,
+            child: CupertinoTextField(
+              focusNode: _focusNode,
+              decoration: BoxDecoration(
+                color: context.theme.appColors.primaryBackground,
+                borderRadius: BorderRadius.circular(16.0.s),
               ),
+              controller: _controller,
+              placeholder: context.i18n.search_placeholder,
+              placeholderStyle: context.theme.appTextThemes.body.copyWith(
+                color: context.theme.appColors.tertararyText,
+              ),
+              prefix: Padding(
+                padding: EdgeInsets.only(left: 12.0.s),
+                child: ImageIcon(
+                  AssetImage(Assets.images.icons.iconFieldSearch.path),
+                  color: context.theme.appColors.tertararyText,
+                  size: 14.0.s,
+                ),
+              ),
+              clearButtonMode: OverlayVisibilityMode.editing,
+              onChanged: widget.onTextChanged,
+              suffixMode: OverlayVisibilityMode.editing,
+              suffix: _controller.text.isNotEmpty
+                  ? GestureDetector(
+                      onTap: _onClearTapped,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 12.0.s),
+                        child: const Icon(
+                          CupertinoIcons.clear_circled,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  : null,
             ),
           ),
-          if (_isFocused)
-            CupertinoButton(
-              onPressed: _onCancelTapped,
-              child: Text(
-                context.i18n.button_cancel,
-                style: context.theme.appTextThemes.caption
-                    .copyWith(color: context.theme.appColors.primaryAccent),
-              ),
-            )
-          else
-            const SizedBox.shrink(),
-        ],
-      ),
+        ),
+        if (_isFocused)
+          CupertinoButton(
+            onPressed: _onCancelTapped,
+            child: Text(
+              context.i18n.button_cancel,
+              style: context.theme.appTextThemes.caption
+                  .copyWith(color: context.theme.appColors.primaryAccent),
+            ),
+          )
+        else
+          const SizedBox.shrink(),
+      ],
     );
   }
 

@@ -35,7 +35,7 @@ class WalletPage extends IceSimplePage {
                   Icons.arrow_drop_down_rounded,
                 ),
                 leadingIcon: ButtonIcon(
-                  Assets.images.bg.foo.path,
+                  Assets.images.icons.iconButtonAddstroke.path,
                   size: 30.0.s,
                 ),
                 label: Text(
