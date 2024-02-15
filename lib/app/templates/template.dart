@@ -284,7 +284,7 @@ class TemplateConfigPage
     implements TemplateConfigElement {
   const factory TemplateConfigPage({
     bool? hidden,
-    Map<String, TemplateConfigControl>? controls,
+    Map<String, TemplateConfigComponent>? components,
   }) = _TemplateConfigPage;
 
   factory TemplateConfigPage.fromJson(Map<String, dynamic> json) =>
@@ -292,14 +292,14 @@ class TemplateConfigPage
 }
 
 @freezed
-class TemplateConfigControl
-    with _$TemplateConfigControl
+class TemplateConfigComponent
+    with _$TemplateConfigComponent
     implements TemplateConfigElement {
-  const factory TemplateConfigControl({
+  const factory TemplateConfigComponent({
     bool? hidden,
     int? variant,
-  }) = _TemplateConfigControl;
+  }) = _TemplateConfigComponent;
 
-  factory TemplateConfigControl.fromJson(Map<String, dynamic> json) =>
-      _$TemplateConfigControlFromJson(json);
+  factory TemplateConfigComponent.fromJson(Map<String, dynamic> json) =>
+      _$TemplateConfigComponentFromJson(json);
 }
