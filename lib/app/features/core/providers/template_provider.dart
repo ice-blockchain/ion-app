@@ -11,7 +11,7 @@ late TemplateTheme _templateTheme;
 
 TemplateTheme get appTemplateTheme => _templateTheme;
 
-@riverpod
+@Riverpod(keepAlive: true)
 class AppTemplate extends _$AppTemplate {
   @override
   Future<Template> build() => _fetch();
