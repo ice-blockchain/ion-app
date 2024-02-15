@@ -15,14 +15,7 @@ class ExploreControls extends HookWidget {
       children: <Widget>[
         Expanded(
           child: Search(
-            onClearText: () {},
             onTextChanged: (String st) {},
-            onFocus: () {
-              focused.value = true;
-            },
-            onBlur: () {
-              focused.value = false;
-            },
           ),
         ),
         if (!focused.value)

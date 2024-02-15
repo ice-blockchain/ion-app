@@ -48,7 +48,6 @@ class DAppsList extends IcePage<AppsRouteData> {
                   children: <Widget>[
                     Search(
                       onTextChanged: (String value) => searchText.value = value,
-                      onClearText: () => searchText.value = '',
                     ),
                     Expanded(
                       child: ListView.builder(

@@ -54,9 +54,6 @@ class SelectLanguages extends IceSimplePage {
                       child: Search(
                         onTextChanged: (String value) =>
                             searchText.value = value,
-                        onClearText: () {
-                          searchText.value = '';
-                        },
                       ),
                     ),
                     Expanded(
