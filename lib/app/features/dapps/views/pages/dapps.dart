@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -30,9 +29,9 @@ class DAppsPage extends IceSimplePage {
               title: context.i18n.dapps_section_title_highest_ranked,
               items: featured,
               onPress: () {
-                context.goNamed(
-                  IceRoutes.appsList.name,
-                  extra: AppsRouteData(
+                IceRoutes.appsList.go(
+                  context,
+                  payload: AppsRouteData(
                     title: context.i18n.dapps_section_title_highest_ranked,
                     items: featured,
                   ),
@@ -43,9 +42,9 @@ class DAppsPage extends IceSimplePage {
               title: context.i18n.dapps_section_title_recently_added,
               items: featured,
               onPress: () {
-                context.goNamed(
-                  IceRoutes.appsList.name,
-                  extra: AppsRouteData(
+                IceRoutes.appsList.go(
+                  context,
+                  payload: AppsRouteData(
                     title: context.i18n.dapps_section_title_recently_added,
                     items: featured,
                   ),
@@ -54,9 +53,9 @@ class DAppsPage extends IceSimplePage {
             ),
             Favourites(
               onPress: () {
-                context.goNamed(
-                  IceRoutes.appsList.name,
-                  extra: AppsRouteData(
+                IceRoutes.appsList.go(
+                  context,
+                  payload: AppsRouteData(
                     title: context.i18n.dapps_section_title_favourites,
                     items: featured,
                   ),

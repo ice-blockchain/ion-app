@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_fields.dart';
@@ -57,7 +56,7 @@ class AuthPage extends IceSimplePage {
               InputField(
                 leadingIcon: CountryCodeInput(
                   country: countries[1],
-                  onTap: () => context.goNamed(IceRoutes.selectCountries.name),
+                  onTap: () => IceRoutes.selectCountries.go(context),
                 ),
                 label: context.i18n.auth_signIn_input_phone_number,
                 controller: numberController.controller,
@@ -114,17 +113,17 @@ class AuthPage extends IceSimplePage {
                 onSocialButtonPressed: (SocialButtonType type) {
                   switch (type) {
                     case SocialButtonType.apple:
-                      context.goNamed(IceRoutes.checkEmail.name);
+                      IceRoutes.checkEmail.go(context);
                     case SocialButtonType.nostr:
-                      context.goNamed(IceRoutes.nostrAuth.name);
+                      IceRoutes.nostrAuth.go(context);
                     case SocialButtonType.x:
-                      context.goNamed(IceRoutes.fillProfile.name);
+                      IceRoutes.fillProfile.go(context);
                     case SocialButtonType.fb:
-                      context.goNamed(IceRoutes.enterCode.name);
+                      IceRoutes.enterCode.go(context);
                     case SocialButtonType.github:
-                      context.goNamed(IceRoutes.selectLanguages.name);
+                      IceRoutes.selectLanguages.go(context);
                     case SocialButtonType.discord:
-                      context.goNamed(IceRoutes.discoverCreators.name);
+                      IceRoutes.discoverCreators.go(context);
                     case SocialButtonType.linkedin:
                       break;
                     default:
