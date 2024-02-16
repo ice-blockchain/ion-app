@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/drop_down_menu/drop_down_menu.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/components/explore_controls/explore_controls.dart';
@@ -18,11 +19,10 @@ class FeedPage extends IceSimplePage {
     final ValueNotifier<FeedType> selected = useState(FeedType.feed);
 
     return Scaffold(
-      body: Center(
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const ExploreControls(),
+            ScreenSideOffset.small(child: const ExploreControls()),
             DropDownMenu(
               builder: (
                 BuildContext context,
