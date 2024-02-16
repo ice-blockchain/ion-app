@@ -7,6 +7,7 @@ import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/explore_controls/explore_controls.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/story_list_item/story_list_item.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 enum FeedType { feed, videos, stories }
@@ -24,6 +25,12 @@ class FeedPage extends IceSimplePage {
           children: <Widget>[
             ScreenSideOffset.small(
               child: const ExploreControls(),
+            ),
+            StoryListItem(
+              onPressed: () {},
+              imageUrl:
+                  'https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg',
+              label: 'youasdasd sdf sdf s',
             ),
             DropDownMenu(
               builder: (
