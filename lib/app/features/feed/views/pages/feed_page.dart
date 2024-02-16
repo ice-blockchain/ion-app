@@ -22,7 +22,9 @@ class FeedPage extends IceSimplePage {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            ScreenSideOffset.small(child: const ExploreControls()),
+            ScreenSideOffset.small(
+              child: const ExploreControls(),
+            ),
             DropDownMenu(
               builder: (
                 BuildContext context,
