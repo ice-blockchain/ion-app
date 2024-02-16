@@ -17,7 +17,8 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   AuthState _authState = const AuthenticationUnknown();
   AsyncValue<void>? _init;
 
-  final Map<IceRoutes, String> _routesLocations = <IceRoutes, String>{};
+  final Map<IceRoutes<dynamic>, String> _routesLocations =
+      <IceRoutes<dynamic>, String>{};
 
   // ignore_for_file: avoid_manual_providers_as_generated_provider_dependency
   @override
@@ -33,7 +34,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     });
   }
 
-  String _location(IceRoutes route, GoRouterState state) {
+  String _location(IceRoutes<dynamic> route, GoRouterState state) {
     final String? location = _routesLocations[route];
     if (location == null) {
       return _routesLocations[route] =
@@ -45,7 +46,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
 
   // ignore: avoid_build_context_in_providers
   String? redirect(BuildContext context, GoRouterState state) {
-    final IceRoutes? route = _redirectNamed(state);
+    final IceRoutes<dynamic>? route = _redirectNamed(state);
     if (route != null) {
       return _location(route, state);
     }
@@ -53,7 +54,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     return null;
   }
 
-  IceRoutes? _redirectNamed(GoRouterState state) {
+  IceRoutes<dynamic>? _redirectNamed(GoRouterState state) {
     //TODO: check that its part of intro navigation flow
     final bool isAuthInProgress =
         state.matchedLocation.startsWith(_location(IceRoutes.intro, state));

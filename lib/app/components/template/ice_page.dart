@@ -6,11 +6,11 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/templates/template.dart';
 
 abstract class IcePage<Payload> extends HookConsumerWidget {
-  const IcePage(IceRoutes route, Payload? payload)
-      : _payload = payload,
-        _route = route;
+  const IcePage(IceRoutes<dynamic> route, dynamic payload)
+      : _payload = payload as Payload?,
+        _route = route as IceRoutes<Payload>;
 
-  final IceRoutes _route;
+  final IceRoutes<Payload> _route;
 
   final Payload? _payload;
 

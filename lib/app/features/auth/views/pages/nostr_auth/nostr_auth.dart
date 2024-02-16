@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
@@ -56,7 +55,7 @@ class NostrAuth extends IceSimplePage {
                       Assets.images.icons.iconProfileSave.path,
                     ),
                     onPressed: () {
-                      context.goNamed(IceRoutes.nostrLogin.name);
+                      IceRoutes.nostrLogin.go(context);
                     },
                     label: Text(context.i18n.button_login),
                     mainAxisSize: MainAxisSize.max,

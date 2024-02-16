@@ -6,15 +6,20 @@ import 'package:ice/app/components/search/search.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/dapps/views/components/apps.dart';
 import 'package:ice/app/features/dapps/views/components/apps_collection.dart';
 import 'package:ice/app/features/dapps/views/components/nav_header_offset/nav_header_offset.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 
-class DAppsList extends IceSimplePage {
+class DAppsList extends IcePage<AppsRouteData> {
   const DAppsList(super.route, super.payload);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
+  Widget buildPage(
+    BuildContext context,
+    WidgetRef ref,
+    AppsRouteData? payload,
+  ) {
     final ValueNotifier<String> searchText = useState('');
 
     final List<DAppItem> filteredApps = searchText.value.isEmpty

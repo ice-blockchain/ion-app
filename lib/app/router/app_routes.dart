@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
 import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
@@ -12,27 +14,28 @@ import 'package:ice/app/features/auth/views/pages/select_languages/select_langua
 import 'package:ice/app/features/chat/views/pages/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
+import 'package:ice/app/features/dapps/views/components/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ice/app/features/wallet/views/pages/inner_wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page.dart';
 
-const IceRoutes initialPage = IceRoutes.splash;
+const IceRoutes<void> initialPage = IceRoutes.splash;
 
-List<IceRoutes> iceRootRoutes = <IceRoutes>[
+List<IceRoutes<dynamic>> iceRootRoutes = <IceRoutes<dynamic>>[
   IceRoutes.splash,
   IceRoutes.error,
   IceRoutes.intro,
   IceRoutes.home,
 ];
 
-enum IceRoutes {
+enum IceRoutes<PayloadType> {
   splash(SplashPage.new),
   error(ErrorPage.new),
   intro(
     IntroPage.new,
     type: IceRouteType.bottomSheet,
-    children: <IceRoutes>[
+    children: <IceRoutes<dynamic>>[
       IceRoutes.auth,
       IceRoutes.selectCountries,
       IceRoutes.selectLanguages,
@@ -56,7 +59,7 @@ enum IceRoutes {
   home(
     AbsentPage.new,
     type: IceRouteType.bottomTabs,
-    children: <IceRoutes>[
+    children: <IceRoutes<dynamic>>[
       IceRoutes.dapps,
       IceRoutes.chat,
       IceRoutes.wallet,
@@ -64,15 +67,15 @@ enum IceRoutes {
   ),
   dapps(
     DAppsPage.new,
-    children: <IceRoutes>[
+    children: <IceRoutes<dynamic>>[
       IceRoutes.appsList,
     ],
   ),
-  appsList(DAppsList.new),
+  appsList<AppsRouteData>(DAppsList.new),
   chat(ChatPage.new),
   wallet(
     WalletPage.new,
-    children: <IceRoutes>[
+    children: <IceRoutes<dynamic>>[
       IceRoutes.innerWallet,
     ],
   ),
@@ -86,14 +89,25 @@ enum IceRoutes {
   });
 
   final IceRouteType type;
-  final List<IceRoutes>? children;
-  final IcePageBuilder builder;
+  final List<IceRoutes<dynamic>>? children;
+  final IcePageBuilder<PayloadType> builder;
+
+  void go(BuildContext context, {PayloadType? payload}) =>
+      context.goNamed(name, extra: payload);
+
+  void push(BuildContext context, {PayloadType? payload}) =>
+      context.pushNamed(name, extra: payload);
+
+  void pushReplacement(BuildContext context, {PayloadType? payload}) =>
+      context.pushReplacementNamed(name, extra: payload);
+
+  void replace(BuildContext context, {PayloadType? payload}) =>
+      context.replaceNamed(name, extra: payload);
 }
 
-typedef IcePageBuilder<PayloadType, PageType extends IcePage<PayloadType>>
-    = PageType Function(
-  IceRoutes route,
-  PayloadType? payload,
+typedef IcePageBuilder<PayloadType> = IcePage<PayloadType> Function(
+  IceRoutes<PayloadType> route,
+  dynamic payload,
 );
 
 enum IceRouteType {

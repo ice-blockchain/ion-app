@@ -7,13 +7,15 @@ import 'package:ice/app/router/views/scaffold_with_bottom_sheet.dart';
 import 'package:ice/app/router/views/scaffold_with_nested_navigation.dart';
 
 List<RouteBase> get appRoutes {
-  return iceRootRoutes.map(_convertIntoRoute).toList();
+  final Iterable<RouteBase> iterable =
+      iceRootRoutes.map(<T>(IceRoutes<T> route) => _convertIntoRoute<T>(route));
+  return iterable.toList();
 }
 
 typedef WidgetBuilder = Widget Function();
 
-RouteBase _convertIntoRoute(
-  IceRoutes route, {
+RouteBase _convertIntoRoute<T>(
+  IceRoutes<T> route, {
   IceRouteType? parentType,
   GlobalKey<NavigatorState>? parentNavigatorKey,
 }) {
@@ -34,16 +36,18 @@ RouteBase _convertIntoRoute(
     path: path,
     name: name,
     parentNavigatorKey: parentNavigatorKey,
-    pageBuilder: _providePageBuilder<void>(route, parentType),
-    routes: _buildChildren(route),
+    pageBuilder: _providePageBuilder<T>(route, parentType),
+    routes: _buildChildren<T>(route),
   );
 }
 
 GoRouterPageBuilder _providePageBuilder<T>(
-  IceRoutes route,
+  IceRoutes<T> route,
   IceRouteType? parentType,
 ) {
-  Widget widgetBuild(GoRouterState state) => route.builder(route, state.extra);
+  Widget widgetBuild(GoRouterState state) {
+    return route.builder(route, state.extra);
+  }
 
   Page<T> simple(BuildContext context, GoRouterState state) => CupertinoPage<T>(
         key: state.pageKey,
@@ -82,8 +86,8 @@ CustomTransitionPage<T> _buildPageWithFadeTransition<T>({
   );
 }
 
-List<RouteBase> _buildChildren(IceRoutes route) {
-  final List<IceRoutes> children = route.children.emptyOrValue;
+List<RouteBase> _buildChildren<T>(IceRoutes<T> route) {
+  final List<IceRoutes<dynamic>> children = route.children.emptyOrValue;
   if (children.isEmpty) {
     return const <RouteBase>[];
   }
@@ -107,29 +111,28 @@ List<RouteBase> _buildChildren(IceRoutes route) {
               );
   }
 
-  final List<RouteBase> childrenRoutes = children
-      .map(
-        (IceRoutes child) => _convertIntoRoute(
-          child,
-          parentType: route.type == IceRouteType.bottomTabs ? null : route.type,
-          parentNavigatorKey: parentNavigatorKey,
-        ),
-      )
-      .toList();
+  final Iterable<RouteBase> iterable = children.map(
+    <T>(IceRoutes<T> child) => _convertIntoRoute<T>(
+      child,
+      parentType: route.type == IceRouteType.bottomTabs ? null : route.type,
+      parentNavigatorKey: parentNavigatorKey,
+    ),
+  );
+  final List<RouteBase> childrenRoutes = iterable.toList();
 
   return processChildren(childrenRoutes);
 }
 
 WidgetBuilder
     _convertToWidgetBuilder<PayloadType, PageType extends IcePage<PayloadType>>(
-  IceRoutes route,
+  IceRoutes<PayloadType> route,
   GoRouterState state,
 ) {
-  return () => route.builder(route, state.extra);
+  return () => route.builder(route, state.extra as PayloadType?);
 }
 
 List<RouteBase> _buildBottomSheetShellRoute<T>(
-  IceRoutes route,
+  IceRoutes<T> route,
   List<RouteBase> children,
   GlobalKey<NavigatorState>? shellNavigatorKey,
 ) {
@@ -149,7 +152,7 @@ List<RouteBase> _buildBottomSheetShellRoute<T>(
   ];
 }
 
-RouteBase _buildBottomTabsRoute<T>(IceRoutes route) {
+RouteBase _buildBottomTabsRoute<T>(IceRoutes<T> route) {
   final List<RouteBase> children = _buildChildren(route);
 
   return StatefulShellRoute.indexedStack(
