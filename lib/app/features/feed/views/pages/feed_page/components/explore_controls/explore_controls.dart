@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/search_input/search_input.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -21,16 +22,18 @@ class ExploreControls extends HookWidget {
     final ValueNotifier<ExploreControlsState> state =
         useExploreControlsState(pageScrollController);
 
-    return Padding(
-      padding: EdgeInsets.only(top: 9.0.s),
-      child: switch (state.value) {
-        ExploreControlsState.initial => _InitialState(
-            onFiltersPressed: () {
-              state.value = ExploreControlsState.filters;
-            },
-          ),
-        ExploreControlsState.filters => const _FiltersState(),
-      },
+    return ScreenSideOffset.small(
+      child: Padding(
+        padding: EdgeInsets.only(top: 9.0.s),
+        child: switch (state.value) {
+          ExploreControlsState.initial => _InitialState(
+              onFiltersPressed: () {
+                state.value = ExploreControlsState.filters;
+              },
+            ),
+          ExploreControlsState.filters => const _FiltersState(),
+        },
+      ),
     );
   }
 }

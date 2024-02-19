@@ -7,6 +7,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/explore_controls/explore_controls.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
 
 enum FeedType { feed, videos, stories }
 
@@ -25,18 +26,18 @@ class FeedPage extends IceSimplePage {
             SliverToBoxAdapter(
               child: Column(
                 children: <Widget>[
-                  ScreenSideOffset.small(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 9.0.s),
-                      child: ExploreControls(
-                        pageScrollController: scrollController,
-                      ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 9.0.s),
+                    child: ExploreControls(
+                      pageScrollController: scrollController,
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0.s),
                     child: const Stories(),
                   ),
+                  const FeedListSeparator(),
+                  const TrendingVideos(),
                   const FeedListSeparator(),
                 ],
               ),
