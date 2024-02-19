@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -21,54 +22,60 @@ class StoryListItem extends StatelessWidget {
   final bool showPlus;
 
   static double get width => 65.0.s;
+  static double get height => 91.0.s;
   static double get plusSize => 18.0.s;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      child: Column(
-        children: <Widget>[
-          Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.bottomCenter,
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(19.5.s),
-                child: CachedNetworkImage(
-                  width: width,
-                  height: width,
-                  imageUrl: getAdaptiveImageUrl(imageUrl, width),
-                  fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: onPressed,
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.bottomCenter,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(19.5.s),
+                  child: CachedNetworkImage(
+                    width: width,
+                    height: width,
+                    imageUrl: getAdaptiveImageUrl(imageUrl, width),
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              Positioned(
-                bottom: -plusSize / 2,
-                child: PlusIcon(
-                  size: plusSize,
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(4.0.s, 8.0.s, 4.0.s, 0),
-            child: Text(
-              label,
-              style: context.theme.appTextThemes.caption3.copyWith(
-                color: context.theme.appColors.primaryText,
-              ),
-              overflow: TextOverflow.ellipsis,
+                if (showPlus)
+                  Positioned(
+                    bottom: -plusSize / 2,
+                    child: _PlusIcon(
+                      size: plusSize,
+                    ),
+                  ),
+              ],
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4.0.s),
+              child: Text(
+                label,
+                style: context.theme.appTextThemes.caption3.copyWith(
+                  color: context.theme.appColors.primaryText,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class PlusIcon extends StatelessWidget {
-  PlusIcon({
-    super.key,
+class _PlusIcon extends StatelessWidget {
+  _PlusIcon({
     double? size,
   }) : size = size ?? 18.0.s;
 

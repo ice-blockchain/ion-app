@@ -22,14 +22,14 @@ class ExploreControls extends HookWidget {
           ),
           Padding(
             padding: EdgeInsets.only(left: 12.0.s),
-            child: ExploreButton(
+            child: _ExploreButton(
               onPressed: () {},
               iconPath: Assets.images.icons.iconHomeNotification.path,
             ),
           ),
           Padding(
             padding: EdgeInsets.only(left: 12.0.s),
-            child: ExploreButton(
+            child: _ExploreButton(
               onPressed: () {},
               iconPath: Assets.images.icons.iconHeaderMenu.path,
             ),
@@ -40,9 +40,8 @@ class ExploreControls extends HookWidget {
   }
 }
 
-class ExploreButton extends StatelessWidget {
-  const ExploreButton({
-    super.key,
+class _ExploreButton extends StatelessWidget {
+  const _ExploreButton({
     required this.iconPath,
     required this.onPressed,
   });
