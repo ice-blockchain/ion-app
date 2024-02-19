@@ -1,0 +1,33 @@
+import 'package:flutter/widgets.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+
+enum ExploreControlsState { initial, filters }
+
+ValueNotifier<ExploreControlsState> useExploreControlsState(
+  ScrollController pageScrollController,
+) {
+  final ValueNotifier<ExploreControlsState> state =
+      useState(ExploreControlsState.initial);
+
+  useEffect(
+    () {
+      void isScrollingNotifierListener() {
+        if (pageScrollController.position.isScrollingNotifier.value) {
+          state.value = ExploreControlsState.initial;
+        }
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        pageScrollController.position.isScrollingNotifier
+            .addListener(isScrollingNotifierListener);
+      });
+      return () {
+        pageScrollController.position.isScrollingNotifier
+            .removeListener(isScrollingNotifierListener);
+      };
+    },
+    <Object?>[pageScrollController],
+  );
+
+  return state;
+}

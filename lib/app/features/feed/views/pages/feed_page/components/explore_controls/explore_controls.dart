@@ -5,37 +5,78 @@ import 'package:ice/app/components/search_input/search_input.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/explore_controls/hooks/use_explore_controls_state.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class ExploreControls extends HookWidget {
-  const ExploreControls({super.key});
+  const ExploreControls({
+    super.key,
+    required this.pageScrollController,
+  });
+
+  final ScrollController pageScrollController;
+
   @override
   Widget build(BuildContext context) {
+    final ValueNotifier<ExploreControlsState> state =
+        useExploreControlsState(pageScrollController);
+
     return Padding(
       padding: EdgeInsets.only(top: 9.0.s),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: SearchInput(
-              onTextChanged: (String st) {},
-            ),
+      child: switch (state.value) {
+        ExploreControlsState.initial => _InitialState(
+            onFiltersPressed: () {
+              state.value = ExploreControlsState.filters;
+            },
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 12.0.s),
-            child: _ExploreButton(
-              onPressed: () {},
-              iconPath: Assets.images.icons.iconHomeNotification.path,
-            ),
+        ExploreControlsState.filters => const _FiltersState(),
+      },
+    );
+  }
+}
+
+class _InitialState extends StatelessWidget {
+  const _InitialState({
+    required this.onFiltersPressed,
+  });
+
+  final VoidCallback onFiltersPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: SearchInput(
+            onTextChanged: (String st) {},
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 12.0.s),
-            child: _ExploreButton(
-              onPressed: () {},
-              iconPath: Assets.images.icons.iconHeaderMenu.path,
-            ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 12.0.s),
+          child: _ExploreButton(
+            onPressed: () {},
+            iconPath: Assets.images.icons.iconHomeNotification.path,
           ),
-        ],
-      ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 12.0.s),
+          child: _ExploreButton(
+            onPressed: onFiltersPressed,
+            iconPath: Assets.images.icons.iconHeaderMenu.path,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _FiltersState extends StatelessWidget {
+  const _FiltersState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Placeholder(
+      fallbackHeight: 40.0.s,
     );
   }
 }

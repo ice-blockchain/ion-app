@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
@@ -14,24 +15,44 @@ class FeedPage extends IceSimplePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
+    final ScrollController scrollController = useScrollController();
+
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              ScreenSideOffset.small(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 9.0.s),
-                  child: const ExploreControls(),
-                ),
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            SliverToBoxAdapter(
+              child: Column(
+                children: <Widget>[
+                  ScreenSideOffset.small(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 9.0.s),
+                      child: ExploreControls(
+                        pageScrollController: scrollController,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0.s),
+                    child: const Stories(),
+                  ),
+                  const FeedListSeparator(),
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0.s),
-                child: const Stories(),
-              ),
-              const FeedListSeparator(),
-            ],
-          ),
+            ),
+            SliverList.separated(
+              itemCount: 20,
+              separatorBuilder: (BuildContext context, int index) {
+                return const FeedListSeparator();
+              },
+              itemBuilder: (BuildContext context, int index) {
+                return const Placeholder(
+                  fallbackHeight: 150,
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
