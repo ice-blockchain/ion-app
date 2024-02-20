@@ -3,7 +3,7 @@ import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/pull_right_menu/components/links_list/links_list_tile_icon.dart';
+import 'package:ice/app/features/user/pages/pull_right_menu_page/components/links_list/links_list_tile_icon.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class LinksListTile extends StatelessWidget {

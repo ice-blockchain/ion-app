@@ -17,7 +17,7 @@ import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/dapps/views/components/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
-import 'package:ice/app/features/pull_right_menu/pull_right_menu_page.dart';
+import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ice/app/features/wallet/views/pages/inner_wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page.dart';
 
@@ -61,7 +61,7 @@ enum IceRoutes<PayloadType> {
     AbsentPage.new,
     type: IceRouteType.bottomTabs,
     children: <IceRoutes<dynamic>>[
-      IceRoutes.dapps,
+      IceRoutes.pullRightMenu,
       IceRoutes.chat,
       IceRoutes.wallet,
     ],

@@ -1,4 +1,4 @@
-import 'package:ice/app/features/core/model/user_data.dart';
+import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_data_provider.g.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/pull_right_menu/components/profile_info/components/background_picture/background_picture.dart';
-import 'package:ice/app/features/pull_right_menu/components/profile_info/components/profile_details/profile_details.dart';
+import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_info/components/background_picture/background_picture.dart';
+import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_info/components/profile_details/profile_details.dart';
 
 class ProfileInfo extends HookWidget {
   const ProfileInfo({

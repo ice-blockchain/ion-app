@@ -18,21 +18,17 @@ class FooterAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Button(
-      type: ButtonType.outlined,
-      borderColor: context.theme.appColors.secondaryBackground,
+    return TextButton.icon(
       label: Text(
         label,
         style: context.theme.appTextThemes.body
             .copyWith(color: context.theme.appColors.primaryText),
       ),
-      leadingIcon: Padding(
+      icon: Padding(
         padding: EdgeInsets.only(right: 12.0.s),
         child: ButtonIcon(assetName),
       ),
-      minimumSize: Size(24.0.s, 24.0.s),
       onPressed: onPressed,
-      disableRipple: true,
     );
   }
 }

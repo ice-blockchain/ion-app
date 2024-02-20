@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/pull_right_menu/components/footer/footer_action.dart';
+import 'package:ice/app/features/user/pages/pull_right_menu_page/components/footer/footer_action.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class Footer extends StatelessWidget {
@@ -23,7 +23,6 @@ class Footer extends StatelessWidget {
               assetName: Assets.images.icons.iconProfileSettings.path,
               label: context.i18n.profile_privacy,
             ),
-            SizedBox(height: 20.0.s),
             FooterAction(
               onPressed: () {},
               assetName: Assets.images.icons.iconProfileHelp.path,

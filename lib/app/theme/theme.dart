@@ -20,6 +20,7 @@ ThemeData buildLightTheme(TemplateTheme templateTheme) {
     menuButtonTheme: buildMenuButtonTheme(templateTheme, colors, textThemes),
     iconButtonTheme: buildIconButtonTheme(templateTheme, textThemes),
     iconTheme: buildIconTheme(templateTheme),
+    scaffoldBackgroundColor: colors.secondaryBackground,
   );
 }
 
@@ -35,5 +36,6 @@ ThemeData buildDarkTheme(TemplateTheme templateTheme) {
     menuButtonTheme: buildMenuButtonTheme(templateTheme, colors, textThemes),
     iconButtonTheme: buildIconButtonTheme(templateTheme, textThemes),
     iconTheme: buildIconTheme(templateTheme),
+    scaffoldBackgroundColor: colors.secondaryBackground,
   );
 }

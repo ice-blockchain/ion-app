@@ -3,10 +3,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/core/model/user_data.dart';
-import 'package:ice/app/features/core/providers/user_data_provider.dart';
-import 'package:ice/app/features/pull_right_menu/components/decorations.dart';
-import 'package:ice/app/features/pull_right_menu/components/profile_info/components/profile_details/profile_details_cell.dart';
+import 'package:ice/app/features/user/model/user_data.dart';
+import 'package:ice/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
+import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_info/components/profile_details/profile_details_cell.dart';
+import 'package:ice/app/features/user/providers/user_data_provider.dart';
 
 class ProfileDetails extends HookConsumerWidget {
   const ProfileDetails({
