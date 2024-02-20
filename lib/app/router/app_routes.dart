@@ -73,7 +73,7 @@ enum IceRoutes<PayloadType> {
     ],
   ),
   appsList<AppsRouteData>(DAppsList.new),
-  pullRightManu(
+  pullRightMenu(
     PullRightMenuPage.new,
     children: <IceRoutes<dynamic>>[],
   ),
