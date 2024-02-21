@@ -46,12 +46,9 @@ class TrendingVideoListItem extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(12.0.s),
-              child: TrendingVideoAuthor(
-                imageUrl: video.authorImageUrl,
-                label: video.authorName,
-              ),
+            TrendingVideoAuthor(
+              imageUrl: video.authorImageUrl,
+              label: video.authorName,
             ),
           ],
         ),

@@ -15,36 +15,45 @@ class TrendingVideoAuthor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          width: 20.0.s,
-          height: 20.0.s,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: CachedNetworkImageProvider(imageUrl),
-              fit: BoxFit.cover,
-            ),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: context.theme.appColors.secondaryBackground,
-              width: 0.5,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(left: 4.0.s),
-            child: Text(
-              label,
-              overflow: TextOverflow.ellipsis,
-              style: context.theme.appTextThemes.caption3.copyWith(
-                color: context.theme.appColors.secondaryBackground,
+    return Padding(
+      padding: EdgeInsets.all(8.0.s),
+      child: TextButton(
+        onPressed: () {},
+        child: Padding(
+          padding: EdgeInsets.all(4.0.s),
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 20.0.s,
+                height: 20.0.s,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: context.theme.appColors.secondaryBackground,
+                    width: 0.5,
+                  ),
+                ),
               ),
-            ),
+              Flexible(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 4.0.s),
+                  child: Text(
+                    label,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.theme.appTextThemes.caption3.copyWith(
+                      color: context.theme.appColors.secondaryBackground,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 }
