@@ -5,6 +5,8 @@ class _ButtonWithIcon extends Button {
     super.key,
     super.type,
     super.tintColor,
+    super.borderColor,
+    super.backgroundColor,
     required super.onPressed,
     required Widget icon,
     ButtonStyle style = const ButtonStyle(),
@@ -16,6 +18,7 @@ class _ButtonWithIcon extends Button {
               fixedSize: Size.square(size ?? 56.0.s),
               minimumSize: Size.zero,
               padding: EdgeInsets.zero,
+              backgroundColor: backgroundColor,
             ),
           ),
         );

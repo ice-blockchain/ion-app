@@ -60,5 +60,19 @@
   "wallet_header_ice_wallet": "ice.wallet",
   "email_input_placeholder": "Email address",
   "email_input_invalid_email_format": "Invalid email format",
-  "read_time_in_mins": "{mins} min read"
+  "read_time_in_mins": "{mins} min read",
+  "profile_following": "Following",
+  "profile_followers": "Followers",
+  "profile_privacy": "Settings & Privacy",
+  "profile_help": "Help Center",
+  "profile_profile": "Profile",
+  "profile_profile_desc": "Your personal space",
+  "profile_feed": "Feed",
+  "profile_feed_desc": "Discover and engage",
+  "profile_videos": "Videos",
+  "profile_videos_desc": "Social streaming",
+  "profile_articles": "Articles",
+  "profile_articles_desc": "Trending stories",
+  "profile_bookmarks": "Bookmarks",
+  "profile_bookmarks_desc": "Your saved posts"
 }

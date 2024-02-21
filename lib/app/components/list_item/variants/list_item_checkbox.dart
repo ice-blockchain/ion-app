@@ -6,7 +6,7 @@ class _ListItemWithCheckbox extends ListItem {
     super.leading,
     super.title,
     super.subtitle,
-    required this.onTap,
+    required super.onTap,
     required this.value,
   }) : super(
           trailing: value
@@ -20,8 +20,6 @@ class _ListItemWithCheckbox extends ListItem {
         );
 
   final bool value;
-
-  final GestureTapCallback? onTap;
 
   @override
   Color _getBackgroundColor(BuildContext context) {

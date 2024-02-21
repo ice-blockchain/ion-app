@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'template_provider.g.dart';
 
-late final TemplateTheme _templateTheme;
+late TemplateTheme _templateTheme;
 
 TemplateTheme get appTemplateTheme => _templateTheme;
 
@@ -40,10 +40,9 @@ class Pages extends _$Pages {
   Map<String, TemplateConfigPage> build() => <String, TemplateConfigPage>{};
 
   void _savePages(Template template) {
-    state.clear();
     final Map<String, TemplateConfigPage>? pages = template.config.pages;
     if (pages != null) {
-      state.addAll(pages);
+      state = pages;
     }
   }
 }
