@@ -89,17 +89,20 @@ class ListItem extends StatelessWidget {
     required BuildContext context,
     required Widget child,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: _getBackgroundColor(context),
-          border: border,
-          borderRadius: borderRadius,
-        ),
-        child: child,
+    final Widget container = Container(
+      decoration: BoxDecoration(
+        color: _getBackgroundColor(context),
+        border: border,
+        borderRadius: borderRadius,
       ),
+      child: child,
     );
+    return onTap != null
+        ? InkWell(
+            onTap: onTap,
+            child: container,
+          )
+        : container;
   }
 
   Color _getBackgroundColor(BuildContext context) {
