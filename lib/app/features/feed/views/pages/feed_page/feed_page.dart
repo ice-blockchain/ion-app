@@ -6,7 +6,7 @@ import 'package:ice/app/components/drop_down_menu/drop_down_menu.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/feed/components/explore_controls/explore_controls.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/explore_controls/explore_controls.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 enum FeedType { feed, videos, stories }
