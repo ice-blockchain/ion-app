@@ -13,7 +13,9 @@ class TrendingVideos extends StatelessWidget {
       child: const Column(
         children: <Widget>[
           TrendingVideosHeader(),
-          TrendingVideosList(),
+          TrendingVideosList(
+            listOverlay: TrendingVideosListOverlay.horizontal,
+          ),
         ],
       ),
     );

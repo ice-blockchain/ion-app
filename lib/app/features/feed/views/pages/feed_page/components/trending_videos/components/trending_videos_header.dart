@@ -71,6 +71,10 @@ class _VideosIcon extends StatelessWidget {
 class _ForwardButton extends StatelessWidget {
   const _ForwardButton();
 
+  static double get hitSlop => 10.0.s;
+  static double get iconSize => 24.0.s;
+  static double get totalSize => iconSize + hitSlop * 2;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -91,8 +95,4 @@ class _ForwardButton extends StatelessWidget {
       ),
     );
   }
-
-  static double get hitSlop => 10.0.s;
-  static double get iconSize => 24.0.s;
-  static double get totalSize => iconSize + hitSlop * 2;
 }
