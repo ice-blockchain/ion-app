@@ -114,7 +114,6 @@ class CancelButton extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           minimumSize: Size(0, 40.0.s),
           padding: EdgeInsets.symmetric(horizontal: 12.0.s),
         ),

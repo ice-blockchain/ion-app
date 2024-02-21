@@ -10,13 +10,11 @@ import 'package:ice/generated/assets.gen.dart';
 class StoryListItem extends StatelessWidget {
   const StoryListItem({
     super.key,
-    required this.onPressed,
     required this.imageUrl,
     required this.label,
     this.showPlus = false,
   });
 
-  final VoidCallback onPressed;
   final String imageUrl;
   final String label;
   final bool showPlus;
@@ -28,7 +26,7 @@ class StoryListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: () {},
       child: SizedBox(
         width: width,
         height: height,
