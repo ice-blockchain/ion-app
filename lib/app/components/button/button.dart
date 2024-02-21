@@ -30,7 +30,6 @@ class Button extends StatelessWidget {
     this.borderColor,
     this.backgroundColor,
     this.minimumSize,
-    this.disableRipple,
   });
 
   factory Button.icon({
@@ -65,7 +64,6 @@ class Button extends StatelessWidget {
   final Color? borderColor;
   final Color? backgroundColor;
   final Size? minimumSize;
-  final bool? disableRipple;
   final Color? tintColor;
   final ButtonStyle style;
   final MainAxisSize mainAxisSize;
@@ -76,8 +74,7 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: type == ButtonType.disabled || disabled ? null : onPressed,
-      style: style
-          .merge(
+      style: style.merge(
         OutlinedButton.styleFrom(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(
@@ -88,15 +85,6 @@ class Button extends StatelessWidget {
           backgroundColor: _getBackgroundColor(context, type),
           side: BorderSide(
             color: _getBorderColor(context, type),
-          ),
-        ),
-      )
-          .merge(
-        ButtonStyle(
-          overlayColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              return disableRipple == true ? Colors.transparent : null;
-            },
           ),
         ),
       ),
