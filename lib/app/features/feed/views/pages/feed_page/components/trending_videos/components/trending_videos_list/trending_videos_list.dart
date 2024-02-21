@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_item.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list/components/trending_videos_list_item.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/mock.dart';
 
 enum TrendingVideosListOverlay {
