@@ -14,7 +14,7 @@ class Footer extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Container(
-        padding: EdgeInsets.all(20.0.s),
+        padding: EdgeInsets.symmetric(vertical: 8.0.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

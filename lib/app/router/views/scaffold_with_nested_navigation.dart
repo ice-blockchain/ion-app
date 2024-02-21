@@ -56,7 +56,7 @@ List<NavigationDestination> getDestinations(
       ),
     ),
     NavigationDestination(
-      label: 'Wallet',
+      label: 'PullRightMenu',
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 3,

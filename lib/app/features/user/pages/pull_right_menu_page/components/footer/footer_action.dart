@@ -19,6 +19,9 @@ class FooterAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton.icon(
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 8.0.s),
+      ),
       label: Text(
         label,
         style: context.theme.appTextThemes.body

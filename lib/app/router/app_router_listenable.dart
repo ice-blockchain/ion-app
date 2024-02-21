@@ -74,7 +74,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
 
     if (isSplash && !isInitInProgress && isAnimationCompleted) {
       if (_authState is Authenticated) {
-        return IceRoutes.wallet;
+        return IceRoutes.feed;
       }
       if (_authState is UnAuthenticated) {
         /// Navigate to the Intro screen after splash for unauthenticated users
@@ -83,7 +83,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     }
 
     if (isAuthInProgress && _authState is Authenticated) {
-      return IceRoutes.wallet;
+      return IceRoutes.feed;
     }
 
     if (!isAuthInProgress && _authState is UnAuthenticated) {
