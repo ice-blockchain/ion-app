@@ -185,3 +185,108 @@ Widget compactButtonUseCase(BuildContext context) {
     ),
   );
 }
+
+@widgetbook.UseCase(
+  name: 'menu',
+  type: Button,
+)
+Widget menuButtonUseCase(BuildContext context) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Button.menu(
+          onPressed: () {},
+          leadingIcon: ButtonFramedIcon(
+            icon: ButtonIcon(
+              Assets.images.icons.iconTabsCoins.path,
+              size: 20.0.s,
+            ),
+          ),
+          label: const Text('Coins'),
+        ),
+        Button.menu(
+          onPressed: () {},
+          leadingIcon: ButtonFramedIcon(
+            color: context.theme.appColors.primaryAccent,
+            icon: ButtonIcon(
+              Assets.images.icons.iconTabsCoins.path,
+              size: 20.0.s,
+              color: context.theme.appColors.secondaryBackground,
+            ),
+          ),
+          label: const Text('Coins'),
+          active: true,
+        ),
+        Button.menu(
+          onPressed: () {},
+          label: const Text('For you'),
+        ),
+        Button.menu(
+          onPressed: () {},
+          label: Text(
+            'For you',
+            style: TextStyle(color: context.theme.appColors.primaryAccent),
+          ),
+          active: true,
+        ),
+      ],
+    ),
+  );
+}
+
+@widgetbook.UseCase(
+  name: 'dropdown',
+  type: Button,
+)
+Widget dropdownButtonUseCase(BuildContext context) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Button.dropdown(
+          onPressed: () {},
+          leadingIcon: ButtonFramedIcon(
+            color: context.theme.appColors.success,
+            icon: ButtonIcon(
+              Assets.images.icons.iconFeedStories.path,
+              size: 24.0.s,
+              color: context.theme.appColors.secondaryBackground,
+            ),
+          ),
+          label: const Text('News'),
+        ),
+        Button.dropdown(
+          onPressed: () {},
+          leadingIcon: ButtonFramedIcon(
+            color: context.theme.appColors.success,
+            icon: ButtonIcon(
+              Assets.images.icons.iconFeedStories.path,
+              size: 24.0.s,
+              color: context.theme.appColors.secondaryBackground,
+            ),
+          ),
+          label: const Text('News'),
+          opened: true,
+        ),
+        Button.dropdown(
+          onPressed: () {},
+          leadingIcon: ButtonFramedIcon(
+            icon: Image(
+              width: 26.0.s,
+              height: 26.0.s,
+              fit: BoxFit.fill,
+              image: AssetImage(Assets.images.icons.iconBadgeIcelogo.path),
+            ),
+          ),
+          leadingButtonOffset: 4.0.s,
+          backgroundColor: context.theme.appColors.tertararyBackground,
+          label: Text(
+            'ice.wallet',
+            style: TextStyle(color: context.theme.appColors.primaryText),
+          ),
+        ),
+      ],
+    ),
+  );
+}

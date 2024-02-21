@@ -4,19 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 part 'variants/button_compact.dart';
 part 'variants/button_icon.dart';
+part 'variants/button_menu.dart';
+part 'variants/button_dropdown.dart';
 
 enum ButtonType {
   primary,
   secondary,
   outlined,
   disabled,
+  menuInactive,
+  menuActive,
+  dropdown,
 }
 
 class Button extends StatelessWidget {
-  const Button({
+  Button({
     super.key,
     required this.onPressed,
     this.trailingIcon,
@@ -30,7 +36,10 @@ class Button extends StatelessWidget {
     this.borderColor,
     this.backgroundColor,
     this.minimumSize,
-  });
+    double? leadingIconOffset,
+    double? trailingIconOffset,
+  })  : leadingIconOffset = leadingIconOffset ?? 8.0.s,
+        trailingIconOffset = trailingIconOffset ?? 8.0.s;
 
   factory Button.icon({
     Key? key,
@@ -57,6 +66,33 @@ class Button extends StatelessWidget {
     Color? tintColor,
   }) = _ButtonCompact;
 
+  factory Button.menu({
+    Key? key,
+    required VoidCallback onPressed,
+    Widget? trailingIcon,
+    Widget? leadingIcon,
+    Widget? label,
+    ButtonStyle style,
+    MainAxisSize mainAxisSize,
+    Color? borderColor,
+    Color? backgroundColor,
+    bool disabled,
+    bool active,
+  }) = _ButtonMenu;
+
+  factory Button.dropdown({
+    Key? key,
+    required VoidCallback onPressed,
+    Widget? leadingIcon,
+    Widget? label,
+    ButtonStyle style,
+    Color? borderColor,
+    Color? backgroundColor,
+    double? leadingButtonOffset,
+    bool disabled,
+    bool opened,
+  }) = _ButtonDropdown;
+
   final VoidCallback onPressed;
   final Widget? leadingIcon;
   final Widget? trailingIcon;
@@ -69,6 +105,8 @@ class Button extends StatelessWidget {
   final MainAxisSize mainAxisSize;
   final ButtonType type;
   final bool disabled;
+  final double leadingIconOffset;
+  final double trailingIconOffset;
 
   @override
   Widget build(BuildContext context) {
@@ -103,10 +141,8 @@ class Button extends StatelessWidget {
                 Flexible(
                   child: Padding(
                     padding: EdgeInsets.only(
-                      left: leadingIcon == null
-                          ? 0
-                          : 8.0.s, // 8 move to constants
-                      right: trailingIcon == null ? 0 : 8.0.s,
+                      left: leadingIcon == null ? 0 : leadingIconOffset,
+                      right: trailingIcon == null ? 0 : trailingIconOffset,
                     ),
                     child: label,
                   ),
@@ -126,6 +162,10 @@ class Button extends StatelessWidget {
           ButtonType.secondary => context.theme.appColors.tertararyBackground,
           ButtonType.outlined => Colors.transparent,
           ButtonType.disabled => context.theme.appColors.sheetLine,
+          ButtonType.menuInactive =>
+            context.theme.appColors.tertararyBackground,
+          ButtonType.menuActive => context.theme.appColors.secondaryBackground,
+          ButtonType.dropdown => context.theme.appColors.secondaryBackground,
         };
   }
 
@@ -137,6 +177,9 @@ class Button extends StatelessWidget {
           ButtonType.secondary => context.theme.appColors.tertararyBackground,
           ButtonType.outlined => context.theme.appColors.strokeElements,
           ButtonType.disabled => context.theme.appColors.sheetLine,
+          ButtonType.menuInactive => context.theme.appColors.onTerararyFill,
+          ButtonType.menuActive => context.theme.appColors.primaryAccent,
+          ButtonType.dropdown => context.theme.appColors.onTerararyFill,
         };
   }
 
@@ -147,6 +190,9 @@ class Button extends StatelessWidget {
           ButtonType.secondary => context.theme.appColors.primaryText,
           ButtonType.outlined => context.theme.appColors.secondaryText,
           ButtonType.disabled => context.theme.appColors.onPrimaryAccent,
+          ButtonType.menuInactive => context.theme.appColors.tertararyText,
+          ButtonType.menuActive => context.theme.appColors.primaryText,
+          ButtonType.dropdown => context.theme.appColors.primaryText,
         };
   }
 
@@ -157,6 +203,9 @@ class Button extends StatelessWidget {
           ButtonType.secondary => context.theme.appColors.primaryAccent,
           ButtonType.outlined => context.theme.appColors.secondaryText,
           ButtonType.disabled => context.theme.appColors.onPrimaryAccent,
+          ButtonType.menuInactive => context.theme.appColors.tertararyText,
+          ButtonType.menuActive => context.theme.appColors.primaryAccent,
+          ButtonType.dropdown => context.theme.appColors.primaryText,
         };
   }
 }
@@ -197,6 +246,31 @@ class ButtonIcon extends StatelessWidget {
       child: FittedBox(
         child: ImageIcon(AssetImage(path), color: color),
       ),
+    );
+  }
+}
+
+class ButtonFramedIcon extends StatelessWidget {
+  const ButtonFramedIcon({
+    super.key,
+    required this.icon,
+    this.color,
+  });
+
+  final Color? color;
+  final Widget icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 32.0.s,
+      height: 32.0.s,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(9.0.s),
+      ),
+      child: icon,
     );
   }
 }
