@@ -1,19 +1,19 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-enum ExploreControlsState { initial, filters }
+enum FeedControlsState { initial, filters }
 
-ValueNotifier<ExploreControlsState> useExploreControlsState(
+ValueNotifier<FeedControlsState> useFeedControlsState(
   ScrollController pageScrollController,
 ) {
-  final ValueNotifier<ExploreControlsState> state =
-      useState(ExploreControlsState.initial);
+  final ValueNotifier<FeedControlsState> state =
+      useState(FeedControlsState.initial);
 
   useEffect(
     () {
       void isScrollingNotifierListener() {
         if (pageScrollController.position.isScrollingNotifier.value) {
-          state.value = ExploreControlsState.initial;
+          state.value = FeedControlsState.initial;
         }
       }
 

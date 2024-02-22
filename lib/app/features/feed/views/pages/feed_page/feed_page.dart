@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/explore_controls/explore_controls.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
@@ -27,7 +27,7 @@ class FeedPage extends IceSimplePage {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(top: 9.0.s),
-                    child: ExploreControls(
+                    child: FeedControls(
                       pageScrollController: scrollController,
                     ),
                   ),

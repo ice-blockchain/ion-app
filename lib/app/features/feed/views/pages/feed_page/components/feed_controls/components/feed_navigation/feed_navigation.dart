@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/search_input/search_input.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/explore_controls/components/explore_button.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_navigation/components/feed_navigation_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class InitialExploreControlsState extends StatelessWidget {
-  const InitialExploreControlsState({
+class FeedNavigation extends StatelessWidget {
+  const FeedNavigation({
     required this.onFiltersPressed,
   });
 
@@ -22,14 +22,14 @@ class InitialExploreControlsState extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(left: 12.0.s),
-          child: ExploreButton(
+          child: FeedNavigationButton(
             onPressed: () {},
             iconPath: Assets.images.icons.iconHomeNotification.path,
           ),
         ),
         Padding(
           padding: EdgeInsets.only(left: 12.0.s),
-          child: ExploreButton(
+          child: FeedNavigationButton(
             onPressed: onFiltersPressed,
             iconPath: Assets.images.icons.iconHeaderMenu.path,
           ),

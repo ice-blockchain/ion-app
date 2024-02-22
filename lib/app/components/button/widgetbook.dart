@@ -197,7 +197,7 @@ Widget menuButtonUseCase(BuildContext context) {
       children: <Widget>[
         Button.menu(
           onPressed: () {},
-          leadingIcon: ButtonFramedIcon(
+          leadingIcon: ButtonIconFrame(
             icon: ButtonIcon(
               Assets.images.icons.iconTabsCoins.path,
               size: 20.0.s,
@@ -207,7 +207,7 @@ Widget menuButtonUseCase(BuildContext context) {
         ),
         Button.menu(
           onPressed: () {},
-          leadingIcon: ButtonFramedIcon(
+          leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.primaryAccent,
             icon: ButtonIcon(
               Assets.images.icons.iconTabsCoins.path,
@@ -246,7 +246,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
       children: <Widget>[
         Button.dropdown(
           onPressed: () {},
-          leadingIcon: ButtonFramedIcon(
+          leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.success,
             icon: ButtonIcon(
               Assets.images.icons.iconFeedStories.path,
@@ -258,7 +258,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
         ),
         Button.dropdown(
           onPressed: () {},
-          leadingIcon: ButtonFramedIcon(
+          leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.success,
             icon: ButtonIcon(
               Assets.images.icons.iconFeedStories.path,
@@ -271,7 +271,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
         ),
         Button.dropdown(
           onPressed: () {},
-          leadingIcon: ButtonFramedIcon(
+          leadingIcon: ButtonIconFrame(
             icon: Image(
               width: 26.0.s,
               height: 26.0.s,

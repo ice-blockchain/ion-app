@@ -165,7 +165,7 @@ class Button extends StatelessWidget {
           ButtonType.menuInactive =>
             context.theme.appColors.tertararyBackground,
           ButtonType.menuActive => context.theme.appColors.secondaryBackground,
-          ButtonType.dropdown => context.theme.appColors.secondaryBackground,
+          ButtonType.dropdown => context.theme.appColors.tertararyBackground,
         };
   }
 
@@ -250,8 +250,8 @@ class ButtonIcon extends StatelessWidget {
   }
 }
 
-class ButtonFramedIcon extends StatelessWidget {
-  const ButtonFramedIcon({
+class ButtonIconFrame extends StatelessWidget {
+  const ButtonIconFrame({
     super.key,
     required this.icon,
     this.color,

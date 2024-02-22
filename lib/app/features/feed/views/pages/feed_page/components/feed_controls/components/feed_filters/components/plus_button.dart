@@ -3,28 +3,29 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/generated/assets.gen.dart';
 
-class ExploreButton extends StatelessWidget {
-  const ExploreButton({
-    required this.iconPath,
+class PlusButton extends StatelessWidget {
+  const PlusButton({
+    super.key,
     required this.onPressed,
   });
 
-  final String iconPath;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return Button.icon(
-      tintColor: context.theme.appColors.onTerararyFill,
-      size: 40.0.s,
+    return Button.compact(
       onPressed: onPressed,
-      icon: ButtonIcon(
-        iconPath,
+      type: ButtonType.menuInactive,
+      label: ImageIcon(
+        AssetImage(Assets.images.icons.iconPlusCreatechannel.path),
+        size: 30.0.s,
         color: context.theme.appColors.primaryText,
       ),
       style: OutlinedButton.styleFrom(
-        backgroundColor: context.theme.appColors.tertararyBackground,
+        minimumSize: Size(48.0.s, 40.0.s),
+        padding: EdgeInsets.zero,
       ),
     );
   }
