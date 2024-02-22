@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ice/app/components/search_input/components/cancel_button.dart';
+import 'package:ice/app/components/search_input/components/search_clear_button.dart';
 import 'package:ice/app/components/search_input/hooks/use_node_focused.dart';
 import 'package:ice/app/components/search_input/hooks/use_text_changed.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -40,7 +42,6 @@ class SearchInput extends HookWidget {
             height: 40.0.s,
             child: TextField(
               focusNode: focusNode,
-              // focusNode: _focusNode,
               style: context.theme.appTextThemes.body.copyWith(
                 color: context.theme.appColors.primaryText,
               ),
@@ -83,7 +84,9 @@ class SearchInput extends HookWidget {
                         height: 20.0.s,
                       )
                     : showClear.value
-                        ? ClearButton(onPressed: () => searchController.clear())
+                        ? SearchClearButton(
+                            onPressed: () => searchController.clear(),
+                          )
                         : null,
                 prefixIconConstraints: const BoxConstraints(),
                 filled: true,
@@ -93,57 +96,9 @@ class SearchInput extends HookWidget {
             ),
           ),
         ),
-        if (focused.value) CancelButton(onPressed: () => focusNode.unfocus()),
+        if (focused.value)
+          SearchCancelButton(onPressed: () => focusNode.unfocus()),
       ],
-    );
-  }
-}
-
-class CancelButton extends StatelessWidget {
-  const CancelButton({
-    super.key,
-    required this.onPressed,
-  });
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      transform: Matrix4.translationValues(12.0.s, 0, 0),
-      child: TextButton(
-        onPressed: onPressed,
-        style: TextButton.styleFrom(
-          minimumSize: Size(0, 40.0.s),
-          padding: EdgeInsets.symmetric(horizontal: 12.0.s),
-        ),
-        child: Text(
-          context.i18n.button_cancel,
-          style: context.theme.appTextThemes.caption
-              .copyWith(color: context.theme.appColors.primaryAccent),
-        ),
-      ),
-    );
-  }
-}
-
-class ClearButton extends StatelessWidget {
-  const ClearButton({
-    super.key,
-    required this.onPressed,
-  });
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: onPressed,
-      icon: Image.asset(
-        Assets.images.icons.iconFieldClearall.path,
-        width: 20.0.s,
-        height: 20.0.s,
-      ),
     );
   }
 }
