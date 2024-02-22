@@ -166,7 +166,6 @@ class TemplateMenuTheme with _$TemplateMenuTheme {
 @freezed
 class TemplateMenuButtonTheme with _$TemplateMenuButtonTheme {
   const factory TemplateMenuButtonTheme(
-    double iconSize,
     double minHeight,
     double paddingLeft,
     double paddingTop,
@@ -183,20 +182,7 @@ class TemplateMenuButtonTheme with _$TemplateMenuButtonTheme {
         0.0,
         0.0,
         0.0,
-        0.0,
       );
-}
-
-@freezed
-class MenuAnchor with _$MenuAnchor {
-  const factory MenuAnchor(
-    double alignmentOffsetY,
-  ) = _MenuAnchor;
-
-  factory MenuAnchor.fromJson(Map<String, dynamic> json) =>
-      _$MenuAnchorFromJson(json);
-
-  factory MenuAnchor.empty() => const MenuAnchor(0.0);
 }
 
 @freezed
@@ -237,7 +223,6 @@ class TemplateTheme with _$TemplateTheme {
     TemplateColorsLightDark colors,
     TemplateTextThemes textThemes,
     TemplateAppBarTheme appBar,
-    MenuAnchor menuAnchor,
     TemplateMenuTheme menu,
     TemplateMenuButtonTheme menuButton,
     TemplateIconButtonTheme iconButton,
@@ -251,7 +236,6 @@ class TemplateTheme with _$TemplateTheme {
         TemplateColorsLightDark.empty(),
         TemplateTextThemes.empty(),
         TemplateAppBarTheme.empty(),
-        MenuAnchor.empty(),
         TemplateMenuTheme.empty(),
         TemplateMenuButtonTheme.empty(),
         TemplateIconButtonTheme.empty(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/search_input/search_input.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_navigation/components/feed_navigation_button.dart';
@@ -13,28 +14,30 @@ class FeedNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: SearchInput(
-            onTextChanged: (String st) {},
+    return ScreenSideOffset.small(
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: SearchInput(
+              onTextChanged: (String st) {},
+            ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 12.0.s),
-          child: FeedNavigationButton(
-            onPressed: () {},
-            iconPath: Assets.images.icons.iconHomeNotification.path,
+          Padding(
+            padding: EdgeInsets.only(left: 12.0.s),
+            child: FeedNavigationButton(
+              onPressed: () {},
+              iconPath: Assets.images.icons.iconHomeNotification.path,
+            ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 12.0.s),
-          child: FeedNavigationButton(
-            onPressed: onFiltersPressed,
-            iconPath: Assets.images.icons.iconHeaderMenu.path,
+          Padding(
+            padding: EdgeInsets.only(left: 12.0.s),
+            child: FeedNavigationButton(
+              onPressed: onFiltersPressed,
+              iconPath: Assets.images.icons.iconHeaderMenu.path,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

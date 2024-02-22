@@ -70,8 +70,22 @@ class FeedCategoriesDropdown extends HookWidget {
         for (final FeedCategory category in FeedCategory.values)
           MenuItemButton(
             onPressed: () => selected.value = category,
-            leadingIcon: ImageIcon(AssetImage(category.iconPath)),
-            child: Text(category.getLabel(context)),
+            child: Row(
+              children: <Widget>[
+                ButtonIconFrame(
+                  color: category.getColor(context),
+                  icon: ButtonIcon(
+                    category.iconPath,
+                    size: 24.0.s,
+                    color: context.theme.appColors.secondaryBackground,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 7.0.s),
+                  child: Text(category.getLabel(context)),
+                ),
+              ],
+            ),
           ),
       ],
     );
