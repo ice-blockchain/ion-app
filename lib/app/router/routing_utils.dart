@@ -60,10 +60,17 @@ GoRouterPageBuilder _providePageBuilder<T>(
         child: widgetBuild(state),
       );
 
+  Page<T> slideFromLeft(BuildContext context, GoRouterState state) =>
+      _buildPageWithSlideFromLeftTransition<T>(
+        state: state,
+        child: widgetBuild(state),
+      );
+
   return switch (parentType) {
     null => simple,
     IceRouteType.single => simple,
     IceRouteType.bottomSheet => bottomSheet,
+    IceRouteType.slideFromLeft => slideFromLeft,
     IceRouteType.bottomTabs =>
       throw Exception('should be built in a different way'),
   };
@@ -86,6 +93,32 @@ CustomTransitionPage<T> _buildPageWithFadeTransition<T>({
   );
 }
 
+CustomTransitionPage<T> _buildPageWithSlideFromLeftTransition<T>({
+  required GoRouterState state,
+  required Widget child,
+}) {
+  return CustomTransitionPage<T>(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child,
+    ) {
+      final Animation<Offset> offsetAnimation = Tween<Offset>(
+        begin: const Offset(-1.0, 0.0),
+        end: Offset.zero,
+      ).animate(animation);
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: child,
+      );
+    },
+  );
+}
+
 List<RouteBase> _buildChildren<T>(IceRoutes<T> route) {
   final List<IceRoutes<dynamic>> children = route.children.emptyOrValue;
   if (children.isEmpty) {
@@ -98,6 +131,7 @@ List<RouteBase> _buildChildren<T>(IceRoutes<T> route) {
 
   switch (route.type) {
     case IceRouteType.single:
+    case IceRouteType.slideFromLeft:
     case IceRouteType.bottomTabs:
       processChildren = (List<RouteBase> children) => children;
     case IceRouteType.bottomSheet:
