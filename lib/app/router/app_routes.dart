@@ -28,6 +28,7 @@ List<IceRoutes<dynamic>> iceRootRoutes = <IceRoutes<dynamic>>[
   IceRoutes.error,
   IceRoutes.intro,
   IceRoutes.home,
+  IceRoutes.pullRightMenu,
 ];
 
 enum IceRoutes<PayloadType> {
@@ -61,7 +62,7 @@ enum IceRoutes<PayloadType> {
     AbsentPage.new,
     type: IceRouteType.bottomTabs,
     children: <IceRoutes<dynamic>>[
-      IceRoutes.pullRightMenu,
+      IceRoutes.dapps,
       IceRoutes.chat,
       IceRoutes.wallet,
     ],
@@ -75,6 +76,7 @@ enum IceRoutes<PayloadType> {
   appsList<AppsRouteData>(DAppsList.new),
   pullRightMenu(
     PullRightMenuPage.new,
+    type: IceRouteType.slideFromLeft,
     children: <IceRoutes<dynamic>>[],
   ),
   chat(ChatPage.new),
@@ -118,6 +120,7 @@ typedef IcePageBuilder<PayloadType> = IcePage<PayloadType> Function(
 enum IceRouteType {
   single,
   bottomSheet,
+  slideFromLeft,
   bottomTabs,
   ;
 }
