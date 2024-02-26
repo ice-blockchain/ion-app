@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -19,8 +20,7 @@ class ForwardButton extends StatelessWidget {
         child: IconButton(
           padding: EdgeInsets.zero,
           onPressed: () {},
-          icon: ImageIcon(
-            Assets.images.icons.iconBackArrow.provider(),
+          icon: Assets.images.icons.iconBackArrow.icon(
             size: iconSize,
           ),
         ),

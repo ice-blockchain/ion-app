@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -23,8 +24,7 @@ class TrendingVideoLikesButton extends StatelessWidget {
       onPressed: onPressed,
       child: Row(
         children: <Widget>[
-          ImageIcon(
-            Assets.images.icons.iconVideoLikeOn.provider(),
+          Assets.images.icons.iconVideoLikeOn.icon(
             size: 14.0.s,
             color: context.theme.appColors.secondaryBackground,
           ),

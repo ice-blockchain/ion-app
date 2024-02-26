@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/footer/footer_action.dart';
@@ -20,12 +21,12 @@ class Footer extends StatelessWidget {
           children: <Widget>[
             FooterAction(
               onPressed: () {},
-              assetName: Assets.images.icons.iconProfileSettings.path,
+              icon: Assets.images.icons.iconProfileSettings.icon(),
               label: context.i18n.profile_privacy,
             ),
             FooterAction(
               onPressed: () {},
-              assetName: Assets.images.icons.iconProfileHelp.path,
+              icon: Assets.images.icons.iconProfileHelp.icon(),
               label: context.i18n.profile_help,
             ),
           ],

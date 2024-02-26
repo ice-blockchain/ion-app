@@ -1,6 +1,7 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -221,30 +222,6 @@ class ButtonLoadingIndicator extends StatelessWidget {
       child: CircularProgressIndicator(
         strokeWidth: 2.0,
         color: context.theme.appColors.onPrimaryAccent,
-      ),
-    );
-  }
-}
-
-class ButtonIcon extends StatelessWidget {
-  ButtonIcon(
-    this.path, {
-    super.key,
-    double? size,
-    this.color,
-  }) : size = size ?? 24.0.s;
-
-  final String path;
-  final double size;
-  final Color? color;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: FittedBox(
-        child: ImageIcon(AssetImage(path), color: color),
       ),
     );
   }

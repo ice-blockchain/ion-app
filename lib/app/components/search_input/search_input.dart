@@ -4,6 +4,7 @@ import 'package:ice/app/components/search_input/components/cancel_button.dart';
 import 'package:ice/app/components/search_input/components/search_clear_button.dart';
 import 'package:ice/app/components/search_input/hooks/use_node_focused.dart';
 import 'package:ice/app/components/search_input/hooks/use_text_changed.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -68,8 +69,7 @@ class SearchInput extends HookWidget {
                 ),
                 prefixIcon: Padding(
                   padding: EdgeInsets.only(left: 12.0.s, right: 6.0.s),
-                  child: ImageIcon(
-                    Assets.images.icons.iconFieldSearch.provider(),
+                  child: Assets.images.icons.iconFieldSearch.icon(
                     color: context.theme.appColors.tertararyText,
                     size: 16.0.s,
                   ),

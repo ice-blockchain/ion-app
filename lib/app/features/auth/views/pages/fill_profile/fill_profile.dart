@@ -6,6 +6,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_fields.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -137,9 +138,7 @@ class FillProfile extends IceSimplePage {
               ),
               InputField(
                 // autofocus: true,
-                leadingIcon: ImageIcon(
-                  Assets.images.icons.iconFieldName.provider(),
-                ),
+                leadingIcon: Assets.images.icons.iconFieldName.icon(),
                 label: context.i18n.fill_profile_input_name,
                 controller: nameController.controller,
                 validator: (String? value) => validateName(value!),
@@ -147,9 +146,7 @@ class FillProfile extends IceSimplePage {
                 // key: nameFieldKey,
               ),
               InputField(
-                leadingIcon: ImageIcon(
-                  Assets.images.icons.iconFieldNickname.provider(),
-                ),
+                leadingIcon: Assets.images.icons.iconFieldNickname.icon(),
                 label: context.i18n.fill_profile_input_nickname,
                 controller: nicknameController.controller,
                 validator: (String? value) => validateNickname(value!),
@@ -158,9 +155,7 @@ class FillProfile extends IceSimplePage {
                 // textInputAction: TextInputAction.next,
               ),
               InputField(
-                leadingIcon: ImageIcon(
-                  Assets.images.icons.iconFieldInviter.provider(),
-                ),
+                leadingIcon: Assets.images.icons.iconFieldInviter.icon(),
                 label: context.i18n.fill_profile_input_who_invited,
                 controller: inviterController.controller,
                 validator: (String? value) => validateWhoInvited(value!),
@@ -173,8 +168,7 @@ class FillProfile extends IceSimplePage {
               ),
               Center(
                 child: Button(
-                  leadingIcon:
-                      ButtonIcon(Assets.images.icons.iconProfileSave.path),
+                  leadingIcon: Assets.images.icons.iconProfileSave.icon(),
                   onPressed: onSave,
                   label: Text(context.i18n.button_save),
                   mainAxisSize: MainAxisSize.max,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -19,8 +20,7 @@ class VideosIcon extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
-      child: ImageIcon(
-        Assets.images.icons.iconVideosTrading.provider(),
+      child: Assets.images.icons.iconVideosTrading.icon(
         color: context.theme.appColors.secondaryBackground,
         size: 20.0.s,
       ),

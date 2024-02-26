@@ -29,11 +29,8 @@ class _ButtonDropdown extends Button {
             ),
           ),
           leadingIconOffset: leadingButtonOffset ?? 10.0.s,
-          trailingIcon: ButtonIcon(
-            opened
-                ? Assets.images.icons.iconArrowUp.path
-                : Assets.images.icons.iconArrowDown.path,
-            size: 24.0.s,
-          ),
+          trailingIcon: opened
+              ? Assets.images.icons.iconArrowUp.icon()
+              : Assets.images.icons.iconArrowDown.icon(),
         );
 }

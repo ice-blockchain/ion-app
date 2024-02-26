@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -40,8 +41,7 @@ class LinksListTile extends StatelessWidget {
         style: context.theme.appTextThemes.caption3
             .copyWith(color: context.theme.appColors.tertararyText),
       ),
-      trailing: ImageIcon(
-        Assets.images.icons.iconArrowRight.provider(),
+      trailing: Assets.images.icons.iconArrowRight.icon(
         color: context.theme.appColors.primaryText,
       ),
       contentPadding: EdgeInsets.symmetric(vertical: 12.0.s),

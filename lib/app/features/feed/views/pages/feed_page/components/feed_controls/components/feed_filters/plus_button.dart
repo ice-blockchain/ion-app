@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -18,8 +19,7 @@ class PlusButton extends StatelessWidget {
     return Button.compact(
       onPressed: onPressed,
       type: ButtonType.menuInactive,
-      label: ImageIcon(
-        Assets.images.icons.iconPlusCreatechannel.provider(),
+      label: Assets.images.icons.iconPlusCreatechannel.icon(
         size: 30.0.s,
         color: context.theme.appColors.primaryText,
       ),

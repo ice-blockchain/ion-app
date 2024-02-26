@@ -4,6 +4,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_fields.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -70,7 +71,7 @@ class AuthPage extends IceSimplePage {
               child: Button(
                 trailingIcon: authState is AuthenticationLoading
                     ? const ButtonLoadingIndicator()
-                    : ButtonIcon(Assets.images.icons.iconButtonNext.path),
+                    : Assets.images.icons.iconButtonNext.icon(),
                 onPressed: () => <void>{
                   emailFormKey.currentState?.reset(),
                   ref
@@ -92,8 +93,7 @@ class AuthPage extends IceSimplePage {
             Center(
               child: Button(
                 type: ButtonType.outlined,
-                leadingIcon: ButtonIcon(
-                  Assets.images.icons.iconFieldPhone.path,
+                leadingIcon: Assets.images.icons.iconFieldPhone.icon(
                   color: context.theme.appColors.secondaryText,
                 ),
                 onPressed: () {
