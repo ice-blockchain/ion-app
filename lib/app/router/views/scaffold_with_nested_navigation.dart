@@ -11,10 +11,25 @@ List<NavigationDestination> getDestinations(
 ) {
   return <NavigationDestination>[
     NavigationDestination(
-      label: 'DApps',
+      label: 'Feed',
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 0,
+        iconOff: Image.asset(
+          Assets.images.icons.iconHomeOff.path,
+          color: context.theme.appColors.tertararyText,
+        ),
+        iconOn: Image.asset(
+          Assets.images.icons.iconHomeOff.path,
+          color: context.theme.appColors.primaryAccent,
+        ),
+      ),
+    ),
+    NavigationDestination(
+      label: 'Dapp',
+      icon: TabIcon(
+        currentIndex: navigationShell.currentIndex,
+        tabIndex: 1,
         iconOff: Image.asset(
           Assets.images.icons.iconDappOff.path,
           color: context.theme.appColors.tertararyText,
@@ -29,7 +44,7 @@ List<NavigationDestination> getDestinations(
       label: 'Chat2',
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
-        tabIndex: 1,
+        tabIndex: 2,
         iconOff: Image.asset(
           Assets.images.icons.iconChatOff.path,
           color: context.theme.appColors.tertararyText,
@@ -44,7 +59,7 @@ List<NavigationDestination> getDestinations(
       label: 'Wallet',
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
-        tabIndex: 2,
+        tabIndex: 3,
         iconOff: Image.asset(
           Assets.images.icons.iconButtonManageWallet.path,
           color: context.theme.appColors.tertararyText,
@@ -82,7 +97,7 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
     );
 
     final int defaultTabIndex = destinations.indexWhere(
-      (NavigationDestination destination) => destination.label == 'DApps',
+      (NavigationDestination destination) => destination.label == 'Feed',
     );
 
     return Scaffold(
