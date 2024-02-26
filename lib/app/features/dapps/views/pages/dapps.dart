@@ -19,7 +19,7 @@ class DAppsPage extends IceSimplePage {
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return PullRightMenuHandler(
       child: SingleChildScrollView(
-        child: Container(
+        child: DecoratedBox(
           decoration:
               BoxDecoration(color: context.theme.appColors.secondaryBackground),
           child: Column(

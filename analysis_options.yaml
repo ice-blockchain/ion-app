@@ -46,3 +46,6 @@ linter:
 
     # Follow the Flutter code style, which prefers types everywhere
     always_specify_types: true
+
+    # use DecoratedBox when Container has only a Decoration
+    use_decorated_box: true

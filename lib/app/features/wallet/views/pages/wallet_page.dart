@@ -24,7 +24,7 @@ class WalletPage extends IceSimplePage {
       appBar: AppBar(
         title: const Text('Wallet Page'),
       ),
-      body: Container(
+      body: DecoratedBox(
         decoration:
             BoxDecoration(color: context.theme.appColors.primaryBackground),
         child: Center(
