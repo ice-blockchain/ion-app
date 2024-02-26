@@ -4,9 +4,9 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/components/feed_categories_dropdown.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/components/filters_separator.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/components/plus_button.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_categories_dropdown.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/filters_separator.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/plus_button.dart';
 
 class FeedFilters extends HookWidget {
   const FeedFilters();

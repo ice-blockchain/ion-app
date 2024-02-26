@@ -3,8 +3,8 @@ import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_header/components/forward_button.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_header/components/video_icon.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_header/forward_button.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_header/video_icon.dart';
 
 class TrendingVideosHeader extends StatelessWidget {
   const TrendingVideosHeader();
