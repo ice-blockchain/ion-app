@@ -66,7 +66,6 @@ enum IceRoutes<PayloadType> {
       IceRoutes.feed,
       IceRoutes.dapps,
       IceRoutes.chat,
-      IceRoutes.pullRightMenu,
     ],
   ),
   feed(FeedPage.new),
