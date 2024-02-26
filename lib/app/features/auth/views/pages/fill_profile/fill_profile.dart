@@ -77,7 +77,7 @@ class FillProfile extends IceSimplePage {
             height: 100.0.s,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(Assets.images.misc.authPhotoPlaceholder.path),
+                image: Assets.images.misc.authPhotoPlaceholder.provider(),
                 fit: BoxFit.cover,
               ),
             ),
@@ -138,7 +138,7 @@ class FillProfile extends IceSimplePage {
               InputField(
                 // autofocus: true,
                 leadingIcon: ImageIcon(
-                  AssetImage(Assets.images.icons.iconFieldName.path),
+                  Assets.images.icons.iconFieldName.provider(),
                 ),
                 label: context.i18n.fill_profile_input_name,
                 controller: nameController.controller,
@@ -148,7 +148,7 @@ class FillProfile extends IceSimplePage {
               ),
               InputField(
                 leadingIcon: ImageIcon(
-                  AssetImage(Assets.images.icons.iconFieldNickname.path),
+                  Assets.images.icons.iconFieldNickname.provider(),
                 ),
                 label: context.i18n.fill_profile_input_nickname,
                 controller: nicknameController.controller,
@@ -159,7 +159,7 @@ class FillProfile extends IceSimplePage {
               ),
               InputField(
                 leadingIcon: ImageIcon(
-                  AssetImage(Assets.images.icons.iconFieldInviter.path),
+                  Assets.images.icons.iconFieldInviter.provider(),
                 ),
                 label: context.i18n.fill_profile_input_who_invited,
                 controller: inviterController.controller,

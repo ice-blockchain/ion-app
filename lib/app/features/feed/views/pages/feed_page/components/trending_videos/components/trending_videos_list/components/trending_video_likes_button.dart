@@ -24,7 +24,7 @@ class TrendingVideoLikesButton extends StatelessWidget {
       child: Row(
         children: <Widget>[
           ImageIcon(
-            AssetImage(Assets.images.icons.iconVideoLikeOn.path),
+            Assets.images.icons.iconVideoLikeOn.provider(),
             size: 14.0.s,
             color: context.theme.appColors.secondaryBackground,
           ),

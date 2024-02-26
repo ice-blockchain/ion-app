@@ -75,7 +75,7 @@ Widget regularButtonUseCase(BuildContext context) {
           ),
           mainAxisSize: MainAxisSize.max,
           trailingIcon: ImageIcon(
-            AssetImage(Assets.images.icons.iconBookmarks.path),
+            Assets.images.icons.iconBookmarks.provider(),
             color: context.theme.appColors.attentionRed,
           ),
           onPressed: () {},
@@ -96,14 +96,14 @@ Widget iconButtonUseCase(BuildContext context) {
       children: <Widget>[
         Button.icon(
           icon: ImageIcon(
-            AssetImage(Assets.images.icons.iconHeaderMenu.path),
+            Assets.images.icons.iconHeaderMenu.provider(),
           ),
           onPressed: () {},
         ),
         Button.icon(
           type: ButtonType.outlined,
           icon: ImageIcon(
-            AssetImage(Assets.images.icons.iconHeaderMenu.path),
+            Assets.images.icons.iconHeaderMenu.provider(),
           ),
           onPressed: () {},
         ),
@@ -111,7 +111,7 @@ Widget iconButtonUseCase(BuildContext context) {
           size: 40.0.s,
           type: ButtonType.outlined,
           icon: ImageIcon(
-            AssetImage(Assets.images.icons.iconHeaderMenu.path),
+            Assets.images.icons.iconHeaderMenu.provider(),
             size: 20.0.s,
           ),
           style: OutlinedButton.styleFrom(
@@ -126,7 +126,7 @@ Widget iconButtonUseCase(BuildContext context) {
           tintColor: context.theme.appColors.attentionRed,
           type: ButtonType.outlined,
           icon: ImageIcon(
-            AssetImage(Assets.images.icons.iconHeaderMenu.path),
+            Assets.images.icons.iconHeaderMenu.provider(),
             size: 20.0.s,
           ),
           onPressed: () {},
@@ -151,7 +151,7 @@ Widget compactButtonUseCase(BuildContext context) {
             Expanded(
               child: Button.compact(
                 leadingIcon: ImageIcon(
-                  AssetImage(Assets.images.icons.iconButtonReceive.path),
+                  Assets.images.icons.iconButtonReceive.provider(),
                 ),
                 label: Text(
                   context.knobs.string(
@@ -168,7 +168,7 @@ Widget compactButtonUseCase(BuildContext context) {
             Expanded(
               child: Button.compact(
                 leadingIcon: ImageIcon(
-                  AssetImage(Assets.images.icons.iconButtonSend.path),
+                  Assets.images.icons.iconButtonSend.provider(),
                 ),
                 label: Text(
                   context.knobs.string(
@@ -272,11 +272,10 @@ Widget dropdownButtonUseCase(BuildContext context) {
         Button.dropdown(
           onPressed: () {},
           leadingIcon: ButtonIconFrame(
-            icon: Image(
+            icon: Assets.images.icons.iconBadgeIcelogo.image(
               width: 26.0.s,
               height: 26.0.s,
               fit: BoxFit.fill,
-              image: AssetImage(Assets.images.icons.iconBadgeIcelogo.path),
             ),
           ),
           leadingButtonOffset: 4.0.s,

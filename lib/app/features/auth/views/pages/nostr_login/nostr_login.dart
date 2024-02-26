@@ -40,7 +40,7 @@ class NostrLogin extends IceSimplePage {
                 children: <Widget>[
                   InputField(
                     leadingIcon: ImageIcon(
-                      AssetImage(Assets.images.icons.iconFieldPrivatekey.path),
+                      Assets.images.icons.iconFieldPrivatekey.provider(),
                     ),
                     label: context.i18n.nostr_login_input_private_key,
                     controller: privateKeyController.controller,

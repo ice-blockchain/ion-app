@@ -19,7 +19,7 @@ class PlusButton extends StatelessWidget {
       onPressed: onPressed,
       type: ButtonType.menuInactive,
       label: ImageIcon(
-        AssetImage(Assets.images.icons.iconPlusCreatechannel.path),
+        Assets.images.icons.iconPlusCreatechannel.provider(),
         size: 30.0.s,
         color: context.theme.appColors.primaryText,
       ),

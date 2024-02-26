@@ -20,9 +20,7 @@ class ForwardButton extends StatelessWidget {
           padding: EdgeInsets.zero,
           onPressed: () {},
           icon: ImageIcon(
-            AssetImage(
-              Assets.images.icons.iconBackArrow.path,
-            ),
+            Assets.images.icons.iconBackArrow.provider(),
             size: iconSize,
           ),
         ),

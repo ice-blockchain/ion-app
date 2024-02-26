@@ -69,7 +69,7 @@ class SearchInput extends HookWidget {
                 prefixIcon: Padding(
                   padding: EdgeInsets.only(left: 12.0.s, right: 6.0.s),
                   child: ImageIcon(
-                    AssetImage(Assets.images.icons.iconFieldSearch.path),
+                    Assets.images.icons.iconFieldSearch.provider(),
                     color: context.theme.appColors.tertararyText,
                     size: 16.0.s,
                   ),

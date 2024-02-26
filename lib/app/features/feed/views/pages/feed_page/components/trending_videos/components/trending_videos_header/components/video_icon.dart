@@ -15,12 +15,12 @@ class VideosIcon extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(Assets.images.bg.iconStroke.path),
+          image: Assets.images.bg.iconStroke.provider(),
           fit: BoxFit.cover,
         ),
       ),
       child: ImageIcon(
-        AssetImage(Assets.images.icons.iconVideosTrading.path),
+        Assets.images.icons.iconVideosTrading.provider(),
         color: context.theme.appColors.secondaryBackground,
         size: 20.0.s,
       ),

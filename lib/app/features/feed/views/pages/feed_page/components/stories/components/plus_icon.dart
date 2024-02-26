@@ -30,7 +30,7 @@ class PlusIcon extends StatelessWidget {
         ImageIcon(
           size: size,
           color: context.theme.appColors.secondaryBackground,
-          AssetImage(Assets.images.icons.iconPlusCreatechannel.path),
+          Assets.images.icons.iconPlusCreatechannel.provider(),
         ),
       ],
     );

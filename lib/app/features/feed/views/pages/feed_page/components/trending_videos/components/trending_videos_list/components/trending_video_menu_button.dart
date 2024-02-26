@@ -18,7 +18,7 @@ class TrendingVideoMenuButton extends StatelessWidget {
       child: IconButton(
         onPressed: onPressed,
         icon: ImageIcon(
-          AssetImage(Assets.images.icons.iconMorePopup.path),
+          Assets.images.icons.iconMorePopup.provider(),
           size: 16.0.s,
           color: context.theme.appColors.secondaryBackground,
         ),
