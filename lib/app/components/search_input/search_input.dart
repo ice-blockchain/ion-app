@@ -75,11 +75,7 @@ class SearchInput extends HookWidget {
                   ),
                 ),
                 suffixIcon: loading
-                    ? Image.asset(
-                        Assets.images.icons.iconFieldIceloader.path,
-                        width: 20.0.s,
-                        height: 20.0.s,
-                      )
+                    ? Assets.images.icons.iconFieldIceloader.icon(size: 20.0.s)
                     : showClear.value
                         ? SearchClearButton(
                             onPressed: () => searchController.clear(),

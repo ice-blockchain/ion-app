@@ -15,12 +15,10 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 0,
-        iconOff: Image.asset(
-          Assets.images.icons.iconHomeOff.path,
+        iconOff: Assets.images.icons.iconHomeOff.image(
           color: context.theme.appColors.tertararyText,
         ),
-        iconOn: Image.asset(
-          Assets.images.icons.iconHomeOff.path,
+        iconOn: Assets.images.icons.iconHomeOff.image(
           color: context.theme.appColors.primaryAccent,
         ),
       ),
@@ -30,12 +28,10 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 1,
-        iconOff: Image.asset(
-          Assets.images.icons.iconDappOff.path,
+        iconOff: Assets.images.icons.iconDappOff.image(
           color: context.theme.appColors.tertararyText,
         ),
-        iconOn: Image.asset(
-          Assets.images.icons.iconDappOff.path,
+        iconOn: Assets.images.icons.iconDappOff.image(
           color: context.theme.appColors.primaryAccent,
         ),
       ),
@@ -45,12 +41,10 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 2,
-        iconOff: Image.asset(
-          Assets.images.icons.iconChatOff.path,
+        iconOff: Assets.images.icons.iconChatOff.image(
           color: context.theme.appColors.tertararyText,
         ),
-        iconOn: Image.asset(
-          Assets.images.icons.iconChatOff.path,
+        iconOn: Assets.images.icons.iconChatOff.image(
           color: context.theme.appColors.primaryAccent,
         ),
       ),
@@ -60,12 +54,10 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 3,
-        iconOff: Image.asset(
-          Assets.images.icons.iconButtonManageWallet.path,
+        iconOff: Assets.images.icons.iconButtonManageWallet.image(
           color: context.theme.appColors.tertararyText,
         ),
-        iconOn: Image.asset(
-          Assets.images.icons.iconButtonManageWallet.path,
+        iconOn: Assets.images.icons.iconButtonManageWallet.image(
           color: context.theme.appColors.primaryAccent,
         ),
       ),

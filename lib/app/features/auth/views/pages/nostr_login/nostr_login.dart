@@ -40,9 +40,7 @@ class NostrLogin extends IceSimplePage {
               Column(
                 children: <Widget>[
                   InputField(
-                    leadingIcon: ImageIcon(
-                      Assets.images.icons.iconFieldPrivatekey.provider(),
-                    ),
+                    leadingIcon: Assets.images.icons.iconFieldPrivatekey.icon(),
                     label: context.i18n.nostr_login_input_private_key,
                     controller: privateKeyController.controller,
                     validator: (String? value) =>

@@ -19,7 +19,7 @@ class _ButtonDropdown extends Button {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
               ),
-              minimumSize: Size(40.0.s, 40.0.s),
+              minimumSize: Size.square(40.0.s),
               padding: leadingIcon != null
                   ? EdgeInsets.only(
                       left: 4.0.s,
@@ -29,8 +29,9 @@ class _ButtonDropdown extends Button {
             ),
           ),
           leadingIconOffset: leadingButtonOffset ?? 10.0.s,
-          trailingIcon: opened
-              ? Assets.images.icons.iconArrowUp.icon()
-              : Assets.images.icons.iconArrowDown.icon(),
+          trailingIcon: (opened
+                  ? Assets.images.icons.iconArrowUp
+                  : Assets.images.icons.iconArrowDown)
+              .icon(),
         );
 }

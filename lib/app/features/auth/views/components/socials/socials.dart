@@ -18,15 +18,16 @@ enum SocialButtonType {
 
   Widget get buttonIcon {
     return switch (this) {
-      SocialButtonType.apple => Assets.images.icons.iconLoginApplelogo.icon(),
-      SocialButtonType.nostr => Assets.images.icons.iconLoginNostrlogo.icon(),
-      SocialButtonType.x => Assets.images.icons.iconLoginXlogo.icon(),
-      SocialButtonType.fb => Assets.images.icons.iconLoginFacebook.icon(),
-      SocialButtonType.github => Assets.images.icons.iconLoginGithub.icon(),
-      SocialButtonType.discord => Assets.images.icons.iconLoginDiscord.icon(),
-      SocialButtonType.linkedin => Assets.images.icons.iconLoginLinkedin.icon(),
-      SocialButtonType.expand => Assets.images.icons.iconLoginDropup.icon(),
-    };
+      SocialButtonType.apple => Assets.images.icons.iconLoginApplelogo,
+      SocialButtonType.nostr => Assets.images.icons.iconLoginNostrlogo,
+      SocialButtonType.x => Assets.images.icons.iconLoginXlogo,
+      SocialButtonType.fb => Assets.images.icons.iconLoginFacebook,
+      SocialButtonType.github => Assets.images.icons.iconLoginGithub,
+      SocialButtonType.discord => Assets.images.icons.iconLoginDiscord,
+      SocialButtonType.linkedin => Assets.images.icons.iconLoginLinkedin,
+      SocialButtonType.expand => Assets.images.icons.iconLoginDropup,
+    }
+        .icon();
   }
 }
 

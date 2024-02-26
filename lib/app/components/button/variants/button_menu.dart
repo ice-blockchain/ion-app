@@ -20,7 +20,7 @@ class _ButtonMenu extends Button {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
               ),
-              minimumSize: Size(40.0.s, 40.0.s),
+              minimumSize: Size.square(40.0.s),
               padding: leadingIcon != null
                   ? EdgeInsets.only(
                       left: 4.0.s,

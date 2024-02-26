@@ -14,8 +14,7 @@ class SearchClearButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: onPressed,
-      icon: Image.asset(
-        Assets.images.icons.iconFieldClearall.path,
+      icon: Assets.images.icons.iconFieldClearall.image(
         width: 20.0.s,
         height: 20.0.s,
       ),
