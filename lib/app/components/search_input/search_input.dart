@@ -49,10 +49,7 @@ class SearchInput extends HookWidget {
               decoration: InputDecoration(
                 isCollapsed: true,
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 11.0.s,
-                  vertical: 11.0.s,
-                ),
+                contentPadding: EdgeInsets.all(11.0.s),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: context.theme.appColors.primaryBackground,
