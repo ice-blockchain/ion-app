@@ -15,21 +15,24 @@ class _ListItemUser extends ListItem {
     BoxConstraints? constraints,
     required Widget title,
     required Widget subtitle,
-    required String profilePicture,
+    String? profilePicture,
     bool verifiedBadge = false,
     bool iceBadge = false,
     DateTime? timeago,
   }) : super(
           leading: leading ??
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10.0.s),
-                child: CachedNetworkImage(
-                  imageUrl: getAdaptiveImageUrl(profilePicture, avatarSize),
-                  width: avatarSize,
-                  height: avatarSize,
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
+              (profilePicture != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0.s),
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            getAdaptiveImageUrl(profilePicture, avatarSize),
+                        width: avatarSize,
+                        height: avatarSize,
+                        fit: BoxFit.fitWidth,
+                      ),
+                    )
+                  : null),
           borderRadius: borderRadius ?? BorderRadius.zero,
           contentPadding: contentPadding ?? EdgeInsets.zero,
           leadingPadding: leadingPadding ?? EdgeInsets.only(right: 8.0.s),
