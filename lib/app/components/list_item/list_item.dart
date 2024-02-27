@@ -5,6 +5,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/utils/image.dart';
 import 'package:ice/generated/assets.gen.dart';
+import 'package:timeago_flutter/timeago_flutter.dart';
 
 part './variants/list_item_checkbox.dart';
 part './variants/list_item_user.dart';
@@ -58,11 +59,12 @@ class ListItem extends StatelessWidget {
     BoxConstraints? constraints,
     Color? backgroundColor,
     VoidCallback? onTap,
-    required String name,
-    required String nickname,
+    required Widget title,
+    required Widget subtitle,
     required String profilePicture,
     bool verifiedBadge,
     bool iceBadge,
+    DateTime? timeago,
   }) = _ListItemUser;
 
   final Widget? leading;

@@ -1154,6 +1154,22 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.4"
+  timeago:
+    dependency: "direct main"
+    description:
+      name: timeago
+      sha256: d3204eb4c788214883380253da7f23485320a58c11d145babc82ad16bf4e7764
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.6.1"
+  timeago_flutter:
+    dependency: "direct main"
+    description:
+      name: timeago_flutter
+      sha256: "8faa66867090d37f7ccb9489bd6d083d14a588005eafa3fadf2d1c86760dbc27"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.6.0"
   timing:
     dependency: transitive
     description:

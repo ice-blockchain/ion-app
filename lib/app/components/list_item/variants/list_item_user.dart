@@ -12,11 +12,12 @@ class _ListItemUser extends ListItem {
     EdgeInsetsGeometry? contentPadding,
     EdgeInsetsGeometry? leadingPadding,
     BoxConstraints? constraints,
-    required String name,
-    required String nickname,
+    required Widget title,
+    required Widget subtitle,
     required String profilePicture,
     bool verifiedBadge = false,
     bool iceBadge = false,
+    DateTime? timeago,
   }) : super(
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(10.0.s),
@@ -33,7 +34,7 @@ class _ListItemUser extends ListItem {
           constraints: constraints ?? const BoxConstraints(),
           title: Row(
             children: <Widget>[
-              Text(name),
+              title,
               if (iceBadge)
                 Padding(
                   padding: EdgeInsets.only(left: 4.0.s),
@@ -48,7 +49,12 @@ class _ListItemUser extends ListItem {
                 ),
             ],
           ),
-          subtitle: Text(nickname),
+          subtitle: Row(
+            children: <Widget>[
+              subtitle,
+              if (timeago != null) _TimeAgo(date: timeago),
+            ],
+          ),
         );
 
   static double get avatarSize => 30.0.s;
@@ -71,6 +77,21 @@ class _ListItemUser extends ListItem {
   TextStyle _getDefaultSubtitleStyle(BuildContext context) {
     return context.theme.appTextThemes.caption.copyWith(
       color: context.theme.appColors.tertararyText,
+    );
+  }
+}
+
+class _TimeAgo extends StatelessWidget {
+  const _TimeAgo({required this.date});
+
+  final DateTime date;
+
+  @override
+  Widget build(BuildContext context) {
+    return Timeago(
+      date: date,
+      builder: (BuildContext context, String value) => Text(' • $value'),
+      locale: 'en_short',
     );
   }
 }

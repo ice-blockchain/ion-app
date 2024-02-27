@@ -63,15 +63,15 @@ Widget userListItemUseCase(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         ListItem.user(
-          name: 'Alina Proxima',
-          nickname: '@alinaproxima',
+          title: const Text('Alina Proxima'),
+          subtitle: const Text('@alinaproxima'),
           profilePicture:
               'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
           verifiedBadge: true,
         ),
         ListItem.user(
-          name: 'Alina Proxima',
-          nickname: '@alinaproxima',
+          title: const Text('Alina Proxima'),
+          subtitle: const Text('@alinaproxima'),
           profilePicture:
               'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
           verifiedBadge: true,
@@ -82,8 +82,8 @@ Widget userListItemUseCase(BuildContext context) {
           ),
         ),
         ListItem.user(
-          name: 'Alina Proxima',
-          nickname: '@alinaproxima',
+          title: const Text('Alina Proxima'),
+          subtitle: const Text('@alinaproxima'),
           profilePicture:
               'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
           verifiedBadge: true,
@@ -92,6 +92,16 @@ Widget userListItemUseCase(BuildContext context) {
             icon: Assets.images.icons.iconCheckboxOn.icon(),
             onPressed: () {},
           ),
+          onTap: () {},
+        ),
+        ListItem.user(
+          title: const Text('Alina Proxima'),
+          subtitle: const Text('@alinaproxima'),
+          profilePicture:
+              'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+          verifiedBadge: true,
+          iceBadge: true,
+          timeago: DateTime(2024, 2, 27, 11),
           onTap: () {},
         ),
       ],
