@@ -9,6 +9,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     required this.title,
     required this.subtitle,
     required this.subtitle2,
+    required this.subtitle3,
     required this.body,
     required this.body2,
     required this.caption,
@@ -24,6 +25,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       title: TemplateTextStyle.fromTemplate(textThemes.title),
       subtitle: TemplateTextStyle.fromTemplate(textThemes.subtitle),
       subtitle2: TemplateTextStyle.fromTemplate(textThemes.subtitle2),
+      subtitle3: TemplateTextStyle.fromTemplate(textThemes.subtitle3),
       body: TemplateTextStyle.fromTemplate(textThemes.body),
       body2: TemplateTextStyle.fromTemplate(textThemes.body2),
       caption: TemplateTextStyle.fromTemplate(textThemes.caption),
@@ -38,6 +40,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   final TextStyle title;
   final TextStyle subtitle;
   final TextStyle subtitle2;
+  final TextStyle subtitle3;
   final TextStyle body;
   final TextStyle body2;
   final TextStyle caption;
@@ -52,6 +55,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     TextStyle? title,
     TextStyle? subtitle,
     TextStyle? subtitle2,
+    TextStyle? subtitle3,
     TextStyle? body,
     TextStyle? body2,
     TextStyle? caption,
@@ -65,6 +69,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
       subtitle2: subtitle2 ?? this.subtitle2,
+      subtitle3: subtitle3 ?? this.subtitle3,
       body: body ?? this.body,
       body2: body2 ?? this.body2,
       caption: caption ?? this.caption,
@@ -89,6 +94,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       title: TextStyle.lerp(title, other.title, t)!,
       subtitle: TextStyle.lerp(subtitle, other.subtitle, t)!,
       subtitle2: TextStyle.lerp(subtitle2, other.subtitle2, t)!,
+      subtitle3: TextStyle.lerp(subtitle3, other.subtitle3, t)!,
       body: TextStyle.lerp(body, other.body, t)!,
       body2: TextStyle.lerp(body2, other.body2, t)!,
       caption: TextStyle.lerp(caption, other.caption, t)!,

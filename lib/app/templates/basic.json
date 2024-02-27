@@ -71,6 +71,10 @@
         "fontSize": 15,
         "fontWeight": 500
       },
+      "subtitle3": {
+        "fontSize": 14,
+        "fontWeight": 500
+      },
       "body": {
         "fontSize": 13,
         "height": 1.38,

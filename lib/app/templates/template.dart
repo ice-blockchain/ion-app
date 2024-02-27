@@ -114,6 +114,7 @@ class TemplateTextThemes with _$TemplateTextThemes {
     TemplateTextTheme title,
     TemplateTextTheme subtitle,
     TemplateTextTheme subtitle2,
+    TemplateTextTheme subtitle3,
     TemplateTextTheme body,
     TemplateTextTheme body2,
     TemplateTextTheme caption,
@@ -125,6 +126,7 @@ class TemplateTextThemes with _$TemplateTextThemes {
       _$TemplateTextThemesFromJson(json);
 
   factory TemplateTextThemes.empty() => TemplateTextThemes(
+        TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),

@@ -7,11 +7,14 @@ import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_info/components/profile_details/profile_details_cell.dart';
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 class ProfileDetails extends HookConsumerWidget {
   const ProfileDetails({
     super.key,
   });
+
+  double get verifiedIconSize => 16.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,11 +27,23 @@ class ProfileDetails extends HookConsumerWidget {
       decoration: Decorations.borderBoxDecoration(context),
       child: Column(
         children: <Widget>[
-          Text(
-            userData.name,
-            style: context.theme.appTextThemes.title.copyWith(
-              color: context.theme.appColors.primaryText,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                userData.name,
+                style: context.theme.appTextThemes.title.copyWith(
+                  color: context.theme.appColors.primaryText,
+                ),
+              ),
+              if (userData.isVerified == true) SizedBox(width: 6.0.s),
+              if (userData.isVerified == true)
+                Image.asset(
+                  Assets.images.icons.iconBadgeVerify.path,
+                  width: verifiedIconSize,
+                  height: verifiedIconSize,
+                ),
+            ],
           ),
           SizedBox(height: 3.0.s),
           Text(
