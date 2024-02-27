@@ -8,6 +8,7 @@ class _ListItemUser extends ListItem {
     super.backgroundColor,
     super.onTap,
     super.trailing,
+    Widget? leading,
     BorderRadius? borderRadius,
     EdgeInsetsGeometry? contentPadding,
     EdgeInsetsGeometry? leadingPadding,
@@ -19,15 +20,16 @@ class _ListItemUser extends ListItem {
     bool iceBadge = false,
     DateTime? timeago,
   }) : super(
-          leading: ClipRRect(
-            borderRadius: BorderRadius.circular(10.0.s),
-            child: CachedNetworkImage(
-              imageUrl: getAdaptiveImageUrl(profilePicture, avatarSize),
-              width: avatarSize,
-              height: avatarSize,
-              fit: BoxFit.fitWidth,
-            ),
-          ),
+          leading: leading ??
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10.0.s),
+                child: CachedNetworkImage(
+                  imageUrl: getAdaptiveImageUrl(profilePicture, avatarSize),
+                  width: avatarSize,
+                  height: avatarSize,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
           borderRadius: borderRadius ?? BorderRadius.zero,
           contentPadding: contentPadding ?? EdgeInsets.zero,
           leadingPadding: leadingPadding ?? EdgeInsets.only(right: 8.0.s),

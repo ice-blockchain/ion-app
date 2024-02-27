@@ -50,6 +50,7 @@ class ListItem extends StatelessWidget {
 
   factory ListItem.user({
     Key? key,
+    Widget? leading,
     Widget? trailing,
     BoxBorder? border,
     BorderRadius? borderRadius,
