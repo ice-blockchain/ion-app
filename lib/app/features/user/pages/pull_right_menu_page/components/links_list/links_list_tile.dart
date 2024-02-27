@@ -47,6 +47,7 @@ class LinksListTile extends StatelessWidget {
       contentPadding: EdgeInsets.symmetric(vertical: 12.0.s),
       leadingPadding: EdgeInsets.only(right: 12.0.s),
       backgroundColor: Colors.transparent,
+      borderRadius: BorderRadius.zero,
     );
   }
 }
