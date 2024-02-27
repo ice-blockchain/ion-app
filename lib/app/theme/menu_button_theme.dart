@@ -11,8 +11,6 @@ MenuButtonThemeData buildMenuButtonTheme(
 ) {
   return MenuButtonThemeData(
     style: ButtonStyle(
-      iconSize:
-          MaterialStatePropertyAll<double>(templateTheme.menuButton.iconSize),
       minimumSize: MaterialStatePropertyAll<Size>(
         Size(100.0.s, templateTheme.menuButton.minHeight.s),
       ),

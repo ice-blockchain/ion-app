@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -82,14 +83,14 @@ class WalletHeader extends HookConsumerWidget {
               children: <Widget>[
                 Button.icon(
                   onPressed: () {},
-                  icon: ButtonIcon(Assets.images.icons.iconFieldSearch.path),
+                  icon: Assets.images.icons.iconFieldSearch.icon(),
                   type: ButtonType.outlined,
                   size: 40.0.s,
                 ),
                 SizedBox(width: 12.0.s),
                 Button.icon(
                   onPressed: () {},
-                  icon: ButtonIcon(Assets.images.icons.iconHeaderMenu.path),
+                  icon: Assets.images.icons.iconHeaderMenu.icon(),
                   type: ButtonType.outlined,
                   size: 40.0.s,
                 ),

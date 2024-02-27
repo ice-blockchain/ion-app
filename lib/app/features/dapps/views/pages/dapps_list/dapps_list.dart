@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/navigation_header/navigation_header.dart';
-import 'package:ice/app/components/search/search.dart';
+import 'package:ice/app/components/search_input/search_input.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -46,9 +46,8 @@ class DAppsList extends IcePage<AppsRouteData> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Search(
+                    SearchInput(
                       onTextChanged: (String value) => searchText.value = value,
-                      onClearText: () => searchText.value = '',
                     ),
                     Expanded(
                       child: ListView.builder(

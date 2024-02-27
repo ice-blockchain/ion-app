@@ -1,37 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/num.dart';
 
+enum ScreenOffsetSide { left, right }
+
 class ScreenSideOffset extends StatelessWidget {
   const ScreenSideOffset._({
     super.key,
     required this.child,
-    required this.insets,
+    required this.margin,
+    this.only,
   });
 
-  // Factory constructor for large margin
   factory ScreenSideOffset.large({
     Key? key,
+    ScreenOffsetSide? only,
     required Widget child,
   }) {
-    final EdgeInsets defaultLargeInsets =
-        EdgeInsets.symmetric(horizontal: defaultLargeMargin);
     return ScreenSideOffset._(
       key: key,
-      insets: defaultLargeInsets,
+      margin: defaultLargeMargin,
+      only: only,
       child: child,
     );
   }
 
-  // Factory constructor for small margin
   factory ScreenSideOffset.small({
     Key? key,
+    ScreenOffsetSide? only,
     required Widget child,
   }) {
-    final EdgeInsets defaultSmallInsets =
-        EdgeInsets.symmetric(horizontal: defaultSmallMargin);
     return ScreenSideOffset._(
       key: key,
-      insets: defaultSmallInsets,
+      margin: defaultSmallMargin,
+      only: only,
       child: child,
     );
   }
@@ -41,12 +42,17 @@ class ScreenSideOffset extends StatelessWidget {
   static double get defaultLargeMargin => 44.0.s;
 
   final Widget child;
-  final EdgeInsets insets;
+  final double margin;
+  final ScreenOffsetSide? only;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: insets,
+      margin: only != null
+          ? only == ScreenOffsetSide.left
+              ? EdgeInsets.only(left: margin)
+              : EdgeInsets.only(right: margin)
+          : EdgeInsets.symmetric(horizontal: margin),
       child: child,
     );
   }

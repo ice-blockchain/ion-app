@@ -13,7 +13,7 @@ class ChatPage extends IceSimplePage {
       appBar: AppBar(
         title: const Text('Chat Page'),
       ),
-      body: Container(
+      body: DecoratedBox(
         decoration: BoxDecoration(color: context.theme.appColors.attentionRed),
         child: Center(
           child: Column(

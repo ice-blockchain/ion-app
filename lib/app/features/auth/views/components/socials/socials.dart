@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -15,17 +16,18 @@ enum SocialButtonType {
   discord,
   linkedin;
 
-  String get buttonIcon {
+  Widget get buttonIcon {
     return switch (this) {
-      SocialButtonType.apple => Assets.images.icons.iconLoginApplelogo.path,
-      SocialButtonType.nostr => Assets.images.icons.iconLoginNostrlogo.path,
-      SocialButtonType.x => Assets.images.icons.iconLoginXlogo.path,
-      SocialButtonType.fb => Assets.images.icons.iconLoginFacebook.path,
-      SocialButtonType.github => Assets.images.icons.iconLoginGithub.path,
-      SocialButtonType.discord => Assets.images.icons.iconLoginDiscord.path,
-      SocialButtonType.linkedin => Assets.images.icons.iconLoginLinkedin.path,
-      SocialButtonType.expand => Assets.images.icons.iconLoginDropup.path,
-    };
+      SocialButtonType.apple => Assets.images.icons.iconLoginApplelogo,
+      SocialButtonType.nostr => Assets.images.icons.iconLoginNostrlogo,
+      SocialButtonType.x => Assets.images.icons.iconLoginXlogo,
+      SocialButtonType.fb => Assets.images.icons.iconLoginFacebook,
+      SocialButtonType.github => Assets.images.icons.iconLoginGithub,
+      SocialButtonType.discord => Assets.images.icons.iconLoginDiscord,
+      SocialButtonType.linkedin => Assets.images.icons.iconLoginLinkedin,
+      SocialButtonType.expand => Assets.images.icons.iconLoginDropup,
+    }
+        .icon();
   }
 }
 
@@ -89,17 +91,17 @@ class _SocialsState extends State<Socials> {
   }
 
   Widget buildSocialButton(SocialButtonType type) {
-    String socialIcon = type.buttonIcon;
+    Widget socialIcon = type.buttonIcon;
 
     if (type == SocialButtonType.expand) {
       socialIcon = isSecondRowVisible
-          ? Assets.images.icons.iconLoginDropup.path
-          : Assets.images.icons.iconLoginDropdown.path;
+          ? Assets.images.icons.iconLoginDropup.icon()
+          : Assets.images.icons.iconLoginDropdown.icon();
     }
 
     return Button.icon(
       type: ButtonType.outlined,
-      icon: ButtonIcon(socialIcon),
+      icon: socialIcon,
       onPressed: () => handleButtonPress(type),
     );
   }

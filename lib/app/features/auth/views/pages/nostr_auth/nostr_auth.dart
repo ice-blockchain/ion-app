@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
@@ -32,9 +33,7 @@ class NostrAuth extends IceSimplePage {
               children: <Widget>[
                 Center(
                   child: Button(
-                    leadingIcon: ButtonIcon(
-                      Assets.images.icons.iconLoginCreateacc.path,
-                    ),
+                    leadingIcon: Assets.images.icons.iconLoginCreateacc.icon(),
                     onPressed: () {
                       // showModalScreen(
                       //   const NostrCreateAccount(),
@@ -51,9 +50,7 @@ class NostrAuth extends IceSimplePage {
                 ),
                 Center(
                   child: Button(
-                    leadingIcon: ButtonIcon(
-                      Assets.images.icons.iconProfileSave.path,
-                    ),
+                    leadingIcon: Assets.images.icons.iconProfileSave.icon(),
                     onPressed: () {
                       IceRoutes.nostrLogin.go(context);
                     },

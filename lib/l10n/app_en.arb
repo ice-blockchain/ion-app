@@ -74,5 +74,6 @@
   "profile_articles": "Articles",
   "profile_articles_desc": "Trending stories",
   "profile_bookmarks": "Bookmarks",
-  "profile_bookmarks_desc": "Your saved posts"
+  "profile_bookmarks_desc": "Your saved posts",
+  "trending_videos": "Trending Videos"
 }

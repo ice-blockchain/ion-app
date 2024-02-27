@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -24,21 +25,21 @@ Widget regularButtonUseCase(BuildContext context) {
             ),
           ),
           mainAxisSize: MainAxisSize.max,
-          leadingIcon: ButtonIcon(Assets.images.icons.iconBookmarks.path),
+          leadingIcon: Assets.images.icons.iconBookmarks.icon(),
           onPressed: () {},
         ),
         Button(
           type: ButtonType.secondary,
           label: const Text('Secondary'),
           mainAxisSize: MainAxisSize.max,
-          trailingIcon: ButtonIcon(Assets.images.icons.iconBookmarks.path),
+          trailingIcon: Assets.images.icons.iconBookmarks.icon(),
           onPressed: () {},
         ),
         Button(
           type: ButtonType.outlined,
           label: const Text('Outlined'),
           mainAxisSize: MainAxisSize.max,
-          leadingIcon: ButtonIcon(Assets.images.icons.iconBookmarks.path),
+          leadingIcon: Assets.images.icons.iconBookmarks.icon(),
           onPressed: () {},
         ),
         Button(
@@ -46,14 +47,14 @@ Widget regularButtonUseCase(BuildContext context) {
           tintColor: context.theme.appColors.attentionRed,
           label: const Text('Outlined with Tint color'),
           mainAxisSize: MainAxisSize.max,
-          leadingIcon: ButtonIcon(Assets.images.icons.iconBookmarks.path),
+          leadingIcon: Assets.images.icons.iconBookmarks.icon(),
           onPressed: () {},
         ),
         Button(
           type: ButtonType.disabled,
           label: const Text('Disabled'),
           mainAxisSize: MainAxisSize.max,
-          trailingIcon: ButtonIcon(Assets.images.icons.iconBookmarks.path),
+          trailingIcon: Assets.images.icons.iconBookmarks.icon(),
           onPressed: () {},
         ),
         Button(
@@ -74,8 +75,7 @@ Widget regularButtonUseCase(BuildContext context) {
             backgroundColor: context.theme.appColors.onTerararyFill,
           ),
           mainAxisSize: MainAxisSize.max,
-          trailingIcon: ImageIcon(
-            AssetImage(Assets.images.icons.iconBookmarks.path),
+          trailingIcon: Assets.images.icons.iconBookmarks.icon(
             color: context.theme.appColors.attentionRed,
           ),
           onPressed: () {},
@@ -95,23 +95,18 @@ Widget iconButtonUseCase(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Button.icon(
-          icon: ImageIcon(
-            AssetImage(Assets.images.icons.iconHeaderMenu.path),
-          ),
+          icon: Assets.images.icons.iconHeaderMenu.icon(),
           onPressed: () {},
         ),
         Button.icon(
           type: ButtonType.outlined,
-          icon: ImageIcon(
-            AssetImage(Assets.images.icons.iconHeaderMenu.path),
-          ),
+          icon: Assets.images.icons.iconHeaderMenu.icon(),
           onPressed: () {},
         ),
         Button.icon(
           size: 40.0.s,
           type: ButtonType.outlined,
-          icon: ImageIcon(
-            AssetImage(Assets.images.icons.iconHeaderMenu.path),
+          icon: Assets.images.icons.iconHeaderMenu.icon(
             size: 20.0.s,
           ),
           style: OutlinedButton.styleFrom(
@@ -125,8 +120,7 @@ Widget iconButtonUseCase(BuildContext context) {
           size: 40.0.s,
           tintColor: context.theme.appColors.attentionRed,
           type: ButtonType.outlined,
-          icon: ImageIcon(
-            AssetImage(Assets.images.icons.iconHeaderMenu.path),
+          icon: Assets.images.icons.iconHeaderMenu.icon(
             size: 20.0.s,
           ),
           onPressed: () {},
@@ -150,9 +144,7 @@ Widget compactButtonUseCase(BuildContext context) {
           children: <Widget>[
             Expanded(
               child: Button.compact(
-                leadingIcon: ImageIcon(
-                  AssetImage(Assets.images.icons.iconButtonReceive.path),
-                ),
+                leadingIcon: Assets.images.icons.iconButtonReceive.icon(),
                 label: Text(
                   context.knobs.string(
                     label: 'Label',
@@ -167,9 +159,7 @@ Widget compactButtonUseCase(BuildContext context) {
             ),
             Expanded(
               child: Button.compact(
-                leadingIcon: ImageIcon(
-                  AssetImage(Assets.images.icons.iconButtonSend.path),
-                ),
+                leadingIcon: Assets.images.icons.iconButtonSend.icon(),
                 label: Text(
                   context.knobs.string(
                     label: 'Label',
@@ -180,6 +170,106 @@ Widget compactButtonUseCase(BuildContext context) {
               ),
             ),
           ],
+        ),
+      ],
+    ),
+  );
+}
+
+@widgetbook.UseCase(
+  name: 'menu',
+  type: Button,
+)
+Widget menuButtonUseCase(BuildContext context) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Button.menu(
+          onPressed: () {},
+          leadingIcon: ButtonIconFrame(
+            icon: Assets.images.icons.iconTabsCoins.icon(
+              size: 20.0.s,
+            ),
+          ),
+          label: const Text('Coins'),
+        ),
+        Button.menu(
+          onPressed: () {},
+          leadingIcon: ButtonIconFrame(
+            color: context.theme.appColors.primaryAccent,
+            icon: Assets.images.icons.iconTabsCoins.icon(
+              size: 20.0.s,
+              color: context.theme.appColors.secondaryBackground,
+            ),
+          ),
+          label: const Text('Coins'),
+          active: true,
+        ),
+        Button.menu(
+          onPressed: () {},
+          label: const Text('For you'),
+        ),
+        Button.menu(
+          onPressed: () {},
+          label: Text(
+            'For you',
+            style: TextStyle(color: context.theme.appColors.primaryAccent),
+          ),
+          active: true,
+        ),
+      ],
+    ),
+  );
+}
+
+@widgetbook.UseCase(
+  name: 'dropdown',
+  type: Button,
+)
+Widget dropdownButtonUseCase(BuildContext context) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Button.dropdown(
+          onPressed: () {},
+          leadingIcon: ButtonIconFrame(
+            color: context.theme.appColors.success,
+            icon: Assets.images.icons.iconFeedStories.icon(
+              size: 24.0.s,
+              color: context.theme.appColors.secondaryBackground,
+            ),
+          ),
+          label: const Text('News'),
+        ),
+        Button.dropdown(
+          onPressed: () {},
+          leadingIcon: ButtonIconFrame(
+            color: context.theme.appColors.success,
+            icon: Assets.images.icons.iconFeedStories.icon(
+              size: 24.0.s,
+              color: context.theme.appColors.secondaryBackground,
+            ),
+          ),
+          label: const Text('News'),
+          opened: true,
+        ),
+        Button.dropdown(
+          onPressed: () {},
+          leadingIcon: ButtonIconFrame(
+            icon: Assets.images.icons.iconBadgeIcelogo.image(
+              width: 26.0.s,
+              height: 26.0.s,
+              fit: BoxFit.fill,
+            ),
+          ),
+          leadingButtonOffset: 4.0.s,
+          backgroundColor: context.theme.appColors.tertararyBackground,
+          label: Text(
+            'ice.wallet',
+            style: TextStyle(color: context.theme.appColors.primaryText),
+          ),
         ),
       ],
     ),

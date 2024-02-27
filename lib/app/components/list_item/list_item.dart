@@ -89,7 +89,7 @@ class ListItem extends StatelessWidget {
     required BuildContext context,
     required Widget child,
   }) {
-    final Widget container = Container(
+    final Widget container = DecoratedBox(
       decoration: BoxDecoration(
         color: _getBackgroundColor(context),
         border: border,

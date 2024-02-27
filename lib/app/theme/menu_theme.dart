@@ -13,7 +13,7 @@ MenuThemeData buildMenuTheme(
     style: MenuStyle(
       elevation: MaterialStatePropertyAll<double>(templateTheme.menu.elevation),
       shadowColor: MaterialStatePropertyAll<Color>(
-        colors.tertararyBackground.withOpacity(0.3),
+        colors.tertararyBackground,
       ),
       padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
         EdgeInsets.fromLTRB(
@@ -31,6 +31,8 @@ MenuThemeData buildMenuTheme(
         ),
       ),
       backgroundColor:
+          MaterialStatePropertyAll<Color>(colors.secondaryBackground),
+      surfaceTintColor:
           MaterialStatePropertyAll<Color>(colors.secondaryBackground),
     ),
   );

@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -24,7 +25,7 @@ class WalletPage extends IceSimplePage {
       appBar: AppBar(
         title: const Text('Wallet Page'),
       ),
-      body: Container(
+      body: DecoratedBox(
         decoration:
             BoxDecoration(color: context.theme.appColors.primaryBackground),
         child: Center(
@@ -34,8 +35,7 @@ class WalletPage extends IceSimplePage {
                 trailingIcon: const Icon(
                   Icons.arrow_drop_down_rounded,
                 ),
-                leadingIcon: ButtonIcon(
-                  Assets.images.bg.foo.path,
+                leadingIcon: Assets.images.icons.iconButtonAddstroke.icon(
                   size: 30.0.s,
                 ),
                 label: Text(

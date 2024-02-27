@@ -97,24 +97,20 @@
     "appBar": {
       "toolbarHeight": 50
     },
-    "menuAnchor": {
-      "alignmentOffsetY": 8
-    },
     "menu": {
       "elevation": 16,
       "paddingLeft": 0,
-      "paddingTop": 11,
+      "paddingTop": 10,
       "paddingRight": 0,
-      "paddingBottom": 11,
+      "paddingBottom": 10,
       "borderRadius": 16
     },
     "menuButton": {
-      "iconSize": 28,
       "minHeight": 46,
       "paddingLeft": 16,
-      "paddingTop": 0,
-      "paddingRight": 13,
-      "paddingBottom": 0
+      "paddingTop": 10,
+      "paddingRight": 20,
+      "paddingBottom": 10
     },
     "iconButton": {
       "width": 24,

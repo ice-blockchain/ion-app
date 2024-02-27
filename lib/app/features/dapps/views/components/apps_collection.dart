@@ -5,7 +5,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/components/favourite_icon/favorite_icon.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
-import 'package:ice/app/utils/string.dart';
+import 'package:ice/app/utils/num.dart';
 
 const double columnWidthPercentage = 0.68;
 double sectionHeight = 200.0.s;

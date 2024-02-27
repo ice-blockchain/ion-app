@@ -7,6 +7,7 @@ import 'package:ice/app/theme/icon_button_theme.dart';
 import 'package:ice/app/theme/icon_theme.dart';
 import 'package:ice/app/theme/menu_button_theme.dart';
 import 'package:ice/app/theme/menu_theme.dart';
+import 'package:ice/app/theme/text_button_theme.dart';
 
 ThemeData buildLightTheme(TemplateTheme templateTheme) {
   final AppColorsExtension colors =
@@ -20,6 +21,7 @@ ThemeData buildLightTheme(TemplateTheme templateTheme) {
     menuButtonTheme: buildMenuButtonTheme(templateTheme, colors, textThemes),
     iconButtonTheme: buildIconButtonTheme(templateTheme, textThemes),
     iconTheme: buildIconTheme(templateTheme),
+    textButtonTheme: buildTextButtonTheme(),
     scaffoldBackgroundColor: colors.secondaryBackground,
   );
 }
@@ -36,6 +38,7 @@ ThemeData buildDarkTheme(TemplateTheme templateTheme) {
     menuButtonTheme: buildMenuButtonTheme(templateTheme, colors, textThemes),
     iconButtonTheme: buildIconButtonTheme(templateTheme, textThemes),
     iconTheme: buildIconTheme(templateTheme),
+    textButtonTheme: buildTextButtonTheme(),
     scaffoldBackgroundColor: colors.secondaryBackground,
   );
 }

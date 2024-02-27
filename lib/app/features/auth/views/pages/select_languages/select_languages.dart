@@ -3,8 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/navigation_header/navigation_header.dart';
 import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
-import 'package:ice/app/components/search/search.dart';
+import 'package:ice/app/components/search_input/search_input.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -51,12 +52,9 @@ class SelectLanguages extends IceSimplePage {
                     ),
                     Padding(
                       padding: EdgeInsets.only(bottom: 12.0.s),
-                      child: Search(
+                      child: SearchInput(
                         onTextChanged: (String value) =>
                             searchText.value = value,
-                        onClearText: () {
-                          searchText.value = '';
-                        },
                       ),
                     ),
                     Expanded(
@@ -120,14 +118,12 @@ class SelectLanguages extends IceSimplePage {
                                   SizedBox(
                                     width: 30.0.s,
                                     child: isSelected
-                                        ? Image.asset(
-                                            Assets.images.icons
-                                                .iconBlockCheckboxOn.path,
-                                          )
-                                        : Image.asset(
-                                            Assets.images.icons
-                                                .iconBlockCheckboxOff.path,
-                                          ),
+                                        ? Assets
+                                            .images.icons.iconBlockCheckboxOn
+                                            .icon()
+                                        : Assets
+                                            .images.icons.iconBlockCheckboxOff
+                                            .icon(),
                                   ),
                                 ],
                               ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/features/core/providers/template_provider.dart';
+import 'package:ice/app/extensions/num.dart';
 
 /// Basically just a MenuAnchor with some predefined values from the Template
 class DropDownMenu extends MenuAnchor {
@@ -18,7 +18,6 @@ class DropDownMenu extends MenuAnchor {
     super.builder,
     super.child,
   }) : super(
-          alignmentOffset: alignmentOffset ??
-              Offset(0, appTemplateTheme.menuAnchor.alignmentOffsetY),
+          alignmentOffset: alignmentOffset ?? Offset(0, 8.0.s),
         );
 }

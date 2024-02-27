@@ -2,5 +2,6 @@ arb-dir: lib/l10n
 output-dir: lib/generated/
 output-class: I18n
 template-arb-file: app_en.arb
+untranslated-messages-file: app_es.arb
 output-localization-file: app_localizations.dart
 synthetic-package: false
