@@ -6,6 +6,13 @@ class _ListItemWithCheckbox extends ListItem {
     super.leading,
     super.title,
     super.subtitle,
+    super.border,
+    super.borderRadius,
+    super.contentPadding,
+    super.leadingPadding,
+    super.trailingPadding,
+    super.constraints,
+    super.backgroundColor,
     required super.onTap,
     required this.value,
   }) : super(
@@ -37,24 +44,8 @@ class _ListItemWithCheckbox extends ListItem {
 
   @override
   TextStyle _getDefaultSubtitleStyle(BuildContext context) {
-    return _getDefaultSubtitleStyle(context).copyWith(
-      color: value ? context.theme.appColors.onPrimaryAccent : null,
-    );
-  }
-
-  @override
-  Widget _buildMainContainer({
-    required BuildContext context,
-    required Widget child,
-  }) {
-    return Material(
-      color: _getBackgroundColor(context),
-      borderRadius: borderRadius,
-      child: InkWell(
-        borderRadius: borderRadius,
-        onTap: onTap,
-        child: child,
-      ),
-    );
+    return super._getDefaultSubtitleStyle(context).copyWith(
+          color: value ? context.theme.appColors.onPrimaryAccent : null,
+        );
   }
 }

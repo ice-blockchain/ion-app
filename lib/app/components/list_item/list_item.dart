@@ -13,12 +13,12 @@ class ListItem extends StatelessWidget {
     this.subtitle,
     this.trailing,
     this.border,
-    this.backgroundColor,
     BorderRadius? borderRadius,
-    EdgeInsets? contentPadding,
-    EdgeInsets? leadingPadding,
-    EdgeInsets? trailingPadding,
+    EdgeInsetsGeometry? contentPadding,
+    EdgeInsetsGeometry? leadingPadding,
+    EdgeInsetsGeometry? trailingPadding,
     BoxConstraints? constraints,
+    this.backgroundColor,
     this.onTap,
   })  : borderRadius =
             borderRadius ?? BorderRadius.all(Radius.circular(16.0.s)),
@@ -32,7 +32,23 @@ class ListItem extends StatelessWidget {
     Widget? leading,
     Widget? title,
     Widget? subtitle,
-    required GestureTapCallback onTap,
+    BoxBorder? border,
+    BorderRadius? borderRadius,
+    EdgeInsetsGeometry? contentPadding,
+    EdgeInsetsGeometry? leadingPadding,
+    EdgeInsetsGeometry? trailingPadding,
+    BoxConstraints? constraints,
+    Color? backgroundColor,
+    required VoidCallback onTap,
+    required bool value,
+  }) = _ListItemWithCheckbox;
+
+  factory ListItem.user({
+    Key? key,
+    Widget? leading,
+    Widget? title,
+    Widget? subtitle,
+    required VoidCallback onTap,
     required bool value,
   }) = _ListItemWithCheckbox;
 
@@ -47,7 +63,7 @@ class ListItem extends StatelessWidget {
   final EdgeInsetsGeometry trailingPadding;
   final BoxConstraints constraints;
   final Color? backgroundColor;
-  final GestureTapCallback? onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -86,23 +102,28 @@ class ListItem extends StatelessWidget {
   }
 
   Widget _buildMainContainer({
-    required BuildContext context,
     required Widget child,
+    required BuildContext context,
   }) {
-    final Widget container = DecoratedBox(
-      decoration: BoxDecoration(
-        color: _getBackgroundColor(context),
-        border: border,
-        borderRadius: borderRadius,
-      ),
-      child: child,
-    );
+    final Color backgroundColor = _getBackgroundColor(context);
     return onTap != null
-        ? InkWell(
-            onTap: onTap,
-            child: container,
+        ? Material(
+            color: backgroundColor,
+            borderRadius: borderRadius,
+            child: InkWell(
+              borderRadius: borderRadius,
+              onTap: onTap,
+              child: child,
+            ),
           )
-        : container;
+        : DecoratedBox(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              border: border,
+              borderRadius: borderRadius,
+            ),
+            child: child,
+          );
   }
 
   Color _getBackgroundColor(BuildContext context) {
