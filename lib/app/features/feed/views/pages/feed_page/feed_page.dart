@@ -7,6 +7,7 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_cont
 import 'package:ice/app/features/feed/views/pages/feed_page/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
+import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_handler.dart';
 
 enum FeedType { feed, videos, stories }
 
@@ -17,42 +18,44 @@ class FeedPage extends IceSimplePage {
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ScrollController scrollController = useScrollController();
 
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 9.0.s),
-                    child: FeedControls(
-                      pageScrollController: scrollController,
+    return PullRightMenuHandler(
+      child: Scaffold(
+        body: SafeArea(
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 9.0.s),
+                      child: FeedControls(
+                        pageScrollController: scrollController,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0.s),
-                    child: const Stories(),
-                  ),
-                  const FeedListSeparator(),
-                  const TrendingVideos(),
-                  const FeedListSeparator(),
-                ],
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0.s),
+                      child: const Stories(),
+                    ),
+                    const FeedListSeparator(),
+                    const TrendingVideos(),
+                    const FeedListSeparator(),
+                  ],
+                ),
               ),
-            ),
-            SliverList.separated(
-              itemCount: 20,
-              separatorBuilder: (BuildContext context, int index) {
-                return const FeedListSeparator();
-              },
-              itemBuilder: (BuildContext context, int index) {
-                return const Placeholder(
-                  fallbackHeight: 150,
-                );
-              },
-            ),
-          ],
+              SliverList.separated(
+                itemCount: 20,
+                separatorBuilder: (BuildContext context, int index) {
+                  return const FeedListSeparator();
+                },
+                itemBuilder: (BuildContext context, int index) {
+                  return const Placeholder(
+                    fallbackHeight: 150,
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

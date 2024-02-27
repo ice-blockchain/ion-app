@@ -36,13 +36,11 @@ class ProfileDetails extends HookConsumerWidget {
                   color: context.theme.appColors.primaryText,
                 ),
               ),
-              if (userData.isVerified == true) SizedBox(width: 6.0.s),
-              if (userData.isVerified == true)
-                Image.asset(
-                  Assets.images.icons.iconBadgeVerify.path,
-                  width: verifiedIconSize,
-                  height: verifiedIconSize,
-                ),
+              if (userData.isVerified == true) ...<Widget>[
+                SizedBox(width: 6.0.s),
+                Assets.images.icons.iconBadgeVerify
+                    .image(width: verifiedIconSize, height: verifiedIconSize),
+              ],
             ],
           ),
           SizedBox(height: 3.0.s),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -9,8 +10,6 @@ class Header extends StatelessWidget {
   const Header({
     super.key,
   });
-
-  double get iconSize => 16.0.s;
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +28,8 @@ class Header extends StatelessWidget {
           top: 20.0.s,
           child: InkWell(
             borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
-            child: ImageIcon(
-              AssetImage(Assets.images.icons.iconSheetClose.path),
-              color: context.theme.appColors.tertararyText,
-              // size: iconSize,
-            ),
+            child: Assets.images.icons.iconSheetClose
+                .icon(color: context.theme.appColors.tertararyText),
             onTap: () {
               context.pop();
             },
