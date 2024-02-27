@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -73,10 +74,8 @@ class AccountsTile extends HookConsumerWidget {
           ),
         ),
         trailing: isActiveUser == true
-            ? Image.asset(
-                Assets.images.icons.iconCheckboxOn.path,
-                color: context.theme.appColors.onPrimaryAccent,
-              )
+            ? Assets.images.icons.iconCheckboxOn
+                .icon(color: context.theme.appColors.onPrimaryAccent)
             : null,
       ),
     );
