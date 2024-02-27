@@ -1,9 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/utils/image.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 part './variants/list_item_checkbox.dart';
+part './variants/list_item_user.dart';
 
 class ListItem extends StatelessWidget {
   ListItem({
@@ -45,12 +49,21 @@ class ListItem extends StatelessWidget {
 
   factory ListItem.user({
     Key? key,
-    Widget? leading,
-    Widget? title,
-    Widget? subtitle,
-    required VoidCallback onTap,
-    required bool value,
-  }) = _ListItemWithCheckbox;
+    Widget? trailing,
+    BoxBorder? border,
+    BorderRadius? borderRadius,
+    EdgeInsetsGeometry? contentPadding,
+    EdgeInsetsGeometry? leadingPadding,
+    EdgeInsetsGeometry? trailingPadding,
+    BoxConstraints? constraints,
+    Color? backgroundColor,
+    VoidCallback? onTap,
+    required String name,
+    required String nickname,
+    required String profilePicture,
+    bool verifiedBadge,
+    bool iceBadge,
+  }) = _ListItemUser;
 
   final Widget? leading;
   final Widget? title;
