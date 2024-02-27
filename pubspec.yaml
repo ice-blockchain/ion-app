@@ -32,6 +32,8 @@ dependencies:
   cached_network_image: ^3.3.1
   widgetbook: ^3.7.1
   widgetbook_annotation: ^3.1.0
+  timeago: ^3.6.1
+  timeago_flutter: ^3.6.0
 
 dev_dependencies:
   flutter_test:
