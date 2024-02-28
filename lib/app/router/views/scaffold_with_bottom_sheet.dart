@@ -24,6 +24,9 @@ class ScaffoldWithBottomSheetState extends State<ScaffoldWithBottomSheet> {
     SchedulerBinding.instance.addPostFrameCallback(
       (_) {
         showModalBottomSheet(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.9,
+          ),
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
