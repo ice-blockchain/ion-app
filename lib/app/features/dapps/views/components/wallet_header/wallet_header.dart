@@ -5,8 +5,8 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/components/navigation_button/navigation_button.dart';
 import 'package:ice/app/features/components/wallet_switcher/wallet_switcher.dart';
+import 'package:ice/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class WalletHeader extends HookConsumerWidget {

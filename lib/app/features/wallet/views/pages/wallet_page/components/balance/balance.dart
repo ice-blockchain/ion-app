@@ -23,7 +23,7 @@ class Balance extends HookConsumerWidget {
         ? Assets.images.icons.iconBlockEyeOn
         : Assets.images.icons.iconBlockEyeOff;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0.s),
+      padding: EdgeInsets.symmetric(vertical: 10.0.s),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -34,11 +34,13 @@ class Balance extends HookConsumerWidget {
                 style: context.theme.appTextThemes.subtitle2
                     .copyWith(color: context.theme.appColors.secondaryText),
               ),
-              SizedBox(width: 6.0.s),
               InkWell(
-                borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
-                child: iconAsset.icon(
-                  color: context.theme.appColors.secondaryText,
+                borderRadius: BorderRadius.all(Radius.circular(18.0.s)),
+                child: Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: iconAsset.icon(
+                    color: context.theme.appColors.secondaryText,
+                  ),
                 ),
                 onTap: () {
                   isVisible.value = !isVisible.value;
