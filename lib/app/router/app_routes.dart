@@ -64,6 +64,7 @@ enum IceRoutes<PayloadType> {
     AbsentPage.new,
     type: IceRouteType.bottomTabs,
     children: <IceRoutes<dynamic>>[
+      IceRoutes.feed,
       IceRoutes.dapps,
       IceRoutes.chat,
       IceRoutes.wallet,
