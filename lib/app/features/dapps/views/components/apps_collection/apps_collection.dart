@@ -11,6 +11,7 @@ class AppsCollection extends StatelessWidget {
 
   static double get itemWidth => 255.0.s;
   static double get itemHeight => 54.0.s;
+  static double get containerAspectRatio => 0.24;
   static double get verticalOffset => 12.0.s;
   static int get itemsPerColumn => 3;
 
@@ -26,12 +27,10 @@ class AppsCollection extends StatelessWidget {
           horizontal: ScreenSideOffset.defaultSmallMargin,
         ),
         crossAxisCount: itemsPerColumn,
-        childAspectRatio: itemHeight / itemWidth,
+        childAspectRatio: containerAspectRatio,
         children: itemList
             .map(
-              (DAppItem item) => Container(
-                color:
-                    item.title == 'Uniswap' ? Colors.red : Colors.transparent,
+              (DAppItem item) => SizedBox(
                 width: itemWidth,
                 child: GridItem(item: item),
               ),
