@@ -20,8 +20,7 @@ import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/switch_account_page.dart';
-import 'package:ice/app/features/wallet/views/pages/inner_wallet_page.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/wallet_page.dart';
 
 const IceRoutes<void> initialPage = IceRoutes.splash;
 
@@ -67,6 +66,7 @@ enum IceRoutes<PayloadType> {
       IceRoutes.feed,
       IceRoutes.dapps,
       IceRoutes.chat,
+      IceRoutes.wallet,
     ],
   ),
   feed(FeedPage.new),
@@ -86,11 +86,8 @@ enum IceRoutes<PayloadType> {
   chat(ChatPage.new),
   wallet(
     WalletPage.new,
-    children: <IceRoutes<dynamic>>[
-      IceRoutes.innerWallet,
-    ],
+    children: <IceRoutes<dynamic>>[],
   ),
-  innerWallet(InnerWalletPage.new),
   ;
 
   const IceRoutes(

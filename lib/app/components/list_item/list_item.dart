@@ -1,9 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/utils/image.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 

@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -8,7 +8,6 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
-import 'package:ice/app/utils/image.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class AccountsTile extends HookConsumerWidget {
@@ -40,12 +39,9 @@ class AccountsTile extends HookConsumerWidget {
             : context.theme.appColors.tertararyBackground,
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(10.0.s),
-          child: CachedNetworkImage(
-            imageUrl:
-                getAdaptiveImageUrl(userData.profilePicture, avatarSize * 2),
-            width: avatarSize,
-            height: avatarSize,
-            fit: BoxFit.fitWidth,
+          child: Avatar(
+            size: avatarSize,
+            imageUrl: userData.profilePicture,
           ),
         ),
         title: Row(

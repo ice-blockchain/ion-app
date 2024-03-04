@@ -159,6 +159,7 @@ Widget compactButtonUseCase(BuildContext context) {
             ),
             Expanded(
               child: Button.compact(
+                type: ButtonType.outlined,
                 leadingIcon: Assets.images.icons.iconButtonSend.icon(),
                 label: Text(
                   context.knobs.string(

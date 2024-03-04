@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/num.dart';
 
-class FeedNavigationButton extends StatelessWidget {
-  const FeedNavigationButton({
+class NavigationButton extends StatelessWidget {
+  const NavigationButton({
     required this.icon,
     required this.onPressed,
   });
