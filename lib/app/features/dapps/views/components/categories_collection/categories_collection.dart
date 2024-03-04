@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -72,37 +73,27 @@ class CategoriesCollection extends StatelessWidget {
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              InkWell(
-                onTap: () {
-                  IceRoutes.appsList.go(
-                    context,
-                    payload: AppsRouteData(
-                      title: categories[index].title,
-                      items: mockedApps,
-                      isSearchVisible: true,
-                    ),
-                  );
-                },
-                child: Container(
-                  width: itemWidth,
-                  height: itemWidth,
-                  margin: EdgeInsets.only(right: rightOffset, left: leftOffset),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(9.6.s),
-                    color: context.theme.appColors.tertararyBackground,
-                    border: Border.all(
-                      color: context.theme.appColors.onTerararyFill,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset(
-                        categories[index].iconImage,
-                        width: 50.0.s,
+              Container(
+                margin: EdgeInsets.only(right: rightOffset, left: leftOffset),
+                child: Button.icon(
+                  onPressed: () {
+                    IceRoutes.appsList.go(
+                      context,
+                      payload: AppsRouteData(
+                        title: categories[index].title,
+                        items: mockedApps,
+                        isSearchVisible: true,
                       ),
-                    ],
+                    );
+                  },
+                  icon: Image.asset(
+                    categories[index].iconImage,
+                    width: 50.0.s,
                   ),
+                  size: itemWidth,
+                  type: ButtonType.outlined,
+                  backgroundColor: context.theme.appColors.tertararyBackground,
+                  borderColor: context.theme.appColors.onTerararyFill,
                 ),
               ),
               Text(
