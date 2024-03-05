@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/router/app_router_listenable.dart';
 import 'package:ice/app/router/routing_utils.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 GoRouter useAppRouter(WidgetRef ref) {
   final AppRouterListenable notifier =
@@ -17,7 +17,7 @@ GoRouter useAppRouter(WidgetRef ref) {
       debugLogDiagnostics: true,
       routes: appRoutes,
       redirect: notifier.redirect,
-      navigatorKey: _rootNavigatorKey,
+      navigatorKey: rootNavigatorKey,
     ),
     <AppRouterListenable>[notifier],
   );

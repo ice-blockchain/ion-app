@@ -38,7 +38,7 @@ RouteBase _convertIntoRoute<T>(
     path: path,
     name: name,
     parentNavigatorKey: parentNavigatorKey,
-    pageBuilder: _providePageBuilder<T>(route, parentType),
+    pageBuilder: _providePageBuilder<T>(route),
     routes: children,
   );
 }
@@ -56,13 +56,10 @@ RouteBase _buildBottomSheetRoute<T>(
   );
 }
 
-GoRouterPageBuilder _providePageBuilder<T>(
-  IceRoutes<T> route,
-  IceRouteType? parentType,
-) {
+GoRouterPageBuilder _providePageBuilder<T>(IceRoutes<T> route) {
   Widget widgetBuild(GoRouterState state) {
-    final Widget widget = route.builder(route, state.extra);
-    return widget;
+    final Widget? widget = route.builder?.call(route, state.extra);
+    return widget ?? const SizedBox.shrink();
   }
 
   Page<T> simple(BuildContext context, GoRouterState state) => CupertinoPage<T>(
@@ -76,13 +73,11 @@ GoRouterPageBuilder _providePageBuilder<T>(
         child: widgetBuild(state),
       );
 
-  return switch (parentType) {
-    null => simple,
-    IceRouteType.single => simple,
-    IceRouteType.bottomSheet => simple,
-    IceRouteType.slideFromLeft => slideFromLeft,
-    _ => throw Exception('should be built in a different way'),
-  };
+  if (route.type == IceRouteType.slideFromLeft) {
+    return slideFromLeft;
+  }
+
+  return simple;
 }
 
 CustomTransitionPage<T> _buildPageWithSlideFromLeftTransition<T>({

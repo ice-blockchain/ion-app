@@ -19,7 +19,7 @@ class ModalWrapper extends HookConsumerWidget {
       child: KeyboardHider(
         child: ClipRRect(
           borderRadius: BorderRadius.vertical(top: Radius.circular(30.0.s)),
-          child: route.builder(route, payload),
+          child: route.builder?.call(route, payload) ?? const SizedBox.shrink(),
         ),
       ),
     );

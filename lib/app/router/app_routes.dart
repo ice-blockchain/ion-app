@@ -42,7 +42,7 @@ enum IceRoutes<PayloadType> {
     ],
   ),
   authModal(
-    AbsentPage.new,
+    null,
     type: IceRouteType.bottomSheet,
     children: <IceRoutes<dynamic>>[
       IceRoutes.auth,
@@ -66,7 +66,7 @@ enum IceRoutes<PayloadType> {
   discoverCreators(DiscoverCreators.new),
   fillProfile(FillProfile.new),
   home(
-    AbsentPage.new,
+    null,
     type: IceRouteType.bottomTabs,
     children: <IceRoutes<dynamic>>[
       IceRoutes.feed,
@@ -85,13 +85,19 @@ enum IceRoutes<PayloadType> {
   appsList<AppsRouteData>(DAppsList.new),
   pullRightMenu(
     PullRightMenuPage.new,
-    //TODO::type: IceRouteType.bottomSheet,
-    //   children: <IceRoutes<dynamic>>[IceRoutes.switchAccount],
+    type: IceRouteType.slideFromLeft,
+    children: <IceRoutes<dynamic>>[
+      IceRoutes.pullRightMenuModal,
+    ],
   ),
-  switchAccount(
-    SwitchAccountPage.new,
-    //TODO::type: IceRouteType.bottomSheet,
+  pullRightMenuModal(
+    null,
+    type: IceRouteType.bottomSheet,
+    children: <IceRoutes<dynamic>>[
+      IceRoutes.switchAccount,
+    ],
   ),
+  switchAccount(SwitchAccountPage.new),
   chat(ChatPage.new),
   wallet(
     WalletPage.new,
@@ -107,7 +113,7 @@ enum IceRoutes<PayloadType> {
 
   final IceRouteType type;
   final List<IceRoutes<dynamic>>? children;
-  final IcePageBuilder<PayloadType> builder;
+  final IcePageBuilder<PayloadType>? builder;
 
   void go(BuildContext context, {PayloadType? payload}) =>
       context.goNamed(name, extra: payload);
