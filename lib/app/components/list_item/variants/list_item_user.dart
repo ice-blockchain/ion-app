@@ -22,15 +22,9 @@ class _ListItemUser extends ListItem {
   }) : super(
           leading: leading ??
               (profilePicture != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0.s),
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            getAdaptiveImageUrl(profilePicture, avatarSize),
-                        width: avatarSize,
-                        height: avatarSize,
-                        fit: BoxFit.fitWidth,
-                      ),
+                  ? Avatar(
+                      size: avatarSize,
+                      imageUrl: profilePicture,
                     )
                   : null),
           borderRadius: borderRadius ?? BorderRadius.zero,
@@ -63,6 +57,7 @@ class _ListItemUser extends ListItem {
         );
 
   static double get avatarSize => 30.0.s;
+
   static double get badgeSize => 16.0.s;
 
   @override

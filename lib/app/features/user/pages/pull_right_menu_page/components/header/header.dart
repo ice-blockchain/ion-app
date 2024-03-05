@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/header/header_action.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -20,7 +19,7 @@ class Header extends StatelessWidget {
           children: <Widget>[
             HeaderAction(
               onPressed: () {
-                context.pop();
+                IceRoutes.feed.go(context);
               },
               assetName: Assets.images.icons.iconChatBack.path,
             ),
