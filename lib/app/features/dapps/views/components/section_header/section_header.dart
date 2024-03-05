@@ -11,8 +11,8 @@ class SectionHeader extends StatelessWidget {
     this.onPress,
     double? topPadding,
     double? bottomPadding,
-  })  : topPadding = topPadding ?? 24.0.s,
-        bottomPadding = bottomPadding ?? 16.0.s;
+  })  : topPadding = topPadding ?? 20.0.s,
+        bottomPadding = bottomPadding ?? 12.0.s;
 
   final double topPadding;
   final double bottomPadding;

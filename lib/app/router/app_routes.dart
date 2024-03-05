@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
@@ -14,7 +14,8 @@ import 'package:ice/app/features/auth/views/pages/select_languages/select_langua
 import 'package:ice/app/features/chat/views/pages/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
-import 'package:ice/app/features/dapps/views/components/apps.dart';
+import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
+import 'package:ice/app/features/dapps/views/pages/dapp_details/dapp_details.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
@@ -63,7 +64,6 @@ enum IceRoutes<PayloadType> {
     AbsentPage.new,
     type: IceRouteType.bottomTabs,
     children: <IceRoutes<dynamic>>[
-      IceRoutes.feed,
       IceRoutes.dapps,
       IceRoutes.chat,
       IceRoutes.wallet,
@@ -74,6 +74,7 @@ enum IceRoutes<PayloadType> {
     DAppsPage.new,
     children: <IceRoutes<dynamic>>[
       IceRoutes.appsList,
+      IceRoutes.dappsDetails,
     ],
   ),
   appsList<AppsRouteData>(DAppsList.new),
@@ -87,6 +88,10 @@ enum IceRoutes<PayloadType> {
   wallet(
     WalletPage.new,
     children: <IceRoutes<dynamic>>[],
+  ),
+  dappsDetails(
+    DAppDetails.new,
+    type: IceRouteType.bottomSheet,
   ),
   ;
 

@@ -6,8 +6,6 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/components/favourite_icon/favorite_icon.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-double containerHeight = 60.0.s;
-
 class Favourites extends StatelessWidget {
   const Favourites({
     super.key,
@@ -16,12 +14,14 @@ class Favourites extends StatelessWidget {
 
   final VoidCallback? onPress;
 
+  static double get containerHeight => 60.0.s;
+
   @override
   Widget build(BuildContext context) {
     return ScreenSideOffset.small(
       child: Padding(
         padding: EdgeInsets.symmetric(
-          vertical: 24.0.s,
+          vertical: 20.0.s,
         ),
         child: GestureDetector(
           onTap: onPress,

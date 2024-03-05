@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/navigation_header/navigation_header.dart';
+import 'package:ice/app/components/empty_list/empty_list.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/search_input/search_input.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/dapps/views/components/apps.dart';
-import 'package:ice/app/features/dapps/views/components/apps_collection.dart';
-import 'package:ice/app/features/dapps/views/components/nav_header_offset/nav_header_offset.dart';
+import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
+import 'package:ice/app/features/dapps/views/components/grid_item/grid_item.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
+import 'package:ice/app/router/views/navigation_header.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 class DAppsList extends IcePage<AppsRouteData> {
   const DAppsList(super.route, super.payload);
@@ -21,10 +23,11 @@ class DAppsList extends IcePage<AppsRouteData> {
     AppsRouteData? payload,
   ) {
     final ValueNotifier<String> searchText = useState('');
+    final List<DAppItem> items = payload?.items ?? <DAppItem>[];
 
     final List<DAppItem> filteredApps = searchText.value.isEmpty
-        ? featured
-        : featured.where((DAppItem app) {
+        ? items
+        : items.where((DAppItem app) {
             final String searchLower = searchText.value.toLowerCase().trim();
             final String titleLower = app.title.toLowerCase();
 
@@ -32,38 +35,51 @@ class DAppsList extends IcePage<AppsRouteData> {
           }).toList();
 
     return Scaffold(
-      body: NavHeaderOffset(
-        child: Container(
-          width: double.infinity,
-          color: context.theme.appColors.secondaryBackground,
-          child: Stack(
-            children: <Widget>[
-              NavigationHeader(
-                title: context.i18n.dapps_list_defi,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: navigationHeaderHeight),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          NavigationHeader(
+            title: payload?.title ?? '',
+          ),
+          Expanded(
+            child: ScreenSideOffset.small(
+              child: Column(
+                children: <Widget>[
+                  if (payload?.isSearchVisible == true)
                     SearchInput(
                       onTextChanged: (String value) => searchText.value = value,
                     ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: filteredApps.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final DAppItem app = filteredApps[index];
-                          return DAppGridItem(item: app, showIsFavourite: true);
-                        },
-                      ),
+                  Expanded(
+                    child: Container(
+                      child: items.isEmpty
+                          ? EmptyList(
+                              icon: Image.asset(
+                                Assets.images.misc.dappsEmpty.path,
+                                width: 48.0.s,
+                                height: 48.0.s,
+                              ),
+                              title: context.i18n.dapps_favourites_empty_title,
+                            )
+                          : ListView.builder(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 12.0.s,
+                              ),
+                              itemCount: filteredApps.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final DAppItem app = filteredApps[index];
+                                return GridItem(
+                                  item: app,
+                                  showIsFavourite: true,
+                                );
+                              },
+                            ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
