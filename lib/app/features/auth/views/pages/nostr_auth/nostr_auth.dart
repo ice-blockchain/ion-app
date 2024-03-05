@@ -35,6 +35,8 @@ class NostrAuth extends IceSimplePage {
                   child: Button(
                     leadingIcon: Assets.images.icons.iconLoginCreateacc.icon(),
                     onPressed: () {
+                      Navigator.of(context).pop();
+                      //  context.pop();
                       // showModalScreen(
                       //   const NostrCreateAccount(),
                       //   context,

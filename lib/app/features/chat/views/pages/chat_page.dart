@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 
 class ChatPage extends IceSimplePage {
   const ChatPage(super.route, super.payload);
@@ -19,8 +20,10 @@ class ChatPage extends IceSimplePage {
           child: Column(
             children: <Widget>[
               ElevatedButton(
-                onPressed: () {}, //TODO add modal??
-                child: const Text('Open Error Modal'),
+                onPressed: () {
+                  ref.read(authProvider.notifier).signOut();
+                },
+                child: const Text('Logout'),
               ),
             ],
           ),

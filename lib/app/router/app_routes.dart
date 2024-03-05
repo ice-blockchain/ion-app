@@ -37,6 +37,12 @@ enum IceRoutes<PayloadType> {
   error(ErrorPage.new),
   intro(
     IntroPage.new,
+    children: <IceRoutes<dynamic>>[
+      IceRoutes.authModal,
+    ],
+  ),
+  authModal(
+    AbsentPage.new,
     type: IceRouteType.bottomSheet,
     children: <IceRoutes<dynamic>>[
       IceRoutes.auth,
@@ -79,10 +85,13 @@ enum IceRoutes<PayloadType> {
   appsList<AppsRouteData>(DAppsList.new),
   pullRightMenu(
     PullRightMenuPage.new,
-    type: IceRouteType.bottomSheet,
-    children: <IceRoutes<dynamic>>[IceRoutes.switchAccount],
+    //TODO::type: IceRouteType.bottomSheet,
+    //   children: <IceRoutes<dynamic>>[IceRoutes.switchAccount],
   ),
-  switchAccount(SwitchAccountPage.new, type: IceRouteType.bottomSheet),
+  switchAccount(
+    SwitchAccountPage.new,
+    //TODO::type: IceRouteType.bottomSheet,
+  ),
   chat(ChatPage.new),
   wallet(
     WalletPage.new,
@@ -112,6 +121,10 @@ enum IceRoutes<PayloadType> {
   void replace(BuildContext context, {PayloadType? payload}) =>
       context.replaceNamed(name, extra: payload);
 }
+
+// Don't use context.pop inside bottomSheets!
+void pop<PayloadType>(BuildContext context, {PayloadType? result}) =>
+    Navigator.of(context).pop(result);
 
 typedef IcePageBuilder<PayloadType> = IcePage<PayloadType> Function(
   IceRoutes<PayloadType> route,

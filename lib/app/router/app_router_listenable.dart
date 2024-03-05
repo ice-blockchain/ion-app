@@ -45,31 +45,44 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   }
 
   // ignore: avoid_build_context_in_providers
-  String? redirect(BuildContext context, GoRouterState state) {
-    final IceRoutes<dynamic>? route = _redirectNamed(state);
+  String? redirect(BuildContext context, GoRouterState goRouterState) {
+    final IceRoutes<dynamic> currentRoute = _getCurrentRoute(goRouterState);
+    final IceRoutes<dynamic>? route =
+        _redirectNamed(goRouterState, currentRoute);
+    late final IceRoutes<dynamic>? routeResult;
+    String? resultLocation;
     if (route != null) {
-      return _location(route, state);
+      routeResult = route;
+      resultLocation = _location(route, goRouterState);
+    } else {
+      routeResult = currentRoute;
     }
 
-    return null;
+    if (routeResult != initialPage) {
+      ref.read(routeProvider.notifier).route = routeResult;
+    }
+
+    return resultLocation;
   }
 
-  IceRoutes<dynamic>? _redirectNamed(GoRouterState state) {
+  IceRoutes<dynamic>? _redirectNamed(
+    GoRouterState goRouterState,
+    IceRoutes<dynamic> currentRoute,
+  ) {
     //TODO: check that its part of intro navigation flow
-    final bool isAuthInProgress =
-        state.matchedLocation.startsWith(_location(IceRoutes.intro, state));
-    final bool isSplash =
-        state.matchedLocation == _location(IceRoutes.splash, state);
+    final bool isAuthInProgress = goRouterState.matchedLocation
+        .startsWith(_location(IceRoutes.intro, goRouterState));
+    final bool isSplash = currentRoute == initialPage;
     final bool isInitError = _init?.hasError ?? false;
     final bool isInitInProgress = _init?.isLoading ?? true;
     final bool isAnimationCompleted = ref.watch(splashProvider);
 
     if (isInitError) {
-      return IceRoutes.splash;
+      return initialPage;
     }
 
     if (isInitInProgress && !isSplash || !isAnimationCompleted) {
-      return IceRoutes.splash;
+      return initialPage;
     }
 
     if (isSplash && !isInitInProgress && isAnimationCompleted) {
@@ -101,5 +114,27 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   @override
   void removeListener(VoidCallback listener) {
     _routerListener = null;
+  }
+
+  IceRoutes<dynamic> _getCurrentRoute(GoRouterState state) {
+    for (final IceRoutes<dynamic> route in IceRoutes.values) {
+      try {
+        if (state.matchedLocation == _location(route, state)) {
+          return route;
+        }
+      } catch (_) {}
+    }
+
+    return initialPage;
+  }
+}
+
+@Riverpod(keepAlive: true)
+class Route extends _$Route {
+  @override
+  IceRoutes<dynamic> build() => initialPage;
+
+  set route(IceRoutes<dynamic> route) {
+    state = route;
   }
 }
