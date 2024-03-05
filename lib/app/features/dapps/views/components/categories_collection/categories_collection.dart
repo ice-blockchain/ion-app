@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -65,39 +66,37 @@ class CategoriesCollection extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: SizedBox(
         height: itemHeight,
-        child: ListView.builder(
+        child: ListView.separated(
           scrollDirection: Axis.horizontal,
+          separatorBuilder: (BuildContext context, int index) =>
+              SizedBox(width: ScreenSideOffset.defaultSmallMargin),
+          padding: EdgeInsets.symmetric(
+            horizontal: ScreenSideOffset.defaultSmallMargin,
+          ),
           itemCount: categories.length,
           itemBuilder: (BuildContext context, int index) {
-            final double leftOffset = index == 0 ? 16.0.s : 8.0.s;
-            final double rightOffset =
-                index == categories.length - 1 ? 16.0.s : 8.0.s;
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(right: rightOffset, left: leftOffset),
-                  child: Button.icon(
-                    onPressed: () {
-                      IceRoutes.appsList.go(
-                        context,
-                        payload: AppsRouteData(
-                          title: categories[index].title,
-                          items: mockedApps,
-                          isSearchVisible: true,
-                        ),
-                      );
-                    },
-                    icon: Image.asset(
-                      categories[index].iconImage,
-                      width: 50.0.s,
-                    ),
-                    size: itemWidth,
-                    type: ButtonType.outlined,
-                    backgroundColor:
-                        context.theme.appColors.tertararyBackground,
-                    borderColor: context.theme.appColors.onTerararyFill,
+                Button.icon(
+                  onPressed: () {
+                    IceRoutes.appsList.go(
+                      context,
+                      payload: AppsRouteData(
+                        title: categories[index].title,
+                        items: mockedApps,
+                        isSearchVisible: true,
+                      ),
+                    );
+                  },
+                  icon: Image.asset(
+                    categories[index].iconImage,
+                    width: 50.0.s,
                   ),
+                  size: itemWidth,
+                  type: ButtonType.outlined,
+                  backgroundColor: context.theme.appColors.tertararyBackground,
+                  borderColor: context.theme.appColors.onTerararyFill,
                 ),
                 Text(
                   categories[index].title,

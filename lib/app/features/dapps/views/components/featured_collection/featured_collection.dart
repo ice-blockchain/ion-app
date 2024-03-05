@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
 import 'package:ice/app/components/shadow_text/shadow_text.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -15,18 +16,20 @@ class FeaturedCollection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 160.0.s,
-      child: ListView.builder(
+      child: ListView.separated(
         scrollDirection: Axis.horizontal,
+        separatorBuilder: (BuildContext context, int index) =>
+            SizedBox(width: ScreenSideOffset.defaultSmallMargin),
+        padding: EdgeInsets.symmetric(
+          horizontal: ScreenSideOffset.defaultSmallMargin,
+        ),
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          final double leftOffset = index == 0 ? 16.0.s : 8.0.s;
-          final double rightOffset = index == items.length - 1 ? 16.0.s : 8.0.s;
           final String assetBg = items[index].backgroundImage ?? '';
           return GestureDetector(
             onTap: () => IceRoutes.dappsDetails.go(context),
             child: Container(
               width: 240.0.s,
-              margin: EdgeInsets.only(right: rightOffset, left: leftOffset),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0.s),
                 image: DecorationImage(
