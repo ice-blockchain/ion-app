@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/features/feed/components/post/post.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
@@ -20,11 +21,11 @@ class FeedPage extends IceSimplePage {
 
     return PullRightMenuHandler(
       child: Scaffold(
-        body: SafeArea(
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: <Widget>[
-              SliverToBoxAdapter(
+        body: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            SliverToBoxAdapter(
+              child: SafeArea(
                 child: Column(
                   children: <Widget>[
                     Padding(
@@ -37,25 +38,25 @@ class FeedPage extends IceSimplePage {
                       padding: EdgeInsets.symmetric(vertical: 16.0.s),
                       child: const Stories(),
                     ),
-                    const FeedListSeparator(),
+                    FeedListSeparator(
+                      height: 16.0.s,
+                    ),
                     const TrendingVideos(),
-                    const FeedListSeparator(),
+                    FeedListSeparator(),
                   ],
                 ),
               ),
-              SliverList.separated(
-                itemCount: 20,
-                separatorBuilder: (BuildContext context, int index) {
-                  return const FeedListSeparator();
-                },
-                itemBuilder: (BuildContext context, int index) {
-                  return const Placeholder(
-                    fallbackHeight: 150,
-                  );
-                },
-              ),
-            ],
-          ),
+            ),
+            SliverList.separated(
+              itemCount: 20,
+              separatorBuilder: (BuildContext context, int index) {
+                return FeedListSeparator();
+              },
+              itemBuilder: (BuildContext context, int index) {
+                return const Post();
+              },
+            ),
+          ],
         ),
       ),
     );

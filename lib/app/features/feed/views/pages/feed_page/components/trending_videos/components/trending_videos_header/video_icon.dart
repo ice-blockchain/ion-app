@@ -14,15 +14,18 @@ class VideosIcon extends StatelessWidget {
       width: 30.0.s,
       height: 29.0.s,
       alignment: Alignment.center,
+      transform: Matrix4.translationValues(-2.0.s, 0, 0),
       decoration: BoxDecoration(
         image: DecorationImage(
           image: Assets.images.bg.iconStroke.provider(),
           fit: BoxFit.cover,
         ),
       ),
-      child: Assets.images.icons.iconVideosTrading.icon(
-        color: context.theme.appColors.secondaryBackground,
-        size: 20.0.s,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(2.0.s, 1.0.s, 0, 0),
+        child: Assets.images.icons.iconVideosTrading.icon(
+          color: context.theme.appColors.secondaryBackground,
+        ),
       ),
     );
   }

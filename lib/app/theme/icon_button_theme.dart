@@ -18,6 +18,7 @@ IconButtonThemeData buildIconButtonTheme(
       iconSize: MaterialStateProperty.all<double>(
         templateTheme.iconButton.width.s,
       ),
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
     ),
   );
 }

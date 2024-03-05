@@ -12,7 +12,7 @@ class Story {
 
 const List<Story> stories = <Story>[
   Story(
-    author: '@john',
+    author: 'you',
     imageUrl: 'https://i.pravatar.cc/150?u=@john',
     me: true,
   ),

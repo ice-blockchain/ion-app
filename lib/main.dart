@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
+import 'package:ice/app/features/core/views/components/content_scaler.dart';
 import 'package:ice/app/router/hooks/use_app_router.dart';
 import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/theme.dart';
@@ -27,23 +27,18 @@ class IceApp extends HookConsumerWidget {
 
     final GoRouter appRouter = useAppRouter(ref);
 
-    return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      builder: (BuildContext context, Widget? widget) => MediaQuery(
-        /// Setting font does not change with system font size
-        data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
-        child: MaterialApp.router(
-          localizationsDelegates: I18n.localizationsDelegates,
-          supportedLocales: I18n.supportedLocales,
-          theme: template.whenOrNull(
-            data: (Template data) => buildLightTheme(data.theme),
-          ),
-          darkTheme: template.whenOrNull(
-            data: (Template data) => buildDarkTheme(data.theme),
-          ),
-          themeMode: appThemeMode,
-          routerConfig: appRouter,
+    return ContentScaler(
+      child: MaterialApp.router(
+        localizationsDelegates: I18n.localizationsDelegates,
+        supportedLocales: I18n.supportedLocales,
+        theme: template.whenOrNull(
+          data: (Template data) => buildLightTheme(data.theme),
         ),
+        darkTheme: template.whenOrNull(
+          data: (Template data) => buildDarkTheme(data.theme),
+        ),
+        themeMode: appThemeMode,
+        routerConfig: appRouter,
       ),
     );
   }

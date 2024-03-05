@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_filters.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_navigation/feed_navigation.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/hooks/use_feed_controls_state.dart';
@@ -18,16 +17,13 @@ class FeedControls extends HookWidget {
     final ValueNotifier<FeedControlsState> state =
         useFeedControlsState(pageScrollController);
 
-    return Padding(
-      padding: EdgeInsets.only(top: 9.0.s),
-      child: switch (state.value) {
-        FeedControlsState.initial => FeedNavigation(
-            onFiltersPressed: () {
-              state.value = FeedControlsState.filters;
-            },
-          ),
-        FeedControlsState.filters => const FeedFilters(),
-      },
-    );
+    return switch (state.value) {
+      FeedControlsState.initial => FeedNavigation(
+          onFiltersPressed: () {
+            state.value = FeedControlsState.filters;
+          },
+        ),
+      FeedControlsState.filters => const FeedFilters(),
+    };
   }
 }
