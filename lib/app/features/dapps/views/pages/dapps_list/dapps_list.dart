@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/empty_list/empty_list.dart';
-import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/search_input/search_input.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -53,11 +53,8 @@ class DAppsList extends IcePage<AppsRouteData> {
                     child: Container(
                       child: items.isEmpty
                           ? EmptyList(
-                              icon: Image.asset(
-                                Assets.images.misc.dappsEmpty.path,
-                                width: 48.0.s,
-                                height: 48.0.s,
-                              ),
+                              icon: Assets.images.misc.dappsEmpty
+                                  .image(width: 48.0.s, height: 48.0.s),
                               title: context.i18n.dapps_favourites_empty_title,
                             )
                           : ListView.builder(

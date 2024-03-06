@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/categories/featured.dart';
@@ -17,57 +19,58 @@ class DAppsPage extends IceSimplePage {
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return Scaffold(
       body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          children: <Widget>[
-            const WalletHeader(),
-            const Featured(),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Container(
-                height: 10.0,
-                color: context.theme.appColors.primaryBackground,
+        child: ScreenTopOffset(
+          child: Column(
+            children: <Widget>[
+              const WalletHeader(),
+              const Featured(),
+              Padding(
+                padding: EdgeInsets.only(top: 20.0.s),
+                child: Container(
+                  height: 10.0.s,
+                  color: context.theme.appColors.primaryBackground,
+                ),
               ),
-            ),
-            const Categories(),
-            Apps(
-              title: context.i18n.dapps_section_title_highest_ranked,
-              items: mockedApps,
-              onPress: () {
-                IceRoutes.appsList.go(
-                  context,
-                  payload: AppsRouteData(
-                    title: context.i18n.dapps_section_title_highest_ranked,
-                    items: mockedApps,
-                  ),
-                );
-              },
-            ),
-            Apps(
-              title: context.i18n.dapps_section_title_recently_added,
-              items: mockedApps,
-              onPress: () {
-                IceRoutes.appsList.go(
-                  context,
-                  payload: AppsRouteData(
-                    title: context.i18n.dapps_section_title_recently_added,
-                    items: mockedApps,
-                  ),
-                );
-              },
-            ),
-            Favourites(
-              onPress: () {
-                IceRoutes.appsList.go(
-                  context,
-                  payload: AppsRouteData(
-                    title: context.i18n.dapps_section_title_favourites,
-                    items: <DAppItem>[],
-                  ),
-                );
-              },
-            ),
-          ],
+              const Categories(),
+              Apps(
+                title: context.i18n.dapps_section_title_highest_ranked,
+                items: mockedApps,
+                onPress: () {
+                  IceRoutes.appsList.go(
+                    context,
+                    payload: AppsRouteData(
+                      title: context.i18n.dapps_section_title_highest_ranked,
+                      items: mockedApps,
+                    ),
+                  );
+                },
+              ),
+              Apps(
+                title: context.i18n.dapps_section_title_recently_added,
+                items: mockedApps,
+                onPress: () {
+                  IceRoutes.appsList.go(
+                    context,
+                    payload: AppsRouteData(
+                      title: context.i18n.dapps_section_title_recently_added,
+                      items: mockedApps,
+                    ),
+                  );
+                },
+              ),
+              Favourites(
+                onPress: () {
+                  IceRoutes.appsList.go(
+                    context,
+                    payload: AppsRouteData(
+                      title: context.i18n.dapps_section_title_favourites,
+                      items: <DAppItem>[],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

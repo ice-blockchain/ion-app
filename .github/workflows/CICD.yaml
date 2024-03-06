@@ -3,24 +3,24 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment'
+        description: "Environment"
         required: true
-        default: 'staging'
+        default: "staging"
         type: choice
         options:
-        - staging
-        - production
+          - staging
+          - production
       deployment:
-        description: 'Deployment target'
+        description: "Deployment target"
         required: true
-        default: 'firebase'
+        default: "firebase"
         type: choice
         options:
-        - firebase
-        - store
+          - firebase
+          - store
       version:
-        description: 'App version'
-        default: '9.9.9'
+        description: "App version"
+        default: "9.9.9"
         required: true
 
 jobs:
@@ -67,7 +67,7 @@ jobs:
         id: set-flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
           cache: true
       - run: flutter --version
       - name: Install dependencies
@@ -136,13 +136,13 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           working-directory: main-repo
-          ruby-version: '3.2.2'
+          ruby-version: "3.2.2"
           bundler-cache: true
       - name: Set Flutter
         id: set-flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
           cache: true
       - run: flutter --version
       - name: Install dependencies
@@ -219,21 +219,21 @@ jobs:
         id: setup-java
         uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
-          java-version: '17'
+          distribution: "adopt"
+          java-version: "17"
           check-latest: true
       - name: Setup Ruby version
         id: setup-ruby
         uses: ruby/setup-ruby@v1
         with:
           working-directory: main-repo
-          ruby-version: '3.2.2'
+          ruby-version: "3.2.2"
           bundler-cache: true
       - name: Set Flutter
         id: set-flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
           cache: true
       - run: flutter --version
       - name: Install dependencies

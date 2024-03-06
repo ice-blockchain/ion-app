@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -9,47 +9,40 @@ import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class CategoryItem {
-  CategoryItem({
-    required this.iconImage,
-    required this.title,
-  });
+enum DAppsCategory {
+  defi,
+  marketplaces,
+  nft,
+  games,
+  social,
+  utilities,
+  other;
 
-  final String iconImage;
-  final String title;
-}
+  Widget get icon {
+    return switch (this) {
+      DAppsCategory.defi => Assets.images.categories.categoriesDefi,
+      DAppsCategory.marketplaces =>
+        Assets.images.categories.categoriesMarketplace,
+      DAppsCategory.nft => Assets.images.categories.categoriesNft,
+      DAppsCategory.games => Assets.images.categories.categoriesGames,
+      DAppsCategory.social => Assets.images.categories.categoriesSocial,
+      DAppsCategory.utilities => Assets.images.categories.categoriesUtilites,
+      DAppsCategory.other => Assets.images.categories.categoriesOther,
+    }
+        .image(width: 50.0.s, height: 50.0.s);
+  }
 
-List<CategoryItem> getFeaturedCategories(BuildContext context) {
-  return <CategoryItem>[
-    CategoryItem(
-      iconImage: Assets.images.categories.categoriesDefi.path,
-      title: context.i18n.dapps_category_defi,
-    ),
-    CategoryItem(
-      iconImage: Assets.images.categories.categoriesMarketplace.path,
-      title: context.i18n.dapps_category_marketplaces,
-    ),
-    CategoryItem(
-      iconImage: Assets.images.categories.categoriesNft.path,
-      title: context.i18n.dapps_category_nft,
-    ),
-    CategoryItem(
-      iconImage: Assets.images.categories.categoriesGames.path,
-      title: context.i18n.dapps_category_games,
-    ),
-    CategoryItem(
-      iconImage: Assets.images.categories.categoriesSocial.path,
-      title: context.i18n.dapps_category_social,
-    ),
-    CategoryItem(
-      iconImage: Assets.images.categories.categoriesUtilites.path,
-      title: context.i18n.dapps_category_utilities,
-    ),
-    CategoryItem(
-      iconImage: Assets.images.categories.categoriesOther.path,
-      title: context.i18n.dapps_category_other,
-    ),
-  ];
+  String title(BuildContext context) {
+    return switch (this) {
+      DAppsCategory.defi => context.i18n.dapps_category_defi,
+      DAppsCategory.marketplaces => context.i18n.dapps_category_marketplaces,
+      DAppsCategory.nft => context.i18n.dapps_category_nft,
+      DAppsCategory.games => context.i18n.dapps_category_games,
+      DAppsCategory.social => context.i18n.dapps_category_social,
+      DAppsCategory.utilities => context.i18n.dapps_category_utilities,
+      DAppsCategory.other => context.i18n.dapps_category_other,
+    };
+  }
 }
 
 class CategoriesCollection extends StatelessWidget {
@@ -60,10 +53,8 @@ class CategoriesCollection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<CategoryItem> categories = getFeaturedCategories(context);
-
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: EdgeInsets.only(bottom: 8.0.s),
       child: SizedBox(
         height: itemHeight,
         child: ListView.separated(
@@ -73,7 +64,7 @@ class CategoriesCollection extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: ScreenSideOffset.defaultSmallMargin,
           ),
-          itemCount: categories.length,
+          itemCount: DAppsCategory.values.length,
           itemBuilder: (BuildContext context, int index) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,23 +74,20 @@ class CategoriesCollection extends StatelessWidget {
                     IceRoutes.appsList.go(
                       context,
                       payload: AppsRouteData(
-                        title: categories[index].title,
+                        title: DAppsCategory.values[index].title(context),
                         items: mockedApps,
                         isSearchVisible: true,
                       ),
                     );
                   },
-                  icon: Image.asset(
-                    categories[index].iconImage,
-                    width: 50.0.s,
-                  ),
+                  icon: DAppsCategory.values[index].icon,
                   size: itemWidth,
                   type: ButtonType.outlined,
                   backgroundColor: context.theme.appColors.tertararyBackground,
                   borderColor: context.theme.appColors.onTerararyFill,
                 ),
                 Text(
-                  categories[index].title,
+                  DAppsCategory.values[index].title(context),
                   style: context.theme.appTextThemes.body.copyWith(
                     color: context.theme.appColors.primaryText,
                   ),

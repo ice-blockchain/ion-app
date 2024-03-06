@@ -22,65 +22,57 @@ class GridItem extends HookWidget {
     final ValueNotifier<bool> isFavourite = useState(item.isFavourite);
     return InkWell(
       onTap: () => IceRoutes.dappsDetails.go(context),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 6.0.s,
-        ),
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            width: 48.0.s,
+            height: 48.0.s,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Image.asset(
+              item.iconImage,
+              width: 48.0.s,
+              fit: BoxFit.contain,
+            ),
+          ),
+          SizedBox(width: 8.0.s),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  width: 48.0.s,
-                  height: 48.0.s,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Image.asset(
-                    item.iconImage,
-                    width: 48.0.s,
-                    fit: BoxFit.contain,
+                Text(
+                  item.title,
+                  style: context.theme.appTextThemes.body.copyWith(
+                    color: context.theme.appColors.primaryText,
                   ),
                 ),
-                SizedBox(width: 8.0.s),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      item.title,
-                      style: context.theme.appTextThemes.body.copyWith(
-                        color: context.theme.appColors.primaryText,
-                      ),
-                    ),
-                    Text(
-                      item.description ?? '',
-                      style: context.theme.appTextThemes.caption3.copyWith(
-                        color: context.theme.appColors.secondaryText,
-                      ),
-                    ),
-                    Text(
-                      item.value != null ? formatDouble(item.value!) : '',
-                      style: context.theme.appTextThemes.caption3.copyWith(
-                        color: context.theme.appColors.tertararyText,
-                      ),
-                    ),
-                  ],
+                Text(
+                  item.description ?? '',
+                  style: context.theme.appTextThemes.caption3.copyWith(
+                    color: context.theme.appColors.secondaryText,
+                  ),
+                ),
+                Text(
+                  item.value != null ? formatDouble(item.value!) : '',
+                  style: context.theme.appTextThemes.caption3.copyWith(
+                    color: context.theme.appColors.tertararyText,
+                  ),
                 ),
               ],
             ),
-            if (showIsFavourite)
-              FavouriteIcon(
-                isFavourite: isFavourite.value,
-                onTap: () {
-                  isFavourite.value = !isFavourite.value;
-                },
-              ),
-          ],
-        ),
+          ),
+          if (showIsFavourite)
+            FavouriteIcon(
+              isFavourite: isFavourite.value,
+              onTap: () {
+                isFavourite.value = !isFavourite.value;
+              },
+            ),
+        ],
       ),
     );
   }

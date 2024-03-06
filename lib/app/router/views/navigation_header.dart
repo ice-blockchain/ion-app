@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/router/views/nav_header_offset.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 double navigationHeaderHeight = 50.0.s;
@@ -25,7 +25,7 @@ class NavigationHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavHeaderOffset(
+    return ScreenTopOffset(
       child: Container(
         color: context.theme.appColors.secondaryBackground,
         height: navigationHeaderHeight,
