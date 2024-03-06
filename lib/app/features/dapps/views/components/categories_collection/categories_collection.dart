@@ -61,50 +61,54 @@ class CategoriesCollection extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<CategoryItem> categories = getFeaturedCategories(context);
 
-    return SizedBox(
-      height: itemHeight,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        itemBuilder: (BuildContext context, int index) {
-          final double leftOffset = index == 0 ? 16.0.s : 8.0.s;
-          final double rightOffset =
-              index == categories.length - 1 ? 16.0.s : 8.0.s;
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(right: rightOffset, left: leftOffset),
-                child: Button.icon(
-                  onPressed: () {
-                    IceRoutes.appsList.go(
-                      context,
-                      payload: AppsRouteData(
-                        title: categories[index].title,
-                        items: mockedApps,
-                        isSearchVisible: true,
-                      ),
-                    );
-                  },
-                  icon: Image.asset(
-                    categories[index].iconImage,
-                    width: 50.0.s,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: SizedBox(
+        height: itemHeight,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: categories.length,
+          itemBuilder: (BuildContext context, int index) {
+            final double leftOffset = index == 0 ? 16.0.s : 8.0.s;
+            final double rightOffset =
+                index == categories.length - 1 ? 16.0.s : 8.0.s;
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(right: rightOffset, left: leftOffset),
+                  child: Button.icon(
+                    onPressed: () {
+                      IceRoutes.appsList.go(
+                        context,
+                        payload: AppsRouteData(
+                          title: categories[index].title,
+                          items: mockedApps,
+                          isSearchVisible: true,
+                        ),
+                      );
+                    },
+                    icon: Image.asset(
+                      categories[index].iconImage,
+                      width: 50.0.s,
+                    ),
+                    size: itemWidth,
+                    type: ButtonType.outlined,
+                    backgroundColor:
+                        context.theme.appColors.tertararyBackground,
+                    borderColor: context.theme.appColors.onTerararyFill,
                   ),
-                  size: itemWidth,
-                  type: ButtonType.outlined,
-                  backgroundColor: context.theme.appColors.tertararyBackground,
-                  borderColor: context.theme.appColors.onTerararyFill,
                 ),
-              ),
-              Text(
-                categories[index].title,
-                style: context.theme.appTextThemes.body.copyWith(
-                  color: context.theme.appColors.primaryText,
+                Text(
+                  categories[index].title,
+                  style: context.theme.appTextThemes.body.copyWith(
+                    color: context.theme.appColors.primaryText,
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }

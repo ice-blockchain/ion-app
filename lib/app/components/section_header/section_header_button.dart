@@ -3,8 +3,12 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ForwardButton extends StatelessWidget {
-  const ForwardButton();
+class SectionHeaderButton extends StatelessWidget {
+  const SectionHeaderButton(
+    this.onPress,
+  );
+
+  final VoidCallback onPress;
 
   static double get hitSlop => 10.0.s;
   static double get iconSize => 24.0.s;
@@ -15,14 +19,11 @@ class ForwardButton extends StatelessWidget {
     return SizedBox(
       width: totalSize,
       height: totalSize,
-      child: RotatedBox(
-        quarterTurns: 2,
-        child: IconButton(
-          padding: EdgeInsets.zero,
-          onPressed: () {},
-          icon: Assets.images.icons.iconBackArrow.icon(
-            size: iconSize,
-          ),
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        onPressed: onPress,
+        icon: Assets.images.icons.iconButtonNext.icon(
+          size: iconSize,
         ),
       ),
     );
