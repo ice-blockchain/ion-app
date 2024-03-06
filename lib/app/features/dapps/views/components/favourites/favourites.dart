@@ -64,10 +64,7 @@ class Favourites extends StatelessWidget {
                     ],
                   ),
                 ),
-                Image.asset(
-                  Assets.images.icons.iconArrowRight.path,
-                  width: 24.0.s,
-                ),
+                Assets.images.icons.iconArrowRight.image(width: 24.0.s),
               ],
             ),
           ),

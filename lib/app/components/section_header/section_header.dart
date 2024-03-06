@@ -26,21 +26,18 @@ class SectionHeader extends StatelessWidget {
       child: SizedBox(
         height: 46.0.s,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                if (leadingIcon != null)
-                  Padding(
-                    padding: EdgeInsets.only(right: leadingIconOffset),
-                    child: leadingIcon,
-                  ),
-                Text(
-                  title,
-                  style: context.theme.appTextThemes.subtitle
-                      .copyWith(color: context.theme.appColors.primaryText),
-                ),
-              ],
+            if (leadingIcon != null)
+              Padding(
+                padding: EdgeInsets.only(right: leadingIconOffset),
+                child: leadingIcon,
+              ),
+            Expanded(
+              child: Text(
+                title,
+                style: context.theme.appTextThemes.subtitle
+                    .copyWith(color: context.theme.appColors.primaryText),
+              ),
             ),
             if (onPress != null)
               Padding(
