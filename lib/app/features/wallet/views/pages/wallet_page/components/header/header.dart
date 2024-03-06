@@ -13,31 +13,28 @@ class Header extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: EdgeInsets.only(top: 16.0.s),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          const WalletSwitcher(),
-          Row(
-            children: <Widget>[
-              NavigationButton(
-                onPressed: () {},
-                icon: Assets.images.icons.iconHeaderCopy.icon(
-                  color: context.theme.appColors.primaryText,
-                ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        const WalletSwitcher(),
+        Row(
+          children: <Widget>[
+            NavigationButton(
+              onPressed: () {},
+              icon: Assets.images.icons.iconHeaderCopy.icon(
+                color: context.theme.appColors.primaryText,
               ),
-              SizedBox(width: 12.0.s),
-              NavigationButton(
-                onPressed: () {},
-                icon: Assets.images.icons.iconHeaderScan1.icon(
-                  color: context.theme.appColors.primaryText,
-                ),
+            ),
+            SizedBox(width: 12.0.s),
+            NavigationButton(
+              onPressed: () {},
+              icon: Assets.images.icons.iconHeaderScan1.icon(
+                color: context.theme.appColors.primaryText,
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

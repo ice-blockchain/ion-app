@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/navigation_header/navigation_header.dart';
 import 'package:ice/app/components/search_input/search_input.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
+import 'package:ice/app/router/views/navigation_header.dart';
 
 class SelectCountries extends IceSimplePage {
   const SelectCountries(super._route, super.payload);

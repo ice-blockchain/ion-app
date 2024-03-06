@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/components/post/post.dart';
@@ -25,14 +26,11 @@ class FeedPage extends IceSimplePage {
           controller: scrollController,
           slivers: <Widget>[
             SliverToBoxAdapter(
-              child: SafeArea(
+              child: ScreenTopOffset(
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 9.0.s),
-                      child: FeedControls(
-                        pageScrollController: scrollController,
-                      ),
+                    FeedControls(
+                      pageScrollController: scrollController,
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 16.0.s),

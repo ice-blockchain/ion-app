@@ -9,18 +9,22 @@ class DAppItem {
     this.value = 0.0,
     this.isVerified = false,
     this.backgroundImage,
+    this.fullDescription,
+    this.link,
   });
 
   final String iconImage;
   final String title;
   final bool isFavourite;
   final String? description;
+  final String? fullDescription;
   final double? value;
   final bool? isVerified;
   final String? backgroundImage;
+  final String? link;
 }
 
-List<DAppItem> featured = <DAppItem>[
+List<DAppItem> mockedApps = <DAppItem>[
   DAppItem(
     iconImage: Assets.images.wallet.walletUniswap.path,
     title: 'Uniswap',

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/navigation_header/navigation_header.dart';
-import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/search_input/search_input.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
@@ -11,6 +10,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/title_description_header/title_description_header.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
+import 'package:ice/app/router/views/navigation_header.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SelectLanguages extends IceSimplePage {

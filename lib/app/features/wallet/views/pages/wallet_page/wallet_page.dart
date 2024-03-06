@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/screen_side_offset/screen_side_offset.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/header/header.dart';
@@ -14,21 +15,21 @@ class WalletPage extends IceSimplePage {
     final ScrollController scrollController = useScrollController();
 
     return Scaffold(
-      body: SafeArea(
-        child: ScreenSideOffset.small(
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: const <Widget>[
-              SliverToBoxAdapter(
-                child: Column(
+      body: ScreenSideOffset.small(
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            SliverToBoxAdapter(
+              child: ScreenTopOffset(
+                child: const Column(
                   children: <Widget>[
                     Header(),
                     Balance(),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
