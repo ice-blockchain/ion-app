@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
+import 'package:ice/app/features/core/views/components/content_scaler.dart';
 import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/theme.dart';
 import 'package:ice/generated/app_localizations.dart';
@@ -36,9 +36,8 @@ class WidgetbookApp extends ConsumerWidget {
           final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
           final AsyncValue<Template> template = ref.watch(appTemplateProvider);
 
-          return ScreenUtilInit(
-            designSize: const Size(375, 812),
-            builder: (BuildContext context, Widget? widget) => MaterialApp(
+          return ContentScaler(
+            child: MaterialApp(
               localizationsDelegates: I18n.localizationsDelegates,
               supportedLocales: I18n.supportedLocales,
               theme: template.whenOrNull(

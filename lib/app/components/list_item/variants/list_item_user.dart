@@ -67,8 +67,7 @@ class _ListItemUser extends ListItem {
 
   @override
   TextStyle _getDefaultTitleStyle(BuildContext context) {
-    //TODO::change to subtitle3
-    return context.theme.appTextThemes.subtitle2.copyWith(
+    return context.theme.appTextThemes.subtitle3.copyWith(
       color: context.theme.appColors.primaryText,
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/views/tab_icon.dart';
@@ -15,10 +16,10 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 0,
-        iconOff: Assets.images.icons.iconHomeOff.image(
+        iconOff: Assets.images.icons.iconHomeOff.icon(
           color: context.theme.appColors.tertararyText,
         ),
-        iconOn: Assets.images.icons.iconHomeOff.image(
+        iconOn: Assets.images.icons.iconHomeOff.icon(
           color: context.theme.appColors.primaryAccent,
         ),
       ),
@@ -28,10 +29,10 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 1,
-        iconOff: Assets.images.icons.iconDappOff.image(
+        iconOff: Assets.images.icons.iconDappOff.icon(
           color: context.theme.appColors.tertararyText,
         ),
-        iconOn: Assets.images.icons.iconDappOff.image(
+        iconOn: Assets.images.icons.iconDappOff.icon(
           color: context.theme.appColors.primaryAccent,
         ),
       ),
@@ -41,10 +42,10 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 2,
-        iconOff: Assets.images.icons.iconChatOff.image(
+        iconOff: Assets.images.icons.iconChatOff.icon(
           color: context.theme.appColors.tertararyText,
         ),
-        iconOn: Assets.images.icons.iconChatOff.image(
+        iconOn: Assets.images.icons.iconChatOff.icon(
           color: context.theme.appColors.primaryAccent,
         ),
       ),
@@ -54,10 +55,10 @@ List<NavigationDestination> getDestinations(
       icon: TabIcon(
         currentIndex: navigationShell.currentIndex,
         tabIndex: 3,
-        iconOff: Assets.images.icons.iconButtonManageWallet.image(
+        iconOff: Assets.images.icons.iconButtonManageWallet.icon(
           color: context.theme.appColors.tertararyText,
         ),
-        iconOn: Assets.images.icons.iconButtonManageWallet.image(
+        iconOn: Assets.images.icons.iconButtonManageWallet.icon(
           color: context.theme.appColors.primaryAccent,
         ),
       ),

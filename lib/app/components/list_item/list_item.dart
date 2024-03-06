@@ -24,12 +24,11 @@ class ListItem extends StatelessWidget {
     BoxConstraints? constraints,
     this.backgroundColor,
     this.onTap,
-  })  : borderRadius =
-            borderRadius ?? BorderRadius.all(Radius.circular(16.0.s)),
-        contentPadding = contentPadding ?? EdgeInsets.all(12.0.s),
-        leadingPadding = leadingPadding ?? EdgeInsets.only(right: 10.0.s),
-        trailingPadding = trailingPadding ?? EdgeInsets.only(left: 10.0.s),
-        constraints = constraints ?? BoxConstraints(minHeight: 60.0.s);
+  })  : borderRadius = borderRadius ?? defaultBorderRadius,
+        contentPadding = contentPadding ?? defaultContentPadding,
+        leadingPadding = leadingPadding ?? defaultLeadingPadding,
+        trailingPadding = trailingPadding ?? defaultTrailingPadding,
+        constraints = constraints ?? defaultConstraints;
 
   factory ListItem.checkbox({
     Key? key,
@@ -59,9 +58,9 @@ class ListItem extends StatelessWidget {
     BoxConstraints? constraints,
     Color? backgroundColor,
     VoidCallback? onTap,
+    String? profilePicture,
     required Widget title,
     required Widget subtitle,
-    required String profilePicture,
     bool verifiedBadge,
     bool iceBadge,
     DateTime? timeago,
@@ -79,6 +78,14 @@ class ListItem extends StatelessWidget {
   final BoxConstraints constraints;
   final Color? backgroundColor;
   final VoidCallback? onTap;
+
+  static BorderRadius get defaultBorderRadius =>
+      BorderRadius.all(Radius.circular(16.0.s));
+  static EdgeInsets get defaultContentPadding => EdgeInsets.all(12.0.s);
+  static EdgeInsets get defaultLeadingPadding => EdgeInsets.only(right: 10.0.s);
+  static EdgeInsets get defaultTrailingPadding => EdgeInsets.only(left: 10.0.s);
+  static BoxConstraints get defaultConstraints =>
+      BoxConstraints(minHeight: 60.0.s);
 
   @override
   Widget build(BuildContext context) {

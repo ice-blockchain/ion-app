@@ -56,7 +56,7 @@ class StoryListItem extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4.0.s),
+              padding: EdgeInsets.symmetric(horizontal: 2.0.s),
               child: Text(
                 label,
                 style: context.theme.appTextThemes.caption3.copyWith(

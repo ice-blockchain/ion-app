@@ -14,7 +14,7 @@ class TrendingVideosHeader extends StatelessWidget {
     return ScreenSideOffset.small(
       only: ScreenOffsetSide.left,
       child: SizedBox(
-        height: 46.0.s,
+        height: 47.0.s,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -22,7 +22,7 @@ class TrendingVideosHeader extends StatelessWidget {
               children: <Widget>[
                 const VideosIcon(),
                 Padding(
-                  padding: EdgeInsets.only(left: 4.0.s),
+                  padding: EdgeInsets.only(left: 2.0.s),
                   child: Text(
                     context.i18n.trending_videos,
                     style: context.theme.appTextThemes.subtitle

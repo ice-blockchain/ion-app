@@ -32,7 +32,6 @@ class SplashPage extends IceSimplePage {
         width: double.infinity,
         color: Colors.blueGrey,
         child: Center(
-          // <-- Wrap Lottie animation with a Container
           child: LottieBuilder.asset(
             'assets/lottie/splash-logo.json',
             controller: animationController,
