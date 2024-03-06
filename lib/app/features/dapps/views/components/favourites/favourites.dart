@@ -28,8 +28,9 @@ class Favourites extends StatelessWidget {
           child: Container(
             height: containerHeight,
             width: double.infinity,
-            padding: EdgeInsets.symmetric(
-              horizontal: ScreenSideOffset.defaultSmallMargin,
+            padding: EdgeInsets.only(
+              left: ScreenSideOffset.defaultSmallMargin,
+              right: 12.0.s,
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16.0.s),
@@ -41,37 +42,31 @@ class Favourites extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    const FavouriteIcon(),
-                    SizedBox(width: 8.0.s),
-                    SizedBox(
-                      height: 36.0.s,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            context.i18n.dapps_section_title_favourites,
-                            style: context.theme.appTextThemes.body.copyWith(
-                              color: context.theme.appColors.primaryText,
-                            ),
-                          ),
-                          Text(
-                            context.i18n.dapps_favourites_added(17),
-                            style:
-                                context.theme.appTextThemes.caption3.copyWith(
-                              color: context.theme.appColors.secondaryText,
-                            ),
-                          ),
-                        ],
+                const FavouriteIcon(),
+                SizedBox(width: 8.0.s),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        context.i18n.dapps_section_title_favourites,
+                        style: context.theme.appTextThemes.body.copyWith(
+                          color: context.theme.appColors.primaryText,
+                        ),
                       ),
-                    ),
-                  ],
+                      Text(
+                        context.i18n.dapps_favourites_added(17),
+                        style: context.theme.appTextThemes.caption3.copyWith(
+                          color: context.theme.appColors.secondaryText,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Image.asset(
                   Assets.images.icons.iconArrowRight.path,
-                  width: 12.0.s,
+                  width: 24.0.s,
                 ),
               ],
             ),

@@ -59,34 +59,31 @@ class FeaturedCollection extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8.0.s),
-                        SizedBox(
-                          height: 36.0.s,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              ShadowText(
-                                child: Text(
-                                  items[index].title,
-                                  style:
-                                      context.theme.appTextThemes.body.copyWith(
-                                    color: context
-                                        .theme.appColors.secondaryBackground,
-                                  ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            ShadowText(
+                              child: Text(
+                                items[index].title,
+                                style:
+                                    context.theme.appTextThemes.body.copyWith(
+                                  color: context
+                                      .theme.appColors.secondaryBackground,
                                 ),
                               ),
-                              ShadowText(
-                                child: Text(
-                                  items[index].description ?? '',
-                                  style: context.theme.appTextThemes.caption3
-                                      .copyWith(
-                                    color: context
-                                        .theme.appColors.secondaryBackground,
-                                  ),
+                            ),
+                            ShadowText(
+                              child: Text(
+                                items[index].description ?? '',
+                                style: context.theme.appTextThemes.caption3
+                                    .copyWith(
+                                  color: context
+                                      .theme.appColors.secondaryBackground,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
