@@ -8,25 +8,29 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 double navigationHeaderHeight = 50.0.s;
-double backButtonSide = 24.0.s;
-double backButtonPadding = 10.0.s;
+double actionButtonSide = 24.0.s;
 
 class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   const NavigationAppBar({
     required this.title,
     this.showBackButton = true,
-    this.showCloseButton = false,
     this.onBackPress,
+    this.actions,
     super.key,
   });
 
   final String title;
   final bool showBackButton;
-  final bool showCloseButton;
   final VoidCallback? onBackPress;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
+    final double extraBackWidth = showBackButton ? actionButtonSide : 0;
+    final double extraActionsWidth = (actions != null && actions!.isNotEmpty)
+        ? actions!.length * actionButtonSide
+        : 0;
+
     return ScreenTopOffset(
       child: Container(
         color: context.theme.appColors.secondaryBackground,
@@ -34,14 +38,21 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: ScreenSideOffset.small(
           child: Row(
             children: <Widget>[
-              if (showBackButton && !showCloseButton)
+              ColoredBox(
+                color: Colors.blueGrey,
+                child: SizedBox(
+                  width: extraActionsWidth - extraBackWidth,
+                  height: actionButtonSide,
+                ),
+              ),
+              if (showBackButton)
                 ColoredBox(
                   color: Colors.amber,
                   child: IconButton(
                     icon: Image.asset(
                       Assets.images.icons.iconBackArrow.path,
-                      width: backButtonSide,
-                      height: backButtonSide,
+                      width: actionButtonSide,
+                      height: actionButtonSide,
                     ),
                     onPressed: () {
                       if (onBackPress != null) {
@@ -55,8 +66,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
               else
                 ColoredBox(
                   color: Colors.amber,
-                  child:
-                      SizedBox(width: backButtonSide + backButtonPadding * 2),
+                  child: SizedBox(width: actionButtonSide),
                 ),
               Expanded(
                 child: Text(
@@ -65,25 +75,10 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
                   style: context.theme.appTextThemes.title,
                 ),
               ),
-              if (showCloseButton)
-                IconButton(
-                  icon: Image.asset(
-                    Assets.images.icons.iconSheetClose.path,
-                    width: backButtonSide,
-                    height: backButtonSide,
-                  ),
-                  onPressed: () {
-                    if (onBackPress != null) {
-                      onBackPress!();
-                    } else {
-                      context.pop();
-                    }
-                  },
-                  padding: EdgeInsets.all(backButtonPadding),
-                  constraints: const BoxConstraints(),
-                )
-              else
-                SizedBox(width: backButtonSide + backButtonPadding * 2),
+              if (actions != null && actions!.isNotEmpty)
+                Row(
+                  children: actions!,
+                ),
             ],
           ),
         ),

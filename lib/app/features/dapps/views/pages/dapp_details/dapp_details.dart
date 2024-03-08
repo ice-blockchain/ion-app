@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/read_more_text/read_more_text.dart';
@@ -24,14 +25,26 @@ class DAppDetails extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return Scaffold(
+      appBar: NavigationAppBar(
+        showBackButton: false,
+        title: item.title,
+        actions: <Widget>[
+          IconButton(
+            icon: Image.asset(
+              Assets.images.icons.iconSheetClose.path,
+              width: actionButtonSide,
+              height: actionButtonSide,
+            ),
+            onPressed: () {
+              context.pop();
+            },
+          ),
+        ],
+      ),
       body: SizedBox(
         child: ScreenSideOffset.small(
           child: Column(
             children: <Widget>[
-              NavigationAppBar(
-                title: item.title,
-                showCloseButton: true,
-              ),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
