@@ -47,6 +47,25 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
           title: 'Some title',
           actions: <Widget>[
             IconButton(
+              icon: Assets.images.icons.iconChannelAdmin.icon(
+                size: actionButtonSide,
+                color: context.theme.appColors.primaryText,
+              ),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Assets.images.icons.iconMorePopup.icon(
+                size: actionButtonSide,
+                color: context.theme.appColors.primaryText,
+              ),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        NavigationAppBar(
+          title: 'Some very very long title',
+          actions: <Widget>[
+            IconButton(
               icon: Assets.images.icons.iconMorePopup.icon(
                 size: actionButtonSide,
                 color: context.theme.appColors.primaryText,

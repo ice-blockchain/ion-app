@@ -63,7 +63,9 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
                   overflow: TextOverflow.fade,
                   softWrap: false,
                   textAlign: TextAlign.center,
-                  style: context.theme.appTextThemes.title,
+                  style: context.theme.appTextThemes.subtitle2.copyWith(
+                    color: context.theme.appColors.primaryText,
+                  ),
                 ),
               ),
               Expanded(
