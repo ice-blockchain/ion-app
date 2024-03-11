@@ -5,6 +5,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/components/actions_list/action_button.dart';
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/utils/username.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class ActionsList extends HookConsumerWidget {
@@ -29,7 +30,12 @@ class ActionsList extends HookConsumerWidget {
         ),
         ActionButton(
           icon: Assets.images.icons.iconMenuLogout.icon(),
-          label: context.i18n.profile_log_out('@${activeUser.nickname}'),
+          label: context.i18n.profile_log_out(
+            prefixUsername(
+              username: activeUser.nickname,
+              context: context,
+            ),
+          ),
           onTap: () {},
         ),
       ],

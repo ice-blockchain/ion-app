@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -23,7 +24,12 @@ class Balance extends HookConsumerWidget {
         ? Assets.images.icons.iconBlockEyeOn
         : Assets.images.icons.iconBlockEyeOff;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0.s),
+      padding: EdgeInsets.only(
+        top: 10.0.s,
+        bottom: 16.0.s,
+        left: ScreenSideOffset.defaultSmallMargin,
+        right: ScreenSideOffset.defaultSmallMargin,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -49,7 +55,7 @@ class Balance extends HookConsumerWidget {
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(top: 8.0.s),
+            padding: EdgeInsets.only(top: 6.0.s),
             child: Text(
               isVisible.value ? '\$${walletData.balance}' : '********',
               style: context.theme.appTextThemes.headline1

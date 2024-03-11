@@ -1,5 +1,5 @@
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
-import 'package:ice/app/features/wallet/providers/mock_data.dart';
+import 'package:ice/app/features/wallet/providers/wallet_mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallets_data_provider.g.dart';
@@ -8,15 +8,15 @@ part 'wallets_data_provider.g.dart';
 class WalletsDataNotifier extends _$WalletsDataNotifier {
   @override
   Map<String, WalletData> build() {
-    final Map<String, WalletData> userAccounts = <String, WalletData>{};
+    final Map<String, WalletData> wallets = <String, WalletData>{};
     for (final WalletData walletData in mockedWalletDataArray) {
-      userAccounts.putIfAbsent(walletData.id, () => walletData);
+      wallets.putIfAbsent(walletData.id, () => walletData);
     }
 
-    return Map<String, WalletData>.unmodifiable(userAccounts);
+    return Map<String, WalletData>.unmodifiable(wallets);
   }
 
-  set userData(WalletData newData) {
+  set walletData(WalletData newData) {
     final Map<String, WalletData> newState = Map<String, WalletData>.from(state)
       ..update(
         newData.id,

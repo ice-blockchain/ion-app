@@ -7,6 +7,7 @@ import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_info/components/profile_details/profile_details_cell.dart';
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/utils/username.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class ProfileDetails extends HookConsumerWidget {
@@ -45,7 +46,10 @@ class ProfileDetails extends HookConsumerWidget {
           ),
           SizedBox(height: 3.0.s),
           Text(
-            '@${userData.nickname}',
+            prefixUsername(
+              username: userData.nickname,
+              context: context,
+            ),
             style: context.theme.appTextThemes.caption.copyWith(
               color: context.theme.appColors.secondaryText,
             ),

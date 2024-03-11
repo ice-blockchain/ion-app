@@ -7,6 +7,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/utils/username.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class AccountsTile extends HookConsumerWidget {
@@ -38,7 +39,10 @@ class AccountsTile extends HookConsumerWidget {
           ),
         ),
         subtitle: Text(
-          '@${userData.nickname}',
+          prefixUsername(
+            username: userData.nickname,
+            context: context,
+          ),
           style: TextStyle(
             color: isActiveUser
                 ? context.theme.appColors.onPrimaryAccent
