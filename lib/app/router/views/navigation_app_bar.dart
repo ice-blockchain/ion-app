@@ -59,6 +59,9 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
                 flex: 2,
                 child: Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
                   textAlign: TextAlign.center,
                   style: context.theme.appTextThemes.title,
                 ),
