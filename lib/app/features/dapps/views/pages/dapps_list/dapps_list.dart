@@ -35,7 +35,7 @@ class DAppsList extends IcePage<AppsRouteData> {
           }).toList();
 
     return Scaffold(
-      appBar: NavigationAppBar(
+      appBar: NavigationAppBar.screen(
         title: payload?.title ?? '',
         actions: <Widget>[
           ColoredBox(

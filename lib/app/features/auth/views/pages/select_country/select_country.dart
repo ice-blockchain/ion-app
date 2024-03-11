@@ -38,11 +38,11 @@ class SelectCountries extends IceSimplePage {
         color: context.theme.appColors.secondaryBackground,
         child: Stack(
           children: <Widget>[
-            NavigationAppBar(
+            NavigationAppBar.modal(
               title: context.i18n.select_countries_nav_title,
             ),
             Padding(
-              padding: EdgeInsets.only(top: navigationHeaderHeight),
+              padding: EdgeInsets.only(top: modalHeaderHeight),
               child: Column(
                 children: <Widget>[
                   SearchInput(

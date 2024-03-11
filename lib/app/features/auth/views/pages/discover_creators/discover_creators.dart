@@ -60,11 +60,11 @@ class DiscoverCreators extends IceSimplePage {
         color: context.theme.appColors.secondaryBackground,
         child: Stack(
           children: <Widget>[
-            const NavigationAppBar(title: ''),
+            NavigationAppBar.modal(title: ''),
             ScreenSideOffset.small(
               child: Padding(
                 padding: EdgeInsets.only(
-                  top: navigationHeaderHeight,
+                  top: modalHeaderHeight,
                 ),
                 child: Column(
                   children: <Widget>[

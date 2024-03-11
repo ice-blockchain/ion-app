@@ -15,10 +15,10 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        const NavigationAppBar(
+        NavigationAppBar.screen(
           title: 'Some title',
         ),
-        NavigationAppBar(
+        NavigationAppBar.screen(
           title: 'Some title',
           showBackButton: false,
           actions: <Widget>[
@@ -31,7 +31,7 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
             ),
           ],
         ),
-        NavigationAppBar(
+        NavigationAppBar.screen(
           title: 'Some title',
           actions: <Widget>[
             IconButton(
@@ -43,7 +43,7 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
             ),
           ],
         ),
-        NavigationAppBar(
+        NavigationAppBar.screen(
           title: 'Some title',
           actions: <Widget>[
             IconButton(
@@ -62,7 +62,7 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
             ),
           ],
         ),
-        NavigationAppBar(
+        NavigationAppBar.screen(
           title: 'Some very very long title',
           actions: <Widget>[
             IconButton(

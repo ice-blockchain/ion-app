@@ -26,7 +26,7 @@ class DAppDetails extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return Scaffold(
-      appBar: NavigationAppBar(
+      appBar: NavigationAppBar.screen(
         title: item.title,
         showBackButton: false,
         actions: <Widget>[
