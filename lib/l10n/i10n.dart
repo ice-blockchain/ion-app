@@ -38,3 +38,7 @@ TextSpan replaceString(
 
   return TextSpan(children: spans);
 }
+
+bool isRTL(BuildContext context) {
+  return Directionality.of(context) == TextDirection.rtl;
+}

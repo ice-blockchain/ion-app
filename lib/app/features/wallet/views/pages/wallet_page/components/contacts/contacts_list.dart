@@ -6,6 +6,7 @@ import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list_item.dart';
+import 'package:ice/app/utils/username.dart';
 
 class ContactsList extends HookConsumerWidget {
   const ContactsList({super.key});
@@ -38,7 +39,10 @@ class ContactsList extends HookConsumerWidget {
               return ContactsListItem(
                 imageUrl: contactData.icon,
                 label: contactData.nickname != null
-                    ? '@${contactData.nickname}'
+                    ? prefixUsername(
+                        username: contactData.nickname,
+                        context: context,
+                      )
                     : contactData.phoneNumber ?? '',
                 hasIceAccount: contactData.hasIceAccount,
               );

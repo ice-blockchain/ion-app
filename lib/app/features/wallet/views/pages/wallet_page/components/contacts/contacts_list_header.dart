@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -22,8 +21,8 @@ class ContactListHeader extends StatelessWidget {
               color: context.theme.appColors.primaryText,
             ),
           ),
-          GestureDetector(
-            onTap: () {},
+          TextButton(
+            onPressed: () {},
             child: Padding(
               padding: EdgeInsets.all(ScreenSideOffset.defaultSmallMargin),
               child: Text(

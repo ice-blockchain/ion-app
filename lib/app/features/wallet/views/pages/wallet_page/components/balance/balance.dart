@@ -26,7 +26,7 @@ class Balance extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.only(
         top: 10.0.s,
-        bottom: ScreenSideOffset.defaultSmallMargin,
+        bottom: 16.0.s,
         left: ScreenSideOffset.defaultSmallMargin,
         right: ScreenSideOffset.defaultSmallMargin,
       ),
