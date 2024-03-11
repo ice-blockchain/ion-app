@@ -37,30 +37,6 @@ class DAppsList extends IcePage<AppsRouteData> {
     return Scaffold(
       appBar: NavigationAppBar.screen(
         title: payload?.title ?? '',
-        actions: <Widget>[
-          ColoredBox(
-            color: const Color.fromARGB(255, 82, 255, 114),
-            child: IconButton(
-              icon: Image.asset(
-                Assets.images.icons.iconBadgeLinkedin.path,
-                width: actionButtonSide,
-                height: actionButtonSide,
-              ),
-              onPressed: () {},
-            ),
-          ),
-          ColoredBox(
-            color: Colors.redAccent,
-            child: IconButton(
-              icon: Image.asset(
-                Assets.images.icons.iconMenuLogout.path,
-                width: actionButtonSide,
-                height: actionButtonSide,
-              ),
-              onPressed: () {},
-            ),
-          ),
-        ],
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,

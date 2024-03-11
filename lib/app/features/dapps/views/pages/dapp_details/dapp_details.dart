@@ -47,6 +47,7 @@ class DAppDetails extends IceSimplePage {
             children: <Widget>[
               Expanded(
                 child: SingleChildScrollView(
+                  padding: EdgeInsets.only(top: 10.0.s),
                   child: Column(
                     children: <Widget>[
                       if (item.backgroundImage != null)

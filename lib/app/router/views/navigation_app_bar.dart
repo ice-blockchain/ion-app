@@ -9,7 +9,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 double modalHeaderHeight = 60.0.s;
-double screenHeaderHeight = 50.0.s;
+double screenHeaderHeight = 56.0.s;
 double actionButtonSide = 24.0.s;
 
 class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
