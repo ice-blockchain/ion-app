@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Provide required visibility configuration for API level 30 and above -->
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- https://pub.dev/packages/url_launcher -->
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
