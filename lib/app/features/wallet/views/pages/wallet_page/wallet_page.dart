@@ -16,7 +16,7 @@ class WalletPage extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ScrollController scrollController = useScrollController();
-    final bool? hasContactsPermission = useHasContactsPermission(ref);
+    final bool? hasContactsPermission = hasContactsPermissionSelector(ref);
     useEffect(
       () {
         WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -16,10 +16,7 @@ class Header extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ScreenTopOffset(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: ScreenSideOffset.defaultSmallMargin,
-        ),
+      child: ScreenSideOffset.small(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
