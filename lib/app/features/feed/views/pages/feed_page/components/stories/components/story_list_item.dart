@@ -1,11 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/components/plus_icon.dart';
-import 'package:ice/app/utils/image.dart';
 
 class StoryListItem extends StatelessWidget {
   const StoryListItem({
@@ -20,7 +19,9 @@ class StoryListItem extends StatelessWidget {
   final bool showPlus;
 
   static double get width => 65.0.s;
+
   static double get height => 91.0.s;
+
   static double get plusSize => 18.0.s;
 
   @override
@@ -37,14 +38,10 @@ class StoryListItem extends StatelessWidget {
               clipBehavior: Clip.none,
               alignment: Alignment.bottomCenter,
               children: <Widget>[
-                ClipRRect(
+                Avatar(
+                  size: width,
+                  imageUrl: imageUrl,
                   borderRadius: BorderRadius.circular(19.5.s),
-                  child: CachedNetworkImage(
-                    width: width,
-                    height: width,
-                    imageUrl: getAdaptiveImageUrl(imageUrl, width),
-                    fit: BoxFit.cover,
-                  ),
                 ),
                 if (showPlus)
                   Positioned(

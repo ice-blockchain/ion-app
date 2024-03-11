@@ -1,0 +1,16 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'contact_data.freezed.dart';
+
+@Freezed(copyWith: true)
+class ContactData with _$ContactData {
+  const factory ContactData({
+    required String id,
+    required String name,
+    required String icon,
+    required bool hasIceAccount,
+    String? nickname,
+    String? phoneNumber,
+    bool? isVerified,
+  }) = _ContactData;
+}

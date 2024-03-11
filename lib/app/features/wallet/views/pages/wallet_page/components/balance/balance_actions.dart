@@ -13,7 +13,9 @@ class BalanceActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 14.0.s),
+      padding: EdgeInsets.only(
+        top: 14.0.s,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[

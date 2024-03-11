@@ -85,6 +85,11 @@
     "trending_videos",
     "wallet_balance",
     "wallet_send",
-    "wallet_receive"
+    "wallet_receive",
+    "contacts_title",
+    "contacts_allow_pop_up_title",
+    "contacts_allow_pop_up_desc",
+    "contacts_allow_pop_up_action",
+    "core_view_all"
   ]
 }
