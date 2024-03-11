@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -26,10 +27,20 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double extraBackWidth = showBackButton ? actionButtonSide : 0;
-    final double extraActionsWidth = (actions != null && actions!.isNotEmpty)
-        ? actions!.length * actionButtonSide
-        : 0;
+    final Widget leftItem = showBackButton
+        ? IconButton(
+            icon: Assets.images.icons.iconBackArrow.icon(
+              size: actionButtonSide,
+            ),
+            onPressed: onBackPress ?? () => context.pop(),
+          )
+        : SizedBox(width: actionButtonSide);
+
+    final List<Widget> rightItems = actions != null && actions!.isNotEmpty
+        ? actions!
+        : <Widget>[
+            SizedBox(width: actionButtonSide),
+          ];
 
     return ScreenTopOffset(
       child: Container(
@@ -37,48 +48,27 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
         height: navigationHeaderHeight,
         child: ScreenSideOffset.small(
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              ColoredBox(
-                color: Colors.blueGrey,
-                child: SizedBox(
-                  width: extraActionsWidth - extraBackWidth,
-                  height: actionButtonSide,
+              Expanded(
+                child: Row(
+                  children: <Widget>[leftItem],
                 ),
               ),
-              if (showBackButton)
-                ColoredBox(
-                  color: Colors.amber,
-                  child: IconButton(
-                    icon: Image.asset(
-                      Assets.images.icons.iconBackArrow.path,
-                      width: actionButtonSide,
-                      height: actionButtonSide,
-                    ),
-                    onPressed: () {
-                      if (onBackPress != null) {
-                        onBackPress!();
-                      } else {
-                        context.pop();
-                      }
-                    },
-                  ),
-                )
-              else
-                ColoredBox(
-                  color: Colors.amber,
-                  child: SizedBox(width: actionButtonSide),
-                ),
               Expanded(
+                flex: 2,
                 child: Text(
                   title,
                   textAlign: TextAlign.center,
                   style: context.theme.appTextThemes.title,
                 ),
               ),
-              if (actions != null && actions!.isNotEmpty)
-                Row(
-                  children: actions!,
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: rightItems,
                 ),
+              ),
             ],
           ),
         ),

@@ -5,6 +5,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/read_more_text/read_more_text.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -26,14 +27,13 @@ class DAppDetails extends IceSimplePage {
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return Scaffold(
       appBar: NavigationAppBar(
-        showBackButton: false,
         title: item.title,
+        showBackButton: false,
         actions: <Widget>[
           IconButton(
-            icon: Image.asset(
-              Assets.images.icons.iconSheetClose.path,
-              width: actionButtonSide,
-              height: actionButtonSide,
+            icon: Assets.images.icons.iconSheetClose.icon(
+              size: actionButtonSide,
+              color: context.theme.appColors.primaryText,
             ),
             onPressed: () {
               context.pop();
