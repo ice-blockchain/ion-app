@@ -11,70 +11,73 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
   type: NavigationAppBar,
 )
 Widget regularNavigationAppBarUseCase(BuildContext context) {
-  return Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        NavigationAppBar.screen(
-          title: 'Some title',
-        ),
-        NavigationAppBar.screen(
-          title: 'Some title',
-          showBackButton: false,
-          actions: <Widget>[
-            IconButton(
-              icon: Assets.images.icons.iconSheetClose.icon(
-                size: NavigationAppBar.actionButtonSide,
-                color: context.theme.appColors.primaryText,
+  return Scaffold(
+    backgroundColor: context.theme.appColors.primaryBackground,
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          NavigationAppBar.screen(
+            title: 'Some title',
+          ),
+          NavigationAppBar.screen(
+            title: 'Some title',
+            showBackButton: false,
+            actions: <Widget>[
+              IconButton(
+                icon: Assets.images.icons.iconSheetClose.icon(
+                  size: NavigationAppBar.actionButtonSide,
+                  color: context.theme.appColors.primaryText,
+                ),
+                onPressed: () {},
               ),
-              onPressed: () {},
-            ),
-          ],
-        ),
-        NavigationAppBar.screen(
-          title: 'Some title',
-          actions: <Widget>[
-            IconButton(
-              icon: Assets.images.icons.iconChannelAdmin.icon(
-                size: NavigationAppBar.actionButtonSide,
-                color: context.theme.appColors.primaryText,
+            ],
+          ),
+          NavigationAppBar.screen(
+            title: 'Some title',
+            actions: <Widget>[
+              IconButton(
+                icon: Assets.images.icons.iconChannelAdmin.icon(
+                  size: NavigationAppBar.actionButtonSide,
+                  color: context.theme.appColors.primaryText,
+                ),
+                onPressed: () {},
               ),
-              onPressed: () {},
-            ),
-          ],
-        ),
-        NavigationAppBar.screen(
-          title: 'Some title',
-          actions: <Widget>[
-            IconButton(
-              icon: Assets.images.icons.iconChannelAdmin.icon(
-                size: NavigationAppBar.actionButtonSide,
-                color: context.theme.appColors.primaryText,
+            ],
+          ),
+          NavigationAppBar.screen(
+            title: 'Some title',
+            actions: <Widget>[
+              IconButton(
+                icon: Assets.images.icons.iconChannelAdmin.icon(
+                  size: NavigationAppBar.actionButtonSide,
+                  color: context.theme.appColors.primaryText,
+                ),
+                onPressed: () {},
               ),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Assets.images.icons.iconMorePopup.icon(
-                size: NavigationAppBar.actionButtonSide,
-                color: context.theme.appColors.primaryText,
+              IconButton(
+                icon: Assets.images.icons.iconMorePopup.icon(
+                  size: NavigationAppBar.actionButtonSide,
+                  color: context.theme.appColors.primaryText,
+                ),
+                onPressed: () {},
               ),
-              onPressed: () {},
-            ),
-          ],
-        ),
-        NavigationAppBar.screen(
-          title: 'Some very very long title',
-          actions: <Widget>[
-            IconButton(
-              icon: Assets.images.icons.iconMorePopup.icon(
-                size: NavigationAppBar.actionButtonSide,
-                color: context.theme.appColors.primaryText,
+            ],
+          ),
+          NavigationAppBar.screen(
+            title: 'Some very very long title',
+            actions: <Widget>[
+              IconButton(
+                icon: Assets.images.icons.iconMorePopup.icon(
+                  size: NavigationAppBar.actionButtonSide,
+                  color: context.theme.appColors.primaryText,
+                ),
+                onPressed: () {},
               ),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     ),
   );
 }
