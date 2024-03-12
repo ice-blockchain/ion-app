@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
+import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
 
 class SplashPage extends IceSimplePage {
@@ -17,7 +18,7 @@ class SplashPage extends IceSimplePage {
       child: FittedBox(
         fit: BoxFit.cover,
         child: Lottie.asset(
-          'assets/lottie/splash-logo.json',
+          Assets.lottie.splashLogo,
           frameRate: const FrameRate(60),
           controller: animationController,
           onLoaded: (LottieComposition composition) {
