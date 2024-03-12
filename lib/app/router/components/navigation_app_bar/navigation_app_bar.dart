@@ -62,7 +62,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget appBarContent = NavigationToolbar(
+    final Widget appBarContent = NavigationToolbar(
       leading: showBackButton
           ? IconButton(
               icon: Assets.images.icons.iconBackArrow
@@ -80,15 +80,13 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
           : null,
     );
 
-    appBarContent = Container(
+    final Widget appBar = Container(
       color: context.theme.appColors.secondaryBackground,
       height: useScreenTopOffset ? screenHeaderHeight : modalHeaderHeight,
       child: ScreenSideOffset.small(child: appBarContent),
     );
 
-    return useScreenTopOffset
-        ? ScreenTopOffset(child: appBarContent)
-        : appBarContent;
+    return useScreenTopOffset ? ScreenTopOffset(child: appBar) : appBar;
   }
 
   @override
