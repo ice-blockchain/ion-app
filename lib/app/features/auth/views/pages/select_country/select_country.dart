@@ -8,7 +8,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
-import 'package:ice/app/router/views/navigation_app_bar.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class SelectCountries extends IceSimplePage {
   const SelectCountries(super._route, super.payload);
@@ -42,7 +42,7 @@ class SelectCountries extends IceSimplePage {
               title: context.i18n.select_countries_nav_title,
             ),
             Padding(
-              padding: EdgeInsets.only(top: modalHeaderHeight),
+              padding: EdgeInsets.only(top: NavigationAppBar.modalHeaderHeight),
               child: Column(
                 children: <Widget>[
                   SearchInput(

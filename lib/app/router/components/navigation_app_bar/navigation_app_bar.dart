@@ -8,13 +8,9 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-double modalHeaderHeight = 60.0.s;
-double screenHeaderHeight = 56.0.s;
-double actionButtonSide = 24.0.s;
-
 class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   const NavigationAppBar._({
-    required this.title,
+    this.title = '',
     this.showBackButton = true,
     this.onBackPress,
     this.actions,
@@ -23,7 +19,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   factory NavigationAppBar.screen({
-    required String title,
+    String title = '',
     bool showBackButton = true,
     VoidCallback? onBackPress,
     List<Widget>? actions,
@@ -39,7 +35,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
       );
 
   factory NavigationAppBar.modal({
-    required String title,
+    String title = '',
     bool showBackButton = true,
     VoidCallback? onBackPress,
     List<Widget>? actions,
@@ -53,6 +49,10 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
         useScreenTopOffset: false,
         key: key,
       );
+
+  static double get modalHeaderHeight => 60.0.s;
+  static double get screenHeaderHeight => 56.0.s;
+  static double get actionButtonSide => 24.0.s;
 
   final String title;
   final bool showBackButton;

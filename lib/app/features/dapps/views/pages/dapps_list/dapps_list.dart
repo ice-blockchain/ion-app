@@ -10,7 +10,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/components/grid_item/grid_item.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
-import 'package:ice/app/router/views/navigation_app_bar.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class DAppsList extends IcePage<AppsRouteData> {

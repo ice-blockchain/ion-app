@@ -13,7 +13,7 @@ import 'package:ice/app/features/dapps/views/components/grid_item/grid_item.dart
 import 'package:ice/app/features/dapps/views/pages/dapp_details/components/dapp_details_info_block/dapp_details_info_block.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_featured.dart';
-import 'package:ice/app/router/views/navigation_app_bar.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,7 +32,7 @@ class DAppDetails extends IceSimplePage {
         actions: <Widget>[
           IconButton(
             icon: Assets.images.icons.iconSheetClose.icon(
-              size: actionButtonSide,
+              size: NavigationAppBar.actionButtonSide,
               color: context.theme.appColors.primaryText,
             ),
             onPressed: () {
