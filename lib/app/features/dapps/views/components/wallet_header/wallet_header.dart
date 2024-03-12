@@ -12,6 +12,8 @@ import 'package:ice/generated/assets.gen.dart';
 class WalletHeader extends HookConsumerWidget {
   const WalletHeader({super.key});
 
+  static double get height => 40.0.s;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ScreenSideOffset.small(
