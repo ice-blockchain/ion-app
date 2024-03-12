@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/extensions/color.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:lottie/lottie.dart';
 
@@ -14,7 +13,7 @@ class SplashPage extends IceSimplePage {
     final AnimationController animationController = useAnimationController();
 
     return ColoredBox(
-      color: HexColor('0166FF'),
+      color: const Color(0xFF0166FF),
       child: FittedBox(
         fit: BoxFit.cover,
         child: Lottie.asset(
