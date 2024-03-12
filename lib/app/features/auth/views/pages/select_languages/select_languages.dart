@@ -10,7 +10,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/title_description_header/title_description_header.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
-import 'package:ice/app/router/views/navigation_header.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SelectLanguages extends IceSimplePage {
@@ -38,11 +38,11 @@ class SelectLanguages extends IceSimplePage {
         color: context.theme.appColors.secondaryBackground,
         child: Stack(
           children: <Widget>[
-            const NavigationHeader(title: ''),
+            NavigationAppBar.modal(),
             ScreenSideOffset.small(
               child: Padding(
                 padding: EdgeInsets.only(
-                  top: navigationHeaderHeight,
+                  top: NavigationAppBar.modalHeaderHeight,
                 ),
                 child: Column(
                   children: <Widget>[
