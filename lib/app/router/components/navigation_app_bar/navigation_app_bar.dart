@@ -62,50 +62,28 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget appBarContent = Container(
+    Widget appBarContent = NavigationToolbar(
+      leading: showBackButton
+          ? IconButton(
+              icon: Assets.images.icons.iconBackArrow
+                  .icon(size: actionButtonSide),
+              onPressed: onBackPress ?? () => context.pop(),
+            )
+          : null,
+      middle: Text(
+        title,
+        style: context.theme.appTextThemes.subtitle2
+            .copyWith(color: context.theme.appColors.primaryText),
+      ),
+      trailing: actions != null && actions!.isNotEmpty
+          ? Row(mainAxisSize: MainAxisSize.min, children: actions!)
+          : null,
+    );
+
+    appBarContent = Container(
       color: context.theme.appColors.secondaryBackground,
       height: useScreenTopOffset ? screenHeaderHeight : modalHeaderHeight,
-      child: ScreenSideOffset.small(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: Row(
-                children: <Widget>[
-                  if (showBackButton)
-                    IconButton(
-                      icon: Assets.images.icons.iconBackArrow.icon(
-                        size: actionButtonSide,
-                      ),
-                      onPressed: onBackPress ?? () => context.pop(),
-                    )
-                  else
-                    SizedBox(width: actionButtonSide),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                textAlign: TextAlign.center,
-                style: context.theme.appTextThemes.subtitle2
-                    .copyWith(color: context.theme.appColors.primaryText),
-              ),
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children:
-                    actions ?? <Widget>[SizedBox(width: actionButtonSide)],
-              ),
-            ),
-          ],
-        ),
-      ),
+      child: ScreenSideOffset.small(child: appBarContent),
     );
 
     return useScreenTopOffset
@@ -114,7 +92,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => useScreenTopOffset
-      ? Size.fromHeight(screenHeaderHeight)
-      : Size.fromHeight(modalHeaderHeight);
+  Size get preferredSize => Size.fromHeight(
+        useScreenTopOffset ? screenHeaderHeight : modalHeaderHeight,
+      );
 }
