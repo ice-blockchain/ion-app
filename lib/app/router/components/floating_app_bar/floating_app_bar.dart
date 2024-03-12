@@ -24,6 +24,7 @@ class FloatingAppBar extends StatelessWidget {
     return SliverAppBar(
       elevation: 50,
       floating: true,
+      automaticallyImplyLeading: false,
       shadowColor:
           context.theme.appColors.onTertararyBackground.withOpacity(0.05),
       toolbarHeight: height + topOffset + bottomOffset,

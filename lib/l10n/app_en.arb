@@ -50,7 +50,6 @@
   "dapps_section_title_categories": "Categories",
   "dapps_category_defi": "DeFi",
   "dapps_category_marketplaces": "Marketplaces",
-  "dapps_category_nft": "NFTs",
   "dapps_category_games": "Games",
   "dapps_category_social": "Social",
   "dapps_category_utilities": "Utilities",
@@ -86,9 +85,16 @@
   "wallet_balance": "Balance",
   "wallet_send": "Send",
   "wallet_receive": "Receive",
+  "wallet_hide": "Hide 0.00",
+  "wallet_empty_coins": "You have no coins yet",
+  "wallet_empty_nfts": "You don't have any NFT's",
+  "wallet_manage_coins": "Manage coins",
+  "wallet_buy_nfts": "Buy NFTs",
   "contacts_title": "Contacts",
   "contacts_allow_pop_up_title": "Ice is better with friends",
   "contacts_allow_pop_up_desc": "Sync your contacts, see who is already on Ice, and send and receive Ice payments from any of your contacts.",
   "contacts_allow_pop_up_action": "Allow contacts access",
-  "core_view_all": "view all"
+  "core_view_all": "view all",
+  "core_nfts": "NFTs",
+  "core_coins": "Coins"
 }

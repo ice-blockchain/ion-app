@@ -36,7 +36,7 @@ enum DAppsCategory {
     return switch (this) {
       DAppsCategory.defi => context.i18n.dapps_category_defi,
       DAppsCategory.marketplaces => context.i18n.dapps_category_marketplaces,
-      DAppsCategory.nft => context.i18n.dapps_category_nft,
+      DAppsCategory.nft => context.i18n.core_nfts,
       DAppsCategory.games => context.i18n.dapps_category_games,
       DAppsCategory.social => context.i18n.dapps_category_social,
       DAppsCategory.utilities => context.i18n.dapps_category_utilities,
@@ -49,6 +49,7 @@ class CategoriesCollection extends StatelessWidget {
   const CategoriesCollection({super.key});
 
   static double get itemWidth => 80.0.s;
+
   static double get itemHeight => 104.0.s;
 
   @override

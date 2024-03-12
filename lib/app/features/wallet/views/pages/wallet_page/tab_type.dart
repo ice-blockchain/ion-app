@@ -1,0 +1,1 @@
+enum WalletTabType { coins, nfts }

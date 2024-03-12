@@ -53,8 +53,7 @@ class DAppsList extends IcePage<AppsRouteData> {
                     child: Container(
                       child: items.isEmpty
                           ? EmptyList(
-                              icon: Assets.images.misc.dappsEmpty
-                                  .image(width: 48.0.s, height: 48.0.s),
+                              asset: Assets.images.misc.dappsEmpty,
                               title: context.i18n.dapps_favourites_empty_title,
                             )
                           : ListView.builder(
