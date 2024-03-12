@@ -6,7 +6,6 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:lottie/lottie.dart';
 
 class IntroPage extends IceSimplePage {
   const IntroPage(super._route, super.payload);
@@ -23,8 +22,7 @@ class IntroPage extends IceSimplePage {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                LottieBuilder.asset(
-                  Assets.lottie.intro,
+                Assets.lottie.intro.lottie(
                   width: double.infinity,
                   fit: BoxFit.fitWidth,
                   repeat: false,

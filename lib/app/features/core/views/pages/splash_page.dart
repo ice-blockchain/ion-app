@@ -17,8 +17,7 @@ class SplashPage extends IceSimplePage {
       color: const Color(0xFF0166FF),
       child: FittedBox(
         fit: BoxFit.cover,
-        child: Lottie.asset(
-          Assets.lottie.splashLogo,
+        child: Assets.lottie.splashLogo.lottie(
           frameRate: const FrameRate(60),
           controller: animationController,
           onLoaded: (LottieComposition composition) {

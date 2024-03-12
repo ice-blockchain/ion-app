@@ -91,3 +91,6 @@ flutter:
 
 flutter_gen:
   output: lib/generated/
+
+  integrations:
+    lottie: true
