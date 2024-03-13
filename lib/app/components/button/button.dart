@@ -90,6 +90,7 @@ class Button extends StatelessWidget {
     Color? borderColor,
     Color? backgroundColor,
     double? leadingButtonOffset,
+    double? trailingIconOffset,
     bool disabled,
     bool opened,
   }) = _ButtonDropdown;

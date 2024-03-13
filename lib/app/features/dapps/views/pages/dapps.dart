@@ -25,6 +25,7 @@ class DAppsPage extends IceSimplePage {
         controller: scrollController,
         slivers: <Widget>[
           FloatingAppBar(
+            topOffset: 5.0.s,
             height: WalletHeader.height,
             child: const WalletHeader(),
           ),
