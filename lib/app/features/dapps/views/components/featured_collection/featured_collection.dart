@@ -19,7 +19,7 @@ class FeaturedCollection extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         separatorBuilder: (BuildContext context, int index) =>
-            SizedBox(width: ScreenSideOffset.defaultSmallMargin),
+            SizedBox(width: 12.0.s),
         padding: EdgeInsets.symmetric(
           horizontal: ScreenSideOffset.defaultSmallMargin,
         ),
@@ -42,13 +42,11 @@ class FeaturedCollection extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   Positioned(
-                    bottom: 14.0.s,
-                    left: 14.0.s,
+                    bottom: 12.0.s,
+                    left: 12.0.s,
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Container(
-                          padding: const EdgeInsets.all(4),
+                        DecoratedBox(
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8.0.s),
