@@ -122,7 +122,10 @@ enum IceRoutes<PayloadType> {
     WalletPage.new,
     children: <IceRoutes<dynamic>>[IceRoutes.allowAccess],
   ),
-  allowAccess(RequestContactAccessModal.new, type: IceRouteType.bottomSheet),
+  allowAccess(
+    RequestContactAccessModal.new,
+    type: IceRouteType.bottomSheet,
+  ),
   dappsDetails(
     DAppDetails.new,
     type: IceRouteType.bottomSheet,
