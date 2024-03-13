@@ -53,6 +53,7 @@ dev_dependencies:
   riverpod_generator: ^2.3.1
   riverpod_lint: ^2.0.4
   widgetbook_generator: ^3.7.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   generate: true
