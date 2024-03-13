@@ -39,7 +39,6 @@ enum IceRoutes<PayloadType> {
   error(ErrorPage.new),
   intro(
     IntroPage.new,
-    type: IceRouteType.bottomSheet,
     children: <IceRoutes<dynamic>>[
       IceRoutes.auth,
       IceRoutes.selectCountries,
@@ -52,15 +51,42 @@ enum IceRoutes<PayloadType> {
       IceRoutes.enterCode,
     ],
   ),
-  auth(AuthPage.new, type: IceRouteType.bottomSheet),
-  selectCountries(SelectCountries.new, type: IceRouteType.bottomSheet),
-  selectLanguages(SelectLanguages.new, type: IceRouteType.bottomSheet),
-  checkEmail(CheckEmail.new, type: IceRouteType.bottomSheet),
-  nostrAuth(NostrAuth.new, type: IceRouteType.bottomSheet),
-  nostrLogin(NostrLogin.new, type: IceRouteType.bottomSheet),
-  enterCode(EnterCode.new, type: IceRouteType.bottomSheet),
-  discoverCreators(DiscoverCreators.new, type: IceRouteType.bottomSheet),
-  fillProfile(FillProfile.new, type: IceRouteType.bottomSheet),
+  auth(
+    AuthPage.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  selectCountries(
+    SelectCountries.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  selectLanguages(
+    SelectLanguages.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  checkEmail(
+    CheckEmail.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  nostrAuth(
+    NostrAuth.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  nostrLogin(
+    NostrLogin.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  enterCode(
+    EnterCode.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  discoverCreators(
+    DiscoverCreators.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  fillProfile(
+    FillProfile.new,
+    type: IceRouteType.bottomSheet,
+  ),
   home(
     null,
     type: IceRouteType.bottomTabs,
@@ -83,9 +109,14 @@ enum IceRoutes<PayloadType> {
   pullRightMenu(
     PullRightMenuPage.new,
     type: IceRouteType.slideFromLeft,
-    children: <IceRoutes<dynamic>>[IceRoutes.switchAccount],
+    children: <IceRoutes<dynamic>>[
+      IceRoutes.switchAccount,
+    ],
   ),
-  switchAccount(SwitchAccountPage.new, type: IceRouteType.bottomSheet),
+  switchAccount(
+    SwitchAccountPage.new,
+    type: IceRouteType.bottomSheet,
+  ),
   chat(ChatPage.new),
   wallet(
     WalletPage.new,
