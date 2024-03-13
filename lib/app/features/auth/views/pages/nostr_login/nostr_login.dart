@@ -10,6 +10,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/controllers/name_controller.dart';
 import 'package:ice/generated/assets.gen.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 class NostrLogin extends IceSimplePage {
   const NostrLogin(super._route, super.payload);
@@ -17,7 +18,7 @@ class NostrLogin extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final PrivateKeyController privateKeyController = PrivateKeyController();
-    return Scaffold(
+    return SheetContentScaffold(
       body: SingleChildScrollView(
         child: ScreenSideOffset.large(
           child: Column(

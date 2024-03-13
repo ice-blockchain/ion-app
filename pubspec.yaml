@@ -30,6 +30,7 @@ dependencies:
   lottie: ^3.1.0
   pin_code_fields: ^8.0.1
   riverpod_annotation: ^2.1.4
+  smooth_sheets: ^0.3.4
   timeago: ^3.6.1
   timeago_flutter: ^3.6.0
   permission_handler: ^11.3.0

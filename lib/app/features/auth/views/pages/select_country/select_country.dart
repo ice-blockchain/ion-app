@@ -9,6 +9,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 class SelectCountries extends IceSimplePage {
   const SelectCountries(super._route, super.payload);
@@ -32,7 +33,7 @@ class SelectCountries extends IceSimplePage {
                     : iddCodeLower.contains('+$searchLower'));
           }).toList();
 
-    return Scaffold(
+    return SheetContentScaffold(
       body: Container(
         width: double.infinity,
         color: context.theme.appColors.secondaryBackground,

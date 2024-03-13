@@ -11,6 +11,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 class EnterCode extends IceSimplePage {
   const EnterCode(super.route, super.payload);
@@ -25,7 +26,7 @@ class EnterCode extends IceSimplePage {
 
     final ValueNotifier<bool> invalidCode = useState(false);
 
-    return Scaffold(
+    return SheetContentScaffold(
       body: ScreenSideOffset.large(
         child: Container(
           alignment: Alignment.center,

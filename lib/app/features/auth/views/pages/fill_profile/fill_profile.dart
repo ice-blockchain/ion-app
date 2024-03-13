@@ -18,6 +18,7 @@ import 'package:ice/app/features/auth/views/pages/fill_profile/validators.dart';
 import 'package:ice/app/utils/image.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 class CroppedFileNotifier extends StateNotifier<CroppedFile?> {
   CroppedFileNotifier() : super(null);
@@ -84,7 +85,7 @@ class FillProfile extends IceSimplePage {
             ),
           );
 
-    return Scaffold(
+    return SheetContentScaffold(
       body: SingleChildScrollView(
         child: ScreenSideOffset.large(
           child: Column(
