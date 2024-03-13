@@ -14,12 +14,14 @@ class SwitchAccountPage extends IceSimplePage {
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return SheetContentScaffold(
       body: ScreenSideOffset.small(
-        child: const SingleChildScrollView(
+        child: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Header(),
-              AccountsList(),
-              ActionsList(),
+              const Header(),
+              const AccountsList(),
+              const ActionsList(),
+              SizedBox(height: MediaQuery.paddingOf(context).bottom),
             ],
           ),
         ),

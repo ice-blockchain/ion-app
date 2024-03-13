@@ -78,7 +78,7 @@ Page<T> _buildBottomSheetPage<T>({
   required GoRouterState state,
   required Widget child,
 }) {
-  return DraggableNavigationSheetPage<T>(
+  return ScrollableNavigationSheetPage<T>(
     key: state.pageKey,
     child: child,
   );
@@ -136,7 +136,9 @@ List<RouteBase> _buildChildren<T>(IceRoutes<T> route) {
   return routes;
 }
 
-RouteBase _buildBottomSheetRoute({required List<RouteBase> children}) {
+RouteBase _buildBottomSheetRoute({
+  required List<RouteBase> children,
+}) {
   final NavigationSheetTransitionObserver navigationSheetTransitionObserver =
       NavigationSheetTransitionObserver();
   return ShellRoute(

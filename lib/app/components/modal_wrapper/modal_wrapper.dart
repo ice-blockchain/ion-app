@@ -21,11 +21,15 @@ class ModalWrapper extends StatelessWidget {
       child: SheetDismissible(
         child: NavigationSheet(
           transitionObserver: transitionObserver,
-          child: Material(
-            borderRadius: BorderRadius.circular(30.0.s),
-            clipBehavior: Clip.antiAlias,
-            color: context.theme.appColors.onPrimaryAccent,
-            child: navigator,
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0.s),
+              topRight: Radius.circular(30.0.s),
+            ),
+            child: Material(
+              color: context.theme.appColors.onPrimaryAccent,
+              child: navigator,
+            ),
           ),
         ),
       ),
