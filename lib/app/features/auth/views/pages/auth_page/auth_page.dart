@@ -21,6 +21,7 @@ import 'package:ice/app/features/auth/views/pages/auth_page/controllers/phone_nu
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 class AuthPage extends IceSimplePage {
   const AuthPage(super._route, super.payload);
@@ -34,7 +35,7 @@ class AuthPage extends IceSimplePage {
     final EmailController emailController = EmailController();
     final PhoneNumberController numberController = PhoneNumberController();
 
-    return Scaffold(
+    return SheetContentScaffold(
       body: ScreenSideOffset.large(
         child: Column(
           children: <Widget>[
@@ -57,7 +58,7 @@ class AuthPage extends IceSimplePage {
               InputField(
                 leadingIcon: CountryCodeInput(
                   country: countries[1],
-                  onTap: () => IceRoutes.selectCountries.go(context),
+                  onTap: () => IceRoutes.selectCountries.push(context),
                 ),
                 label: context.i18n.auth_signIn_input_phone_number,
                 controller: numberController.controller,
@@ -113,17 +114,17 @@ class AuthPage extends IceSimplePage {
                 onSocialButtonPressed: (SocialButtonType type) {
                   switch (type) {
                     case SocialButtonType.apple:
-                      IceRoutes.checkEmail.go(context);
+                      IceRoutes.checkEmail.push(context);
                     case SocialButtonType.nostr:
-                      IceRoutes.nostrAuth.go(context);
+                      IceRoutes.nostrAuth.push(context);
                     case SocialButtonType.x:
-                      IceRoutes.fillProfile.go(context);
+                      IceRoutes.fillProfile.push(context);
                     case SocialButtonType.fb:
-                      IceRoutes.enterCode.go(context);
+                      IceRoutes.enterCode.push(context);
                     case SocialButtonType.github:
-                      IceRoutes.selectLanguages.go(context);
+                      IceRoutes.selectLanguages.push(context);
                     case SocialButtonType.discord:
-                      IceRoutes.discoverCreators.go(context);
+                      IceRoutes.discoverCreators.push(context);
                     case SocialButtonType.linkedin:
                       break;
                     default:

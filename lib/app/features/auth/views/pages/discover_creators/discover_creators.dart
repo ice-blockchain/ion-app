@@ -12,6 +12,7 @@ import 'package:ice/app/features/auth/views/components/title_description_header/
 import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/generated/assets.gen.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 class DiscoverCreators extends IceSimplePage {
   const DiscoverCreators(super.route, super.payload);
@@ -54,7 +55,7 @@ class DiscoverCreators extends IceSimplePage {
       followedCreatorsNotifier.value = newFollowedCreators;
     }
 
-    return Scaffold(
+    return SheetContentScaffold(
       body: Container(
         width: double.infinity,
         color: context.theme.appColors.secondaryBackground,

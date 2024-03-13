@@ -10,6 +10,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 class CheckEmail extends IceSimplePage {
   const CheckEmail(super._route, super.payload);
@@ -22,7 +23,7 @@ class CheckEmail extends IceSimplePage {
     final TextEditingController textEditingController =
         TextEditingController(text: '1234');
 
-    return Scaffold(
+    return SheetContentScaffold(
       body: ScreenSideOffset.large(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

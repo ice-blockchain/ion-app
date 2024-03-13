@@ -52,17 +52,17 @@ enum IceRoutes<PayloadType> {
       IceRoutes.enterCode,
     ],
   ),
-  auth(AuthPage.new),
-  selectCountries(SelectCountries.new),
-  selectLanguages(SelectLanguages.new),
-  checkEmail(CheckEmail.new),
-  nostrAuth(NostrAuth.new),
-  nostrLogin(NostrLogin.new),
-  enterCode(EnterCode.new),
-  discoverCreators(DiscoverCreators.new),
-  fillProfile(FillProfile.new),
+  auth(AuthPage.new, type: IceRouteType.bottomSheet),
+  selectCountries(SelectCountries.new, type: IceRouteType.bottomSheet),
+  selectLanguages(SelectLanguages.new, type: IceRouteType.bottomSheet),
+  checkEmail(CheckEmail.new, type: IceRouteType.bottomSheet),
+  nostrAuth(NostrAuth.new, type: IceRouteType.bottomSheet),
+  nostrLogin(NostrLogin.new, type: IceRouteType.bottomSheet),
+  enterCode(EnterCode.new, type: IceRouteType.bottomSheet),
+  discoverCreators(DiscoverCreators.new, type: IceRouteType.bottomSheet),
+  fillProfile(FillProfile.new, type: IceRouteType.bottomSheet),
   home(
-    AbsentPage.new,
+    null,
     type: IceRouteType.bottomTabs,
     children: <IceRoutes<dynamic>>[
       IceRoutes.feed,
@@ -82,14 +82,13 @@ enum IceRoutes<PayloadType> {
   appsList<AppsRouteData>(DAppsList.new),
   pullRightMenu(
     PullRightMenuPage.new,
-    type: IceRouteType.bottomSheet,
+    type: IceRouteType.slideFromLeft,
     children: <IceRoutes<dynamic>>[IceRoutes.switchAccount],
   ),
   switchAccount(SwitchAccountPage.new, type: IceRouteType.bottomSheet),
   chat(ChatPage.new),
   wallet(
     WalletPage.new,
-    type: IceRouteType.bottomSheet,
     children: <IceRoutes<dynamic>>[IceRoutes.allowAccess],
   ),
   allowAccess(RequestContactAccessModal.new, type: IceRouteType.bottomSheet),
@@ -107,7 +106,7 @@ enum IceRoutes<PayloadType> {
 
   final IceRouteType type;
   final List<IceRoutes<dynamic>>? children;
-  final IcePageBuilder<PayloadType> builder;
+  final IcePageBuilder<PayloadType>? builder;
 
   void go(BuildContext context, {PayloadType? payload}) =>
       context.goNamed(name, extra: payload);

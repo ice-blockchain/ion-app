@@ -9,13 +9,14 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 class NostrAuth extends IceSimplePage {
   const NostrAuth(super._route, super.payload);
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    return Scaffold(
+    return SheetContentScaffold(
       body: ScreenSideOffset.large(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,7 +53,7 @@ class NostrAuth extends IceSimplePage {
                   child: Button(
                     leadingIcon: Assets.images.icons.iconProfileSave.icon(),
                     onPressed: () {
-                      IceRoutes.nostrLogin.go(context);
+                      IceRoutes.nostrLogin.push(context);
                     },
                     label: Text(context.i18n.button_login),
                     mainAxisSize: MainAxisSize.max,

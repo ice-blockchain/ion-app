@@ -16,6 +16,7 @@ import 'package:ice/app/features/dapps/views/pages/mocks/mocked_featured.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DAppDetails extends IceSimplePage {
@@ -25,7 +26,7 @@ class DAppDetails extends IceSimplePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    return Scaffold(
+    return SheetContentScaffold(
       appBar: NavigationAppBar.screen(
         title: item.title,
         showBackButton: false,

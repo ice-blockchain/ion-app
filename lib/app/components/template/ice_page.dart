@@ -58,14 +58,3 @@ class ComponentsConfigContext extends InheritedWidget {
 }
 
 typedef IceSimplePage = IcePage<void>;
-
-class AbsentPage extends IceSimplePage {
-  const AbsentPage(super.route, super.payload);
-
-  @override
-  Widget buildPage(_, __, ____) {
-    throw UnsupportedError(
-      'AbsentPage is for declaration only, not for building.',
-    );
-  }
-}

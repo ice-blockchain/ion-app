@@ -12,6 +12,7 @@ import 'package:ice/app/features/auth/views/components/title_description_header/
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/generated/assets.gen.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 class SelectLanguages extends IceSimplePage {
   const SelectLanguages(super._route, super.payload);
@@ -32,7 +33,7 @@ class SelectLanguages extends IceSimplePage {
             return nameLower.contains(searchLower);
           }).toList();
 
-    return Scaffold(
+    return SheetContentScaffold(
       body: Container(
         width: double.infinity,
         color: context.theme.appColors.secondaryBackground,

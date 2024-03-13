@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/extensions/list.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/views/scaffold_with_bottom_sheet.dart';
 import 'package:ice/app/router/views/scaffold_with_nested_navigation.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 List<RouteBase> get appRoutes {
   final Iterable<RouteBase> iterable =
@@ -12,15 +13,15 @@ List<RouteBase> get appRoutes {
   return iterable.toList();
 }
 
-typedef WidgetBuilder = Widget Function();
-
 RouteBase _convertIntoRoute<T>(
   IceRoutes<T> route, {
   IceRouteType? parentType,
   GlobalKey<NavigatorState>? parentNavigatorKey,
 }) {
+  final List<RouteBase> children = _buildChildren(route);
+
   if (route.type == IceRouteType.bottomTabs) {
-    return _buildBottomTabsRoute(route);
+    return _buildBottomTabsRoute(route, parentNavigatorKey, children);
   }
 
   final bool initial = route == initialPage;
@@ -36,27 +37,19 @@ RouteBase _convertIntoRoute<T>(
     path: path,
     name: name,
     parentNavigatorKey: parentNavigatorKey,
-    pageBuilder: _providePageBuilder<T>(route, parentType),
-    routes: _buildChildren<T>(route),
+    pageBuilder: _providePageBuilder<T>(route),
+    routes: children,
   );
 }
 
-GoRouterPageBuilder _providePageBuilder<T>(
-  IceRoutes<T> route,
-  IceRouteType? parentType,
-) {
+GoRouterPageBuilder _providePageBuilder<T>(IceRoutes<T> route) {
   Widget widgetBuild(GoRouterState state) {
-    return route.builder(route, state.extra);
+    final Widget? widget = route.builder?.call(route, state.extra);
+    return widget ?? const SizedBox.shrink();
   }
 
   Page<T> simple(BuildContext context, GoRouterState state) => CupertinoPage<T>(
         key: state.pageKey,
-        child: widgetBuild(state),
-      );
-
-  Page<T> bottomSheet(BuildContext context, GoRouterState state) =>
-      _buildPageWithFadeTransition<T>(
-        state: state,
         child: widgetBuild(state),
       );
 
@@ -66,30 +59,28 @@ GoRouterPageBuilder _providePageBuilder<T>(
         child: widgetBuild(state),
       );
 
-  return switch (parentType) {
-    null => simple,
-    IceRouteType.single => simple,
-    IceRouteType.bottomSheet => bottomSheet,
-    IceRouteType.slideFromLeft => slideFromLeft,
-    IceRouteType.bottomTabs =>
-      throw Exception('should be built in a different way'),
-  };
+  Page<T> bottomSheet(BuildContext context, GoRouterState state) =>
+      _buildBottomSheetPage<T>(
+        state: state,
+        child: widgetBuild(state),
+      );
+
+  if (route.type == IceRouteType.slideFromLeft) {
+    return slideFromLeft;
+  } else if (route.type == IceRouteType.bottomSheet) {
+    return bottomSheet;
+  }
+
+  return simple;
 }
 
-CustomTransitionPage<T> _buildPageWithFadeTransition<T>({
+Page<T> _buildBottomSheetPage<T>({
   required GoRouterState state,
   required Widget child,
 }) {
-  return CustomTransitionPage<T>(
+  return DraggableNavigationSheetPage<T>(
     key: state.pageKey,
     child: child,
-    transitionsBuilder: (
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child,
-    ) =>
-        FadeTransition(opacity: animation, child: child),
   );
 }
 
@@ -120,76 +111,92 @@ CustomTransitionPage<T> _buildPageWithSlideFromLeftTransition<T>({
 }
 
 List<RouteBase> _buildChildren<T>(IceRoutes<T> route) {
-  final List<IceRoutes<dynamic>> children = route.children.emptyOrValue;
-  if (children.isEmpty) {
-    return const <RouteBase>[];
+  final List<IceRoutes<dynamic>> pages = <IceRoutes<dynamic>>[];
+  final List<IceRoutes<dynamic>> bottomSheets = <IceRoutes<dynamic>>[];
+  for (final IceRoutes<dynamic> child in route.children.emptyOrValue) {
+    if (child.type == IceRouteType.bottomSheet) {
+      bottomSheets.add(child);
+    } else {
+      pages.add(child);
+    }
   }
 
-  GlobalKey<NavigatorState>? parentNavigatorKey;
+  final List<RouteBase> routes = _convertChildrenIntoRoutes(pages, route.type);
 
-  late final List<RouteBase> Function(List<RouteBase> children) processChildren;
-
-  switch (route.type) {
-    case IceRouteType.single:
-    case IceRouteType.slideFromLeft:
-    case IceRouteType.bottomTabs:
-      processChildren = (List<RouteBase> children) => children;
-    case IceRouteType.bottomSheet:
-      parentNavigatorKey =
-          GlobalKey<NavigatorState>(debugLabel: 'bottomSheet ${route.name}');
-      processChildren =
-          (List<RouteBase> children) => _buildBottomSheetShellRoute(
-                route,
-                children,
-                parentNavigatorKey,
-              );
+  if (bottomSheets.isNotEmpty) {
+    final List<RouteBase> bottomSheetsRoutes = _convertChildrenIntoRoutes(
+      bottomSheets,
+      IceRouteType.bottomSheet,
+    );
+    final RouteBase bottomSheetRoute =
+        _buildBottomSheetRoute(children: bottomSheetsRoutes);
+    routes.add(bottomSheetRoute);
   }
 
-  final Iterable<RouteBase> iterable = children.map(
-    <T>(IceRoutes<T> child) => _convertIntoRoute<T>(
-      child,
-      parentType: route.type == IceRouteType.bottomTabs ? null : route.type,
-      parentNavigatorKey: parentNavigatorKey,
-    ),
-  );
-  final List<RouteBase> childrenRoutes = iterable.toList();
-
-  return processChildren(childrenRoutes);
+  return routes;
 }
 
-WidgetBuilder
-    _convertToWidgetBuilder<PayloadType, PageType extends IcePage<PayloadType>>(
-  IceRoutes<PayloadType> route,
-  GoRouterState state,
-) {
-  return () => route.builder(route, state.extra as PayloadType?);
-}
-
-List<RouteBase> _buildBottomSheetShellRoute<T>(
-  IceRoutes<T> route,
-  List<RouteBase> children,
-  GlobalKey<NavigatorState>? shellNavigatorKey,
-) {
-  return <RouteBase>[
-    ShellRoute(
-      navigatorKey: shellNavigatorKey,
-      pageBuilder: (BuildContext context, GoRouterState state, Widget child) =>
-          NoTransitionPage<T>(
-        key: state.pageKey,
-        child: ScaffoldWithBottomSheet(
-          builder: _convertToWidgetBuilder(route, state),
-          child: child,
+RouteBase _buildBottomSheetRoute({required List<RouteBase> children}) {
+  final NavigationSheetTransitionObserver navigationSheetTransitionObserver =
+      NavigationSheetTransitionObserver();
+  return ShellRoute(
+    observers: <NavigatorObserver>[navigationSheetTransitionObserver],
+    pageBuilder: (BuildContext context, GoRouterState state, Widget navigator) {
+      return ModalSheetPage<dynamic>(
+        child: ModalWrapper(
+          navigator: navigator,
+          transitionObserver: navigationSheetTransitionObserver,
         ),
-      ),
-      routes: children,
-    ),
-  ];
+      );
+    },
+    routes: children,
+  );
 }
 
-RouteBase _buildBottomTabsRoute<T>(IceRoutes<T> route) {
-  final List<RouteBase> children = _buildChildren(route);
+List<RouteBase> _convertChildrenIntoRoutes<T>(
+  List<IceRoutes<dynamic>> children,
+  IceRouteType parentRouteType,
+) {
+  final Iterable<RouteBase> iterable = children.map(
+    <T>(IceRoutes<T> child) => _convertChildIntoRoute(child, parentRouteType),
+  );
 
+  return iterable.toList();
+}
+
+RouteBase _convertChildIntoRoute<T>(
+  IceRoutes<T> child,
+  IceRouteType parentRouteType,
+) {
+  return _convertIntoRoute<T>(
+    child,
+    parentType:
+        parentRouteType == IceRouteType.bottomTabs ? null : parentRouteType,
+  );
+}
+
+class BottomSheetRoute<T> extends ModalBottomSheetRoute<T> {
+  BottomSheetRoute({
+    required super.builder,
+    required super.isScrollControlled,
+    super.settings,
+    super.constraints,
+    super.backgroundColor,
+  });
+
+  @override
+  bool get canPop {
+    return false;
+  }
+}
+
+RouteBase _buildBottomTabsRoute<T>(
+  IceRoutes<T> route,
+  GlobalKey<NavigatorState>? parentNavigatorKey,
+  List<RouteBase> children,
+) {
   return StatefulShellRoute.indexedStack(
+    parentNavigatorKey: parentNavigatorKey,
     builder: (
       BuildContext context,
       GoRouterState state,

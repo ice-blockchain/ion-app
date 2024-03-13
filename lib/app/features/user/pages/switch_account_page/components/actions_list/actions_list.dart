@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/components/actions_list/action_button.dart';
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
@@ -36,7 +37,9 @@ class ActionsList extends HookConsumerWidget {
               context: context,
             ),
           ),
-          onTap: () {},
+          onTap: () {
+            ref.read(authProvider.notifier).signOut();
+          },
         ),
       ],
     );
