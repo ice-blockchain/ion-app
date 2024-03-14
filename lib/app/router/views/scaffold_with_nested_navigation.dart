@@ -76,7 +76,9 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => _goBranch(branchIndex),
-      child: SizedBox(
+      child: ColoredBox(
+        color: Colors
+            .transparent, // A hack to push the box for maximum boundaries yet having flex parent
         child: Center(
           child: tab.icon.icon(color: color, size: 24.0.s),
         ),
