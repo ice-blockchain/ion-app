@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
@@ -9,12 +10,16 @@ import 'package:lottie/lottie.dart';
 class SplashPage extends IceSimplePage {
   const SplashPage(super.route, super.payload);
 
+  static const Color backgroundColor = Color(0xFF0166FF);
+
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final AnimationController animationController = useAnimationController();
 
+    _setSystemChrome();
+
     return ColoredBox(
-      color: const Color(0xFF0166FF),
+      color: backgroundColor,
       child: FittedBox(
         fit: BoxFit.cover,
         child: Assets.lottie.splashLogo.lottie(
@@ -29,6 +34,15 @@ class SplashPage extends IceSimplePage {
               );
           },
         ),
+      ),
+    );
+  }
+
+  void _setSystemChrome() {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: backgroundColor,
       ),
     );
   }
