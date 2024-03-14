@@ -37,8 +37,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   String _location(IceRoutes<dynamic> route, GoRouterState state) {
     final String? location = _routesLocations[route];
     if (location == null) {
-      return _routesLocations[route] =
-          state.namedLocation(route.name); //TODO avoid hardcoded route.name
+      return _routesLocations[route] = state.namedLocation(route.routeName);
     }
 
     return location;

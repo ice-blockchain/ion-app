@@ -23,6 +23,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.orangePeel,
     required this.purple,
     required this.raspberry,
+    required this.shadow,
   });
 
   factory AppColorsExtension.fromTemplate(TemplateColors templateColors) {
@@ -47,6 +48,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       orangePeel: templateColors.orangePeel,
       purple: templateColors.purple,
       raspberry: templateColors.raspberry,
+      shadow: templateColors.shadow,
     );
   }
 
@@ -70,6 +72,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color orangePeel;
   final Color purple;
   final Color raspberry;
+  final Color shadow;
 
   @override
   ThemeExtension<AppColorsExtension> copyWith({
@@ -93,6 +96,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? orangePeel,
     Color? purple,
     Color? raspberry,
+    Color? shadow,
   }) {
     return AppColorsExtension(
       primaryAccent: primaryAccent ?? this.primaryAccent,
@@ -117,6 +121,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       orangePeel: orangePeel ?? this.orangePeel,
       purple: purple ?? this.purple,
       raspberry: raspberry ?? this.raspberry,
+      shadow: shadow ?? this.shadow,
     );
   }
 
@@ -155,6 +160,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       orangePeel: Color.lerp(orangePeel, other.orangePeel, t)!,
       purple: Color.lerp(purple, other.purple, t)!,
       raspberry: Color.lerp(raspberry, other.raspberry, t)!,
+      shadow: Color.lerp(shadow, other.shadow, t)!,
     );
   }
 }

@@ -142,17 +142,19 @@ enum IceRoutes<PayloadType> {
   final List<IceRoutes<dynamic>>? children;
   final IcePageBuilder<PayloadType>? builder;
 
+  String get routeName => name;
+
   void go(BuildContext context, {PayloadType? payload}) =>
-      context.goNamed(name, extra: payload);
+      context.goNamed(routeName, extra: payload);
 
   void push(BuildContext context, {PayloadType? payload}) =>
-      context.pushNamed(name, extra: payload);
+      context.pushNamed(routeName, extra: payload);
 
   void pushReplacement(BuildContext context, {PayloadType? payload}) =>
-      context.pushReplacementNamed(name, extra: payload);
+      context.pushReplacementNamed(routeName, extra: payload);
 
   void replace(BuildContext context, {PayloadType? payload}) =>
-      context.replaceNamed(name, extra: payload);
+      context.replaceNamed(routeName, extra: payload);
 }
 
 typedef IcePageBuilder<PayloadType> = IcePage<PayloadType> Function(

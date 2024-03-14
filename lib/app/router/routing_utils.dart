@@ -126,7 +126,7 @@ List<RouteBase> _buildChildren<T>(IceRoutes<T> route) {
   if (bottomSheets.isNotEmpty) {
     final List<RouteBase> bottomSheetsRoutes = _convertChildrenIntoRoutes(
       bottomSheets,
-      IceRouteType.bottomSheet,
+      route.type,
     );
     final RouteBase bottomSheetRoute =
         _buildBottomSheetRoute(children: bottomSheetsRoutes);

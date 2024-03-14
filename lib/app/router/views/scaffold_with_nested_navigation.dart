@@ -2,69 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/router/views/tab_icon.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
-
-List<NavigationDestination> getDestinations(
-  StatefulNavigationShell navigationShell,
-  BuildContext context,
-) {
-  return <NavigationDestination>[
-    NavigationDestination(
-      label: 'Feed',
-      icon: TabIcon(
-        currentIndex: navigationShell.currentIndex,
-        tabIndex: 0,
-        iconOff: Assets.images.icons.iconHomeOff.icon(
-          color: context.theme.appColors.tertararyText,
-        ),
-        iconOn: Assets.images.icons.iconHomeOff.icon(
-          color: context.theme.appColors.primaryAccent,
-        ),
-      ),
-    ),
-    NavigationDestination(
-      label: 'Dapp',
-      icon: TabIcon(
-        currentIndex: navigationShell.currentIndex,
-        tabIndex: 1,
-        iconOff: Assets.images.icons.iconDappOff.icon(
-          color: context.theme.appColors.tertararyText,
-        ),
-        iconOn: Assets.images.icons.iconDappOff.icon(
-          color: context.theme.appColors.primaryAccent,
-        ),
-      ),
-    ),
-    NavigationDestination(
-      label: 'Chat2',
-      icon: TabIcon(
-        currentIndex: navigationShell.currentIndex,
-        tabIndex: 2,
-        iconOff: Assets.images.icons.iconChatOff.icon(
-          color: context.theme.appColors.tertararyText,
-        ),
-        iconOn: Assets.images.icons.iconChatOff.icon(
-          color: context.theme.appColors.primaryAccent,
-        ),
-      ),
-    ),
-    NavigationDestination(
-      label: 'PullRightMenu',
-      icon: TabIcon(
-        currentIndex: navigationShell.currentIndex,
-        tabIndex: 3,
-        iconOff: Assets.images.icons.iconButtonManageWallet.icon(
-          color: context.theme.appColors.tertararyText,
-        ),
-        iconOn: Assets.images.icons.iconButtonManageWallet.icon(
-          color: context.theme.appColors.primaryAccent,
-        ),
-      ),
-    ),
-  ];
-}
 
 class ScaffoldWithNestedNavigation extends StatelessWidget {
   const ScaffoldWithNestedNavigation({
@@ -84,25 +25,96 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<NavigationDestination> destinations = getDestinations(
-      navigationShell,
-      context,
-    );
-
-    final int defaultTabIndex = destinations.indexWhere(
-      (NavigationDestination destination) => destination.label == 'Feed',
-    );
-
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        selectedIndex: defaultTabIndex,
-        destinations: destinations,
-        backgroundColor: Colors.white,
-        onDestinationSelected: _goBranch,
-        indicatorColor: Colors.transparent,
+      bottomNavigationBar: _buildNavigationBar(context),
+    );
+  }
+
+  Widget _buildNavigationBar(BuildContext context) {
+    final List<Widget> children = _Tabs.values
+        .map(
+          (_Tabs tab) => _convertToWidget(
+            tab,
+            context,
+          ),
+        )
+        .toList();
+
+    children.insert((children.length / 2).ceil(), _buildMainButton());
+
+    return Container(
+      height: 82.0.s,
+      decoration: BoxDecoration(
+        color: context.theme.appColors.onPrimaryAccent,
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: context.theme.appColors.shadow.withOpacity(0.05),
+            blurRadius: 16.0.s,
+            offset: Offset(-2.0.s, -2.0.s),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(top: 9.0.s, bottom: 23.0.s),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children:
+              children.map((Widget child) => Flexible(child: child)).toList(),
+        ),
       ),
     );
+  }
+
+  Widget _convertToWidget(_Tabs tab, BuildContext context) {
+    final StatefulShellBranch branch = _byTab(tab);
+    final int branchIndex = navigationShell.route.branches.indexOf(branch);
+    final bool selected = navigationShell.currentIndex == branchIndex;
+    final Color color = selected
+        ? context.theme.appColors.primaryAccent
+        : context.theme.appColors.tertararyText;
+
+    return GestureDetector(
+      onTap: () => _goBranch(branchIndex),
+      child: SizedBox(
+        child: Center(
+          child: tab.icon.icon(color: color, size: 24.0.s),
+        ),
+      ),
+    );
+  }
+
+  StatefulShellBranch _byTab(_Tabs tab) {
+    return navigationShell.route.branches.firstWhere(
+      (StatefulShellBranch branch) =>
+          (branch.routes.single as GoRoute).name == tab.route.routeName,
+    );
+  }
+
+  Widget _buildMainButton() {
+    return GestureDetector(
+      onTap: () {},
+      child: Assets.images.icons.iconLogoButton.image(height: 50.0.s),
+    );
+  }
+}
+
+enum _Tabs {
+  feed(IceRoutes.feed),
+  chat(IceRoutes.chat),
+  dapps(IceRoutes.dapps),
+  wallet(IceRoutes.wallet);
+
+  const _Tabs(this.route);
+
+  final IceRoutes<dynamic> route;
+
+  AssetGenImage get icon {
+    return switch (this) {
+      _Tabs.feed => Assets.images.icons.iconHomeOff,
+      _Tabs.chat => Assets.images.icons.iconChatOff,
+      _Tabs.dapps => Assets.images.icons.iconDappOff,
+      _Tabs.wallet => Assets.images.icons.iconButtonManageWallet,
+    };
   }
 }
