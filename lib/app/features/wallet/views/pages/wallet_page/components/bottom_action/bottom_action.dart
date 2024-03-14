@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class BottomAction extends StatelessWidget {
@@ -30,12 +28,7 @@ class BottomAction extends StatelessWidget {
       child: Button(
         leadingIcon: asset.image(width: 24.0.s, height: 24.0.s),
         onPressed: onTap,
-        label: Text(
-          title,
-          style: context.theme.appTextThemes.body.copyWith(
-            color: context.theme.appColors.primaryText,
-          ),
-        ),
+        label: Text(title),
         mainAxisSize: MainAxisSize.max,
         type: ButtonType.secondary,
       ),

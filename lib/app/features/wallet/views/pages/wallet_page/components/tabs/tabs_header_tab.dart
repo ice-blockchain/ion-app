@@ -16,16 +16,7 @@ class WalletTabsHeaderTab extends StatelessWidget {
   final WalletTabType tabType;
   final VoidCallback onTap;
 
-  String getTitle(BuildContext context) {
-    switch (tabType) {
-      case WalletTabType.coins:
-        return context.i18n.core_coins;
-      case WalletTabType.nfts:
-        return context.i18n.core_nfts;
-    }
-  }
-
-  Color getColor(BuildContext context) {
+  Color _getColor(BuildContext context) {
     return isActive
         ? context.theme.appColors.primaryText
         : context.theme.appColors.tertararyText;
@@ -38,9 +29,9 @@ class WalletTabsHeaderTab extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(Constants.hitSlop),
         child: Text(
-          getTitle(context),
+          tabType.getTitle(context),
           style: context.theme.appTextThemes.title.copyWith(
-            color: getColor(context),
+            color: _getColor(context),
           ),
         ),
       ),
