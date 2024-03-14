@@ -24,7 +24,7 @@ class BottomAction extends StatelessWidget {
       padding: EdgeInsets.only(
         left: ScreenSideOffset.defaultSmallMargin,
         right: ScreenSideOffset.defaultSmallMargin,
-        bottom: ScreenSideOffset.defaultSmallMargin,
+        bottom: 16.0.s,
         top: 12.0.s,
       ),
       child: Button(
@@ -32,7 +32,9 @@ class BottomAction extends StatelessWidget {
         onPressed: onTap,
         label: Text(
           title,
-          style: context.theme.appTextThemes.body,
+          style: context.theme.appTextThemes.body.copyWith(
+            color: context.theme.appColors.primaryText,
+          ),
         ),
         mainAxisSize: MainAxisSize.max,
         type: ButtonType.secondary,

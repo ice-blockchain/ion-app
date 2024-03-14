@@ -5,25 +5,24 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class EmptyList extends StatelessWidget {
-  const EmptyList({
+  EmptyList({
     super.key,
     required this.asset,
     required this.title,
-    this.imageSize,
-  });
+    double? imageSize,
+  }) : imageSize = imageSize ?? 48.0.s;
 
   final AssetGenImage asset;
   final String title;
-  final double? imageSize;
+  final double imageSize;
 
   @override
   Widget build(BuildContext context) {
-    final double size = imageSize ?? 48.0.s;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          asset.image(width: size, height: size),
+          asset.image(width: imageSize, height: imageSize),
           SizedBox(height: 8.0.s),
           Text(
             title,

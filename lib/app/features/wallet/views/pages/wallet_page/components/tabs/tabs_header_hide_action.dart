@@ -3,8 +3,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/user_preferences/providers/user_preferences_provider.dart';
-import 'package:ice/app/features/user_preferences/providers/user_preferences_selectors.dart';
+import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
+import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -13,7 +13,7 @@ class WalletTabsHeaderHideAction extends HookConsumerWidget {
     super.key,
   });
 
-  static double iconSize = 20.0.s;
+  static double get iconSize => 20.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

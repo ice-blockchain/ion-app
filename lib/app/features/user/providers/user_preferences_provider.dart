@@ -1,4 +1,4 @@
-import 'package:ice/app/features/user_preferences/model/user_preferences.dart';
+import 'package:ice/app/features/user/model/user_preferences.dart';
 import 'package:ice/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
