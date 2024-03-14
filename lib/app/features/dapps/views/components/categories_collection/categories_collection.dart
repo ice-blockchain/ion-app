@@ -78,7 +78,6 @@ class CategoriesCollection extends StatelessWidget {
                       payload: AppsRouteData(
                         title: DAppsCategory.values[index].title(context),
                         items: mockedApps,
-                        isSearchVisible: true,
                       ),
                     );
                   },

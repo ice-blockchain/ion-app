@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -7,6 +8,7 @@ import 'package:ice/app/features/dapps/views/components/favourite_icon/favorite_
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/num.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 class GridItem extends HookWidget {
   const GridItem({
@@ -44,11 +46,30 @@ class GridItem extends HookWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  item.title,
-                  style: context.theme.appTextThemes.body.copyWith(
-                    color: context.theme.appColors.primaryText,
-                  ),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      item.title,
+                      style: context.theme.appTextThemes.body.copyWith(
+                        color: context.theme.appColors.primaryText,
+                      ),
+                    ),
+                    if (item.isVerified != null && item.isVerified!)
+                      Padding(
+                        padding: EdgeInsets.only(left: 4.0.s),
+                        child: IconTheme(
+                          data: IconThemeData(
+                            size: 16.0.s,
+                            color:
+                                context.theme.appColors.onTertararyBackground,
+                          ),
+                          child: Assets.images.icons.iconBadgeVerify.image(
+                            width: 16.0.s,
+                            height: 16.0.s,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
                 Text(
                   item.description ?? '',
@@ -56,11 +77,27 @@ class GridItem extends HookWidget {
                     color: context.theme.appColors.secondaryText,
                   ),
                 ),
-                Text(
-                  item.value != null ? formatDouble(item.value!) : '',
-                  style: context.theme.appTextThemes.caption3.copyWith(
-                    color: context.theme.appColors.tertararyText,
-                  ),
+                Row(
+                  children: <Widget>[
+                    IconTheme(
+                      data: IconThemeData(
+                        size: 12.0.s,
+                        color: context.theme.appColors.onTertararyBackground,
+                      ),
+                      child: Assets.images.icons.iconButtonIceStroke
+                          .icon(size: 12.0.s),
+                    ),
+                    if (item.value != null)
+                      Padding(
+                        padding: EdgeInsets.only(left: 3.0.s),
+                        child: Text(
+                          item.value != null ? formatDouble(item.value!) : '',
+                          style: context.theme.appTextThemes.caption3.copyWith(
+                            color: context.theme.appColors.tertararyText,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ],
             ),

@@ -8,7 +8,7 @@ class AppsRouteData {
   AppsRouteData({
     required this.title,
     this.items = const <DAppItem>[],
-    this.isSearchVisible = false,
+    this.isSearchVisible = true,
   });
 
   final String title;

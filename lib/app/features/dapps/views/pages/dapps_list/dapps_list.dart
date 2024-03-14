@@ -69,7 +69,7 @@ class DAppsList extends IcePage<AppsRouteData> {
                                   final DAppItem app = filteredApps[index];
                                   return Padding(
                                     padding:
-                                        EdgeInsets.symmetric(vertical: 6.0.s),
+                                        EdgeInsets.symmetric(vertical: 5.5.s),
                                     child: GridItem(
                                       item: app,
                                       showIsFavourite: true,
