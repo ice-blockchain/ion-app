@@ -43,35 +43,44 @@ class DAppsList extends IcePage<AppsRouteData> {
         children: <Widget>[
           Expanded(
             child: ScreenSideOffset.small(
-              child: Column(
-                children: <Widget>[
-                  if (payload?.isSearchVisible == true)
-                    SearchInput(
-                      onTextChanged: (String value) => searchText.value = value,
-                    ),
-                  Expanded(
-                    child: Container(
-                      child: items.isEmpty
-                          ? EmptyList(
-                              asset: Assets.images.misc.dappsEmpty,
-                              title: context.i18n.dapps_favourites_empty_title,
-                            )
-                          : ListView.builder(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 12.0.s,
+              child: Padding(
+                padding: EdgeInsets.only(top: 18.0.s),
+                child: Column(
+                  children: <Widget>[
+                    if (payload?.isSearchVisible == true)
+                      SearchInput(
+                        onTextChanged: (String value) =>
+                            searchText.value = value,
+                      ),
+                    Expanded(
+                      child: Container(
+                        child: items.isEmpty
+                            ? EmptyList(
+                                asset: Assets.images.misc.dappsEmpty,
+                                title:
+                                    context.i18n.dapps_favourites_empty_title,
+                              )
+                            : ListView.builder(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 10.0.s,
+                                ),
+                                itemCount: filteredApps.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final DAppItem app = filteredApps[index];
+                                  return Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 6.0.s),
+                                    child: GridItem(
+                                      item: app,
+                                      showIsFavourite: true,
+                                    ),
+                                  );
+                                },
                               ),
-                              itemCount: filteredApps.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final DAppItem app = filteredApps[index];
-                                return GridItem(
-                                  item: app,
-                                  showIsFavourite: true,
-                                );
-                              },
-                            ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

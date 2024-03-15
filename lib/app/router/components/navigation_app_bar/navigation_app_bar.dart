@@ -51,7 +51,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
       );
 
   static double get modalHeaderHeight => 60.0.s;
-  static double get screenHeaderHeight => 56.0.s;
+  static double get screenHeaderHeight => 42.0.s;
   static double get actionButtonSide => 24.0.s;
 
   final String title;
@@ -64,10 +64,10 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final Widget appBarContent = NavigationToolbar(
       leading: showBackButton
-          ? IconButton(
-              icon: Assets.images.icons.iconBackArrow
+          ? GestureDetector(
+              onTap: onBackPress ?? () => context.pop(),
+              child: Assets.images.icons.iconBackArrow
                   .icon(size: actionButtonSide),
-              onPressed: onBackPress ?? () => context.pop(),
             )
           : null,
       middle: Text(
