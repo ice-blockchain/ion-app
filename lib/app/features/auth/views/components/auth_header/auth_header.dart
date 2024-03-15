@@ -11,7 +11,7 @@ class AuthHeaderWidget extends StatelessWidget {
     double? bottomPadding,
     String? description,
     String? imagePath,
-  })  : topPadding = topPadding ?? 65.0.s,
+  })  : topPadding = topPadding ?? 35.0.s,
         bottomPadding = bottomPadding ?? 30.0.s,
         description = description ?? '', // Ensure description is not null
         imagePath = imagePath ?? Assets.images.logo.logoIce.path;
@@ -22,6 +22,8 @@ class AuthHeaderWidget extends StatelessWidget {
   final String description;
   final String imagePath;
 
+  static double get iconSide => 65.0.s;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -30,10 +32,13 @@ class AuthHeaderWidget extends StatelessWidget {
           padding: EdgeInsets.only(top: topPadding),
           child: Image.asset(
             imagePath,
+            width: iconSide,
+            height: iconSide,
+            fit: BoxFit.fitWidth,
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 19.0.s, bottom: 3.0.s),
+          padding: EdgeInsets.only(top: 19.0.s),
           child: Text(
             title,
             style: context.theme.appTextThemes.headline1,
