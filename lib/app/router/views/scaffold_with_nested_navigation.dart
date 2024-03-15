@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/router/app_router_listenable.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ScaffoldWithNestedNavigation extends StatelessWidget {
+class ScaffoldWithNestedNavigation extends ConsumerWidget {
   const ScaffoldWithNestedNavigation({
     Key? key,
     required this.navigationShell,
@@ -24,24 +26,36 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: _buildNavigationBar(context),
+      bottomNavigationBar: _buildNavigationBar(context, ref),
     );
   }
 
-  Widget _buildNavigationBar(BuildContext context) {
-    final List<Widget> children = _Tabs.values
-        .map(
-          (_Tabs tab) => _convertToWidget(
-            tab,
-            context,
-          ),
-        )
-        .toList();
+  Widget _buildNavigationBar(BuildContext context, WidgetRef ref) {
+    late final _Tabs selectedTab;
+    final List<Widget> children = _Tabs.values.map((_Tabs tab) {
+      final StatefulShellBranch branch = _byTab(tab);
+      final int branchIndex = navigationShell.route.branches.indexOf(branch);
+      final bool isSelected = navigationShell.currentIndex == branchIndex;
 
-    children.insert((children.length / 2).ceil(), _buildMainButton());
+      if (isSelected) {
+        selectedTab = tab;
+      }
+
+      return _convertToWidget(
+        tab,
+        branchIndex,
+        isSelected,
+        context,
+      );
+    }).toList();
+
+    children.insert(
+      (children.length / 2).ceil(),
+      _buildMainButton(selectedTab, context, ref),
+    );
 
     return Container(
       height: 82.0.s,
@@ -66,11 +80,13 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
     );
   }
 
-  Widget _convertToWidget(_Tabs tab, BuildContext context) {
-    final StatefulShellBranch branch = _byTab(tab);
-    final int branchIndex = navigationShell.route.branches.indexOf(branch);
-    final bool selected = navigationShell.currentIndex == branchIndex;
-    final Color color = selected
+  Widget _convertToWidget(
+    _Tabs tab,
+    int branchIndex,
+    bool isSelected,
+    BuildContext context,
+  ) {
+    final Color color = isSelected
         ? context.theme.appColors.primaryAccent
         : context.theme.appColors.tertararyText;
 
@@ -87,10 +103,24 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
     );
   }
 
-  Widget _buildMainButton() {
+  Widget _buildMainButton(
+    _Tabs selectedTab,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    final IceRoutes<dynamic> current = ref.watch(currentRouteProvider);
+    late final AssetGenImage image;
+    if (_Tabs.values.map((_Tabs tab) => tab.mainModalRoute).contains(current)) {
+      image = Assets.images.logo.logoButtonClose;
+    } else {
+      image = Assets.images.logo.logoButton;
+    }
+
     return _buildHitBox(
-      onTap: () {},
-      child: Assets.images.logo.logoButton.image(height: 50.0.s),
+      onTap: () {
+        selectedTab.mainModalRoute.go(context);
+      },
+      child: image.image(height: 50.0.s), //TODO refactor into .icon when fixed
     );
   }
 
@@ -112,14 +142,15 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 }
 
 enum _Tabs {
-  feed(IceRoutes.feed),
-  chat(IceRoutes.chat),
-  dapps(IceRoutes.dapps),
-  wallet(IceRoutes.wallet);
+  feed(IceRoutes.feed, IceRoutes.feedMainModal),
+  chat(IceRoutes.chat, IceRoutes.chatMainModal),
+  dapps(IceRoutes.dapps, IceRoutes.dappsMainModal),
+  wallet(IceRoutes.wallet, IceRoutes.walletMainModal);
 
-  const _Tabs(this.route);
+  const _Tabs(this.route, this.mainModalRoute);
 
   final IceRoutes<dynamic> route;
+  final IceRoutes<dynamic> mainModalRoute;
 
   AssetGenImage get icon {
     return switch (this) {
