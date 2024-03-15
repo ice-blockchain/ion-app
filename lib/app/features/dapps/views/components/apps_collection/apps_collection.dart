@@ -10,10 +10,10 @@ class AppsCollection extends StatelessWidget {
   final List<DAppItem>? items;
 
   static double get itemWidth => 255.0.s;
-  static double get offsetBetweenItems => 12.0.s;
+  static double get offsetBetweenItems => 16.0.s;
   static double get itemHeight => 54.0.s;
   static const int itemsPerColumn = 3;
-  static const double containerAspectRatio = 0.24;
+  static const double containerAspectRatio = 0.235;
 
   @override
   Widget build(BuildContext context) {

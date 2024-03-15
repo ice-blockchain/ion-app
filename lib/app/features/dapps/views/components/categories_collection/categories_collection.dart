@@ -56,13 +56,13 @@ class CategoriesCollection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8.0.s),
+      padding: EdgeInsets.only(bottom: 8.0.s, top: 3.0.s),
       child: SizedBox(
         height: itemHeight,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           separatorBuilder: (BuildContext context, int index) =>
-              SizedBox(width: ScreenSideOffset.defaultSmallMargin),
+              SizedBox(width: 15.0.s),
           padding: EdgeInsets.symmetric(
             horizontal: ScreenSideOffset.defaultSmallMargin,
           ),
@@ -78,7 +78,6 @@ class CategoriesCollection extends StatelessWidget {
                       payload: AppsRouteData(
                         title: DAppsCategory.values[index].title(context),
                         items: mockedApps,
-                        isSearchVisible: true,
                       ),
                     );
                   },
@@ -87,6 +86,7 @@ class CategoriesCollection extends StatelessWidget {
                   type: ButtonType.outlined,
                   backgroundColor: context.theme.appColors.tertararyBackground,
                   borderColor: context.theme.appColors.onTerararyFill,
+                  borderRadius: BorderRadius.circular(12.0.s),
                 ),
                 Text(
                   DAppsCategory.values[index].title(context),

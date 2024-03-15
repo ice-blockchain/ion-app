@@ -35,6 +35,7 @@ class Button extends StatelessWidget {
     this.disabled = false,
     this.tintColor,
     this.borderColor,
+    this.borderRadius,
     this.backgroundColor,
     this.minimumSize,
     double? leadingIconOffset,
@@ -50,6 +51,7 @@ class Button extends StatelessWidget {
     ButtonStyle style,
     Color? tintColor,
     Color? borderColor,
+    BorderRadius? borderRadius,
     Color? backgroundColor,
     double size,
   }) = _ButtonWithIcon;
@@ -90,6 +92,7 @@ class Button extends StatelessWidget {
     Color? borderColor,
     Color? backgroundColor,
     double? leadingButtonOffset,
+    double? trailingIconOffset,
     bool disabled,
     bool opened,
   }) = _ButtonDropdown;
@@ -99,6 +102,7 @@ class Button extends StatelessWidget {
   final Widget? trailingIcon;
   final Widget? label;
   final Color? borderColor;
+  final BorderRadius? borderRadius;
   final Color? backgroundColor;
   final Size? minimumSize;
   final Color? tintColor;
@@ -117,7 +121,8 @@ class Button extends StatelessWidget {
         OutlinedButton.styleFrom(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
+            borderRadius:
+                borderRadius ?? BorderRadius.all(Radius.circular(16.0.s)),
           ),
           minimumSize: minimumSize ?? Size(56.0.s, 56.0.s),
           padding: EdgeInsets.symmetric(horizontal: 16.0.s),

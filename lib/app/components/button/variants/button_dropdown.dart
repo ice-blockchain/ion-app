@@ -10,6 +10,7 @@ class _ButtonDropdown extends Button {
     super.backgroundColor,
     super.borderColor,
     double? leadingButtonOffset,
+    double? trailingIconOffset,
     bool opened = false,
     ButtonStyle style = const ButtonStyle(),
   }) : super(
@@ -33,5 +34,6 @@ class _ButtonDropdown extends Button {
                   ? Assets.images.icons.iconArrowUp
                   : Assets.images.icons.iconArrowDown)
               .icon(),
+          trailingIconOffset: trailingIconOffset ?? 8.0.s,
         );
 }

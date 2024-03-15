@@ -10,10 +10,16 @@ class FavouriteIcon extends StatelessWidget {
     super.key,
     this.isFavourite = false,
     this.onTap,
+    this.tintColor = Colors.black,
+    this.borderRadius,
+    this.size,
   });
 
   final bool isFavourite;
   final VoidCallback? onTap;
+  final Color? tintColor;
+  final double? borderRadius;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +34,11 @@ class FavouriteIcon extends StatelessWidget {
       icon: Image.asset(
         iconPath,
         width: 24.0.s,
+        color: isFavourite ? null : tintColor,
       ),
       type: ButtonType.outlined,
-      size: iconSideDimension,
+      size: size ?? iconSideDimension,
+      borderRadius: BorderRadius.circular(borderRadius ?? 16.0.s),
     );
   }
 }

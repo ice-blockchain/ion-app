@@ -19,14 +19,18 @@ class WalletSwitcher extends HookConsumerWidget {
     return Button.dropdown(
       onPressed: () {},
       leadingIcon: Avatar(
-        size: 24.0.s,
+        size: 28.0.s,
         imageUrl: walletData.icon,
+        borderRadius: BorderRadius.circular(10.0.s),
       ),
-      leadingButtonOffset: 8.0.s,
+      leadingButtonOffset: 11.0.s,
+      trailingIconOffset: 0.0.s,
       backgroundColor: context.theme.appColors.tertararyBackground,
       label: Text(
         walletData.name,
-        style: TextStyle(color: context.theme.appColors.primaryText),
+        style: context.theme.appTextThemes.subtitle2.copyWith(
+          color: context.theme.appColors.primaryText,
+        ),
       ),
     );
   }
