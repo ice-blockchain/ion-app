@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -22,7 +23,7 @@ class EmptyList extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          asset.image(width: imageSize, height: imageSize),
+          asset.icon(size: imageSize),
           SizedBox(height: 8.0.s),
           Text(
             title,

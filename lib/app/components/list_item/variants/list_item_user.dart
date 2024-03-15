@@ -38,13 +38,13 @@ class _ListItemUser extends ListItem {
                 Padding(
                   padding: EdgeInsets.only(left: 4.0.s),
                   child: Assets.images.icons.iconBadgeIcelogo
-                      .image(width: badgeSize, height: badgeSize),
+                      .icon(size: badgeSize),
                 ),
               if (verifiedBadge)
                 Padding(
                   padding: EdgeInsets.only(left: 4.0.s),
-                  child: Assets.images.icons.iconBadgeVerify
-                      .image(width: badgeSize, height: badgeSize),
+                  child:
+                      Assets.images.icons.iconBadgeVerify.icon(size: badgeSize),
                 ),
             ],
           ),

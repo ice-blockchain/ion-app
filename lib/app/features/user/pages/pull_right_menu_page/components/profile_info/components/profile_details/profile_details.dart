@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -40,7 +41,7 @@ class ProfileDetails extends HookConsumerWidget {
               if (userData.isVerified == true) ...<Widget>[
                 SizedBox(width: 6.0.s),
                 Assets.images.icons.iconBadgeVerify
-                    .image(width: verifiedIconSize, height: verifiedIconSize),
+                    .icon(size: verifiedIconSize),
               ],
             ],
           ),

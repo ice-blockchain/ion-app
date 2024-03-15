@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -29,7 +30,7 @@ enum DAppsCategory {
       DAppsCategory.utilities => Assets.images.categories.categoriesUtilites,
       DAppsCategory.other => Assets.images.categories.categoriesOther,
     }
-        .image(width: 50.0.s, height: 50.0.s);
+        .icon(size: 50.0.s);
   }
 
   String title(BuildContext context) {
