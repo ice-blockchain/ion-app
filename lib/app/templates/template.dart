@@ -31,7 +31,7 @@ class TemplateColors with _$TemplateColors {
     Color orangePeel,
     Color purple,
     Color raspberry,
-    Color shadow,
+    Color darkBlue,
   ) = _TemplateColors;
 
   factory TemplateColors.fromJson(Map<String, dynamic> json) =>

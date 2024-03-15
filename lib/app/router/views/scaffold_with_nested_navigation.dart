@@ -49,7 +49,7 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
         color: context.theme.appColors.onPrimaryAccent,
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: context.theme.appColors.shadow.withOpacity(0.05),
+            color: context.theme.appColors.darkBlue.withOpacity(0.05),
             blurRadius: 16.0.s,
             offset: Offset(-2.0.s, -2.0.s),
           ),
@@ -74,15 +74,9 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
         ? context.theme.appColors.primaryAccent
         : context.theme.appColors.tertararyText;
 
-    return GestureDetector(
+    return _buildHitBox(
       onTap: () => _goBranch(branchIndex),
-      child: ColoredBox(
-        color: Colors
-            .transparent, // A hack to push the box for maximum boundaries yet having flex parent
-        child: Center(
-          child: tab.icon.icon(color: color, size: 24.0.s),
-        ),
-      ),
+      child: tab.icon.icon(color: color, size: 24.0.s),
     );
   }
 
@@ -94,9 +88,25 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   }
 
   Widget _buildMainButton() {
-    return GestureDetector(
+    return _buildHitBox(
       onTap: () {},
-      child: Assets.images.icons.iconLogoButton.image(height: 50.0.s),
+      child: Assets.images.logo.logoButton.image(height: 50.0.s),
+    );
+  }
+
+  Widget _buildHitBox({
+    required VoidCallback onTap,
+    required Widget child,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: ColoredBox(
+        color: Colors
+            .transparent, // A hack to push the box for maximum boundaries yet having flex parent
+        child: Center(
+          child: child,
+        ),
+      ),
     );
   }
 }
@@ -116,7 +126,7 @@ enum _Tabs {
       _Tabs.feed => Assets.images.icons.iconHomeOff,
       _Tabs.chat => Assets.images.icons.iconChatOff,
       _Tabs.dapps => Assets.images.icons.iconDappOff,
-      _Tabs.wallet => Assets.images.icons.iconButtonManageWallet,
+      _Tabs.wallet => Assets.images.icons.iconsWalletOff,
     };
   }
 }
