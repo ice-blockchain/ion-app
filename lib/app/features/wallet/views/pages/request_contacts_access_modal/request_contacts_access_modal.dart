@@ -30,8 +30,7 @@ class RequestContactAccessModal extends IceSimplePage {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Assets.images.wallet.walletIce
-                .image(width: iceIconSize, height: iceIconSize),
+            Assets.images.wallet.walletIce.icon(size: iceIconSize),
             SizedBox(
               height: ScreenSideOffset.defaultSmallMargin,
             ),

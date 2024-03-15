@@ -259,11 +259,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
         Button.dropdown(
           onPressed: () {},
           leadingIcon: ButtonIconFrame(
-            icon: Assets.images.icons.iconBadgeIcelogo.image(
-              width: 26.0.s,
-              height: 26.0.s,
-              fit: BoxFit.fill,
-            ),
+            icon: Assets.images.icons.iconBadgeIcelogo.icon(size: 26.0.s),
           ),
           leadingButtonOffset: 4.0.s,
           backgroundColor: context.theme.appColors.tertararyBackground,

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/section_header/section_header.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_header/video_icon.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list/trending_videos_list.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/video_icon/video_icon.dart';
 
 class TrendingVideos extends StatelessWidget {
   const TrendingVideos({super.key});

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -33,15 +34,13 @@ class WalletTabsHeaderHideAction extends HookConsumerWidget {
         child: Row(
           children: <Widget>[
             if (isWalletValuesVisible)
-              asset.image(
+              asset.icon(
                 color: actionColor,
-                width: iconSize,
-                height: iconSize,
+                size: iconSize,
               )
             else
-              asset.image(
-                width: iconSize,
-                height: iconSize,
+              asset.icon(
+                size: iconSize,
               ),
             SizedBox(
               width: 6.0.s,

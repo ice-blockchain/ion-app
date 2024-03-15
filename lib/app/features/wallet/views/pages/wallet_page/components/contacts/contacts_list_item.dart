@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -64,9 +65,8 @@ class ContactsListItem extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius:
                             BorderRadius.circular(iceLogoBorderRadius),
-                        child: Assets.images.icons.iconBadgeIcelogo.image(
-                          width: iceLogoSize,
-                          height: iceLogoSize,
+                        child: Assets.images.icons.iconBadgeIcelogo.icon(
+                          size: iceLogoSize,
                         ),
                       ),
                     ),

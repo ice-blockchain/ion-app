@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -64,7 +65,7 @@ class Favourites extends StatelessWidget {
                     ],
                   ),
                 ),
-                Assets.images.icons.iconArrowRight.image(width: 24.0.s),
+                Assets.images.icons.iconArrowRight.icon(size: 24.0.s),
               ],
             ),
           ),
