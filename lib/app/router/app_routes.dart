@@ -11,17 +11,21 @@ import 'package:ice/app/features/auth/views/pages/nostr_auth/nostr_auth.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/nostr_login.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
-import 'package:ice/app/features/chat/views/pages/chat_page.dart';
+import 'package:ice/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
+import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapp_details/dapp_details.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
+import 'package:ice/app/features/dapps/views/pages/dapps_main_modal/dapps_main_modal_page.dart';
+import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/switch_account_page.dart';
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/wallet_page.dart';
 
 const IceRoutes<void> initialPage = IceRoutes.splash;
@@ -97,13 +101,25 @@ enum IceRoutes<PayloadType> {
       IceRoutes.wallet,
     ],
   ),
-  feed(FeedPage.new),
+  feed(
+    FeedPage.new,
+    children: <IceRoutes<dynamic>>[IceRoutes.feedMainModal],
+  ),
+  feedMainModal(
+    FeedMainModalPage.new,
+    type: IceRouteType.bottomSheet,
+  ),
   dapps(
     DAppsPage.new,
     children: <IceRoutes<dynamic>>[
       IceRoutes.appsList,
       IceRoutes.dappsDetails,
+      IceRoutes.dappsMainModal,
     ],
+  ),
+  dappsMainModal(
+    DappsMainModalPage.new,
+    type: IceRouteType.bottomSheet,
   ),
   appsList<AppsRouteData>(DAppsList.new),
   pullRightMenu(
@@ -117,10 +133,26 @@ enum IceRoutes<PayloadType> {
     SwitchAccountPage.new,
     type: IceRouteType.bottomSheet,
   ),
-  chat(ChatPage.new),
+  chat(
+    ChatPage.new,
+    children: <IceRoutes<dynamic>>[
+      IceRoutes.chatMainModal,
+    ],
+  ),
+  chatMainModal(
+    ChatMainModalPage.new,
+    type: IceRouteType.bottomSheet,
+  ),
   wallet(
     WalletPage.new,
-    children: <IceRoutes<dynamic>>[IceRoutes.allowAccess],
+    children: <IceRoutes<dynamic>>[
+      IceRoutes.allowAccess,
+      IceRoutes.walletMainModal,
+    ],
+  ),
+  walletMainModal(
+    WalletMainModalPage.new,
+    type: IceRouteType.bottomSheet,
   ),
   allowAccess(
     RequestContactAccessModal.new,
@@ -142,17 +174,19 @@ enum IceRoutes<PayloadType> {
   final List<IceRoutes<dynamic>>? children;
   final IcePageBuilder<PayloadType>? builder;
 
+  String get routeName => name;
+
   void go(BuildContext context, {PayloadType? payload}) =>
-      context.goNamed(name, extra: payload);
+      context.goNamed(routeName, extra: payload);
 
   void push(BuildContext context, {PayloadType? payload}) =>
-      context.pushNamed(name, extra: payload);
+      context.pushNamed(routeName, extra: payload);
 
   void pushReplacement(BuildContext context, {PayloadType? payload}) =>
-      context.pushReplacementNamed(name, extra: payload);
+      context.pushReplacementNamed(routeName, extra: payload);
 
   void replace(BuildContext context, {PayloadType? payload}) =>
-      context.replaceNamed(name, extra: payload);
+      context.replaceNamed(routeName, extra: payload);
 }
 
 typedef IcePageBuilder<PayloadType> = IcePage<PayloadType> Function(
