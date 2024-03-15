@@ -57,6 +57,7 @@ class DAppsPage extends IceSimplePage {
                 Apps(
                   title: context.i18n.dapps_section_title_recently_added,
                   items: mockedApps,
+                  topOffset: 8.0.s,
                   onPress: () {
                     IceRoutes.appsList.go(
                       context,

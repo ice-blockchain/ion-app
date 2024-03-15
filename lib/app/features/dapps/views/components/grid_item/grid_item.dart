@@ -30,7 +30,7 @@ class GridItem extends HookWidget {
             height: 48.0.s,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12.0.s),
             ),
             child: Image.asset(
               item.iconImage,
@@ -38,7 +38,7 @@ class GridItem extends HookWidget {
               fit: BoxFit.contain,
             ),
           ),
-          SizedBox(width: 8.0.s),
+          SizedBox(width: 10.0.s),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
