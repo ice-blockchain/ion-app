@@ -50,7 +50,6 @@
     "dapps_section_title_categories",
     "dapps_category_defi",
     "dapps_category_marketplaces",
-    "dapps_category_nft",
     "dapps_category_games",
     "dapps_category_social",
     "dapps_category_utilities",
@@ -86,10 +85,17 @@
     "wallet_balance",
     "wallet_send",
     "wallet_receive",
+    "wallet_hide",
+    "wallet_empty_coins",
+    "wallet_empty_nfts",
+    "wallet_manage_coins",
+    "wallet_buy_nfts",
     "contacts_title",
     "contacts_allow_pop_up_title",
     "contacts_allow_pop_up_desc",
     "contacts_allow_pop_up_action",
-    "core_view_all"
+    "core_view_all",
+    "core_nfts",
+    "core_coins"
   ]
 }

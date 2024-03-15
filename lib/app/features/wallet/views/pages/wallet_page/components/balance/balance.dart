@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
+import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallet/providers/wallet_data_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
@@ -19,8 +20,8 @@ class Balance extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final WalletData walletData = ref.watch(walletDataNotifierProvider);
-    final ValueNotifier<bool> isVisible = useState<bool>(true);
-    final AssetGenImage iconAsset = isVisible.value
+    final bool isBalanceVisible = isBalanceVisibleSelector(ref);
+    final AssetGenImage iconAsset = isBalanceVisible
         ? Assets.images.icons.iconBlockEyeOn
         : Assets.images.icons.iconBlockEyeOff;
     return Padding(
@@ -40,16 +41,17 @@ class Balance extends HookConsumerWidget {
                 style: context.theme.appTextThemes.subtitle2
                     .copyWith(color: context.theme.appColors.secondaryText),
               ),
-              InkWell(
-                borderRadius: BorderRadius.all(Radius.circular(18.0.s)),
+              TextButton(
                 child: Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: iconAsset.icon(
                     color: context.theme.appColors.secondaryText,
                   ),
                 ),
-                onTap: () {
-                  isVisible.value = !isVisible.value;
+                onPressed: () {
+                  ref
+                      .watch(userPreferencesNotifierProvider.notifier)
+                      .switchBalanceVisibility();
                 },
               ),
             ],
@@ -57,7 +59,7 @@ class Balance extends HookConsumerWidget {
           Padding(
             padding: EdgeInsets.only(top: 6.0.s),
             child: Text(
-              isVisible.value ? '\$${walletData.balance}' : '********',
+              isBalanceVisible ? '\$${walletData.balance}' : '********',
               style: context.theme.appTextThemes.headline1
                   .copyWith(color: context.theme.appColors.primaryText),
             ),
