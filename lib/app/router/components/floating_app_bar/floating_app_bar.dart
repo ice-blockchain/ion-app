@@ -21,18 +21,36 @@ class FloatingAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double safeAreaOffset = MediaQuery.paddingOf(context).top;
+    final double totalHeight =
+        height + topOffset + bottomOffset + safeAreaOffset;
+    final double fadeOffset = topOffset + safeAreaOffset / 2;
+
     return SliverAppBar(
       elevation: 50,
       floating: true,
+      pinned: true,
       automaticallyImplyLeading: false,
+      expandedHeight: height + topOffset + bottomOffset,
       shadowColor:
           context.theme.appColors.onTertararyBackground.withOpacity(0.05),
-      toolbarHeight: height + topOffset + bottomOffset,
+      toolbarHeight: 0,
       backgroundColor: context.theme.appColors.onPrimaryAccent,
       surfaceTintColor: context.theme.appColors.onPrimaryAccent,
       flexibleSpace: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          return ScreenTopOffset(margin: topOffset, child: child);
+          final double opacity = 1 -
+              ((totalHeight - constraints.maxHeight) / fadeOffset).clamp(0, 1);
+          return Align(
+            alignment: Alignment.bottomCenter,
+            child: Opacity(
+              opacity: opacity,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: bottomOffset),
+                child: child,
+              ),
+            ),
+          );
         },
       ),
     );
