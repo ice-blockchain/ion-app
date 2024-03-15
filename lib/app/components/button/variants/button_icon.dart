@@ -6,6 +6,7 @@ class _ButtonWithIcon extends Button {
     super.type,
     super.tintColor,
     super.borderColor,
+    super.borderRadius,
     super.backgroundColor,
     required super.onPressed,
     required Widget icon,
