@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_back_button.dart';
 
 class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   const NavigationAppBar._({
@@ -51,7 +50,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
       );
 
   static double get modalHeaderHeight => 60.0.s;
-  static double get screenHeaderHeight => 42.0.s;
+  static double get screenHeaderHeight => 56.0.s;
   static double get actionButtonSide => 24.0.s;
 
   final String title;
@@ -64,10 +63,15 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final Widget appBarContent = NavigationToolbar(
       leading: showBackButton
-          ? GestureDetector(
-              onTap: onBackPress ?? () => context.pop(),
-              child: Assets.images.icons.iconBackArrow
-                  .icon(size: actionButtonSide),
+          ? Container(
+              transform: Matrix4.translationValues(
+                -NavigationBackButton.hitSlop,
+                0,
+                0,
+              ),
+              child: NavigationBackButton(() {
+                context.pop();
+              }),
             )
           : null,
       middle: Text(
@@ -86,7 +90,12 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: ScreenSideOffset.small(child: appBarContent),
     );
 
-    return useScreenTopOffset ? ScreenTopOffset(child: appBar) : appBar;
+    return useScreenTopOffset
+        ? ScreenTopOffset(
+            margin: 0.0,
+            child: appBar,
+          )
+        : appBar;
   }
 
   @override

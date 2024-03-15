@@ -8,7 +8,7 @@ class ScreenTopOffset extends StatelessWidget {
     double? margin,
   }) : margin = margin ?? defaultMargin;
 
-  static double get defaultMargin => 0.0.s;
+  static double get defaultMargin => 10.0.s;
 
   final Widget child;
   final double margin;

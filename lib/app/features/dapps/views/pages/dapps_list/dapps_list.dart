@@ -44,7 +44,7 @@ class DAppsList extends IcePage<AppsRouteData> {
           Expanded(
             child: ScreenSideOffset.small(
               child: Padding(
-                padding: EdgeInsets.only(top: 18.0.s),
+                padding: EdgeInsets.only(top: 12.0.s),
                 child: Column(
                   children: <Widget>[
                     if (payload?.isSearchVisible == true)
