@@ -117,6 +117,7 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     }
 
     return _buildHitBox(
+      ripple: false,
       onTap: () {
         selectedTab.mainModalRoute.go(context);
       },
@@ -125,18 +126,30 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
   }
 
   Widget _buildHitBox({
+    bool ripple = true,
     required VoidCallback onTap,
     required Widget child,
   }) {
+    final Widget content = ColoredBox(
+      color: Colors
+          .transparent, // A hack to push the box for maximum boundaries yet having flex parent
+      child: Center(
+        child: child,
+      ),
+    );
+
+    if (ripple) {
+      return Material(
+        child: InkWell(
+          onTap: onTap,
+          child: content,
+        ),
+      );
+    }
+
     return GestureDetector(
       onTap: onTap,
-      child: ColoredBox(
-        color: Colors
-            .transparent, // A hack to push the box for maximum boundaries yet having flex parent
-        child: Center(
-          child: child,
-        ),
-      ),
+      child: content,
     );
   }
 }
