@@ -91,7 +91,7 @@ class GridItem extends HookWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 3.0.s),
                         child: Text(
-                          item.value != null ? formatDouble(item.value!) : '',
+                          formatDouble(item.value!),
                           style: context.theme.appTextThemes.caption3.copyWith(
                             color: context.theme.appColors.tertararyText,
                           ),

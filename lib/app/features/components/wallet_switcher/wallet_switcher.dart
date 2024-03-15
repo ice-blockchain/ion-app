@@ -23,16 +23,13 @@ class WalletSwitcher extends HookConsumerWidget {
         imageUrl: walletData.icon,
         borderRadius: BorderRadius.circular(10.0.s),
       ),
-      leadingButtonOffset: 8.0.s,
+      leadingButtonOffset: 11.0.s,
       trailingIconOffset: 0.0.s,
       backgroundColor: context.theme.appColors.tertararyBackground,
-      label: Padding(
-        padding: EdgeInsets.only(left: 3.0.s),
-        child: Text(
-          walletData.name,
-          style: context.theme.appTextThemes.subtitle2.copyWith(
-            color: context.theme.appColors.secondaryText,
-          ),
+      label: Text(
+        walletData.name,
+        style: context.theme.appTextThemes.subtitle2.copyWith(
+          color: context.theme.appColors.primaryText,
         ),
       ),
     );

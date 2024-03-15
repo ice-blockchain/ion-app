@@ -26,7 +26,6 @@ class SectionHeader extends StatelessWidget {
       child: SizedBox(
         height: 46.0.s,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             if (leadingIcon != null)
               Padding(
