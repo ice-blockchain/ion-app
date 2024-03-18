@@ -83,7 +83,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     final bool isAnimationCompleted = ref.watch(splashProvider);
 
     if (isInitError) {
-      return initialPage;
+      return IceRoutes.error;
     }
 
     if (isInitInProgress && !isSplash || !isAnimationCompleted) {
