@@ -39,8 +39,11 @@ class RiverpodLogger extends ProviderObserver {
     StackTrace stackTrace,
     ProviderContainer container,
   ) {
-    _log('Provider $provider threw error',
-        error: error, stackTrace: stackTrace);
+    _log(
+      'Provider $provider threw error',
+      error: error,
+      stackTrace: stackTrace,
+    );
   }
 
   void _log(
