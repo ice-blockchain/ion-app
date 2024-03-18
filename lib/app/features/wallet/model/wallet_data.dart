@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ice/app/features/wallet/model/coin_data.dart';
 
 part 'wallet_data.freezed.dart';
 
@@ -9,5 +10,6 @@ class WalletData with _$WalletData {
     required String name,
     required String icon,
     required double balance,
+    required List<CoinData> coins,
   }) = _WalletData;
 }

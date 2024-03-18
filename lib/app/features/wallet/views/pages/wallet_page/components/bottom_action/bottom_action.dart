@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -21,8 +20,6 @@ class BottomAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: ScreenSideOffset.defaultSmallMargin,
-        right: ScreenSideOffset.defaultSmallMargin,
         bottom: 16.0.s,
         top: 12.0.s,
       ),

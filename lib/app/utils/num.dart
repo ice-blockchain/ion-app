@@ -10,3 +10,7 @@ String formatDouble(double value) {
 String formatDoubleCompact(num value) {
   return NumberFormat.compact().format(value);
 }
+
+String formatToCurrency(double value) {
+  return NumberFormat.currency(symbol: '\$', decimalDigits: 2).format(value);
+}
