@@ -10,6 +10,7 @@ import 'package:ice/app/features/user/providers/user_preferences_selectors.dart'
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallet/providers/wallet_data_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
+import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class Balance extends HookConsumerWidget {
@@ -59,7 +60,9 @@ class Balance extends HookConsumerWidget {
           Padding(
             padding: EdgeInsets.only(top: 6.0.s),
             child: Text(
-              isBalanceVisible ? '\$${walletData.balance}' : '********',
+              isBalanceVisible
+                  ? formatToCurrency(walletData.balance)
+                  : '********',
               style: context.theme.appTextThemes.headline1
                   .copyWith(color: context.theme.appColors.primaryText),
             ),
