@@ -48,16 +48,17 @@ class NostrLogin extends IceSimplePage {
                         privateKeyController.onVerify(),
                     showLeadingSeparator: true,
                   ),
-                  SizedBox(
-                    height: 26.0.s,
-                  ),
-                  Center(
-                    child: Button(
-                      leadingIcon: Assets.images.icons.iconProfilePaste.icon(),
-                      onPressed: () {},
-                      type: ButtonType.disabled,
-                      label: Text(context.i18n.button_paste),
-                      mainAxisSize: MainAxisSize.max,
+                  Padding(
+                    padding: EdgeInsets.only(top: 26.0.s, bottom: 90.0.s),
+                    child: Center(
+                      child: Button(
+                        leadingIcon:
+                            Assets.images.icons.iconProfilePaste.icon(),
+                        onPressed: () {},
+                        type: ButtonType.disabled,
+                        label: Text(context.i18n.button_paste),
+                        mainAxisSize: MainAxisSize.max,
+                      ),
                     ),
                   ),
                 ],
