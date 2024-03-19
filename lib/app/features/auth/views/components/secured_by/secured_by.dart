@@ -17,12 +17,17 @@ class SecuredBy extends StatelessWidget {
           style: context.theme.appTextThemes.caption,
         ),
         SizedBox(width: 5.0.s),
-        Image.asset(Assets.images.icons.iconIcelogoSecuredby.path),
+        Assets.images.icons.iconIcelogoSecuredby.image(
+          width: 20.0.s,
+          height: 20.0.s,
+        ),
         SizedBox(width: 3.0.s),
         Text(
           context.i18n.secured_by_ice,
-          style: context.theme.appTextThemes.headline1
-              .copyWith(fontSize: 17), //TODO::why fixed size here
+          style: context.theme.appTextThemes.headline1.copyWith(
+            fontSize: 14.0.s,
+            color: context.theme.appColors.secondaryText,
+          ),
         ),
       ],
     );

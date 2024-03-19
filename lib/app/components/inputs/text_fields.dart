@@ -200,12 +200,15 @@ class InputFormField extends FormField<String> {
                   children: <Widget>[
                     leadingIcon,
                     if (showLeadingSeparator != null && showLeadingSeparator)
-                      Container(
-                        width: 1.0.s,
-                        height: 26.0.s,
-                        color: context.theme.appColors.strokeElements,
-                        margin: EdgeInsets.only(
-                          left: textInputLeadingPadding,
+                      Opacity(
+                        opacity: 0.3,
+                        child: Container(
+                          width: 1.0.s,
+                          height: 26.0.s,
+                          color: context.theme.appColors.strokeElements,
+                          margin: EdgeInsets.only(
+                            left: textInputLeadingPadding,
+                          ),
                         ),
                       ),
                   ],
@@ -225,7 +228,9 @@ class InputFormField extends FormField<String> {
                     controller: textController,
                     focusNode: controller.focusNode,
                     autofocus: autofocus,
-                    style: context.theme.appTextThemes.title,
+                    style: context.theme.appTextThemes.body.copyWith(
+                      color: context.theme.appColors.primaryText,
+                    ),
                     onFieldSubmitted: onFieldSubmitted,
                     keyboardType: numbersOnly ? TextInputType.number : null,
                     inputFormatters: numbersOnly
@@ -247,11 +252,11 @@ class InputFormField extends FormField<String> {
                       focusedErrorBorder: InputFieldBorder(),
                       label: Padding(
                         padding: EdgeInsets.only(
-                          bottom: defaultTextFieldMargin / 2,
+                          bottom: textInputLeadingPadding,
                         ),
                         child: Text(
                           label,
-                          style: context.theme.appTextThemes.subtitle.copyWith(
+                          style: context.theme.appTextThemes.body.copyWith(
                             color: context.theme.appColors.tertararyText,
                           ),
                         ),
@@ -358,7 +363,7 @@ class TextFieldToEdit extends StatelessWidget {
     return GestureDetector(
       onTap: onEdit,
       child: RoundedContainer(
-        height: 56.0.s,
+        height: 58.0.s,
         color: _kBackgroundColor,
         child: Padding(
           padding: EdgeInsets.all(defaultTextFieldMargin),

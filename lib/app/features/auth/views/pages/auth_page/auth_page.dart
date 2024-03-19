@@ -39,15 +39,18 @@ class AuthPage extends IceSimplePage {
       body: ScreenSideOffset.large(
         child: Column(
           children: <Widget>[
-            AuthHeaderWidget(
-              title: context.i18n.auth_signIn_title,
-              description: context.i18n.auth_signIn_description,
+            Padding(
+              padding: EdgeInsets.only(bottom: 2.0.s),
+              child: AuthHeaderWidget(
+                title: context.i18n.auth_signIn_title,
+                description: context.i18n.auth_signIn_description,
+              ),
             ),
             if (isEmailMode)
               InputField(
-                leadingIcon: Image.asset(
-                  Assets.images.icons.iconFieldEmail.path,
+                leadingIcon: Assets.images.icons.iconFieldEmail.icon(
                   color: context.theme.appColors.primaryText,
+                  size: 24.0.s,
                 ),
                 label: context.i18n.auth_signIn_input_email,
                 controller: emailController.controller,
@@ -65,14 +68,12 @@ class AuthPage extends IceSimplePage {
                 validator: (String? value) => numberController.onVerify(),
                 showLeadingSeparator: true,
               ),
-            SizedBox(
-              height: 16.0.s,
-            ),
             Center(
               child: Button(
                 trailingIcon: authState is AuthenticationLoading
                     ? const ButtonLoadingIndicator()
-                    : Assets.images.icons.iconButtonNext.icon(),
+                    : Assets.images.icons.iconButtonNext
+                        .icon(color: context.theme.appColors.onPrimaryAccent),
                 onPressed: () => <void>{
                   emailFormKey.currentState?.reset(),
                   ref
@@ -102,14 +103,14 @@ class AuthPage extends IceSimplePage {
                 },
                 label: Text(
                   isEmailMode
-                      ? context.i18n.auth_signIn_button_email
-                      : context.i18n.auth_signIn_button_phone_number,
+                      ? context.i18n.auth_signIn_button_phone_number
+                      : context.i18n.auth_signIn_button_email,
                 ),
                 mainAxisSize: MainAxisSize.max,
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 16.0.s, bottom: 22.0.s),
+              padding: EdgeInsets.only(top: 16.0.s, bottom: 72.0.s),
               child: Socials(
                 onSocialButtonPressed: (SocialButtonType type) {
                   switch (type) {
@@ -135,7 +136,7 @@ class AuthPage extends IceSimplePage {
             ),
             const SecuredBy(),
             SizedBox(
-              height: 20.0.s,
+              height: 14.0.s,
             ),
             const TermsPrivacy(),
           ],
