@@ -66,7 +66,7 @@ class AuthPage extends IceSimplePage {
                 label: context.i18n.auth_signIn_input_phone_number,
                 controller: numberController.controller,
                 validator: (String? value) => numberController.onVerify(),
-                showLeadingSeparator: true,
+                numbersOnly: true,
               ),
             Center(
               child: Button(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -30,8 +29,6 @@ enum SocialButtonType {
         .icon();
   }
 }
-
-double defaultSocialIconButtonSide = 44.0.s;
 
 typedef SocialButtonCallback = void Function(SocialButtonType type);
 
@@ -61,36 +58,35 @@ class _SocialsState extends State<Socials> {
     SocialButtonType.linkedin,
   ];
 
+  static double get defaultButtonsOffset => 16.0.s;
+
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double buttonWidth = context.theme.iconButtonTheme.style?.iconSize
-            ?.resolve(<MaterialState>{}) ??
-        defaultSocialIconButtonSide;
-    final double spaceBetweenButtons = (screenWidth -
-            2 * ScreenSideOffset.defaultLargeMargin -
-            4 * buttonWidth) /
-        3;
+    final double buttonSide = (screenWidth -
+            (2 * ScreenSideOffset.defaultLargeMargin) -
+            (3 * defaultButtonsOffset)) /
+        4;
 
     return Column(
       children: <Widget>[
-        buildSocialRow(firstRowButtons),
-        if (isSecondRowVisible) SizedBox(height: spaceBetweenButtons),
-        if (isSecondRowVisible) buildSocialRow(secondRowButtons),
+        buildSocialRow(firstRowButtons, buttonSide),
+        if (isSecondRowVisible) SizedBox(height: defaultButtonsOffset),
+        if (isSecondRowVisible) buildSocialRow(secondRowButtons, buttonSide),
       ],
     );
   }
 
-  Widget buildSocialRow(List<SocialButtonType> types) {
+  Widget buildSocialRow(List<SocialButtonType> types, double buttonSide) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: types
-          .map((SocialButtonType type) => buildSocialButton(type))
+          .map((SocialButtonType type) => buildSocialButton(type, buttonSide))
           .toList(),
     );
   }
 
-  Widget buildSocialButton(SocialButtonType type) {
+  Widget buildSocialButton(SocialButtonType type, double buttonSide) {
     Widget socialIcon = type.buttonIcon;
 
     if (type == SocialButtonType.expand) {
@@ -103,6 +99,7 @@ class _SocialsState extends State<Socials> {
       type: ButtonType.outlined,
       icon: socialIcon,
       onPressed: () => handleButtonPress(type),
+      size: buttonSide,
     );
   }
 
