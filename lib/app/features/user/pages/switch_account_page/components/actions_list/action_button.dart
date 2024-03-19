@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
 
 class ActionButton extends StatelessWidget {
   const ActionButton({
@@ -23,10 +21,7 @@ class ActionButton extends StatelessWidget {
       child: Button(
         leadingIcon: icon,
         onPressed: onTap,
-        label: Text(
-          label,
-          style: context.theme.appTextThemes.body,
-        ),
+        label: Text(label),
         mainAxisSize: MainAxisSize.max,
         type: ButtonType.secondary,
       ),

@@ -22,7 +22,8 @@
         "orangePeel": "#FFA143",
         "purple": "#7D40FF",
         "raspberry": "#EA3665",
-        "darkBlue": "#1D46EB"
+        "darkBlue": "#1D46EB",
+        "quaternaryText": "#727689"
       },
       "dark": {
         "primaryAccent": "#0166FF",
@@ -45,7 +46,8 @@
         "orangePeel": "#FFA143",
         "purple": "#7D40FF",
         "raspberry": "#EA3665",
-        "darkBlue": "#1D46EB"
+        "darkBlue": "#1D46EB",
+        "quaternaryText": "#727689"
       }
     },
     "textThemes": {

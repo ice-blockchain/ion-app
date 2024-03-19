@@ -7,10 +7,14 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_cont
 import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/header/header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_footer.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -41,6 +45,7 @@ class WalletPage extends IceSimplePage {
 
     final ValueNotifier<WalletTabType> activeTab =
         useState<WalletTabType>(WalletTabType.coins);
+
     return Scaffold(
       body: CustomScrollView(
         controller: scrollController,
@@ -66,10 +71,18 @@ class WalletPage extends IceSimplePage {
               ],
             ),
           ),
+          if (activeTab.value == WalletTabType.nfts)
+            const NftsTabHeader()
+          else
+            const CoinsTabHeader(),
           if (activeTab.value == WalletTabType.coins)
             const CoinsTab()
           else
             const NftsTab(),
+          if (activeTab.value == WalletTabType.coins)
+            const CoinsTabFooter()
+          else
+            const NftsTabFooter(),
         ],
       ),
     );

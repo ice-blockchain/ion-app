@@ -32,12 +32,14 @@ class TemplateColors with _$TemplateColors {
     Color purple,
     Color raspberry,
     Color darkBlue,
+    Color quaternaryText,
   ) = _TemplateColors;
 
   factory TemplateColors.fromJson(Map<String, dynamic> json) =>
       _$TemplateColorsFromJson(json);
 
   factory TemplateColors.empty() => const TemplateColors(
+        Colors.transparent,
         Colors.transparent,
         Colors.transparent,
         Colors.transparent,

@@ -23,8 +23,10 @@ class WalletTabsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(
-        ScreenSideOffset.defaultSmallMargin - Constants.hitSlop,
+      padding: EdgeInsets.only(
+        top: 16.0.s - Constants.hitSlop,
+        left: ScreenSideOffset.defaultSmallMargin - Constants.hitSlop,
+        right: ScreenSideOffset.defaultSmallMargin - Constants.hitSlop,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

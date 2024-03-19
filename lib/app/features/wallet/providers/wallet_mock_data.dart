@@ -1,4 +1,5 @@
 import 'package:ice/app/features/wallet/model/coin_data.dart';
+import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 
 const List<CoinData> mockedCoinsDataArray = <CoinData>[
@@ -45,8 +46,8 @@ const List<CoinData> mockedCoinsDataArray = <CoinData>[
   CoinData(
     abbreviation: 'XRP',
     name: 'XRP',
-    amount: 58.00,
-    balance: 43.00,
+    amount: 0.00,
+    balance: 0.00,
     iconUrl:
         'https://ice-staging.b-cdn.net/profile/default-profile-picture-15.png',
   ),
@@ -60,6 +61,69 @@ const List<CoinData> mockedCoinsDataArray = <CoinData>[
   ),
 ];
 
+const List<NftData> mockedNftsDataArray = <NftData>[
+  NftData(
+    collectionName: 'WZRD',
+    identifier: 67,
+    price: 2.11,
+    iconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-10.png',
+    currency: 'ETH',
+    currencyIconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+  ),
+  NftData(
+    collectionName: 'Moonrunners Specialty',
+    identifier: 4,
+    price: 3.87,
+    iconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-11.png',
+    currency: 'ETH',
+    currencyIconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+  ),
+  NftData(
+    collectionName: 'Crazy Monkey',
+    identifier: 456,
+    price: 0.04,
+    iconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-12.png',
+    currency: 'ETH',
+    currencyIconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+  ),
+  NftData(
+    collectionName: 'WZRD',
+    identifier: 76,
+    price: 1.34,
+    iconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-13.png',
+    currency: 'ETH',
+    currencyIconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+  ),
+  NftData(
+    collectionName: 'Lucky Dog',
+    identifier: 345,
+    price: 0.00,
+    iconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
+    currency: 'ETH',
+    currencyIconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+  ),
+  NftData(
+    collectionName: 'WZRD',
+    identifier: 19,
+    price: 0.05,
+    iconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-15.png',
+    currency: 'ETH',
+    currencyIconUrl:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+  ),
+];
+
 const List<WalletData> mockedWalletDataArray = <WalletData>[
   WalletData(
     id: '1',
@@ -68,6 +132,7 @@ const List<WalletData> mockedWalletDataArray = <WalletData>[
         'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
     balance: 36594.33,
     coins: mockedCoinsDataArray,
+    nfts: mockedNftsDataArray,
   ),
   WalletData(
     id: '2',
@@ -76,6 +141,7 @@ const List<WalletData> mockedWalletDataArray = <WalletData>[
         'https://ice-staging.b-cdn.net/profile/default-profile-picture-15.png',
     balance: 48.00,
     coins: <CoinData>[],
+    nfts: mockedNftsDataArray,
   ),
   WalletData(
     id: '3',
@@ -84,5 +150,6 @@ const List<WalletData> mockedWalletDataArray = <WalletData>[
         'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
     balance: 279.99,
     coins: mockedCoinsDataArray,
+    nfts: <NftData>[],
   ),
 ];
