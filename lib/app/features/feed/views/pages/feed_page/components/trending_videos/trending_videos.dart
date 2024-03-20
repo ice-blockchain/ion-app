@@ -16,7 +16,7 @@ class TrendingVideos extends StatelessWidget {
         children: <Widget>[
           SectionHeader(
             onPress: () {},
-            title: context.i18n.trending_videos,
+            title: context.i18n.feed_trending_videos,
             leadingIcon: const VideosIcon(),
           ),
           const TrendingVideosList(

@@ -22,7 +22,7 @@ class ReadTimeTile extends StatelessWidget {
         ),
         SizedBox(width: 3.0.s),
         Text(
-          context.i18n.read_time_in_mins(minutesToRead),
+          context.i18n.feed_read_time_in_mins(minutesToRead),
           style: context.theme.appTextThemes.caption
               .copyWith(color: context.theme.appColors.sharkText),
         ),
