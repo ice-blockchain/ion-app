@@ -6,22 +6,27 @@ import 'package:ice/app/features/feed/components/post/components/post_header/pos
 import 'package:ice/app/features/feed/components/post/components/post_header/post_menu.dart';
 
 class Post extends StatelessWidget {
-  const Post({super.key});
+  const Post({
+    super.key,
+    required this.content,
+  });
+
+  final String content;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 12.0.s),
-      child: const Column(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          PostHeader(
+          const PostHeader(
             trailing: PostMenu(),
           ),
           PostBody(
-            content:
-                '⏰ We expect tomorrow to pre-release our ice app on Android.\n⏳ For iOS, we are still waiting on @Apple to approve our app. If, for some reason, Apple will not approve the app in time for 4th April, iOS users will be able to use a mobile web light version.\n\nAll the best, ice Team',
+            content: content,
           ),
-          PostFooter(),
+          const PostFooter(),
         ],
       ),
     );
