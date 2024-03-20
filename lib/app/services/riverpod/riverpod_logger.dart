@@ -1,6 +1,5 @@
-import 'dart:developer' as developer;
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/services/logger/logger.dart';
 
 class RiverpodLogger extends ProviderObserver {
   static const String tag = 'Riverpod';
@@ -51,6 +50,6 @@ class RiverpodLogger extends ProviderObserver {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    developer.log(message, name: tag, error: error, stackTrace: stackTrace);
+    Logger.log(message, name: tag, error: error, stackTrace: stackTrace);
   }
 }

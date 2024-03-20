@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/router/app_router_listenable.dart';
 import 'package:ice/app/router/routing_utils.dart';
+import 'package:ice/app/services/logger/config.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -14,7 +15,7 @@ GoRouter useAppRouter(WidgetRef ref) {
   final GoRouter router = useMemoized(
     () => GoRouter(
       refreshListenable: notifier,
-      debugLogDiagnostics: true,
+      debugLogDiagnostics: LoggerConfig.routerLogsEnabled,
       routes: appRoutes,
       redirect: notifier.redirect,
       navigatorKey: _rootNavigatorKey,
