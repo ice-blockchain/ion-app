@@ -69,11 +69,8 @@
   "profile_help": "Help Center",
   "profile_profile": "Profile",
   "profile_profile_desc": "Your personal space",
-  "profile_feed": "Feed",
   "profile_feed_desc": "Discover and engage",
-  "profile_videos": "Videos",
   "profile_videos_desc": "Social streaming",
-  "profile_articles": "Articles",
   "profile_articles_desc": "Trending stories",
   "profile_bookmarks": "Bookmarks",
   "profile_bookmarks_desc": "Your saved posts",
@@ -99,5 +96,8 @@
   "contacts_allow_pop_up_action": "Allow contacts access",
   "core_view_all": "view all",
   "core_nfts": "NFTs",
-  "core_coins": "Coins"
+  "core_coins": "Coins",
+  "general_feed": "Feed",
+  "general_videos": "Videos",
+  "general_articles": "Articles"
 }

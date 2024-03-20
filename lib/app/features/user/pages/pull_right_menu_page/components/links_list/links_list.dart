@@ -32,7 +32,7 @@ class LinksList extends StatelessWidget {
           LinksListTile(
             iconAssetName: Assets.images.icons.iconProfileFeed.path,
             iconTintColor: context.theme.appColors.purple,
-            title: context.i18n.profile_feed,
+            title: context.i18n.general_feed,
             subtitle: context.i18n.profile_feed_desc,
             onTap: () {},
           ),
@@ -40,7 +40,7 @@ class LinksList extends StatelessWidget {
           LinksListTile(
             iconAssetName: Assets.images.icons.iconVideosTrading.path,
             iconTintColor: context.theme.appColors.raspberry,
-            title: context.i18n.profile_videos,
+            title: context.i18n.general_videos,
             subtitle: context.i18n.profile_videos_desc,
             onTap: () {},
           ),
@@ -48,7 +48,7 @@ class LinksList extends StatelessWidget {
           LinksListTile(
             iconAssetName: Assets.images.icons.iconFeedStories.path,
             iconTintColor: context.theme.appColors.success,
-            title: context.i18n.profile_articles,
+            title: context.i18n.general_articles,
             subtitle: context.i18n.profile_articles_desc,
             onTap: () {},
           ),

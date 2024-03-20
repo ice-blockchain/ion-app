@@ -69,11 +69,8 @@
     "profile_help",
     "profile_profile",
     "profile_profile_desc",
-    "profile_feed",
     "profile_feed_desc",
-    "profile_videos",
     "profile_videos_desc",
-    "profile_articles",
     "profile_articles_desc",
     "profile_bookmarks",
     "profile_bookmarks_desc",
@@ -99,6 +96,9 @@
     "contacts_allow_pop_up_action",
     "core_view_all",
     "core_nfts",
-    "core_coins"
+    "core_coins",
+    "general_feed",
+    "general_videos",
+    "general_articles"
   ]
 }
