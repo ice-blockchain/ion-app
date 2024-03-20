@@ -11,7 +11,10 @@ Widget feedPostUseCase(BuildContext context) {
     body: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Post(),
+        Post(
+          content:
+              '⏰ We expect tomorrow to pre-release our ice app on Android.\n⏳ For iOS, we are still waiting on @Apple to approve our app. If, for some reason, Apple will not approve the app in time for 4th April, iOS users will be able to use a mobile web light version.\n\nAll the best, ice Team',
+        ),
       ],
     ),
   );

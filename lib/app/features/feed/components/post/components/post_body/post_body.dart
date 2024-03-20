@@ -16,8 +16,9 @@ class PostBody extends StatelessWidget {
     return ScreenSideOffset.small(
       child: Text(
         content,
-        style: context.theme.appTextThemes.body2
-            .copyWith(color: context.theme.appColors.sharkText),
+        style: context.theme.appTextThemes.body2.copyWith(
+          color: context.theme.appColors.sharkText,
+        ),
       ),
     );
   }

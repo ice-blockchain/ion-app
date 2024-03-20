@@ -26,7 +26,9 @@ class Relays extends _$Relays {
       return state[url]!;
     }
     final NostrRelay relay = await NostrRelay.connect(url);
-    state[url] = relay;
+    state = Map<String, NostrRelay>.unmodifiable(
+      <String, NostrRelay>{...state, url: relay},
+    );
     return relay;
   }
 
