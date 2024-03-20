@@ -37,109 +37,133 @@ class AuthPage extends IceSimplePage {
 
     return SheetContent(
       body: ScreenSideOffset.large(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(bottom: 2.0.s),
-              child: AuthHeaderWidget(
-                title: context.i18n.auth_signIn_title,
-                description: context.i18n.auth_signIn_description,
-              ),
-            ),
-            if (isEmailMode)
-              InputField(
-                leadingIcon: Assets.images.icons.iconFieldEmail.icon(
-                  color: context.theme.appColors.primaryText,
-                  size: 24.0.s,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(bottom: 2.0.s),
+                child: AuthHeaderWidget(
+                  title: context.i18n.auth_signIn_title,
+                  description: context.i18n.auth_signIn_description,
                 ),
-                label: context.i18n.auth_signIn_input_email,
-                controller: emailController.controller,
-                validator: (String? value) => emailController.onVerify(),
-                showLeadingSeparator: true,
               ),
-            if (!isEmailMode)
-              InputField(
-                leadingIcon: CountryCodeInput(
-                  country: countries[1],
-                  onTap: () => IceRoutes.selectCountries.push(context),
+              if (isEmailMode)
+                InputField(
+                  leadingIcon: Assets.images.icons.iconFieldEmail.icon(
+                    color: context.theme.appColors.primaryText,
+                    size: 24.0.s,
+                  ),
+                  label: context.i18n.auth_signIn_input_email,
+                  controller: emailController.controller,
+                  validator: (String? value) => emailController.onVerify(),
+                  showLeadingSeparator: true,
                 ),
-                label: context.i18n.auth_signIn_input_phone_number,
-                controller: numberController.controller,
-                validator: (String? value) => numberController.onVerify(),
-                numbersOnly: true,
-              ),
-            Center(
-              child: Button(
-                trailingIcon: authState is AuthenticationLoading
-                    ? const ButtonLoadingIndicator()
-                    : Assets.images.icons.iconButtonNext
-                        .icon(color: context.theme.appColors.onPrimaryAccent),
-                onPressed: () => <void>{
-                  emailFormKey.currentState?.reset(),
-                  ref
-                      .read(authProvider.notifier)
-                      .signIn(email: 'foo@bar.baz', password: '123'),
-                },
-                label: Text(context.i18n.button_continue),
-                mainAxisSize: MainAxisSize.max,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 14.0.s, bottom: 14.0.s),
-              child: Text(
-                context.i18n.auth_signIn_or,
-                style: context.theme.appTextThemes.caption
-                    .copyWith(color: context.theme.appColors.tertararyText),
-              ),
-            ),
-            Center(
-              child: Button(
-                type: ButtonType.outlined,
-                leadingIcon: Assets.images.icons.iconFieldPhone.icon(
-                  color: context.theme.appColors.secondaryText,
+              if (!isEmailMode)
+                InputField(
+                  leadingIcon: CountryCodeInput(
+                    country: countries[1],
+                    onTap: () => IceRoutes.selectCountries.push(context),
+                  ),
+                  label: context.i18n.auth_signIn_input_phone_number,
+                  controller: numberController.controller,
+                  validator: (String? value) => numberController.onVerify(),
+                  numbersOnly: true,
                 ),
-                onPressed: () {
-                  ref.read(isEmailModeProvider.notifier).state = !isEmailMode;
-                },
-                label: Text(
-                  isEmailMode
-                      ? context.i18n.auth_signIn_button_phone_number
-                      : context.i18n.auth_signIn_button_email,
+              Center(
+                child: Button(
+                  trailingIcon: authState is AuthenticationLoading
+                      ? const ButtonLoadingIndicator()
+                      : Assets.images.icons.iconButtonNext.icon(
+                          color: context.theme.appColors.onPrimaryAccent,
+                        ),
+                  onPressed: () => <void>{
+                    emailFormKey.currentState?.reset(),
+                    ref
+                        .read(authProvider.notifier)
+                        .signIn(email: 'foo@bar.baz', password: '123'),
+                  },
+                  label: Text(context.i18n.button_continue),
+                  mainAxisSize: MainAxisSize.max,
                 ),
-                mainAxisSize: MainAxisSize.max,
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 16.0.s, bottom: 72.0.s),
-              child: Socials(
-                onSocialButtonPressed: (SocialButtonType type) {
-                  switch (type) {
-                    case SocialButtonType.apple:
-                      IceRoutes.checkEmail.push(context);
-                    case SocialButtonType.nostr:
-                      IceRoutes.nostrAuth.push(context);
-                    case SocialButtonType.x:
-                      IceRoutes.fillProfile.push(context);
-                    case SocialButtonType.fb:
-                      IceRoutes.enterCode.push(context);
-                    case SocialButtonType.github:
-                      IceRoutes.selectLanguages.push(context);
-                    case SocialButtonType.discord:
-                      IceRoutes.discoverCreators.push(context);
-                    case SocialButtonType.linkedin:
-                      break;
-                    default:
-                      break;
-                  }
-                },
+              Padding(
+                padding: EdgeInsets.only(top: 14.0.s, bottom: 14.0.s),
+                child: Text(
+                  context.i18n.auth_signIn_or,
+                  style: context.theme.appTextThemes.caption.copyWith(
+                    color: context.theme.appColors.tertararyText,
+                  ),
+                ),
               ),
-            ),
-            const SecuredBy(),
-            SizedBox(
-              height: 14.0.s,
-            ),
-            const TermsPrivacy(),
-          ],
+              Center(
+                child: Button(
+                  type: ButtonType.outlined,
+                  leadingIcon: Assets.images.icons.iconFieldPhone.icon(
+                    color: context.theme.appColors.secondaryText,
+                  ),
+                  onPressed: () {
+                    ref.read(isEmailModeProvider.notifier).state = !isEmailMode;
+                  },
+                  label: Text(
+                    isEmailMode
+                        ? context.i18n.auth_signIn_button_phone_number
+                        : context.i18n.auth_signIn_button_email,
+                  ),
+                  mainAxisSize: MainAxisSize.max,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16.0.s, bottom: 72.0.s),
+                child: Socials(
+                  onSocialButtonPressed: (SocialButtonType type) {
+                    switch (type) {
+                      case SocialButtonType.apple:
+                        IceRoutes.checkEmail.push(context);
+                      case SocialButtonType.nostr:
+                        IceRoutes.nostrAuth.push(context);
+                      case SocialButtonType.x:
+                        IceRoutes.fillProfile.push(context);
+                      case SocialButtonType.fb:
+                        IceRoutes.enterCode.push(context);
+                      case SocialButtonType.github:
+                        IceRoutes.selectLanguages.push(context);
+                      case SocialButtonType.discord:
+                        IceRoutes.discoverCreators.push(context);
+                      case SocialButtonType.linkedin:
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                ),
+              ),
+              const SecuredBy(),
+              SizedBox(
+                height: 14.0.s,
+              ),
+              const TermsPrivacy(),
+              SizedBox(
+                height: 14.0.s + MediaQuery.paddingOf(context).bottom,
+              ),
+              const SecuredBy(),
+              SizedBox(
+                height: 14.0.s,
+              ),
+              const TermsPrivacy(),
+              SizedBox(
+                height: 14.0.s + MediaQuery.paddingOf(context).bottom,
+              ),
+              const SecuredBy(),
+              SizedBox(
+                height: 14.0.s,
+              ),
+              const TermsPrivacy(),
+              SizedBox(
+                height: 14.0.s + MediaQuery.paddingOf(context).bottom,
+              ),
+            ],
+          ),
         ),
       ),
     );

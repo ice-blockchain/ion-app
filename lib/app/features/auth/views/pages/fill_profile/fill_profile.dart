@@ -167,12 +167,15 @@ class FillProfile extends IceSimplePage {
               SizedBox(
                 height: 20.0.s,
               ),
-              Center(
-                child: Button(
-                  leadingIcon: Assets.images.icons.iconProfileSave.icon(),
-                  onPressed: onSave,
-                  label: Text(context.i18n.button_save),
-                  mainAxisSize: MainAxisSize.max,
+              Padding(
+                padding: EdgeInsets.only(top: 20.0.s, bottom: 74.0.s),
+                child: Center(
+                  child: Button(
+                    leadingIcon: Assets.images.icons.iconProfileSave.icon(),
+                    onPressed: onSave,
+                    label: Text(context.i18n.button_save),
+                    mainAxisSize: MainAxisSize.max,
+                  ),
                 ),
               ),
             ],

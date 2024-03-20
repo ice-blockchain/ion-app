@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -9,7 +10,6 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 class RequestContactAccessModal extends IceSimplePage {
   const RequestContactAccessModal(super.route, super.payload);
@@ -18,7 +18,7 @@ class RequestContactAccessModal extends IceSimplePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    return SheetContentScaffold(
+    return SheetContent(
       backgroundColor: context.theme.appColors.primaryBackground,
       body: Padding(
         padding: EdgeInsets.fromLTRB(
@@ -55,7 +55,8 @@ class RequestContactAccessModal extends IceSimplePage {
             ),
             Button(
               mainAxisSize: MainAxisSize.max,
-              leadingIcon: Assets.images.icons.iconButtonInvite.icon(),
+              leadingIcon: Assets.images.icons.iconButtonInvite
+                  .icon(color: context.theme.appColors.onPrimaryAccent),
               label: Text(
                 context.i18n.contacts_allow_pop_up_action,
               ),
