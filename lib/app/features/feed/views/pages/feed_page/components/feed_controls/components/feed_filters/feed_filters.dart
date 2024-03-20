@@ -17,28 +17,33 @@ class FeedFilters extends HookWidget {
     final ValueNotifier<FeedFilter> selectedFilter =
         useState(FeedFilter.forYou);
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: ScreenSideOffset.small(
-        child: SeparatedRow(
-          separator: SizedBox(width: 12.0.s),
-          children: <Widget>[
-            const FeedCategoriesDropdown(),
-            ...FeedFilter.values.map(
-              (FeedFilter filter) => Button.menu(
-                onPressed: () {
-                  selectedFilter.value = filter;
-                },
-                label: Text(
-                  filter.getLabel(context),
-                  style: selectedFilter.value == filter
-                      ? TextStyle(color: context.theme.appColors.primaryAccent)
-                      : null,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: ScreenSideOffset.small(
+          child: SeparatedRow(
+            separator: SizedBox(width: 12.0.s),
+            children: <Widget>[
+              const FeedCategoriesDropdown(),
+              ...FeedFilter.values.map(
+                (FeedFilter filter) => Button.menu(
+                  onPressed: () {
+                    selectedFilter.value = filter;
+                  },
+                  label: Text(
+                    filter.getLabel(context),
+                    style: selectedFilter.value == filter
+                        ? TextStyle(
+                            color: context.theme.appColors.primaryAccent,
+                          )
+                        : null,
+                  ),
+                  active: selectedFilter.value == filter,
                 ),
-                active: selectedFilter.value == filter,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
