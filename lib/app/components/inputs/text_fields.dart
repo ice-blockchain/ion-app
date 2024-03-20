@@ -67,11 +67,17 @@ class _InputFieldState extends State<InputField> {
   void initState() {
     super.initState();
     widget._controller.onInit();
+    widget._controller.focusNode.addListener(_handleFocusChange);
+  }
+
+  void _handleFocusChange() {
+    setState(() {});
   }
 
   @override
   void dispose() {
     widget._controller.focusNode.dispose();
+    widget._controller.focusNode.removeListener(_handleFocusChange);
     super.dispose();
   }
 
@@ -257,7 +263,9 @@ class InputFormField extends FormField<String> {
                         child: Text(
                           label,
                           style: context.theme.appTextThemes.body.copyWith(
-                            color: context.theme.appColors.tertararyText,
+                            color: controller.focusNode.hasFocus
+                                ? context.theme.appColors.primaryAccent
+                                : context.theme.appColors.tertararyText,
                           ),
                         ),
                       ),
