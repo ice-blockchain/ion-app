@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -10,7 +11,6 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 class CheckEmail extends IceSimplePage {
   const CheckEmail(super._route, super.payload);
@@ -23,7 +23,7 @@ class CheckEmail extends IceSimplePage {
     final TextEditingController textEditingController =
         TextEditingController(text: '1234');
 
-    return SheetContentScaffold(
+    return SheetContent(
       body: ScreenSideOffset.large(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/search_input/search_input.dart';
+import 'package:ice/app/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -12,7 +13,6 @@ import 'package:ice/app/features/auth/views/components/title_description_header/
 import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 class DiscoverCreators extends IceSimplePage {
   const DiscoverCreators(super.route, super.payload);
@@ -27,6 +27,7 @@ class DiscoverCreators extends IceSimplePage {
 
     final ValueNotifier<List<User>> creatorsNotifier =
         useState<List<User>>(<User>[]);
+
     useEffect(
       () {
         creatorsNotifier.value = creators;
@@ -55,7 +56,7 @@ class DiscoverCreators extends IceSimplePage {
       followedCreatorsNotifier.value = newFollowedCreators;
     }
 
-    return SheetContentScaffold(
+    return SheetContent(
       body: Container(
         width: double.infinity,
         color: context.theme.appColors.secondaryBackground,
@@ -180,19 +181,20 @@ class DiscoverCreators extends IceSimplePage {
                                     tintColor: isFollowing
                                         ? null
                                         : context.theme.appColors.primaryAccent,
-                                    label: Text(
-                                      isFollowing
-                                          ? context.i18n.button_following
-                                          : context.i18n.button_follow,
-                                      style: context.theme.appTextThemes.caption
-                                          .copyWith(
-                                        color: isFollowing
-                                            ? context.theme.appColors
-                                                .secondaryBackground
-                                            : context
-                                                .theme.appColors.primaryAccent,
-                                      ),
-                                    ),
+                                    // TODO: check why its not working
+                                    // label: Text(
+                                    //   isFollowing
+                                    //       ? context.i18n.button_following
+                                    //       : context.i18n.button_follow,
+                                    //   style: context.theme.appTextThemes.caption
+                                    //       .copyWith(
+                                    //     color: isFollowing
+                                    //         ? context.theme.appColors
+                                    //             .secondaryBackground
+                                    //         : context
+                                    //             .theme.appColors.primaryAccent,
+                                    //   ),
+                                    // ),
                                     mainAxisSize: MainAxisSize.max,
                                     style: OutlinedButton.styleFrom(
                                       minimumSize: Size(77.0.s, 28.0.s),

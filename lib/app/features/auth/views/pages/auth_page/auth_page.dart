@@ -146,22 +146,6 @@ class AuthPage extends IceSimplePage {
               SizedBox(
                 height: 14.0.s + MediaQuery.paddingOf(context).bottom,
               ),
-              const SecuredBy(),
-              SizedBox(
-                height: 14.0.s,
-              ),
-              const TermsPrivacy(),
-              SizedBox(
-                height: 14.0.s + MediaQuery.paddingOf(context).bottom,
-              ),
-              const SecuredBy(),
-              SizedBox(
-                height: 14.0.s,
-              ),
-              const TermsPrivacy(),
-              SizedBox(
-                height: 14.0.s + MediaQuery.paddingOf(context).bottom,
-              ),
             ],
           ),
         ),

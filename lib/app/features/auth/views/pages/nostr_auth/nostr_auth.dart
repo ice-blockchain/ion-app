@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -9,14 +10,13 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 class NostrAuth extends IceSimplePage {
   const NostrAuth(super._route, super.payload);
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    return SheetContentScaffold(
+    return SheetContent(
       body: ScreenSideOffset.large(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

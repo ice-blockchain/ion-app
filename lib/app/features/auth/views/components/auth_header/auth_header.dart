@@ -49,6 +49,7 @@ class AuthHeaderWidget extends StatelessWidget {
               .isNotEmpty, // Show the Text widget only if description is not empty
           child: Text(
             description,
+            textAlign: TextAlign.center,
             style: context.theme.appTextThemes.body2.copyWith(
               color: context.theme.appColors.tertararyText,
             ),

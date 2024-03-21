@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -11,7 +12,6 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 class EnterCode extends IceSimplePage {
   const EnterCode(super.route, super.payload);
@@ -26,7 +26,7 @@ class EnterCode extends IceSimplePage {
 
     final ValueNotifier<bool> invalidCode = useState(false);
 
-    return SheetContentScaffold(
+    return SheetContent(
       body: ScreenSideOffset.large(
         child: Container(
           alignment: Alignment.center,

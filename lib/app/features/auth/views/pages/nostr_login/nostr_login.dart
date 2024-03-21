@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_fields.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -10,7 +11,6 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/controllers/name_controller.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 class NostrLogin extends IceSimplePage {
   const NostrLogin(super._route, super.payload);
@@ -18,7 +18,7 @@ class NostrLogin extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final PrivateKeyController privateKeyController = PrivateKeyController();
-    return SheetContentScaffold(
+    return SheetContent(
       body: SingleChildScrollView(
         child: ScreenSideOffset.large(
           child: Column(
