@@ -20,8 +20,9 @@ class TrendingVideos extends HookConsumerWidget {
     final ValueNotifier<bool> loading = useState(true);
     useEffect(
       () {
-        Timer(const Duration(seconds: 3), () => loading.value = false);
-        return null;
+        final Timer timer =
+            Timer(const Duration(seconds: 3), () => loading.value = false);
+        return timer.cancel;
       },
       <Object?>[],
     );

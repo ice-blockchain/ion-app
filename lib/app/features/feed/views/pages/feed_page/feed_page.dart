@@ -3,6 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/features/feed/model/feed_category.dart';
+import 'package:ice/app/features/feed/providers/feed_category_provider.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/post_list/post_list.dart';
@@ -19,6 +21,7 @@ class FeedPage extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ScrollController scrollController = useScrollController();
+    final FeedCategory feedCategory = ref.watch(feedCategoryNotifierProvider);
 
     return PullRightMenuHandler(
       child: Scaffold(
@@ -38,8 +41,10 @@ class FeedPage extends IceSimplePage {
                     padding: EdgeInsets.only(bottom: 16.0.s, top: 3.0.s),
                     child: const Stories(),
                   ),
-                  FeedListSeparator(height: 16.0.s),
-                  const TrendingVideos(),
+                  if (feedCategory == FeedCategory.feed) ...<Widget>[
+                    FeedListSeparator(height: 16.0.s),
+                    const TrendingVideos(),
+                  ],
                   FeedListSeparator(),
                 ],
               ),
