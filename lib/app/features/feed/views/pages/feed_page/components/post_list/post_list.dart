@@ -11,11 +11,11 @@ class PostList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<PostData> posts = ref.watch(feedProvider);
+    final List<PostData> posts = ref.watch(feedNotifierProvider);
 
     useEffect(
       () {
-        ref.read(feedProvider.notifier).fetchPosts();
+        ref.read(feedNotifierProvider.notifier).fetchPosts();
         return null;
       },
       <Object?>[],

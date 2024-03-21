@@ -15,7 +15,7 @@ class Skeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
       baseColor: context.theme.appColors.primaryBackground,
-      highlightColor: context.theme.appColors.tertararyBackground,
+      highlightColor: context.theme.appColors.secondaryBackground,
       child: child,
     );
   }

@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_provider.g.dart';
 
 @riverpod
-class Feed extends _$Feed {
+class FeedNotifier extends _$FeedNotifier {
   @override
   List<PostData> build() {
     return List<PostData>.unmodifiable(<PostData>[]);
