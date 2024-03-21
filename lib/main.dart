@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/features/core/views/components/content_scaler.dart';
-import 'package:ice/app/router/components/lifecycle_watcher/lifecycle_watcher.dart';
+import 'package:ice/app/features/core/views/components/lifecycle_watcher.dart';
 import 'package:ice/app/router/hooks/use_app_router.dart';
 import 'package:ice/app/services/riverpod/root_provider_scope.dart';
 import 'package:ice/app/templates/template.dart';
