@@ -9,12 +9,12 @@ import 'package:ice/app/router/app_router_listenable.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ScaffoldWithNestedNavigation extends ConsumerWidget {
-  const ScaffoldWithNestedNavigation({
+class MainTabNavigation extends ConsumerWidget {
+  const MainTabNavigation({
     Key? key,
     required this.navigationShell,
   }) : super(
-          key: key ?? const ValueKey<String>('ScaffoldWithNestedNavigation'),
+          key: key ?? const ValueKey<String>('MainTabNavigation'),
         );
   final StatefulNavigationShell navigationShell;
 
