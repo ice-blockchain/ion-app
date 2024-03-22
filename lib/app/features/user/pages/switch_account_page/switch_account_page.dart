@@ -5,7 +5,8 @@ import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/components/accounts_list/accounts_list.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/components/actions_list/actions_list.dart';
-import 'package:ice/app/router/components/closable_modal_header/closable_modal_header.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class SwitchAccountPage extends IceSimplePage {
@@ -14,19 +15,21 @@ class SwitchAccountPage extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return SheetContentScaffold(
-      body: ScreenSideOffset.small(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ClosableModalHeader(
-                title: context.i18n.profile_switch_user_header,
-              ),
-              const AccountsList(),
-              const ActionsList(),
-              SizedBox(height: MediaQuery.paddingOf(context).bottom),
-            ],
-          ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            NavigationAppBar.modal(
+              showBackButton: false,
+              title: context.i18n.profile_switch_user_header,
+              actions: const <Widget>[
+                NavigationCloseButton(),
+              ],
+            ),
+            ScreenSideOffset.small(child: const AccountsList()),
+            ScreenSideOffset.small(child: const ActionsList()),
+            SizedBox(height: MediaQuery.paddingOf(context).bottom),
+          ],
         ),
       ),
     );

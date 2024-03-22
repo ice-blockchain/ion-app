@@ -4,10 +4,10 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/constants.dart';
 import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/constants.dart';
 
 class NftHeaderLayoutAction extends HookConsumerWidget {
   const NftHeaderLayoutAction({
@@ -25,7 +25,7 @@ class NftHeaderLayoutAction extends HookConsumerWidget {
         TextButton(
           onPressed: () {
             ref
-                .watch(userPreferencesNotifierProvider.notifier)
+                .read(userPreferencesNotifierProvider.notifier)
                 .setNftLayoutType(NftLayoutType.grid);
           },
           child: Padding(
