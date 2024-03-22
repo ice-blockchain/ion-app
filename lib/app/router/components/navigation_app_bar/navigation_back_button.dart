@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NavigationBackButton extends StatelessWidget {
@@ -13,7 +13,7 @@ class NavigationBackButton extends StatelessWidget {
 
   static double get iconSize => 24.0.s;
 
-  static double get totalSize => iconSize + Constants.hitSlop * 2;
+  static double get totalSize => iconSize + UiConstants.hitSlop * 2;
 
   @override
   Widget build(BuildContext context) {

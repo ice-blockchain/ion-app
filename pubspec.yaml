@@ -11,7 +11,7 @@ environment:
 dependencies:
   cached_network_image: ^3.3.1
   cupertino_icons: ^1.0.6
-  email_validator: "^2.1.16"
+  email_validator: ^2.1.16
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.1.0
@@ -34,6 +34,7 @@ dependencies:
   pin_code_fields: ^8.0.1
   riverpod_annotation: ^2.1.4
   shared_preferences: ^2.2.2
+  shimmer: ^3.0.0
   smooth_sheets: ^0.3.4
   timeago: ^3.6.1
   timeago_flutter: ^3.6.0

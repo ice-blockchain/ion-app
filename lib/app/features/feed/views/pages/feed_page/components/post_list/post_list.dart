@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/feed/components/post/post.dart';
 import 'package:ice/app/features/feed/model/post_data.dart';
 import 'package:ice/app/features/feed/providers/feed_provider.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/list_separator/list_separator.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/post_list/components/post_list.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/post_list/components/post_list_skeleton.dart';
 
-class PostList extends HookConsumerWidget {
-  const PostList({super.key});
+class Posts extends HookConsumerWidget {
+  const Posts({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<PostData> posts = ref.watch(feedProvider);
+    final AsyncValue<List<PostData>> posts = ref.watch(feedNotifierProvider);
 
     useEffect(
       () {
-        ref.read(feedProvider.notifier).fetchPosts();
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ref.read(feedNotifierProvider.notifier).fetchPosts(),
+        );
         return null;
       },
       <Object?>[],
     );
 
-    return SliverList.separated(
-      itemCount: posts.length,
-      separatorBuilder: (BuildContext context, int index) {
-        return FeedListSeparator();
-      },
-      itemBuilder: (BuildContext context, int index) {
-        return Post(
-          content: posts[index].body,
-        );
-      },
+    return posts.maybeWhen(
+      data: (List<PostData> data) => PostList(
+        posts: data,
+      ),
+      orElse: () => const PostListSkeleton(),
     );
   }
 }

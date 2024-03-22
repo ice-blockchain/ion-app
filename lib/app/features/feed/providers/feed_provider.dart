@@ -7,23 +7,26 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_provider.g.dart';
 
 @riverpod
-class Feed extends _$Feed {
+class FeedNotifier extends _$FeedNotifier {
   @override
-  List<PostData> build() {
-    return List<PostData>.unmodifiable(<PostData>[]);
+  AsyncValue<List<PostData>> build() {
+    return AsyncData<List<PostData>>(List<PostData>.unmodifiable(<PostData>[]));
   }
 
   Future<void> fetchPosts() async {
+    state = const AsyncLoading<List<PostData>>().copyWithPrevious(state);
     final NostrRelay relay =
         await ref.read(relaysProvider.notifier).getOrCreate(mainRelay);
     final RequestMessage requestMessage = RequestMessage()
       ..addFilter(const RequestFilter(kinds: <int>[1], limit: 20));
     final List<EventMessage> events =
         await requestEvents(requestMessage, relay);
-    state = events
-        .map(
-          (EventMessage event) => PostData(id: event.id, body: event.content),
-        )
-        .toList();
+    state = AsyncData<List<PostData>>(
+      events
+          .map(
+            (EventMessage event) => PostData(id: event.id, body: event.content),
+          )
+          .toList(),
+    );
   }
 }

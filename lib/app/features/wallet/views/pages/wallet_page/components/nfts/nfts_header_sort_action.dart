@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/constants.dart';
 import 'package:ice/app/features/user/model/nft_sorting_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -24,7 +24,7 @@ class NftHeaderSortAction extends HookConsumerWidget {
         IceRoutes.nftsSorting.go(context);
       },
       child: Padding(
-        padding: EdgeInsets.all(Constants.hitSlop),
+        padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Row(
           children: <Widget>[
             Text(

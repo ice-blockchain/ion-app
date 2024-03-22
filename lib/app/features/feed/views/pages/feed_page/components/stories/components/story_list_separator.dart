@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/num.dart';
 
-class FiltersSeparator extends StatelessWidget {
-  const FiltersSeparator({super.key});
+class StoryListSeparator extends StatelessWidget {
+  const StoryListSeparator({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 12.0.s,
-    );
+    return SizedBox(width: 12.0.s);
   }
 }

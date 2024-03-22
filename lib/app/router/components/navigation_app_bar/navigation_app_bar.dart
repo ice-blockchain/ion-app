@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/constants.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_back_button.dart';
 
 class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -85,7 +85,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
       height: useScreenTopOffset ? screenHeaderHeight : modalHeaderHeight,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: ScreenSideOffset.defaultSmallMargin - Constants.hitSlop,
+          horizontal: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
         ),
         child: appBarContent,
       ),
