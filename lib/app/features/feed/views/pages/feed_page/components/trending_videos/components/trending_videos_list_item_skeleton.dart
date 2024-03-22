@@ -3,6 +3,7 @@ import 'package:ice/app/extensions/num.dart';
 
 class TrendingVideoListItemSkeleton extends StatelessWidget {
   const TrendingVideoListItemSkeleton({
+    super.key,
     required this.itemSize,
   });
 
