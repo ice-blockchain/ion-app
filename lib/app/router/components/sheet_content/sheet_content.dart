@@ -23,6 +23,8 @@ class SheetContent extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: topPadding),
       child: SheetContentScaffold(
+        backgroundColor:
+            backgroundColor ?? context.theme.appColors.primaryBackground,
         body: Container(
           color: backgroundColor ?? context.theme.appColors.primaryBackground,
           transform: Matrix4.translationValues(0, -topPadding, 0),
