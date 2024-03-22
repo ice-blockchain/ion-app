@@ -21,6 +21,15 @@ class PostList extends HookConsumerWidget {
       <Object?>[],
     );
 
+    // return SliverToBoxAdapter(
+    //   child: Skeleton(
+    //     child: SeparatedColumn(
+    //       separator: FeedListSeparator(),
+    //       children: const <Widget>[PostSkeleton()],
+    //     ),
+    //   ),
+    // );
+
     return SliverList.separated(
       itemCount: posts.length,
       separatorBuilder: (BuildContext context, int index) {

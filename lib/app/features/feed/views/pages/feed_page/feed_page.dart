@@ -37,15 +37,12 @@ class FeedPage extends IceSimplePage {
             SliverToBoxAdapter(
               child: Column(
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 16.0.s, top: 3.0.s),
-                    child: const Stories(),
-                  ),
+                  const Stories(),
+                  FeedListSeparator(height: 16.0.s),
                   if (feedCategory == FeedCategory.feed) ...<Widget>[
-                    FeedListSeparator(height: 16.0.s),
                     const TrendingVideos(),
+                    FeedListSeparator(),
                   ],
-                  FeedListSeparator(),
                 ],
               ),
             ),
