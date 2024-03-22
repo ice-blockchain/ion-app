@@ -5,6 +5,7 @@ import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/constants.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_back_button.dart';
 
 class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -50,7 +51,9 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
       );
 
   static double get modalHeaderHeight => 60.0.s;
+
   static double get screenHeaderHeight => 56.0.s;
+
   static double get actionButtonSide => 24.0.s;
 
   final String title;
@@ -63,20 +66,13 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final Widget appBarContent = NavigationToolbar(
       leading: showBackButton
-          ? Container(
-              transform: Matrix4.translationValues(
-                -NavigationBackButton.hitSlop,
-                0,
-                0,
-              ),
-              child: NavigationBackButton(() {
-                context.pop();
-              }),
-            )
+          ? NavigationBackButton(() {
+              context.pop();
+            })
           : null,
       middle: Text(
         title,
-        style: context.theme.appTextThemes.subtitle2
+        style: context.theme.appTextThemes.subtitle
             .copyWith(color: context.theme.appColors.primaryText),
       ),
       trailing: actions != null && actions!.isNotEmpty
@@ -87,7 +83,12 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     final Widget appBar = Container(
       color: context.theme.appColors.secondaryBackground,
       height: useScreenTopOffset ? screenHeaderHeight : modalHeaderHeight,
-      child: ScreenSideOffset.small(child: appBarContent),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: ScreenSideOffset.defaultSmallMargin - Constants.hitSlop,
+        ),
+        child: appBarContent,
+      ),
     );
 
     return useScreenTopOffset

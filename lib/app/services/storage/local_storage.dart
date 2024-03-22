@@ -1,3 +1,4 @@
+import 'package:ice/app/extensions/enum.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
@@ -29,5 +30,26 @@ class LocalStorage {
 
   static String? getString(String key) {
     return _prefs.getString(key);
+  }
+
+  static Future<bool> setEnum<T extends Enum>(String key, T value) {
+    return _prefs.setString(key, value.toShortString());
+  }
+
+  // Get an enum value
+  static T getEnum<T extends Enum>(
+    String key,
+    List<T> enumValues, {
+    required T defaultValue,
+  }) {
+    final String? stringValue = _prefs.getString(key);
+    if (stringValue == null) {
+      return defaultValue;
+    }
+    try {
+      return EnumExtensions.fromShortString(enumValues, stringValue);
+    } catch (e) {
+      return defaultValue;
+    }
   }
 }

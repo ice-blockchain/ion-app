@@ -1,3 +1,5 @@
+import 'package:ice/app/features/user/model/nft_layout_type.dart';
+import 'package:ice/app/features/user/model/nft_sorting_type.dart';
 import 'package:ice/app/features/user/model/user_preferences.dart';
 import 'package:ice/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -7,19 +9,33 @@ part 'user_preferences_provider.g.dart';
 @Riverpod(keepAlive: true)
 class UserPreferencesNotifier extends _$UserPreferencesNotifier {
   static String isBalanceVisibleKey = 'UserPreferences:isBalanceVisible';
-  static String isWalletValuesVisibleKey =
-      'UserPreferences:isWalletValuesVisible';
+  static String isZeroValueAssetsVisibleKey =
+      'UserPreferences:isZeroValueAssetsVisible';
+  static String nftLayoutTypeKey = 'UserPreferences:nftLayoutType';
+  static String nftSortingTypeKey = 'UserPreferences:nftSortingType';
 
   @override
   UserPreferences build() {
     final bool isBalanceVisible =
         LocalStorage.getBool(isBalanceVisibleKey, defaultValue: true);
-    final bool isWalletValuesVisible =
-        LocalStorage.getBool(isWalletValuesVisibleKey, defaultValue: true);
+    final bool isZeroValueAssetsVisible =
+        LocalStorage.getBool(isZeroValueAssetsVisibleKey, defaultValue: true);
+    final NftLayoutType nftLayoutType = LocalStorage.getEnum<NftLayoutType>(
+      nftLayoutTypeKey,
+      NftLayoutType.values,
+      defaultValue: NftLayoutType.list,
+    );
+    final NftSortingType nftSortingType = LocalStorage.getEnum<NftSortingType>(
+      nftSortingTypeKey,
+      NftSortingType.values,
+      defaultValue: NftSortingType.desc,
+    );
 
     return UserPreferences(
       isBalanceVisible: isBalanceVisible,
-      isWalletValuesVisible: isWalletValuesVisible,
+      isZeroValueAssetsVisible: isZeroValueAssetsVisible,
+      nftLayoutType: nftLayoutType,
+      nftSortingType: nftSortingType,
     );
   }
 
@@ -28,8 +44,33 @@ class UserPreferencesNotifier extends _$UserPreferencesNotifier {
     LocalStorage.setBool(isBalanceVisibleKey, state.isBalanceVisible);
   }
 
-  void switchWalletValuesVisibility() {
-    state = state.copyWith(isWalletValuesVisible: !state.isWalletValuesVisible);
-    LocalStorage.setBool(isWalletValuesVisibleKey, state.isWalletValuesVisible);
+  void switchZeroValueAssetsVisibility() {
+    state = state.copyWith(
+      isZeroValueAssetsVisible: !state.isZeroValueAssetsVisible,
+    );
+    LocalStorage.setBool(
+      isZeroValueAssetsVisibleKey,
+      state.isZeroValueAssetsVisible,
+    );
+  }
+
+  void setNftLayoutType(NftLayoutType newNftLayoutType) {
+    state = state.copyWith(
+      nftLayoutType: newNftLayoutType,
+    );
+    LocalStorage.setEnum<NftLayoutType>(
+      nftLayoutTypeKey,
+      newNftLayoutType,
+    );
+  }
+
+  void setNftSortingType(NftSortingType newNftSortingType) {
+    state = state.copyWith(
+      nftSortingType: newNftSortingType,
+    );
+    LocalStorage.setEnum<NftSortingType>(
+      nftSortingTypeKey,
+      newNftSortingType,
+    );
   }
 }

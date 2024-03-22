@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ice/app/features/user/model/nft_layout_type.dart';
+import 'package:ice/app/features/user/model/nft_sorting_type.dart';
 
 part 'user_preferences.freezed.dart';
 
@@ -6,6 +8,8 @@ part 'user_preferences.freezed.dart';
 class UserPreferences with _$UserPreferences {
   const factory UserPreferences({
     required bool isBalanceVisible,
-    required bool isWalletValuesVisible,
+    required bool isZeroValueAssetsVisible,
+    required NftLayoutType nftLayoutType,
+    required NftSortingType nftSortingType,
   }) = _UserPreferences;
 }

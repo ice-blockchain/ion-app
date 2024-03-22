@@ -19,7 +19,7 @@ class CoinItem extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool isWalletValuesVisible = isWalletValuesVisibleSelector(ref);
+    final bool isBalanceVisible = isBalanceVisibleSelector(ref);
     return ListItem(
       title: Text(coinData.name),
       subtitle: Text(coinData.abbreviation),
@@ -32,12 +32,14 @@ class CoinItem extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Text(
-            isWalletValuesVisible ? coinData.amount.toString() : '****',
+            isBalanceVisible ? coinData.amount.toString() : '****',
+            style: context.theme.appTextThemes.body
+                .copyWith(color: context.theme.appColors.primaryText),
           ),
           Text(
-            isWalletValuesVisible
-                ? formatToCurrency(coinData.balance)
-                : '******',
+            isBalanceVisible ? formatToCurrency(coinData.balance) : '******',
+            style: context.theme.appTextThemes.caption3
+                .copyWith(color: context.theme.appColors.secondaryText),
           ),
         ],
       ),
