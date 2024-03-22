@@ -7,29 +7,32 @@ class PostSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(
-            top: 14.5.s,
-            bottom: 10.5.s,
-          ),
-          child: Container(
-            height: 32.0.s,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0.s),
-              color: Colors.white,
+    return Padding(
+      padding: EdgeInsets.only(bottom: 10.0.s),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+              top: 14.5.s,
+              bottom: 10.5.s,
+            ),
+            child: Container(
+              height: 32.0.s,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0.s),
+                color: Colors.white,
+              ),
             ),
           ),
-        ),
-        const PostSkeletonText(widthFactor: 0.8),
-        const PostSkeletonText(),
-        const PostSkeletonText(),
-        const PostSkeletonText(
-          widthFactor: 0.4,
-        ),
-      ],
+          const PostSkeletonText(widthFactor: 0.8),
+          const PostSkeletonText(),
+          const PostSkeletonText(),
+          const PostSkeletonText(
+            widthFactor: 0.4,
+          ),
+        ],
+      ),
     );
   }
 }

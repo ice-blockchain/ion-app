@@ -46,7 +46,7 @@ class FeedPage extends IceSimplePage {
                 ],
               ),
             ),
-            const PostList(),
+            const Posts(),
           ],
         ),
       ),
