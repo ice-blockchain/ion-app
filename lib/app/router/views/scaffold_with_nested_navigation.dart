@@ -60,7 +60,7 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     return Container(
       height: 82.0.s,
       decoration: BoxDecoration(
-        color: context.theme.appColors.onPrimaryAccent,
+        color: context.theme.appColors.secondaryBackground,
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: context.theme.appColors.darkBlue.withOpacity(0.05),
@@ -130,26 +130,18 @@ class ScaffoldWithNestedNavigation extends ConsumerWidget {
     required VoidCallback onTap,
     required Widget child,
   }) {
-    final Widget content = ColoredBox(
-      color: Colors
-          .transparent, // A hack to push the box for maximum boundaries yet having flex parent
-      child: Center(
-        child: child,
-      ),
-    );
-
     if (ripple) {
-      return Material(
-        child: InkWell(
-          onTap: onTap,
-          child: content,
+      return SizedBox.expand(
+        child: IconButton(
+          onPressed: onTap,
+          icon: child,
         ),
       );
     }
 
     return GestureDetector(
       onTap: onTap,
-      child: content,
+      child: SizedBox.expand(child: child),
     );
   }
 }
