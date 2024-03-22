@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/constants.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_header_layout_action.dart';
@@ -26,9 +26,9 @@ class NftsTabHeader extends HookConsumerWidget {
     return SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.only(
-          bottom: 16.0.s - Constants.hitSlop,
-          left: ScreenSideOffset.defaultSmallMargin - Constants.hitSlop,
-          right: ScreenSideOffset.defaultSmallMargin - Constants.hitSlop,
+          bottom: 16.0.s - UiConstants.hitSlop,
+          left: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
+          right: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
         ),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

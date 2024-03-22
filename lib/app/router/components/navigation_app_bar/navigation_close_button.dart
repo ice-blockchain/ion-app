@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/constants.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NavigationCloseButton extends StatelessWidget {
@@ -13,7 +13,7 @@ class NavigationCloseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       child: Padding(
-        padding: EdgeInsets.all(Constants.hitSlop),
+        padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Assets.images.icons.iconSheetClose.icon(
           color: context.theme.appColors.tertararyText,
         ),

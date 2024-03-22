@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/constants.dart';
 import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
@@ -30,10 +30,10 @@ class NftHeaderLayoutAction extends HookConsumerWidget {
           },
           child: Padding(
             padding: EdgeInsets.only(
-              top: Constants.hitSlop,
-              left: Constants.hitSlop,
+              top: UiConstants.hitSlop,
+              left: UiConstants.hitSlop,
               right: 7.0.s,
-              bottom: Constants.hitSlop,
+              bottom: UiConstants.hitSlop,
             ),
             child: NftLayoutType.grid.iconAsset.icon(
               color: NftLayoutType.grid == nftLayoutType
@@ -51,10 +51,10 @@ class NftHeaderLayoutAction extends HookConsumerWidget {
           },
           child: Padding(
             padding: EdgeInsets.only(
-              top: Constants.hitSlop,
-              right: Constants.hitSlop,
+              top: UiConstants.hitSlop,
+              right: UiConstants.hitSlop,
               left: 7.0.s,
-              bottom: Constants.hitSlop,
+              bottom: UiConstants.hitSlop,
             ),
             child: NftLayoutType.list.iconAsset.icon(
               color: NftLayoutType.list == nftLayoutType

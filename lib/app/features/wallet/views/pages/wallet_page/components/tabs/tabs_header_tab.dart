@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/constants.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
 class WalletTabsHeaderTab extends StatelessWidget {
@@ -27,7 +27,7 @@ class WalletTabsHeaderTab extends StatelessWidget {
     return TextButton(
       onPressed: onTap,
       child: Padding(
-        padding: EdgeInsets.all(Constants.hitSlop),
+        padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Text(
           tabType.getTitle(context),
           style: context.theme.appTextThemes.title.copyWith(
