@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
+import 'package:ice/app/components/inputs/text_input/components/text_input_text_button.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -15,77 +16,86 @@ final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   type: TextInput,
 )
 Widget regularTextInputUseCase(BuildContext context) {
-  return Center(
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            TextInput(
-              labelText: 'Basic text input',
-            ),
-            TextInput(
-              enabled: false,
-              labelText: 'Disabled',
-            ),
-            TextInput(
-              verified: true,
-              labelText: 'Validated',
-            ),
-            TextInput(
-              validator: (String? v) {
-                if (v.isEmpty) return '';
-                if (!EmailValidator.validate(v!)) {
-                  return 'Invalid email';
-                }
-                return null;
-              },
-              labelText: 'With email validator',
-            ),
-            TextInput(
-              maxLines: 2,
-              minLines: 2,
-              labelText: 'Multiline',
-              initialValue:
-                  '0x93956a5688078e8f25df21ec0f24fd9fd7baf09545645645745',
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 5.0.s, horizontal: 16.0.s),
-            ),
-            TextInput(
-              labelText: 'Basic text input with prefix icon',
-              prefixIcon: TextInputIcons(
-                icons: <Widget>[
-                  Assets.images.icons.iconBadgeCompany.icon(),
-                ],
-                hasRightDivider: true,
+  return Scaffold(
+    body: Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              TextInput(
+                labelText: 'Basic text input',
               ),
-            ),
-            TextInput(
-              labelText: 'Basic text input with suffix buttons',
-              suffixIcon: TextInputIcons(
-                icons: <Widget>[
-                  IconButton(
-                    icon: Assets.images.icons.iconBlockEyeOn.icon(),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: Assets.images.icons.iconArrowDown.icon(),
-                    onPressed: () {},
-                  ),
-                ],
-                hasLeftDivider: true,
+              TextInput(
+                enabled: false,
+                labelText: 'Disabled',
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false otherwise.
-                if (_formKey.currentState!.validate()) {}
-              },
-              child: const Text('Submit'),
-            ),
-          ],
+              TextInput(
+                verified: true,
+                labelText: 'Validated',
+              ),
+              TextInput(
+                validator: (String? v) {
+                  if (v.isEmpty) return '';
+                  if (!EmailValidator.validate(v!)) {
+                    return 'Invalid email';
+                  }
+                  return null;
+                },
+                labelText: 'With email validator',
+              ),
+              TextInput(
+                maxLines: 2,
+                minLines: 2,
+                labelText: 'Multiline',
+                initialValue:
+                    '0x93956a5688078e8f25df21ec0f24fd9fd7baf09545645645745',
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 5.0.s, horizontal: 16.0.s),
+              ),
+              TextInput(
+                labelText: 'Basic text input with prefix icon',
+                prefixIcon: TextInputIcons(
+                  icons: <Widget>[
+                    Assets.images.icons.iconBadgeCompany.icon(),
+                  ],
+                  hasRightDivider: true,
+                ),
+              ),
+              TextInput(
+                labelText: 'Basic text input with suffix buttons',
+                suffixIcon: TextInputIcons(
+                  icons: <Widget>[
+                    IconButton(
+                      icon: Assets.images.icons.iconBlockEyeOn.icon(),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: Assets.images.icons.iconArrowDown.icon(),
+                      onPressed: () {},
+                    ),
+                  ],
+                  hasLeftDivider: true,
+                ),
+              ),
+              TextInput(
+                labelText: 'Basic text input with suffix button',
+                suffixIcon: TextInputTextButton(
+                  onPressed: () {},
+                  label: 'max',
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Validate returns true if the form is valid, or false otherwise.
+                  if (_formKey.currentState!.validate()) {}
+                },
+                child: const Text('Submit'),
+              ),
+            ],
+          ),
         ),
       ),
     ),
