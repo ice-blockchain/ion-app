@@ -24,13 +24,7 @@ class TextInput extends HookWidget {
     this.onChanged,
     EdgeInsetsGeometry? contentPadding,
   }) : contentPadding = contentPadding ??
-            EdgeInsets.symmetric(
-              vertical: defaultContentVerticalOffset,
-              horizontal: defaultContentHorizontalOffset,
-            );
-
-  static double get defaultContentHorizontalOffset => 16.0.s;
-  static double get defaultContentVerticalOffset => 13.0.s;
+            EdgeInsets.symmetric(vertical: 13.0.s, horizontal: 16.0.s);
 
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;
@@ -84,8 +78,8 @@ class TextInput extends HookWidget {
       decoration: TextInputDecoration(
         context: context,
         verified: verified,
-        suffixIcon: prefixIcon,
         prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
         errorText: errorText ?? error.value,
         contentPadding: contentPadding,
         labelText: errorText.isNotEmpty
