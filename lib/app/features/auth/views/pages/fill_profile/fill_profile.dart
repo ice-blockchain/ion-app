@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/inputs/text_fields.dart';
+import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
+import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
@@ -137,32 +138,41 @@ class FillProfile extends IceSimplePage {
               SizedBox(
                 height: 28.0.s,
               ),
-              InputField(
-                // autofocus: true,
-                leadingIcon: Assets.images.icons.iconFieldName.icon(),
-                label: context.i18n.fill_profile_input_name,
+              TextInput(
+                prefixIcon: TextInputIcons(
+                  hasRightDivider: true,
+                  icons: <Widget>[
+                    Assets.images.icons.iconFieldName.icon(),
+                  ],
+                ),
+                labelText: context.i18n.fill_profile_input_name,
                 controller: nameController.controller,
                 validator: (String? value) => validateName(value!),
-                showLeadingSeparator: true,
-                // key: nameFieldKey,
+                textInputAction: TextInputAction.next,
               ),
-              InputField(
-                leadingIcon: Assets.images.icons.iconFieldNickname.icon(),
-                label: context.i18n.fill_profile_input_nickname,
+              TextInput(
+                prefixIcon: TextInputIcons(
+                  hasRightDivider: true,
+                  icons: <Widget>[
+                    Assets.images.icons.iconFieldNickname.icon(),
+                  ],
+                ),
+                labelText: context.i18n.fill_profile_input_nickname,
                 controller: nicknameController.controller,
                 validator: (String? value) => validateNickname(value!),
-                showLeadingSeparator: true,
-                // key: nicknameFieldKey,
-                // textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.next,
               ),
-              InputField(
-                leadingIcon: Assets.images.icons.iconFieldInviter.icon(),
-                label: context.i18n.fill_profile_input_who_invited,
+              TextInput(
+                prefixIcon: TextInputIcons(
+                  hasRightDivider: true,
+                  icons: <Widget>[
+                    Assets.images.icons.iconFieldInviter.icon(),
+                  ],
+                ),
+                labelText: context.i18n.fill_profile_input_who_invited,
                 controller: inviterController.controller,
                 validator: (String? value) => validateWhoInvited(value!),
-                showLeadingSeparator: true,
-                // key: inviterFieldKey,
-                // textInputAction: TextInputAction.done
+                textInputAction: TextInputAction.done,
               ),
               SizedBox(
                 height: 20.0.s,

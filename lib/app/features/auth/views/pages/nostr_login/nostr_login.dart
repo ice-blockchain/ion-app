@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/inputs/text_fields.dart';
+import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
+import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
@@ -40,13 +41,17 @@ class NostrLogin extends IceSimplePage {
               ),
               Column(
                 children: <Widget>[
-                  InputField(
-                    leadingIcon: Assets.images.icons.iconFieldPrivatekey.icon(),
-                    label: context.i18n.nostr_login_input_private_key,
+                  TextInput(
+                    prefixIcon: TextInputIcons(
+                      hasRightDivider: true,
+                      icons: <Widget>[
+                        Assets.images.icons.iconFieldPrivatekey.icon(),
+                      ],
+                    ),
+                    labelText: context.i18n.nostr_login_input_private_key,
                     controller: privateKeyController.controller,
                     validator: (String? value) =>
                         privateKeyController.onVerify(),
-                    showLeadingSeparator: true,
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 26.0.s, bottom: 90.0.s),

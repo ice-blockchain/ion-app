@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_decoration.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -11,7 +12,9 @@ class TextInput extends HookWidget {
     super.key,
     this.controller,
     this.validator,
+    this.textInputAction,
     this.keyboardType,
+    this.inputFormatters,
     this.labelText,
     this.initialValue,
     this.errorText,
@@ -19,6 +22,7 @@ class TextInput extends HookWidget {
     this.minLines,
     this.verified = false,
     this.enabled = true,
+    this.numbersOnly = false,
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
@@ -28,8 +32,10 @@ class TextInput extends HookWidget {
 
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;
+  final TextInputAction? textInputAction;
 
   final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   final String? labelText;
   final String? errorText;
@@ -40,6 +46,7 @@ class TextInput extends HookWidget {
 
   final bool enabled;
   final bool verified;
+  final bool numbersOnly;
 
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -58,7 +65,13 @@ class TextInput extends HookWidget {
       maxLines: maxLines,
       minLines: minLines,
       enabled: enabled,
-      keyboardType: keyboardType,
+      textInputAction: textInputAction,
+      keyboardType: numbersOnly ? TextInputType.number : keyboardType,
+      inputFormatters: numbersOnly
+          ? <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly,
+            ]
+          : inputFormatters,
       style: context.theme.appTextThemes.body.copyWith(
         color: context.theme.appColors.primaryText,
       ),

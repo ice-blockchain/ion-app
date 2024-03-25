@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/inputs/text_fields.dart';
+import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
+import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
@@ -49,23 +50,31 @@ class AuthPage extends IceSimplePage {
                 ),
               ),
               if (isEmailMode)
-                InputField(
-                  leadingIcon: Assets.images.icons.iconFieldEmail.icon(
-                    color: context.theme.appColors.primaryText,
-                    size: 24.0.s,
+                TextInput(
+                  prefixIcon: TextInputIcons(
+                    hasRightDivider: true,
+                    icons: <Widget>[
+                      Assets.images.icons.iconFieldEmail.icon(
+                        color: context.theme.appColors.primaryText,
+                        size: 24.0.s,
+                      ),
+                    ],
                   ),
-                  label: context.i18n.auth_signIn_input_email,
+                  labelText: context.i18n.auth_signIn_input_email,
                   controller: emailController.controller,
                   validator: (String? value) => emailController.onVerify(),
-                  showLeadingSeparator: true,
                 ),
               if (!isEmailMode)
-                InputField(
-                  leadingIcon: CountryCodeInput(
-                    country: countries[1],
-                    onTap: () => IceRoutes.selectCountries.push(context),
+                TextInput(
+                  prefixIcon: TextInputIcons(
+                    icons: <Widget>[
+                      CountryCodeInput(
+                        country: countries[1],
+                        onTap: () => IceRoutes.selectCountries.push(context),
+                      ),
+                    ],
                   ),
-                  label: context.i18n.auth_signIn_input_phone_number,
+                  labelText: context.i18n.auth_signIn_input_phone_number,
                   controller: numberController.controller,
                   validator: (String? value) => numberController.onVerify(),
                   numbersOnly: true,

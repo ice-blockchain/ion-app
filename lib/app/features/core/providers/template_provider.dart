@@ -7,10 +7,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'template_provider.g.dart';
 
-late TemplateTheme _templateTheme;
-
-TemplateTheme get appTemplateTheme => _templateTheme;
-
 @riverpod
 class AppTemplate extends _$AppTemplate {
   @override
@@ -30,7 +26,6 @@ class AppTemplate extends _$AppTemplate {
   // ignore_for_file: avoid_manual_providers_as_generated_provider_dependency
   void _fillData(Template template) {
     ref.read(pagesProvider.notifier)._savePages(template);
-    _templateTheme = template.theme;
   }
 }
 
