@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/search_input/search_input.dart';
+import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(
