@@ -19,7 +19,7 @@ class SearchCancelButton extends StatelessWidget {
         onPressed: onPressed,
         style: TextButton.styleFrom(
           minimumSize: Size(0, 40.0.s),
-          padding: EdgeInsets.symmetric(horizontal: 12.0.s),
+          padding: EdgeInsets.only(right: 12.0.s),
         ),
         child: Text(
           context.i18n.button_cancel,

@@ -7,6 +7,8 @@ import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_header_layout_action.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_header_sort_action.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/search_bar/search_bar.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
 class NftsTabHeader extends HookConsumerWidget {
   const NftsTabHeader({
@@ -18,8 +20,13 @@ class NftsTabHeader extends HookConsumerWidget {
     final List<NftData> nfts = useFilteredWalletNfts(ref);
 
     if (nfts.isEmpty) {
-      return const SliverToBoxAdapter(
-        child: SizedBox.shrink(),
+      return SliverToBoxAdapter(
+        child: ScreenSideOffset.small(
+          child: WalletSearchBar(
+            padding: EdgeInsets.only(top: UiConstants.hitSlop),
+            tabType: WalletTabType.nfts,
+          ),
+        ),
       );
     }
 
@@ -30,12 +37,25 @@ class NftsTabHeader extends HookConsumerWidget {
           left: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
           right: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
         ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
           children: <Widget>[
-            NftHeaderSortAction(),
-            Spacer(),
-            NftHeaderLayoutAction(),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                NftHeaderSortAction(),
+                Spacer(),
+                NftHeaderLayoutAction(),
+              ],
+            ),
+            WalletSearchBar(
+              padding: EdgeInsets.only(
+                left: UiConstants.hitSlop,
+                right: UiConstants.hitSlop,
+                top: 16.0.s - UiConstants.hitSlop,
+                bottom: UiConstants.hitSlop,
+              ),
+              tabType: WalletTabType.nfts,
+            ),
           ],
         ),
       ),

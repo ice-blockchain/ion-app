@@ -10,19 +10,26 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
+void voidMethod() {}
+
 class SearchInput extends HookWidget {
   const SearchInput({
     super.key,
     required this.onTextChanged,
     this.loading = false,
+    this.onCancelSearch = voidMethod,
+    this.defaultValue = '',
   });
 
   final Function(String) onTextChanged;
+  final VoidCallback onCancelSearch;
   final bool loading;
+  final String defaultValue;
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController searchController = useTextEditingController();
+    final TextEditingController searchController =
+        useTextEditingController(text: defaultValue);
     final FocusNode focusNode = useFocusNode();
 
     final ValueNotifier<bool> showClear = useState(false);
@@ -68,14 +75,18 @@ class SearchInput extends HookWidget {
                   color: context.theme.appColors.tertararyText,
                 ),
                 prefixIcon: Padding(
-                  padding: EdgeInsets.only(left: 9.0.s, right: 5.0.s),
+                  padding: EdgeInsets.only(left: 12.0.s, right: 6.0.s),
                   child: Assets.images.icons.iconFieldSearch.icon(
                     color: context.theme.appColors.tertararyText,
                     size: 18.0.s,
                   ),
                 ),
                 suffixIcon: loading
-                    ? Assets.images.icons.iconFieldIceloader.icon(size: 20.0.s)
+                    ? Padding(
+                        padding: EdgeInsets.all(12.0.s),
+                        child: Assets.images.icons.iconFieldIceloader
+                            .icon(size: 20.0.s),
+                      )
                     : showClear.value
                         ? SearchClearButton(
                             onPressed: () => searchController.clear(),
@@ -90,7 +101,12 @@ class SearchInput extends HookWidget {
           ),
         ),
         if (focused.value)
-          SearchCancelButton(onPressed: () => focusNode.unfocus()),
+          SearchCancelButton(
+            onPressed: () {
+              onCancelSearch();
+              focusNode.unfocus();
+            },
+          ),
       ],
     );
   }
