@@ -1,5 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ice/app/components/inputs/text_input/components/text_input_clear_button.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_text_button.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
@@ -34,6 +36,7 @@ Widget regularTextInputUseCase(BuildContext context) {
               ),
               TextInput(
                 verified: true,
+                initialValue: 'Some correct value',
                 labelText: 'Validated',
               ),
               TextInput(
@@ -87,6 +90,7 @@ Widget regularTextInputUseCase(BuildContext context) {
                   label: 'max',
                 ),
               ),
+              const TextInputWithClear(),
               ElevatedButton(
                 onPressed: () {
                   // Validate returns true if the form is valid, or false otherwise.
@@ -100,4 +104,24 @@ Widget regularTextInputUseCase(BuildContext context) {
       ),
     ),
   );
+}
+
+class TextInputWithClear extends HookWidget {
+  const TextInputWithClear({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController controller = useTextEditingController();
+    return TextInput(
+      controller: controller,
+      labelText: 'With clear button',
+      suffixIcon: TextInputIcons(
+        icons: <Widget>[
+          TextInputClearButton(
+            controller: controller,
+          ),
+        ],
+      ),
+    );
+  }
 }
