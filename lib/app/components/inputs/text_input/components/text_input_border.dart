@@ -1,37 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/num.dart';
 
 class TextInputBorder extends InputBorder {
-  /// Creates a rounded rectangle outline border for an [InputDecorator].
-  ///
-  /// If the [borderSide] parameter is [BorderSide.none], it will not draw a
-  /// border. However, it will still define a shape (which you can see if
-  /// [InputDecoration.filled] is true).
-  ///
-  /// If an application does not specify a [borderSide] parameter of
-  /// value [BorderSide.none], the input decorator substitutes its own, using
-  /// [copyWith], based on the current theme and [InputDecorator.isFocused].
-  ///
-  /// The [borderRadius] parameter defaults to a value where all four
-  /// corners have a circular radius of 4.0. The [borderRadius] parameter
-  /// must not be null and the corner radii must be circular, i.e. their
-  /// [Radius.x] and [Radius.y] values must be the same.
-  ///
-  /// See also:
-  ///
-  ///  * [InputDecoration.floatingLabelBehavior], which should be set to
-  ///    [FloatingLabelBehavior.never] when the [borderSide] is
-  ///    [BorderSide.none]. If let as [FloatingLabelBehavior.auto], the label
-  ///    will extend beyond the container as if the border were still being
-  ///    drawn.
-  const TextInputBorder({
+  TextInputBorder({
     super.borderSide = const BorderSide(),
-    this.borderRadius = const BorderRadius.all(Radius.circular(4.0)),
-  });
+    BorderRadius? borderRadius,
+  }) : borderRadius = borderRadius ?? BorderRadius.all(Radius.circular(16.0.s));
 
-  /// The radii of the border's rounded rectangle corners.
-  ///
-  /// The corner radii must be circular, i.e. their [Radius.x] and [Radius.y]
-  /// values must be the same.
   final BorderRadius borderRadius;
 
   @override
@@ -66,7 +41,7 @@ class TextInputBorder extends InputBorder {
     if (a is TextInputBorder) {
       final TextInputBorder outline = a;
       return TextInputBorder(
-        borderRadius: BorderRadius.lerp(outline.borderRadius, borderRadius, t)!,
+        borderRadius: BorderRadius.lerp(outline.borderRadius, borderRadius, t),
         borderSide: BorderSide.lerp(outline.borderSide, borderSide, t),
       );
     }
@@ -78,7 +53,7 @@ class TextInputBorder extends InputBorder {
     if (b is TextInputBorder) {
       final TextInputBorder outline = b;
       return TextInputBorder(
-        borderRadius: BorderRadius.lerp(borderRadius, outline.borderRadius, t)!,
+        borderRadius: BorderRadius.lerp(borderRadius, outline.borderRadius, t),
         borderSide: BorderSide.lerp(borderSide, outline.borderSide, t),
       );
     }
@@ -114,9 +89,6 @@ class TextInputBorder extends InputBorder {
   @override
   bool get preferPaintInterior => true;
 
-  /// Draw a rounded rectangle around [rect] using [borderRadius].
-  ///
-  /// The [borderSide] defines the line's color and weight.
   @override
   void paint(
     Canvas canvas,
