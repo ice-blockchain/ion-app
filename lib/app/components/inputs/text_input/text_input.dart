@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/components/inputs/text_input/components/state_borders.dart';
+import 'package:ice/app/components/inputs/text_input/components/text_input_decoration.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/string.dart';
@@ -11,6 +11,7 @@ class TextInput extends HookWidget {
     super.key,
     this.controller,
     this.validator,
+    this.keyboardType,
     this.labelText,
     this.initialValue,
     this.errorText,
@@ -25,6 +26,8 @@ class TextInput extends HookWidget {
 
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;
+
+  final TextInputType? keyboardType;
 
   final String? labelText;
   final String? errorText;
@@ -50,6 +53,7 @@ class TextInput extends HookWidget {
       maxLines: maxLines,
       minLines: minLines,
       enabled: enabled,
+      keyboardType: keyboardType,
       style: context.theme.appTextThemes.body.copyWith(
         color: context.theme.appColors.primaryText,
       ),
@@ -66,41 +70,16 @@ class TextInput extends HookWidget {
         onChanged?.call(value);
         error.value = null;
       },
-      decoration: InputDecoration(
-        isDense: true,
+      decoration: TextInputDecoration(
+        context: context,
+        verified: verified,
         errorText: errorText ?? error.value,
         contentPadding: contentPadding,
-        enabledBorder: StateBorders.enabledBorder(context, verified: verified),
-        disabledBorder: StateBorders.disabledBorder(context),
-        focusedBorder: StateBorders.focusedBorder(context, verified: verified),
-        errorBorder: StateBorders.errorBorder(context),
-        focusedErrorBorder: StateBorders.focusedErrorBorder(context),
-        filled: true,
-        fillColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-          return states.contains(MaterialState.disabled)
-              ? context.theme.appColors.onSecondaryBackground
-              : context.theme.appColors.secondaryBackground;
-        }),
         labelText: errorText.isNotEmpty
             ? errorText
             : error.value.isNotEmpty
                 ? error.value
                 : labelText,
-        labelStyle: context.theme.appTextThemes.body.copyWith(
-          color: context.theme.appColors.tertararyText,
-        ),
-        errorStyle: const TextStyle(fontSize: 0),
-        floatingLabelStyle:
-            MaterialStateTextStyle.resolveWith((Set<MaterialState> states) {
-          return context.theme.appTextThemes.subtitle2.copyWith(
-            color: states.contains(MaterialState.error)
-                ? context.theme.appColors.attentionRed
-                : states.contains(MaterialState.focused)
-                    ? context.theme.appColors.primaryAccent
-                    : context.theme.appColors.tertararyText,
-            height: 1,
-          );
-        }),
       ),
     );
   }
