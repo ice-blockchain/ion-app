@@ -10,8 +10,12 @@ class TextInputDecoration extends InputDecoration {
     super.errorText,
     super.contentPadding,
     super.labelText,
+    super.prefixIcon,
+    super.suffixIcon,
   }) : super(
           isDense: true,
+          prefixIconConstraints: const BoxConstraints(),
+          suffixIconConstraints: const BoxConstraints(),
           enabledBorder: TextInputBorder(
             borderSide: BorderSide(
               color: verified

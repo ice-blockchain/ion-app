@@ -50,6 +50,9 @@ Widget regularTextInputUseCase(BuildContext context) {
               contentPadding:
                   EdgeInsets.symmetric(vertical: 5.0.s, horizontal: 16.0.s),
             ),
+            TextInput(
+              labelText: 'Basic text input',
+            ),
             ElevatedButton(
               onPressed: () {
                 // Validate returns true if the form is valid, or false otherwise.

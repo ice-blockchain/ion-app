@@ -19,10 +19,18 @@ class TextInput extends HookWidget {
     this.minLines,
     this.verified = false,
     this.enabled = true,
+    this.prefixIcon,
+    this.suffixIcon,
     this.onChanged,
     EdgeInsetsGeometry? contentPadding,
   }) : contentPadding = contentPadding ??
-            EdgeInsets.symmetric(vertical: 13.0.s, horizontal: 16.0.s);
+            EdgeInsets.symmetric(
+              vertical: defaultContentVerticalOffset,
+              horizontal: defaultContentHorizontalOffset,
+            );
+
+  static double get defaultContentHorizontalOffset => 16.0.s;
+  static double get defaultContentVerticalOffset => 13.0.s;
 
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;
@@ -38,6 +46,9 @@ class TextInput extends HookWidget {
 
   final bool enabled;
   final bool verified;
+
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   final EdgeInsetsGeometry? contentPadding;
 
@@ -73,6 +84,8 @@ class TextInput extends HookWidget {
       decoration: TextInputDecoration(
         context: context,
         verified: verified,
+        suffixIcon: prefixIcon,
+        prefixIcon: prefixIcon,
         errorText: errorText ?? error.value,
         contentPadding: contentPadding,
         labelText: errorText.isNotEmpty
