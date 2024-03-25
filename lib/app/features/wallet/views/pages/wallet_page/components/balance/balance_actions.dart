@@ -12,37 +12,32 @@ class BalanceActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: 14.0.s,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Expanded(
-            child: Button.compact(
-              leadingIcon: Assets.images.icons.iconButtonSend.icon(),
-              label: Text(
-                context.i18n.wallet_send,
-              ),
-              onPressed: () {},
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Expanded(
+          child: Button.compact(
+            leadingIcon: Assets.images.icons.iconButtonSend.icon(),
+            label: Text(
+              context.i18n.wallet_send,
             ),
+            onPressed: () {},
           ),
-          SizedBox(
-            width: 12.0.s,
-          ),
-          Expanded(
-            child: Button.compact(
-              type: ButtonType.outlined,
-              leadingIcon: Assets.images.icons.iconButtonReceive.icon(),
-              label: Text(
-                context.i18n.wallet_receive,
-              ),
-              onPressed: () {},
+        ),
+        SizedBox(
+          width: 12.0.s,
+        ),
+        Expanded(
+          child: Button.compact(
+            type: ButtonType.outlined,
+            leadingIcon: Assets.images.icons.iconButtonReceive.icon(),
+            label: Text(
+              context.i18n.wallet_receive,
             ),
+            onPressed: () {},
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
