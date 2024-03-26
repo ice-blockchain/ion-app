@@ -6,6 +6,7 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/auth/views/pages/intro_page/hooks/use_button_animation.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
@@ -15,6 +16,8 @@ class IntroPage extends IceSimplePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
+    final Animation<double> animation = useButtonAnimation();
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -29,15 +32,18 @@ class IntroPage extends IceSimplePage {
             left: 40.0.s,
             right: 40.0.s,
             bottom: MediaQuery.of(context).padding.bottom + 46.0.s,
-            child: Button(
-              onPressed: () {
-                IceRoutes.auth.go(context);
-              },
-              label: Text(context.i18n.button_continue),
-              leadingIcon: Assets.images.icons.iconIcelogoSecuredby
-                  .icon(color: context.theme.appColors.secondaryBackground),
-              trailingIcon: Assets.images.icons.iconButtonNext
-                  .icon(color: context.theme.appColors.secondaryBackground),
+            child: ScaleTransition(
+              scale: animation,
+              child: Button(
+                onPressed: () {
+                  IceRoutes.auth.go(context);
+                },
+                label: Text(context.i18n.button_continue),
+                leadingIcon: Assets.images.icons.iconIcelogoSecuredby
+                    .icon(color: context.theme.appColors.secondaryBackground),
+                trailingIcon: Assets.images.icons.iconButtonNext
+                    .icon(color: context.theme.appColors.secondaryBackground),
+              ),
             ),
           ),
         ],

@@ -11,7 +11,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/email_auth_form.dart';
-import 'package:ice/app/features/auth/views/pages/auth_page/components/email_phone_form.dart';
+import 'package:ice/app/features/auth/views/pages/auth_page/components/phone_auth_form.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/secured_by.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/socials.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -39,10 +39,7 @@ class AuthPage extends IceSimplePage {
                 SizedBox(
                   height: 30.0.s,
                 ),
-                if (isEmailMode.value)
-                  EmailAuthForm()
-                else
-                  const EmailPhoneForm(),
+                if (isEmailMode.value) EmailAuthForm() else PhoneAuthForm(),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 16.0.s),
                   child: Text(
