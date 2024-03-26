@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -14,18 +15,15 @@ class SecuredBy extends StatelessWidget {
       children: <Widget>[
         Text(
           context.i18n.secured_by,
-          style: context.theme.appTextThemes.caption,
+          style: context.theme.appTextThemes.caption
+              .copyWith(color: context.theme.appColors.secondaryText),
         ),
-        SizedBox(width: 5.0.s),
-        Assets.images.icons.iconIcelogoSecuredby.image(
-          width: 20.0.s,
-          height: 20.0.s,
-        ),
+        SizedBox(width: 6.0.s),
+        Assets.images.icons.iconIcelogoSecuredby.icon(size: 20.0.s),
         SizedBox(width: 3.0.s),
         Text(
           context.i18n.secured_by_ice,
-          style: context.theme.appTextThemes.headline1.copyWith(
-            fontSize: 14.0.s,
+          style: context.theme.appTextThemes.title.copyWith(
             color: context.theme.appColors.secondaryText,
           ),
         ),

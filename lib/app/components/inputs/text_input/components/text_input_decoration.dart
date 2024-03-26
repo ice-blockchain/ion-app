@@ -20,7 +20,7 @@ class TextInputDecoration extends InputDecoration {
             borderSide: BorderSide(
               color: verified
                   ? context.theme.appColors.success
-                  : context.theme.appColors.primaryBackground,
+                  : context.theme.appColors.strokeElements,
             ),
           ),
           disabledBorder: TextInputBorder(

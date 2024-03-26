@@ -82,11 +82,7 @@ class TextInput extends HookWidget {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           error.value = validatorError;
         });
-        return null;
-      },
-      onChanged: (String value) {
-        onChanged?.call(value);
-        error.value = null;
+        return validatorError;
       },
       decoration: TextInputDecoration(
         context: context,
