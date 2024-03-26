@@ -1,63 +1,57 @@
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
+import 'package:ice/generated/assets.gen.dart';
 
-const List<CoinData> mockedCoinsDataArray = <CoinData>[
+List<CoinData> mockedCoinsDataArray = <CoinData>[
   CoinData(
     abbreviation: 'BTC',
     name: 'Bitcoin',
     amount: 0.5,
     balance: 14589.42,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-10.png',
+    iconUrl: Assets.images.wallet.walletBtc,
   ),
   CoinData(
     abbreviation: 'ICE',
     name: 'ice Network',
     amount: 10000.00,
     balance: 9500.00,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-11.png',
+    iconUrl: Assets.images.wallet.walletIce,
   ),
   CoinData(
     abbreviation: 'ETH',
     name: 'Etherium',
     amount: 1.17,
     balance: 2010.35,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-12.png',
+    iconUrl: Assets.images.wallet.walletEth,
   ),
   CoinData(
     abbreviation: 'USDT',
     name: 'TetherUS',
     amount: 100.00,
     balance: 99.99,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-13.png',
+    iconUrl: Assets.images.wallet.walletUsdc,
   ),
   CoinData(
     abbreviation: 'Polygon',
     name: 'MATIC',
     amount: 1000.00,
     balance: 694.60,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
+    iconUrl: Assets.images.wallet.walletMatic,
   ),
   CoinData(
     abbreviation: 'XRP',
     name: 'XRP',
     amount: 0.00,
     balance: 0.00,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-15.png',
+    iconUrl: Assets.images.wallet.walletXrp,
   ),
   CoinData(
     abbreviation: 'LTC',
     name: 'Litecoin',
     amount: 350.00,
     balance: 589.42,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+    iconUrl: Assets.images.wallet.walletLtc,
   ),
 ];
 
@@ -124,7 +118,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
   ),
 ];
 
-const List<WalletData> mockedWalletDataArray = <WalletData>[
+List<WalletData> mockedWalletDataArray = <WalletData>[
   WalletData(
     id: '1',
     name: 'ice.wallet',
@@ -134,7 +128,7 @@ const List<WalletData> mockedWalletDataArray = <WalletData>[
     coins: mockedCoinsDataArray,
     nfts: mockedNftsDataArray,
   ),
-  WalletData(
+  const WalletData(
     id: '2',
     name: 'Airdrop wallet',
     icon:

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 part 'coin_data.freezed.dart';
 
@@ -9,6 +10,6 @@ class CoinData with _$CoinData {
     required String name,
     required double amount,
     required double balance,
-    required String iconUrl,
+    required AssetGenImage iconUrl,
   }) = _CoinData;
 }

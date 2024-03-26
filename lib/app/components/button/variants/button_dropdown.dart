@@ -24,7 +24,7 @@ class _ButtonDropdown extends Button {
               padding: leadingIcon != null
                   ? EdgeInsets.only(
                       left: 4.0.s,
-                      right: 12.0.s,
+                      right: 10.0.s,
                     )
                   : EdgeInsets.symmetric(horizontal: 14.0.s),
             ),

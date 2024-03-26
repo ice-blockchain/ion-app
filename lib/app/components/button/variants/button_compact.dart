@@ -18,7 +18,7 @@ class _ButtonCompact extends Button {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
               ),
-              minimumSize: Size(44.0.s, 44.0.s),
+              minimumSize: Size(40.0.s, 40.0.s),
             ),
           ),
         );

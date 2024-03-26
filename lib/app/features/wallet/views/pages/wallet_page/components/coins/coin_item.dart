@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -24,10 +24,7 @@ class CoinItem extends HookConsumerWidget {
       title: Text(coinData.name),
       subtitle: Text(coinData.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
-      leading: Avatar(
-        size: 36.0.s,
-        imageUrl: coinData.iconUrl,
-      ),
+      leading: coinData.iconUrl.icon(size: 36.0.s),
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[

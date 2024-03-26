@@ -25,49 +25,53 @@ class Balance extends HookConsumerWidget {
     final AssetGenImage iconAsset = isBalanceVisible
         ? Assets.images.icons.iconBlockEyeOn
         : Assets.images.icons.iconBlockEyeOff;
-    return Padding(
-      padding: EdgeInsets.only(
-        top: 10.0.s,
-        bottom: 16.0.s,
-        left: ScreenSideOffset.defaultSmallMargin,
-        right: ScreenSideOffset.defaultSmallMargin,
-      ),
+    final double hitSlop = 5.0.s;
+    return ScreenSideOffset.small(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(
-                context.i18n.wallet_balance,
-                style: context.theme.appTextThemes.subtitle2
-                    .copyWith(color: context.theme.appColors.secondaryText),
-              ),
-              TextButton(
-                child: Padding(
-                  padding: EdgeInsets.all(6.0.s),
-                  child: iconAsset.icon(
-                    color: context.theme.appColors.secondaryText,
-                  ),
-                ),
-                onPressed: () {
-                  ref
-                      .watch(userPreferencesNotifierProvider.notifier)
-                      .switchBalanceVisibility();
-                },
-              ),
-            ],
-          ),
           Padding(
-            padding: EdgeInsets.only(top: 6.0.s),
-            child: Text(
-              isBalanceVisible
-                  ? formatToCurrency(walletData.balance)
-                  : '********',
-              style: context.theme.appTextThemes.headline1
-                  .copyWith(color: context.theme.appColors.primaryText),
+            padding: EdgeInsets.only(
+              top: 6.0.s - hitSlop,
+              bottom: 8.0.s - hitSlop,
+            ),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  context.i18n.wallet_balance,
+                  style: context.theme.appTextThemes.subtitle2
+                      .copyWith(color: context.theme.appColors.secondaryText),
+                ),
+                TextButton(
+                  child: Padding(
+                    padding: EdgeInsets.all(hitSlop),
+                    child: iconAsset.icon(
+                      color: context.theme.appColors.secondaryText,
+                    ),
+                  ),
+                  onPressed: () {
+                    ref
+                        .watch(userPreferencesNotifierProvider.notifier)
+                        .switchBalanceVisibility();
+                  },
+                ),
+              ],
             ),
           ),
-          const BalanceActions(),
+          Text(
+            isBalanceVisible
+                ? formatToCurrency(walletData.balance)
+                : '********',
+            style: context.theme.appTextThemes.headline1
+                .copyWith(color: context.theme.appColors.primaryText),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 12.0.s,
+              bottom: 16.0.s,
+            ),
+            child: const BalanceActions(),
+          ),
         ],
       ),
     );
