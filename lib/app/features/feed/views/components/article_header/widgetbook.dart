@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/features/feed/components/article_header/article_header.dart';
+import 'package:ice/app/features/feed/views/components/article_header/article_header.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 

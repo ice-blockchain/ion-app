@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/features/feed/components/post/post.dart';
+import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(

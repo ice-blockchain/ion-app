@@ -4,7 +4,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/feed/components/read_time_tile/read_time_tile.dart';
+import 'package:ice/app/features/feed/views/components/read_time_tile/read_time_tile.dart';
 import 'package:ice/app/utils/image.dart';
 
 double borderRadius = 12.0.s;

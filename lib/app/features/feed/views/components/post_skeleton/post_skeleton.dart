@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/feed/components/post_skeleton/post_skeleton_text.dart';
+import 'package:ice/app/features/feed/views/components/post_skeleton/post_skeleton_text.dart';
 
 class PostSkeleton extends StatelessWidget {
   const PostSkeleton({super.key});
