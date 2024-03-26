@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
+import 'package:lottie/lottie.dart';
 
 class IntroPage extends IceSimplePage {
   const IntroPage(super._route, super.payload);
@@ -13,67 +16,31 @@ class IntroPage extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        color: context.theme.appColors.secondaryBackground,
-        child: Stack(
-          children: <Widget>[
-            // Your Lottie animation
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Assets.lottie.intro.lottie(
-                  width: double.infinity,
-                  fit: BoxFit.fitWidth,
-                  repeat: false,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 40.0.s,
-                    right: 85.0.s,
-                    bottom: 10.0.s,
-                  ),
-                  child: Text(
-                    context.i18n.intro_title,
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.w900,
-                      color: context.theme.appColors.primaryText,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 40.0.s, right: 40.0.s),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      context.i18n.intro_description,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        color: context.theme.appColors.primaryAccent,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+      body: Stack(
+        children: <Widget>[
+          Center(
+            child: Assets.lottie.intro.lottie(
+              fit: BoxFit.fitWidth,
+              frameRate: const FrameRate(60),
+              repeat: false,
             ),
-            // Positioned button
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: MediaQuery.of(context).size.height * 0.10,
-              child: Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    IceRoutes.auth.go(context);
-                  },
-                  child: Text(context.i18n.button_continue),
-                ),
-              ),
+          ),
+          Positioned(
+            left: 40.0.s,
+            right: 40.0.s,
+            bottom: MediaQuery.of(context).padding.bottom + 46.0.s,
+            child: Button(
+              onPressed: () {
+                IceRoutes.auth.go(context);
+              },
+              label: Text(context.i18n.button_continue),
+              leadingIcon: Assets.images.icons.iconIcelogoSecuredby
+                  .icon(color: context.theme.appColors.secondaryBackground),
+              trailingIcon: Assets.images.icons.iconButtonNext
+                  .icon(color: context.theme.appColors.secondaryBackground),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
