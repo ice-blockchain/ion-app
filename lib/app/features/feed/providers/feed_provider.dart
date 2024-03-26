@@ -10,7 +10,7 @@ part 'feed_provider.g.dart';
 class FeedNotifier extends _$FeedNotifier {
   @override
   AsyncValue<List<PostData>> build() {
-    return AsyncData<List<PostData>>(List<PostData>.unmodifiable(<PostData>[]));
+    return const AsyncLoading<List<PostData>>();
   }
 
   Future<void> fetchPosts() async {

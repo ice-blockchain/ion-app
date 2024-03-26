@@ -18,6 +18,7 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
+import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 
@@ -28,21 +29,16 @@ class WalletPage extends IceSimplePage {
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ScrollController scrollController = useScrollController();
     final bool? hasContactsPermission = hasContactsPermissionSelector(ref);
-    useEffect(
-      () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (hasContactsPermission == true) {
-            ref.read(contactsDataNotifierProvider.notifier).fetchContacts();
-          } else {
-            IceRoutes.allowAccess.go(context);
-          }
-        });
-        return null;
-      },
-      <Object?>[
-        hasContactsPermission,
-      ],
-    );
+
+    useOnInit(() {
+      if (hasContactsPermission == true) {
+        ref.read(contactsDataNotifierProvider.notifier).fetchContacts();
+      } else {
+        IceRoutes.allowAccess.go(context);
+      }
+    }, <Object?>[
+      hasContactsPermission,
+    ]);
 
     final ValueNotifier<WalletTabType> activeTab =
         useState<WalletTabType>(WalletTabType.coins);
