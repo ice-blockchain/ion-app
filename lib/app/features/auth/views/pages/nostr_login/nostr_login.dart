@@ -8,6 +8,7 @@ import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/controllers/name_controller.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -20,6 +21,7 @@ class NostrLogin extends IceSimplePage {
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final PrivateKeyController privateKeyController = PrivateKeyController();
     return SheetContent(
+      backgroundColor: context.theme.appColors.secondaryBackground,
       body: SingleChildScrollView(
         child: ScreenSideOffset.large(
           child: Column(
