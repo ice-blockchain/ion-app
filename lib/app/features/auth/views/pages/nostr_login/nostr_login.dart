@@ -9,10 +9,10 @@ import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/string.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NostrLogin extends IceSimplePage {
@@ -66,7 +66,7 @@ class NostrLogin extends IceSimplePage {
                                   context.i18n.nostr_login_input_private_key,
                               controller: controller,
                               validator: (String? value) {
-                                if (value.isEmpty) return '';
+                                if (!Validators.notEmpty(value)) return '';
                                 return null;
                               },
                             ),

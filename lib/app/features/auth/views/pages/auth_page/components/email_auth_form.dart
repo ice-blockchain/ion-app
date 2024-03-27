@@ -1,4 +1,3 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -8,10 +7,10 @@ import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/string.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class EmailAuthForm extends HookConsumerWidget {
@@ -40,10 +39,8 @@ class EmailAuthForm extends HookConsumerWidget {
             labelText: context.i18n.auth_signIn_input_email,
             controller: inputController,
             validator: (String? value) {
-              if (value.isEmpty) {
-                return '';
-              }
-              if (!EmailValidator.validate(value!)) {
+              if (!Validators.notEmpty(value)) return '';
+              if (!Validators.validEmail(value)) {
                 return context.i18n.email_input_invalid_email_format;
               }
               return null;
