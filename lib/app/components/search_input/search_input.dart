@@ -10,19 +10,17 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-void voidMethod() {}
-
 class SearchInput extends HookWidget {
   const SearchInput({
     super.key,
     required this.onTextChanged,
     this.loading = false,
-    this.onCancelSearch = voidMethod,
+    this.onCancelSearch,
     this.defaultValue = '',
   });
 
   final Function(String) onTextChanged;
-  final VoidCallback onCancelSearch;
+  final VoidCallback? onCancelSearch;
   final bool loading;
   final String defaultValue;
 
@@ -103,7 +101,7 @@ class SearchInput extends HookWidget {
         if (focused.value)
           SearchCancelButton(
             onPressed: () {
-              onCancelSearch();
+              onCancelSearch?.call();
               focusNode.unfocus();
             },
           ),

@@ -13,7 +13,7 @@ class WalletDataNotifier extends _$WalletDataNotifier {
   WalletDataWithLoadingState build() {
     return WalletDataWithLoadingState(
       walletData: mockedWalletDataArray[0],
-      loadingAssets: <WalletAssetType>{},
+      loadingAssets: <WalletAssetType, AsyncValue<bool>>{},
       assetSearchValues: <WalletAssetType, String>{},
     );
   }
@@ -21,7 +21,7 @@ class WalletDataNotifier extends _$WalletDataNotifier {
   set walletData(WalletData newData) {
     state = state.copyWith(
       walletData: newData,
-      loadingAssets: <WalletAssetType>{},
+      loadingAssets: <WalletAssetType, AsyncValue<bool>>{},
       assetSearchValues: <WalletAssetType, String>{},
     );
   }
@@ -52,22 +52,54 @@ class WalletDataNotifier extends _$WalletDataNotifier {
     );
   }
 
+  Map<WalletAssetType, AsyncValue<bool>> _updateLoadingAssets({
+    required AsyncValue<bool> newState,
+    required WalletAssetType assetType,
+  }) {
+    return Map<WalletAssetType, AsyncValue<bool>>.from(state.loadingAssets)
+      ..update(
+        assetType,
+        (_) => newState,
+        ifAbsent: () => newState,
+      );
+  }
+
   Future<void> _filterAssetsByName({
     required String searchValue,
     required WalletAssetType assetType,
   }) async {
-    // to emulate loading state
-    await Future<void>.delayed(const Duration(seconds: 1));
-
     state = state.copyWith(
-      walletData: switch (assetType) {
-        WalletAssetType.coin => _filterCoinsByName(searchValue: searchValue),
-        WalletAssetType.nft => _filterNftsByName(searchValue: searchValue),
-      },
-      loadingAssets: state.loadingAssets
-          .where((WalletAssetType asset) => asset != assetType)
-          .toSet(),
+      loadingAssets: _updateLoadingAssets(
+        newState: const AsyncValue<bool>.loading(),
+        assetType: assetType,
+      ),
     );
+    try {
+      // to emulate loading state
+      await Future<void>.delayed(const Duration(seconds: 1));
+
+      state = state.copyWith(
+        walletData: switch (assetType) {
+          WalletAssetType.coin => _filterCoinsByName(searchValue: searchValue),
+          WalletAssetType.nft => _filterNftsByName(searchValue: searchValue),
+        },
+        loadingAssets: _updateLoadingAssets(
+          newState: const AsyncValue<bool>.data(true),
+          assetType: assetType,
+        ),
+      );
+    } catch (e, stackTrace) {
+      state = state.copyWith(
+        walletData: switch (assetType) {
+          WalletAssetType.coin => _filterCoinsByName(searchValue: searchValue),
+          WalletAssetType.nft => _filterNftsByName(searchValue: searchValue),
+        },
+        loadingAssets: _updateLoadingAssets(
+          newState: AsyncValue<bool>.error(e, stackTrace),
+          assetType: assetType,
+        ),
+      );
+    }
   }
 
   void updateSearchValue({

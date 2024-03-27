@@ -59,8 +59,8 @@ String walletAssetSearchValueSelector(
 bool walletAssetIsLoadingSelector(WidgetRef ref, WalletAssetType assetType) {
   return ref.watch(
     walletDataNotifierProvider.select(
-      (WalletDataWithLoadingState walletData) => walletData.loadingAssets
-          .any((WalletAssetType asset) => asset == assetType),
+      (WalletDataWithLoadingState walletData) =>
+          walletData.loadingAssets[assetType]?.isLoading ?? false,
     ),
   );
 }
