@@ -24,6 +24,8 @@ import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_moda
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/switch_account_page.dart';
+import 'package:ice/app/features/wallet/model/coin_data.dart';
+import 'package:ice/app/features/wallet/views/pages/coin_details/coin_details_page.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sorting_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
@@ -150,6 +152,7 @@ enum IceRoutes<PayloadType> {
       IceRoutes.allowAccess,
       IceRoutes.nftsSorting,
       IceRoutes.walletMainModal,
+      IceRoutes.coinDetails,
     ],
   ),
   walletMainModal(
@@ -164,6 +167,7 @@ enum IceRoutes<PayloadType> {
     NftsSortingModal.new,
     type: IceRouteType.bottomSheet,
   ),
+  coinDetails<CoinData>(CoinDetailsPage.new),
   dappsDetails(
     DAppDetails.new,
     type: IceRouteType.bottomSheet,

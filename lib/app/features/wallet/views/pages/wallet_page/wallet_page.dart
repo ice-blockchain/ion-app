@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/core/providers/permissions_provider_selectors.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
@@ -59,7 +60,11 @@ class WalletPage extends IceSimplePage {
               children: <Widget>[
                 const Balance(),
                 const ContactsList(),
-                const Delimiter(),
+                Delimiter(
+                  padding: EdgeInsets.only(
+                    top: 16.0.s,
+                  ),
+                ),
                 WalletTabsHeader(
                   activeTab: activeTab.value,
                   onTabSwitch: (WalletTabType newTab) {

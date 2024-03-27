@@ -96,6 +96,7 @@
     "core_nfts",
     "core_coins",
     "core_empty_search",
+    "core_empty_transactions_history",
     "general_feed",
     "general_videos",
     "general_articles",
