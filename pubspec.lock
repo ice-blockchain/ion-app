@@ -890,8 +890,8 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "5a5a8f4b5ba24dd356d215c7f3fa52bc9bea244c"
-      url: "git@github.com:ice-blockchain/nostr-dart.git"
+      resolved-ref: c7a58483730ee43b89bf94e7908cd2f838d4fc35
+      url: "https://github.com/ice-blockchain/nostr-dart.git"
     source: git
     version: "0.0.1"
   octo_image:

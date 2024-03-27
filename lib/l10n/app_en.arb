@@ -95,6 +95,8 @@
   "core_view_all": "view all",
   "core_nfts": "NFTs",
   "core_coins": "Coins",
+  "core_empty_search": "No results found",
+  "core_coins": "Coins",
   "general_feed": "Feed",
   "general_videos": "Videos",
   "general_articles": "Articles",

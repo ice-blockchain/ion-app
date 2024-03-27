@@ -7,8 +7,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
-import 'package:ice/app/features/wallet/model/wallet_data.dart';
-import 'package:ice/app/features/wallet/providers/wallet_data_provider.dart';
+import 'package:ice/app/features/wallet/providers/wallet_data_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -20,7 +19,7 @@ class Balance extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final WalletData walletData = ref.watch(walletDataNotifierProvider);
+    final double walletBalance = walletBalanceSelector(ref);
     final bool isBalanceVisible = isBalanceVisibleSelector(ref);
     final AssetGenImage iconAsset = isBalanceVisible
         ? Assets.images.icons.iconBlockEyeOn
@@ -59,9 +58,7 @@ class Balance extends HookConsumerWidget {
             ),
           ),
           Text(
-            isBalanceVisible
-                ? formatToCurrency(walletData.balance)
-                : '********',
+            isBalanceVisible ? formatToCurrency(walletBalance) : '********',
             style: context.theme.appTextThemes.headline1
                 .copyWith(color: context.theme.appColors.primaryText),
           ),

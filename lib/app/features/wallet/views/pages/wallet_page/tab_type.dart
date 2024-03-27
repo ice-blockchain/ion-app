@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/features/wallet/model/wallet_data_with_loading_state.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 enum WalletTabType {
   coins,
   nfts;
+
+  WalletAssetType get walletAssetType {
+    return switch (this) {
+      WalletTabType.coins => WalletAssetType.coin,
+      WalletTabType.nfts => WalletAssetType.nft,
+    };
+  }
 
   AssetGenImage get emptyListAsset {
     return switch (this) {
