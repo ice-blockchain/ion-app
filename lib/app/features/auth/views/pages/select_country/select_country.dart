@@ -3,12 +3,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
+import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class SelectCountries extends IceSimplePage {
@@ -33,69 +36,66 @@ class SelectCountries extends IceSimplePage {
                     : iddCodeLower.contains('+$searchLower'));
           }).toList();
 
-    return SheetContentScaffold(
-      body: Container(
-        width: double.infinity,
-        color: context.theme.appColors.secondaryBackground,
-        child: Stack(
-          children: <Widget>[
-            NavigationAppBar.modal(
-              title: context.i18n.select_countries_nav_title,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: NavigationAppBar.modalHeaderHeight),
-              child: Column(
-                children: <Widget>[
-                  SearchInput(
-                    onTextChanged: (String value) => searchText.value = value,
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: filteredCountries.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final Country country = filteredCountries[index];
-                        return InkWell(
-                          onTap: context.pop,
-                          child: Container(
-                            height: 40.0.s,
-                            padding: EdgeInsets.symmetric(horizontal: 16.0.s),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  country.flag,
-                                  style: context.theme.appTextThemes.subtitle2,
-                                ),
-                                SizedBox(width: 16.0.s),
-                                Expanded(
-                                  child: Text(
-                                    country.name,
-                                    style: context.theme.appTextThemes.subtitle2
-                                        .copyWith(
-                                      color:
-                                          context.theme.appColors.primaryText,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  country.iddCode,
-                                  style: context.theme.appTextThemes.subtitle2
-                                      .copyWith(
-                                    color:
-                                        context.theme.appColors.secondaryText,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
+    return SheetContent(
+      backgroundColor: context.theme.appColors.secondaryBackground,
+      body: Column(
+        children: <Widget>[
+          NavigationAppBar.modal(
+            title: context.i18n.select_countries_nav_title,
+          ),
+          Expanded(
+            child: CustomScrollView(
+              slivers: <Widget>[
+                FloatingAppBar(
+                  height: 40.0.s,
+                  child: ScreenSideOffset.small(
+                    child: SearchInput(
+                      onTextChanged: (String value) => searchText.value = value,
                     ),
                   ),
-                ],
-              ),
+                ),
+                SliverList.builder(
+                  itemCount: filteredCountries.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Country country = filteredCountries[index];
+                    return InkWell(
+                      onTap: context.pop,
+                      child: Container(
+                        height: 40.0.s,
+                        padding: EdgeInsets.symmetric(horizontal: 16.0.s),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              country.flag,
+                              style: context.theme.appTextThemes.subtitle2,
+                            ),
+                            SizedBox(width: 16.0.s),
+                            Expanded(
+                              child: Text(
+                                country.name,
+                                style: context.theme.appTextThemes.subtitle2
+                                    .copyWith(
+                                  color: context.theme.appColors.primaryText,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              country.iddCode,
+                              style: context.theme.appTextThemes.subtitle2
+                                  .copyWith(
+                                color: context.theme.appColors.secondaryText,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
