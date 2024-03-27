@@ -1,3 +1,5 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/features/wallet/providers/wallet_data_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/model/wallet_page_provider_data.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,6 +12,7 @@ class WalletPageNotifier extends _$WalletPageNotifier {
   WalletPageProviderData build() {
     return const WalletPageProviderData(
       tabSearchVisibleMap: <WalletTabType, bool>{},
+      assetSearchValues: <WalletTabType, String>{},
     );
   }
 
@@ -26,5 +29,28 @@ class WalletPageNotifier extends _$WalletPageNotifier {
               ifAbsent: () => isSearchVisible,
             ),
     );
+  }
+
+  void updateSearchValue({
+    required String searchValue,
+    required WalletTabType tabType,
+    required WidgetRef ref,
+  }) {
+    final String? currentSearchValue = state.assetSearchValues[tabType];
+    state = state.copyWith(
+      assetSearchValues:
+          Map<WalletTabType, String>.from(state.assetSearchValues)
+            ..update(
+              tabType,
+              (_) => searchValue,
+              ifAbsent: () => searchValue,
+            ),
+    );
+    if (currentSearchValue != searchValue) {
+      ref.read(walletDataNotifierProvider.notifier).filterAssetsByName(
+            assetType: tabType.walletAssetType,
+            searchValue: searchValue,
+          );
+    }
   }
 }

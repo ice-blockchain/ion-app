@@ -14,7 +14,6 @@ class WalletDataNotifier extends _$WalletDataNotifier {
     return WalletDataWithLoadingState(
       walletData: mockedWalletDataArray[0],
       loadingAssets: <WalletAssetType, AsyncValue<bool>>{},
-      assetSearchValues: <WalletAssetType, String>{},
     );
   }
 
@@ -22,7 +21,6 @@ class WalletDataNotifier extends _$WalletDataNotifier {
     state = state.copyWith(
       walletData: newData,
       loadingAssets: <WalletAssetType, AsyncValue<bool>>{},
-      assetSearchValues: <WalletAssetType, String>{},
     );
   }
 
@@ -64,7 +62,7 @@ class WalletDataNotifier extends _$WalletDataNotifier {
       );
   }
 
-  Future<void> _filterAssetsByName({
+  Future<void> filterAssetsByName({
     required String searchValue,
     required WalletAssetType assetType,
   }) async {
@@ -90,34 +88,11 @@ class WalletDataNotifier extends _$WalletDataNotifier {
       );
     } catch (e, stackTrace) {
       state = state.copyWith(
-        walletData: switch (assetType) {
-          WalletAssetType.coin => _filterCoinsByName(searchValue: searchValue),
-          WalletAssetType.nft => _filterNftsByName(searchValue: searchValue),
-        },
         loadingAssets: _updateLoadingAssets(
           newState: AsyncValue<bool>.error(e, stackTrace),
           assetType: assetType,
         ),
       );
-    }
-  }
-
-  void updateSearchValue({
-    required String searchValue,
-    required WalletAssetType assetType,
-  }) {
-    final String? currentSearchValue = state.assetSearchValues[assetType];
-    state = state.copyWith(
-      assetSearchValues:
-          Map<WalletAssetType, String>.from(state.assetSearchValues)
-            ..update(
-              assetType,
-              (_) => searchValue,
-              ifAbsent: () => searchValue,
-            ),
-    );
-    if (currentSearchValue != searchValue) {
-      _filterAssetsByName(searchValue: searchValue, assetType: assetType);
     }
   }
 }

@@ -44,18 +44,6 @@ List<NftData> walletNftsSelector(WidgetRef ref) {
   );
 }
 
-String walletAssetSearchValueSelector(
-  WidgetRef ref,
-  WalletAssetType assetType,
-) {
-  return ref.watch(
-    walletDataNotifierProvider.select(
-      (WalletDataWithLoadingState walletData) =>
-          walletData.assetSearchValues[assetType] ?? '',
-    ),
-  );
-}
-
 bool walletAssetIsLoadingSelector(WidgetRef ref, WalletAssetType assetType) {
   return ref.watch(
     walletDataNotifierProvider.select(

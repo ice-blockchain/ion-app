@@ -11,6 +11,5 @@ class WalletDataWithLoadingState with _$WalletDataWithLoadingState {
   const factory WalletDataWithLoadingState({
     required WalletData walletData,
     required Map<WalletAssetType, AsyncValue<bool>> loadingAssets,
-    required Map<WalletAssetType, String> assetSearchValues,
   }) = _WalletDataWithLoadingState;
 }

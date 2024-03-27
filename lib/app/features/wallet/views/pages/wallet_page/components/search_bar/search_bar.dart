@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/search_input/search_input.dart';
 import 'package:ice/app/features/wallet/model/wallet_data_with_loading_state.dart';
-import 'package:ice/app/features/wallet/providers/wallet_data_provider.dart';
 import 'package:ice/app/features/wallet/providers/wallet_data_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
@@ -22,7 +21,7 @@ class WalletSearchBar extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final WalletAssetType assetType = tabType.walletAssetType;
     final String defaultSearchValue =
-        walletAssetSearchValueSelector(ref, assetType);
+        walletAssetSearchValueSelector(ref, tabType);
     final bool isLoading = walletAssetIsLoadingSelector(ref, assetType);
     final bool isVisible = walletTabSearchVisibleSelector(ref, tabType);
 
@@ -36,9 +35,11 @@ class WalletSearchBar extends HookConsumerWidget {
         defaultValue: defaultSearchValue,
         loading: isLoading,
         onTextChanged: (String newValue) {
-          ref
-              .read(walletDataNotifierProvider.notifier)
-              .updateSearchValue(searchValue: newValue, assetType: assetType);
+          ref.read(walletPageNotifierProvider.notifier).updateSearchValue(
+                searchValue: newValue,
+                tabType: tabType,
+                ref: ref,
+              );
         },
         onCancelSearch: () {
           ref

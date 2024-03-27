@@ -11,3 +11,14 @@ bool walletTabSearchVisibleSelector(WidgetRef ref, WalletTabType tabType) {
     ),
   );
 }
+
+String walletAssetSearchValueSelector(
+  WidgetRef ref,
+  WalletTabType tabType,
+) {
+  return ref.watch(
+    walletPageNotifierProvider.select(
+      (WalletPageProviderData data) => data.assetSearchValues[tabType] ?? '',
+    ),
+  );
+}

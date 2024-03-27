@@ -7,5 +7,6 @@ part 'wallet_page_provider_data.freezed.dart';
 class WalletPageProviderData with _$WalletPageProviderData {
   const factory WalletPageProviderData({
     required Map<WalletTabType, bool> tabSearchVisibleMap,
+    required Map<WalletTabType, String> assetSearchValues,
   }) = _WalletPageProviderData;
 }
