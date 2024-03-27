@@ -35,6 +35,7 @@
     "nostr_auth_title",
     "nostr_auth_description",
     "nostr_login_title",
+    "nostr_login_button",
     "nostr_login_description",
     "nostr_login_input_private_key",
     "select_countries_nav_title",

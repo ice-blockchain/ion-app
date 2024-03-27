@@ -35,6 +35,7 @@
   "nostr_auth_title": "Nostr",
   "nostr_auth_description": "Create an account or login using your existing one",
   "nostr_login_title": "Nostr",
+  "nostr_login_button": "Login with Nostr",
   "nostr_login_description": "Enter your Nostr private key",
   "nostr_login_input_private_key": "Your Private Key",
   "select_countries_nav_title": "Select country",
