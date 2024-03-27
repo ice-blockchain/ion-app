@@ -12,6 +12,7 @@ import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
+import 'package:ice/app/features/auth/views/pages/select_country/select_country_return_data.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -23,6 +24,7 @@ class PhoneAuthForm extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AuthState authState = ref.watch(authProvider);
+    final ValueNotifier<Country> country = useState(countries[1]);
     final TextEditingController inputController = useTextEditingController();
 
     return Form(
@@ -30,9 +32,17 @@ class PhoneAuthForm extends HookConsumerWidget {
       child: Column(
         children: <Widget>[
           TextInput(
+            prefix: Text(country.value.iddCode),
             prefixIcon: CountryCodeInput(
-              country: countries[1],
-              onTap: () => IceRoutes.selectCountries.push(context),
+              country: country.value,
+              onTap: () async {
+                final SelectCountryReturnData? data = await IceRoutes
+                    .selectCountries
+                    .push<SelectCountryReturnData>(context);
+                if (data != null) {
+                  country.value = data.country;
+                }
+              },
             ),
             labelText: context.i18n.auth_signIn_input_phone_number,
             controller: inputController,

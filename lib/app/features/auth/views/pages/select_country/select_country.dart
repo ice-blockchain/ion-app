@@ -9,10 +9,10 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
+import 'package:ice/app/features/auth/views/pages/select_country/select_country_return_data.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 class SelectCountries extends IceSimplePage {
   const SelectCountries(super._route, super.payload);
@@ -47,7 +47,7 @@ class SelectCountries extends IceSimplePage {
             child: CustomScrollView(
               slivers: <Widget>[
                 FloatingAppBar(
-                  height: 40.0.s,
+                  height: SearchInput.height,
                   child: ScreenSideOffset.small(
                     child: SearchInput(
                       onTextChanged: (String value) => searchText.value = value,
@@ -59,7 +59,8 @@ class SelectCountries extends IceSimplePage {
                   itemBuilder: (BuildContext context, int index) {
                     final Country country = filteredCountries[index];
                     return InkWell(
-                      onTap: context.pop,
+                      onTap: () => context
+                          .pop(SelectCountryReturnData(country: country)),
                       child: Container(
                         height: 40.0.s,
                         padding: EdgeInsets.symmetric(horizontal: 16.0.s),

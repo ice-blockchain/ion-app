@@ -19,6 +19,8 @@ class SearchInput extends HookWidget {
     this.defaultValue = '',
   });
 
+  static double get height => 40.0.s;
+
   final Function(String) onTextChanged;
   final VoidCallback? onCancelSearch;
   final bool loading;
@@ -45,7 +47,7 @@ class SearchInput extends HookWidget {
       children: <Widget>[
         Expanded(
           child: SizedBox(
-            height: 40.0.s,
+            height: height,
             child: TextField(
               focusNode: focusNode,
               style: context.theme.appTextThemes.body.copyWith(

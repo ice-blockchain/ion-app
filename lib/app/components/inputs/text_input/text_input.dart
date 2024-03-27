@@ -23,6 +23,7 @@ class TextInput extends HookWidget {
     this.verified = false,
     this.enabled = true,
     this.numbersOnly = false,
+    this.prefix,
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
@@ -48,6 +49,7 @@ class TextInput extends HookWidget {
   final bool verified;
   final bool numbersOnly;
 
+  final Widget? prefix;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
 
@@ -87,6 +89,7 @@ class TextInput extends HookWidget {
       decoration: TextInputDecoration(
         context: context,
         verified: verified,
+        prefix: prefix,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         errorText: errorText ?? error.value,

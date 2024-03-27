@@ -10,6 +10,7 @@ class TextInputDecoration extends InputDecoration {
     super.errorText,
     super.contentPadding,
     super.labelText,
+    super.prefix,
     super.prefixIcon,
     super.suffixIcon,
   }) : super(
@@ -49,6 +50,9 @@ class TextInputDecoration extends InputDecoration {
           }),
           labelStyle: context.theme.appTextThemes.body.copyWith(
             color: context.theme.appColors.tertararyText,
+          ),
+          prefixStyle: context.theme.appTextThemes.body.copyWith(
+            color: context.theme.appColors.primaryText,
           ),
           errorStyle: const TextStyle(fontSize: 0),
           floatingLabelStyle:

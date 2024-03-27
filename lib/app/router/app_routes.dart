@@ -189,7 +189,10 @@ enum IceRoutes<PayloadType> {
   void go(BuildContext context, {PayloadType? payload}) =>
       context.goNamed(routeName, extra: payload);
 
-  void push(BuildContext context, {PayloadType? payload}) =>
+  Future<T?> push<T extends Object?>(
+    BuildContext context, {
+    PayloadType? payload,
+  }) =>
       context.pushNamed(routeName, extra: payload);
 
   void pushReplacement(BuildContext context, {PayloadType? payload}) =>
