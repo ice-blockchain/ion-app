@@ -21,6 +21,7 @@ class EmailAuthForm extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final TextEditingController inputController = useTextEditingController();
+    final ValueNotifier<bool> loading = useState(false);
 
     return Column(
       children: <Widget>[
@@ -50,12 +51,21 @@ class EmailAuthForm extends HookConsumerWidget {
           height: 16.0.s,
         ),
         Button(
-          trailingIcon: Assets.images.icons.iconButtonNext.icon(
-            color: context.theme.appColors.onPrimaryAccent,
-          ),
-          onPressed: () {
+          disabled: loading.value,
+          trailingIcon: loading.value
+              ? const ButtonLoadingIndicator()
+              : Assets.images.icons.iconButtonNext.icon(
+                  color: context.theme.appColors.onPrimaryAccent,
+                ),
+          onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              IceRoutes.checkEmail.push(context);
+              FocusManager.instance.primaryFocus?.unfocus();
+              loading.value = true;
+              await Future<void>.delayed(const Duration(seconds: 1));
+              loading.value = false;
+              if (context.mounted) {
+                IceRoutes.checkEmail.push(context);
+              }
             }
           },
           label: Text(context.i18n.button_continue),

@@ -102,6 +102,7 @@ class SelectLanguages extends IceSimplePage {
                   label: Text(context.i18n.button_continue),
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
                     IceRoutes.discoverCreators.push(context);
                   },
                 ),

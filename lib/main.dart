@@ -1,5 +1,6 @@
 // ignore_for_file: missing_provider_scope
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
@@ -15,7 +16,8 @@ import 'package:ice/generated/app_localizations.dart';
 void main() async {
   runApp(
     const RiverpodRootProviderScope(
-      child: LifecycleWatcher(child: IceApp()),
+      child:
+          KeyboardVisibilityProvider(child: LifecycleWatcher(child: IceApp())),
     ),
   );
 }

@@ -27,6 +27,7 @@ class FillProfile extends IceSimplePage {
     final TextEditingController nameController = useTextEditingController();
     final TextEditingController nicknameController = useTextEditingController();
     final TextEditingController inviterController = useTextEditingController();
+    final ValueNotifier<bool> loading = useState(false);
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -112,10 +113,23 @@ class FillProfile extends IceSimplePage {
                         height: 26.0.s,
                       ),
                       Button(
-                        leadingIcon: Assets.images.icons.iconProfileSave.icon(),
-                        onPressed: () {
+                        disabled: loading.value,
+                        trailingIcon: loading.value
+                            ? const ButtonLoadingIndicator()
+                            : Assets.images.icons.iconProfileSave.icon(
+                                color: context.theme.appColors.onPrimaryAccent,
+                              ),
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            IceRoutes.selectLanguages.push(context);
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            loading.value = true;
+                            await Future<void>.delayed(
+                              const Duration(seconds: 1),
+                            );
+                            loading.value = false;
+                            if (context.mounted) {
+                              IceRoutes.selectLanguages.push(context);
+                            }
                           }
                         },
                         label: Text(context.i18n.button_save),

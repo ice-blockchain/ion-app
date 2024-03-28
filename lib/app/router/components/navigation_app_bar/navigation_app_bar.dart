@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
@@ -12,6 +13,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   const NavigationAppBar._({
     this.title = '',
     this.showBackButton = true,
+    this.hideKeyboardOnBack = false,
     this.onBackPress,
     this.actions,
     this.titleIcon,
@@ -42,6 +44,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     bool showBackButton = true,
     VoidCallback? onBackPress,
     List<Widget>? actions,
+    bool hideKeyboardOnBack = true,
     Key? key,
   }) =>
       NavigationAppBar._(
@@ -50,6 +53,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
         onBackPress: onBackPress,
         actions: actions,
         useScreenTopOffset: false,
+        hideKeyboardOnBack: hideKeyboardOnBack,
         key: key,
       );
 
@@ -62,6 +66,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget? titleIcon;
   final bool showBackButton;
+  final bool hideKeyboardOnBack;
   final VoidCallback? onBackPress;
   final List<Widget>? actions;
   final bool useScreenTopOffset;
@@ -76,9 +81,21 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
     final Widget appBarContent = NavigationToolbar(
       leading: showBackButton
-          ? NavigationBackButton(() {
-              context.pop();
-            })
+          ? NavigationBackButton(
+              onBackPress ??
+                  () async {
+                    if (hideKeyboardOnBack &&
+                        KeyboardVisibilityProvider.isKeyboardVisible(context)) {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      await Future<void>.delayed(const Duration(seconds: 1));
+                      if (context.mounted) {
+                        context.pop();
+                      }
+                    } else {
+                      context.pop();
+                    }
+                  },
+            )
           : null,
       middle: titleIcon != null
           ? Row(

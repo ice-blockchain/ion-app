@@ -25,7 +25,9 @@ class AuthHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        NavigationAppBar.modal(showBackButton: showBackButton),
+        NavigationAppBar.modal(
+          showBackButton: showBackButton,
+        ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 52.0.s),
           child: Column(

@@ -72,13 +72,17 @@ class EnterCode extends IceSimplePage {
                         controller: codeController,
                         errorAnimationController: errorController,
                         invalidCode: invalidCode.value,
-                        onCompleted: (String completed) {
+                        onCompleted: (String completed) async {
                           if (completed != code) {
                             invalidCode.value = true;
                             codeController.clear();
                             errorController.add(ErrorAnimationType.shake);
                           } else {
-                            IceRoutes.fillProfile.push(context);
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            Future<void>.delayed(const Duration(seconds: 1));
+                            if (context.mounted) {
+                              IceRoutes.fillProfile.pushReplacement(context);
+                            }
                           }
                         },
                         onChanged: (String text) {

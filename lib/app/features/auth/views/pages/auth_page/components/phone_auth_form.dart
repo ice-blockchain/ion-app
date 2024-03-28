@@ -8,8 +8,6 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/auth/data/models/auth_state.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country_return_data.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -23,9 +21,9 @@ class PhoneAuthForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AuthState authState = ref.watch(authProvider);
     final ValueNotifier<Country> country = useState(countries[1]);
     final TextEditingController inputController = useTextEditingController();
+    final ValueNotifier<bool> loading = useState(false);
 
     return Column(
       children: <Widget>[
@@ -58,15 +56,21 @@ class PhoneAuthForm extends HookConsumerWidget {
           height: 16.0.s,
         ),
         Button(
-          disabled: authState is AuthenticationLoading,
-          trailingIcon: authState is AuthenticationLoading
+          disabled: loading.value,
+          trailingIcon: loading.value
               ? const ButtonLoadingIndicator()
               : Assets.images.icons.iconButtonNext.icon(
                   color: context.theme.appColors.onPrimaryAccent,
                 ),
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              IceRoutes.enterCode.push(context);
+              FocusManager.instance.primaryFocus?.unfocus();
+              loading.value = true;
+              await Future<void>.delayed(const Duration(seconds: 1));
+              loading.value = false;
+              if (context.mounted) {
+                IceRoutes.enterCode.push(context);
+              }
             }
           },
           label: Text(context.i18n.button_continue),

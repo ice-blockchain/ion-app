@@ -19,6 +19,7 @@ class IntroPage extends IceSimplePage {
     final Animation<double> animation = useButtonAnimation();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
           Center(
