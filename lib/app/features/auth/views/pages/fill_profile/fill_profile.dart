@@ -12,6 +12,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/components/avatar_picker.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -113,7 +114,9 @@ class FillProfile extends IceSimplePage {
                       Button(
                         leadingIcon: Assets.images.icons.iconProfileSave.icon(),
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {}
+                          if (_formKey.currentState!.validate()) {
+                            IceRoutes.selectLanguages.push(context);
+                          }
                         },
                         label: Text(context.i18n.button_save),
                         mainAxisSize: MainAxisSize.max,

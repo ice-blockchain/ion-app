@@ -9,8 +9,7 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/auth/data/models/auth_state.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -21,7 +20,6 @@ class EmailAuthForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AuthState authState = ref.watch(authProvider);
     final TextEditingController inputController = useTextEditingController();
 
     return Column(
@@ -52,17 +50,12 @@ class EmailAuthForm extends HookConsumerWidget {
           height: 16.0.s,
         ),
         Button(
-          disabled: authState is AuthenticationLoading,
-          trailingIcon: authState is AuthenticationLoading
-              ? const ButtonLoadingIndicator()
-              : Assets.images.icons.iconButtonNext.icon(
-                  color: context.theme.appColors.onPrimaryAccent,
-                ),
+          trailingIcon: Assets.images.icons.iconButtonNext.icon(
+            color: context.theme.appColors.onPrimaryAccent,
+          ),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              ref
-                  .read(authProvider.notifier)
-                  .signIn(email: inputController.value.text, password: '123');
+              IceRoutes.checkEmail.push(context);
             }
           },
           label: Text(context.i18n.button_continue),

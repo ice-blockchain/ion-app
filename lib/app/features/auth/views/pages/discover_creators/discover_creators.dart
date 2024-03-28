@@ -8,6 +8,8 @@ import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/auth/data/models/auth_state.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
@@ -18,6 +20,8 @@ class DiscoverCreators extends IceSimplePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
+    final AuthState authState = ref.watch(authProvider);
+
     final ValueNotifier<Set<User>> followedCreators =
         useState<Set<User>>(<User>{});
 
@@ -82,9 +86,17 @@ class DiscoverCreators extends IceSimplePage {
                   bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
                 ),
                 child: Button(
+                  disabled: authState is AuthenticationLoading,
+                  trailingIcon: authState is AuthenticationLoading
+                      ? const ButtonLoadingIndicator()
+                      : null,
                   label: Text(context.i18n.button_continue),
                   mainAxisSize: MainAxisSize.max,
-                  onPressed: () {},
+                  onPressed: () {
+                    ref
+                        .read(authProvider.notifier)
+                        .signIn(email: 'foo@bar.baz', password: '123');
+                  },
                 ),
               ),
             ),

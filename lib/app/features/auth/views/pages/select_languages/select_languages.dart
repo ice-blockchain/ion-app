@@ -11,6 +11,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/language_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
@@ -100,7 +101,9 @@ class SelectLanguages extends IceSimplePage {
                 child: Button(
                   label: Text(context.i18n.button_continue),
                   mainAxisSize: MainAxisSize.max,
-                  onPressed: () {},
+                  onPressed: () {
+                    IceRoutes.discoverCreators.push(context);
+                  },
                 ),
               ),
             ),

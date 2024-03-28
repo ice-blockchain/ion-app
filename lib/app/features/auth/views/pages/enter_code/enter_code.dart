@@ -12,6 +12,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/code_fields/code_fields.dart';
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -76,6 +77,8 @@ class EnterCode extends IceSimplePage {
                             invalidCode.value = true;
                             codeController.clear();
                             errorController.add(ErrorAnimationType.shake);
+                          } else {
+                            IceRoutes.fillProfile.push(context);
                           }
                         },
                         onChanged: (String text) {

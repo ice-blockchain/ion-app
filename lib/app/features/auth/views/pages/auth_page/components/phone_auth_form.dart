@@ -66,9 +66,7 @@ class PhoneAuthForm extends HookConsumerWidget {
                 ),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              ref
-                  .read(authProvider.notifier)
-                  .signIn(email: 'foo@bar.baz', password: '123');
+              IceRoutes.enterCode.push(context);
             }
           },
           label: Text(context.i18n.button_continue),
