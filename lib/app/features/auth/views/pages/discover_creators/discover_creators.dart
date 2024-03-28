@@ -21,6 +21,8 @@ class DiscoverCreators extends IceSimplePage {
     final ValueNotifier<Set<User>> followedCreators =
         useState<Set<User>>(<User>{});
 
+    final bool mayContinue = followedCreators.value.isNotEmpty;
+
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
@@ -63,13 +65,16 @@ class DiscoverCreators extends IceSimplePage {
                 ),
                 SliverPadding(
                   padding: EdgeInsets.only(
-                    bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
+                    bottom: 16.0.s +
+                        (mayContinue
+                            ? 0
+                            : MediaQuery.paddingOf(context).bottom),
                   ),
                 ),
               ],
             ),
           ),
-          if (followedCreators.value.isNotEmpty)
+          if (mayContinue)
             ScreenSideOffset.small(
               child: Padding(
                 padding: EdgeInsets.only(

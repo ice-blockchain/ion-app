@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -12,6 +13,8 @@ class SecuredBy extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      // textBaseline: TextBaseline.alphabetic,
+      // crossAxisAlignment: CrossAxisAlignment.baseline,
       children: <Widget>[
         Text(
           context.i18n.secured_by,
@@ -21,10 +24,13 @@ class SecuredBy extends StatelessWidget {
         SizedBox(width: 6.0.s),
         Assets.images.icons.iconIcelogoSecuredby.icon(size: 20.0.s),
         SizedBox(width: 3.0.s),
-        Text(
-          context.i18n.secured_by_ice,
-          style: context.theme.appTextThemes.title.copyWith(
-            color: context.theme.appColors.secondaryText,
+        Padding(
+          padding: EdgeInsets.only(bottom: 2.0.s),
+          child: Text(
+            context.i18n.secured_by_ice,
+            style: context.theme.appTextThemes.title.copyWith(
+              color: context.theme.appColors.secondaryText,
+            ),
           ),
         ),
       ],

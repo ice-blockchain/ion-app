@@ -30,22 +30,30 @@ class CheckEmail extends IceSimplePage {
         children: <Widget>[
           AuthHeader(
             title: context.i18n.check_email_title,
-            icon: Assets.images.misc.authEnvelope.icon(
-              size: 74.0.s,
-            ),
+            icon: Assets.images.misc.authEnvelope.icon(size: 74.0.s),
             iconOffset: 12.0.s,
           ),
           ScreenSideOffset.large(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(context.i18n.check_email_subtitle),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0.s),
+                  child: Text(
+                    context.i18n.check_email_subtitle,
+                    style: context.theme.appTextThemes.subtitle2.copyWith(
+                      color: context.theme.appColors.secondaryText,
+                    ),
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       email,
-                      style: context.theme.appTextThemes.subtitle,
+                      style: context.theme.appTextThemes.subtitle.copyWith(
+                        color: context.theme.appColors.secondaryText,
+                      ),
                     ),
                     TextButton(
                       onPressed: context.pop,

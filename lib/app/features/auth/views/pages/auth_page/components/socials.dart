@@ -66,7 +66,7 @@ class Socials extends HookConsumerWidget {
 
     return ConstrainedBox(
       constraints: BoxConstraints(
-        minHeight: 107.0.s,
+        minHeight: 110.0.s,
       ),
       child: Column(
         children: <Widget>[

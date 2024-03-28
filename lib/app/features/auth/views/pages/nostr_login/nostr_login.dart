@@ -42,6 +42,7 @@ class NostrLogin extends IceSimplePage {
                     AuthHeader(
                       title: context.i18n.nostr_login_title,
                       description: context.i18n.nostr_login_description,
+                      icon: Assets.images.logo.logoIce.icon(size: 65.0.s),
                     ),
                     Image.asset(
                       Assets.images.bg.ostrichlogo.path,
@@ -83,7 +84,7 @@ class NostrLogin extends IceSimplePage {
                             ),
                             SizedBox(
                               height:
-                                  50.0.s + MediaQuery.paddingOf(context).bottom,
+                                  58.0.s + MediaQuery.paddingOf(context).bottom,
                             ),
                           ],
                         ),

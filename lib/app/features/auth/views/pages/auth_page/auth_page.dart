@@ -67,7 +67,7 @@ class AuthPage extends IceSimplePage {
                   mainAxisSize: MainAxisSize.max,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 16.0.s, bottom: 22.0.s),
+                  padding: EdgeInsets.only(top: 16.0.s, bottom: 20.0.s),
                   child: const Socials(),
                 ),
                 const SecuredBy(),

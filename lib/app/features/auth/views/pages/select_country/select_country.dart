@@ -68,7 +68,7 @@ class SelectCountries extends IceSimplePage {
                             children: <Widget>[
                               Text(
                                 country.flag,
-                                style: context.theme.appTextThemes.subtitle2,
+                                style: TextStyle(fontSize: 21.0.s),
                               ),
                               SizedBox(width: 16.0.s),
                               Expanded(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
@@ -30,6 +31,8 @@ class SelectLanguages extends IceSimplePage {
             final String nameLower = country.name.toLowerCase();
             return nameLower.contains(searchLower);
           }).toList();
+
+    final bool mayContinue = selectedLanguages.value.isNotEmpty;
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -78,12 +81,29 @@ class SelectLanguages extends IceSimplePage {
                 ),
                 SliverPadding(
                   padding: EdgeInsets.only(
-                    bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
+                    bottom: 16.0.s +
+                        (mayContinue
+                            ? 0
+                            : MediaQuery.paddingOf(context).bottom),
                   ),
                 ),
               ],
             ),
           ),
+          if (mayContinue)
+            ScreenSideOffset.small(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: 8.0.s,
+                  bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
+                ),
+                child: Button(
+                  label: Text(context.i18n.button_continue),
+                  mainAxisSize: MainAxisSize.max,
+                  onPressed: () {},
+                ),
+              ),
+            ),
         ],
       ),
     );

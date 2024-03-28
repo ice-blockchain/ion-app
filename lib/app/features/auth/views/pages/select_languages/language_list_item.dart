@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -39,7 +40,7 @@ class LanguageListItem extends StatelessWidget {
                   language.flag,
                   style: context.theme.appTextThemes.subtitle2.copyWith(
                     color: context.theme.appColors.primaryText,
-                    fontSize: 24,
+                    fontSize: 22,
                   ),
                 ),
                 SizedBox(
@@ -53,12 +54,10 @@ class LanguageListItem extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 30.0.s,
-                  child: isSelected
-                      ? Assets.images.icons.iconBlockCheckboxOn.icon()
-                      : Assets.images.icons.iconBlockCheckboxOff.icon(),
-                ),
+                if (isSelected)
+                  Assets.images.icons.iconBlockCheckboxOn.icon()
+                else
+                  Assets.images.icons.iconBlockCheckboxOff.icon(),
               ],
             ),
           ),
