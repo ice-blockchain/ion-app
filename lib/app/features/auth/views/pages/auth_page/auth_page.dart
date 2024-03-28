@@ -41,7 +41,10 @@ class AuthPage extends IceSimplePage {
                 SizedBox(
                   height: 30.0.s,
                 ),
-                if (isEmailMode.value) EmailAuthForm() else PhoneAuthForm(),
+                if (isEmailMode.value)
+                  const EmailAuthForm()
+                else
+                  const PhoneAuthForm(),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 16.0.s),
                   child: Text(

@@ -17,9 +17,9 @@ import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class PhoneAuthForm extends HookConsumerWidget {
-  PhoneAuthForm({super.key});
+  const PhoneAuthForm({super.key});
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,11 +27,11 @@ class PhoneAuthForm extends HookConsumerWidget {
     final ValueNotifier<Country> country = useState(countries[1]);
     final TextEditingController inputController = useTextEditingController();
 
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: <Widget>[
-          TextInput(
+    return Column(
+      children: <Widget>[
+        Form(
+          key: _formKey,
+          child: TextInput(
             prefix: Text(country.value.iddCode),
             prefixIcon: CountryCodeInput(
               country: country.value,
@@ -50,30 +50,31 @@ class PhoneAuthForm extends HookConsumerWidget {
               if (!Validators.notEmpty(value)) return '';
               return null;
             },
+            textInputAction: TextInputAction.done,
             numbersOnly: true,
           ),
-          SizedBox(
-            height: 16.0.s,
-          ),
-          Button(
-            disabled: authState is AuthenticationLoading,
-            trailingIcon: authState is AuthenticationLoading
-                ? const ButtonLoadingIndicator()
-                : Assets.images.icons.iconButtonNext.icon(
-                    color: context.theme.appColors.onPrimaryAccent,
-                  ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                ref
-                    .read(authProvider.notifier)
-                    .signIn(email: 'foo@bar.baz', password: '123');
-              }
-            },
-            label: Text(context.i18n.button_continue),
-            mainAxisSize: MainAxisSize.max,
-          ),
-        ],
-      ),
+        ),
+        SizedBox(
+          height: 16.0.s,
+        ),
+        Button(
+          disabled: authState is AuthenticationLoading,
+          trailingIcon: authState is AuthenticationLoading
+              ? const ButtonLoadingIndicator()
+              : Assets.images.icons.iconButtonNext.icon(
+                  color: context.theme.appColors.onPrimaryAccent,
+                ),
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              ref
+                  .read(authProvider.notifier)
+                  .signIn(email: 'foo@bar.baz', password: '123');
+            }
+          },
+          label: Text(context.i18n.button_continue),
+          mainAxisSize: MainAxisSize.max,
+        ),
+      ],
     );
   }
 }

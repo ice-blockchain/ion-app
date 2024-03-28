@@ -16,9 +16,9 @@ import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NostrLogin extends IceSimplePage {
-  NostrLogin(super._route, super.payload);
+  const NostrLogin(super._route, super.payload);
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {

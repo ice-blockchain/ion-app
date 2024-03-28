@@ -17,9 +17,9 @@ import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class FillProfile extends IceSimplePage {
-  FillProfile(super.route, super.payload);
+  const FillProfile(super.route, super.payload);
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {

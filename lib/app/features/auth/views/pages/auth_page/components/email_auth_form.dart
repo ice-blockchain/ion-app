@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
@@ -14,20 +15,20 @@ import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class EmailAuthForm extends HookConsumerWidget {
-  EmailAuthForm({super.key});
+  const EmailAuthForm({super.key});
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AuthState authState = ref.watch(authProvider);
     final TextEditingController inputController = useTextEditingController();
 
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: <Widget>[
-          TextInput(
+    return Column(
+      children: <Widget>[
+        Form(
+          key: _formKey,
+          child: TextInput(
             prefixIcon: TextInputIcons(
               hasRightDivider: true,
               icons: <Widget>[
@@ -46,28 +47,28 @@ class EmailAuthForm extends HookConsumerWidget {
               return null;
             },
           ),
-          SizedBox(
-            height: 16.0.s,
-          ),
-          Button(
-            disabled: authState is AuthenticationLoading,
-            trailingIcon: authState is AuthenticationLoading
-                ? const ButtonLoadingIndicator()
-                : Assets.images.icons.iconButtonNext.icon(
-                    color: context.theme.appColors.onPrimaryAccent,
-                  ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                ref
-                    .read(authProvider.notifier)
-                    .signIn(email: inputController.value.text, password: '123');
-              }
-            },
-            label: Text(context.i18n.button_continue),
-            mainAxisSize: MainAxisSize.max,
-          ),
-        ],
-      ),
+        ),
+        SizedBox(
+          height: 16.0.s,
+        ),
+        Button(
+          disabled: authState is AuthenticationLoading,
+          trailingIcon: authState is AuthenticationLoading
+              ? const ButtonLoadingIndicator()
+              : Assets.images.icons.iconButtonNext.icon(
+                  color: context.theme.appColors.onPrimaryAccent,
+                ),
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              ref
+                  .read(authProvider.notifier)
+                  .signIn(email: inputController.value.text, password: '123');
+            }
+          },
+          label: Text(context.i18n.button_continue),
+          mainAxisSize: MainAxisSize.max,
+        ),
+      ],
     );
   }
 }
