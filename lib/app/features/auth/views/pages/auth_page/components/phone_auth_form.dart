@@ -32,7 +32,7 @@ class PhoneAuthForm extends HookConsumerWidget {
         Form(
           key: _formKey,
           child: TextInput(
-            prefix: Text(country.value.iddCode),
+            prefix: Text('${country.value.iddCode} '),
             prefixIcon: CountryCodeInput(
               country: country.value,
               onTap: () async {
