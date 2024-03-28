@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
+import 'package:ice/app/features/auth/views/components/code_fields/code_fields.dart';
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -19,93 +22,60 @@ class EnterCode extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     const String phoneNumber = '+101234567890';
-    final TextEditingController codeController = TextEditingController();
+    const String code = '1111';
 
+    final TextEditingController codeController = useTextEditingController();
     final StreamController<ErrorAnimationType> errorController =
-        StreamController<ErrorAnimationType>();
+        useStreamController<ErrorAnimationType>();
 
     final ValueNotifier<bool> invalidCode = useState(false);
 
     return SheetContent(
-      body: ScreenSideOffset.large(
-        child: Container(
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: context.theme.appColors.secondaryBackground,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          AuthHeader(
+            title: context.i18n.enter_code_title,
+            icon: Assets.images.misc.authEnterCode.icon(
+              size: 74.0.s,
+            ),
+            iconOffset: 12.0.s,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 65.0.s,
-                  ),
-                  Image.asset(
-                    Assets.images.misc.authEnterCode.path,
-                  ),
-                  SizedBox(
-                    height: 9.0.s,
-                  ),
-                  Text(
-                    context.i18n.enter_code_title,
-                    style: context.theme.appTextThemes.headline1,
-                  ),
-                ],
+              Text(
+                context.i18n.enter_code_description,
+                style: context.theme.appTextThemes.subtitle2.copyWith(
+                  color: context.theme.appColors.secondaryText,
+                ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(context.i18n.enter_code_description),
-                  Text(
-                    phoneNumber,
-                    style: context.theme.appTextThemes.subtitle,
+              Padding(
+                padding: EdgeInsets.only(top: 5.0.s),
+                child: Text(
+                  phoneNumber,
+                  style: context.theme.appTextThemes.subtitle.copyWith(
+                    color: context.theme.appColors.secondaryText,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 30.0.s, bottom: 19.0.s),
-                    child: SizedBox(
-                      width: 248.0.s,
-                      child: PinCodeTextField(
-                        appContext: context,
-                        length: 4,
-                        animationType: AnimationType.fade,
-                        cursorColor: Colors.black,
-                        cursorWidth: 3.0.s,
-                        cursorHeight: 25.0.s,
-                        textStyle: context.theme.appTextThemes.inputFieldText,
-                        pinTheme: PinTheme(
-                          shape: PinCodeFieldShape.box,
-                          borderRadius: BorderRadius.circular(16.0.s),
-                          fieldHeight: 56.0.s,
-                          fieldWidth: 50.0.s,
-                          borderWidth: 1,
-                          inactiveColor: invalidCode.value
-                              ? context.theme.appColors.attentionRed
-                              : context.theme.appColors.strokeElements,
-                          disabledColor: context.theme.appColors.strokeElements,
-                          activeColor: invalidCode.value
-                              ? context.theme.appColors.attentionRed
-                              : context.theme.appColors.primaryAccent,
-                          errorBorderColor:
-                              context.theme.appColors.attentionRed,
-                          activeFillColor: Colors.white,
-                          inactiveFillColor: Colors.white,
-                          selectedFillColor: Colors.white,
-                          errorBorderWidth: 1,
-                          activeBorderWidth: 1,
-                          inactiveBorderWidth: 1,
-                          disabledBorderWidth: 1,
-                          selectedBorderWidth: 1,
-                        ),
-                        animationDuration: const Duration(milliseconds: 300),
-                        keyboardType: TextInputType.number,
-                        errorAnimationController: errorController,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 30.0.s),
+                child: SizedBox(
+                  height: 95.0.s,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      CodeFields(
                         controller: codeController,
+                        errorAnimationController: errorController,
+                        invalidCode: invalidCode.value,
                         onCompleted: (String completed) {
-                          if (completed != '1111') {
+                          if (completed != code) {
                             invalidCode.value = true;
-                            errorController.add(
-                              ErrorAnimationType.shake,
-                            );
-                          } else {
-                            invalidCode.value = false;
+                            codeController.clear();
+                            errorController.add(ErrorAnimationType.shake);
                           }
                         },
                         onChanged: (String text) {
@@ -113,45 +83,44 @@ class EnterCode extends IceSimplePage {
                             invalidCode.value = false;
                           }
                         },
-                        beforeTextPaste: (String? text) {
-                          return true;
-                        },
                       ),
-                    ),
+                      if (invalidCode.value)
+                        Text(
+                          context.i18n.enter_code_invalid_code,
+                          style: context.theme.appTextThemes.body.copyWith(
+                            color: context.theme.appColors.attentionRed,
+                          ),
+                        ),
+                    ],
                   ),
-                  if (invalidCode.value)
-                    Text(
-                      context.i18n.enter_code_invalid_code,
-                      style: context.theme.appTextThemes.body.copyWith(
-                        color: context.theme.appColors.attentionRed,
-                      ),
-                    ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    context.i18n.enter_code_available_in,
-                    style: context.theme.appTextThemes.subtitle2,
-                  ),
-                  Text(
-                    ' 3.0.s', // TODO: Add countdown timer
-                    style: context.theme.appTextThemes.subtitle2
-                        .copyWith(color: context.theme.appColors.primaryAccent),
-                  ),
-                ],
-              ),
-              Image.asset(
-                Assets.images.logo.logoIce.path,
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 48.0.s),
-                child: const TermsPrivacy(),
+                ),
               ),
             ],
           ),
-        ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                context.i18n.enter_code_available_in,
+                style: context.theme.appTextThemes.subtitle2.copyWith(
+                  color: context.theme.appColors.secondaryText,
+                ),
+              ),
+              Text(
+                ' 3.0.s', // TODO: Add countdown timer
+                style: context.theme.appTextThemes.subtitle2
+                    .copyWith(color: context.theme.appColors.primaryAccent),
+              ),
+            ],
+          ),
+          Assets.images.logo.logoIce.icon(size: 65.0.s),
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: 14.0.s + MediaQuery.paddingOf(context).bottom,
+            ),
+            child: const TermsPrivacy(),
+          ),
+        ],
       ),
     );
   }

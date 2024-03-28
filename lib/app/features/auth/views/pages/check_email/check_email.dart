@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
@@ -18,8 +20,8 @@ class CheckEmail extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     const String email = 'hello@ice.io';
-    final TextEditingController controller =
-        TextEditingController(text: '1234');
+    final TextEditingController codeController =
+        useTextEditingController(text: '1234');
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -28,7 +30,7 @@ class CheckEmail extends IceSimplePage {
         children: <Widget>[
           AuthHeader(
             title: context.i18n.check_email_title,
-            icon: Assets.images.misc.authEnterCode.icon(
+            icon: Assets.images.misc.authEnvelope.icon(
               size: 74.0.s,
             ),
             iconOffset: 12.0.s,
@@ -45,7 +47,11 @@ class CheckEmail extends IceSimplePage {
                       email,
                       style: context.theme.appTextThemes.subtitle,
                     ),
-                    Image.asset(Assets.images.icons.iconEditLink.path),
+                    TextButton(
+                      onPressed: context.pop,
+                      child:
+                          Assets.images.icons.iconEditLink.icon(size: 20.0.s),
+                    ),
                   ],
                 ),
                 Padding(
@@ -61,20 +67,18 @@ class CheckEmail extends IceSimplePage {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 248.0.s,
-                  child: CodeFields(
-                    controller: controller,
-                  ),
+                CodeFields(
+                  enabled: false,
+                  controller: codeController,
                 ),
               ],
             ),
           ),
-          Assets.images.logo.logoIce.icon(
-            size: 65.0.s,
-          ),
+          Assets.images.logo.logoIce.icon(size: 65.0.s),
           Padding(
-            padding: EdgeInsets.only(bottom: 48.0.s),
+            padding: EdgeInsets.only(
+              bottom: 14.0.s + MediaQuery.paddingOf(context).bottom,
+            ),
             child: const TermsPrivacy(),
           ),
         ],
