@@ -58,40 +58,46 @@ class SelectCountries extends IceSimplePage {
                   itemCount: filteredCountries.length,
                   itemBuilder: (BuildContext context, int index) {
                     final Country country = filteredCountries[index];
-                    return InkWell(
+                    return GestureDetector(
                       onTap: () => context
                           .pop(SelectCountryReturnData(country: country)),
-                      child: Container(
-                        height: 40.0.s,
-                        padding: EdgeInsets.symmetric(horizontal: 16.0.s),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              country.flag,
-                              style: context.theme.appTextThemes.subtitle2,
-                            ),
-                            SizedBox(width: 16.0.s),
-                            Expanded(
-                              child: Text(
-                                country.name,
-                                style: context.theme.appTextThemes.subtitle2
-                                    .copyWith(
-                                  color: context.theme.appColors.primaryText,
+                      child: ScreenSideOffset.small(
+                        child: SizedBox(
+                          height: 40.0.s,
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                country.flag,
+                                style: context.theme.appTextThemes.subtitle2,
+                              ),
+                              SizedBox(width: 16.0.s),
+                              Expanded(
+                                child: Text(
+                                  country.name,
+                                  style: context.theme.appTextThemes.subtitle2
+                                      .copyWith(
+                                    color: context.theme.appColors.primaryText,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Text(
-                              country.iddCode,
-                              style: context.theme.appTextThemes.subtitle2
-                                  .copyWith(
-                                color: context.theme.appColors.secondaryText,
+                              Text(
+                                country.iddCode,
+                                style: context.theme.appTextThemes.subtitle2
+                                    .copyWith(
+                                  color: context.theme.appColors.secondaryText,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     );
                   },
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.only(
+                    bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
+                  ),
                 ),
               ],
             ),

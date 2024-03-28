@@ -33,7 +33,8 @@ class _ListItemUser extends ListItem {
           constraints: constraints ?? const BoxConstraints(),
           title: Row(
             children: <Widget>[
-              title,
+              // Flexible allows text to be truncated on overflow
+              Flexible(child: title),
               if (iceBadge)
                 Padding(
                   padding: EdgeInsets.only(left: 4.0.s),
@@ -50,7 +51,8 @@ class _ListItemUser extends ListItem {
           ),
           subtitle: Row(
             children: <Widget>[
-              subtitle,
+              // Flexible allows text to be truncated on overflow
+              Flexible(child: subtitle),
               if (timeago != null) _TimeAgo(date: timeago),
             ],
           ),

@@ -111,11 +111,13 @@ class ListItem extends StatelessWidget {
                   if (title != null)
                     DefaultTextStyle(
                       style: _getDefaultTitleStyle(context),
+                      overflow: TextOverflow.ellipsis,
                       child: title!,
                     ),
                   if (subtitle != null)
                     DefaultTextStyle(
                       style: _getDefaultSubtitleStyle(context),
+                      overflow: TextOverflow.ellipsis,
                       child: subtitle!,
                     ),
                 ],

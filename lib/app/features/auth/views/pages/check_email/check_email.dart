@@ -116,9 +116,7 @@ class CheckEmail extends IceSimplePage {
                 ),
               ],
             ),
-            Image.asset(
-              Assets.images.logo.logoIce.path,
-            ),
+            Assets.images.logo.logoIce.image(),
             Padding(
               padding: EdgeInsets.only(bottom: 48.0.s),
               child: const TermsPrivacy(),

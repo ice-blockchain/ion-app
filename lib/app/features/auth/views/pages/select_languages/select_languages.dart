@@ -43,39 +43,47 @@ class SelectLanguages extends IceSimplePage {
             bottomPadding: 6.0.s,
           ),
           Expanded(
-            child: ScreenSideOffset.small(
-              child: CustomScrollView(
-                slivers: <Widget>[
-                  FloatingAppBar(
-                    height: SearchInput.height,
+            child: CustomScrollView(
+              slivers: <Widget>[
+                FloatingAppBar(
+                  height: SearchInput.height,
+                  child: ScreenSideOffset.small(
                     child: SearchInput(
                       onTextChanged: (String value) => searchText.value = value,
                     ),
                   ),
-                  SliverList.builder(
-                    itemCount: filteredLanguages.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final Language language = filteredLanguages[index];
-                      final bool isSelected =
-                          selectedLanguages.value.contains(language);
-                      return LanguageListItem(
-                        language: language,
-                        isSelected: isSelected,
-                        onTap: () {
-                          final Set<Language> newSelectedLanguages =
-                              Set<Language>.from(selectedLanguages.value);
-                          if (isSelected) {
-                            newSelectedLanguages.remove(language);
-                          } else {
-                            newSelectedLanguages.add(language);
-                          }
-                          selectedLanguages.value = newSelectedLanguages;
-                        },
-                      );
-                    },
+                ),
+                SliverList.separated(
+                  itemCount: filteredLanguages.length,
+                  separatorBuilder: (BuildContext _, int __) => SizedBox(
+                    height: 12.0.s,
                   ),
-                ],
-              ),
+                  itemBuilder: (BuildContext context, int index) {
+                    final Language language = filteredLanguages[index];
+                    final bool isSelected =
+                        selectedLanguages.value.contains(language);
+                    return LanguageListItem(
+                      language: language,
+                      isSelected: isSelected,
+                      onTap: () {
+                        final Set<Language> newSelectedLanguages =
+                            Set<Language>.from(selectedLanguages.value);
+                        if (isSelected) {
+                          newSelectedLanguages.remove(language);
+                        } else {
+                          newSelectedLanguages.add(language);
+                        }
+                        selectedLanguages.value = newSelectedLanguages;
+                      },
+                    );
+                  },
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.only(
+                    bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
