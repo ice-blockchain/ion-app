@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ice/app/features/auth/views/pages/select_country/countries.dart';
+import 'package:ice/app/constants/countries.dart';
 
 part 'select_country_return_data.freezed.dart';
 
