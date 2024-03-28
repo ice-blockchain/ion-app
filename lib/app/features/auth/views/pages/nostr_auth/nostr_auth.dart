@@ -19,31 +19,30 @@ class NostrAuth extends IceSimplePage {
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
-      body: ScreenSideOffset.large(
-        // Scroll child takes all available screen height to
-        // add space around logo (column alignment is space-between)
-        // on big devices and be able to scroll on small ones.
-        child: SizedBox(
-          height: double.infinity,
-          child: LayoutBuilder(
-            builder:
-                (BuildContext context, BoxConstraints viewportConstraints) {
-              return SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(minHeight: viewportConstraints.maxHeight),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      AuthHeaderWidget(
-                        title: context.i18n.nostr_auth_title,
-                        description: context.i18n.nostr_auth_description,
-                      ),
-                      Assets.images.bg.ostrichlogo.image(
-                        width: 256.0.s,
-                        height: 160.0.s,
-                      ),
-                      Column(
+      // Scroll child takes all available screen height to
+      // add space around logo (column alignment is space-between)
+      // on big devices and be able to scroll on small ones.
+      body: SizedBox(
+        height: double.infinity,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints:
+                    BoxConstraints(minHeight: viewportConstraints.maxHeight),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    AuthHeader(
+                      title: context.i18n.nostr_auth_title,
+                      description: context.i18n.nostr_auth_description,
+                    ),
+                    Assets.images.bg.ostrichlogo.image(
+                      width: 256.0.s,
+                      height: 160.0.s,
+                    ),
+                    ScreenSideOffset.large(
+                      child: Column(
                         children: <Widget>[
                           Button(
                             leadingIcon:
@@ -76,12 +75,12 @@ class NostrAuth extends IceSimplePage {
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

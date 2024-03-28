@@ -7,11 +7,10 @@ import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/auth/views/components/title_description_header/title_description_header.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/language_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class SelectLanguages extends IceSimplePage {
@@ -36,16 +35,15 @@ class SelectLanguages extends IceSimplePage {
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
         children: <Widget>[
-          NavigationAppBar.modal(),
-          TitleDescription(
+          AuthHeader(
             title: context.i18n.select_languages_title,
             description: context.i18n.select_languages_description,
-            bottomPadding: 6.0.s,
           ),
           Expanded(
             child: CustomScrollView(
               slivers: <Widget>[
                 FloatingAppBar(
+                  topOffset: 16.0.s,
                   height: SearchInput.height,
                   child: ScreenSideOffset.small(
                     child: SearchInput(

@@ -32,9 +32,11 @@ class AuthPage extends IceSimplePage {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                AuthHeaderWidget(
+                AuthHeader(
                   title: context.i18n.auth_signIn_title,
                   description: context.i18n.auth_signIn_description,
+                  icon: Assets.images.logo.logoIce.icon(size: 65.0.s),
+                  showBackButton: false,
                 ),
                 SizedBox(
                   height: 30.0.s,

@@ -29,90 +29,100 @@ class FillProfile extends IceSimplePage {
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
-      body: SingleChildScrollView(
-        child: ScreenSideOffset.large(
+      body: SizedBox(
+        height: double.infinity,
+        child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
               children: <Widget>[
-                AuthHeaderWidget(
+                AuthHeader(
                   title: context.i18n.fill_profile_title,
                   description: context.i18n.fill_profile_description,
+                  icon: Assets.images.logo.logoIce.icon(size: 65.0.s),
                 ),
-                SizedBox(
-                  height: 20.0.s,
-                ),
-                AvatarPicker(
-                  onAvatarPicked: (String path) {},
-                ),
-                SizedBox(
-                  height: 28.0.s,
-                ),
-                TextInput(
-                  prefixIcon: TextInputIcons(
-                    hasRightDivider: true,
-                    icons: <Widget>[
-                      Assets.images.icons.iconFieldName.icon(),
+                ScreenSideOffset.large(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20.0.s,
+                      ),
+                      AvatarPicker(
+                        onAvatarPicked: (String path) {},
+                      ),
+                      SizedBox(
+                        height: 28.0.s,
+                      ),
+                      TextInput(
+                        prefixIcon: TextInputIcons(
+                          hasRightDivider: true,
+                          icons: <Widget>[
+                            Assets.images.icons.iconFieldName.icon(),
+                          ],
+                        ),
+                        labelText: context.i18n.fill_profile_input_name,
+                        controller: nameController,
+                        validator: (String? value) {
+                          if (!Validators.notEmpty(value)) return '';
+                          return null;
+                        },
+                        textInputAction: TextInputAction.next,
+                      ),
+                      SizedBox(
+                        height: 16.0.s,
+                      ),
+                      TextInput(
+                        prefixIcon: TextInputIcons(
+                          hasRightDivider: true,
+                          icons: <Widget>[
+                            Assets.images.icons.iconFieldNickname.icon(),
+                          ],
+                        ),
+                        labelText: context.i18n.fill_profile_input_nickname,
+                        controller: nicknameController,
+                        validator: (String? value) {
+                          if (!Validators.notEmpty(value)) return '';
+                          if (!Validators.validLength(value, minLength: 4)) {
+                            return '';
+                          }
+                          return null;
+                        },
+                        textInputAction: TextInputAction.next,
+                      ),
+                      SizedBox(
+                        height: 16.0.s,
+                      ),
+                      TextInput(
+                        prefixIcon: TextInputIcons(
+                          hasRightDivider: true,
+                          icons: <Widget>[
+                            Assets.images.icons.iconFieldInviter.icon(),
+                          ],
+                        ),
+                        labelText: context.i18n.fill_profile_input_who_invited,
+                        controller: inviterController,
+                        validator: (String? value) {
+                          if (!Validators.notEmpty(value)) return '';
+                          return null;
+                        },
+                        textInputAction: TextInputAction.done,
+                      ),
+                      SizedBox(
+                        height: 26.0.s,
+                      ),
+                      Button(
+                        leadingIcon: Assets.images.icons.iconProfileSave.icon(),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {}
+                        },
+                        label: Text(context.i18n.button_save),
+                        mainAxisSize: MainAxisSize.max,
+                      ),
+                      SizedBox(
+                        height: 40.0.s + MediaQuery.paddingOf(context).bottom,
+                      ),
                     ],
                   ),
-                  labelText: context.i18n.fill_profile_input_name,
-                  controller: nameController,
-                  validator: (String? value) {
-                    if (!Validators.notEmpty(value)) return '';
-                    return null;
-                  },
-                  textInputAction: TextInputAction.next,
-                ),
-                SizedBox(
-                  height: 16.0.s,
-                ),
-                TextInput(
-                  prefixIcon: TextInputIcons(
-                    hasRightDivider: true,
-                    icons: <Widget>[
-                      Assets.images.icons.iconFieldNickname.icon(),
-                    ],
-                  ),
-                  labelText: context.i18n.fill_profile_input_nickname,
-                  controller: nicknameController,
-                  validator: (String? value) {
-                    if (!Validators.notEmpty(value)) return '';
-                    if (!Validators.validLength(value, minLength: 4)) return '';
-                    return null;
-                  },
-                  textInputAction: TextInputAction.next,
-                ),
-                SizedBox(
-                  height: 16.0.s,
-                ),
-                TextInput(
-                  prefixIcon: TextInputIcons(
-                    hasRightDivider: true,
-                    icons: <Widget>[
-                      Assets.images.icons.iconFieldInviter.icon(),
-                    ],
-                  ),
-                  labelText: context.i18n.fill_profile_input_who_invited,
-                  controller: inviterController,
-                  validator: (String? value) {
-                    if (!Validators.notEmpty(value)) return '';
-                    return null;
-                  },
-                  textInputAction: TextInputAction.done,
-                ),
-                SizedBox(
-                  height: 26.0.s,
-                ),
-                Button(
-                  leadingIcon: Assets.images.icons.iconProfileSave.icon(),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {}
-                  },
-                  label: Text(context.i18n.button_save),
-                  mainAxisSize: MainAxisSize.max,
-                ),
-                SizedBox(
-                  height: 40.0.s + MediaQuery.paddingOf(context).bottom,
                 ),
               ],
             ),

@@ -25,33 +25,32 @@ class NostrLogin extends IceSimplePage {
     final TextEditingController controller = useTextEditingController();
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
-      body: ScreenSideOffset.large(
-        // Scroll child takes all available screen height to
-        // add space around logo (column alignment is space-between)
-        // on big devices and be able to scroll on small ones.
-        child: SizedBox(
-          height: double.infinity,
-          child: LayoutBuilder(
-            builder:
-                (BuildContext context, BoxConstraints viewportConstraints) {
-              return SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(minHeight: viewportConstraints.maxHeight),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      AuthHeaderWidget(
-                        title: context.i18n.nostr_login_title,
-                        description: context.i18n.nostr_login_description,
-                      ),
-                      Image.asset(
-                        Assets.images.bg.ostrichlogo.path,
-                        width: 256.0.s,
-                        height: 160.0.s,
-                      ),
-                      Form(
-                        key: _formKey,
+      // Scroll child takes all available screen height to
+      // add space around logo (column alignment is space-between)
+      // on big devices and be able to scroll on small ones.
+      body: SizedBox(
+        height: double.infinity,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints:
+                    BoxConstraints(minHeight: viewportConstraints.maxHeight),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    AuthHeader(
+                      title: context.i18n.nostr_login_title,
+                      description: context.i18n.nostr_login_description,
+                    ),
+                    Image.asset(
+                      Assets.images.bg.ostrichlogo.path,
+                      width: 256.0.s,
+                      height: 160.0.s,
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: ScreenSideOffset.large(
                         child: Column(
                           children: <Widget>[
                             TextInput(
@@ -89,12 +88,12 @@ class NostrLogin extends IceSimplePage {
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
