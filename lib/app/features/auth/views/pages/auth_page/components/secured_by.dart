@@ -13,8 +13,6 @@ class SecuredBy extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      // textBaseline: TextBaseline.alphabetic,
-      // crossAxisAlignment: CrossAxisAlignment.baseline,
       children: <Widget>[
         Text(
           context.i18n.secured_by,
