@@ -2,7 +2,7 @@ import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data_with_loading_state.dart';
-import 'package:ice/app/features/wallet/providers/wallet_mock_data.dart';
+import 'package:ice/app/features/wallet/providers/mock_data/wallet_mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallet_data_provider.g.dart';

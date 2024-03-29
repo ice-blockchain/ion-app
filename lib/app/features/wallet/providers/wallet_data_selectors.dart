@@ -4,6 +4,14 @@ import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data_with_loading_state.dart';
 import 'package:ice/app/features/wallet/providers/wallet_data_provider.dart';
 
+String walletIdSelector(WidgetRef ref) {
+  return ref.watch(
+    walletDataNotifierProvider.select(
+      (WalletDataWithLoadingState walletData) => walletData.walletData.id,
+    ),
+  );
+}
+
 double walletBalanceSelector(WidgetRef ref) {
   return ref.watch(
     walletDataNotifierProvider.select(
