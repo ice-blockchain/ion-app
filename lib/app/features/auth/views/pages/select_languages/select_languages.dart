@@ -14,6 +14,7 @@ import 'package:ice/app/features/auth/views/pages/select_languages/languages.dar
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/services/keyboard/keyboard.dart';
 
 class SelectLanguages extends IceSimplePage {
   const SelectLanguages(super._route, super.payload);
@@ -102,8 +103,10 @@ class SelectLanguages extends IceSimplePage {
                   label: Text(context.i18n.button_continue),
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    IceRoutes.discoverCreators.push(context);
+                    hideKeyboardAndCall(
+                      context,
+                      callback: () => IceRoutes.discoverCreators.push(context),
+                    );
                   },
                 ),
               ),

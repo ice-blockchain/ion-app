@@ -14,6 +14,7 @@ import 'package:ice/app/features/auth/views/components/code_fields/code_fields.d
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/services/keyboard/keyboard.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -78,11 +79,12 @@ class EnterCode extends IceSimplePage {
                             codeController.clear();
                             errorController.add(ErrorAnimationType.shake);
                           } else {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            Future<void>.delayed(const Duration(seconds: 1));
-                            if (context.mounted) {
-                              IceRoutes.fillProfile.pushReplacement(context);
-                            }
+                            hideKeyboardAndCall(
+                              context,
+                              callback: () {
+                                IceRoutes.fillProfile.pushReplacement(context);
+                              },
+                            );
                           }
                         },
                         onChanged: (String text) {

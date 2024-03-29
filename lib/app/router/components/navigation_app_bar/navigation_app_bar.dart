@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
@@ -8,6 +7,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_back_button.dart';
+import 'package:ice/app/services/keyboard/keyboard.dart';
 
 class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   const NavigationAppBar._({
@@ -83,14 +83,9 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: showBackButton
           ? NavigationBackButton(
               onBackPress ??
-                  () async {
-                    if (hideKeyboardOnBack &&
-                        KeyboardVisibilityProvider.isKeyboardVisible(context)) {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      await Future<void>.delayed(const Duration(seconds: 1));
-                      if (context.mounted) {
-                        context.pop();
-                      }
+                  () {
+                    if (hideKeyboardOnBack) {
+                      hideKeyboardAndCall(context, callback: context.pop);
                     } else {
                       context.pop();
                     }

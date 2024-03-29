@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
@@ -14,6 +13,7 @@ import 'package:ice/app/features/auth/views/pages/select_country/select_country_
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/services/keyboard/keyboard.dart';
 
 class SelectCountries extends IceSimplePage {
   const SelectCountries(super._route, super.payload);
@@ -60,22 +60,14 @@ class SelectCountries extends IceSimplePage {
                   itemBuilder: (BuildContext context, int index) {
                     final Country country = filteredCountries[index];
                     return GestureDetector(
-                      onTap: () async {
-                        if (KeyboardVisibilityProvider.isKeyboardVisible(
+                      onTap: () {
+                        hideKeyboardAndCall(
                           context,
-                        )) {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          await Future<void>.delayed(
-                            const Duration(seconds: 1),
-                          );
-                          if (context.mounted) {
+                          callback: () {
                             context
                                 .pop(SelectCountryReturnData(country: country));
-                          }
-                        } else {
-                          context
-                              .pop(SelectCountryReturnData(country: country));
-                        }
+                          },
+                        );
                       },
                       child: ScreenSideOffset.small(
                         child: SizedBox(
