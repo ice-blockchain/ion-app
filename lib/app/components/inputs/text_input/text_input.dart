@@ -27,8 +27,10 @@ class TextInput extends HookWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
+    EdgeInsets? scrollPadding,
     EdgeInsetsGeometry? contentPadding,
-  }) : contentPadding = contentPadding ??
+  })  : scrollPadding = scrollPadding ?? EdgeInsets.all(20.0.s),
+        contentPadding = contentPadding ??
             EdgeInsets.symmetric(vertical: 13.0.s, horizontal: 16.0.s);
 
   final TextEditingController? controller;
@@ -53,7 +55,8 @@ class TextInput extends HookWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
 
-  final EdgeInsetsGeometry? contentPadding;
+  final EdgeInsets scrollPadding;
+  final EdgeInsetsGeometry contentPadding;
 
   final ValueChanged<String>? onChanged;
 
@@ -62,6 +65,7 @@ class TextInput extends HookWidget {
     final ValueNotifier<String?> error = useState(null);
 
     return TextFormField(
+      scrollPadding: scrollPadding,
       controller: controller,
       initialValue: initialValue,
       maxLines: maxLines,

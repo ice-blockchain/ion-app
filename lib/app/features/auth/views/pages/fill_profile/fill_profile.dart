@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
@@ -31,117 +32,124 @@ class FillProfile extends IceSimplePage {
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
-      body: SizedBox(
-        height: double.infinity,
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-                AuthHeader(
-                  title: context.i18n.fill_profile_title,
-                  description: context.i18n.fill_profile_description,
-                  icon: Assets.images.logo.logoIce.icon(size: 65.0.s),
-                ),
-                ScreenSideOffset.large(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 20.0.s,
-                      ),
-                      AvatarPicker(
-                        onAvatarPicked: (String path) {},
-                      ),
-                      SizedBox(
-                        height: 28.0.s,
-                      ),
-                      TextInput(
-                        prefixIcon: TextInputIcons(
-                          hasRightDivider: true,
-                          icons: <Widget>[
-                            Assets.images.icons.iconFieldName.icon(),
-                          ],
-                        ),
-                        labelText: context.i18n.fill_profile_input_name,
-                        controller: nameController,
-                        validator: (String? value) {
-                          if (!Validators.notEmpty(value)) return '';
-                          return null;
-                        },
-                        textInputAction: TextInputAction.next,
-                      ),
-                      SizedBox(
-                        height: 16.0.s,
-                      ),
-                      TextInput(
-                        prefixIcon: TextInputIcons(
-                          hasRightDivider: true,
-                          icons: <Widget>[
-                            Assets.images.icons.iconFieldNickname.icon(),
-                          ],
-                        ),
-                        labelText: context.i18n.fill_profile_input_nickname,
-                        controller: nicknameController,
-                        validator: (String? value) {
-                          if (!Validators.notEmpty(value)) return '';
-                          if (!Validators.validLength(value, minLength: 4)) {
-                            return '';
-                          }
-                          return null;
-                        },
-                        textInputAction: TextInputAction.next,
-                      ),
-                      SizedBox(
-                        height: 16.0.s,
-                      ),
-                      TextInput(
-                        prefixIcon: TextInputIcons(
-                          hasRightDivider: true,
-                          icons: <Widget>[
-                            Assets.images.icons.iconFieldInviter.icon(),
-                          ],
-                        ),
-                        labelText: context.i18n.fill_profile_input_who_invited,
-                        controller: inviterController,
-                        validator: (String? value) {
-                          if (!Validators.notEmpty(value)) return '';
-                          return null;
-                        },
-                        textInputAction: TextInputAction.done,
-                      ),
-                      SizedBox(
-                        height: 26.0.s,
-                      ),
-                      Button(
-                        disabled: loading.value,
-                        trailingIcon: loading.value
-                            ? const ButtonLoadingIndicator()
-                            : Assets.images.icons.iconProfileSave.icon(
-                                color: context.theme.appColors.onPrimaryAccent,
-                              ),
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            loading.value = true;
-                            await Future<void>.delayed(
-                              const Duration(seconds: 1),
-                            );
-                            loading.value = false;
-                            if (context.mounted) {
-                              IceRoutes.selectLanguages.push(context);
-                            }
-                          }
-                        },
-                        label: Text(context.i18n.button_save),
-                        mainAxisSize: MainAxisSize.max,
-                      ),
-                      SizedBox(
-                        height: 40.0.s + MediaQuery.paddingOf(context).bottom,
-                      ),
-                    ],
+      body: KeyboardDismissOnTap(
+        child: SizedBox(
+          height: double.infinity,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  AuthHeader(
+                    title: context.i18n.fill_profile_title,
+                    description: context.i18n.fill_profile_description,
+                    icon: Assets.images.logo.logoIce.icon(size: 65.0.s),
                   ),
-                ),
-              ],
+                  ScreenSideOffset.large(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 20.0.s,
+                        ),
+                        AvatarPicker(
+                          onAvatarPicked: (String path) {},
+                        ),
+                        SizedBox(
+                          height: 28.0.s,
+                        ),
+                        TextInput(
+                          prefixIcon: TextInputIcons(
+                            hasRightDivider: true,
+                            icons: <Widget>[
+                              Assets.images.icons.iconFieldName.icon(),
+                            ],
+                          ),
+                          labelText: context.i18n.fill_profile_input_name,
+                          controller: nameController,
+                          validator: (String? value) {
+                            if (!Validators.notEmpty(value)) return '';
+                            return null;
+                          },
+                          textInputAction: TextInputAction.next,
+                          scrollPadding: EdgeInsets.all(120.0.s),
+                        ),
+                        SizedBox(
+                          height: 16.0.s,
+                        ),
+                        TextInput(
+                          prefixIcon: TextInputIcons(
+                            hasRightDivider: true,
+                            icons: <Widget>[
+                              Assets.images.icons.iconFieldNickname.icon(),
+                            ],
+                          ),
+                          labelText: context.i18n.fill_profile_input_nickname,
+                          controller: nicknameController,
+                          validator: (String? value) {
+                            if (!Validators.notEmpty(value)) return '';
+                            if (!Validators.validLength(value, minLength: 4)) {
+                              return '';
+                            }
+                            return null;
+                          },
+                          textInputAction: TextInputAction.next,
+                          scrollPadding: EdgeInsets.all(120.0.s),
+                        ),
+                        SizedBox(
+                          height: 16.0.s,
+                        ),
+                        TextInput(
+                          prefixIcon: TextInputIcons(
+                            hasRightDivider: true,
+                            icons: <Widget>[
+                              Assets.images.icons.iconFieldInviter.icon(),
+                            ],
+                          ),
+                          labelText:
+                              context.i18n.fill_profile_input_who_invited,
+                          controller: inviterController,
+                          validator: (String? value) {
+                            if (!Validators.notEmpty(value)) return '';
+                            return null;
+                          },
+                          textInputAction: TextInputAction.done,
+                          scrollPadding: EdgeInsets.all(120.0.s),
+                        ),
+                        SizedBox(
+                          height: 26.0.s,
+                        ),
+                        Button(
+                          disabled: loading.value,
+                          trailingIcon: loading.value
+                              ? const ButtonLoadingIndicator()
+                              : Assets.images.icons.iconProfileSave.icon(
+                                  color:
+                                      context.theme.appColors.onPrimaryAccent,
+                                ),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              loading.value = true;
+                              await Future<void>.delayed(
+                                const Duration(seconds: 1),
+                              );
+                              loading.value = false;
+                              if (context.mounted) {
+                                IceRoutes.selectLanguages.push(context);
+                              }
+                            }
+                          },
+                          label: Text(context.i18n.button_save),
+                          mainAxisSize: MainAxisSize.max,
+                        ),
+                        SizedBox(
+                          height: 40.0.s + MediaQuery.paddingOf(context).bottom,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

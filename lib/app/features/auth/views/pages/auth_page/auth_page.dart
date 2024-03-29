@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
@@ -29,57 +30,59 @@ class AuthPage extends IceSimplePage {
       body: ScreenSideOffset.large(
         child: SizedBox(
           height: double.infinity,
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                AuthHeader(
-                  title: context.i18n.auth_signIn_title,
-                  description: context.i18n.auth_signIn_description,
-                  icon: Assets.images.logo.logoIce.icon(size: 65.0.s),
-                  showBackButton: false,
-                ),
-                SizedBox(
-                  height: 30.0.s,
-                ),
-                if (isEmailMode.value)
-                  const EmailAuthForm()
-                else
-                  const PhoneAuthForm(),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.0.s),
-                  child: Text(
-                    context.i18n.auth_signIn_or,
-                    style: context.theme.appTextThemes.caption.copyWith(
-                      color: context.theme.appColors.tertararyText,
+          child: KeyboardDismissOnTap(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  AuthHeader(
+                    title: context.i18n.auth_signIn_title,
+                    description: context.i18n.auth_signIn_description,
+                    icon: Assets.images.logo.logoIce.icon(size: 65.0.s),
+                    showBackButton: false,
+                  ),
+                  SizedBox(
+                    height: 30.0.s,
+                  ),
+                  if (isEmailMode.value)
+                    const EmailAuthForm()
+                  else
+                    const PhoneAuthForm(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0.s),
+                    child: Text(
+                      context.i18n.auth_signIn_or,
+                      style: context.theme.appTextThemes.caption.copyWith(
+                        color: context.theme.appColors.tertararyText,
+                      ),
                     ),
                   ),
-                ),
-                Button(
-                  type: ButtonType.outlined,
-                  leadingIcon: Assets.images.icons.iconFieldPhone.icon(
-                    color: context.theme.appColors.secondaryText,
+                  Button(
+                    type: ButtonType.outlined,
+                    leadingIcon: Assets.images.icons.iconFieldPhone.icon(
+                      color: context.theme.appColors.secondaryText,
+                    ),
+                    onPressed: () {
+                      isEmailMode.value = !isEmailMode.value;
+                    },
+                    label: Text(
+                      isEmailMode.value
+                          ? context.i18n.auth_signIn_button_phone_number
+                          : context.i18n.auth_signIn_button_email,
+                    ),
+                    mainAxisSize: MainAxisSize.max,
                   ),
-                  onPressed: () {
-                    isEmailMode.value = !isEmailMode.value;
-                  },
-                  label: Text(
-                    isEmailMode.value
-                        ? context.i18n.auth_signIn_button_phone_number
-                        : context.i18n.auth_signIn_button_email,
+                  Padding(
+                    padding: EdgeInsets.only(top: 16.0.s, bottom: 20.0.s),
+                    child: const Socials(),
                   ),
-                  mainAxisSize: MainAxisSize.max,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 16.0.s, bottom: 20.0.s),
-                  child: const Socials(),
-                ),
-                const SecuredBy(),
-                SizedBox(height: 14.0.s),
-                const TermsPrivacy(),
-                SizedBox(
-                  height: 14.0.s + MediaQuery.paddingOf(context).bottom,
-                ),
-              ],
+                  const SecuredBy(),
+                  SizedBox(height: 14.0.s),
+                  const TermsPrivacy(),
+                  SizedBox(
+                    height: 14.0.s + MediaQuery.paddingOf(context).bottom,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

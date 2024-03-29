@@ -10,6 +10,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/router/hooks/use_sheet_full_height.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NostrAuth extends IceSimplePage {
@@ -17,71 +18,63 @@ class NostrAuth extends IceSimplePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
+    final double sheetFullHeight = useSheetFullHeight(context);
+
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       // Scroll child takes all available screen height to
       // add space around logo (column alignment is space-between)
       // on big devices and be able to scroll on small ones.
-      body: SizedBox(
-        height: double.infinity,
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints viewportConstraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints:
-                    BoxConstraints(minHeight: viewportConstraints.maxHeight),
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: sheetFullHeight),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              AuthHeader(
+                title: context.i18n.nostr_auth_title,
+                description: context.i18n.nostr_auth_description,
+                icon: Assets.images.logo.logoIce.icon(size: 65.0.s),
+              ),
+              Assets.images.bg.ostrichlogo.image(
+                width: 256.0.s,
+                height: 160.0.s,
+              ),
+              ScreenSideOffset.large(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    AuthHeader(
-                      title: context.i18n.nostr_auth_title,
-                      description: context.i18n.nostr_auth_description,
-                      icon: Assets.images.logo.logoIce.icon(size: 65.0.s),
-                    ),
-                    Assets.images.bg.ostrichlogo.image(
-                      width: 256.0.s,
-                      height: 160.0.s,
-                    ),
-                    ScreenSideOffset.large(
-                      child: Column(
-                        children: <Widget>[
-                          Button(
-                            leadingIcon:
-                                Assets.images.icons.iconLoginCreateacc.icon(),
-                            onPressed: () {},
-                            type: ButtonType.outlined,
-                            label: Text(
-                              context.i18n.button_create_account,
-                              style: context.theme.appTextThemes.body.copyWith(
-                                color: context.theme.appColors.primaryAccent,
-                              ),
-                            ),
-                            mainAxisSize: MainAxisSize.max,
-                          ),
-                          SizedBox(
-                            height: 26.0.s,
-                          ),
-                          Button(
-                            leadingIcon:
-                                Assets.images.icons.iconProfileLogin.icon(),
-                            onPressed: () {
-                              IceRoutes.nostrLogin.push(context);
-                            },
-                            label: Text(context.i18n.button_login),
-                            mainAxisSize: MainAxisSize.max,
-                          ),
-                          SizedBox(
-                            height:
-                                58.0.s + MediaQuery.paddingOf(context).bottom,
-                          ),
-                        ],
+                    Button(
+                      leadingIcon:
+                          Assets.images.icons.iconLoginCreateacc.icon(),
+                      onPressed: () {},
+                      type: ButtonType.outlined,
+                      label: Text(
+                        context.i18n.button_create_account,
+                        style: context.theme.appTextThemes.body.copyWith(
+                          color: context.theme.appColors.primaryAccent,
+                        ),
                       ),
+                      mainAxisSize: MainAxisSize.max,
+                    ),
+                    SizedBox(
+                      height: 26.0.s,
+                    ),
+                    Button(
+                      leadingIcon: Assets.images.icons.iconProfileLogin.icon(),
+                      onPressed: () {
+                        IceRoutes.nostrLogin.push(context);
+                      },
+                      label: Text(context.i18n.button_login),
+                      mainAxisSize: MainAxisSize.max,
+                    ),
+                    SizedBox(
+                      height: 58.0.s + MediaQuery.paddingOf(context).bottom,
                     ),
                   ],
                 ),
               ),
-            );
-          },
+            ],
+          ),
         ),
       ),
     );
