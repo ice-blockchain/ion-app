@@ -8,7 +8,7 @@ Future<void> hideKeyboardAndCall(
   if (KeyboardVisibilityProvider.isKeyboardVisible(context)) {
     FocusManager.instance.primaryFocus?.unfocus();
     await Future<void>.delayed(
-      const Duration(seconds: 1),
+      const Duration(milliseconds: 500),
     );
     if (context.mounted) {
       callback();
