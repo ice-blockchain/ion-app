@@ -31,12 +31,7 @@ class AvatarPicker extends HookWidget {
         if (avatar.value != null)
           CircleAvatar(
             radius: 50.0.s,
-            child: Image.file(
-              File(avatar.value!.path),
-              width: 100.0.s,
-              height: 100.0.s,
-              fit: BoxFit.cover,
-            ),
+            backgroundImage: FileImage(File(avatar.value!.path)),
           )
         else
           CircleAvatar(
