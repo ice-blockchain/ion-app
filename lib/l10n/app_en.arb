@@ -96,7 +96,7 @@
   "core_nfts": "NFTs",
   "core_coins": "Coins",
   "core_empty_search": "No results found",
-  "core_coins": "Coins",
+  "core_empty_transactions_history": "You don't have any transactions yet",
   "general_feed": "Feed",
   "general_videos": "Videos",
   "general_articles": "Articles",

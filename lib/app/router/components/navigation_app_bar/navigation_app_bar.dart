@@ -14,6 +14,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showBackButton = true,
     this.onBackPress,
     this.actions,
+    this.titleIcon,
     required this.useScreenTopOffset,
     super.key,
   });
@@ -23,6 +24,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     bool showBackButton = true,
     VoidCallback? onBackPress,
     List<Widget>? actions,
+    Widget? titleIcon,
     Key? key,
   }) =>
       NavigationAppBar._(
@@ -30,6 +32,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
         showBackButton: showBackButton,
         onBackPress: onBackPress,
         actions: actions,
+        titleIcon: titleIcon,
         useScreenTopOffset: true,
         key: key,
       );
@@ -57,6 +60,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   static double get actionButtonSide => 24.0.s;
 
   final String title;
+  final Widget? titleIcon;
   final bool showBackButton;
   final VoidCallback? onBackPress;
   final List<Widget>? actions;
@@ -64,17 +68,31 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Widget titleWidget = Text(
+      title,
+      textAlign: TextAlign.center,
+      style: context.theme.appTextThemes.subtitle
+          .copyWith(color: context.theme.appColors.primaryText),
+    );
     final Widget appBarContent = NavigationToolbar(
       leading: showBackButton
           ? NavigationBackButton(() {
               context.pop();
             })
           : null,
-      middle: Text(
-        title,
-        style: context.theme.appTextThemes.subtitle
-            .copyWith(color: context.theme.appColors.primaryText),
-      ),
+      middle: titleIcon != null
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                titleIcon!,
+                SizedBox(
+                  width: 6.0.s,
+                ),
+                titleWidget,
+              ],
+            )
+          : titleWidget,
       trailing: actions != null && actions!.isNotEmpty
           ? Row(mainAxisSize: MainAxisSize.min, children: actions!)
           : null,

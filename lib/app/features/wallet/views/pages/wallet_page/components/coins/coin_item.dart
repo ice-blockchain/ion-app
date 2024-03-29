@@ -7,6 +7,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/num.dart';
 
 class CoinItem extends HookConsumerWidget {
@@ -25,6 +26,12 @@ class CoinItem extends HookConsumerWidget {
       subtitle: Text(coinData.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
       leading: coinData.iconUrl.icon(size: 36.0.s),
+      onTap: () {
+        IceRoutes.coinDetails.go(
+          context,
+          payload: coinData,
+        );
+      },
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
