@@ -19,6 +19,8 @@ class PostFooter extends StatelessWidget {
         0,
       );
 
+  static double get iconSize => 16.0.s;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,7 +36,7 @@ class PostFooter extends StatelessWidget {
             child: PostEngagementMetric(
               onPressed: () {},
               icon: Assets.images.icons.iconBlockComment.icon(
-                size: 16.0.s,
+                size: iconSize,
                 color: context.theme.appColors.onTertararyBackground,
               ),
               value: '121k',
@@ -44,7 +46,7 @@ class PostFooter extends StatelessWidget {
             child: PostEngagementMetric(
               onPressed: () {},
               icon: Assets.images.icons.iconBlockRepost.icon(
-                size: 16.0.s,
+                size: iconSize,
                 color: context.theme.appColors.onTertararyBackground,
               ),
               value: '442k',
@@ -54,7 +56,7 @@ class PostFooter extends StatelessWidget {
             child: PostEngagementMetric(
               onPressed: () {},
               icon: Assets.images.icons.iconVideoLikeOff.icon(
-                size: 16.0.s,
+                size: iconSize,
                 color: context.theme.appColors.onTertararyBackground,
               ),
               value: '121k',
@@ -64,7 +66,7 @@ class PostFooter extends StatelessWidget {
             child: PostEngagementMetric(
               onPressed: () {},
               icon: Assets.images.icons.iconButtonIceStroke.icon(
-                size: 16.0.s,
+                size: iconSize,
                 color: context.theme.appColors.onTertararyBackground,
               ),
               value: '7',
@@ -73,7 +75,7 @@ class PostFooter extends StatelessWidget {
           PostEngagementMetric(
             onPressed: () {},
             icon: Assets.images.icons.iconBlockShare.icon(
-              size: 16.0.s,
+              size: iconSize,
               color: context.theme.appColors.onTertararyBackground,
             ),
           ),
