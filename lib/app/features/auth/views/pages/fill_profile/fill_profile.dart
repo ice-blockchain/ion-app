@@ -91,7 +91,7 @@ class FillProfile extends IceSimplePage {
                           controller: nicknameController,
                           validator: (String? value) {
                             if (Validators.isEmpty(value)) return '';
-                            if (Validators.invalidLength(
+                            if (Validators.isInvalidLength(
                               value,
                               minLength: 4,
                             )) {

@@ -4,58 +4,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/features/auth/data/models/social_auth_type.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/social_button.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
-
-enum SocialButtonType {
-  apple,
-  nostr,
-  x,
-  fb,
-  github,
-  discord,
-  linkedin;
-
-  Widget get buttonIcon {
-    return switch (this) {
-      SocialButtonType.apple => Assets.images.icons.iconLoginApplelogo,
-      SocialButtonType.nostr => Assets.images.icons.iconLoginNostrlogo,
-      SocialButtonType.x => Assets.images.icons.iconLoginXlogo,
-      SocialButtonType.fb => Assets.images.icons.iconLoginFacebook,
-      SocialButtonType.github => Assets.images.icons.iconLoginGithub,
-      SocialButtonType.discord => Assets.images.icons.iconLoginDiscord,
-      SocialButtonType.linkedin => Assets.images.icons.iconLoginLinkedin,
-    }
-        .icon();
-  }
-
-  VoidCallback onPressHandler(BuildContext context, WidgetRef ref) {
-    return switch (this) {
-      SocialButtonType.apple => () {
-          IceRoutes.checkEmail.push(context);
-        },
-      SocialButtonType.nostr => () {
-          IceRoutes.nostrAuth.push(context);
-        },
-      SocialButtonType.x => () {
-          IceRoutes.fillProfile.push(context);
-        },
-      SocialButtonType.fb => () {
-          IceRoutes.enterCode.push(context);
-        },
-      SocialButtonType.github => () {
-          IceRoutes.selectLanguages.push(context);
-        },
-      SocialButtonType.discord => () {
-          IceRoutes.discoverCreators.push(context);
-        },
-      SocialButtonType.linkedin => () {
-          IceRoutes.discoverCreators.push(context);
-        },
-    };
-  }
-}
 
 class Socials extends HookConsumerWidget {
   const Socials({super.key});
@@ -63,6 +15,32 @@ class Socials extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ValueNotifier<bool> isSecondRowVisible = useState(false);
+
+    Null Function() onPressHandler(SocialAuthType type) {
+      return switch (type) {
+        SocialAuthType.apple => () {
+            IceRoutes.checkEmail.push(context);
+          },
+        SocialAuthType.nostr => () {
+            IceRoutes.nostrAuth.push(context);
+          },
+        SocialAuthType.x => () {
+            IceRoutes.fillProfile.push(context);
+          },
+        SocialAuthType.fb => () {
+            IceRoutes.enterCode.push(context);
+          },
+        SocialAuthType.github => () {
+            IceRoutes.selectLanguages.push(context);
+          },
+        SocialAuthType.discord => () {
+            IceRoutes.discoverCreators.push(context);
+          },
+        SocialAuthType.linkedin => () {
+            IceRoutes.discoverCreators.push(context);
+          },
+      };
+    }
 
     return ConstrainedBox(
       constraints: BoxConstraints(
@@ -73,14 +51,14 @@ class Socials extends HookConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              ...<SocialButtonType>[
-                SocialButtonType.apple,
-                SocialButtonType.nostr,
-                SocialButtonType.x,
+              ...<SocialAuthType>[
+                SocialAuthType.apple,
+                SocialAuthType.nostr,
+                SocialAuthType.x,
               ].map(
-                (SocialButtonType type) => SocialButton(
+                (SocialAuthType type) => SocialButton(
                   icon: type.buttonIcon,
-                  onPressed: type.onPressHandler(context, ref),
+                  onPressed: onPressHandler(type),
                 ),
               ),
               SocialButton(
@@ -98,16 +76,16 @@ class Socials extends HookConsumerWidget {
               padding: EdgeInsets.only(top: 16.0.s),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <SocialButtonType>[
-                  SocialButtonType.fb,
-                  SocialButtonType.github,
-                  SocialButtonType.discord,
-                  SocialButtonType.linkedin,
+                children: <SocialAuthType>[
+                  SocialAuthType.fb,
+                  SocialAuthType.github,
+                  SocialAuthType.discord,
+                  SocialAuthType.linkedin,
                 ]
                     .map(
-                      (SocialButtonType type) => SocialButton(
+                      (SocialAuthType type) => SocialButton(
                         icon: type.buttonIcon,
-                        onPressed: type.onPressHandler(context, ref),
+                        onPressed: onPressHandler(type),
                       ),
                     )
                     .toList(),

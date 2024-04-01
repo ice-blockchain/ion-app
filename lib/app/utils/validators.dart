@@ -7,17 +7,17 @@ class Validators {
     return value == null || value.trim().isEmpty;
   }
 
-  static bool invalidEmail(String? value) {
+  static bool isInvalidEmail(String? value) {
     return isEmpty(value) || !EmailValidator.validate(value!);
   }
 
-  static bool invalidLength(String? value, {int? minLength, int? maxLength}) {
+  static bool isInvalidLength(String? value, {int? minLength, int? maxLength}) {
     assert(minLength != null || maxLength != null);
 
     if (value == null) return true;
     if (minLength != null && value.length < minLength) return true;
     if (maxLength != null && value.length > maxLength) return true;
 
-    return true;
+    return false;
   }
 }
