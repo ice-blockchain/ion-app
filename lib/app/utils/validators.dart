@@ -4,11 +4,11 @@ class Validators {
   Validators._();
 
   static bool notEmpty(String? value) {
-    return value != null && value.trim().isNotEmpty;
+    return value?.trim().isNotEmpty ?? false;
   }
 
   static bool validEmail(String? value) {
-    return Validators.notEmpty(value) && EmailValidator.validate(value!);
+    return notEmpty(value) && EmailValidator.validate(value!);
   }
 
   static bool validLength(String? value, {int? minLength, int? maxLength}) {
