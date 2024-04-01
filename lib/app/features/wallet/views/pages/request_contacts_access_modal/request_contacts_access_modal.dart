@@ -8,8 +8,8 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 class RequestContactAccessModal extends IceSimplePage {
   const RequestContactAccessModal(super.route, super.payload);
@@ -18,7 +18,7 @@ class RequestContactAccessModal extends IceSimplePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    return SheetContentScaffold(
+    return SheetContent(
       backgroundColor: context.theme.appColors.primaryBackground,
       body: Padding(
         padding: EdgeInsets.fromLTRB(
@@ -55,7 +55,8 @@ class RequestContactAccessModal extends IceSimplePage {
             ),
             Button(
               mainAxisSize: MainAxisSize.max,
-              leadingIcon: Assets.images.icons.iconButtonInvite.icon(),
+              leadingIcon: Assets.images.icons.iconButtonInvite
+                  .icon(color: context.theme.appColors.onPrimaryAccent),
               label: Text(
                 context.i18n.contacts_allow_pop_up_action,
               ),

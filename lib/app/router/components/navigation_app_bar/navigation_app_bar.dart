@@ -12,6 +12,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   const NavigationAppBar._({
     this.title = '',
     this.showBackButton = true,
+    this.hideKeyboardOnBack = false,
     this.onBackPress,
     this.actions,
     this.titleIcon,
@@ -42,6 +43,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     bool showBackButton = true,
     VoidCallback? onBackPress,
     List<Widget>? actions,
+    bool hideKeyboardOnBack = true,
     Key? key,
   }) =>
       NavigationAppBar._(
@@ -50,6 +52,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
         onBackPress: onBackPress,
         actions: actions,
         useScreenTopOffset: false,
+        hideKeyboardOnBack: hideKeyboardOnBack,
         key: key,
       );
 
@@ -62,6 +65,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget? titleIcon;
   final bool showBackButton;
+  final bool hideKeyboardOnBack;
   final VoidCallback? onBackPress;
   final List<Widget>? actions;
   final bool useScreenTopOffset;
@@ -76,9 +80,10 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
     final Widget appBarContent = NavigationToolbar(
       leading: showBackButton
-          ? NavigationBackButton(() {
-              context.pop();
-            })
+          ? NavigationBackButton(
+              onBackPress ?? context.pop,
+              hideKeyboardOnBack: hideKeyboardOnBack,
+            )
           : null,
       middle: titleIcon != null
           ? Row(

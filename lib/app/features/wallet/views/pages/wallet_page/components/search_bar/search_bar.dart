@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/search_input/search_input.dart';
+import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/features/wallet/model/wallet_data_with_loading_state.dart';
 import 'package:ice/app/features/wallet/providers/wallet_data_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_provider.dart';

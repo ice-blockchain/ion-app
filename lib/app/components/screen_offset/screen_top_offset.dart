@@ -16,6 +16,7 @@ class ScreenTopOffset extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      bottom: false,
       child: Padding(
         padding: EdgeInsets.only(top: margin),
         child: child,

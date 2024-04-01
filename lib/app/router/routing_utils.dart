@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/extensions/list.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/views/scaffold_with_nested_navigation.dart';
+import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
+import 'package:ice/app/router/main_tab_navigation.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 List<RouteBase> get appRoutes {
@@ -204,7 +204,7 @@ RouteBase _buildBottomTabsRoute<T>(
       GoRouterState state,
       StatefulNavigationShell navigationShell,
     ) {
-      return ScaffoldWithNestedNavigation(
+      return MainTabNavigation(
         key: state.pageKey,
         navigationShell: navigationShell,
       );
