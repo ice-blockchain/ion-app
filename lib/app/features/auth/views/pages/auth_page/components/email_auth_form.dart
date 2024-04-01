@@ -43,8 +43,8 @@ class EmailAuthForm extends HookConsumerWidget {
             labelText: context.i18n.auth_signIn_input_email,
             controller: inputController,
             validator: (String? value) {
-              if (!Validators.notEmpty(value)) return '';
-              if (!Validators.validEmail(value)) {
+              if (Validators.isEmpty(value)) return '';
+              if (Validators.invalidEmail(value)) {
                 return context.i18n.email_input_invalid_email_format;
               }
               return null;

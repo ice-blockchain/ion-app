@@ -49,7 +49,7 @@ class PhoneAuthForm extends HookConsumerWidget {
             labelText: context.i18n.auth_signIn_input_phone_number,
             controller: inputController,
             validator: (String? value) {
-              if (!Validators.notEmpty(value)) return '';
+              if (Validators.isEmpty(value)) return '';
               return null;
             },
             textInputAction: TextInputAction.done,

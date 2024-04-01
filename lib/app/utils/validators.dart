@@ -3,20 +3,20 @@ import 'package:email_validator/email_validator.dart';
 class Validators {
   Validators._();
 
-  static bool notEmpty(String? value) {
-    return value?.trim().isNotEmpty ?? false;
+  static bool isEmpty(String? value) {
+    return value == null || value.trim().isEmpty;
   }
 
-  static bool validEmail(String? value) {
-    return notEmpty(value) && EmailValidator.validate(value!);
+  static bool invalidEmail(String? value) {
+    return isEmpty(value) || !EmailValidator.validate(value!);
   }
 
-  static bool validLength(String? value, {int? minLength, int? maxLength}) {
+  static bool invalidLength(String? value, {int? minLength, int? maxLength}) {
     assert(minLength != null || maxLength != null);
 
-    if (value == null) return false;
-    if (minLength != null && value.length < minLength) return false;
-    if (maxLength != null && value.length > maxLength) return false;
+    if (value == null) return true;
+    if (minLength != null && value.length < minLength) return true;
+    if (maxLength != null && value.length > maxLength) return true;
 
     return true;
   }

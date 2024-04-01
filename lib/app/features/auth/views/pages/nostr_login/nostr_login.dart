@@ -70,7 +70,7 @@ class NostrLogin extends IceSimplePage {
                           labelText: context.i18n.nostr_login_input_private_key,
                           controller: controller,
                           validator: (String? value) {
-                            if (!Validators.notEmpty(value)) return '';
+                            if (Validators.isEmpty(value)) return '';
                             return null;
                           },
                         ),

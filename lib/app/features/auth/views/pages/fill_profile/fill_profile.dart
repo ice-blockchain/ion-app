@@ -71,7 +71,7 @@ class FillProfile extends IceSimplePage {
                           labelText: context.i18n.fill_profile_input_name,
                           controller: nameController,
                           validator: (String? value) {
-                            if (!Validators.notEmpty(value)) return '';
+                            if (Validators.isEmpty(value)) return '';
                             return null;
                           },
                           textInputAction: TextInputAction.next,
@@ -90,8 +90,11 @@ class FillProfile extends IceSimplePage {
                           labelText: context.i18n.fill_profile_input_nickname,
                           controller: nicknameController,
                           validator: (String? value) {
-                            if (!Validators.notEmpty(value)) return '';
-                            if (!Validators.validLength(value, minLength: 4)) {
+                            if (Validators.isEmpty(value)) return '';
+                            if (Validators.invalidLength(
+                              value,
+                              minLength: 4,
+                            )) {
                               return '';
                             }
                             return null;
@@ -113,7 +116,7 @@ class FillProfile extends IceSimplePage {
                               context.i18n.fill_profile_input_who_invited,
                           controller: inviterController,
                           validator: (String? value) {
-                            if (!Validators.notEmpty(value)) return '';
+                            if (Validators.isEmpty(value)) return '';
                             return null;
                           },
                           textInputAction: TextInputAction.done,
