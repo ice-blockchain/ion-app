@@ -16,21 +16,15 @@ class SheetContent extends StatelessWidget {
   final double topPadding;
   final Color? backgroundColor;
 
-  static double get defaultPadding => 30.0.s;
+  static double get defaultPadding => 0.0.s;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: topPadding),
-      child: SheetContentScaffold(
-        backgroundColor:
-            backgroundColor ?? context.theme.appColors.primaryBackground,
-        body: Container(
-          color: backgroundColor ?? context.theme.appColors.primaryBackground,
-          transform: Matrix4.translationValues(0, -topPadding, 0),
-          child: body,
-        ),
-      ),
+    //TODO::handle top offset without transition
+    return SheetContentScaffold(
+      backgroundColor:
+          backgroundColor ?? context.theme.appColors.primaryBackground,
+      body: body,
     );
   }
 }

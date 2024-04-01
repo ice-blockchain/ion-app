@@ -67,6 +67,7 @@ class DiscoverCreators extends IceSimplePage {
                     );
                   },
                 ),
+                // TODO:: add ScreenBottomOffset.sliver factory for this case
                 SliverPadding(
                   padding: EdgeInsets.only(
                     bottom: 16.0.s +

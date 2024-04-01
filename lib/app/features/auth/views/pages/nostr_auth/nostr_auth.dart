@@ -68,6 +68,7 @@ class NostrAuth extends IceSimplePage {
                       mainAxisSize: MainAxisSize.max,
                     ),
                     SizedBox(
+                      //TODO::add ScreenBottomOffset with maintainBottomViewPadding flag
                       height: 58.0.s + MediaQuery.paddingOf(context).bottom,
                     ),
                   ],
