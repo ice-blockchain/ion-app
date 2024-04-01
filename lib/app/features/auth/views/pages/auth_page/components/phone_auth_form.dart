@@ -10,7 +10,9 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country_return_data.dart';
+import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/services/keyboard/keyboard.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -24,12 +26,14 @@ class PhoneAuthForm extends HookConsumerWidget {
     final ValueNotifier<Country> country = useState(countries[1]);
     final TextEditingController inputController = useTextEditingController();
     final ValueNotifier<bool> loading = useState(false);
+    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
+        useHideKeyboardAndCallOnce();
 
-    return Column(
-      children: <Widget>[
-        Form(
-          key: _formKey,
-          child: TextInput(
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          TextInput(
             prefix: Text('${country.value.iddCode} '),
             prefixIcon: CountryCodeInput(
               country: country.value,
@@ -51,32 +55,32 @@ class PhoneAuthForm extends HookConsumerWidget {
             textInputAction: TextInputAction.done,
             numbersOnly: true,
           ),
-        ),
-        SizedBox(
-          height: 16.0.s,
-        ),
-        Button(
-          disabled: loading.value,
-          trailingIcon: loading.value
-              ? const ButtonLoadingIndicator()
-              : Assets.images.icons.iconButtonNext.icon(
-                  color: context.theme.appColors.onPrimaryAccent,
-                ),
-          onPressed: () async {
-            if (_formKey.currentState!.validate()) {
-              FocusManager.instance.primaryFocus?.unfocus();
-              loading.value = true;
-              await Future<void>.delayed(const Duration(seconds: 1));
-              loading.value = false;
-              if (context.mounted) {
-                IceRoutes.enterCode.push(context);
+          SizedBox(
+            height: 16.0.s,
+          ),
+          Button(
+            disabled: loading.value,
+            trailingIcon: loading.value
+                ? const ButtonLoadingIndicator()
+                : Assets.images.icons.iconButtonNext.icon(
+                    color: context.theme.appColors.onPrimaryAccent,
+                  ),
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                loading.value = true;
+                hideKeyboard(context);
+                await Future<void>.delayed(const Duration(seconds: 1));
+                loading.value = false;
+                hideKeyboardAndCallOnce(
+                  callback: () => IceRoutes.enterCode.push(context),
+                );
               }
-            }
-          },
-          label: Text(context.i18n.button_continue),
-          mainAxisSize: MainAxisSize.max,
-        ),
-      ],
+            },
+            label: Text(context.i18n.button_continue),
+            mainAxisSize: MainAxisSize.max,
+          ),
+        ],
+      ),
     );
   }
 }

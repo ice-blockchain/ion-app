@@ -9,7 +9,9 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/services/keyboard/keyboard.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -20,14 +22,16 @@ class EmailAuthForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
+        useHideKeyboardAndCallOnce();
     final TextEditingController inputController = useTextEditingController();
     final ValueNotifier<bool> loading = useState(false);
 
-    return Column(
-      children: <Widget>[
-        Form(
-          key: _formKey,
-          child: TextInput(
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          TextInput(
             prefixIcon: TextInputIcons(
               hasRightDivider: true,
               icons: <Widget>[
@@ -46,32 +50,32 @@ class EmailAuthForm extends HookConsumerWidget {
               return null;
             },
           ),
-        ),
-        SizedBox(
-          height: 16.0.s,
-        ),
-        Button(
-          disabled: loading.value,
-          trailingIcon: loading.value
-              ? const ButtonLoadingIndicator()
-              : Assets.images.icons.iconButtonNext.icon(
-                  color: context.theme.appColors.onPrimaryAccent,
-                ),
-          onPressed: () async {
-            if (_formKey.currentState!.validate()) {
-              FocusManager.instance.primaryFocus?.unfocus();
-              loading.value = true;
-              await Future<void>.delayed(const Duration(seconds: 1));
-              loading.value = false;
-              if (context.mounted) {
-                IceRoutes.checkEmail.push(context);
+          SizedBox(
+            height: 16.0.s,
+          ),
+          Button(
+            disabled: loading.value,
+            trailingIcon: loading.value
+                ? const ButtonLoadingIndicator()
+                : Assets.images.icons.iconButtonNext.icon(
+                    color: context.theme.appColors.onPrimaryAccent,
+                  ),
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                loading.value = true;
+                hideKeyboard(context);
+                await Future<void>.delayed(const Duration(seconds: 1));
+                loading.value = false;
+                hideKeyboardAndCallOnce(
+                  callback: () => IceRoutes.checkEmail.push(context),
+                );
               }
-            }
-          },
-          label: Text(context.i18n.button_continue),
-          mainAxisSize: MainAxisSize.max,
-        ),
-      ],
+            },
+            label: Text(context.i18n.button_continue),
+            mainAxisSize: MainAxisSize.max,
+          ),
+        ],
+      ),
     );
   }
 }

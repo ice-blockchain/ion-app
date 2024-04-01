@@ -13,8 +13,10 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/components/avatar_picker.dart';
+import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/services/keyboard/keyboard.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -28,6 +30,8 @@ class FillProfile extends IceSimplePage {
     final TextEditingController nameController = useTextEditingController();
     final TextEditingController nicknameController = useTextEditingController();
     final TextEditingController inviterController = useTextEditingController();
+    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
+        useHideKeyboardAndCallOnce();
     final ValueNotifier<bool> loading = useState(false);
 
     return SheetContent(
@@ -128,15 +132,16 @@ class FillProfile extends IceSimplePage {
                                 ),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              FocusManager.instance.primaryFocus?.unfocus();
                               loading.value = true;
+                              hideKeyboard(context);
                               await Future<void>.delayed(
                                 const Duration(seconds: 1),
                               );
                               loading.value = false;
-                              if (context.mounted) {
-                                IceRoutes.selectLanguages.push(context);
-                              }
+                              hideKeyboardAndCallOnce(
+                                callback: () =>
+                                    IceRoutes.selectLanguages.push(context),
+                              );
                             }
                           },
                           label: Text(context.i18n.button_save),

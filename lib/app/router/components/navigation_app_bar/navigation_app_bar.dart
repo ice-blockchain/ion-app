@@ -7,7 +7,6 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_back_button.dart';
-import 'package:ice/app/services/keyboard/keyboard.dart';
 
 class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   const NavigationAppBar._({
@@ -82,14 +81,8 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     final Widget appBarContent = NavigationToolbar(
       leading: showBackButton
           ? NavigationBackButton(
-              onBackPress ??
-                  () {
-                    if (hideKeyboardOnBack) {
-                      hideKeyboardAndCall(context, callback: context.pop);
-                    } else {
-                      context.pop();
-                    }
-                  },
+              onBackPress ?? context.pop,
+              hideKeyboardOnBack: hideKeyboardOnBack,
             )
           : null,
       middle: titleIcon != null

@@ -6,8 +6,8 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/code_fields/code_fields.dart';
+import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/services/keyboard/keyboard.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class EnterCodeFields extends HookWidget {
@@ -21,6 +21,8 @@ class EnterCodeFields extends HookWidget {
     final StreamController<ErrorAnimationType> errorController =
         useStreamController<ErrorAnimationType>();
     final ValueNotifier<bool> invalidCode = useState(false);
+    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
+        useHideKeyboardAndCallOnce();
 
     return SizedBox(
       height: 95.0.s,
@@ -37,11 +39,9 @@ class EnterCodeFields extends HookWidget {
                 codeController.clear();
                 errorController.add(ErrorAnimationType.shake);
               } else {
-                hideKeyboardAndCall(
-                  context,
-                  callback: () {
-                    IceRoutes.fillProfile.pushReplacement(context);
-                  },
+                hideKeyboardAndCallOnce(
+                  callback: () =>
+                      IceRoutes.fillProfile.pushReplacement(context),
                 );
               }
             },

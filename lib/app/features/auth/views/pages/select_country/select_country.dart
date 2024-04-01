@@ -10,10 +10,10 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country_return_data.dart';
+import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/app/services/keyboard/keyboard.dart';
 
 class SelectCountries extends IceSimplePage {
   const SelectCountries(super._route, super.payload);
@@ -21,6 +21,8 @@ class SelectCountries extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     final ValueNotifier<String> searchText = useState('');
+    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
+        useHideKeyboardAndCallOnce();
 
     final List<Country> filteredCountries = searchText.value.isEmpty
         ? countries
@@ -61,12 +63,9 @@ class SelectCountries extends IceSimplePage {
                     final Country country = filteredCountries[index];
                     return GestureDetector(
                       onTap: () {
-                        hideKeyboardAndCall(
-                          context,
-                          callback: () {
-                            context
-                                .pop(SelectCountryReturnData(country: country));
-                          },
+                        hideKeyboardAndCallOnce(
+                          callback: () => context
+                              .pop(SelectCountryReturnData(country: country)),
                         );
                       },
                       child: ScreenSideOffset.small(
