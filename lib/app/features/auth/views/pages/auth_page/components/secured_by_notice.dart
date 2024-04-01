@@ -6,8 +6,8 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SecuredBy extends StatelessWidget {
-  const SecuredBy({super.key});
+class SecuredByNotice extends StatelessWidget {
+  const SecuredByNotice({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -13,7 +13,7 @@ import 'package:ice/app/features/auth/views/components/auth_header/auth_header.d
 import 'package:ice/app/features/auth/views/components/terms_privacy/terms_privacy.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/email_auth_form.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/phone_auth_form.dart';
-import 'package:ice/app/features/auth/views/pages/auth_page/components/secured_by.dart';
+import 'package:ice/app/features/auth/views/pages/auth_page/components/secured_by_notice.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/socials.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -75,7 +75,7 @@ class AuthPage extends IceSimplePage {
                     padding: EdgeInsets.only(top: 16.0.s, bottom: 20.0.s),
                     child: const Socials(),
                   ),
-                  const SecuredBy(),
+                  const SecuredByNotice(),
                   SizedBox(height: 14.0.s),
                   const TermsPrivacy(),
                   SizedBox(
