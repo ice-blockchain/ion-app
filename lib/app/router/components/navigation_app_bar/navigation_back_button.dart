@@ -31,7 +31,7 @@ class NavigationBackButton extends HookWidget {
         padding: EdgeInsets.zero,
         onPressed: () => hideKeyboardOnBack
             ? hideKeyboardAndCallOnce(callback: onPress)
-            : onPress,
+            : onPress(),
         icon: Assets.images.icons.iconBackArrow.icon(
           size: iconSize,
         ),
