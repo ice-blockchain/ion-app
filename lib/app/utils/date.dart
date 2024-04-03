@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:intl/intl.dart';
 
+/*
+  For the given timestamp returns a data in format 'MMM d yyyy'.
+  But has 2 special cases: if a date is Yesterday and Today then returns a corresponding translation.
+ */
 String toPastDateDisplayValue(int timestamp, BuildContext context) {
   final DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
   final DateTime now = DateTime.now();
@@ -21,6 +25,9 @@ String toPastDateDisplayValue(int timestamp, BuildContext context) {
   return DateFormat('MMM d yyyy').format(date);
 }
 
+/*
+  For the given timestamp returns a time in format 'HH:mm'
+ */
 String toTimeDisplayValue(int timestamp) {
   final DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
   return DateFormat('HH:mm').format(date);

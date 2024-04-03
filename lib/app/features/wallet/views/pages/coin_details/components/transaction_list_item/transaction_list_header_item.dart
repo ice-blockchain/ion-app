@@ -18,13 +18,13 @@ class TransactionListHeaderItem extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onPress;
 
-  Color getBorderColor(BuildContext context) {
+  Color _getBorderColor(BuildContext context) {
     return isSelected
         ? context.theme.appColors.primaryAccent
         : context.theme.appColors.onTerararyFill;
   }
 
-  Color getTextColor(BuildContext context) {
+  Color _getTextColor(BuildContext context) {
     return isSelected
         ? context.theme.appColors.primaryText
         : context.theme.appColors.onTertararyBackground;
@@ -44,7 +44,7 @@ class TransactionListHeaderItem extends StatelessWidget {
             color: context.theme.appColors.tertararyBackground,
             borderRadius: borderRadius,
             border: Border.all(
-              color: getBorderColor(context),
+              color: _getBorderColor(context),
               width: 1.0.s,
             ),
           ),
@@ -60,7 +60,7 @@ class TransactionListHeaderItem extends StatelessWidget {
               Text(
                 networkType.getDisplayName(context),
                 style: context.theme.appTextThemes.body2.copyWith(
-                  color: getTextColor(context),
+                  color: _getTextColor(context),
                 ),
               ),
             ],

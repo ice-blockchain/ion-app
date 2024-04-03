@@ -21,7 +21,7 @@ class TransactionListItem extends StatelessWidget {
   final CoinTransactionData transactionData;
   final CoinData coinData;
 
-  Color getTextColor(BuildContext context) {
+  Color _getTextColor(BuildContext context) {
     return switch (transactionData.transactionType) {
       TransactionType.receive => context.theme.appColors.success,
       TransactionType.send => context.theme.appColors.primaryText,
@@ -53,7 +53,7 @@ class TransactionListItem extends StatelessWidget {
           Text(
             '${transactionData.transactionType.sign}${formatToCurrency(transactionData.coinAmount, '')} ${coinData.abbreviation}',
             style: context.theme.appTextThemes.body.copyWith(
-              color: getTextColor(context),
+              color: _getTextColor(context),
             ),
           ),
           Text(

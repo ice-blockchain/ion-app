@@ -13,21 +13,21 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
 
   final TransactionType transactionType;
 
-  Color getBorderColor(BuildContext context) {
+  Color _getBorderColor(BuildContext context) {
     return switch (transactionType) {
       TransactionType.receive => context.theme.appColors.success,
       TransactionType.send => context.theme.appColors.onTerararyFill,
     };
   }
 
-  Color getIconColor(BuildContext context) {
+  Color _getIconColor(BuildContext context) {
     return switch (transactionType) {
       TransactionType.receive => context.theme.appColors.secondaryBackground,
       TransactionType.send => context.theme.appColors.secondaryText,
     };
   }
 
-  Color getBackgroundColor(BuildContext context) {
+  Color _getBackgroundColor(BuildContext context) {
     return switch (transactionType) {
       TransactionType.receive => context.theme.appColors.success,
       TransactionType.send => context.theme.appColors.onSecondaryBackground,
@@ -42,14 +42,14 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
       height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: getBackgroundColor(context),
+        color: _getBackgroundColor(context),
         borderRadius: BorderRadius.circular(10.0.s),
         border: Border.all(
-          color: getBorderColor(context),
+          color: _getBorderColor(context),
           width: 1.0.s,
         ),
       ),
-      child: transactionType.iconAsset.icon(color: getIconColor(context)),
+      child: transactionType.iconAsset.icon(color: _getIconColor(context)),
     );
   }
 }
