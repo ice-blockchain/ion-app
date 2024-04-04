@@ -67,7 +67,10 @@ class Balance extends HookConsumerWidget {
               top: 12.0.s,
               bottom: 16.0.s,
             ),
-            child: const BalanceActions(),
+            child: BalanceActions(
+              onReceive: () {},
+              onSend: () {},
+            ),
           ),
         ],
       ),

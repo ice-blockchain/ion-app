@@ -6,7 +6,10 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
+import 'package:ice/app/features/wallet/model/network_type.dart';
+import 'package:ice/app/features/wallet/views/pages/coin_receive_modal/model/coin_receive_modal_data.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -14,9 +17,11 @@ class Balance extends HookConsumerWidget {
   const Balance({
     super.key,
     required this.coinData,
+    required this.networkType,
   });
 
   final CoinData coinData;
+  final NetworkType networkType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,7 +59,18 @@ class Balance extends HookConsumerWidget {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 20.0.s, top: 11.0.s),
-            child: const BalanceActions(),
+            child: BalanceActions(
+              onReceive: () {
+                IceRoutes.coinReceive.push(
+                  context,
+                  payload: CoinReceiveModalData(
+                    coinData: coinData,
+                    networkType: networkType,
+                  ),
+                );
+              },
+              onSend: () {},
+            ),
           ),
         ],
       ),

@@ -23,12 +23,14 @@ class ListItem extends StatelessWidget {
     EdgeInsetsGeometry? leadingPadding,
     EdgeInsetsGeometry? trailingPadding,
     BoxConstraints? constraints,
+    bool? switchTitleStyles,
     this.backgroundColor,
     this.onTap,
   })  : borderRadius = borderRadius ?? defaultBorderRadius,
         contentPadding = contentPadding ?? defaultContentPadding,
         leadingPadding = leadingPadding ?? defaultLeadingPadding,
         trailingPadding = trailingPadding ?? defaultTrailingPadding,
+        switchTitleStyles = switchTitleStyles ?? false,
         constraints = constraints ?? defaultConstraints;
 
   factory ListItem.checkbox({
@@ -70,6 +72,7 @@ class ListItem extends StatelessWidget {
   final Widget? leading;
   final Widget? title;
   final Widget? subtitle;
+  final bool switchTitleStyles;
   final Widget? trailing;
   final BoxBorder? border;
   final BorderRadius? borderRadius;
@@ -110,13 +113,17 @@ class ListItem extends StatelessWidget {
                 children: <Widget>[
                   if (title != null)
                     DefaultTextStyle(
-                      style: _getDefaultTitleStyle(context),
+                      style: switchTitleStyles
+                          ? _getDefaultSubtitleStyle(context)
+                          : _getDefaultTitleStyle(context),
                       overflow: TextOverflow.ellipsis,
                       child: title!,
                     ),
                   if (subtitle != null)
                     DefaultTextStyle(
-                      style: _getDefaultSubtitleStyle(context),
+                      style: switchTitleStyles
+                          ? _getDefaultTitleStyle(context)
+                          : _getDefaultSubtitleStyle(context),
                       overflow: TextOverflow.ellipsis,
                       child: subtitle!,
                     ),

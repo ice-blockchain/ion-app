@@ -14,8 +14,10 @@ import 'package:ice/app/features/wallet/views/pages/coin_details/components/empt
 import 'package:ice/app/features/wallet/views/pages/coin_details/components/transaction_list_item/section_header.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/components/transaction_list_item/transaction_list_header.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/components/transaction_list_item/transaction_list_item.dart';
+import 'package:ice/app/features/wallet/views/pages/coin_details/components/transaction_list_item/transaction_list_loading_state.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/providers/coin_transactions_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/providers/hooks/use_transactions_by_date.dart';
+import 'package:ice/app/features/wallet/views/pages/coin_details/providers/selectors/coin_transactions_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -34,6 +36,7 @@ class CoinDetailsPage extends IcePage<CoinData> {
     final String coinId = coinData?.abbreviation ?? '';
     final Map<String, List<CoinTransactionData>> coinTransactionsMap =
         useTransactionsByDate(context, ref);
+    final bool isLoading = coinTransactionsIsLoadingSelector(ref);
     final ValueNotifier<NetworkType> activeNetworkType =
         useState<NetworkType>(NetworkType.all);
 
@@ -67,13 +70,14 @@ class CoinDetailsPage extends IcePage<CoinData> {
                 const Delimiter(),
                 Balance(
                   coinData: coinData,
+                  networkType: activeNetworkType.value,
                 ),
                 const Delimiter(),
               ],
             ),
           ),
-          if (coinTransactionsMap.isEmpty) const EmptyState(),
-          if (coinTransactionsMap.isNotEmpty)
+          if (coinTransactionsMap.isEmpty && !isLoading) const EmptyState(),
+          if (coinTransactionsMap.isNotEmpty || isLoading)
             SliverToBoxAdapter(
               child: TransactionListHeader(
                 selectedNetworkType: activeNetworkType.value,
@@ -81,6 +85,7 @@ class CoinDetailsPage extends IcePage<CoinData> {
                     activeNetworkType.value = newNetworkType,
               ),
             ),
+          if (isLoading) const TransactionListLoadingState(),
           if (coinTransactionsMap.isNotEmpty)
             for (final MapEntry<String, List<CoinTransactionData>>(
                   key: String date,

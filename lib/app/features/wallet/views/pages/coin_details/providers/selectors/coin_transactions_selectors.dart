@@ -10,3 +10,11 @@ List<CoinTransactionData> coinTransactionsSelector(WidgetRef ref) {
     ),
   );
 }
+
+bool coinTransactionsIsLoadingSelector(WidgetRef ref) {
+  return ref.watch(
+    coinTransactionsNotifierProvider.select(
+      (AsyncValue<List<CoinTransactionData>> data) => data.isLoading,
+    ),
+  );
+}
