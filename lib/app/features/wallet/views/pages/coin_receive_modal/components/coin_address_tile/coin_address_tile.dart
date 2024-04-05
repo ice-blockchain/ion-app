@@ -8,6 +8,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_receive_modal/components/copied_tooltip/copied_tooltip.dart';
 import 'package:ice/app/router/components/navigation_button/navigation_button.dart';
+import 'package:ice/app/utils/address.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class CoinAddressTile extends HookConsumerWidget {
@@ -66,7 +67,7 @@ class CoinAddressTile extends HookConsumerWidget {
                 height: 7.0.s,
               ),
               Text(
-                '0xf38405dk9N...cak30fkjkw3049',
+                shortenAddress('0x122abc456def789ghij012klmno345pqrs678tuv'),
                 style: context.theme.appTextThemes.caption.copyWith(
                   color: context.theme.appColors.tertararyText,
                 ),
