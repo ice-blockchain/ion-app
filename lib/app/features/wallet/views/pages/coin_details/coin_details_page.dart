@@ -86,7 +86,7 @@ class CoinDetailsPage extends IcePage<CoinData> {
               ),
             ),
           if (isLoading) const TransactionListLoadingState(),
-          if (coinTransactionsMap.isNotEmpty)
+          if (coinTransactionsMap.isNotEmpty && !isLoading)
             for (final MapEntry<String, List<CoinTransactionData>>(
                   key: String date,
                   value: List<CoinTransactionData> transactions
