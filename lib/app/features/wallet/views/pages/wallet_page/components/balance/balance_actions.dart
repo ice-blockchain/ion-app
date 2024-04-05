@@ -8,7 +8,12 @@ import 'package:ice/generated/assets.gen.dart';
 class BalanceActions extends StatelessWidget {
   const BalanceActions({
     super.key,
+    required this.onReceive,
+    required this.onSend,
   });
+
+  final VoidCallback onReceive;
+  final VoidCallback onSend;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,7 @@ class BalanceActions extends StatelessWidget {
             label: Text(
               context.i18n.wallet_send,
             ),
-            onPressed: () {},
+            onPressed: onSend,
           ),
         ),
         SizedBox(
@@ -34,7 +39,7 @@ class BalanceActions extends StatelessWidget {
             label: Text(
               context.i18n.wallet_receive,
             ),
-            onPressed: () {},
+            onPressed: onReceive,
           ),
         ),
       ],

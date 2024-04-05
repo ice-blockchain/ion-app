@@ -8,8 +8,8 @@ enum TransactionType {
 
   String getDisplayName(BuildContext context) {
     return switch (this) {
-      TransactionType.send => context.i18n.wallet_send,
-      TransactionType.receive => context.i18n.wallet_receive,
+      TransactionType.send => context.i18n.wallet_sent,
+      TransactionType.receive => context.i18n.wallet_received,
     };
   }
 
