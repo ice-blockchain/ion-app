@@ -101,6 +101,7 @@
     "core_all",
     "core_nfts",
     "core_coins",
+    "core_done",
     "core_empty_search",
     "core_empty_transactions_history",
     "date_today",

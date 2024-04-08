@@ -101,6 +101,7 @@
   "core_all": "All",
   "core_nfts": "NFTs",
   "core_coins": "Coins",
+  "core_done": "Done",
   "core_empty_search": "No results found",
   "core_empty_transactions_history": "You don't have any transactions yet",
   "date_today": "Today",

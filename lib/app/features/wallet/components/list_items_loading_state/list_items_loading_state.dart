@@ -5,8 +5,8 @@ import 'package:ice/app/components/separated/separated_column.dart';
 import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/num.dart';
 
-class TransactionListLoadingState extends StatelessWidget {
-  const TransactionListLoadingState({
+class ListItemsLoadingState extends StatelessWidget {
+  const ListItemsLoadingState({
     super.key,
   });
 
