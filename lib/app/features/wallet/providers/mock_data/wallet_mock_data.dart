@@ -30,6 +30,13 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
     name: 'TetherUS',
     amount: 100.00,
     balance: 99.99,
+    iconUrl: Assets.images.wallet.walletTether,
+  ),
+  CoinData(
+    abbreviation: 'USDC',
+    name: 'USDC',
+    amount: 100.00,
+    balance: 99.99,
     iconUrl: Assets.images.wallet.walletUsdc,
   ),
   CoinData(

@@ -27,6 +27,7 @@ import 'package:ice/app/features/user/pages/switch_account_page/switch_account_p
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/coin_details_page.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_receive_modal/coin_receive_modal.dart';
+import 'package:ice/app/features/wallet/views/pages/manage_coins/manage_coins_page.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sorting_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
@@ -155,6 +156,7 @@ enum IceRoutes<PayloadType> {
       IceRoutes.walletMainModal,
       IceRoutes.coinDetails,
       IceRoutes.coinReceive,
+      IceRoutes.manageCoins,
     ],
   ),
   walletMainModal(
@@ -171,6 +173,10 @@ enum IceRoutes<PayloadType> {
   ),
   coinReceive(
     CoinReceiveModal.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  manageCoins(
+    ManageCoinsPage.new,
     type: IceRouteType.bottomSheet,
   ),
   coinDetails<CoinData>(CoinDetailsPage.new),

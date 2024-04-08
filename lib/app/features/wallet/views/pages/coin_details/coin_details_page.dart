@@ -5,6 +5,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/coin_transaction_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
@@ -14,7 +15,6 @@ import 'package:ice/app/features/wallet/views/pages/coin_details/components/empt
 import 'package:ice/app/features/wallet/views/pages/coin_details/components/transaction_list_item/section_header.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/components/transaction_list_item/transaction_list_header.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/components/transaction_list_item/transaction_list_item.dart';
-import 'package:ice/app/features/wallet/views/pages/coin_details/components/transaction_list_item/transaction_list_loading_state.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/providers/coin_transactions_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/providers/hooks/use_transactions_by_date.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/providers/selectors/coin_transactions_selectors.dart';
@@ -85,7 +85,7 @@ class CoinDetailsPage extends IcePage<CoinData> {
                     activeNetworkType.value = newNetworkType,
               ),
             ),
-          if (isLoading) const TransactionListLoadingState(),
+          if (isLoading) const ListItemsLoadingState(),
           if (coinTransactionsMap.isNotEmpty && !isLoading)
             for (final MapEntry<String, List<CoinTransactionData>>(
                   key: String date,
