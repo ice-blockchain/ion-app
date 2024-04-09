@@ -24,6 +24,7 @@ class ListItem extends StatelessWidget {
     EdgeInsetsGeometry? trailingPadding,
     BoxConstraints? constraints,
     bool? switchTitleStyles,
+    this.isSelected,
     this.backgroundColor,
     this.onTap,
   })  : borderRadius = borderRadius ?? defaultBorderRadius,
@@ -66,6 +67,7 @@ class ListItem extends StatelessWidget {
     required Widget subtitle,
     bool verifiedBadge,
     bool iceBadge,
+    bool isSelected,
     DateTime? timeago,
   }) = _ListItemUser;
 
@@ -82,6 +84,7 @@ class ListItem extends StatelessWidget {
   final BoxConstraints constraints;
   final Color? backgroundColor;
   final VoidCallback? onTap;
+  final bool? isSelected;
 
   static BorderRadius get defaultBorderRadius =>
       BorderRadius.all(Radius.circular(16.0.s));
@@ -164,16 +167,24 @@ class ListItem extends StatelessWidget {
   }
 
   Color _getBackgroundColor(BuildContext context) {
-    return backgroundColor ?? context.theme.appColors.tertararyBackground;
+    return isSelected == true
+        ? context.theme.appColors.primaryAccent
+        : backgroundColor ?? context.theme.appColors.tertararyBackground;
   }
 
   TextStyle _getDefaultTitleStyle(BuildContext context) {
-    return context.theme.appTextThemes.body
-        .copyWith(color: context.theme.appColors.primaryText);
+    return context.theme.appTextThemes.body.copyWith(
+      color: isSelected == true
+          ? context.theme.appColors.onPrimaryAccent
+          : context.theme.appColors.primaryText,
+    );
   }
 
   TextStyle _getDefaultSubtitleStyle(BuildContext context) {
-    return context.theme.appTextThemes.caption3
-        .copyWith(color: context.theme.appColors.secondaryText);
+    return context.theme.appTextThemes.caption3.copyWith(
+      color: isSelected == true
+          ? context.theme.appColors.onPrimaryAccent
+          : context.theme.appColors.secondaryText,
+    );
   }
 }

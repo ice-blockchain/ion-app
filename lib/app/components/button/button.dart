@@ -8,9 +8,9 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 part 'variants/button_compact.dart';
+part 'variants/button_dropdown.dart';
 part 'variants/button_icon.dart';
 part 'variants/button_menu.dart';
-part 'variants/button_dropdown.dart';
 
 enum ButtonType {
   primary,
@@ -67,6 +67,8 @@ class Button extends StatelessWidget {
     ButtonType type,
     bool disabled,
     Color? tintColor,
+    Color? backgroundColor,
+    Size? minimumSize,
   }) = _ButtonCompact;
 
   factory Button.menu({

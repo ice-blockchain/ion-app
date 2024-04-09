@@ -3,9 +3,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
+import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coin_item.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
+import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
+import 'package:ice/app/hooks/use_on_init.dart';
 
 class CoinsTab extends HookConsumerWidget {
   const CoinsTab({
@@ -17,6 +21,19 @@ class CoinsTab extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<CoinData> coins = useFilteredWalletCoins(ref);
+    final String searchValue = walletAssetSearchValueSelector(ref, tabType);
+    final String walletId = walletIdSelector(ref);
+
+    useOnInit(
+      () {
+        if (walletId.isNotEmpty) {
+          ref
+              .read(coinsNotifierProvider.notifier)
+              .fetch(searchValue: searchValue, walletId: walletId);
+        }
+      },
+      <Object?>[searchValue, walletId],
+    );
 
     if (coins.isEmpty) {
       return const SliverToBoxAdapter(

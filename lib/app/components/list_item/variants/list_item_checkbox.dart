@@ -16,6 +16,7 @@ class _ListItemWithCheckbox extends ListItem {
     required super.onTap,
     required this.value,
   }) : super(
+          isSelected: value,
           trailing: value
               ? const Icon(
                   Icons.check_box,

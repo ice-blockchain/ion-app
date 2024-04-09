@@ -64,6 +64,20 @@ class TextInput extends HookWidget {
   Widget build(BuildContext context) {
     final ValueNotifier<String?> error = useState(null);
 
+    useEffect(
+      () {
+        void listener() {
+          onChanged?.call(controller?.text ?? '');
+        }
+
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => controller?.addListener(listener),
+        );
+        return () => controller?.removeListener(listener);
+      },
+      <Object?>[controller, onChanged],
+    );
+
     return TextFormField(
       scrollPadding: scrollPadding,
       controller: controller,
