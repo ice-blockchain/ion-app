@@ -81,6 +81,7 @@ class TextInput extends HookWidget {
     return TextFormField(
       scrollPadding: scrollPadding,
       controller: controller,
+      onChanged: controller == null ? onChanged : null,
       initialValue: initialValue,
       maxLines: maxLines,
       minLines: minLines,
