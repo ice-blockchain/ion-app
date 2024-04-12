@@ -1,5 +1,8 @@
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 
+const String mockWalletIconUrl =
+    'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png';
+
 List<WalletData> mockedWalletDataArray = <WalletData>[
   const WalletData(
     id: '1',

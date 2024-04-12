@@ -13,6 +13,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
+import 'package:ice/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -66,8 +67,7 @@ class CreateNewWalletModal extends IceSimplePage {
                       WalletData(
                     id: DateTime.now().toString(),
                     name: walletName.value,
-                    icon:
-                        'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+                    icon: mockWalletIconUrl,
                     balance: 0.0,
                   );
                   context.pop();
