@@ -1,5 +1,5 @@
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
-import 'package:ice/app/features/wallet/providers/mock_data/wallet_mock_data.dart';
+import 'package:ice/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallets_data_provider.g.dart';
@@ -28,6 +28,12 @@ class WalletsDataNotifier extends _$WalletsDataNotifier {
         ),
         ifAbsent: () => newData,
       );
+    state = Map<String, WalletData>.unmodifiable(newState);
+  }
+
+  void deleteWallet(String walletId) {
+    final Map<String, WalletData> newState = Map<String, WalletData>.from(state)
+      ..removeWhere((String key, _) => key == walletId);
     state = Map<String, WalletData>.unmodifiable(newState);
   }
 }

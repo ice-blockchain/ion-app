@@ -8,9 +8,11 @@ class _ButtonCompact extends Button {
     super.leadingIcon,
     super.label,
     super.mainAxisSize,
+    super.backgroundColor,
     super.type,
     super.disabled,
     super.tintColor,
+    Size? minimumSize,
     ButtonStyle style = const ButtonStyle(),
   }) : super(
           style: style.merge(
@@ -18,7 +20,8 @@ class _ButtonCompact extends Button {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
               ),
-              minimumSize: Size(40.0.s, 40.0.s),
+              minimumSize: minimumSize ?? Size(40.0.s, 40.0.s),
+              backgroundColor: backgroundColor,
             ),
           ),
         );

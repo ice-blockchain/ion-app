@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ice/app/components/inputs/hooks/use_text_changed.dart';
 import 'package:ice/app/components/inputs/search_input/components/cancel_button.dart';
 import 'package:ice/app/components/inputs/search_input/components/search_clear_button.dart';
 import 'package:ice/app/components/inputs/search_input/hooks/use_node_focused.dart';
-import 'package:ice/app/components/inputs/search_input/hooks/use_text_changed.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -36,7 +36,7 @@ class SearchInput extends HookWidget {
     final ValueNotifier<bool> focused = useNodeFocused(focusNode);
 
     useTextChanged(
-      searchController,
+      controller: searchController,
       onTextChanged: (String text) {
         onTextChanged(text);
         showClear.value = text.isNotEmpty;

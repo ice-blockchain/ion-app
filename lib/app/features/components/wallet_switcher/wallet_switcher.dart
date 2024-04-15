@@ -5,7 +5,8 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/providers/wallet_data_selectors.dart';
+import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
+import 'package:ice/app/router/app_routes.dart';
 
 class WalletSwitcher extends HookConsumerWidget {
   const WalletSwitcher({
@@ -14,10 +15,14 @@ class WalletSwitcher extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final String walletName = walletNameSelector(ref);
-    final String walletIcon = walletIconSelector(ref);
+    final String walletId = walletIdSelector(ref);
+    final String walletName = walletNameSelector(ref: ref, walletId: walletId);
+    final String walletIcon = walletIconSelector(ref: ref, walletId: walletId);
+
     return Button.dropdown(
-      onPressed: () {},
+      onPressed: () {
+        IceRoutes.wallets.push(context);
+      },
       leadingIcon: Avatar(
         size: 28.0.s,
         imageUrl: walletIcon,

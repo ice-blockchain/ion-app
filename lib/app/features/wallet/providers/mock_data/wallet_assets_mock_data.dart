@@ -1,6 +1,5 @@
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
-import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 List<CoinData> mockedCoinsDataArray = <CoinData>[
@@ -122,35 +121,5 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     currency: 'ETH',
     currencyIconUrl:
         'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
-  ),
-];
-
-List<WalletData> mockedWalletDataArray = <WalletData>[
-  WalletData(
-    id: '1',
-    name: 'ice.wallet',
-    icon:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-    balance: 36594.33,
-    coins: mockedCoinsDataArray,
-    nfts: mockedNftsDataArray,
-  ),
-  const WalletData(
-    id: '2',
-    name: 'Airdrop wallet',
-    icon:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-15.png',
-    balance: 48.00,
-    coins: <CoinData>[],
-    nfts: mockedNftsDataArray,
-  ),
-  WalletData(
-    id: '3',
-    name: 'For transfers',
-    icon:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
-    balance: 279.99,
-    coins: mockedCoinsDataArray,
-    nfts: <NftData>[],
   ),
 ];

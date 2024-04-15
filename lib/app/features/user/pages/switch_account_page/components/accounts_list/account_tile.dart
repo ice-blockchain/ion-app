@@ -25,6 +25,7 @@ class AccountsTile extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ListItem.user(
+        isSelected: isActiveUser,
         onTap: () {
           if (!isActiveUser) {
             ref.read(userDataNotifierProvider.notifier).userData = userData;
@@ -32,21 +33,11 @@ class AccountsTile extends HookConsumerWidget {
         },
         title: Text(
           userData.name,
-          style: TextStyle(
-            color: isActiveUser
-                ? context.theme.appColors.onPrimaryAccent
-                : context.theme.appColors.primaryText,
-          ),
         ),
         subtitle: Text(
           prefixUsername(
             username: userData.nickname,
             context: context,
-          ),
-          style: TextStyle(
-            color: isActiveUser
-                ? context.theme.appColors.onPrimaryAccent
-                : context.theme.appColors.tertararyText,
           ),
         ),
         profilePicture: userData.profilePicture,
@@ -56,9 +47,7 @@ class AccountsTile extends HookConsumerWidget {
                 .icon(color: context.theme.appColors.onPrimaryAccent)
             : null,
         contentPadding: EdgeInsets.symmetric(horizontal: 12.0.s),
-        backgroundColor: isActiveUser
-            ? context.theme.appColors.primaryAccent
-            : context.theme.appColors.tertararyBackground,
+        backgroundColor: context.theme.appColors.tertararyBackground,
         borderRadius: ListItem.defaultBorderRadius,
         constraints: ListItem.defaultConstraints,
       ),

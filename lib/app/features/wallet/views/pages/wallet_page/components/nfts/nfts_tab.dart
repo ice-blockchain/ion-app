@@ -6,10 +6,14 @@ import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
+import 'package:ice/app/features/wallet/providers/nfts_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nft_grid_item.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nft_list_item.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
+import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
+import 'package:ice/app/hooks/use_on_init.dart';
 
 class NftsTab extends HookConsumerWidget {
   const NftsTab({
@@ -22,6 +26,20 @@ class NftsTab extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final List<NftData> nfts = useFilteredWalletNfts(ref);
     final NftLayoutType nftLayoutType = nftLayoutTypeSelector(ref);
+
+    final String searchValue = walletAssetSearchValueSelector(ref, tabType);
+    final String walletId = walletIdSelector(ref);
+
+    useOnInit(
+      () {
+        if (walletId.isNotEmpty) {
+          ref
+              .read(nftsNotifierProvider.notifier)
+              .fetch(searchValue: searchValue, walletId: walletId);
+        }
+      },
+      <Object?>[searchValue, walletId],
+    );
 
     if (nfts.isEmpty) {
       return const SliverToBoxAdapter(

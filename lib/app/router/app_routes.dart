@@ -32,6 +32,11 @@ import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sort
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/wallet_page.dart';
+import 'package:ice/app/features/wallets/pages/create_new_wallet_modal/create_new_wallet_modal.dart';
+import 'package:ice/app/features/wallets/pages/delete_wallet_modal/delete_wallet_modal.dart';
+import 'package:ice/app/features/wallets/pages/edit_wallet_modal/edit_wallet_modal.dart';
+import 'package:ice/app/features/wallets/pages/manage_wallets_modal/manage_wallets_modal.dart';
+import 'package:ice/app/features/wallets/pages/wallets_modal/wallets_modal.dart';
 
 const IceRoutes<void> initialPage = IceRoutes.splash;
 
@@ -157,7 +162,32 @@ enum IceRoutes<PayloadType> {
       IceRoutes.coinDetails,
       IceRoutes.coinReceive,
       IceRoutes.manageCoins,
+      IceRoutes.wallets,
+      IceRoutes.manageWallets,
+      IceRoutes.createWallet,
+      IceRoutes.editWallet,
+      IceRoutes.deleteWallet,
     ],
+  ),
+  wallets(
+    WalletsModal.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  manageWallets(
+    ManageWalletsModal.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  createWallet(
+    CreateNewWalletModal.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  editWallet(
+    EditWalletModal.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  deleteWallet(
+    DeleteWalletModal.new,
+    type: IceRouteType.bottomSheet,
   ),
   walletMainModal(
     WalletMainModalPage.new,

@@ -9,7 +9,6 @@ import 'package:ice/app/features/wallet/components/list_items_loading_state/list
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/coin_transaction_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
-import 'package:ice/app/features/wallet/providers/wallet_data_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/components/balance/balance.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/components/empty_state/empty_state.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/components/transaction_list_item/section_header.dart';
@@ -19,6 +18,7 @@ import 'package:ice/app/features/wallet/views/pages/coin_details/providers/coin_
 import 'package:ice/app/features/wallet/views/pages/coin_details/providers/hooks/use_transactions_by_date.dart';
 import 'package:ice/app/features/wallet/views/pages/coin_details/providers/selectors/coin_transactions_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
+import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 

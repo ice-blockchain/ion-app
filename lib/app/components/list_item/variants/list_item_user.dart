@@ -18,6 +18,7 @@ class _ListItemUser extends ListItem {
     String? profilePicture,
     bool verifiedBadge = false,
     bool iceBadge = false,
+    super.isSelected,
     DateTime? timeago,
   }) : super(
           leading: leading ??
@@ -64,20 +65,26 @@ class _ListItemUser extends ListItem {
 
   @override
   Color _getBackgroundColor(BuildContext context) {
-    return backgroundColor ?? Colors.transparent;
+    return isSelected == true
+        ? context.theme.appColors.primaryAccent
+        : backgroundColor ?? Colors.transparent;
   }
 
   @override
   TextStyle _getDefaultTitleStyle(BuildContext context) {
     return context.theme.appTextThemes.subtitle3.copyWith(
-      color: context.theme.appColors.primaryText,
+      color: isSelected == true
+          ? context.theme.appColors.onPrimaryAccent
+          : context.theme.appColors.primaryText,
     );
   }
 
   @override
   TextStyle _getDefaultSubtitleStyle(BuildContext context) {
     return context.theme.appTextThemes.caption.copyWith(
-      color: context.theme.appColors.tertararyText,
+      color: isSelected == true
+          ? context.theme.appColors.onPrimaryAccent
+          : context.theme.appColors.tertararyText,
     );
   }
 }
