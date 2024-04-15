@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ice/app/components/inputs/hooks/use_text_changed.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_decoration.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -64,18 +65,9 @@ class TextInput extends HookWidget {
   Widget build(BuildContext context) {
     final ValueNotifier<String?> error = useState(null);
 
-    useEffect(
-      () {
-        void listener() {
-          onChanged?.call(controller?.text ?? '');
-        }
-
-        WidgetsBinding.instance.addPostFrameCallback(
-          (_) => controller?.addListener(listener),
-        );
-        return () => controller?.removeListener(listener);
-      },
-      <Object?>[controller, onChanged],
+    useTextChanged(
+      controller: controller,
+      onTextChanged: onChanged,
     );
 
     return TextFormField(
