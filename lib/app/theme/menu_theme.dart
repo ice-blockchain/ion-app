@@ -11,11 +11,11 @@ MenuThemeData buildMenuTheme(
 ) {
   return MenuThemeData(
     style: MenuStyle(
-      elevation: MaterialStatePropertyAll<double>(templateTheme.menu.elevation),
-      shadowColor: MaterialStatePropertyAll<Color>(
+      elevation: WidgetStatePropertyAll<double>(templateTheme.menu.elevation),
+      shadowColor: WidgetStatePropertyAll<Color>(
         colors.tertararyBackground,
       ),
-      padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+      padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(
         EdgeInsets.fromLTRB(
           templateTheme.menu.paddingLeft.s,
           templateTheme.menu.paddingTop.s,
@@ -23,7 +23,7 @@ MenuThemeData buildMenuTheme(
           templateTheme.menu.paddingBottom.s,
         ),
       ),
-      shape: MaterialStatePropertyAll<OutlinedBorder>(
+      shape: WidgetStatePropertyAll<OutlinedBorder>(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(templateTheme.menu.borderRadius.s),
@@ -31,9 +31,9 @@ MenuThemeData buildMenuTheme(
         ),
       ),
       backgroundColor:
-          MaterialStatePropertyAll<Color>(colors.secondaryBackground),
+          WidgetStatePropertyAll<Color>(colors.secondaryBackground),
       surfaceTintColor:
-          MaterialStatePropertyAll<Color>(colors.secondaryBackground),
+          WidgetStatePropertyAll<Color>(colors.secondaryBackground),
     ),
   );
 }

@@ -43,8 +43,8 @@ class TextInputDecoration extends InputDecoration {
           ),
           filled: true,
           fillColor:
-              MaterialStateColor.resolveWith((Set<MaterialState> states) {
-            return states.contains(MaterialState.disabled)
+              WidgetStateColor.resolveWith((Set<WidgetState> states) {
+            return states.contains(WidgetState.disabled)
                 ? context.theme.appColors.onSecondaryBackground
                 : context.theme.appColors.secondaryBackground;
           }),
@@ -56,11 +56,11 @@ class TextInputDecoration extends InputDecoration {
           ),
           errorStyle: const TextStyle(fontSize: 0),
           floatingLabelStyle:
-              MaterialStateTextStyle.resolveWith((Set<MaterialState> states) {
+              WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
             return context.theme.appTextThemes.subtitle2.copyWith(
-              color: states.contains(MaterialState.error)
+              color: states.contains(WidgetState.error)
                   ? context.theme.appColors.attentionRed
-                  : states.contains(MaterialState.focused)
+                  : states.contains(WidgetState.focused)
                       ? context.theme.appColors.primaryAccent
                       : context.theme.appColors.tertararyText,
               height: 1,
