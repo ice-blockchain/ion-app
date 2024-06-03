@@ -9,13 +9,13 @@ IconButtonThemeData buildIconButtonTheme(
 ) {
   return IconButtonThemeData(
     style: ButtonStyle(
-      fixedSize: MaterialStateProperty.all<Size>(
+      fixedSize: WidgetStateProperty.all<Size>(
         Size(
           templateTheme.iconButton.width.s,
           templateTheme.iconButton.height.s,
         ),
       ),
-      iconSize: MaterialStateProperty.all<double>(
+      iconSize: WidgetStateProperty.all<double>(
         templateTheme.iconButton.width.s,
       ),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,

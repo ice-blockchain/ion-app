@@ -11,11 +11,11 @@ MenuButtonThemeData buildMenuButtonTheme(
 ) {
   return MenuButtonThemeData(
     style: ButtonStyle(
-      minimumSize: MaterialStatePropertyAll<Size>(
+      minimumSize: WidgetStatePropertyAll<Size>(
         Size(100.0.s, templateTheme.menuButton.minHeight.s),
       ),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(
+      padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(
         EdgeInsets.fromLTRB(
           templateTheme.menuButton.paddingLeft.s,
           templateTheme.menuButton.paddingTop.s,
@@ -23,7 +23,7 @@ MenuButtonThemeData buildMenuButtonTheme(
           templateTheme.menuButton.paddingBottom.s,
         ),
       ),
-      textStyle: MaterialStatePropertyAll<TextStyle>(textThemes.subtitle2),
+      textStyle: WidgetStatePropertyAll<TextStyle>(textThemes.subtitle2),
     ),
   );
 }
