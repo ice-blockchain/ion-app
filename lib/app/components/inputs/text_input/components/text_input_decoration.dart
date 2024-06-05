@@ -42,8 +42,7 @@ class TextInputDecoration extends InputDecoration {
             borderSide: BorderSide(color: context.theme.appColors.attentionRed),
           ),
           filled: true,
-          fillColor:
-              WidgetStateColor.resolveWith((Set<WidgetState> states) {
+          fillColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
             return states.contains(WidgetState.disabled)
                 ? context.theme.appColors.onSecondaryBackground
                 : context.theme.appColors.secondaryBackground;

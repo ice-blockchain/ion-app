@@ -30,6 +30,7 @@ import 'package:ice/app/features/wallet/views/pages/coin_receive_modal/coin_rece
 import 'package:ice/app/features/wallet/views/pages/manage_coins/manage_coins_page.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sorting_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
+import 'package:ice/app/features/wallet/views/pages/send_coins/send_coin_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/wallet_page.dart';
 import 'package:ice/app/features/wallets/pages/create_new_wallet_modal/create_new_wallet_modal.dart';
@@ -159,6 +160,7 @@ enum IceRoutes<PayloadType> {
       IceRoutes.allowAccess,
       IceRoutes.nftsSorting,
       IceRoutes.walletMainModal,
+      IceRoutes.coinSend,
       IceRoutes.coinDetails,
       IceRoutes.coinReceive,
       IceRoutes.manageCoins,
@@ -199,6 +201,10 @@ enum IceRoutes<PayloadType> {
   ),
   nftsSorting(
     NftsSortingModal.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  coinSend(
+    SendCoinModalPage.new,
     type: IceRouteType.bottomSheet,
   ),
   coinReceive(
