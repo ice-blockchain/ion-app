@@ -12,8 +12,8 @@ class SendCoinModalPage extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: const CoinsListView(),
+      backgroundColor: context.theme.appColors.secondaryBackground,
     );
   }
 }
