@@ -79,6 +79,7 @@
     "profile_log_out",
     "wallet_balance",
     "wallet_send",
+    "wallet_send_coins",
     "wallet_receive",
     "wallet_sent",
     "wallet_received",

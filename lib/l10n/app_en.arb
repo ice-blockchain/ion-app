@@ -79,6 +79,7 @@
   "profile_log_out": "Log out {nickname}",
   "wallet_balance": "Balance",
   "wallet_send": "Send",
+  "wallet_send_coins": "Send coins",
   "wallet_receive": "Receive",
   "wallet_sent": "Sent",
   "wallet_received": "Received",
