@@ -12,6 +12,7 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
@@ -76,6 +77,11 @@ class CoinsListView extends HookConsumerWidget {
                 return ScreenSideOffset.small(
                   child: CoinItem(
                     coinData: coins[index],
+                    onTap: () {
+                      IceRoutes.networkSelect.push(
+                        context,
+                      );
+                    },
                   ),
                 );
               },

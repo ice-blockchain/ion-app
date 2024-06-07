@@ -7,16 +7,17 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/num.dart';
 
 class CoinItem extends HookConsumerWidget {
   const CoinItem({
     super.key,
     required this.coinData,
+    required this.onTap,
   });
 
   final CoinData coinData;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,12 +27,7 @@ class CoinItem extends HookConsumerWidget {
       subtitle: Text(coinData.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
       leading: coinData.iconUrl.icon(size: 36.0.s),
-      onTap: () {
-        IceRoutes.coinDetails.go(
-          context,
-          payload: coinData,
-        );
-      },
+      onTap: onTap,
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[

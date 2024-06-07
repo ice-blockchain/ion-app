@@ -80,6 +80,7 @@
   "wallet_balance": "Balance",
   "wallet_send": "Send",
   "wallet_send_coins": "Send coins",
+  "wallet_choose_network": "Choose network",
   "wallet_receive": "Receive",
   "wallet_sent": "Sent",
   "wallet_received": "Received",
