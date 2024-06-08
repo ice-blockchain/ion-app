@@ -64,7 +64,9 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     }
 
     if (routeResult != initialPage) {
-      ref.read(currentRouteProvider.notifier).route = routeResult;
+      Future<void>.microtask(() {
+        ref.read(currentRouteProvider.notifier).route = routeResult!;
+      });
     }
 
     return resultLocation;
