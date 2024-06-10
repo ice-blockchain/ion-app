@@ -64,7 +64,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     }
 
     if (routeResult != initialPage) {
-      Future<void>.microtask(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(currentRouteProvider.notifier).route = routeResult!;
       });
     }
