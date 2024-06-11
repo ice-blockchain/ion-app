@@ -80,6 +80,7 @@
     "wallet_balance",
     "wallet_send",
     "wallet_send_coins",
+    "wallet_choose_network",
     "wallet_receive",
     "wallet_sent",
     "wallet_received",
