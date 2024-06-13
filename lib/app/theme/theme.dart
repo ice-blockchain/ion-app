@@ -7,7 +7,6 @@ import 'package:ice/app/theme/icon_button_theme.dart';
 import 'package:ice/app/theme/icon_theme.dart';
 import 'package:ice/app/theme/menu_button_theme.dart';
 import 'package:ice/app/theme/menu_theme.dart';
-import 'package:ice/app/theme/slider_theme.dart';
 import 'package:ice/app/theme/text_button_theme.dart';
 
 ThemeData buildLightTheme(TemplateTheme templateTheme) {
@@ -24,7 +23,6 @@ ThemeData buildLightTheme(TemplateTheme templateTheme) {
     iconTheme: buildIconTheme(templateTheme),
     textButtonTheme: buildTextButtonTheme(),
     scaffoldBackgroundColor: colors.secondaryBackground,
-    sliderTheme: buildSliderTheme(colors),
   );
 }
 
@@ -42,6 +40,5 @@ ThemeData buildDarkTheme(TemplateTheme templateTheme) {
     iconTheme: buildIconTheme(templateTheme),
     textButtonTheme: buildTextButtonTheme(),
     scaffoldBackgroundColor: colors.secondaryBackground,
-    sliderTheme: buildSliderTheme(colors),
   );
 }

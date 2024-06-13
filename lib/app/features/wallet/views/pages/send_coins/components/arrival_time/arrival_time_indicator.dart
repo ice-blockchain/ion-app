@@ -10,7 +10,7 @@ class ArrivalTimeIndicator extends StatelessWidget {
     return Row(
       children: <Widget>[
         Text(
-          'Normal',
+          context.i18n.wallet_arrival_time_type_normal,
           style: context.theme.appTextThemes.body2.copyWith(
             color: context.theme.appColors.secondaryText,
           ),
@@ -22,14 +22,14 @@ class ArrivalTimeIndicator extends StatelessWidget {
             vertical: 4,
           ),
           decoration: BoxDecoration(
-            color: Colors.blue.shade50,
+            color: context.theme.appColors.onSecondaryBackground,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Row(
             children: <Widget>[
-              const Icon(
+              Icon(
                 Icons.access_time,
-                color: Colors.blue,
+                color: context.theme.appColors.primaryAccent,
                 size: 16,
               ),
               const SizedBox(width: 5),

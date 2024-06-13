@@ -12,7 +12,7 @@ class NetworkFee extends StatelessWidget {
     return Row(
       children: <Widget>[
         Text(
-          'Network fee',
+          context.i18n.wallet_network_fee,
           style: context.theme.appTextThemes.body.copyWith(
             color: context.theme.appColors.primaryText,
           ),

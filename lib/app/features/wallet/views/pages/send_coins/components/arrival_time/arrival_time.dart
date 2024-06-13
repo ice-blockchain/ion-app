@@ -11,7 +11,7 @@ class ArrivalTime extends StatelessWidget {
     return Row(
       children: <Widget>[
         Text(
-          'Arrival time',
+          context.i18n.wallet_arrival_time,
           style: context.theme.appTextThemes.body.copyWith(
             color: context.theme.appColors.primaryText,
           ),
