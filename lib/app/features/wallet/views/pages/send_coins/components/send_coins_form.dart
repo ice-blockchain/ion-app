@@ -27,84 +27,98 @@ class SendCoinsForm extends IceSimplePage {
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
-      body: KeyboardDismissOnTap(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0.s),
-                child: NavigationAppBar.screen(
-                  title: context.i18n.wallet_send_coins,
-                  actions: const <Widget>[
-                    NavigationCloseButton(),
-                  ],
+      body: FractionallySizedBox(
+        heightFactor: 0.9,
+        child: KeyboardDismissOnTap(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0.s),
+                  child: NavigationAppBar.screen(
+                    title: context.i18n.wallet_send_coins,
+                    actions: const <Widget>[
+                      NavigationCloseButton(),
+                    ],
+                  ),
                 ),
-              ),
-              ScreenSideOffset.small(
-                child: Column(
-                  children: <Widget>[
-                    TextInput(
-                      labelText: 'Coin',
-                      suffixIcon: TextInputIcons(
-                        icons: <Widget>[
-                          IconButton(
-                            icon: Assets.images.icons.iconArrowDown.icon(),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 12.0.s),
-                    TextInput(
-                      labelText: context.i18n.wallet_network,
-                      suffixIcon: TextInputIcons(
-                        icons: <Widget>[
-                          IconButton(
-                            icon: Assets.images.icons.iconArrowDown.icon(),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 12.0.s),
-                    const AddressInputField(),
-                    SizedBox(height: 12.0.s),
-                    TextInput(
-                      labelText: context.i18n.wallet_usdt_amount,
-                      initialValue: '350.00',
-                      suffixIcon: TextInputTextButton(
-                        onPressed: () {},
-                        label: context.i18n.wallet_max,
-                      ),
-                    ),
-                    SizedBox(height: 12.0.s),
-                    const ArrivalTime(),
-                    SizedBox(height: 12.0.s),
-                    ArrivalTimeSlider(
-                      onChanged: (double value) {},
-                    ),
-                    SizedBox(height: 8.0.s),
-                    const NetworkFee(),
-                    SizedBox(height: 45.0.s),
-                    Button(
-                      label: Text(
-                        context.i18n.button_continue,
-                      ),
-                      mainAxisSize: MainAxisSize.max,
-                      trailingIcon: ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          context.theme.appColors.primaryBackground,
-                          BlendMode.srcIn,
+                ScreenSideOffset.small(
+                  child: Column(
+                    children: <Widget>[
+                      TextInput(
+                        labelText: 'Coin',
+                        suffixIcon: TextInputIcons(
+                          icons: <Widget>[
+                            IconButton(
+                              icon: Assets.images.icons.iconArrowDown.icon(),
+                              onPressed: () {},
+                            ),
+                          ],
                         ),
-                        child: Assets.images.icons.iconButtonNext.icon(),
                       ),
-                      onPressed: () {},
-                    ),
-                  ],
+                      SizedBox(height: 12.0.s),
+                      TextInput(
+                        labelText: context.i18n.wallet_network,
+                        suffixIcon: TextInputIcons(
+                          icons: <Widget>[
+                            IconButton(
+                              icon: Assets.images.icons.iconArrowDown.icon(),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 12.0.s),
+                      const AddressInputField(),
+                      SizedBox(height: 12.0.s),
+                      TextInput(
+                        labelText: context.i18n.wallet_usdt_amount,
+                        initialValue: '350.00',
+                        suffixIcon: TextInputTextButton(
+                          onPressed: () {},
+                          label: context.i18n.wallet_max,
+                        ),
+                      ),
+                      SizedBox(height: 10.0.s),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '~ 349.99 USD',
+                          style: context.theme.appTextThemes.caption2.copyWith(
+                            color: context.theme.appColors.tertararyText,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 17.0.s),
+                      const ArrivalTime(),
+                      SizedBox(height: 12.0.s),
+                      ArrivalTimeSlider(
+                        onChanged: (double value) {},
+                      ),
+                      SizedBox(height: 8.0.s),
+                      const NetworkFee(),
+                      SizedBox(height: 45.0.s),
+                      Button(
+                        label: Text(
+                          context.i18n.button_continue,
+                        ),
+                        mainAxisSize: MainAxisSize.max,
+                        trailingIcon: ColorFiltered(
+                          colorFilter: ColorFilter.mode(
+                            context.theme.appColors.primaryBackground,
+                            BlendMode.srcIn,
+                          ),
+                          child: Assets.images.icons.iconButtonNext.icon(),
+                        ),
+                        onPressed: () {},
+                      ),
+                      SizedBox(height: 16.0.s),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -15,7 +15,7 @@ class ArrivalTimeSlider extends HookWidget {
     this.maxValue = 45.0,
     this.minValue = 0.0,
     this.stepValue = 15.0,
-    this.handlerHeight = 40.0,
+    this.sliderHeight = 40.0,
     this.trackBarHeight = 2.0,
     this.thumbIconSize = 34.0,
     this.markerSize = 8.0,
@@ -28,7 +28,7 @@ class ArrivalTimeSlider extends HookWidget {
   final double maxValue;
   final double minValue;
   final double stepValue;
-  final double handlerHeight;
+  final double sliderHeight;
   final double trackBarHeight;
   final double thumbIconSize;
   final double markerSize;
@@ -51,7 +51,7 @@ class ArrivalTimeSlider extends HookWidget {
           ),
           child: SizedBox(
             width: sliderWidth,
-            height: 50.0.s,
+            height: sliderHeight.s,
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
@@ -60,7 +60,7 @@ class ArrivalTimeSlider extends HookWidget {
                   color: context.theme.appColors.onTerararyFill,
                 ),
                 Positioned(
-                  left: 0,
+                  left: 0.0.s,
                   child: _TrackBar.active(
                     trackBarHeight: trackBarHeight,
                     color: context.theme.appColors.primaryAccent,
