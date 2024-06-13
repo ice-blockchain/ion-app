@@ -6,6 +6,7 @@ import 'package:ice/app/components/inputs/text_input/components/text_input_icons
 import 'package:ice/app/components/inputs/text_input/components/text_input_text_button.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/slider/app_slider.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -13,7 +14,6 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/address_input_field.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/arrival_time/arrival_time.dart';
-import 'package:ice/app/features/wallet/views/pages/send_coins/components/arrival_time/arrival_time_slider.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/network_fee.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -93,7 +93,7 @@ class SendCoinsForm extends IceSimplePage {
                       SizedBox(height: 17.0.s),
                       const ArrivalTime(),
                       SizedBox(height: 12.0.s),
-                      ArrivalTimeSlider(
+                      AppSlider(
                         onChanged: (double value) {},
                       ),
                       SizedBox(height: 8.0.s),
