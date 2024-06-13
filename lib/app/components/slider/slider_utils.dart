@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 /// A utility class for slider-related calculations and conversions.
@@ -88,5 +90,57 @@ class SliderUtils {
     final double newValue =
         currentValue + (deltaDx / sliderWidth) * (maxValue - minValue);
     return newValue.clamp(minValue, maxValue);
+  }
+
+  /// Finds the closest stop to the current value.
+  ///
+  /// [currentValue] is the current value of the slider.
+  /// [stops] is the list of stop values.
+  /// [resistance] is the resistance factor for interpolation.
+  static double findClosestStop({
+    required double currentValue,
+    required List<double> stops,
+    required double resistance,
+  }) {
+    final int closestStopIndex =
+        stops.indexWhere((double stop) => stop >= currentValue);
+
+    if (closestStopIndex == -1) {
+      return stops.last;
+    } else if (closestStopIndex == 0) {
+      return stops.first;
+    } else {
+      final double previousStop = stops[closestStopIndex - 1];
+      final double nextStop = stops[closestStopIndex];
+      final double midPoint = (previousStop + nextStop) / 2;
+
+      return (currentValue < midPoint)
+          ? lerpDouble(currentValue, previousStop, resistance)!
+          : lerpDouble(currentValue, nextStop, resistance)!;
+    }
+  }
+
+  /// Adjusts the slider value to the closest stop after dragging ends.
+  ///
+  /// [currentValue] is the current value of the slider.
+  /// [stops] is the list of stop values.
+  static double adjustToClosestStop({
+    required double currentValue,
+    required List<double> stops,
+  }) {
+    final int closestStopIndex =
+        stops.indexWhere((double stop) => stop >= currentValue);
+
+    if (closestStopIndex == -1) {
+      return stops.last;
+    } else if (closestStopIndex == 0) {
+      return stops.first;
+    } else {
+      final double previousStop = stops[closestStopIndex - 1];
+      final double nextStop = stops[closestStopIndex];
+      final double midPoint = (previousStop + nextStop) / 2;
+
+      return (currentValue < midPoint) ? previousStop : nextStop;
+    }
   }
 }

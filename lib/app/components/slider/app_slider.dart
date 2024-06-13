@@ -16,6 +16,7 @@ class AppSlider extends HookWidget {
     this.thumbIconSize = 34.0,
     this.markerSize = 8.0,
     this.markerRadius = 3.0,
+    this.resistance = 0,
   });
 
   final double initialValue;
@@ -29,10 +30,32 @@ class AppSlider extends HookWidget {
   final double thumbIconSize;
   final double markerSize;
   final double markerRadius;
+  final double resistance;
 
   @override
   Widget build(BuildContext context) {
     final ValueNotifier<double> sliderValue = useState(initialValue);
+    final AnimationController animationController = useAnimationController(
+      duration: const Duration(milliseconds: 100),
+      initialValue: sliderValue.value / maxValue,
+    );
+
+    useEffect(
+      () {
+        sliderValue.addListener(() {
+          animationController.animateTo(sliderValue.value / maxValue);
+        });
+        return null;
+      },
+      <Object?>[sliderValue.value],
+    );
+
+    final Animation<double> animation = animationController.drive(
+      Tween<double>(
+        begin: minValue,
+        end: maxValue,
+      ),
+    );
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -45,45 +68,59 @@ class AppSlider extends HookWidget {
             sliderWidth,
             sliderValue,
           ),
+          onPanEnd: (DragEndDetails details) =>
+              _handlePanEnd(sliderValue, stops),
           child: SizedBox(
             width: sliderWidth,
             height: sliderHeight.s,
             child: Stack(
+              clipBehavior: Clip.none,
               alignment: Alignment.center,
               children: <Widget>[
                 TrackBar.inactive(
                   trackBarHeight: trackBarHeight,
                   color: context.theme.appColors.onTerararyFill,
                 ),
-                Positioned(
-                  left: 0.0.s,
-                  child: TrackBar.active(
-                    trackBarHeight: trackBarHeight,
-                    color: context.theme.appColors.primaryAccent,
-                    width: SliderUtils.calculateActiveTrackWidth(
-                      value: sliderValue.value,
-                      minValue: minValue,
-                      maxValue: maxValue,
-                      sliderWidth: sliderWidth,
-                    ).s,
-                  ),
+                AnimatedBuilder(
+                  animation: animationController,
+                  builder: (BuildContext context, Widget? child) {
+                    return Positioned(
+                      left: 0.0.s,
+                      child: TrackBar.active(
+                        trackBarHeight: trackBarHeight,
+                        color: context.theme.appColors.primaryAccent,
+                        width: SliderUtils.calculateActiveTrackWidth(
+                          value: animation.value,
+                          minValue: minValue,
+                          maxValue: maxValue,
+                          sliderWidth: sliderWidth,
+                        ).s,
+                      ),
+                    );
+                  },
                 ),
                 Markers(
                   stops: stops,
-                  sliderValue: sliderValue,
+                  sliderValue: animation.value,
                   markerSize: markerSize.s,
                   markerRadius: markerRadius.s,
                 ),
-                Positioned(
-                  left: SliderUtils.computeSliderOffset(
-                    value: sliderValue.value,
-                    minValue: minValue,
-                    maxValue: maxValue,
-                    sliderWidth: sliderWidth,
-                    thumbSize: thumbIconSize.s,
-                    leftOffset: -2.5.s,
-                    rightOffset: -1.0.s,
-                  ),
+                AnimatedBuilder(
+                  animation: animationController,
+                  builder: (BuildContext context, Widget? child) {
+                    return Positioned(
+                      left: SliderUtils.computeSliderOffset(
+                        value: animation.value,
+                        minValue: minValue,
+                        maxValue: maxValue,
+                        sliderWidth: sliderWidth,
+                        thumbSize: thumbIconSize.s,
+                        leftOffset: -2.5.s,
+                        rightOffset: -0.7.s,
+                      ),
+                      child: child!,
+                    );
+                  },
                   child: SliderThumb(
                     sliderValue: sliderValue,
                     sliderWidth: sliderWidth,
@@ -91,6 +128,8 @@ class AppSlider extends HookWidget {
                     thumbIconSize: thumbIconSize.s,
                     maxValue: maxValue,
                     minValue: minValue,
+                    stops: stops,
+                    resistance: resistance,
                   ),
                 ),
               ],
@@ -117,7 +156,21 @@ class AppSlider extends HookWidget {
       minValue: minValue,
       maxValue: maxValue,
     );
-    sliderValue.value = newValue;
+
+    sliderValue.value = SliderUtils.findClosestStop(
+      currentValue: newValue,
+      stops: stops,
+      resistance: resistance,
+    );
+  }
+
+  void _handlePanEnd(ValueNotifier<double> sliderValue, List<double> stops) {
+    sliderValue.value = SliderUtils.findClosestStop(
+      currentValue: sliderValue.value,
+      stops: stops,
+      resistance: resistance,
+    );
+
     onChanged(sliderValue.value);
   }
 }

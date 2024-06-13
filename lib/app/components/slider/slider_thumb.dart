@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/slider/slider_utils.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SliderThumb extends StatelessWidget {
+class SliderThumb extends HookWidget {
   const SliderThumb({
     required this.sliderValue,
     required this.sliderWidth,
@@ -12,6 +13,8 @@ class SliderThumb extends StatelessWidget {
     required this.thumbIconSize,
     required this.maxValue,
     required this.minValue,
+    required this.stops,
+    required this.resistance,
   });
 
   final ValueNotifier<double> sliderValue;
@@ -20,10 +23,15 @@ class SliderThumb extends StatelessWidget {
   final double thumbIconSize;
   final double maxValue;
   final double minValue;
+  final List<double> stops;
+  final double resistance;
 
   @override
   Widget build(BuildContext context) {
+    final ValueNotifier<bool> isDragging = useState(false);
+
     return GestureDetector(
+      onHorizontalDragStart: (_) => isDragging.value = true,
       onHorizontalDragUpdate: (DragUpdateDetails details) {
         final double newValue = SliderUtils.calculateNewValueOnDrag(
           currentValue: sliderValue.value,
@@ -33,10 +41,22 @@ class SliderThumb extends StatelessWidget {
           maxValue: maxValue,
         );
         sliderValue.value = newValue;
+      },
+      onHorizontalDragEnd: (DragEndDetails details) {
+        sliderValue.value = SliderUtils.adjustToClosestStop(
+          currentValue: sliderValue.value,
+          stops: stops,
+        );
+        isDragging.value = false;
         onChanged(sliderValue.value);
       },
-      child: Assets.images.icons.iconBlockRocket.icon(
-        size: thumbIconSize.s,
+      child: ValueListenableBuilder<bool>(
+        valueListenable: isDragging,
+        builder: (BuildContext context, bool dragging, Widget? child) {
+          return Assets.images.icons.iconBlockRocket.icon(
+            size: (dragging ? thumbIconSize * 1.1 : thumbIconSize).s,
+          );
+        },
       ),
     );
   }
