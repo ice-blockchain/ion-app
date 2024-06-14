@@ -5,13 +5,21 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class AddressInputField extends StatelessWidget {
-  const AddressInputField({super.key});
+  const AddressInputField({
+    super.key,
+    required this.onContactListPressed,
+    required this.onScanPressed,
+  });
+
+  static const int maxLines = 2;
+
+  final VoidCallback onContactListPressed;
+  final VoidCallback onScanPressed;
 
   @override
   Widget build(BuildContext context) {
     return TextInput(
-      maxLines: 2,
-      minLines: 2,
+      maxLines: maxLines,
       labelText: context.i18n.wallet_enter_address,
       initialValue: '0x93956a5688078e8f25df21ec0f24fd9fd7baf09545645645745',
       contentPadding: EdgeInsets.symmetric(
@@ -22,7 +30,7 @@ class AddressInputField extends StatelessWidget {
         icons: <Widget>[
           IconButton(
             icon: Assets.images.icons.iconContactList.icon(),
-            onPressed: () {},
+            onPressed: onContactListPressed,
           ),
           IconButton(
             icon: ColorFiltered(
@@ -32,7 +40,7 @@ class AddressInputField extends StatelessWidget {
               ),
               child: Assets.images.icons.iconHeaderScan1.icon(),
             ),
-            onPressed: () {},
+            onPressed: onScanPressed,
           ),
         ],
         hasLeftDivider: true,

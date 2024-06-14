@@ -73,7 +73,10 @@ class SendCoinsForm extends IceSimplePage {
                         ),
                       ),
                       SizedBox(height: 12.0.s),
-                      const AddressInputField(),
+                      AddressInputField(
+                        onContactListPressed: () {},
+                        onScanPressed: () {},
+                      ),
                       SizedBox(height: 12.0.s),
                       TextInput(
                         labelText: context.i18n.wallet_usdt_amount,
