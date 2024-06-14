@@ -6,9 +6,16 @@ Min supported flutter version is Flutter 3.22.1
 # Configure folder structure:
 
 ## Fetch key.properties and ice-upload-key.keystore from Admin/Master to run release build 
-## Create .add.env and put there FOO=123
-## Featch repository https://github.com/ice-blockchain/flutter-app-secrets and put nearest with 
-current project 
+## Create .add.env and put there FOO=123 TODO: remove this dependency
+## Fetch repository https://github.com/ice-blockchain/flutter-app-secrets and put nearest with 
+current project
+## Run from root folder to configure key
+```bash
+$ ./scripts/configure_env.sh staging
+```
+
+
+
 
 # Step to run
 (1) Upgrade build runner
