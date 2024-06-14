@@ -74,7 +74,6 @@ class AppSlider extends HookWidget {
             width: sliderWidth,
             height: sliderHeight.s,
             child: Stack(
-              clipBehavior: Clip.none,
               alignment: Alignment.center,
               children: <Widget>[
                 TrackBar.inactive(
@@ -101,9 +100,13 @@ class AppSlider extends HookWidget {
                 ),
                 Markers(
                   stops: stops,
-                  sliderValue: animation.value,
+                  sliderValue: sliderValue,
                   markerSize: markerSize.s,
                   markerRadius: markerRadius.s,
+                  onMarkerTapped: (double stop) {
+                    sliderValue.value = stop;
+                    onChanged(stop);
+                  },
                 ),
                 AnimatedBuilder(
                   animation: animationController,

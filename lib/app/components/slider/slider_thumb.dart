@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/slider/slider_utils.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SliderThumb extends HookWidget {
+class SliderThumb extends StatelessWidget {
   const SliderThumb({
     required this.sliderValue,
     required this.sliderWidth,
@@ -28,10 +27,7 @@ class SliderThumb extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<bool> isDragging = useState(false);
-
     return GestureDetector(
-      onHorizontalDragStart: (_) => isDragging.value = true,
       onHorizontalDragUpdate: (DragUpdateDetails details) {
         final double newValue = SliderUtils.calculateNewValueOnDrag(
           currentValue: sliderValue.value,
@@ -47,16 +43,10 @@ class SliderThumb extends HookWidget {
           currentValue: sliderValue.value,
           stops: stops,
         );
-        isDragging.value = false;
         onChanged(sliderValue.value);
       },
-      child: ValueListenableBuilder<bool>(
-        valueListenable: isDragging,
-        builder: (BuildContext context, bool dragging, Widget? child) {
-          return Assets.images.icons.iconBlockRocket.icon(
-            size: (dragging ? thumbIconSize * 1.1 : thumbIconSize).s,
-          );
-        },
+      child: Assets.images.icons.iconBlockRocket.icon(
+        size: thumbIconSize.s,
       ),
     );
   }
