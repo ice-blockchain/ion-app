@@ -57,7 +57,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
                 sizedBoxHeight8,
                 QrImageView(
                   data: walletAddress,
-                  size: 150.0.s,
+                  size: 150.0,
                 ),
                 sizedBoxHeight8,
                 Text(

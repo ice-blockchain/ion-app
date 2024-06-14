@@ -223,12 +223,12 @@ enum IceRoutes<PayloadType> {
     SendCoinModalPage.new,
     type: IceRouteType.bottomSheet,
   ),
-  scanWallet(
-    WalletScanModalPage.new,
-    type: IceRouteType.bottomSheet,
-  ),
   receiveCoin(
     ReceiveCoinModalPage.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  scanWallet(
+    WalletScanModalPage.new,
     type: IceRouteType.bottomSheet,
   ),
   coinReceive(
