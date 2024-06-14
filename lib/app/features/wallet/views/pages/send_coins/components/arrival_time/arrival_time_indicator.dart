@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 class ArrivalTimeIndicator extends StatelessWidget {
   const ArrivalTimeIndicator({super.key});
 
-  // TODO: Replace with dynamic value
+  // TODO @ice-alcides): Replace with dynamic value
   static const String time = '15 min';
 
   @override

@@ -5,7 +5,7 @@ import 'package:ice/generated/assets.gen.dart';
 class NetworkFee extends StatelessWidget {
   const NetworkFee({super.key});
 
-  // TODO: Replace this with a real network fee
+  // TODO (@ice-alcides): Replace this with a real network fee
   static const String networkFee = '1.00 USDT';
 
   @override

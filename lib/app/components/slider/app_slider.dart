@@ -40,16 +40,14 @@ class AppSlider extends HookWidget {
       initialValue: sliderValue.value / maxValue,
     );
 
+    useListenable(sliderValue);
+
     useEffect(
       () {
-        void listener() =>
-            animationController.animateTo(sliderValue.value / maxValue);
-
-        sliderValue.addListener(listener);
-
-        return () => sliderValue.removeListener(listener);
+        animationController.animateTo(sliderValue.value / maxValue);
+        return null;
       },
-      <Object?>[sliderValue],
+      <Object?>[sliderValue.value],
     );
 
     final Animation<double> animation = animationController.drive(
