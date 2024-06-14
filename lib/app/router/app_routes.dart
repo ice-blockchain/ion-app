@@ -29,6 +29,9 @@ import 'package:ice/app/features/wallet/views/pages/coin_details/coin_details_pa
 import 'package:ice/app/features/wallet/views/pages/coin_receive_modal/coin_receive_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/manage_coins_page.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sorting_modal.dart';
+import 'package:ice/app/features/wallet/views/pages/receive_coins/components/network_list_view.dart';
+import 'package:ice/app/features/wallet/views/pages/receive_coins/components/share_address_view.dart';
+import 'package:ice/app/features/wallet/views/pages/receive_coins/receive_coin_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/network_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/send_coin_modal_page.dart';
@@ -162,7 +165,10 @@ enum IceRoutes<PayloadType> {
       IceRoutes.nftsSorting,
       IceRoutes.walletMainModal,
       IceRoutes.coinSend,
+      IceRoutes.receiveCoin,
       IceRoutes.networkSelect,
+      IceRoutes.networkSelectReceive,
+      IceRoutes.shareAddress,
       IceRoutes.coinDetails,
       IceRoutes.coinReceive,
       IceRoutes.manageCoins,
@@ -209,12 +215,24 @@ enum IceRoutes<PayloadType> {
     SendCoinModalPage.new,
     type: IceRouteType.bottomSheet,
   ),
+  receiveCoin(
+    ReceiveCoinModalPage.new,
+    type: IceRouteType.bottomSheet,
+  ),
   coinReceive(
     CoinReceiveModal.new,
     type: IceRouteType.bottomSheet,
   ),
   networkSelect(
     NetworkListView.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  networkSelectReceive(
+    NetworkListReceiveView.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  shareAddress(
+    ShareAddressView.new,
     type: IceRouteType.bottomSheet,
   ),
   manageCoins(
