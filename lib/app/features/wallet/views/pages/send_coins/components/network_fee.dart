@@ -5,6 +5,9 @@ import 'package:ice/generated/assets.gen.dart';
 class NetworkFee extends StatelessWidget {
   const NetworkFee({super.key});
 
+  // TODO: Replace this with a real network fee
+  static const String networkFee = '1.00 USDT';
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -35,7 +38,7 @@ class NetworkFee extends StatelessWidget {
         ),
         const Spacer(),
         Text(
-          '1.00 USDT',
+          networkFee,
           style: context.theme.appTextThemes.body.copyWith(
             color: context.theme.appColors.primaryText,
           ),
