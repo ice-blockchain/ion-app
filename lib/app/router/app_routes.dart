@@ -37,6 +37,7 @@ import 'package:ice/app/features/wallet/views/pages/send_coins/components/networ
 import 'package:ice/app/features/wallet/views/pages/send_coins/send_coin_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/wallet_page.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_scan/wallet_scan_modal_page.dart';
 import 'package:ice/app/features/wallets/pages/create_new_wallet_modal/create_new_wallet_modal.dart';
 import 'package:ice/app/features/wallets/pages/delete_wallet_modal/delete_wallet_modal.dart';
 import 'package:ice/app/features/wallets/pages/edit_wallet_modal/edit_wallet_modal.dart';
@@ -166,6 +167,7 @@ enum IceRoutes<PayloadType> {
       IceRoutes.walletMainModal,
       IceRoutes.coinSend,
       IceRoutes.receiveCoin,
+      IceRoutes.scanWallet,
       IceRoutes.networkSelect,
       IceRoutes.networkSelectReceive,
       IceRoutes.shareAddress,
@@ -213,6 +215,10 @@ enum IceRoutes<PayloadType> {
   ),
   coinSend(
     SendCoinModalPage.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  scanWallet(
+    WalletScanModalPage.new,
     type: IceRouteType.bottomSheet,
   ),
   receiveCoin(
