@@ -2,7 +2,7 @@
 
 The Flutter app for the ice ecosystem.
 If you are starting this project for the first time, follow these steps:
-
+Min supported flutter version is Flutter 3.22.1
 # Configure folder structure:
 
 ## Fetch key.properties and ice-upload-key.keystore from Admin/Master to run release build 
