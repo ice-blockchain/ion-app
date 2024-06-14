@@ -23,6 +23,9 @@ import 'package:ice/generated/assets.gen.dart';
 class SendCoinsForm extends IceSimplePage {
   const SendCoinsForm(super.route, super.payload);
 
+  // TODO replace with actual selected coin
+  static const String coinTitle = 'Coin';
+
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
     return SheetContent(
@@ -47,7 +50,7 @@ class SendCoinsForm extends IceSimplePage {
                   child: Column(
                     children: <Widget>[
                       TextInput(
-                        labelText: 'Coin',
+                        labelText: coinTitle,
                         suffixIcon: TextInputIcons(
                           icons: <Widget>[
                             IconButton(

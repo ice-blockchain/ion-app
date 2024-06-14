@@ -6,6 +6,9 @@ import 'package:ice/app/extensions/theme_data.dart';
 class ArrivalTimeIndicator extends StatelessWidget {
   const ArrivalTimeIndicator({super.key});
 
+  // TODO: Replace with dynamic value
+  static const String time = '15 min';
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -35,7 +38,7 @@ class ArrivalTimeIndicator extends StatelessWidget {
               ),
               SizedBox(width: 5.0.s),
               Text(
-                '15 min',
+                time,
                 style: context.theme.appTextThemes.body2.copyWith(
                   color: context.theme.appColors.primaryAccent,
                 ),

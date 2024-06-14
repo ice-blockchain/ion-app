@@ -12,9 +12,7 @@ class ArrivalTime extends StatelessWidget {
       children: <Widget>[
         Text(
           context.i18n.wallet_arrival_time,
-          style: context.theme.appTextThemes.body.copyWith(
-            color: context.theme.appColors.primaryText,
-          ),
+          style: context.theme.appTextThemes.body,
         ),
         const Spacer(),
         const ArrivalTimeIndicator(),
