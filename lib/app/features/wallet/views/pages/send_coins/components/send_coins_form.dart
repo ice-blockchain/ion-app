@@ -14,6 +14,7 @@ import 'package:ice/app/features/wallet/views/pages/send_coins/components/arriva
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/button/coin_button.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/button/network_button.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/network_fee.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/model/send_coins_form_data.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/providers/send_coins_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -79,7 +80,9 @@ class SendCoinsForm extends IceSimplePage {
                       ),
                       SizedBox(height: 12.0.s),
                       AddressInputField(
-                        onContactListPressed: () {},
+                        onContactListPressed: () {
+                          IceRoutes.contactsSelect.push(context);
+                        },
                         onScanPressed: () {},
                       ),
                       SizedBox(height: 12.0.s),

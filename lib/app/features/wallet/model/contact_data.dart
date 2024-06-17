@@ -12,5 +12,6 @@ class ContactData with _$ContactData {
     String? nickname,
     String? phoneNumber,
     bool? isVerified,
+    DateTime? lastSeen,
   }) = _ContactData;
 }
