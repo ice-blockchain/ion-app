@@ -5,6 +5,7 @@ import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/network_item.dart';
+import 'package:ice/app/features/wallet/views/pages/send_coins/providers/send_coins_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -41,6 +42,10 @@ class NetworkListView extends IceSimplePage {
               child: NetworkItem(
                 networkType: networkTypeValues[index],
                 onTap: () {
+                  ref
+                      .read(sendCoinsFormControllerProvider.notifier)
+                      .selectNetwork(networkTypeValues[index]);
+
                   IceRoutes.coinSendForm.push(
                     context,
                   );
