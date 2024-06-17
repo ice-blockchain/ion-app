@@ -14,7 +14,7 @@ import 'package:ice/app/features/wallet/views/pages/send_coins/components/arriva
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/button/coin_button.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/button/network_button.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/network_fee.dart';
-import 'package:ice/app/features/wallet/views/pages/send_coins/model/form_data.dart';
+import 'package:ice/app/features/wallet/views/pages/send_coins/model/send_coins_form_data.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/providers/send_coins_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -36,7 +36,8 @@ class SendCoinsForm extends IceSimplePage {
     final AppTextThemesExtension textTheme = context.theme.appTextThemes;
     final I18n locale = context.i18n;
 
-    final FormData formController = ref.watch(sendCoinsFormControllerProvider);
+    final SendCoinsFormData formController =
+        ref.watch(sendCoinsFormControllerProvider);
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,

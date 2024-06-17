@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
@@ -9,7 +8,7 @@ import 'package:ice/app/theme/app_text_themes.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class CoinButton extends HookConsumerWidget {
+class CoinButton extends StatelessWidget {
   const CoinButton({
     super.key,
     required this.coinData,
@@ -20,7 +19,7 @@ class CoinButton extends HookConsumerWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final AppColorsExtension colors = context.theme.appColors;
     final AppTextThemesExtension textTheme = context.theme.appTextThemes;
 
