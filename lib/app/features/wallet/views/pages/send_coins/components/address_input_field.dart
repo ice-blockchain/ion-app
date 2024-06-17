@@ -7,13 +7,13 @@ import 'package:ice/generated/assets.gen.dart';
 class AddressInputField extends StatelessWidget {
   const AddressInputField({
     super.key,
-    required this.onContactListPressed,
+    required this.onOpenContactList,
     required this.onScanPressed,
   });
 
   static const int maxLines = 2;
 
-  final VoidCallback onContactListPressed;
+  final VoidCallback onOpenContactList;
   final VoidCallback onScanPressed;
 
   @override
@@ -23,14 +23,14 @@ class AddressInputField extends StatelessWidget {
       labelText: context.i18n.wallet_enter_address,
       initialValue: '0x93956a5688078e8f25df21ec0f24fd9fd7baf09545645645745',
       contentPadding: EdgeInsets.symmetric(
-        vertical: 5.0.s,
+        vertical: 6.0.s,
         horizontal: 16.0.s,
       ),
       suffixIcon: TextInputIcons(
         icons: <Widget>[
           IconButton(
             icon: Assets.images.icons.iconContactList.icon(),
-            onPressed: onContactListPressed,
+            onPressed: onOpenContactList,
           ),
           IconButton(
             icon: ColorFiltered(

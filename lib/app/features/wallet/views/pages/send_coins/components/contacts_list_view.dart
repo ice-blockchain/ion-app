@@ -10,14 +10,14 @@ import 'package:ice/app/features/wallet/providers/mock_data/contacts_mock_data.d
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-class ContactsListView extends IceSimplePage {
+class ContactsListView extends IcePage<ContactData> {
   const ContactsListView(
     super.key,
     super.payload,
   );
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, ContactData? payload) {
     final List<ContactData> contacts = mockedContactDataArray;
 
     return FractionallySizedBox(
@@ -61,7 +61,7 @@ class ContactsListView extends IceSimplePage {
                     verifiedBadge: contact.isVerified!,
                     iceBadge: contact.hasIceAccount,
                     timeago: contact.lastSeen,
-                    onTap: () {},
+                    onTap: () => Navigator.pop(context, contact),
                   ),
                 );
               },

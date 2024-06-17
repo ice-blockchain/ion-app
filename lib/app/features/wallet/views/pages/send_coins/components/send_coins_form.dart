@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
@@ -7,12 +8,18 @@ import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/slider/app_slider.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
+import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/address_input_field.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/arrival_time/arrival_time.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/button/coin_button.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/button/network_button.dart';
+import 'package:ice/app/features/wallet/views/pages/send_coins/components/contact_input_switcher.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/network_fee.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/model/send_coins_form_data.dart';
@@ -33,6 +40,8 @@ class SendCoinsForm extends IceSimplePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
+    final ValueNotifier<ContactData?> selectedContact = useState(null);
+
     final AppColorsExtension colors = context.theme.appColors;
     final AppTextThemesExtension textTheme = context.theme.appTextThemes;
     final I18n locale = context.i18n;
@@ -79,11 +88,10 @@ class SendCoinsForm extends IceSimplePage {
                         },
                       ),
                       SizedBox(height: 12.0.s),
-                      AddressInputField(
-                        onContactListPressed: () {
-                          IceRoutes.contactsSelect.push(context);
-                        },
-                        onScanPressed: () {},
+                      ContactInputSwitcher(
+                        selectedContact: selectedContact.value,
+                        onContactSelected: (ContactData? contact) =>
+                            selectedContact.value = contact,
                       ),
                       SizedBox(height: 12.0.s),
                       TextInput(
