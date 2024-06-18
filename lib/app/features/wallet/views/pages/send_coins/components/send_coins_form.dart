@@ -2,32 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_text_button.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/slider/app_slider.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/address_input_field.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/arrival_time/arrival_time.dart';
+import 'package:ice/app/features/wallet/views/pages/send_coins/components/button/coin_button.dart';
+import 'package:ice/app/features/wallet/views/pages/send_coins/components/button/network_button.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/network_fee.dart';
+import 'package:ice/app/features/wallet/views/pages/send_coins/model/send_coins_form_data.dart';
+import 'package:ice/app/features/wallet/views/pages/send_coins/providers/send_coins_form_provider.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/theme/app_colors.dart';
+import 'package:ice/app/theme/app_text_themes.dart';
+import 'package:ice/generated/app_localizations.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SendCoinsForm extends IceSimplePage {
   const SendCoinsForm(super.route, super.payload);
 
-  // TODO (@ice-alcides): replace with actual selected coin
-  static const String coinTitle = 'Coin';
+  static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, __) {
+    final AppColorsExtension colors = context.theme.appColors;
+    final AppTextThemesExtension textTheme = context.theme.appTextThemes;
+    final I18n locale = context.i18n;
+
+    final SendCoinsFormData formController =
+        ref.watch(sendCoinsFormControllerProvider);
+
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: FractionallySizedBox(
@@ -40,7 +51,7 @@ class SendCoinsForm extends IceSimplePage {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0.s),
                   child: NavigationAppBar.screen(
-                    title: context.i18n.wallet_send_coins,
+                    title: locale.wallet_send_coins,
                     actions: const <Widget>[
                       NavigationCloseButton(),
                     ],
@@ -49,28 +60,22 @@ class SendCoinsForm extends IceSimplePage {
                 ScreenSideOffset.small(
                   child: Column(
                     children: <Widget>[
-                      TextInput(
-                        labelText: coinTitle,
-                        suffixIcon: TextInputIcons(
-                          icons: <Widget>[
-                            IconButton(
-                              icon: Assets.images.icons.iconArrowDown.icon(),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
+                      CoinButton(
+                        coinData: formController.selectedCoin,
+                        onTap: () {
+                          IceRoutes.coinSend.push(
+                            context,
+                          );
+                        },
                       ),
                       SizedBox(height: 12.0.s),
-                      TextInput(
-                        labelText: context.i18n.wallet_network,
-                        suffixIcon: TextInputIcons(
-                          icons: <Widget>[
-                            IconButton(
-                              icon: Assets.images.icons.iconArrowDown.icon(),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
+                      NetworkButton(
+                        networkType: formController.selectedNetwork,
+                        onTap: () {
+                          IceRoutes.networkSelect.push(
+                            context,
+                          );
+                        },
                       ),
                       SizedBox(height: 12.0.s),
                       AddressInputField(
@@ -79,11 +84,11 @@ class SendCoinsForm extends IceSimplePage {
                       ),
                       SizedBox(height: 12.0.s),
                       TextInput(
-                        labelText: context.i18n.wallet_usdt_amount,
+                        labelText: locale.wallet_usdt_amount,
                         initialValue: '350.00',
                         suffixIcon: TextInputTextButton(
                           onPressed: () {},
-                          label: context.i18n.wallet_max,
+                          label: locale.wallet_max,
                         ),
                       ),
                       SizedBox(height: 10.0.s),
@@ -91,8 +96,8 @@ class SendCoinsForm extends IceSimplePage {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           '~ 349.99 USD',
-                          style: context.theme.appTextThemes.caption2.copyWith(
-                            color: context.theme.appColors.tertararyText,
+                          style: textTheme.caption2.copyWith(
+                            color: colors.tertararyText,
                           ),
                         ),
                       ),
@@ -107,12 +112,12 @@ class SendCoinsForm extends IceSimplePage {
                       SizedBox(height: 45.0.s),
                       Button(
                         label: Text(
-                          context.i18n.button_continue,
+                          locale.button_continue,
                         ),
                         mainAxisSize: MainAxisSize.max,
                         trailingIcon: ColorFiltered(
                           colorFilter: ColorFilter.mode(
-                            context.theme.appColors.primaryBackground,
+                            colors.primaryBackground,
                             BlendMode.srcIn,
                           ),
                           child: Assets.images.icons.iconButtonNext.icon(),
