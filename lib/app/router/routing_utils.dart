@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/list.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/router/main_tab_navigation.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
+
+final StateProvider<bool> mainModalStateProvider =
+    StateProvider<bool>((StateProviderRef<bool> ref) => false);
 
 List<RouteBase> get appRoutes {
   final iterable = iceRootRoutes.map<RouteBase>(_convertIntoRoute);

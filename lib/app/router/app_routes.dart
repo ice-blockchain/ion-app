@@ -247,6 +247,8 @@ enum IceRoutes<PayloadType> {
 
   void replace(BuildContext context, {PayloadType? payload}) =>
       context.replaceNamed(routeName, extra: payload);
+
+  void pop(BuildContext context) => context.canPop() ? context.pop() : null;
 }
 
 typedef IcePageBuilder<PayloadType> = IcePage<PayloadType> Function(
