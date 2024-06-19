@@ -7,7 +7,7 @@ class FeedModalSeparator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final separatorWidth = MediaQuery.of(context).size.width;
+    final separatorWidth = MediaQuery.sizeOf(context).width;
 
     return Container(
       width: separatorWidth,

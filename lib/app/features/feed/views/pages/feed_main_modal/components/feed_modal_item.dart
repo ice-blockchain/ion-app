@@ -29,7 +29,7 @@ class FeedModalItem extends StatelessWidget {
               color: feedType.getIconColor(context),
             ),
             child: Center(
-              child: feedType.iconAsset.icon(size: 24.0.s),
+              child: feedType.iconAsset.icon(size: 24.0.s, color: Colors.white),
             ),
           ),
           backgroundColor: Colors.transparent,

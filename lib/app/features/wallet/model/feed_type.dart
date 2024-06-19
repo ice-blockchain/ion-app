@@ -38,10 +38,10 @@ enum FeedType {
 
   AssetGenImage get iconAsset {
     return switch (this) {
-      FeedType.post => Assets.images.feed.post,
-      FeedType.story => Assets.images.feed.story,
-      FeedType.video => Assets.images.feed.videos,
-      FeedType.article => Assets.images.feed.articles,
+      FeedType.post => Assets.images.icons.iconFeedPost,
+      FeedType.story => Assets.images.icons.iconFeedStory,
+      FeedType.video => Assets.images.icons.iconVideosTrading,
+      FeedType.article => Assets.images.icons.iconFeedStories,
     };
   }
 }
