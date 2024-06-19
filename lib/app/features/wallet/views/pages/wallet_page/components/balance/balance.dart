@@ -70,12 +70,8 @@ class Balance extends HookConsumerWidget {
               bottom: 16.0.s,
             ),
             child: BalanceActions(
-              onReceive: () {},
-              onSend: () {
-                IceRoutes.coinSend.push(
-                  context,
-                );
-              },
+              onReceive: () => IceRoutes.receiveCoin.push(context),
+              onSend: () => IceRoutes.coinSend.push(context),
             ),
           ),
         ],

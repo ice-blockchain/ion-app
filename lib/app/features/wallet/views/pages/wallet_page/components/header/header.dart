@@ -6,6 +6,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/components/wallet_switcher/wallet_switcher.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -29,7 +30,7 @@ class Header extends HookConsumerWidget {
               ),
               SizedBox(width: 12.0.s),
               NavigationButton(
-                onPressed: () {},
+                onPressed: () => IceRoutes.scanWallet.push(context),
                 icon: Assets.images.icons.iconHeaderScan1.icon(
                   color: context.theme.appColors.primaryText,
                 ),
