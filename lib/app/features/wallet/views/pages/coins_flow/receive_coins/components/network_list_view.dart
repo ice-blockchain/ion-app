@@ -17,7 +17,7 @@ class NetworkListReceiveView extends IcePage<CoinData> {
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, CoinData? coinData) {
+  Widget buildPage(BuildContext context, WidgetRef ref, CoinData? payload) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -46,7 +46,7 @@ class NetworkListReceiveView extends IcePage<CoinData> {
                   IceRoutes.shareAddress.push(
                     context,
                     payload: <String, dynamic>{
-                      'coinData': coinData,
+                      'coinData': payload,
                       'networkType': networkTypeValues[index],
                     },
                   );

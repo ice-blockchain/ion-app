@@ -23,9 +23,9 @@ class ShareAddressView extends IcePage<Map<String, dynamic>?> {
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    Map<String, dynamic>? data,
+    Map<String, dynamic>? payload,
   ) {
-    final arguments = data!;
+    final arguments = payload!;
     final coinData = arguments['coinData'] as CoinData;
     final networkType = arguments['networkType'] as NetworkType;
 

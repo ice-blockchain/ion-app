@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coin_item.dart';
@@ -19,18 +20,22 @@ class CoinsListView extends HookConsumerWidget {
     super.key,
   });
 
+  // ignore: inference_failure_on_function_return_type
   final Function(CoinData) coinTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coins = useFilteredWalletCoins(ref);
-    final searchValue = walletAssetSearchValueSelector(ref, WalletTabType.coins);
+    final searchValue =
+        walletAssetSearchValueSelector(ref, WalletTabType.coins);
     final walletId = walletIdSelector(ref);
 
     useOnInit<void>(
       () {
         if (walletId.isNotEmpty) {
-          ref.read(coinsNotifierProvider.notifier).fetch(searchValue: searchValue, walletId: walletId);
+          ref
+              .read(coinsNotifierProvider.notifier)
+              .fetch(searchValue: searchValue, walletId: walletId);
         }
       },
       <Object?>[searchValue, walletId],

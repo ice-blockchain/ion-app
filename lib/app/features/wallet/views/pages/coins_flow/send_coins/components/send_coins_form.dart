@@ -79,7 +79,8 @@ class SendCoinsForm extends IceSimplePage {
                       SizedBox(height: 12.0.s),
                       ContactInputSwitcher(
                         selectedContact: selectedContact.value,
-                        onContactSelected: (ContactData? contact) => selectedContact.value = contact,
+                        onContactSelected: (ContactData? contact) =>
+                            selectedContact.value = contact,
                       ),
                       SizedBox(height: 12.0.s),
                       TextInput(
