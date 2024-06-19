@@ -148,9 +148,9 @@ class MainTabNavigation extends ConsumerWidget {
 
 enum _Tabs {
   feed(IceRoutes.feed, IceRoutes.feedMainModal),
-  chat(IceRoutes.chat, IceRoutes.chatMainModal),
-  dapps(IceRoutes.dapps, IceRoutes.dappsMainModal),
-  wallet(IceRoutes.wallet, IceRoutes.walletMainModal);
+  chat(IceRoutes.chat, IceRoutes.chat),
+  dapps(IceRoutes.dapps, IceRoutes.dapps),
+  wallet(IceRoutes.wallet, IceRoutes.wallet);
 
   const _Tabs(this.route, this.mainModalRoute);
 

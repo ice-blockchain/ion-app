@@ -130,6 +130,15 @@
     "feed_for_you",
     "feed_following",
     "feed_read_time_in_mins",
-    "feed_trending_videos"
+    "feed_trending_videos",
+    "feed_modal_title",
+    "feed_modal_post",
+    "feed_modal_post_description",
+    "feed_modal_story",
+    "feed_modal_story_description",
+    "feed_modal_video",
+    "feed_modal_video_description",
+    "feed_modal_article",
+    "feed_modal_article_description"
   ]
 }
