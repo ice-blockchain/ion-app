@@ -6,9 +6,9 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class FloatingAppBar extends StatelessWidget {
   FloatingAppBar({
-    super.key,
     required this.child,
     required this.height,
+    super.key,
     double? bottomOffset,
     double? topOffset,
   })  : bottomOffset = bottomOffset ?? 10.0.s,
@@ -21,10 +21,9 @@ class FloatingAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double safeAreaOffset = MediaQuery.paddingOf(context).top;
-    final double totalHeight =
-        height + topOffset + bottomOffset + safeAreaOffset;
-    final double fadeOffset = topOffset + safeAreaOffset / 2;
+    final safeAreaOffset = MediaQuery.paddingOf(context).top;
+    final totalHeight = height + topOffset + bottomOffset + safeAreaOffset;
+    final fadeOffset = topOffset + safeAreaOffset / 2;
 
     return SliverAppBar(
       elevation: 50,
@@ -39,12 +38,12 @@ class FloatingAppBar extends StatelessWidget {
       surfaceTintColor: context.theme.appColors.onPrimaryAccent,
       flexibleSpace: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final double opacity = 1 -
+          final opacity = 1 -
               ((totalHeight - constraints.maxHeight) / fadeOffset).clamp(0, 1);
           return Align(
             alignment: Alignment.bottomCenter,
             child: Opacity(
-              opacity: opacity,
+              opacity: opacity.toDouble(),
               child: Padding(
                 padding: EdgeInsets.only(bottom: bottomOffset),
                 child: child,

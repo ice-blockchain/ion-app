@@ -8,8 +8,8 @@ import 'package:ice/app/services/keyboard/keyboard.dart';
 /// Useful for button handlers when users may press it multiple times
 /// in short succession.
 void Function({VoidCallback? callback}) useHideKeyboardAndCallOnce() {
-  final BuildContext context = useContext();
-  final ObjectRef<bool> isInProgress = useRef(false);
+  final context = useContext();
+  final isInProgress = useRef(false);
 
   return ({VoidCallback? callback}) {
     if (!isInProgress.value) {

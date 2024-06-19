@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -15,14 +13,12 @@ class EnterCodeFields extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String code = '1111';
+    const code = '1111';
 
-    final TextEditingController codeController = useTextEditingController();
-    final StreamController<ErrorAnimationType> errorController =
-        useStreamController<ErrorAnimationType>();
-    final ValueNotifier<bool> invalidCode = useState(false);
-    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
-        useHideKeyboardAndCallOnce();
+    final codeController = useTextEditingController();
+    final errorController = useStreamController<ErrorAnimationType>();
+    final invalidCode = useState(false);
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
     return SizedBox(
       height: 95.0.s,

@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/components/actions_list/action_button.dart';
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/utils/username.dart';
@@ -16,7 +15,7 @@ class ActionsList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final UserData activeUser = ref.watch(userDataNotifierProvider);
+    final activeUser = ref.watch(userDataNotifierProvider);
     return Column(
       children: <Widget>[
         ActionButton(

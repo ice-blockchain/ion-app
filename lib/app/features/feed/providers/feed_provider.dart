@@ -15,12 +15,11 @@ class FeedNotifier extends _$FeedNotifier {
 
   Future<void> fetchPosts() async {
     state = const AsyncLoading<List<PostData>>().copyWithPrevious(state);
-    final NostrRelay relay =
+    final relay =
         await ref.read(relaysProvider.notifier).getOrCreate(mainRelay);
-    final RequestMessage requestMessage = RequestMessage()
+    final requestMessage = RequestMessage()
       ..addFilter(const RequestFilter(kinds: <int>[1], limit: 20));
-    final List<EventMessage> events =
-        await requestEvents(requestMessage, relay);
+    final events = await requestEvents(requestMessage, relay);
     state = AsyncData<List<PostData>>(
       events
           .map(

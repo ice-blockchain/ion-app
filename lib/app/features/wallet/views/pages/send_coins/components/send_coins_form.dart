@@ -16,32 +16,27 @@ import 'package:ice/app/features/wallet/views/pages/send_coins/components/button
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/button/network_button.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/contact_input_switcher.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/components/network_fee.dart';
-import 'package:ice/app/features/wallet/views/pages/send_coins/model/send_coins_form_data.dart';
 import 'package:ice/app/features/wallet/views/pages/send_coins/providers/send_coins_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/app/theme/app_colors.dart';
-import 'package:ice/app/theme/app_text_themes.dart';
-import 'package:ice/generated/app_localizations.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SendCoinsForm extends IceSimplePage {
-  const SendCoinsForm(super.route, super.payload);
+  const SendCoinsForm(super.route, super.payload, {super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final ValueNotifier<ContactData?> selectedContact = useState(null);
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final selectedContact = useState<ContactData?>(null);
 
-    final AppColorsExtension colors = context.theme.appColors;
-    final AppTextThemesExtension textTheme = context.theme.appTextThemes;
-    final I18n locale = context.i18n;
+    final colors = context.theme.appColors;
+    final textTheme = context.theme.appTextThemes;
+    final locale = context.i18n;
 
-    final SendCoinsFormData formController =
-        ref.watch(sendCoinsFormControllerProvider);
+    final formController = ref.watch(sendCoinsFormControllerProvider);
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,

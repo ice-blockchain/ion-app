@@ -14,7 +14,7 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/generated/assets.gen.dart';
 
 class DAppsList extends IcePage<AppsRouteData> {
-  const DAppsList(super.route, super.payload);
+  const DAppsList(super.route, super.payload, {super.key});
 
   @override
   Widget buildPage(
@@ -22,14 +22,14 @@ class DAppsList extends IcePage<AppsRouteData> {
     WidgetRef ref,
     AppsRouteData? payload,
   ) {
-    final ValueNotifier<String> searchText = useState('');
-    final List<DAppItem> items = payload?.items ?? <DAppItem>[];
+    final searchText = useState('');
+    final items = payload?.items ?? <DAppItem>[];
 
-    final List<DAppItem> filteredApps = searchText.value.isEmpty
+    final filteredApps = searchText.value.isEmpty
         ? items
         : items.where((DAppItem app) {
-            final String searchLower = searchText.value.toLowerCase().trim();
-            final String titleLower = app.title.toLowerCase();
+            final searchLower = searchText.value.toLowerCase().trim();
+            final titleLower = app.title.toLowerCase();
 
             return titleLower.contains(searchLower);
           }).toList();
@@ -47,7 +47,7 @@ class DAppsList extends IcePage<AppsRouteData> {
                 padding: EdgeInsets.only(top: 12.0.s),
                 child: Column(
                   children: <Widget>[
-                    if (payload?.isSearchVisible == true)
+                    if (payload?.isSearchVisible ?? false)
                       SearchInput(
                         onTextChanged: (String value) =>
                             searchText.value = value,
@@ -66,7 +66,7 @@ class DAppsList extends IcePage<AppsRouteData> {
                                 ),
                                 itemCount: filteredApps.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final DAppItem app = filteredApps[index];
+                                  final app = filteredApps[index];
                                   return Padding(
                                     padding:
                                         EdgeInsets.symmetric(vertical: 5.5.s),

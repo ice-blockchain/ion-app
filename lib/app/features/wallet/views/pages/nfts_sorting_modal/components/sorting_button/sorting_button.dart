@@ -10,8 +10,8 @@ import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
 
 class SortingButton extends HookConsumerWidget {
   const SortingButton({
-    super.key,
     required this.sortingType,
+    super.key,
   });
 
   final NftSortingType sortingType;

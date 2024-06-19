@@ -6,8 +6,8 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/list_sepa
 
 class PostList extends HookConsumerWidget {
   const PostList({
-    super.key,
     required this.posts,
+    super.key,
   });
 
   final List<PostData> posts;

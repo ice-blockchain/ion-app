@@ -9,7 +9,7 @@ class StoryListItemSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle textStyle = context.theme.appTextThemes.caption3;
+    final textStyle = context.theme.appTextThemes.caption3;
 
     return SizedBox(
       width: StoryListItem.width,

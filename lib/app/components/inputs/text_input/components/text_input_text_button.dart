@@ -5,9 +5,9 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class TextInputTextButton extends StatelessWidget {
   const TextInputTextButton({
-    super.key,
     required this.onPressed,
     required this.label,
+    super.key,
   });
 
   final VoidCallback onPressed;

@@ -10,6 +10,7 @@ class TrendingVideoLikesButton extends StatelessWidget {
   const TrendingVideoLikesButton({
     required this.likes,
     required this.onPressed,
+    super.key,
   });
 
   final int likes;

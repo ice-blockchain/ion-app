@@ -7,13 +7,13 @@ import 'package:ice/app/features/wallet/views/pages/coin_details/components/tran
 
 class TransactionListHeader extends StatelessWidget {
   const TransactionListHeader({
-    super.key,
     required this.selectedNetworkType,
     required this.onNetworkTypeSelect,
+    super.key,
   });
 
   final NetworkType selectedNetworkType;
-  final Function(NetworkType) onNetworkTypeSelect;
+  final void Function(NetworkType) onNetworkTypeSelect;
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
@@ -36,7 +36,7 @@ class TransactionListHeader extends StatelessWidget {
           return SizedBox(width: 6.0.s);
         },
         itemBuilder: (BuildContext context, int index) {
-          final NetworkType networkType = networkTypeValues[index];
+          final networkType = networkTypeValues[index];
           return TransactionListHeaderItem(
             isSelected: networkType == selectedNetworkType,
             networkType: networkType,

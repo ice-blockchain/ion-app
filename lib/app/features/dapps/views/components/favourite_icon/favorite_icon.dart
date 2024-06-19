@@ -23,7 +23,7 @@ class FavouriteIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String iconPath = isFavourite
+    final iconPath = isFavourite
         ? Assets.images.icons.iconBookmarksOn.path
         : Assets.images.icons.iconBookmarks.path;
 

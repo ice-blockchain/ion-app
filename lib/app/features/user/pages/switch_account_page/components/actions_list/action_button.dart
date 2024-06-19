@@ -4,10 +4,10 @@ import 'package:ice/app/extensions/num.dart';
 
 class ActionButton extends StatelessWidget {
   const ActionButton({
-    super.key,
     required this.icon,
     required this.label,
     required this.onTap,
+    super.key,
   });
 
   final Widget icon;

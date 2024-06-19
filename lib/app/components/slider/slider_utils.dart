@@ -11,7 +11,7 @@ class SliderUtils {
   /// [context] is the BuildContext of the widget.
   /// [globalPosition] is the global position to convert.
   static Offset getLocalPosition(BuildContext context, Offset globalPosition) {
-    final RenderBox box = context.findRenderObject()! as RenderBox;
+    final box = context.findRenderObject()! as RenderBox;
     return box.globalToLocal(globalPosition);
   }
 
@@ -27,7 +27,7 @@ class SliderUtils {
     required double minValue,
     required double maxValue,
   }) {
-    final double newValue =
+    final newValue =
         (localPosition.dx / sliderWidth) * (maxValue - minValue) + minValue;
     return newValue.clamp(minValue, maxValue);
   }
@@ -52,9 +52,8 @@ class SliderUtils {
     required double leftOffset,
     required double rightOffset,
   }) {
-    final double offset =
-        ((value - minValue) / (maxValue - minValue) * sliderWidth) -
-            (thumbSize / 2);
+    final offset = ((value - minValue) / (maxValue - minValue) * sliderWidth) -
+        (thumbSize / 2);
     return offset.clamp(leftOffset, sliderWidth - thumbSize - rightOffset);
   }
 
@@ -87,7 +86,7 @@ class SliderUtils {
     required double minValue,
     required double maxValue,
   }) {
-    final double newValue =
+    final newValue =
         currentValue + (deltaDx / sliderWidth) * (maxValue - minValue);
     return newValue.clamp(minValue, maxValue);
   }
@@ -102,7 +101,7 @@ class SliderUtils {
     required List<double> stops,
     required double resistance,
   }) {
-    final int closestStopIndex =
+    final closestStopIndex =
         stops.indexWhere((double stop) => stop >= currentValue);
 
     if (closestStopIndex == -1) {
@@ -110,9 +109,9 @@ class SliderUtils {
     } else if (closestStopIndex == 0) {
       return stops.first;
     } else {
-      final double previousStop = stops[closestStopIndex - 1];
-      final double nextStop = stops[closestStopIndex];
-      final double midPoint = (previousStop + nextStop) / 2;
+      final previousStop = stops[closestStopIndex - 1];
+      final nextStop = stops[closestStopIndex];
+      final midPoint = (previousStop + nextStop) / 2;
 
       return (currentValue < midPoint)
           ? lerpDouble(currentValue, previousStop, resistance)!
@@ -128,7 +127,7 @@ class SliderUtils {
     required double currentValue,
     required List<double> stops,
   }) {
-    final int closestStopIndex =
+    final closestStopIndex =
         stops.indexWhere((double stop) => stop >= currentValue);
 
     if (closestStopIndex == -1) {
@@ -136,9 +135,9 @@ class SliderUtils {
     } else if (closestStopIndex == 0) {
       return stops.first;
     } else {
-      final double previousStop = stops[closestStopIndex - 1];
-      final double nextStop = stops[closestStopIndex];
-      final double midPoint = (previousStop + nextStop) / 2;
+      final previousStop = stops[closestStopIndex - 1];
+      final nextStop = stops[closestStopIndex];
+      final midPoint = (previousStop + nextStop) / 2;
 
       return (currentValue < midPoint) ? previousStop : nextStop;
     }

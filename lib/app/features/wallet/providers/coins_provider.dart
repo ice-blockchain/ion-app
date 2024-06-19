@@ -22,7 +22,7 @@ class CoinsNotifier extends _$CoinsNotifier {
     // to emulate loading state
     await Future<void>.delayed(const Duration(seconds: 1));
 
-    final String lSearchValue = searchValue.trim().toLowerCase();
+    final lSearchValue = searchValue.trim().toLowerCase();
     state = AsyncData<List<CoinData>>(
       List<CoinData>.unmodifiable(
         mockedCoinsDataArray.where(

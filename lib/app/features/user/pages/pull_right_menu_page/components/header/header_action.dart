@@ -6,9 +6,9 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class HeaderAction extends StatelessWidget {
   const HeaderAction({
-    super.key,
     required this.onPressed,
     required this.assetName,
+    super.key,
   });
 
   final String assetName;

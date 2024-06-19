@@ -22,7 +22,7 @@ class TermsPrivacy extends StatelessWidget {
       );
     }
 
-    final TextSpan replaced = replaceString(
+    final replaced = replaceString(
       context.i18n.auth_privacy,
       tagRegex('link', isSingular: false),
       handleMatch,

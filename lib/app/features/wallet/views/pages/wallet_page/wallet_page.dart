@@ -23,15 +23,15 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 
 class WalletPage extends IceSimplePage {
-  const WalletPage(super.route, super.payload);
+  const WalletPage(super.route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final ScrollController scrollController = useScrollController();
-    final bool? hasContactsPermission = hasContactsPermissionSelector(ref);
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final scrollController = useScrollController();
+    final hasContactsPermission = hasContactsPermissionSelector(ref);
 
-    useOnInit(() {
-      if (hasContactsPermission == true) {
+    useOnInit<void>(() {
+      if (hasContactsPermission ?? false) {
         ref.read(contactsDataNotifierProvider.notifier).fetchContacts();
       } else {
         IceRoutes.allowAccess.go(context);
@@ -40,8 +40,7 @@ class WalletPage extends IceSimplePage {
       hasContactsPermission,
     ]);
 
-    final ValueNotifier<WalletTabType> activeTab =
-        useState<WalletTabType>(WalletTabType.coins);
+    final activeTab = useState<WalletTabType>(WalletTabType.coins);
 
     return Scaffold(
       body: CustomScrollView(

@@ -8,8 +8,8 @@ part 'users_data_provider.g.dart';
 class UsersDataNotifier extends _$UsersDataNotifier {
   @override
   Map<String, UserData> build() {
-    final Map<String, UserData> userAccounts = <String, UserData>{};
-    for (final UserData userAccount in mockedUserAccounts) {
+    final userAccounts = <String, UserData>{};
+    for (final userAccount in mockedUserAccounts) {
       userAccounts.putIfAbsent(userAccount.id, () => userAccount);
     }
 
@@ -17,7 +17,7 @@ class UsersDataNotifier extends _$UsersDataNotifier {
   }
 
   set userData(UserData newData) {
-    final Map<String, UserData> newState = Map<String, UserData>.from(state)
+    final newState = Map<String, UserData>.from(state)
       ..update(
         newData.id,
         (UserData value) => value.copyWith(

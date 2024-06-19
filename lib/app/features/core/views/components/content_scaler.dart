@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ContentScaler extends StatelessWidget {
   const ContentScaler({
-    super.key,
     required this.child,
+    super.key,
   });
 
   final Widget child;

@@ -22,7 +22,7 @@ enum FeedCategory {
       };
 
   Widget getIcon(BuildContext context) {
-    final Color color = context.theme.appColors.secondaryBackground;
+    final color = context.theme.appColors.secondaryBackground;
     return switch (this) {
       FeedCategory.feed =>
         Assets.images.icons.iconProfileFeed.icon(color: color),

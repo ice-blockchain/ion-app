@@ -7,7 +7,7 @@ class ColorConverter implements JsonConverter<Color, String> {
 
   @override
   Color fromJson(String json) {
-    final StringBuffer buffer = StringBuffer();
+    final buffer = StringBuffer();
     if (json.length == 6 || json.length == 7) buffer.write('ff');
     buffer.write(json.replaceFirst('#', ''));
     return Color(int.parse(buffer.toString(), radix: 16));

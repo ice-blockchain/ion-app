@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class VideosIcon extends StatelessWidget {
-  const VideosIcon();
+  const VideosIcon({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,6 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_info/components/profile_details/profile_details_cell.dart';
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
@@ -20,7 +19,7 @@ class ProfileDetails extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final UserData userData = ref.watch(userDataNotifierProvider);
+    final userData = ref.watch(userDataNotifierProvider);
 
     return Container(
       alignment: Alignment.center,
@@ -38,7 +37,7 @@ class ProfileDetails extends HookConsumerWidget {
                   color: context.theme.appColors.primaryText,
                 ),
               ),
-              if (userData.isVerified == true) ...<Widget>[
+              if (userData.isVerified ?? false) ...<Widget>[
                 SizedBox(width: 6.0.s),
                 Assets.images.icons.iconBadgeVerify
                     .icon(size: verifiedIconSize),
@@ -67,8 +66,7 @@ class ProfileDetails extends HookConsumerWidget {
                 VerticalDivider(
                   width: 36.0.s,
                   thickness: 1.0.s,
-                  color: context.theme.appColors
-                      .onTerararyFill, // Color of the divider line. Adjust as needed.
+                  color: context.theme.appColors.onTerararyFill,
                 ),
                 ProfileDetailsCell(
                   title: context.i18n.profile_followers,

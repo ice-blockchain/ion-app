@@ -5,8 +5,8 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class SectionHeader extends StatelessWidget {
   const SectionHeader({
-    super.key,
     required this.date,
+    super.key,
   });
 
   final String date;

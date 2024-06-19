@@ -8,8 +8,8 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_
 
 class TrendingVideosListSkeleton extends StatelessWidget {
   const TrendingVideosListSkeleton({
-    super.key,
     required this.listOverlay,
+    super.key,
   });
 
   final TrendingVideosOverlay listOverlay;

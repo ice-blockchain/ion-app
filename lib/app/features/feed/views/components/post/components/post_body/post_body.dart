@@ -5,8 +5,8 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class PostBody extends StatelessWidget {
   const PostBody({
-    super.key,
     required this.content,
+    super.key,
   });
 
   final String content;

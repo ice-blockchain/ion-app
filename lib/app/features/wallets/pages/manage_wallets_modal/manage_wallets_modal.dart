@@ -16,13 +16,13 @@ import 'package:ice/generated/assets.gen.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class ManageWalletsModal extends IceSimplePage {
-  const ManageWalletsModal(super.route, super.payload);
+  const ManageWalletsModal(super.route, super.payload, {super.key});
 
   @override
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    _,
+    void payload,
   ) {
     return SheetContentScaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,

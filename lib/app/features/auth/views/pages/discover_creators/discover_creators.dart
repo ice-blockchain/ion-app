@@ -16,16 +16,15 @@ import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creat
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class DiscoverCreators extends IceSimplePage {
-  const DiscoverCreators(super.route, super.payload);
+  const DiscoverCreators(super.route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final AuthState authState = ref.watch(authProvider);
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final authState = ref.watch(authProvider);
 
-    final ValueNotifier<Set<User>> followedCreators =
-        useState<Set<User>>(<User>{});
+    final followedCreators = useState<Set<User>>(<User>{});
 
-    final bool mayContinue = followedCreators.value.isNotEmpty;
+    final mayContinue = followedCreators.value.isNotEmpty;
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -47,15 +46,14 @@ class DiscoverCreators extends IceSimplePage {
                   ),
                   itemCount: creators.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final User creator = creators[index];
-                    final bool followed =
-                        followedCreators.value.contains(creator);
+                    final creator = creators[index];
+                    final followed = followedCreators.value.contains(creator);
 
                     return CreatorListItem(
                       creator: creator,
                       followed: followed,
                       onPressed: () {
-                        final Set<User> newFollowedCreators =
+                        final newFollowedCreators =
                             Set<User>.from(followedCreators.value);
                         if (followed) {
                           newFollowedCreators.remove(creator);
@@ -67,7 +65,7 @@ class DiscoverCreators extends IceSimplePage {
                     );
                   },
                 ),
-                // TODO:: add ScreenBottomOffset.sliver factory for this case
+                // TODO add ScreenBottomOffset.sliver factory for this case
                 SliverPadding(
                   padding: EdgeInsets.only(
                     bottom: 16.0.s +

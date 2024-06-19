@@ -11,8 +11,8 @@ import 'package:ice/generated/assets.gen.dart';
 
 class MainTabNavigation extends ConsumerWidget {
   const MainTabNavigation({
-    Key? key,
     required this.navigationShell,
+    Key? key,
   }) : super(
           key: key ?? const ValueKey<String>('MainTabNavigation'),
         );
@@ -35,10 +35,10 @@ class MainTabNavigation extends ConsumerWidget {
 
   Widget _buildNavigationBar(BuildContext context, WidgetRef ref) {
     late final _Tabs selectedTab;
-    final List<Widget> children = _Tabs.values.map((_Tabs tab) {
-      final StatefulShellBranch branch = _byTab(tab);
-      final int branchIndex = navigationShell.route.branches.indexOf(branch);
-      final bool isSelected = navigationShell.currentIndex == branchIndex;
+    final children = _Tabs.values.map((_Tabs tab) {
+      final branch = _byTab(tab);
+      final branchIndex = navigationShell.route.branches.indexOf(branch);
+      final isSelected = navigationShell.currentIndex == branchIndex;
 
       if (isSelected) {
         selectedTab = tab;
@@ -86,7 +86,7 @@ class MainTabNavigation extends ConsumerWidget {
     bool isSelected,
     BuildContext context,
   ) {
-    final Color color = isSelected
+    final color = isSelected
         ? context.theme.appColors.primaryAccent
         : context.theme.appColors.tertararyText;
 
@@ -108,7 +108,7 @@ class MainTabNavigation extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final IceRoutes<dynamic> current = ref.watch(currentRouteProvider);
+    final current = ref.watch(currentRouteProvider);
     late final AssetGenImage image;
     if (_Tabs.values.map((_Tabs tab) => tab.mainModalRoute).contains(current)) {
       image = Assets.images.logo.logoButtonClose;
@@ -126,9 +126,9 @@ class MainTabNavigation extends ConsumerWidget {
   }
 
   Widget _buildHitBox({
-    bool ripple = true,
     required VoidCallback onTap,
     required Widget child,
+    bool ripple = true,
   }) {
     if (ripple) {
       return SizedBox.expand(

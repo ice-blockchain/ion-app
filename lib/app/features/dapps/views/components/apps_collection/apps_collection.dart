@@ -17,7 +17,7 @@ class AppsCollection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<DAppItem> itemList = items ?? <DAppItem>[];
+    final itemList = items ?? <DAppItem>[];
 
     return SizedBox(
       height: itemHeight * itemsPerColumn +

@@ -12,8 +12,8 @@ import 'package:ice/generated/assets.gen.dart';
 
 class ManageWalletTile extends StatelessWidget {
   const ManageWalletTile({
-    super.key,
     required this.walletData,
+    super.key,
   });
 
   final WalletData walletData;

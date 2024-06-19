@@ -8,10 +8,10 @@ import 'package:ice/app/features/wallet/views/pages/coin_details/components/tran
 
 class TransactionListHeaderItem extends StatelessWidget {
   const TransactionListHeaderItem({
-    super.key,
     required this.networkType,
     required this.isSelected,
     required this.onPress,
+    super.key,
   });
 
   final NetworkType networkType;
@@ -32,7 +32,7 @@ class TransactionListHeaderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BorderRadius borderRadius = BorderRadius.circular(8.0.s);
+    final borderRadius = BorderRadius.circular(8.0.s);
     return Material(
       borderRadius: borderRadius,
       child: InkWell(

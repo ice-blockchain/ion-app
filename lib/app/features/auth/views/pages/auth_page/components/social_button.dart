@@ -4,9 +4,9 @@ import 'package:ice/app/extensions/num.dart';
 
 class SocialButton extends StatelessWidget {
   const SocialButton({
-    super.key,
     required this.icon,
     required this.onPressed,
+    super.key,
   });
 
   static double get width => 60.0.s;

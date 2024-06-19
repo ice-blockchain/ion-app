@@ -17,27 +17,25 @@ import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class SelectLanguages extends IceSimplePage {
-  const SelectLanguages(super._route, super.payload);
+  const SelectLanguages(super._route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final ValueNotifier<String> searchText = useState('');
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final searchText = useState('');
 
-    final ValueNotifier<Set<Language>> selectedLanguages =
-        useState<Set<Language>>(<Language>{});
+    final selectedLanguages = useState<Set<Language>>(<Language>{});
 
-    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
-        useHideKeyboardAndCallOnce();
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
-    final List<Language> filteredLanguages = searchText.value.isEmpty
+    final filteredLanguages = searchText.value.isEmpty
         ? languages
         : languages.where((Language country) {
-            final String searchLower = searchText.value.toLowerCase().trim();
-            final String nameLower = country.name.toLowerCase();
+            final searchLower = searchText.value.toLowerCase().trim();
+            final nameLower = country.name.toLowerCase();
             return nameLower.contains(searchLower);
           }).toList();
 
-    final bool mayContinue = selectedLanguages.value.isNotEmpty;
+    final mayContinue = selectedLanguages.value.isNotEmpty;
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -65,14 +63,14 @@ class SelectLanguages extends IceSimplePage {
                     height: 12.0.s,
                   ),
                   itemBuilder: (BuildContext context, int index) {
-                    final Language language = filteredLanguages[index];
-                    final bool isSelected =
+                    final language = filteredLanguages[index];
+                    final isSelected =
                         selectedLanguages.value.contains(language);
                     return LanguageListItem(
                       language: language,
                       isSelected: isSelected,
                       onTap: () {
-                        final Set<Language> newSelectedLanguages =
+                        final newSelectedLanguages =
                             Set<Language>.from(selectedLanguages.value);
                         if (isSelected) {
                           newSelectedLanguages.remove(language);

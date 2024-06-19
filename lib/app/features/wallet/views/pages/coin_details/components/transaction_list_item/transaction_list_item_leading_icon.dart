@@ -7,8 +7,8 @@ import 'package:ice/app/features/wallet/model/transaction_type.dart';
 
 class TransactionListItemLeadingIcon extends StatelessWidget {
   const TransactionListItemLeadingIcon({
-    super.key,
     required this.transactionType,
+    super.key,
   });
 
   final TransactionType transactionType;
@@ -36,7 +36,7 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double size = 36.0.s;
+    final size = 36.0.s;
     return Container(
       width: size,
       height: size,

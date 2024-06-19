@@ -6,8 +6,8 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/m
 
 class StoryList extends StatelessWidget {
   const StoryList({
-    super.key,
     required this.stories,
+    super.key,
   });
 
   final List<Story> stories;
@@ -26,7 +26,7 @@ class StoryList extends StatelessWidget {
           return const StoryListSeparator();
         },
         itemBuilder: (BuildContext context, int index) {
-          final Story story = stories[index];
+          final story = stories[index];
           return StoryListItem(
             imageUrl: story.imageUrl,
             label: story.author,

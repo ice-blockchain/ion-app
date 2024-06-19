@@ -11,9 +11,9 @@ class Posts extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<List<PostData>> posts = ref.watch(feedNotifierProvider);
+    final posts = ref.watch(feedNotifierProvider);
 
-    useOnInit(() {
+    useOnInit<void>(() {
       ref.read(feedNotifierProvider.notifier).fetchPosts();
     });
 

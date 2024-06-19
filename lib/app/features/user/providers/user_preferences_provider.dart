@@ -16,16 +16,16 @@ class UserPreferencesNotifier extends _$UserPreferencesNotifier {
 
   @override
   UserPreferences build() {
-    final bool isBalanceVisible =
+    final isBalanceVisible =
         LocalStorage.getBool(isBalanceVisibleKey, defaultValue: true);
-    final bool isZeroValueAssetsVisible =
+    final isZeroValueAssetsVisible =
         LocalStorage.getBool(isZeroValueAssetsVisibleKey, defaultValue: true);
-    final NftLayoutType nftLayoutType = LocalStorage.getEnum<NftLayoutType>(
+    final nftLayoutType = LocalStorage.getEnum<NftLayoutType>(
       nftLayoutTypeKey,
       NftLayoutType.values,
       defaultValue: NftLayoutType.list,
     );
-    final NftSortingType nftSortingType = LocalStorage.getEnum<NftSortingType>(
+    final nftSortingType = LocalStorage.getEnum<NftSortingType>(
       nftSortingTypeKey,
       NftSortingType.values,
       defaultValue: NftSortingType.desc,
@@ -41,7 +41,10 @@ class UserPreferencesNotifier extends _$UserPreferencesNotifier {
 
   void switchBalanceVisibility() {
     state = state.copyWith(isBalanceVisible: !state.isBalanceVisible);
-    LocalStorage.setBool(isBalanceVisibleKey, state.isBalanceVisible);
+    LocalStorage.setBool(
+      key: isBalanceVisibleKey,
+      value: state.isBalanceVisible,
+    );
   }
 
   void switchZeroValueAssetsVisibility() {
@@ -49,8 +52,8 @@ class UserPreferencesNotifier extends _$UserPreferencesNotifier {
       isZeroValueAssetsVisible: !state.isZeroValueAssetsVisible,
     );
     LocalStorage.setBool(
-      isZeroValueAssetsVisibleKey,
-      state.isZeroValueAssetsVisible,
+      key: isZeroValueAssetsVisibleKey,
+      value: state.isZeroValueAssetsVisible,
     );
   }
 

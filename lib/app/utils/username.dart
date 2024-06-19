@@ -5,8 +5,8 @@ String prefixUsername({
   required String? username,
   required BuildContext context,
 }) {
-  final bool rtl = isRTL(context);
-  final String lUsername = username ?? '';
+  final rtl = isRTL(context);
+  final lUsername = username ?? '';
 
   if (lUsername.isNotEmpty) {
     return rtl ? '$lUsername@' : '@$lUsername';

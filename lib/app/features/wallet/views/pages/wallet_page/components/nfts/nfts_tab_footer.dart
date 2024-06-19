@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/empty_state/empty_state.dart';
@@ -16,7 +15,7 @@ class NftsTabFooter extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<NftData> nfts = useFilteredWalletNfts(ref);
+    final nfts = useFilteredWalletNfts(ref);
 
     if (nfts.isEmpty) {
       return const EmptyState(

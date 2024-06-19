@@ -5,9 +5,10 @@ import 'package:ice/app/extensions/extensions.dart';
 
 class AppSlider extends HookWidget {
   const AppSlider({
+    required this.onChanged,
+    super.key,
     this.initialValue = 15.0,
     this.stops = const <double>[0, 15, 30, 45],
-    required this.onChanged,
     this.maxValue = 45.0,
     this.minValue = 0.0,
     this.stepValue = 15.0,
@@ -21,7 +22,7 @@ class AppSlider extends HookWidget {
 
   final double initialValue;
   final List<double> stops;
-  final Function(double) onChanged;
+  final void Function(double) onChanged;
   final double maxValue;
   final double minValue;
   final double stepValue;
@@ -34,8 +35,8 @@ class AppSlider extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<double> sliderValue = useState(initialValue);
-    final AnimationController animationController = useAnimationController(
+    final sliderValue = useState(initialValue);
+    final animationController = useAnimationController(
       duration: const Duration(milliseconds: 100),
       initialValue: sliderValue.value / maxValue,
     );
@@ -50,7 +51,7 @@ class AppSlider extends HookWidget {
       <Object?>[sliderValue.value],
     );
 
-    final Animation<double> animation = animationController.drive(
+    final animation = animationController.drive(
       Tween<double>(
         begin: minValue,
         end: maxValue,
@@ -59,7 +60,7 @@ class AppSlider extends HookWidget {
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final double sliderWidth = constraints.maxWidth;
+        final sliderWidth = constraints.maxWidth;
 
         return GestureDetector(
           onPanUpdate: (DragUpdateDetails details) => _handlePanUpdate(
@@ -149,11 +150,11 @@ class AppSlider extends HookWidget {
     double sliderWidth,
     ValueNotifier<double> sliderValue,
   ) {
-    final Offset localPosition = SliderUtils.getLocalPosition(
+    final localPosition = SliderUtils.getLocalPosition(
       context,
       details.globalPosition,
     );
-    final double newValue = SliderUtils.calculateNewValue(
+    final newValue = SliderUtils.calculateNewValue(
       localPosition: localPosition,
       sliderWidth: sliderWidth,
       minValue: minValue,

@@ -15,7 +15,7 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
-  const CoinReceiveModal(super.route, super.payload);
+  const CoinReceiveModal(super.route, super.payload, {super.key});
 
   NetworkType _getNetworkType(CoinReceiveModalData data) {
     if (data.networkType == NetworkType.all) {
@@ -28,13 +28,13 @@ class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    CoinReceiveModalData? data,
+    CoinReceiveModalData? payload,
   ) {
-    if (data == null) {
+    if (payload == null) {
       return const SizedBox.shrink();
     }
 
-    final NetworkType networkType = _getNetworkType(data);
+    final networkType = _getNetworkType(payload);
 
     return SheetContentScaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -52,7 +52,7 @@ class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
             ),
             ScreenSideOffset.small(
               child: CoinAddressTile(
-                coinData: data.coinData,
+                coinData: payload.coinData,
               ),
             ),
             SizedBox(

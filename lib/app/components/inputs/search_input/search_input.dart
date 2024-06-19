@@ -12,8 +12,8 @@ import 'package:ice/generated/assets.gen.dart';
 
 class SearchInput extends HookWidget {
   const SearchInput({
-    super.key,
     required this.onTextChanged,
+    super.key,
     this.loading = false,
     this.onCancelSearch,
     this.defaultValue = '',
@@ -21,19 +21,18 @@ class SearchInput extends HookWidget {
 
   static double get height => 40.0.s;
 
-  final Function(String) onTextChanged;
+  final void Function(String) onTextChanged;
   final VoidCallback? onCancelSearch;
   final bool loading;
   final String defaultValue;
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController searchController =
-        useTextEditingController(text: defaultValue);
-    final FocusNode focusNode = useFocusNode();
+    final searchController = useTextEditingController(text: defaultValue);
+    final focusNode = useFocusNode();
 
-    final ValueNotifier<bool> showClear = useState(false);
-    final ValueNotifier<bool> focused = useNodeFocused(focusNode);
+    final showClear = useState(false);
+    final focused = useNodeFocused(focusNode);
 
     useTextChanged(
       controller: searchController,
@@ -89,7 +88,7 @@ class SearchInput extends HookWidget {
                       )
                     : showClear.value
                         ? SearchClearButton(
-                            onPressed: () => searchController.clear(),
+                            onPressed: searchController.clear,
                           )
                         : null,
                 prefixIconConstraints: const BoxConstraints(),

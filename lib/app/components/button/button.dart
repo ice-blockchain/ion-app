@@ -24,8 +24,8 @@ enum ButtonType {
 
 class Button extends StatelessWidget {
   Button({
-    super.key,
     required this.onPressed,
+    super.key,
     this.trailingIcon,
     this.leadingIcon,
     this.label,
@@ -44,9 +44,9 @@ class Button extends StatelessWidget {
         trailingIconOffset = trailingIconOffset ?? 8.0.s;
 
   factory Button.icon({
-    Key? key,
     required VoidCallback onPressed,
     required Widget icon,
+    Key? key,
     ButtonType type,
     ButtonStyle style,
     Color? tintColor,
@@ -57,8 +57,8 @@ class Button extends StatelessWidget {
   }) = _ButtonWithIcon;
 
   factory Button.compact({
-    Key? key,
     required VoidCallback onPressed,
+    Key? key,
     Widget? trailingIcon,
     Widget? leadingIcon,
     Widget? label,
@@ -72,8 +72,8 @@ class Button extends StatelessWidget {
   }) = _ButtonCompact;
 
   factory Button.menu({
-    Key? key,
     required VoidCallback onPressed,
+    Key? key,
     Widget? trailingIcon,
     Widget? leadingIcon,
     Widget? label,
@@ -86,8 +86,8 @@ class Button extends StatelessWidget {
   }) = _ButtonMenu;
 
   factory Button.dropdown({
-    Key? key,
     required VoidCallback onPressed,
+    Key? key,
     Widget? leadingIcon,
     Widget? label,
     ButtonStyle style,
@@ -227,7 +227,7 @@ class ButtonLoadingIndicator extends StatelessWidget {
       width: 12.0.s,
       height: 12.0.s,
       child: CircularProgressIndicator(
-        strokeWidth: 2.0,
+        strokeWidth: 2,
         color: context.theme.appColors.onPrimaryAccent,
       ),
     );
@@ -236,8 +236,8 @@ class ButtonLoadingIndicator extends StatelessWidget {
 
 class ButtonIconFrame extends StatelessWidget {
   const ButtonIconFrame({
-    super.key,
     required this.icon,
+    super.key,
     this.color,
   });
 

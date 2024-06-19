@@ -5,8 +5,8 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class ArticleHeader extends StatelessWidget {
   const ArticleHeader({
-    super.key,
     required this.headerText,
+    super.key,
     this.isMainHeader = false,
   });
 
@@ -14,7 +14,7 @@ class ArticleHeader extends StatelessWidget {
   final bool isMainHeader;
 
   TextStyle getStyle(BuildContext context) {
-    final Color color = context.theme.appColors.sharkText;
+    final color = context.theme.appColors.sharkText;
     if (isMainHeader) {
       return context.theme.appTextThemes.headline2.copyWith(color: color);
     }

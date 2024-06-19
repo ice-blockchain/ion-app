@@ -10,10 +10,10 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class SwitchAccountPage extends IceSimplePage {
-  const SwitchAccountPage(super.route, super.payload);
+  const SwitchAccountPage(super.route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
     return SheetContentScaffold(
       body: SingleChildScrollView(
         child: Column(

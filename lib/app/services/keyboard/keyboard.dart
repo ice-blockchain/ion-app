@@ -13,8 +13,8 @@ void hideKeyboard(
 }) {
   if (isKeyboardVisible(context)) {
     if (callback != null) {
-      final Completer<void> completer = Completer<void>();
-      final _KeyboardHiddenObserver observer =
+      final completer = Completer<void>();
+      final observer =
           _KeyboardHiddenObserver(context, callback: completer.complete);
       WidgetsBinding.instance.addObserver(observer);
       FocusManager.instance.primaryFocus?.unfocus();

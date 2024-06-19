@@ -21,18 +21,17 @@ import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class FillProfile extends IceSimplePage {
-  const FillProfile(super.route, super.payload);
+  const FillProfile(super.route, super.payload, {super.key});
 
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final TextEditingController nameController = useTextEditingController();
-    final TextEditingController nicknameController = useTextEditingController();
-    final TextEditingController inviterController = useTextEditingController();
-    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
-        useHideKeyboardAndCallOnce();
-    final ValueNotifier<bool> loading = useState(false);
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final nameController = useTextEditingController();
+    final nicknameController = useTextEditingController();
+    final inviterController = useTextEditingController();
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
+    final loading = useState(false);
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,

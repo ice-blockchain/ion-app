@@ -20,16 +20,16 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class CreateNewWalletModal extends IceSimplePage {
-  const CreateNewWalletModal(super.route, super.payload);
+  const CreateNewWalletModal(super.route, super.payload, {super.key});
 
   @override
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    _,
+    void payload,
   ) {
-    final ValueNotifier<String> walletName = useState('');
-    final TextEditingController controller = useTextEditingController();
+    final walletName = useState('');
+    final controller = useTextEditingController();
 
     return SheetContentScaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -68,7 +68,7 @@ class CreateNewWalletModal extends IceSimplePage {
                     id: DateTime.now().toString(),
                     name: walletName.value,
                     icon: mockWalletIconUrl,
-                    balance: 0.0,
+                    balance: 0,
                   );
                   context.pop();
                 },

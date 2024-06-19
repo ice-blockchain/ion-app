@@ -21,7 +21,7 @@ Widget regularTextInputUseCase(BuildContext context) {
   return Scaffold(
     body: Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -93,7 +93,8 @@ Widget regularTextInputUseCase(BuildContext context) {
               const TextInputWithClear(),
               ElevatedButton(
                 onPressed: () {
-                  // Validate returns true if the form is valid, or false otherwise.
+                  // Validate returns true if the form is valid, or false
+                  // otherwise.
                   if (_formKey.currentState!.validate()) {}
                 },
                 child: const Text('Submit'),
@@ -111,7 +112,7 @@ class TextInputWithClear extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController controller = useTextEditingController();
+    final controller = useTextEditingController();
     return TextInput(
       controller: controller,
       labelText: 'With clear button',

@@ -14,9 +14,9 @@ import 'package:ice/generated/assets.gen.dart';
 
 class WalletTabsHeader extends HookConsumerWidget {
   const WalletTabsHeader({
-    super.key,
     required this.activeTab,
     required this.onTabSwitch,
+    super.key,
   });
 
   final WalletTabType activeTab;

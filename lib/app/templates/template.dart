@@ -88,7 +88,7 @@ class TemplateAppBarTheme with _$TemplateAppBarTheme {
   factory TemplateAppBarTheme.fromJson(Map<String, dynamic> json) =>
       _$TemplateAppBarThemeFromJson(json);
 
-  factory TemplateAppBarTheme.empty() => const TemplateAppBarTheme(0.0);
+  factory TemplateAppBarTheme.empty() => const TemplateAppBarTheme(0);
 }
 
 @freezed
@@ -160,12 +160,12 @@ class TemplateMenuTheme with _$TemplateMenuTheme {
       _$TemplateMenuThemeFromJson(json);
 
   factory TemplateMenuTheme.empty() => const TemplateMenuTheme(
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
       );
 }
 
@@ -183,11 +183,11 @@ class TemplateMenuButtonTheme with _$TemplateMenuButtonTheme {
       _$TemplateMenuButtonThemeFromJson(json);
 
   factory TemplateMenuButtonTheme.empty() => const TemplateMenuButtonTheme(
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
+        0,
+        0,
+        0,
+        0,
+        0,
       );
 }
 
@@ -202,8 +202,8 @@ class TemplateIconButtonTheme with _$TemplateIconButtonTheme {
       _$TemplateIconButtonThemeFromJson(json);
 
   factory TemplateIconButtonTheme.empty() => const TemplateIconButtonTheme(
-        width: 0.0,
-        height: 0.0,
+        width: 0,
+        height: 0,
       );
 }
 
@@ -218,8 +218,8 @@ class TemplateIconTheme with _$TemplateIconTheme {
       _$TemplateIconThemeFromJson(json);
 
   factory TemplateIconTheme.empty() => const TemplateIconTheme(
-        width: 0.0,
-        height: 0.0,
+        width: 0,
+        height: 0,
       );
 }
 

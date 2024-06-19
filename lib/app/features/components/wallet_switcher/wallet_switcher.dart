@@ -15,9 +15,9 @@ class WalletSwitcher extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final String walletId = walletIdSelector(ref);
-    final String walletName = walletNameSelector(ref: ref, walletId: walletId);
-    final String walletIcon = walletIconSelector(ref: ref, walletId: walletId);
+    final walletId = walletIdSelector(ref);
+    final walletName = walletNameSelector(ref: ref, walletId: walletId);
+    final walletIcon = walletIconSelector(ref: ref, walletId: walletId);
 
     return Button.dropdown(
       onPressed: () {

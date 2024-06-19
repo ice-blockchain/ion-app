@@ -18,6 +18,7 @@ class AppsRouteData {
 
 class Apps extends StatelessWidget {
   const Apps({
+    super.key,
     this.title = '',
     this.onPress,
     this.items,

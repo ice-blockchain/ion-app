@@ -13,7 +13,7 @@ class Auth extends _$Auth {
   }
 
   Future<void> rehydrate() async {
-    final String foo = ref.read(envProvider.notifier).get(EnvVariable.FOO);
+    final foo = ref.read(envProvider.notifier).get(EnvVariable.FOO);
     // ignore: avoid_print
     print('Env is $foo');
     state = const Authenticated(

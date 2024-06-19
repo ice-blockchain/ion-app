@@ -7,9 +7,9 @@ import 'package:ice/generated/assets.gen.dart';
 
 class EmptyList extends StatelessWidget {
   EmptyList({
-    super.key,
     required this.asset,
     required this.title,
+    super.key,
     double? imageSize,
   }) : imageSize = imageSize ?? 48.0.s;
 

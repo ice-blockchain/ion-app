@@ -14,16 +14,17 @@ Widget plainArticleHeader(BuildContext context) {
       ArticleHeader(
         headerText: context.knobs.string(
           label: 'Article Header',
-          initialValue:
-              'Coinbase Launches USDC Yields for Global Customers Amid US Crackdown',
+          initialValue: '''
+Coinbase Launches USDC Yields for Global Customers Amid US Crackdown''',
         ),
         isMainHeader: true,
       ),
       ArticleHeader(
         headerText: context.knobs.string(
           label: 'Article Header',
-          initialValue:
-              'In 22 years, AI will perform 50% of work tasks, These are the results of McKinsey study',
+          initialValue: '''
+In 22 years, AI will perform 50% of work tasks, These are the results of 
+McKinsey study''',
         ),
       ),
     ],

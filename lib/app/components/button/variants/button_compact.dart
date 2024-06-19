@@ -2,8 +2,8 @@ part of '../button.dart';
 
 class _ButtonCompact extends Button {
   _ButtonCompact({
-    super.key,
     required super.onPressed,
+    super.key,
     super.trailingIcon,
     super.leadingIcon,
     super.label,

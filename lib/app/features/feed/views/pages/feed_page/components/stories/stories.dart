@@ -13,7 +13,7 @@ class Stories extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ValueNotifier<bool> loading = useState(true);
+    final loading = useState(true);
     useEffect(
       () {
         Timer(const Duration(seconds: 3), () => loading.value = false);

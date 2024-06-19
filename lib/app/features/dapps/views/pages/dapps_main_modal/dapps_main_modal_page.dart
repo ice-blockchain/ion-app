@@ -6,10 +6,10 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class DappsMainModalPage extends IceSimplePage {
-  const DappsMainModalPage(super.route, super.payload);
+  const DappsMainModalPage(super.route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
     return SheetContentScaffold(
       body: ScreenSideOffset.small(
         child: SingleChildScrollView(

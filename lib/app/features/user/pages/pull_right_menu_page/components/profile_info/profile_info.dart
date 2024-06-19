@@ -11,11 +11,11 @@ class ProfileInfo extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey detailsKey = GlobalKey();
-    final ValueNotifier<double> bottomOverflow = useState<double>(30.0.s);
+    final detailsKey = GlobalKey();
+    final bottomOverflow = useState<double>(30.0.s);
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        final RenderBox? renderBox =
+        final renderBox =
             detailsKey.currentContext?.findRenderObject() as RenderBox?;
         if (renderBox != null) {
           bottomOverflow.value = renderBox.size.height / 3;

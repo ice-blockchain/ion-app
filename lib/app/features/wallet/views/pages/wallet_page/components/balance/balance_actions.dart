@@ -7,9 +7,9 @@ import 'package:ice/generated/assets.gen.dart';
 
 class BalanceActions extends StatelessWidget {
   const BalanceActions({
-    super.key,
     required this.onReceive,
     required this.onSend,
+    super.key,
   });
 
   final VoidCallback onReceive;

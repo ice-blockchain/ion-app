@@ -6,8 +6,8 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 
 class SheetContent extends StatelessWidget {
   SheetContent({
-    super.key,
     required this.body,
+    super.key,
     double? topPadding,
     this.backgroundColor,
   }) : topPadding = topPadding ?? defaultPadding;

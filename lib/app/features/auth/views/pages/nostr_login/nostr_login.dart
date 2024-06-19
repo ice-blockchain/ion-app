@@ -20,16 +20,16 @@ import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NostrLogin extends IceSimplePage {
-  const NostrLogin(super._route, super.payload);
+  const NostrLogin(super._route, super.payload, {super.key});
 
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final TextEditingController controller = useTextEditingController();
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final controller = useTextEditingController();
 
-    final double sheetFullHeight = useSheetFullHeight(context);
-    final double bottomOffset = useMemoizedBottomOffset(context);
+    final sheetFullHeight = useSheetFullHeight(context);
+    final bottomOffset = useMemoizedBottomOffset(context);
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,

@@ -7,6 +7,7 @@ import 'package:ice/generated/assets.gen.dart';
 
 class PlusIcon extends StatelessWidget {
   PlusIcon({
+    super.key,
     double? size,
   }) : size = size ?? 18.0.s;
 

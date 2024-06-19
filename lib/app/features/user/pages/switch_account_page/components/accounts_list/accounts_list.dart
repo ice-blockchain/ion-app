@@ -12,8 +12,7 @@ class AccountsList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Map<String, UserData> usersData =
-        ref.watch(usersDataNotifierProvider);
+    final usersData = ref.watch(usersDataNotifierProvider);
     return Padding(
       padding: EdgeInsets.only(top: 8.0.s),
       child: Column(

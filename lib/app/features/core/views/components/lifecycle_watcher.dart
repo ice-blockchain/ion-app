@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
 
 class LifecycleWatcher extends HookConsumerWidget {
-  const LifecycleWatcher({super.key, required this.child});
+  const LifecycleWatcher({required this.child, super.key});
 
   final Widget child;
 

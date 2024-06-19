@@ -13,6 +13,7 @@ class TrendingVideoListItem extends HookConsumerWidget {
   const TrendingVideoListItem({
     required this.video,
     required this.itemSize,
+    super.key,
   });
 
   final TrendingVideo video;

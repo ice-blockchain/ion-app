@@ -5,8 +5,8 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class SearchCancelButton extends StatelessWidget {
   const SearchCancelButton({
-    super.key,
     required this.onPressed,
+    super.key,
   });
 
   final VoidCallback onPressed;

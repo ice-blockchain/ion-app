@@ -23,11 +23,10 @@ class PhoneAuthForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ValueNotifier<Country> country = useState(countries[1]);
-    final TextEditingController inputController = useTextEditingController();
-    final ValueNotifier<bool> loading = useState(false);
-    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
-        useHideKeyboardAndCallOnce();
+    final country = useState(countries[1]);
+    final inputController = useTextEditingController();
+    final loading = useState(false);
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
     return Form(
       key: _formKey,
@@ -38,8 +37,7 @@ class PhoneAuthForm extends HookConsumerWidget {
             prefixIcon: CountryCodeInput(
               country: country.value,
               onTap: () async {
-                final SelectCountryReturnData? data = await IceRoutes
-                    .selectCountries
+                final data = await IceRoutes.selectCountries
                     .push<SelectCountryReturnData>(context);
                 if (data != null) {
                   country.value = data.country;

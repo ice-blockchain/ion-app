@@ -8,9 +8,9 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/c
 
 class StoryListItem extends StatelessWidget {
   const StoryListItem({
-    super.key,
     required this.imageUrl,
     required this.label,
+    super.key,
     this.showPlus = false,
   });
 

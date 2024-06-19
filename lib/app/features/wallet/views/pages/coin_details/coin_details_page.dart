@@ -23,24 +23,22 @@ import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class CoinDetailsPage extends IcePage<CoinData> {
-  const CoinDetailsPage(super.route, super.payload);
+  const CoinDetailsPage(super.route, super.payload, {super.key});
 
   @override
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    CoinData? coinData,
+    CoinData? payload,
   ) {
-    final ScrollController scrollController = useScrollController();
-    final String walletId = walletIdSelector(ref);
-    final String coinId = coinData?.abbreviation ?? '';
-    final Map<String, List<CoinTransactionData>> coinTransactionsMap =
-        useTransactionsByDate(context, ref);
-    final bool isLoading = coinTransactionsIsLoadingSelector(ref);
-    final ValueNotifier<NetworkType> activeNetworkType =
-        useState<NetworkType>(NetworkType.all);
+    final scrollController = useScrollController();
+    final walletId = walletIdSelector(ref);
+    final coinId = payload?.abbreviation ?? '';
+    final coinTransactionsMap = useTransactionsByDate(context, ref);
+    final isLoading = coinTransactionsIsLoadingSelector(ref);
+    final activeNetworkType = useState<NetworkType>(NetworkType.all);
 
-    useOnInit(
+    useOnInit<void>(
       () {
         if (walletId.isNotEmpty && coinId.isNotEmpty) {
           ref.read(coinTransactionsNotifierProvider.notifier).fetch(
@@ -53,13 +51,13 @@ class CoinDetailsPage extends IcePage<CoinData> {
       <Object?>[walletId, coinId, activeNetworkType.value],
     );
 
-    if (coinData == null) {
+    if (payload == null) {
       return const SizedBox.shrink();
     }
     return Scaffold(
       appBar: NavigationAppBar.screen(
-        title: coinData.name,
-        titleIcon: coinData.iconUrl.icon(),
+        title: payload.name,
+        titleIcon: payload.iconUrl.icon(),
       ),
       body: CustomScrollView(
         controller: scrollController,
@@ -69,7 +67,7 @@ class CoinDetailsPage extends IcePage<CoinData> {
               children: <Widget>[
                 const Delimiter(),
                 Balance(
-                  coinData: coinData,
+                  coinData: payload,
                   networkType: activeNetworkType.value,
                 ),
                 const Delimiter(),
@@ -107,7 +105,7 @@ class CoinDetailsPage extends IcePage<CoinData> {
                   return ScreenSideOffset.small(
                     child: TransactionListItem(
                       transactionData: transactions[index],
-                      coinData: coinData,
+                      coinData: payload,
                     ),
                   );
                 },

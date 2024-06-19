@@ -5,9 +5,9 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class PostEngagementMetric extends StatelessWidget {
   const PostEngagementMetric({
-    super.key,
     required this.icon,
     required this.onPressed,
+    super.key,
     this.value,
   });
 

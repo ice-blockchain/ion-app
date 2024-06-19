@@ -6,9 +6,9 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 
 class ModalWrapper extends StatelessWidget {
   const ModalWrapper({
-    super.key,
     required this.transitionObserver,
     required this.navigator,
+    super.key,
   });
 
   final NavigationSheetTransitionObserver transitionObserver;

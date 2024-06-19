@@ -17,14 +17,14 @@ import 'package:ice/app/router/hooks/use_sheet_full_height.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class EnterCode extends IceSimplePage {
-  const EnterCode(super.route, super.payload);
+  const EnterCode(super.route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    const String phoneNumber = '+101234567890';
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    const phoneNumber = '+101234567890';
 
-    final double sheetFullHeight = useSheetFullHeight(context);
-    final double bottomOffset = useMemoizedBottomOffset(context);
+    final sheetFullHeight = useSheetFullHeight(context);
+    final bottomOffset = useMemoizedBottomOffset(context);
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,

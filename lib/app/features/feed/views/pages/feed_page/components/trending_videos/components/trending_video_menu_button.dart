@@ -8,6 +8,7 @@ import 'package:ice/generated/assets.gen.dart';
 class TrendingVideoMenuButton extends StatelessWidget {
   const TrendingVideoMenuButton({
     required this.onPressed,
+    super.key,
   });
 
   final VoidCallback onPressed;

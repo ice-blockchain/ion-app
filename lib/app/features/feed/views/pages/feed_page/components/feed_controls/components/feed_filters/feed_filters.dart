@@ -10,12 +10,11 @@ import 'package:ice/app/features/feed/model/feed_filter.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_categories_dropdown.dart';
 
 class FeedFilters extends HookWidget {
-  const FeedFilters();
+  const FeedFilters({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<FeedFilter> selectedFilter =
-        useState(FeedFilter.forYou);
+    final selectedFilter = useState(FeedFilter.forYou);
 
     return Align(
       alignment: Alignment.centerLeft,

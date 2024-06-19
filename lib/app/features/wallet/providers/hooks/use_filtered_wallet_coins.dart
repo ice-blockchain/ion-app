@@ -5,8 +5,8 @@ import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/providers/selectors/wallet_assets_selectors.dart';
 
 List<CoinData> useFilteredWalletCoins(WidgetRef ref) {
-  final bool isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
-  final List<CoinData> walletCoins = coinsDataSelector(ref);
+  final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
+  final walletCoins = coinsDataSelector(ref);
 
   return useMemoized(
     () {

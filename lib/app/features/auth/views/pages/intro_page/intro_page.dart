@@ -12,11 +12,11 @@ import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
 
 class IntroPage extends IceSimplePage {
-  const IntroPage(super._route, super.payload);
+  const IntroPage(super._route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final Animation<double> animation = useButtonAnimation();
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final animation = useButtonAnimation();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

@@ -11,6 +11,7 @@ import 'package:ice/generated/assets.gen.dart';
 class FeedNavigation extends StatelessWidget {
   const FeedNavigation({
     required this.onFiltersPressed,
+    super.key,
   });
 
   final VoidCallback onFiltersPressed;

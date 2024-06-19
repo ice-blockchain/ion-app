@@ -8,28 +8,28 @@ class ContactInputSwitcher extends StatelessWidget {
   const ContactInputSwitcher({
     required this.selectedContact,
     required this.onContactSelected,
+    super.key,
   });
 
   final ContactData? selectedContact;
-  final Function(ContactData?) onContactSelected;
+  final void Function(ContactData?) onContactSelected;
 
   @override
   Widget build(BuildContext context) {
     return selectedContact != null
         ? ContactButton(
             contact: selectedContact!,
-            onContactTap: () async => await selectContact(context),
+            onContactTap: () => selectContact(context),
             onClearContact: () => onContactSelected(null),
           )
         : AddressInputField(
-            onOpenContactList: () async => await selectContact(context),
+            onOpenContactList: () => selectContact(context),
             onScanPressed: () {},
           );
   }
 
   Future<void> selectContact(BuildContext context) async {
-    final ContactData? contact =
-        await IceRoutes.contactsSelect.push<ContactData>(context);
+    final contact = await IceRoutes.contactsSelect.push<ContactData>(context);
 
     if (!context.mounted) return;
 

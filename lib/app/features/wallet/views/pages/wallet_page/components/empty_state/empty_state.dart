@@ -10,20 +10,20 @@ import 'package:ice/generated/assets.gen.dart';
 
 class EmptyState extends HookConsumerWidget {
   const EmptyState({
-    super.key,
     required this.tabType,
+    super.key,
   });
 
   final WalletTabType tabType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final String searchValue = walletAssetSearchValueSelector(ref, tabType);
-    final bool toShowNoResults = searchValue.isNotEmpty == true;
-    final AssetGenImage asset = toShowNoResults
+    final searchValue = walletAssetSearchValueSelector(ref, tabType);
+    final toShowNoResults = searchValue.isNotEmpty == true;
+    final asset = toShowNoResults
         ? Assets.images.misc.emptySearch
         : tabType.emptyListAsset;
-    final String title = toShowNoResults
+    final title = toShowNoResults
         ? context.i18n.core_empty_search
         : tabType.getEmptyListTitle(context);
 

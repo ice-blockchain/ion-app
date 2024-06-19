@@ -9,12 +9,12 @@ import 'package:ice/generated/assets.gen.dart';
 
 class LinksListTile extends StatelessWidget {
   const LinksListTile({
-    super.key,
     required this.title,
     required this.subtitle,
     required this.onTap,
     required this.iconAssetName,
     required this.iconTintColor,
+    super.key,
   });
 
   final String iconAssetName;

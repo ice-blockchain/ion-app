@@ -23,9 +23,9 @@ class CodeFields extends StatelessWidget {
 
   final StreamController<ErrorAnimationType>? errorAnimationController;
 
-  final Function(String)? onCompleted;
+  final void Function(String)? onCompleted;
 
-  final Function(String)? onChanged;
+  final void Function(String)? onChanged;
 
   final bool invalidCode;
 

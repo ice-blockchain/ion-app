@@ -15,9 +15,9 @@ import 'package:ice/generated/assets.gen.dart';
 
 class Balance extends HookConsumerWidget {
   const Balance({
-    super.key,
     required this.coinData,
     required this.networkType,
+    super.key,
   });
 
   final CoinData coinData;
@@ -25,6 +25,9 @@ class Balance extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final text =
+        '${formatToCurrency(coinData.amount, '')} ${coinData.abbreviation}';
+
     return ScreenSideOffset.small(
       child: Column(
         children: <Widget>[
@@ -37,7 +40,7 @@ class Balance extends HookConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      '${formatToCurrency(coinData.amount, '')} ${coinData.abbreviation}',
+                      text,
                       style: context.theme.appTextThemes.headline1.copyWith(
                         color: context.theme.appColors.primaryText,
                       ),

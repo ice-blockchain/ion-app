@@ -10,10 +10,10 @@ import 'package:ice/app/features/user/pages/pull_right_menu_page/components/prof
 import 'package:ice/app/router/app_routes.dart';
 
 class PullRightMenuPage extends IceSimplePage {
-  const PullRightMenuPage(super.route, super.payload);
+  const PullRightMenuPage(super.route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
     return PopScope(
       canPop: false,
       onPopInvoked: (_) => IceRoutes.feed.go(context),

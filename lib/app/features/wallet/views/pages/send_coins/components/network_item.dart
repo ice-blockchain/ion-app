@@ -5,9 +5,9 @@ import 'package:ice/app/features/wallet/model/network_type.dart';
 
 class NetworkItem extends StatelessWidget {
   const NetworkItem({
-    super.key,
     required this.networkType,
     required this.onTap,
+    super.key,
   });
 
   final NetworkType networkType;

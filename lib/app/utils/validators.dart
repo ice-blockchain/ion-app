@@ -12,7 +12,10 @@ class Validators {
   }
 
   static bool isInvalidLength(String? value, {int? minLength, int? maxLength}) {
-    assert(minLength != null || maxLength != null);
+    assert(
+      minLength != null || maxLength != null,
+      'At least one of minLength or maxLength must be provided',
+    );
 
     if (value == null) return true;
     if (minLength != null && value.length < minLength) return true;

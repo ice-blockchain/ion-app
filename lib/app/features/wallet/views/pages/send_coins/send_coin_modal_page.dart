@@ -6,10 +6,10 @@ import 'package:ice/app/features/wallet/views/pages/send_coins/components/coins_
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class SendCoinModalPage extends IceSimplePage {
-  const SendCoinModalPage(super.route, super.payload);
+  const SendCoinModalPage(super.route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
     return SheetContent(
       body: const CoinsListView(),
       backgroundColor: context.theme.appColors.secondaryBackground,

@@ -15,9 +15,8 @@ class Permissions extends _$Permissions {
   }
 
   Future<void> checkAllPermissions() async {
-    final Map<PermissionType, bool> permissions = <PermissionType, bool>{};
-    final PermissionStatus contactsPermissionStatus =
-        await Permission.contacts.status;
+    final permissions = <PermissionType, bool>{};
+    final contactsPermissionStatus = await Permission.contacts.status;
     permissions.putIfAbsent(
       PermissionType.Contacts,
       () => contactsPermissionStatus == PermissionStatus.granted,
@@ -28,14 +27,13 @@ class Permissions extends _$Permissions {
   Future<void> requestContactsPermission() async {
     await Permission.contacts.request();
     // hardcode always as granted for now
-    const bool newIsGranted = true;
-    final Map<PermissionType, bool> newState =
-        Map<PermissionType, bool>.from(state)
-          ..update(
-            PermissionType.Contacts,
-            (_) => newIsGranted,
-            ifAbsent: () => newIsGranted,
-          );
+    const newIsGranted = true;
+    final newState = Map<PermissionType, bool>.from(state)
+      ..update(
+        PermissionType.Contacts,
+        (_) => newIsGranted,
+        ifAbsent: () => newIsGranted,
+      );
     state = Map<PermissionType, bool>.unmodifiable(newState);
   }
 }

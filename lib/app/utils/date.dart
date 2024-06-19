@@ -18,10 +18,10 @@ import 'package:intl/intl.dart';
 /// Returns: A string representing the human-readable date. This will be either
 /// "today", "yesterday", or a date formatted as 'MMM d yyyy'.
 String toPastDateDisplayValue(int timestamp, BuildContext context) {
-  final DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-  final DateTime now = DateTime.now();
-  final DateTime today = DateTime(now.year, now.month, now.day);
-  final DateTime yesterday = today.subtract(const Duration(days: 1));
+  final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final yesterday = today.subtract(const Duration(days: 1));
 
   if (date.year == today.year &&
       date.month == today.month &&
@@ -47,6 +47,6 @@ String toPastDateDisplayValue(int timestamp, BuildContext context) {
 ///
 /// Returns: A string representing the time in 'HH:mm' format.
 String toTimeDisplayValue(int timestamp) {
-  final DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+  final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
   return DateFormat('HH:mm').format(date);
 }

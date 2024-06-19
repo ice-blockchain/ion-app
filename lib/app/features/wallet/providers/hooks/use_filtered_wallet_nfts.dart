@@ -5,8 +5,8 @@ import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/providers/selectors/wallet_assets_selectors.dart';
 
 List<NftData> useFilteredWalletNfts(WidgetRef ref) {
-  final bool isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
-  final List<NftData> walletNfts = nftsDataSelector(ref);
+  final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
+  final walletNfts = nftsDataSelector(ref);
 
   return useMemoized(
     () {

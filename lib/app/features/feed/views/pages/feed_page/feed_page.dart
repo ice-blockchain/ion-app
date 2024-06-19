@@ -16,12 +16,12 @@ import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart
 enum FeedType { feed, videos, stories }
 
 class FeedPage extends IceSimplePage {
-  const FeedPage(super.route, super.payload);
+  const FeedPage(super.route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final ScrollController scrollController = useScrollController();
-    final FeedCategory feedCategory = ref.watch(feedCategoryNotifierProvider);
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final scrollController = useScrollController();
+    final feedCategory = ref.watch(feedCategoryNotifierProvider);
 
     return PullRightMenuHandler(
       child: Scaffold(

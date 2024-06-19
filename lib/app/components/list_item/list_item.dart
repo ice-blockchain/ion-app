@@ -35,6 +35,8 @@ class ListItem extends StatelessWidget {
         constraints = constraints ?? defaultConstraints;
 
   factory ListItem.checkbox({
+    required VoidCallback onTap,
+    required bool value,
     Key? key,
     Widget? leading,
     Widget? title,
@@ -46,11 +48,11 @@ class ListItem extends StatelessWidget {
     EdgeInsetsGeometry? trailingPadding,
     BoxConstraints? constraints,
     Color? backgroundColor,
-    required VoidCallback onTap,
-    required bool value,
   }) = _ListItemWithCheckbox;
 
   factory ListItem.user({
+    required Widget title,
+    required Widget subtitle,
     Key? key,
     Widget? leading,
     Widget? trailing,
@@ -63,8 +65,6 @@ class ListItem extends StatelessWidget {
     Color? backgroundColor,
     VoidCallback? onTap,
     String? profilePicture,
-    required Widget title,
-    required Widget subtitle,
     bool verifiedBadge,
     bool iceBadge,
     bool isSelected,
@@ -145,7 +145,7 @@ class ListItem extends StatelessWidget {
     required Widget child,
     required BuildContext context,
   }) {
-    final Color backgroundColor = _getBackgroundColor(context);
+    final backgroundColor = _getBackgroundColor(context);
     return onTap != null
         ? Material(
             color: backgroundColor,
@@ -167,14 +167,14 @@ class ListItem extends StatelessWidget {
   }
 
   Color _getBackgroundColor(BuildContext context) {
-    return isSelected == true
+    return (isSelected ?? false)
         ? context.theme.appColors.primaryAccent
         : backgroundColor ?? context.theme.appColors.tertararyBackground;
   }
 
   TextStyle _getDefaultTitleStyle(BuildContext context) {
     return context.theme.appTextThemes.body.copyWith(
-      color: isSelected == true
+      color: (isSelected ?? false)
           ? context.theme.appColors.onPrimaryAccent
           : context.theme.appColors.primaryText,
     );
@@ -182,7 +182,7 @@ class ListItem extends StatelessWidget {
 
   TextStyle _getDefaultSubtitleStyle(BuildContext context) {
     return context.theme.appTextThemes.caption3.copyWith(
-      color: isSelected == true
+      color: (isSelected ?? false)
           ? context.theme.appColors.onPrimaryAccent
           : context.theme.appColors.secondaryText,
     );

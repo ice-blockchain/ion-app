@@ -8,8 +8,7 @@ import 'package:ice/app/router/main_tab_navigation.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 List<RouteBase> get appRoutes {
-  final Iterable<RouteBase> iterable =
-      iceRootRoutes.map(<T>(IceRoutes<T> route) => _convertIntoRoute<T>(route));
+  final iterable = iceRootRoutes.map<RouteBase>(_convertIntoRoute);
   return iterable.toList();
 }
 
@@ -18,20 +17,20 @@ RouteBase _convertIntoRoute<T>(
   IceRouteType? parentType,
   GlobalKey<NavigatorState>? parentNavigatorKey,
 }) {
-  final List<RouteBase> children = _buildChildren(route);
+  final children = _buildChildren(route);
 
   if (route.type == IceRouteType.bottomTabs) {
     return _buildBottomTabsRoute(route, parentNavigatorKey, children);
   }
 
-  final bool initial = route == initialPage;
+  final initial = route == initialPage;
 
-  final String path = initial
+  final path = initial
       ? '/'
       : parentType == null
           ? '/${route.name}'
           : route.name;
-  final String name = route.name;
+  final name = route.name;
 
   return GoRoute(
     path: path,
@@ -97,8 +96,8 @@ CustomTransitionPage<T> _buildPageWithSlideFromLeftTransition<T>({
       Animation<double> secondaryAnimation,
       Widget child,
     ) {
-      final Animation<Offset> offsetAnimation = Tween<Offset>(
-        begin: const Offset(-1.0, 0.0),
+      final offsetAnimation = Tween<Offset>(
+        begin: const Offset(-1, 0),
         end: Offset.zero,
       ).animate(animation);
 
@@ -111,9 +110,9 @@ CustomTransitionPage<T> _buildPageWithSlideFromLeftTransition<T>({
 }
 
 List<RouteBase> _buildChildren<T>(IceRoutes<T> route) {
-  final List<IceRoutes<dynamic>> pages = <IceRoutes<dynamic>>[];
-  final List<IceRoutes<dynamic>> bottomSheets = <IceRoutes<dynamic>>[];
-  for (final IceRoutes<dynamic> child in route.children.emptyOrValue) {
+  final pages = <IceRoutes<dynamic>>[];
+  final bottomSheets = <IceRoutes<dynamic>>[];
+  for (final child in route.children.emptyOrValue) {
     if (child.type == IceRouteType.bottomSheet) {
       bottomSheets.add(child);
     } else {
@@ -121,14 +120,14 @@ List<RouteBase> _buildChildren<T>(IceRoutes<T> route) {
     }
   }
 
-  final List<RouteBase> routes = _convertChildrenIntoRoutes(pages, route.type);
+  final routes = _convertChildrenIntoRoutes<dynamic>(pages, route.type);
 
   if (bottomSheets.isNotEmpty) {
-    final List<RouteBase> bottomSheetsRoutes = _convertChildrenIntoRoutes(
+    final bottomSheetsRoutes = _convertChildrenIntoRoutes<dynamic>(
       bottomSheets,
       route.type,
     );
-    final RouteBase bottomSheetRoute =
+    final bottomSheetRoute =
         _buildBottomSheetRoute(children: bottomSheetsRoutes);
     routes.add(bottomSheetRoute);
   }
@@ -139,8 +138,7 @@ List<RouteBase> _buildChildren<T>(IceRoutes<T> route) {
 RouteBase _buildBottomSheetRoute({
   required List<RouteBase> children,
 }) {
-  final NavigationSheetTransitionObserver navigationSheetTransitionObserver =
-      NavigationSheetTransitionObserver();
+  final navigationSheetTransitionObserver = NavigationSheetTransitionObserver();
   return ShellRoute(
     observers: <NavigatorObserver>[navigationSheetTransitionObserver],
     pageBuilder: (BuildContext context, GoRouterState state, Widget navigator) {
@@ -159,8 +157,8 @@ List<RouteBase> _convertChildrenIntoRoutes<T>(
   List<IceRoutes<dynamic>> children,
   IceRouteType parentRouteType,
 ) {
-  final Iterable<RouteBase> iterable = children.map(
-    <T>(IceRoutes<T> child) => _convertChildIntoRoute(child, parentRouteType),
+  final iterable = children.map<RouteBase>(
+    (child) => _convertChildIntoRoute(child, parentRouteType),
   );
 
   return iterable.toList();

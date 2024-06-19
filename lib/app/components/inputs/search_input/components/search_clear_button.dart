@@ -5,8 +5,8 @@ import 'package:ice/generated/assets.gen.dart';
 
 class SearchClearButton extends StatelessWidget {
   const SearchClearButton({
-    super.key,
     required this.onPressed,
+    super.key,
   });
 
   final VoidCallback onPressed;

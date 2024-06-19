@@ -14,11 +14,12 @@ class SliderThumb extends StatelessWidget {
     required this.minValue,
     required this.stops,
     required this.resistance,
+    super.key,
   });
 
   final ValueNotifier<double> sliderValue;
   final double sliderWidth;
-  final Function(double) onChanged;
+  final void Function(double) onChanged;
   final double thumbIconSize;
   final double maxValue;
   final double minValue;
@@ -29,7 +30,7 @@ class SliderThumb extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onHorizontalDragUpdate: (DragUpdateDetails details) {
-        final double newValue = SliderUtils.calculateNewValueOnDrag(
+        final newValue = SliderUtils.calculateNewValueOnDrag(
           currentValue: sliderValue.value,
           deltaDx: details.delta.dx,
           sliderWidth: sliderWidth,

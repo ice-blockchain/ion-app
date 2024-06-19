@@ -11,8 +11,8 @@ double borderRadius = 12.0.s;
 
 class PostImage extends StatelessWidget {
   const PostImage({
-    super.key,
     required this.imageUrl,
+    super.key,
     this.minutesToRead,
     this.minutesToReadAlignment,
   });
@@ -39,11 +39,11 @@ class PostImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double paddingHorizontal = ScreenSideOffset.defaultSmallMargin;
-    final double imageWidth =
+    final paddingHorizontal = ScreenSideOffset.defaultSmallMargin;
+    final imageWidth =
         MediaQuery.of(context).size.width - paddingHorizontal * 2;
 
-    final Alignment alignment = minutesToReadAlignment ?? Alignment.bottomRight;
+    final alignment = minutesToReadAlignment ?? Alignment.bottomRight;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: paddingHorizontal),

@@ -16,9 +16,9 @@ class NftHeaderLayoutAction extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final NftLayoutType nftLayoutType = nftLayoutTypeSelector(ref);
-    final Color activeColor = context.theme.appColors.primaryText;
-    final Color inactiveColor = context.theme.appColors.tertararyText;
+    final nftLayoutType = nftLayoutTypeSelector(ref);
+    final activeColor = context.theme.appColors.primaryText;
+    final inactiveColor = context.theme.appColors.tertararyText;
 
     return Row(
       children: <Widget>[
