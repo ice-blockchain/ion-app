@@ -1,15 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/router/app_router_listenable.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class MainTabNavigation extends ConsumerWidget {
+class MainTabNavigation extends HookWidget {
   const MainTabNavigation({
     required this.navigationShell,
     Key? key,
@@ -18,22 +18,55 @@ class MainTabNavigation extends ConsumerWidget {
         );
   final StatefulNavigationShell navigationShell;
 
-  void _goBranch(int index) {
-    navigationShell.goBranch(
-      index,
-      initialLocation: index == navigationShell.currentIndex,
-    );
+  static const disabledTabs = <_Tabs>[
+    _Tabs.chat,
+    _Tabs.dapps,
+    _Tabs.wallet,
+  ];
+
+  void _goBranch(
+    int index,
+    ValueNotifier<bool> isModalOpen,
+    ValueNotifier<bool> isButtonDisabled,
+    BuildContext context,
+  ) {
+    if (isModalOpen.value) {
+      final selectedTab = _Tabs.values[navigationShell.currentIndex];
+      selectedTab.mainModalRoute.pop(context);
+      isModalOpen.value = false;
+      isButtonDisabled.value = true;
+      Timer(const Duration(milliseconds: 300), () {
+        isButtonDisabled.value = false;
+        navigationShell.goBranch(
+          index,
+          initialLocation: index == navigationShell.currentIndex,
+        );
+      });
+    } else {
+      navigationShell.goBranch(
+        index,
+        initialLocation: index == navigationShell.currentIndex,
+      );
+    }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final isModalOpen = useState(false);
+    final isButtonDisabled = useState(false);
+
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: _buildNavigationBar(context, ref),
+      bottomNavigationBar:
+          _buildNavigationBar(context, isModalOpen, isButtonDisabled),
     );
   }
 
-  Widget _buildNavigationBar(BuildContext context, WidgetRef ref) {
+  Widget _buildNavigationBar(
+    BuildContext context,
+    ValueNotifier<bool> isModalOpen,
+    ValueNotifier<bool> isButtonDisabled,
+  ) {
     late final _Tabs selectedTab;
     final children = _Tabs.values.map((_Tabs tab) {
       final branch = _byTab(tab);
@@ -49,12 +82,14 @@ class MainTabNavigation extends ConsumerWidget {
         branchIndex,
         isSelected,
         context,
+        isModalOpen,
+        isButtonDisabled,
       );
     }).toList();
 
     children.insert(
       (children.length / 2).ceil(),
-      _buildMainButton(selectedTab, context, ref),
+      _buildMainButton(selectedTab, context, isModalOpen, isButtonDisabled),
     );
 
     return Container(
@@ -85,13 +120,16 @@ class MainTabNavigation extends ConsumerWidget {
     int branchIndex,
     bool isSelected,
     BuildContext context,
+    ValueNotifier<bool> isModalOpen,
+    ValueNotifier<bool> isButtonDisabled,
   ) {
     final color = isSelected
         ? context.theme.appColors.primaryAccent
         : context.theme.appColors.tertararyText;
 
     return _buildHitBox(
-      onTap: () => _goBranch(branchIndex),
+      onTap: () =>
+          _goBranch(branchIndex, isModalOpen, isButtonDisabled, context),
       child: tab.icon.icon(color: color, size: 24.0.s),
     );
   }
@@ -106,11 +144,11 @@ class MainTabNavigation extends ConsumerWidget {
   Widget _buildMainButton(
     _Tabs selectedTab,
     BuildContext context,
-    WidgetRef ref,
+    ValueNotifier<bool> isModalOpen,
+    ValueNotifier<bool> isButtonDisabled,
   ) {
-    final current = ref.watch(currentRouteProvider);
     late final AssetGenImage image;
-    if (_Tabs.values.map((_Tabs tab) => tab.mainModalRoute).contains(current)) {
+    if (isModalOpen.value) {
       image = Assets.images.logo.logoButtonClose;
     } else {
       image = Assets.images.logo.logoButton;
@@ -119,9 +157,27 @@ class MainTabNavigation extends ConsumerWidget {
     return _buildHitBox(
       ripple: false,
       onTap: () {
-        selectedTab.mainModalRoute.go(context);
+        // Disable the button if the selected tab is in the disabledTabs list
+        if (disabledTabs.contains(selectedTab)) return;
+
+        // Disable the button for 300ms to prevent double taps
+        // and wait until the modal is fully closed/opened
+        if (isButtonDisabled.value) return;
+
+        if (isModalOpen.value) {
+          selectedTab.mainModalRoute.pop(context);
+          isModalOpen.value = false;
+        } else {
+          selectedTab.mainModalRoute.go(context);
+          isModalOpen.value = true;
+        }
+
+        isButtonDisabled.value = true;
+        Timer(const Duration(milliseconds: 300), () {
+          isButtonDisabled.value = false;
+        });
       },
-      child: image.image(height: 50.0.s), //TODO refactor into .icon when fixed
+      child: image.image(height: 50.0.s),
     );
   }
 
@@ -148,9 +204,9 @@ class MainTabNavigation extends ConsumerWidget {
 
 enum _Tabs {
   feed(IceRoutes.feed, IceRoutes.feedMainModal),
-  chat(IceRoutes.chat, IceRoutes.chatMainModal),
-  dapps(IceRoutes.dapps, IceRoutes.dappsMainModal),
-  wallet(IceRoutes.wallet, IceRoutes.walletMainModal);
+  chat(IceRoutes.chat, IceRoutes.chat),
+  dapps(IceRoutes.dapps, IceRoutes.dapps),
+  wallet(IceRoutes.wallet, IceRoutes.wallet);
 
   const _Tabs(this.route, this.mainModalRoute);
 

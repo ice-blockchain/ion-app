@@ -130,5 +130,14 @@
   "feed_for_you": "For you",
   "feed_following": "Following",
   "feed_read_time_in_mins": "{mins} min read",
-  "feed_trending_videos": "Trending Videos"
+  "feed_trending_videos": "Trending Videos",
+  "feed_modal_title": "Create value",
+  "feed_modal_post": "Post",
+  "feed_modal_post_description": "Voice your ideas",
+  "feed_modal_story": "Story",
+  "feed_modal_story_description": "Express the moment",
+  "feed_modal_video": "Video",
+  "feed_modal_video_description": "Show the world in motion",
+  "feed_modal_article": "Article",
+  "feed_modal_article_description": "Share your wisdom"
 }

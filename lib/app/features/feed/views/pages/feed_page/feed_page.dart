@@ -13,8 +13,6 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_handler.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 
-enum FeedType { feed, videos, stories }
-
 class FeedPage extends IceSimplePage {
   const FeedPage(super.route, super.payload, {super.key});
 
