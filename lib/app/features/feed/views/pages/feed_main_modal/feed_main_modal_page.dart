@@ -3,28 +3,19 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/views/pages/feed_main_modal/components/feed_modal_item.dart';
+import 'package:ice/app/features/feed/views/pages/feed_main_modal/components/feed_modal_separator.dart';
+import 'package:ice/app/features/wallet/model/feed_type.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class FeedMainModalPage extends IceSimplePage {
   const FeedMainModalPage(super.route, super.payload, {super.key});
 
+  static const List<FeedType> feedTypeValues = FeedType.values;
+
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
-    final separatorWidth = MediaQuery.of(context).size.width;
-
-    final separator = Container(
-      width: separatorWidth,
-      height: 0.50,
-      decoration: const BoxDecoration(
-        gradient: RadialGradient(
-          center: Alignment.bottomCenter,
-          radius: 0,
-          colors: <Color>[Color(0xFFC2C2C2), Color(0x47D9D9D9)],
-        ),
-      ),
-    );
-
     return SheetContentScaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: ScreenSideOffset.small(
@@ -36,12 +27,24 @@ class FeedMainModalPage extends IceSimplePage {
                 title: context.i18n.feed_modal_title,
                 showBackButton: false,
               ),
-              separator,
-              SizedBox(
-                height: 250.0.s,
-                child: const Center(
-                  child: Text('WALLET MAIN MODAL'),
-                ),
+              const FeedModalSeparator(),
+              ListView.separated(
+                shrinkWrap: true,
+                padding: EdgeInsets.only(bottom: 10.0.s),
+                itemCount: feedTypeValues.length,
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    height: 12.0.s,
+                  );
+                },
+                itemBuilder: (BuildContext context, int index) {
+                  return ScreenSideOffset.small(
+                    child: FeedModalItem(
+                      feedType: feedTypeValues[index],
+                      onTap: () {},
+                    ),
+                  );
+                },
               ),
             ],
           ),

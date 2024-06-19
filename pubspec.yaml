@@ -6,7 +6,7 @@ publish_to: "none"
 version: 0.0.0+1
 
 environment:
-  sdk: '>=3.3.1 <4.0.0'
+  sdk: ">=3.3.1 <4.0.0"
 
 dependencies:
   cached_network_image: ^3.3.1
@@ -93,6 +93,7 @@ flutter:
     - assets/images/bg/
     - assets/images/logo/
     - assets/images/misc/
+    - assets/images/feed/
 
 flutter_gen:
   output: lib/generated/
