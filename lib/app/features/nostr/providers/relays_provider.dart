@@ -25,7 +25,7 @@ class Relays extends _$Relays {
     if (state[url] != null) {
       return state[url]!;
     }
-    final NostrRelay relay = await NostrRelay.connect(url);
+    final relay = await NostrRelay.connect(url);
     state = Map<String, NostrRelay>.unmodifiable(
       <String, NostrRelay>{...state, url: relay},
     );
@@ -33,7 +33,7 @@ class Relays extends _$Relays {
   }
 
   void _closeAll() {
-    for (final NostrRelay relay in state.values) {
+    for (final relay in state.values) {
       relay.close();
     }
     state = initialState;

@@ -10,10 +10,10 @@ import 'package:ice/generated/assets.gen.dart';
 
 class LanguageListItem extends StatelessWidget {
   const LanguageListItem({
-    super.key,
     required this.language,
     required this.isSelected,
     required this.onTap,
+    super.key,
   });
 
   final Language language;

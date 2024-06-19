@@ -2,6 +2,8 @@ part of '../list_item.dart';
 
 class _ListItemUser extends ListItem {
   _ListItemUser({
+    required Widget title,
+    required Widget subtitle,
     super.key,
     super.border,
     super.trailingPadding,
@@ -13,8 +15,6 @@ class _ListItemUser extends ListItem {
     EdgeInsetsGeometry? contentPadding,
     EdgeInsetsGeometry? leadingPadding,
     BoxConstraints? constraints,
-    required Widget title,
-    required Widget subtitle,
     String? profilePicture,
     bool verifiedBadge = false,
     bool iceBadge = false,
@@ -65,7 +65,7 @@ class _ListItemUser extends ListItem {
 
   @override
   Color _getBackgroundColor(BuildContext context) {
-    return isSelected == true
+    return (isSelected ?? false)
         ? context.theme.appColors.primaryAccent
         : backgroundColor ?? Colors.transparent;
   }
@@ -73,7 +73,7 @@ class _ListItemUser extends ListItem {
   @override
   TextStyle _getDefaultTitleStyle(BuildContext context) {
     return context.theme.appTextThemes.subtitle3.copyWith(
-      color: isSelected == true
+      color: (isSelected ?? false)
           ? context.theme.appColors.onPrimaryAccent
           : context.theme.appColors.primaryText,
     );
@@ -82,7 +82,7 @@ class _ListItemUser extends ListItem {
   @override
   TextStyle _getDefaultSubtitleStyle(BuildContext context) {
     return context.theme.appTextThemes.caption.copyWith(
-      color: isSelected == true
+      color: (isSelected ?? false)
           ? context.theme.appColors.onPrimaryAccent
           : context.theme.appColors.tertararyText,
     );

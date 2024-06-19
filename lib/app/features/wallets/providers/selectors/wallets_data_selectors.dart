@@ -12,7 +12,7 @@ String? selectedWalletIdSelector(WidgetRef ref) {
 }
 
 String walletIdSelector(WidgetRef ref) {
-  final String? selectedWalletId = selectedWalletIdSelector(ref);
+  final selectedWalletId = selectedWalletIdSelector(ref);
   return ref.watch(
     walletsDataNotifierProvider.select(
       (Map<String, WalletData> walletsData) {
@@ -20,7 +20,7 @@ String walletIdSelector(WidgetRef ref) {
             walletsData.containsKey(selectedWalletId)) {
           return selectedWalletId;
         }
-        final List<String> idsList = walletsData.keys.toList();
+        final idsList = walletsData.keys.toList();
         return idsList.isEmpty ? '' : idsList[0];
       },
     ),

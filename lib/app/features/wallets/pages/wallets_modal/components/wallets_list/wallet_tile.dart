@@ -14,16 +14,16 @@ import 'package:ice/generated/assets.gen.dart';
 
 class WalletTile extends HookConsumerWidget {
   const WalletTile({
-    super.key,
     required this.walletData,
+    super.key,
   });
 
   final WalletData walletData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final String selectedWalletId = walletIdSelector(ref);
-    final bool isSelected = walletData.id == selectedWalletId;
+    final selectedWalletId = walletIdSelector(ref);
+    final isSelected = walletData.id == selectedWalletId;
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),

@@ -20,14 +20,13 @@ class Balance extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final String walletId = walletIdSelector(ref);
-    final double walletBalance =
-        walletBalanceSelector(ref: ref, walletId: walletId);
-    final bool isBalanceVisible = isBalanceVisibleSelector(ref);
-    final AssetGenImage iconAsset = isBalanceVisible
+    final walletId = walletIdSelector(ref);
+    final walletBalance = walletBalanceSelector(ref: ref, walletId: walletId);
+    final isBalanceVisible = isBalanceVisibleSelector(ref);
+    final iconAsset = isBalanceVisible
         ? Assets.images.icons.iconBlockEyeOn
         : Assets.images.icons.iconBlockEyeOff;
-    final double hitSlop = 5.0.s;
+    final hitSlop = 5.0.s;
     return ScreenSideOffset.small(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

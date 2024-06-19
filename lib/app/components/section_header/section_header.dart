@@ -7,6 +7,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class SectionHeader extends StatelessWidget {
   SectionHeader({
+    super.key,
     String? title,
     this.onPress,
     this.leadingIcon,

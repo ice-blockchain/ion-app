@@ -18,7 +18,7 @@ class ContactsListView extends IcePage<ContactData> {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, ContactData? payload) {
-    final List<ContactData> contacts = mockedContactDataArray;
+    final contacts = mockedContactDataArray;
 
     return FractionallySizedBox(
       heightFactor: 0.79,
@@ -51,7 +51,7 @@ class ContactsListView extends IcePage<ContactData> {
                 );
               },
               itemBuilder: (BuildContext context, int index) {
-                final ContactData contact = contacts[index];
+                final contact = contacts[index];
 
                 return ScreenSideOffset.small(
                   child: ListItem.user(

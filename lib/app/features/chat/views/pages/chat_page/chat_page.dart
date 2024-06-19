@@ -6,10 +6,10 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 
 class ChatPage extends IceSimplePage {
-  const ChatPage(super.route, super.payload);
+  const ChatPage(super.route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat Page'),

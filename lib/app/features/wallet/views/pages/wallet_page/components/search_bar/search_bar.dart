@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
-import 'package:ice/app/features/wallet/model/wallet_data_with_loading_state.dart';
 import 'package:ice/app/features/wallet/providers/selectors/wallet_assets_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
@@ -9,8 +8,8 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
 class WalletSearchBar extends HookConsumerWidget {
   const WalletSearchBar({
-    super.key,
     required this.tabType,
+    super.key,
     this.padding = EdgeInsets.zero,
   });
 
@@ -19,11 +18,11 @@ class WalletSearchBar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final WalletAssetType assetType = tabType.walletAssetType;
-    final String defaultValue = walletAssetSearchValueSelector(ref, tabType);
-    final bool isLoading =
+    final assetType = tabType.walletAssetType;
+    final defaultValue = walletAssetSearchValueSelector(ref, tabType);
+    final isLoading =
         walletAssetIsLoadingSelector(ref: ref, assetType: assetType);
-    final bool isVisible = walletTabSearchVisibleSelector(ref, tabType);
+    final isVisible = walletTabSearchVisibleSelector(ref, tabType);
 
     if (isVisible == false) {
       return const SizedBox.shrink();

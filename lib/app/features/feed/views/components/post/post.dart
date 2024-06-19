@@ -7,8 +7,8 @@ import 'package:ice/app/features/feed/views/components/post/components/post_head
 
 class Post extends StatelessWidget {
   const Post({
-    super.key,
     required this.content,
+    super.key,
   });
 
   final String content;

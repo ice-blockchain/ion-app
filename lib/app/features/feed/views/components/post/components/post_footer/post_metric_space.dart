@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PostMetricSpace extends StatelessWidget {
-  const PostMetricSpace({super.key, required this.child});
+  const PostMetricSpace({required this.child, super.key});
 
   final Widget child;
 

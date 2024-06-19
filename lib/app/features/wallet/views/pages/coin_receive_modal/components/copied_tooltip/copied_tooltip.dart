@@ -8,18 +8,18 @@ import 'package:ice/app/hooks/use_on_init.dart';
 
 class CopiedTooltip extends HookConsumerWidget {
   const CopiedTooltip({
-    super.key,
     required this.onLayout,
+    super.key,
   });
 
-  final Function(Size) onLayout;
+  final void Function(Size) onLayout;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final GlobalKey tooltipKey = GlobalKey();
+    final tooltipKey = GlobalKey();
 
-    useOnInit(() {
-      final RenderBox? renderBox =
+    useOnInit<void>(() {
+      final renderBox =
           tooltipKey.currentContext?.findRenderObject() as RenderBox?;
       if (renderBox != null) {
         onLayout(renderBox.size);

@@ -1,4 +1,4 @@
-include: package:lint/analysis_options.yaml
+include: package:very_good_analysis/analysis_options.yaml
 
 analyzer:
   plugins:
@@ -14,38 +14,8 @@ analyzer:
     invalid_annotation_target: ignore
 
 linter:
-
   rules:
-
-    # Conflicts with the convention used by flutter, which puts `Key key`
-    # and `@required Widget child` last.
-    always_put_required_named_parameters_first: false
-
-    # No docs
-    type_annotate_public_apis: false
-
-    # Allow utility classes
-    avoid_classes_with_only_static_members: false
-
-    # Group dependencies
-    sort_pub_dependencies: false
-
-    # Let only setters exist
+    public_member_api_docs: false
+    flutter_style_todos: false
+    comment_references: false
     avoid_setters_without_getters: false
-
-    # Use bools in positional args
-    avoid_positional_boolean_parameters: false
-
-    ############################################################
-
-    # Make constructors the first thing in every class
-    sort_constructors_first: true
-
-    # Fast literals
-    prefer_single_quotes: true
-
-    # Follow the Flutter code style, which prefers types everywhere
-    always_specify_types: true
-
-    # use DecoratedBox when Container has only a Decoration
-    use_decorated_box: true

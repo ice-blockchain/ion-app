@@ -5,9 +5,9 @@ import 'package:ice/app/utils/image.dart';
 
 class Avatar extends StatelessWidget {
   Avatar({
-    super.key,
     required this.size,
     required this.imageUrl,
+    super.key,
     BorderRadiusGeometry? borderRadius,
     BoxFit? fit,
   })  : borderRadius = borderRadius ?? BorderRadius.circular(10.0.s),

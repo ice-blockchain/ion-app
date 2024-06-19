@@ -3,6 +3,7 @@ import 'package:ice/app/extensions/iterable.dart';
 
 class SeparatedColumn extends Column {
   SeparatedColumn({
+    required Widget separator,
     super.key,
     super.mainAxisAlignment,
     super.mainAxisSize,
@@ -11,7 +12,6 @@ class SeparatedColumn extends Column {
     super.verticalDirection,
     super.textBaseline,
     List<Widget> children = const <Widget>[],
-    required Widget separator,
   }) : super(
           children: children.intersperse(separator).toList(),
         );

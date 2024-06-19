@@ -8,7 +8,7 @@ import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/router/app_routes.dart';
 
 class FeaturedCollection extends StatelessWidget {
-  const FeaturedCollection({super.key, required this.items});
+  const FeaturedCollection({required this.items, super.key});
 
   final List<DAppItem> items;
 
@@ -25,7 +25,7 @@ class FeaturedCollection extends StatelessWidget {
         ),
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          final String assetBg = items[index].backgroundImage ?? '';
+          final assetBg = items[index].backgroundImage ?? '';
           return GestureDetector(
             onTap: () => IceRoutes.dappsDetails.go(context),
             child: Container(

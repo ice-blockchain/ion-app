@@ -8,7 +8,7 @@ class LocalStorage {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  static Future<bool> setBool(String key, bool value) {
+  static Future<bool> setBool({required String key, required bool value}) {
     return _prefs.setBool(key, value);
   }
 
@@ -42,7 +42,7 @@ class LocalStorage {
     List<T> enumValues, {
     required T defaultValue,
   }) {
-    final String? stringValue = _prefs.getString(key);
+    final stringValue = _prefs.getString(key);
     if (stringValue == null) {
       return defaultValue;
     }

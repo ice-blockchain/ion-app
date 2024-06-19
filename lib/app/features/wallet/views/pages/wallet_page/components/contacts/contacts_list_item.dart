@@ -9,10 +9,10 @@ import 'package:ice/generated/assets.gen.dart';
 
 class ContactsListItem extends StatelessWidget {
   const ContactsListItem({
-    super.key,
     required this.imageUrl,
     required this.label,
     required this.hasIceAccount,
+    super.key,
   });
 
   final String imageUrl;

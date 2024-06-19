@@ -6,8 +6,7 @@ enum FeedControlsState { initial, filters }
 ValueNotifier<FeedControlsState> useFeedControlsState(
   ScrollController pageScrollController,
 ) {
-  final ValueNotifier<FeedControlsState> state =
-      useState(FeedControlsState.initial);
+  final state = useState(FeedControlsState.initial);
 
   useEffect(
     () {

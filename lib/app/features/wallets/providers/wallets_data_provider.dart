@@ -8,8 +8,8 @@ part 'wallets_data_provider.g.dart';
 class WalletsDataNotifier extends _$WalletsDataNotifier {
   @override
   Map<String, WalletData> build() {
-    final Map<String, WalletData> wallets = <String, WalletData>{};
-    for (final WalletData walletData in mockedWalletDataArray) {
+    final wallets = <String, WalletData>{};
+    for (final walletData in mockedWalletDataArray) {
       wallets.putIfAbsent(walletData.id, () => walletData);
     }
 
@@ -17,7 +17,7 @@ class WalletsDataNotifier extends _$WalletsDataNotifier {
   }
 
   set walletData(WalletData newData) {
-    final Map<String, WalletData> newState = Map<String, WalletData>.from(state)
+    final newState = Map<String, WalletData>.from(state)
       ..update(
         newData.id,
         (WalletData value) => value.copyWith(
@@ -32,7 +32,7 @@ class WalletsDataNotifier extends _$WalletsDataNotifier {
   }
 
   void deleteWallet(String walletId) {
-    final Map<String, WalletData> newState = Map<String, WalletData>.from(state)
+    final newState = Map<String, WalletData>.from(state)
       ..removeWhere((String key, _) => key == walletId);
     state = Map<String, WalletData>.unmodifiable(newState);
   }

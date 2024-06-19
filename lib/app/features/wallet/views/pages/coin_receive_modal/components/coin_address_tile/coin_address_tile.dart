@@ -13,8 +13,8 @@ import 'package:ice/generated/assets.gen.dart';
 
 class CoinAddressTile extends HookConsumerWidget {
   const CoinAddressTile({
-    super.key,
     required this.coinData,
+    super.key,
   });
 
   final CoinData coinData;
@@ -25,8 +25,8 @@ class CoinAddressTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ValueNotifier<bool> isCopied = useState<bool>(false);
-    final ValueNotifier<double> tooltipLeftPosition = useState<double>(0.0);
+    final isCopied = useState<bool>(false);
+    final tooltipLeftPosition = useState<double>(0);
 
     return Container(
       decoration: BoxDecoration(

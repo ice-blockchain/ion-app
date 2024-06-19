@@ -4,7 +4,6 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
-import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
 import 'package:ice/app/features/wallet/providers/nfts_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
@@ -24,13 +23,13 @@ class NftsTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<NftData> nfts = useFilteredWalletNfts(ref);
-    final NftLayoutType nftLayoutType = nftLayoutTypeSelector(ref);
+    final nfts = useFilteredWalletNfts(ref);
+    final nftLayoutType = nftLayoutTypeSelector(ref);
 
-    final String searchValue = walletAssetSearchValueSelector(ref, tabType);
-    final String walletId = walletIdSelector(ref);
+    final searchValue = walletAssetSearchValueSelector(ref, tabType);
+    final walletId = walletIdSelector(ref);
 
-    useOnInit(
+    useOnInit<void>(
       () {
         if (walletId.isNotEmpty) {
           ref

@@ -6,9 +6,9 @@ import 'package:ice/generated/assets.gen.dart';
 
 class AddressInputField extends StatelessWidget {
   const AddressInputField({
-    super.key,
     required this.onOpenContactList,
     required this.onScanPressed,
+    super.key,
   });
 
   static const int maxLines = 2;

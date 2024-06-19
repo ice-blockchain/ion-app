@@ -5,10 +5,10 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class FooterAction extends StatelessWidget {
   const FooterAction({
-    super.key,
     required this.onPressed,
     required this.icon,
     required this.label,
+    super.key,
   });
 
   final String label;

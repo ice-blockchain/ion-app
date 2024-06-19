@@ -14,7 +14,7 @@ class Socials extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ValueNotifier<bool> isSecondRowVisible = useState(false);
+    final isSecondRowVisible = useState(false);
 
     Null Function() onPressHandler(SocialAuthType type) {
       return switch (type) {

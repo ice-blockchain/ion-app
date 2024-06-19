@@ -19,13 +19,13 @@ class ReadMoreText extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<bool> showMore = useState(true);
-    final DefaultTextStyle defaultTextStyle = DefaultTextStyle.of(context);
+    final showMore = useState(true);
+    final defaultTextStyle = DefaultTextStyle.of(context);
 
-    final TextAlign textAlign = defaultTextStyle.textAlign ?? TextAlign.start;
-    final TextDirection textDirection = Directionality.of(context);
-    final TextScaler textScaler = MediaQuery.textScalerOf(context);
-    final Locale? locale = Localizations.maybeLocaleOf(context);
+    final textAlign = defaultTextStyle.textAlign ?? TextAlign.start;
+    final textDirection = Directionality.of(context);
+    final textScaler = MediaQuery.textScalerOf(context);
+    final locale = Localizations.maybeLocaleOf(context);
 
     final TapGestureRecognizer gestureRecognizer = useMemoized(
       () => TapGestureRecognizer()
@@ -35,56 +35,64 @@ class ReadMoreText extends HookWidget {
       <Object?>[],
     );
 
-    final TextSpan link = TextSpan(
-      text:
-          ' ${showMore.value ? context.i18n.common_show_more : context.i18n.common_show_less}',
+    final link = TextSpan(
+      text: showMore.value
+          ? context.i18n.common_show_more
+          : context.i18n.common_show_less,
       recognizer: gestureRecognizer,
       style: context.theme.appTextThemes.body2
           .copyWith(color: context.theme.appColors.primaryAccent),
     );
 
-    final TextSpan delimiter = TextSpan(
+    final delimiter = TextSpan(
       text: showMore.value ? ellipsis : '',
       recognizer: gestureRecognizer,
     );
 
     final Widget result = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        assert(constraints.hasBoundedWidth);
-        final double maxWidth = constraints.maxWidth;
+        assert(
+          constraints.hasBoundedWidth,
+          'ReadMoreText must have bounded width',
+        );
+        final maxWidth = constraints.maxWidth;
 
         // Create a TextSpan with data
-        final TextSpan text = TextSpan(text: this.text);
+        final text = TextSpan(text: this.text);
 
         // Layout and measure link
-        final TextPainter textPainter = TextPainter(
+        final textPainter = TextPainter(
           text: link,
           textAlign: textAlign,
           textDirection: textDirection,
           textScaler: textScaler,
           maxLines: maxLines,
           locale: locale,
-        );
-        textPainter.layout(maxWidth: maxWidth);
-        final Size linkSize = textPainter.size;
+        )..layout(maxWidth: maxWidth);
+
+        final linkSize = textPainter.size;
 
         // Layout and measure delimiter
-        textPainter.text = delimiter;
-        textPainter.layout(maxWidth: maxWidth);
-        final Size delimiterSize = textPainter.size;
+        textPainter
+          ..text = delimiter
+          ..layout(maxWidth: maxWidth);
+
+        final delimiterSize = textPainter.size;
 
         // Layout and measure text
-        textPainter.text = text;
-        textPainter.layout(minWidth: constraints.minWidth, maxWidth: maxWidth);
-        final Size textSize = textPainter.size;
+        textPainter
+          ..text = text
+          ..layout(minWidth: constraints.minWidth, maxWidth: maxWidth);
+
+        final textSize = textPainter.size;
 
         // Get the endIndex of data
-        bool linkLongerThanLine = false;
+        var linkLongerThanLine = false;
         int endIndex;
 
         if (linkSize.width < maxWidth) {
-          final double readMoreSize = linkSize.width + delimiterSize.width;
-          final TextPosition pos = textPainter.getPositionForOffset(
+          final readMoreSize = linkSize.width + delimiterSize.width;
+          final pos = textPainter.getPositionForOffset(
             Offset(
               textDirection == TextDirection.rtl
                   ? readMoreSize
@@ -94,7 +102,7 @@ class ReadMoreText extends HookWidget {
           );
           endIndex = textPainter.getOffsetBefore(pos.offset) ?? 0;
         } else {
-          final TextPosition pos = textPainter.getPositionForOffset(
+          final pos = textPainter.getPositionForOffset(
             textSize.bottomLeft(Offset.zero),
           );
           endIndex = pos.offset;

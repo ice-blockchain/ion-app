@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class ShadowText extends StatelessWidget {
   const ShadowText({
-    super.key,
     required this.child,
+    super.key,
     TextStyle? shadowStyle,
   }) : shadowStyle = shadowStyle ?? defaultShadowStyle;
 

@@ -9,7 +9,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 Widget regularSearchInputUseCase(BuildContext context) {
   return Center(
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[

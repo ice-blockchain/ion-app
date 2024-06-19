@@ -15,7 +15,7 @@ class SendCoinsFormController extends _$SendCoinsFormController {
       selectedCoin: mockedCoinsDataArray[0],
       selectedNetwork: NetworkType.eth,
       address: '0x93956a5688078e8f25df21ec0f24fd9fd7baf09545645645745',
-      usdtAmount: 350.00,
+      usdtAmount: 350,
       arrivalTime: 15,
     );
   }

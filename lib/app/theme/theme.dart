@@ -10,9 +10,8 @@ import 'package:ice/app/theme/menu_theme.dart';
 import 'package:ice/app/theme/text_button_theme.dart';
 
 ThemeData buildLightTheme(TemplateTheme templateTheme) {
-  final AppColorsExtension colors =
-      AppColorsExtension.fromTemplate(templateTheme.colors.light);
-  final AppTextThemesExtension textThemes =
+  final colors = AppColorsExtension.fromTemplate(templateTheme.colors.light);
+  final textThemes =
       AppTextThemesExtension.fromTemplate(templateTheme.textThemes);
   return ThemeData.light().copyWith(
     extensions: <ThemeExtension<dynamic>>[colors, textThemes],
@@ -27,9 +26,8 @@ ThemeData buildLightTheme(TemplateTheme templateTheme) {
 }
 
 ThemeData buildDarkTheme(TemplateTheme templateTheme) {
-  final AppColorsExtension colors =
-      AppColorsExtension.fromTemplate(templateTheme.colors.dark);
-  final AppTextThemesExtension textThemes =
+  final colors = AppColorsExtension.fromTemplate(templateTheme.colors.dark);
+  final textThemes =
       AppTextThemesExtension.fromTemplate(templateTheme.textThemes);
   return ThemeData.dark().copyWith(
     extensions: <ThemeExtension<dynamic>>[colors, textThemes],

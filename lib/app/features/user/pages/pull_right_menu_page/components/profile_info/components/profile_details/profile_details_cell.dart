@@ -4,9 +4,9 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class ProfileDetailsCell extends StatelessWidget {
   const ProfileDetailsCell({
-    super.key,
     required this.title,
     required this.value,
+    super.key,
   });
 
   final String title;

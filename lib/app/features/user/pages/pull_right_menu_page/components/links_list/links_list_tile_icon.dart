@@ -5,9 +5,9 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class LinksListTileIcon extends StatelessWidget {
   const LinksListTileIcon({
-    super.key,
     required this.iconAssetName,
     required this.iconTintColor,
+    super.key,
   });
 
   final String iconAssetName;

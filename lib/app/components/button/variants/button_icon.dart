@@ -2,14 +2,14 @@ part of '../button.dart';
 
 class _ButtonWithIcon extends Button {
   _ButtonWithIcon({
+    required super.onPressed,
+    required Widget icon,
     super.key,
     super.type,
     super.tintColor,
     super.borderColor,
     super.borderRadius,
     super.backgroundColor,
-    required super.onPressed,
-    required Widget icon,
     ButtonStyle style = const ButtonStyle(),
     double? size,
   }) : super(

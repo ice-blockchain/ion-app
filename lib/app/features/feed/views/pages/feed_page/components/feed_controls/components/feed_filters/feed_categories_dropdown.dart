@@ -11,7 +11,7 @@ class FeedCategoriesDropdown extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final FeedCategory feedCategory = ref.watch(feedCategoryNotifierProvider);
+    final feedCategory = ref.watch(feedCategoryNotifierProvider);
     return DropDownMenu(
       builder: (
         BuildContext context,

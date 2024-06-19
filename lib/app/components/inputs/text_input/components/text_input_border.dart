@@ -39,7 +39,7 @@ class TextInputBorder extends InputBorder {
   @override
   ShapeBorder? lerpFrom(ShapeBorder? a, double t) {
     if (a is TextInputBorder) {
-      final TextInputBorder outline = a;
+      final outline = a;
       return TextInputBorder(
         borderRadius: BorderRadius.lerp(outline.borderRadius, borderRadius, t),
         borderSide: BorderSide.lerp(outline.borderSide, borderSide, t),
@@ -51,7 +51,7 @@ class TextInputBorder extends InputBorder {
   @override
   ShapeBorder? lerpTo(ShapeBorder? b, double t) {
     if (b is TextInputBorder) {
-      final TextInputBorder outline = b;
+      final outline = b;
       return TextInputBorder(
         borderRadius: BorderRadius.lerp(borderRadius, outline.borderRadius, t),
         borderSide: BorderSide.lerp(borderSide, outline.borderSide, t),
@@ -98,9 +98,9 @@ class TextInputBorder extends InputBorder {
     double gapPercentage = 0.0,
     TextDirection? textDirection,
   }) {
-    final Paint paint = borderSide.toPaint();
-    final RRect outer = borderRadius.toRRect(rect);
-    final RRect center = outer.deflate(borderSide.width / 2.0);
+    final paint = borderSide.toPaint();
+    final outer = borderRadius.toRRect(rect);
+    final center = outer.deflate(borderSide.width / 2.0);
     canvas.drawRRect(center, paint);
   }
 

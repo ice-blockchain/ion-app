@@ -51,9 +51,8 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
 
   // ignore: avoid_build_context_in_providers
   String? redirect(BuildContext context, GoRouterState goRouterState) {
-    final IceRoutes<dynamic> currentRoute = _getCurrentRoute(goRouterState);
-    final IceRoutes<dynamic>? route =
-        _redirectNamed(goRouterState, currentRoute);
+    final currentRoute = _getCurrentRoute(goRouterState);
+    final route = _redirectNamed(goRouterState, currentRoute);
     late final IceRoutes<dynamic>? routeResult;
     String? resultLocation;
     if (route != null) {
@@ -77,12 +76,12 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
     IceRoutes<dynamic> currentRoute,
   ) {
     //TODO: check that its part of intro navigation flow
-    final bool isAuthInProgress = goRouterState.matchedLocation
+    final isAuthInProgress = goRouterState.matchedLocation
         .startsWith(_location(IceRoutes.intro, goRouterState).emptyOrValue);
-    final bool isSplash = currentRoute == initialPage;
-    final bool isInitError = _init?.hasError ?? false;
-    final bool isInitInProgress = _init?.isLoading ?? true;
-    final bool isAnimationCompleted = ref.watch(splashProvider);
+    final isSplash = currentRoute == initialPage;
+    final isInitError = _init?.hasError ?? false;
+    final isInitInProgress = _init?.isLoading ?? true;
+    final isAnimationCompleted = ref.watch(splashProvider);
 
     if (isInitError) {
       return IceRoutes.error;
@@ -124,7 +123,7 @@ class AppRouterListenable extends _$AppRouterListenable implements Listenable {
   }
 
   IceRoutes<dynamic> _getCurrentRoute(GoRouterState state) {
-    for (final IceRoutes<dynamic> route in IceRoutes.values) {
+    for (final route in IceRoutes.values) {
       try {
         if (state.matchedLocation == _location(route, state)) {
           return route;

@@ -6,15 +6,15 @@ class TrackBar extends StatelessWidget {
     required this.trackBarHeight,
     required this.color,
     required this.width,
-  })  : inactive = false,
-        super();
+    super.key,
+  }) : inactive = false;
 
   const TrackBar.inactive({
     required this.trackBarHeight,
     required this.color,
+    super.key,
   })  : width = double.infinity,
-        inactive = true,
-        super();
+        inactive = true;
 
   final double trackBarHeight;
   final Color color;

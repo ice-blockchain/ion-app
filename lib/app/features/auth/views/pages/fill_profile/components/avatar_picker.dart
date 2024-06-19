@@ -12,14 +12,14 @@ import 'package:image_cropper/image_cropper.dart';
 class AvatarPicker extends HookWidget {
   const AvatarPicker({super.key, this.onAvatarPicked});
 
-  final Function(String)? onAvatarPicked;
+  final void Function(String)? onAvatarPicked;
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<CroppedFile?> avatar = useState<CroppedFile?>(null);
+    final avatar = useState<CroppedFile?>(null);
 
     Future<void> pickAvatar() async {
-      final CroppedFile? croppedFile = await takePhoto();
+      final croppedFile = await takePhoto();
       if (croppedFile != null) {
         avatar.value = croppedFile;
         onAvatarPicked?.call(croppedFile.path);

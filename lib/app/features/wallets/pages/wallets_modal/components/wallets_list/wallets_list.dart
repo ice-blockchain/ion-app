@@ -12,7 +12,7 @@ class WalletsList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<WalletData> walletsData = walletsDataSelector(ref);
+    final walletsData = walletsDataSelector(ref);
     return Padding(
       padding: EdgeInsets.only(top: 6.0.s),
       child: Column(

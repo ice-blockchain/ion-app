@@ -3,8 +3,8 @@ import 'package:ice/app/extensions/num.dart';
 
 class ScreenTopOffset extends StatelessWidget {
   ScreenTopOffset({
-    super.key,
     required this.child,
+    super.key,
     double? margin,
   }) : margin = margin ?? defaultMargin;
 

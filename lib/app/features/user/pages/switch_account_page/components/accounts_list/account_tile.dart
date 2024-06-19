@@ -12,16 +12,16 @@ import 'package:ice/generated/assets.gen.dart';
 
 class AccountsTile extends HookConsumerWidget {
   const AccountsTile({
-    super.key,
     required this.userData,
+    super.key,
   });
 
   final UserData userData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final UserData activeUser = ref.watch(userDataNotifierProvider);
-    final bool isActiveUser = userData.id == activeUser.id;
+    final activeUser = ref.watch(userDataNotifierProvider);
+    final isActiveUser = userData.id == activeUser.id;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ListItem.user(
@@ -41,7 +41,7 @@ class AccountsTile extends HookConsumerWidget {
           ),
         ),
         profilePicture: userData.profilePicture,
-        verifiedBadge: userData.isVerified == true,
+        verifiedBadge: userData.isVerified ?? false,
         trailing: isActiveUser == true
             ? Assets.images.icons.iconCheckboxOn
                 .icon(color: context.theme.appColors.onPrimaryAccent)

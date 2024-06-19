@@ -3,6 +3,7 @@ import 'package:ice/app/extensions/iterable.dart';
 
 class SeparatedRow extends Row {
   SeparatedRow({
+    required Widget separator,
     super.key,
     super.mainAxisAlignment,
     super.mainAxisSize,
@@ -11,7 +12,6 @@ class SeparatedRow extends Row {
     super.verticalDirection,
     super.textBaseline,
     List<Widget> children = const <Widget>[],
-    required Widget separator,
   }) : super(
           children: children.intersperse(separator).toList(),
         );

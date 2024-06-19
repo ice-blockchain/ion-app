@@ -19,5 +19,5 @@ Future<void> initApp(InitAppRef ref) async {
     LocalStorage.initialize(),
   ]);
   ref.watch(relaysProvider.notifier);
-  ref.read(permissionsProvider.notifier).checkAllPermissions();
+  await ref.read(permissionsProvider.notifier).checkAllPermissions();
 }

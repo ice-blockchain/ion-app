@@ -13,8 +13,8 @@ import 'package:ice/app/utils/image.dart';
 
 class NftGridItem extends HookConsumerWidget {
   const NftGridItem({
-    super.key,
     required this.nftData,
+    super.key,
   });
 
   final NftData nftData;
@@ -22,7 +22,7 @@ class NftGridItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final BorderRadiusGeometry borderRadius = BorderRadius.circular(16.0.s);
-    final double imageWidth = (MediaQuery.of(context).size.width -
+    final imageWidth = (MediaQuery.of(context).size.width -
             NftConstants.cellPadding * 4 -
             NftConstants.gridSpacing -
             ScreenSideOffset.defaultSmallMargin * 2) /

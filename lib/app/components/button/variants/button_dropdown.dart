@@ -2,8 +2,8 @@ part of '../button.dart';
 
 class _ButtonDropdown extends Button {
   _ButtonDropdown({
-    super.key,
     required super.onPressed,
+    super.key,
     super.leadingIcon,
     super.label,
     super.disabled,

@@ -12,12 +12,12 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class RequestContactAccessModal extends IceSimplePage {
-  const RequestContactAccessModal(super.route, super.payload);
+  const RequestContactAccessModal(super.route, super.payload, {super.key});
 
   static double get iceIconSize => 60.0.s;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
     return SheetContent(
       backgroundColor: context.theme.appColors.primaryBackground,
       body: Padding(

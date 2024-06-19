@@ -13,8 +13,8 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
   CoinData(
     abbreviation: 'ICE',
     name: 'ice Network',
-    amount: 10000.00,
-    balance: 9500.00,
+    amount: 10000,
+    balance: 9500,
     iconUrl: Assets.images.wallet.walletIce,
   ),
   CoinData(
@@ -27,35 +27,35 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
   CoinData(
     abbreviation: 'USDT',
     name: 'TetherUS',
-    amount: 100.00,
+    amount: 100,
     balance: 99.99,
     iconUrl: Assets.images.wallet.walletTether,
   ),
   CoinData(
     abbreviation: 'USDC',
     name: 'USDC',
-    amount: 100.00,
+    amount: 100,
     balance: 99.99,
     iconUrl: Assets.images.wallet.walletUsdc,
   ),
   CoinData(
     abbreviation: 'Polygon',
     name: 'MATIC',
-    amount: 1000.00,
+    amount: 1000,
     balance: 694.60,
     iconUrl: Assets.images.wallet.walletMatic,
   ),
   CoinData(
     abbreviation: 'XRP',
     name: 'XRP',
-    amount: 0.00,
-    balance: 0.00,
+    amount: 0,
+    balance: 0,
     iconUrl: Assets.images.wallet.walletXrp,
   ),
   CoinData(
     abbreviation: 'LTC',
     name: 'Litecoin',
-    amount: 350.00,
+    amount: 350,
     balance: 589.42,
     iconUrl: Assets.images.wallet.walletLtc,
   ),
@@ -105,7 +105,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
   NftData(
     collectionName: 'Lucky Dog',
     identifier: 345,
-    price: 0.00,
+    price: 0,
     iconUrl:
         'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
     currency: 'ETH',

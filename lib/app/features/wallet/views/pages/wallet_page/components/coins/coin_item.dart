@@ -11,9 +11,9 @@ import 'package:ice/app/utils/num.dart';
 
 class CoinItem extends HookConsumerWidget {
   const CoinItem({
-    super.key,
     required this.coinData,
     required this.onTap,
+    super.key,
   });
 
   final CoinData coinData;
@@ -21,7 +21,7 @@ class CoinItem extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool isBalanceVisible = isBalanceVisibleSelector(ref);
+    final isBalanceVisible = isBalanceVisibleSelector(ref);
     return ListItem(
       title: Text(coinData.name),
       subtitle: Text(coinData.abbreviation),

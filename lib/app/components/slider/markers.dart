@@ -9,13 +9,14 @@ class Markers extends HookWidget {
     required this.markerSize,
     required this.markerRadius,
     required this.onMarkerTapped,
+    super.key,
   });
 
   final List<double> stops;
   final ValueNotifier<double> sliderValue;
   final double markerSize;
   final double markerRadius;
-  final Function(double) onMarkerTapped;
+  final void Function(double) onMarkerTapped;
 
   @override
   Widget build(BuildContext context) {

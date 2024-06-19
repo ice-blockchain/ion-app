@@ -21,7 +21,7 @@ class WidgetbookApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<void> init = ref.watch(initAppProvider);
+    final init = ref.watch(initAppProvider);
 
     return init.when(
       data: (void data) => Widgetbook.material(
@@ -33,8 +33,8 @@ class WidgetbookApp extends ConsumerWidget {
           ),
         ],
         appBuilder: (BuildContext context, Widget child) {
-          final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
-          final AsyncValue<Template> template = ref.watch(appTemplateProvider);
+          final appThemeMode = ref.watch(appThemeModeProvider);
+          final template = ref.watch(appTemplateProvider);
 
           return ContentScaler(
             child: MaterialApp(

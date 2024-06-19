@@ -5,16 +5,16 @@ enum ScreenOffsetSide { left, right }
 
 class ScreenSideOffset extends StatelessWidget {
   const ScreenSideOffset._({
-    super.key,
     required this.child,
     required this.margin,
+    super.key,
     this.only,
   });
 
   factory ScreenSideOffset.large({
+    required Widget child,
     Key? key,
     ScreenOffsetSide? only,
-    required Widget child,
   }) {
     return ScreenSideOffset._(
       key: key,
@@ -25,9 +25,9 @@ class ScreenSideOffset extends StatelessWidget {
   }
 
   factory ScreenSideOffset.small({
+    required Widget child,
     Key? key,
     ScreenOffsetSide? only,
-    required Widget child,
   }) {
     return ScreenSideOffset._(
       key: key,

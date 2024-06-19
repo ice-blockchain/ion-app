@@ -6,7 +6,7 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/templates/template.dart';
 
 abstract class IcePage<Payload> extends HookConsumerWidget {
-  const IcePage(IceRoutes<dynamic> route, dynamic payload)
+  const IcePage(IceRoutes<dynamic> route, dynamic payload, {super.key})
       : _payload = payload as Payload?,
         _route = route as IceRoutes<Payload>;
 
@@ -17,7 +17,7 @@ abstract class IcePage<Payload> extends HookConsumerWidget {
   @override
   @nonVirtual
   Widget build(BuildContext context, WidgetRef ref) {
-    final Widget pageWidget = buildPage(
+    final pageWidget = buildPage(
       context,
       ref,
       _payload,
@@ -41,12 +41,13 @@ class ComponentsConfigContext extends InheritedWidget {
   const ComponentsConfigContext({
     required this.componentsConfig,
     required super.child,
+    super.key,
   });
 
   final Map<String, TemplateConfigComponent>? componentsConfig;
 
   static ComponentsConfigContext of(BuildContext context) {
-    final ComponentsConfigContext? result =
+    final result =
         context.dependOnInheritedWidgetOfExactType<ComponentsConfigContext>();
     assert(result != null, 'No ControlsConfigContext found in context');
     return result!;

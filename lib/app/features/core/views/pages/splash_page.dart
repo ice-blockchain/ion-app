@@ -8,13 +8,13 @@ import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
 
 class SplashPage extends IceSimplePage {
-  const SplashPage(super.route, super.payload);
+  const SplashPage(super.route, super.payload, {super.key});
 
   static const Color backgroundColor = Color(0xFF0166FF);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final AnimationController animationController = useAnimationController();
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final animationController = useAnimationController();
 
     _setSystemChrome();
 

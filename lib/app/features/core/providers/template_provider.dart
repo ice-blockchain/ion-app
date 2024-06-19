@@ -13,9 +13,9 @@ class AppTemplate extends _$AppTemplate {
   Future<Template> build() => _fetch();
 
   Future<Template> _fetch() async {
-    final String jsonString =
+    final jsonString =
         await rootBundle.loadString('lib/app/templates/basic.json');
-    final Template data =
+    final data =
         Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
     state = AsyncValue<Template>.data(data);
     _fillData(data);
@@ -35,7 +35,7 @@ class Pages extends _$Pages {
   Map<String, TemplateConfigPage> build() => <String, TemplateConfigPage>{};
 
   void _savePages(Template template) {
-    final Map<String, TemplateConfigPage>? pages = template.config.pages;
+    final pages = template.config.pages;
     if (pages != null) {
       state = pages;
     }

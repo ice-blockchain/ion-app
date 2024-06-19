@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/empty_state/empty_state.dart';
@@ -17,7 +16,7 @@ class CoinsTabFooter extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<CoinData> coins = useFilteredWalletCoins(ref);
+    final coins = useFilteredWalletCoins(ref);
 
     if (coins.isEmpty) {
       return const EmptyState(

@@ -5,17 +5,17 @@ import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/model/transaction_type.dart';
 
 int generateRandomTimestamp() {
-  final DateTime now = DateTime.now();
-  final Random random = Random();
-  final int daysAgo =
+  final now = DateTime.now();
+  final random = Random();
+  final daysAgo =
       random.nextInt(3); // 0 for today, 1 for yesterday, 2 for the day before
-  final DateTime targetDay =
+  final targetDay =
       DateTime(now.year, now.month, now.day).subtract(Duration(days: daysAgo));
 
-  final int randomHour = random.nextInt(24);
-  final int randomMinute = random.nextInt(60);
-  final int randomSecond = random.nextInt(60);
-  final DateTime randomDateTime = DateTime(
+  final randomHour = random.nextInt(24);
+  final randomMinute = random.nextInt(60);
+  final randomSecond = random.nextInt(60);
+  final randomDateTime = DateTime(
     targetDay.year,
     targetDay.month,
     targetDay.day,
@@ -24,7 +24,7 @@ int generateRandomTimestamp() {
     randomSecond,
   );
 
-  final int timestampMs = randomDateTime.millisecondsSinceEpoch;
+  final timestampMs = randomDateTime.millisecondsSinceEpoch;
   return timestampMs;
 }
 

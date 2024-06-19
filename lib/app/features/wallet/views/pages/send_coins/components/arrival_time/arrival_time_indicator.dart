@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/theme/app_colors.dart';
-import 'package:ice/app/theme/app_text_themes.dart';
-import 'package:ice/generated/app_localizations.dart';
 
 class ArrivalTimeIndicator extends StatelessWidget {
   const ArrivalTimeIndicator({super.key});
@@ -12,9 +9,9 @@ class ArrivalTimeIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppColorsExtension colors = context.theme.appColors;
-    final AppTextThemesExtension textTheme = context.theme.appTextThemes;
-    final I18n locale = context.i18n;
+    final colors = context.theme.appColors;
+    final textTheme = context.theme.appTextThemes;
+    final locale = context.i18n;
 
     return Row(
       children: <Widget>[

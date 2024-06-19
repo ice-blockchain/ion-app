@@ -63,7 +63,7 @@ class TextInput extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<String?> error = useState(null);
+    final error = useState<String?>(null);
 
     useTextChanged(
       controller: controller,
@@ -91,7 +91,7 @@ class TextInput extends HookWidget {
       cursorErrorColor: context.theme.appColors.primaryAccent,
       cursorColor: context.theme.appColors.primaryAccent,
       validator: (String? value) {
-        final String? validatorError = validator?.call(value);
+        final validatorError = validator?.call(value);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           error.value = validatorError;
         });

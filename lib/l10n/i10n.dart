@@ -14,16 +14,16 @@ TextSpan replaceString(
   RegExp regex,
   Widget Function(String, int) onMatch,
 ) {
-  final Iterable<RegExpMatch> matches = regex.allMatches(input);
-  final List<InlineSpan> spans = <InlineSpan>[];
-  int lastMatchEnd = 0;
-  int index = 0;
+  final matches = regex.allMatches(input);
+  final spans = <InlineSpan>[];
+  var lastMatchEnd = 0;
+  var index = 0;
 
-  for (final RegExpMatch match in matches) {
-    final String substring = input.substring(lastMatchEnd, match.start);
+  for (final match in matches) {
+    final substring = input.substring(lastMatchEnd, match.start);
     spans.add(TextSpan(text: substring));
 
-    final String linkText = match.group(1)!;
+    final linkText = match.group(1)!;
     spans.add(
       WidgetSpan(child: onMatch(linkText, index)),
     );

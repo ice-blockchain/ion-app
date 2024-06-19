@@ -20,12 +20,12 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DAppDetails extends IceSimplePage {
-  DAppDetails(super._route, super.payload);
+  DAppDetails(super._route, super.payload, {super.key});
 
   final DAppItem item = mockedFeatured[2]; //TODO: get from params or provider
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
     return SheetContentScaffold(
       appBar: NavigationAppBar.screen(
         title: item.title,
@@ -78,7 +78,7 @@ class DAppDetails extends IceSimplePage {
                   iconPath: Assets.images.icons.iconWalletLink.path,
                   value: InkWell(
                     onTap: () async {
-                      final Uri uri = Uri(path: item.link);
+                      final uri = Uri(path: item.link);
                       if (await canLaunchUrl(uri)) {
                         await launchUrl(uri);
                       }

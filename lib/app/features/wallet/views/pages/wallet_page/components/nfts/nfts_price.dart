@@ -10,9 +10,9 @@ import 'package:ice/app/features/wallet/model/nft_data.dart';
 
 class NftPrice extends HookConsumerWidget {
   const NftPrice({
-    super.key,
     required this.layoutType,
     required this.nftData,
+    super.key,
   });
 
   final NftLayoutType layoutType;
@@ -20,8 +20,8 @@ class NftPrice extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool isBalanceVisible = isBalanceVisibleSelector(ref);
-    final TextStyle textStyle = (layoutType == NftLayoutType.grid
+    final isBalanceVisible = isBalanceVisibleSelector(ref);
+    final textStyle = (layoutType == NftLayoutType.grid
             ? context.theme.appTextThemes.caption
             : context.theme.appTextThemes.caption3)
         .copyWith(

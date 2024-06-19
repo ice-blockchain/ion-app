@@ -4,15 +4,14 @@ import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
-import 'package:ice/app/theme/app_colors.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class ContactButton extends HookConsumerWidget {
   const ContactButton({
-    super.key,
     required this.contact,
     required this.onContactTap,
     required this.onClearContact,
+    super.key,
   });
 
   final ContactData contact;
@@ -21,7 +20,7 @@ class ContactButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AppColorsExtension colors = context.theme.appColors;
+    final colors = context.theme.appColors;
 
     return DecoratedBox(
       decoration: BoxDecoration(

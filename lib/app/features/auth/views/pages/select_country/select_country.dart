@@ -16,21 +16,20 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class SelectCountries extends IceSimplePage {
-  const SelectCountries(super._route, super.payload);
+  const SelectCountries(super._route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final ValueNotifier<String> searchText = useState('');
-    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
-        useHideKeyboardAndCallOnce();
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final searchText = useState('');
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
-    final List<Country> filteredCountries = searchText.value.isEmpty
+    final filteredCountries = searchText.value.isEmpty
         ? countries
         : countries.where((Country country) {
-            final String searchLower = searchText.value.toLowerCase().trim();
-            final String nameLower = country.name.toLowerCase();
-            final String codeLower = country.isoCode.toLowerCase();
-            final String iddCodeLower = country.iddCode.toLowerCase();
+            final searchLower = searchText.value.toLowerCase().trim();
+            final nameLower = country.name.toLowerCase();
+            final codeLower = country.isoCode.toLowerCase();
+            final iddCodeLower = country.iddCode.toLowerCase();
 
             return nameLower.contains(searchLower) ||
                 codeLower.contains(searchLower) ||
@@ -60,7 +59,7 @@ class SelectCountries extends IceSimplePage {
                 SliverList.builder(
                   itemCount: filteredCountries.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final Country country = filteredCountries[index];
+                    final country = filteredCountries[index];
                     return GestureDetector(
                       onTap: () {
                         hideKeyboardAndCallOnce(

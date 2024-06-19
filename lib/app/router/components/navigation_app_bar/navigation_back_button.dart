@@ -9,6 +9,7 @@ import 'package:ice/generated/assets.gen.dart';
 class NavigationBackButton extends HookWidget {
   const NavigationBackButton(
     this.onPress, {
+    super.key,
     this.hideKeyboardOnBack = false,
   });
 
@@ -22,8 +23,7 @@ class NavigationBackButton extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
-        useHideKeyboardAndCallOnce();
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return SizedBox(
       width: totalSize,
       height: totalSize,

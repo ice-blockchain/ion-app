@@ -6,10 +6,10 @@ import 'package:ice/generated/assets.gen.dart';
 
 class BottomAction extends StatelessWidget {
   const BottomAction({
-    super.key,
     required this.onTap,
     required this.asset,
     required this.title,
+    super.key,
   });
 
   final VoidCallback onTap;

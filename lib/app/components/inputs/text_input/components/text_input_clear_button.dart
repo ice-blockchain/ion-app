@@ -7,8 +7,8 @@ import 'package:ice/generated/assets.gen.dart';
 
 class TextInputClearButton extends StatelessWidget {
   const TextInputClearButton({
-    super.key,
     required this.controller,
+    super.key,
   });
 
   final TextEditingController controller;
@@ -16,9 +16,7 @@ class TextInputClearButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {
-        controller.clear();
-      },
+      onPressed: controller.clear,
       icon: Padding(
         padding: EdgeInsets.all(6.0.s),
         child: Assets.images.icons.iconSheetClose

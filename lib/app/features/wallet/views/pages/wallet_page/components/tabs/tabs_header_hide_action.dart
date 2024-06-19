@@ -18,9 +18,9 @@ class WalletTabsHeaderHideAction extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
-    final Color actionColor = context.theme.appColors.tertararyText;
-    final AssetGenImage asset = isZeroValueAssetsVisible
+    final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
+    final actionColor = context.theme.appColors.tertararyText;
+    final asset = isZeroValueAssetsVisible
         ? Assets.images.icons.iconCheckboxOff
         : Assets.images.icons.iconBlockCheckboxOnblue;
     return TextButton(

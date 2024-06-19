@@ -6,10 +6,10 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
 class WalletTabsHeaderTab extends StatelessWidget {
   const WalletTabsHeaderTab({
-    super.key,
     required this.isActive,
     required this.tabType,
     required this.onTap,
+    super.key,
   });
 
   final bool isActive;

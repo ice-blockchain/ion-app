@@ -9,22 +9,18 @@ Map<String, List<CoinTransactionData>> useTransactionsByDate(
   BuildContext context,
   WidgetRef ref,
 ) {
-  final List<CoinTransactionData> coinTransactions =
-      coinTransactionsSelector(ref);
+  final coinTransactions = coinTransactionsSelector(ref);
 
   return useMemoized(
     () {
-      final List<CoinTransactionData> transactions =
-          List<CoinTransactionData>.from(coinTransactions);
-      transactions.sort(
-        (CoinTransactionData a, CoinTransactionData b) =>
-            b.timestamp.compareTo(a.timestamp),
-      );
-      final Map<String, List<CoinTransactionData>> result =
-          <String, List<CoinTransactionData>>{};
-      for (final CoinTransactionData transaction in transactions) {
-        final String dateKey =
-            toPastDateDisplayValue(transaction.timestamp, context);
+      final transactions = List<CoinTransactionData>.from(coinTransactions)
+        ..sort(
+          (CoinTransactionData a, CoinTransactionData b) =>
+              b.timestamp.compareTo(a.timestamp),
+        );
+      final result = <String, List<CoinTransactionData>>{};
+      for (final transaction in transactions) {
+        final dateKey = toPastDateDisplayValue(transaction.timestamp, context);
         if (result[dateKey] == null) {
           result[dateKey] = <CoinTransactionData>[];
         }

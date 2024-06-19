@@ -10,8 +10,8 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/
 
 class NftListItem extends StatelessWidget {
   const NftListItem({
-    super.key,
     required this.nftData,
+    super.key,
   });
 
   final NftData nftData;

@@ -8,6 +8,7 @@ class TrendingVideoAuthor extends StatelessWidget {
   const TrendingVideoAuthor({
     required this.imageUrl,
     required this.label,
+    super.key,
   });
 
   final String imageUrl;

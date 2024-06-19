@@ -4,6 +4,7 @@ import 'package:ice/app/extensions/num.dart';
 /// Basically just a MenuAnchor with some predefined values from the Template
 class DropDownMenu extends MenuAnchor {
   DropDownMenu({
+    required super.menuChildren,
     super.key,
     super.controller,
     super.childFocusNode,
@@ -14,7 +15,6 @@ class DropDownMenu extends MenuAnchor {
     super.onOpen,
     super.onClose,
     super.crossAxisUnconstrained = true,
-    required super.menuChildren,
     super.builder,
     super.child,
   }) : super(

@@ -9,10 +9,10 @@ import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creat
 
 class CreatorListItem extends StatelessWidget {
   const CreatorListItem({
-    super.key,
     required this.creator,
     required this.followed,
     required this.onPressed,
+    super.key,
   });
 
   final User creator;
@@ -28,7 +28,7 @@ class CreatorListItem extends StatelessWidget {
         title: Text(creator.name),
         subtitle: Text(creator.nickname),
         profilePicture: creator.imageUrl,
-        verifiedBadge: creator.isVerified == true,
+        verifiedBadge: creator.isVerified ?? false,
         backgroundColor: context.theme.appColors.tertararyBackground,
         contentPadding: EdgeInsets.all(12.0.s),
         borderRadius: BorderRadius.circular(16.0.s),

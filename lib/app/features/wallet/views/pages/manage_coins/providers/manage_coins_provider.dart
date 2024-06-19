@@ -21,7 +21,7 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
     // to emulate loading state
     await Future<void>.delayed(const Duration(seconds: 1));
 
-    final String lSearchValue = searchValue.trim().toLowerCase();
+    final lSearchValue = searchValue.trim().toLowerCase();
 
     state = AsyncData<List<ManageCoinData>>(
       List<ManageCoinData>.unmodifiable(
@@ -36,7 +36,7 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
   void switchCoin({
     required String coinId,
   }) {
-    final List<ManageCoinData>? list = state.value;
+    final list = state.value;
     if (list != null) {
       state = AsyncData<List<ManageCoinData>>(
         List<ManageCoinData>.unmodifiable(

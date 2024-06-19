@@ -10,13 +10,13 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_back_but
 
 class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   const NavigationAppBar._({
+    required this.useScreenTopOffset,
     this.title = '',
     this.showBackButton = true,
     this.hideKeyboardOnBack = false,
     this.onBackPress,
     this.actions,
     this.titleIcon,
-    required this.useScreenTopOffset,
     super.key,
   });
 
@@ -116,7 +116,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return useScreenTopOffset
         ? ScreenTopOffset(
-            margin: 0.0,
+            margin: 0,
             child: appBar,
           )
         : appBar;

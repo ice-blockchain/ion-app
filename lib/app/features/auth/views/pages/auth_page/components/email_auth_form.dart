@@ -22,10 +22,9 @@ class EmailAuthForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final void Function({VoidCallback? callback}) hideKeyboardAndCallOnce =
-        useHideKeyboardAndCallOnce();
-    final TextEditingController inputController = useTextEditingController();
-    final ValueNotifier<bool> loading = useState(false);
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
+    final inputController = useTextEditingController();
+    final loading = useState(false);
 
     return Form(
       key: _formKey,

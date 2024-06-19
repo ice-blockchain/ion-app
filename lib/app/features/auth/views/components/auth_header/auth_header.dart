@@ -8,6 +8,7 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 
 class AuthHeader extends StatelessWidget {
   AuthHeader({
+    super.key,
     this.title,
     this.description,
     this.icon,

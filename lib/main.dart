@@ -1,6 +1,5 @@
 // ignore_for_file: missing_provider_scope
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
@@ -25,10 +24,10 @@ class IceApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ThemeMode appThemeMode = ref.watch(appThemeModeProvider);
-    final AsyncValue<Template> template = ref.watch(appTemplateProvider);
+    final appThemeMode = ref.watch(appThemeModeProvider);
+    final template = ref.watch(appTemplateProvider);
 
-    final GoRouter appRouter = useAppRouter(ref);
+    final appRouter = useAppRouter(ref);
 
     return ContentScaler(
       child: MaterialApp.router(

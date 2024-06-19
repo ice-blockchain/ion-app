@@ -7,7 +7,7 @@
 ///     final list3 = intersperse(2, [0, 0]); // [0, 2, 0];
 ///
 Iterable<T> intersperse<T>(T element, Iterable<T> iterable) sync* {
-  final Iterator<T> iterator = iterable.iterator;
+  final iterator = iterable.iterator;
   if (iterator.moveNext()) {
     yield iterator.current;
     while (iterator.moveNext()) {

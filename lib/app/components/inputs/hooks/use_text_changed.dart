@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 void useTextChanged({
+  required void Function(String)? onTextChanged,
   TextEditingController? controller,
-  required Function(String)? onTextChanged,
 }) {
   useEffect(
     () {

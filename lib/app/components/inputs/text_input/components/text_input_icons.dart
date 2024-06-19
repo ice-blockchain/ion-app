@@ -4,8 +4,8 @@ import 'package:ice/app/extensions/num.dart';
 
 class TextInputIcons extends StatelessWidget {
   const TextInputIcons({
-    super.key,
     required this.icons,
+    super.key,
     this.hasLeftDivider = false,
     this.hasRightDivider = false,
   });

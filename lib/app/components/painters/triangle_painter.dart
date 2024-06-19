@@ -7,15 +7,16 @@ class TrianglePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
+    final paint = Paint()
       ..color = color
       ..style = PaintingStyle.fill;
 
-    final Path path = Path();
-    path.moveTo(0, 0); // Start at the bottom left
-    path.lineTo(size.width / 2, size.height); // Draw line to the top middle
-    path.lineTo(size.width, 0); // Draw line to the bottom right
-    path.close(); // Close the path to automatically draw a line back to the starting point
+    final path = Path()
+      ..moveTo(0, 0) // Start at the bottom left
+      ..lineTo(size.width / 2, size.height) // Draw line to the top middle
+      ..lineTo(size.width, 0) // Draw line to the bottom right
+      // Close the path to automatically draw a line back to the starting point
+      ..close();
 
     canvas.drawPath(path, paint);
   }

@@ -2,6 +2,8 @@ part of '../list_item.dart';
 
 class _ListItemWithCheckbox extends ListItem {
   _ListItemWithCheckbox({
+    required super.onTap,
+    required this.value,
     super.key,
     super.leading,
     super.title,
@@ -13,8 +15,6 @@ class _ListItemWithCheckbox extends ListItem {
     super.trailingPadding,
     super.constraints,
     super.backgroundColor,
-    required super.onTap,
-    required this.value,
   }) : super(
           isSelected: value,
           trailing: value

@@ -15,13 +15,12 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class CheckEmail extends IceSimplePage {
-  const CheckEmail(super._route, super.payload);
+  const CheckEmail(super._route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    const String email = 'hello@ice.io';
-    final TextEditingController codeController =
-        useTextEditingController(text: '1234');
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    const email = 'hello@ice.io';
+    final codeController = useTextEditingController(text: '1234');
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,

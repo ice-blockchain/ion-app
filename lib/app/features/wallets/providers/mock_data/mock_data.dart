@@ -16,7 +16,7 @@ List<WalletData> mockedWalletDataArray = <WalletData>[
     name: 'Airdrop wallet',
     icon:
         'https://ice-staging.b-cdn.net/profile/default-profile-picture-15.png',
-    balance: 48.00,
+    balance: 48,
   ),
   const WalletData(
     id: '3',

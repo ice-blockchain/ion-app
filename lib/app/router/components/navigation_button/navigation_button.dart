@@ -4,9 +4,9 @@ import 'package:ice/app/extensions/num.dart';
 
 class NavigationButton extends StatelessWidget {
   const NavigationButton({
-    super.key,
     required this.icon,
     required this.onPressed,
+    super.key,
     this.size,
   });
 

@@ -11,12 +11,12 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
 class NetworkListView extends IceSimplePage {
-  const NetworkListView(super.route, super.payload);
+  const NetworkListView(super.route, super.payload, {super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[

@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/section_header/section_header.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/feed/model/trending_videos_overlay.dart';
 import 'package:ice/app/features/feed/providers/trending_videos_overlay_provider.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_skeleton.dart';
@@ -17,17 +16,16 @@ class TrendingVideos extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ValueNotifier<bool> loading = useState(true);
+    final loading = useState(true);
     useEffect(
       () {
-        final Timer timer =
+        final timer =
             Timer(const Duration(seconds: 3), () => loading.value = false);
         return timer.cancel;
       },
       <Object?>[],
     );
-    final TrendingVideosOverlay listOverlay =
-        ref.watch(trendingVideosOverlayNotifierProvider);
+    final listOverlay = ref.watch(trendingVideosOverlayNotifierProvider);
     return Padding(
       padding: EdgeInsets.only(bottom: 18.0.s),
       child: Column(

@@ -10,7 +10,6 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/components/empty_state/empty_state.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/components/manage_coin_item/manage_coin_item.dart';
-import 'package:ice/app/features/wallet/views/pages/manage_coins/model/manage_coin_data.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/providers/selectors/manage_coins_selectors.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
@@ -20,16 +19,16 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_done_but
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class ManageCoinsPage extends IceSimplePage {
-  const ManageCoinsPage(super._route, super.payload);
+  const ManageCoinsPage(super._route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final ValueNotifier<String> searchText = useState('');
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final searchText = useState('');
 
-    final List<ManageCoinData> manageCoinsData = manageCoinsDataSelector(ref);
-    final bool isLoading = manageCoinsIsLoadingSelector(ref);
+    final manageCoinsData = manageCoinsDataSelector(ref);
+    final isLoading = manageCoinsIsLoadingSelector(ref);
 
-    useOnInit(
+    useOnInit<void>(
       () {
         ref
             .read(manageCoinsNotifierProvider.notifier)

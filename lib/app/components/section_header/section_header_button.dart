@@ -5,8 +5,9 @@ import 'package:ice/generated/assets.gen.dart';
 
 class SectionHeaderButton extends StatelessWidget {
   const SectionHeaderButton(
-    this.onPress,
-  );
+    this.onPress, {
+    super.key,
+  });
 
   final VoidCallback onPress;
 

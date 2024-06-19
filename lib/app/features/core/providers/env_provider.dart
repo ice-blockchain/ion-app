@@ -14,7 +14,7 @@ class Env extends _$Env {
   @override
   Future<void> build() async {
     await dotenv.load(fileName: _filename);
-    final List<EnvVariable> notDefined = _getNotDefined();
+    final notDefined = _getNotDefined();
     if (notDefined.isNotEmpty) {
       throw Exception('Invalid ENV value for $notDefined');
     }

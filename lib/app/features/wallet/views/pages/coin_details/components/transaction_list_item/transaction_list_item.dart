@@ -13,9 +13,9 @@ import 'package:ice/app/utils/num.dart';
 
 class TransactionListItem extends StatelessWidget {
   const TransactionListItem({
-    super.key,
     required this.transactionData,
     required this.coinData,
+    super.key,
   });
 
   final CoinTransactionData transactionData;
@@ -51,7 +51,9 @@ class TransactionListItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Text(
-            '${transactionData.transactionType.sign}${formatToCurrency(transactionData.coinAmount, '')} ${coinData.abbreviation}',
+            '${transactionData.transactionType.sign}'
+            '${formatToCurrency(transactionData.coinAmount, '')} '
+            '${coinData.abbreviation}',
             style: context.theme.appTextThemes.body.copyWith(
               color: _getTextColor(context),
             ),

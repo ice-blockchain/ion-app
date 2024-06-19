@@ -5,8 +5,8 @@ import 'package:shimmer/shimmer.dart';
 
 class Skeleton extends StatelessWidget {
   const Skeleton({
-    super.key,
     required this.child,
+    super.key,
   });
 
   final Widget child;

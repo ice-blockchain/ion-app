@@ -15,10 +15,10 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 
 class DAppsPage extends IceSimplePage {
-  const DAppsPage(super.route, super.payload);
+  const DAppsPage(super.route, super.payload, {super.key});
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final ScrollController scrollController = useScrollController();
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final scrollController = useScrollController();
 
     return Scaffold(
       body: CustomScrollView(

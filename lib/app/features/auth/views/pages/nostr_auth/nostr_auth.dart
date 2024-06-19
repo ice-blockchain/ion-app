@@ -14,11 +14,11 @@ import 'package:ice/app/router/hooks/use_sheet_full_height.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NostrAuth extends IceSimplePage {
-  const NostrAuth(super._route, super.payload);
+  const NostrAuth(super._route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, __) {
-    final double sheetFullHeight = useSheetFullHeight(context);
+  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+    final sheetFullHeight = useSheetFullHeight(context);
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -68,7 +68,8 @@ class NostrAuth extends IceSimplePage {
                       mainAxisSize: MainAxisSize.max,
                     ),
                     SizedBox(
-                      //TODO::add ScreenBottomOffset with maintainBottomViewPadding flag
+                      //TODO::add ScreenBottomOffset with
+                      //maintainBottomViewPadding flag
                       height: 58.0.s + MediaQuery.paddingOf(context).bottom,
                     ),
                   ],

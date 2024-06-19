@@ -7,8 +7,8 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_cont
 
 class FeedControls extends HookWidget {
   const FeedControls({
-    super.key,
     required this.pageScrollController,
+    super.key,
   });
 
   static double get height => 40.0.s;
@@ -17,8 +17,7 @@ class FeedControls extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<FeedControlsState> state =
-        useFeedControlsState(pageScrollController);
+    final state = useFeedControlsState(pageScrollController);
 
     return SizedBox(
       height: height,

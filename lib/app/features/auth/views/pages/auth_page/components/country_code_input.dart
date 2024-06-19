@@ -7,7 +7,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class CountryCodeInput extends StatelessWidget {
-  const CountryCodeInput({super.key, required this.country, this.onTap});
+  const CountryCodeInput({required this.country, super.key, this.onTap});
 
   final Country country;
   final VoidCallback? onTap;

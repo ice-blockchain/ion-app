@@ -3,8 +3,8 @@ import 'package:ice/app/router/app_routes.dart';
 
 class PullRightMenuHandler extends StatelessWidget {
   const PullRightMenuHandler({
-    super.key,
     required this.child,
+    super.key,
   });
 
   final Widget child;

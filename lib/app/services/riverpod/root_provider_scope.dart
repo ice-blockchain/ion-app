@@ -5,8 +5,8 @@ import 'package:ice/app/services/riverpod/riverpod_logger.dart';
 
 class RiverpodRootProviderScope extends StatelessWidget {
   const RiverpodRootProviderScope({
-    super.key,
     required this.child,
+    super.key,
   });
 
   final Widget child;

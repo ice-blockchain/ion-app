@@ -22,21 +22,20 @@ import 'package:ice/generated/assets.gen.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class EditWalletModal extends IcePage<WalletData> {
-  const EditWalletModal(super.route, super.payload);
+  const EditWalletModal(super.route, super.payload, {super.key});
 
   @override
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    WalletData? walletData,
+    WalletData? payload,
   ) {
-    final ValueNotifier<String> walletName = useState(walletData?.name ?? '');
-    final TextEditingController controller =
-        useTextEditingController(text: walletName.value);
-    final bool isNameChanged = walletName.value != (walletData?.name ?? '') &&
+    final walletName = useState(payload?.name ?? '');
+    final controller = useTextEditingController(text: walletName.value);
+    final isNameChanged = walletName.value != (payload?.name ?? '') &&
         walletName.value.isNotEmpty;
 
-    if (walletData == null) {
+    if (payload == null) {
       return const SizedBox.shrink();
     }
 
@@ -76,7 +75,7 @@ class EditWalletModal extends IcePage<WalletData> {
                         ref
                                 .read(walletsDataNotifierProvider.notifier)
                                 .walletData =
-                            walletData.copyWith(name: walletName.value);
+                            payload.copyWith(name: walletName.value);
                         context.pop();
                       },
                       label: Text(context.i18n.button_save),
@@ -85,7 +84,7 @@ class EditWalletModal extends IcePage<WalletData> {
                   : Button(
                       onPressed: () {
                         IceRoutes.deleteWallet
-                            .replace(context, payload: walletData);
+                            .replace(context, payload: payload);
                       },
                       leadingIcon: Assets.images.icons.iconBlockDelete
                           .icon(color: context.theme.appColors.onPrimaryAccent),

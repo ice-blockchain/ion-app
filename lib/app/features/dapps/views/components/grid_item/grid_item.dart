@@ -12,8 +12,8 @@ import 'package:ice/generated/assets.gen.dart';
 
 class GridItem extends HookWidget {
   const GridItem({
-    super.key,
     required this.item,
+    super.key,
     this.showIsFavourite = false,
   });
   final DAppItem item;
@@ -21,7 +21,7 @@ class GridItem extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<bool> isFavourite = useState(item.isFavourite);
+    final isFavourite = useState(item.isFavourite);
     return InkWell(
       onTap: () => IceRoutes.dappsDetails.go(context),
       child: Row(

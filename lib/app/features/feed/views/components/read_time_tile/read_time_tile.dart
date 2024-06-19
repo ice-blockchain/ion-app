@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 double iconSize = 16.0.s;
 
 class ReadTimeTile extends StatelessWidget {
-  const ReadTimeTile({super.key, required this.minutesToRead});
+  const ReadTimeTile({required this.minutesToRead, super.key});
 
   final int minutesToRead;
 
