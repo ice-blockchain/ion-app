@@ -121,6 +121,7 @@ class SendCoinsForm extends IceSimplePage {
                       const ArrivalTime(),
                       SizedBox(height: 12.0.s),
                       AppSlider(
+                        initialValue: formController.arrivalTime!.toDouble(),
                         onChanged: (double value) {
                           ref
                               .read(sendCoinsFormControllerProvider.notifier)
