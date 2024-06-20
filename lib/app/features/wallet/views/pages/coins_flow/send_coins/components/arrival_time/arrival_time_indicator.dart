@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_form_provider.dart';
+import 'package:ice/generated/assets.gen.dart';
 
-class ArrivalTimeIndicator extends StatelessWidget {
+class ArrivalTimeIndicator extends HookConsumerWidget {
   const ArrivalTimeIndicator({super.key});
 
-  // TODO @ice-alcides): Replace with dynamic value
-  static const String time = '15 min';
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
+
+    final arrivalTime = ref.watch(
+      sendCoinsFormControllerProvider.select((state) => state.arrivalTime),
+    );
 
     return Row(
       children: <Widget>[
@@ -33,14 +37,12 @@ class ArrivalTimeIndicator extends StatelessWidget {
           ),
           child: Row(
             children: <Widget>[
-              Icon(
-                Icons.access_time,
-                color: colors.primaryAccent,
-                size: 16.0.s,
+              Assets.images.icons.iconBlockTime.icon(
+                size: 12.0.s,
               ),
               SizedBox(width: 5.0.s),
               Text(
-                time,
+                '$arrivalTime min',
                 style: textTheme.body2.copyWith(
                   color: colors.primaryAccent,
                 ),

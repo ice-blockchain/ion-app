@@ -29,6 +29,7 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_moda
 import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/components/network_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/components/share_address_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/receive_coin_modal_page.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/confirmation_sheet.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contacts_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/network_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/send_coins_form.dart';
@@ -160,6 +161,7 @@ enum IceRoutes<PayloadType> {
       IceRoutes.shareAddress,
       IceRoutes.contactsSelect,
       IceRoutes.coinSendForm,
+      IceRoutes.coinSendFormConfirmation,
       IceRoutes.coinDetails,
       IceRoutes.coinReceive,
       IceRoutes.manageCoins,
@@ -212,6 +214,10 @@ enum IceRoutes<PayloadType> {
   ),
   receiveCoin(
     ReceiveCoinModalPage.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  coinSendFormConfirmation(
+    ConfirmationSheet.new,
     type: IceRouteType.bottomSheet,
   ),
   coinReceive(

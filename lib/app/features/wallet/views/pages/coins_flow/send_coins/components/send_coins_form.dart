@@ -12,8 +12,8 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/arrival_time/arrival_time.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/button/coin_button.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/button/network_button.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/coin_button.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/network_fee.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_form_provider.dart';
@@ -37,6 +37,10 @@ class SendCoinsForm extends IceSimplePage {
     final locale = context.i18n;
 
     final formController = ref.watch(sendCoinsFormControllerProvider);
+
+    final amountController = useTextEditingController(
+      text: formController.usdtAmount.toString(),
+    );
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -84,10 +88,22 @@ class SendCoinsForm extends IceSimplePage {
                       ),
                       SizedBox(height: 12.0.s),
                       TextInput(
+                        controller: amountController,
                         labelText: locale.wallet_usdt_amount,
-                        initialValue: '350.00',
+                        onChanged: (value) {
+                          ref
+                              .read(sendCoinsFormControllerProvider.notifier)
+                              .updateAmount(value);
+                        },
                         suffixIcon: TextInputTextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            final maxAmount =
+                                formController.wallet.balance.toString();
+                            amountController.text = maxAmount;
+                            ref
+                                .read(sendCoinsFormControllerProvider.notifier)
+                                .updateAmount(maxAmount);
+                          },
                           label: locale.wallet_max,
                         ),
                       ),
@@ -105,7 +121,11 @@ class SendCoinsForm extends IceSimplePage {
                       const ArrivalTime(),
                       SizedBox(height: 12.0.s),
                       AppSlider(
-                        onChanged: (double value) {},
+                        onChanged: (double value) {
+                          ref
+                              .read(sendCoinsFormControllerProvider.notifier)
+                              .updateArrivalTime(value.toInt());
+                        },
                       ),
                       SizedBox(height: 8.0.s),
                       const NetworkFee(),
@@ -122,7 +142,9 @@ class SendCoinsForm extends IceSimplePage {
                           ),
                           child: Assets.images.icons.iconButtonNext.icon(),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          IceRoutes.coinSendFormConfirmation.push(context);
+                        },
                       ),
                       SizedBox(height: 16.0.s),
                     ],
