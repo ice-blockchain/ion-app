@@ -12,7 +12,8 @@ class QRScannerBottomSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qrKey = GlobalKey<State<StatefulWidget>>(debugLabel: 'QR');
+    final qrKey = useRef(GlobalKey(debugLabel: 'QR')).value;
+
     final result = useState<Barcode?>(null);
 
     return FractionallySizedBox(
@@ -29,7 +30,6 @@ class QRScannerBottomSheet extends HookConsumerWidget {
             child: Stack(
               children: <Widget>[
                 QRView(
-                  key: qrKey,
                   onQRViewCreated: (QRViewController controller) {
                     controller.scannedDataStream
                         .listen((Barcode scanData) => result.value = scanData);
@@ -42,6 +42,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
                     cutOutSize: 238.0.s,
                     overlayColor: context.theme.appColors.backgroundSheet,
                   ),
+                  key: qrKey,
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,

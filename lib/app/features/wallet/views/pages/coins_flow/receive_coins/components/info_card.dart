@@ -8,14 +8,10 @@ class InfoCard extends StatelessWidget {
     super.key,
   });
 
-  static SizedBox sizedBoxWidth10 = SizedBox(width: 10.0.s);
-  static EdgeInsetsGeometry infoContainerPadding =
-      EdgeInsets.symmetric(vertical: 8.0.s, horizontal: 18.0.s);
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: infoContainerPadding,
+      padding: EdgeInsets.symmetric(vertical: 8.0.s, horizontal: 18.0.s),
       decoration: BoxDecoration(
         color: context.theme.appColors.tertararyBackground,
         borderRadius: BorderRadius.circular(16.0.s),
@@ -26,7 +22,7 @@ class InfoCard extends StatelessWidget {
             Icons.info_outline,
             color: context.theme.appColors.primaryAccent,
           ),
-          sizedBoxWidth10,
+          SizedBox(width: 10.0.s),
           Expanded(
             child: Text(
               context.i18n.wallet_receive_info,

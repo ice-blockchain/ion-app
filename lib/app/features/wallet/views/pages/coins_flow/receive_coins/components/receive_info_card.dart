@@ -61,35 +61,29 @@ class ReceiveInfoCard extends HookConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 22.0.s),
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: <Widget>[
-                    Button(
-                      minimumSize: Size(148.0.s, 48.0.s),
-                      leadingIcon: isCopied.value
-                          ? Assets.images.icons.iconBlockCheckGreen.icon()
-                          : Assets.images.icons.iconBlockCopyBlue.icon(),
-                      borderColor: isCopied.value
-                          ? context.theme.appColors.success
-                          : context.theme.appColors.strokeElements,
-                      onPressed: () {
-                        isCopied.value = true;
-                        Future<void>.delayed(const Duration(seconds: 3))
-                            .then((_) {
-                          isCopied.value = false;
-                        });
-                      },
-                      label: Text(
-                        isCopied.value
-                            ? context.i18n.wallet_copied
-                            : context.i18n.wallet_copy,
-                        style: context.theme.appTextThemes.body.copyWith(
-                          color: context.theme.appColors.primaryText,
-                        ),
-                      ),
-                      type: ButtonType.secondary,
+                Button(
+                  minimumSize: Size(148.0.s, 48.0.s),
+                  leadingIcon: isCopied.value
+                      ? Assets.images.icons.iconBlockCheckGreen.icon()
+                      : Assets.images.icons.iconBlockCopyBlue.icon(),
+                  borderColor: isCopied.value
+                      ? context.theme.appColors.success
+                      : context.theme.appColors.strokeElements,
+                  onPressed: () {
+                    isCopied.value = true;
+                    Future<void>.delayed(const Duration(seconds: 3)).then((_) {
+                      isCopied.value = false;
+                    });
+                  },
+                  label: Text(
+                    isCopied.value
+                        ? context.i18n.wallet_copied
+                        : context.i18n.wallet_copy,
+                    style: context.theme.appTextThemes.body.copyWith(
+                      color: context.theme.appColors.primaryText,
                     ),
-                  ],
+                  ),
+                  type: ButtonType.secondary,
                 ),
                 SizedBox(height: 16.0.s),
               ],
