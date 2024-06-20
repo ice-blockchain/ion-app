@@ -24,12 +24,6 @@ class ReceiveInfoCard extends HookConsumerWidget {
   final NetworkType networkType;
   final String walletAddress;
 
-  static SizedBox sizedBoxHeight20 = SizedBox(height: 20.0.s);
-  static SizedBox sizedBoxHeight10 = SizedBox(height: 10.0.s);
-  static SizedBox sizedBoxHeight8 = SizedBox(height: 8.0.s);
-  static SizedBox sizedBoxHeight16 = SizedBox(height: 16.0.s);
-  static SizedBox sizedBoxHeight22 = SizedBox(height: 22.0.s);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isCopied = useState<bool>(false);
@@ -44,9 +38,9 @@ class ReceiveInfoCard extends HookConsumerWidget {
             ),
             child: Column(
               children: <Widget>[
-                sizedBoxHeight20,
+                SizedBox(height: 20.0.s),
                 coinData.iconUrl.icon(size: 46.0.s),
-                sizedBoxHeight10,
+                SizedBox(height: 10.0.s),
                 Text(
                   coinData.name,
                   style: context.theme.appTextThemes.body.copyWith(
@@ -54,19 +48,19 @@ class ReceiveInfoCard extends HookConsumerWidget {
                   ),
                 ),
                 Text('(${networkType.getDisplayName(context)})'),
-                sizedBoxHeight8,
+                SizedBox(height: 8.0.s),
                 QrImageView(
                   data: walletAddress,
                   size: 150,
                 ),
-                sizedBoxHeight8,
+                SizedBox(height: 8.0.s),
                 Text(
                   shortenAddress(walletAddress),
                   style: context.theme.appTextThemes.body.copyWith(
                     color: context.theme.appColors.primaryText,
                   ),
                 ),
-                sizedBoxHeight22,
+                SizedBox(height: 22.0.s),
                 Stack(
                   clipBehavior: Clip.none,
                   children: <Widget>[
@@ -97,7 +91,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
                     ),
                   ],
                 ),
-                sizedBoxHeight16,
+                SizedBox(height: 16.0.s),
               ],
             ),
           ),

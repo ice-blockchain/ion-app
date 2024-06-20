@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -35,7 +34,7 @@ class ShareAddressView extends IcePage<Map<String, dynamic>?> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Padding(
-          padding: UiPadding.verticalPadding8,
+          padding: EdgeInsets.symmetric(vertical: 8.0.s),
           child: NavigationAppBar.screen(
             title: context.i18n.wallet_share_address,
             actions: const <Widget>[
@@ -44,7 +43,7 @@ class ShareAddressView extends IcePage<Map<String, dynamic>?> {
           ),
         ),
         Padding(
-          padding: UiPadding.horizontalPadding16,
+          padding: EdgeInsets.symmetric(horizontal: 16.0.s),
           child: Column(
             children: <Widget>[
               ReceiveInfoCard(
@@ -52,9 +51,13 @@ class ShareAddressView extends IcePage<Map<String, dynamic>?> {
                 networkType: networkType,
                 walletAddress: walletAddress,
               ),
-              UiPadding.sizedBoxHeight16,
+              SizedBox(
+                height: 16.0.s,
+              ),
               const InfoCard(),
-              UiPadding.sizedBoxHeight16,
+              SizedBox(
+                height: 16.0.s,
+              ),
               Button.compact(
                 mainAxisSize: MainAxisSize.max,
                 minimumSize: Size(56.0.s, 56.0.s),
