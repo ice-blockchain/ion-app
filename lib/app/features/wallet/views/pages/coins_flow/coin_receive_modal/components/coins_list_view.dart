@@ -16,12 +16,11 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 
 class CoinsListView extends HookConsumerWidget {
   const CoinsListView({
-    required this.coinTap,
+    required this.onCoinItemTap,
     super.key,
   });
 
-  // ignore: inference_failure_on_function_return_type
-  final Function(CoinData) coinTap;
+  final void Function(CoinData) onCoinItemTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,7 +79,7 @@ class CoinsListView extends HookConsumerWidget {
                   child: CoinItem(
                     coinData: coins[index],
                     onTap: () {
-                      coinTap(coins[index]);
+                      onCoinItemTap(coins[index]);
                     },
                   ),
                 );

@@ -15,7 +15,7 @@ class SendCoinModalPage extends IceSimplePage {
   Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
     return SheetContent(
       body: CoinsListView(
-        coinTap: (CoinData coin) {
+        onCoinItemTap: (CoinData coin) {
           ref.read(sendCoinsFormControllerProvider.notifier).selectCoin(coin);
           IceRoutes.networkSelect.push(
             context,

@@ -19,4 +19,3 @@ linter:
     flutter_style_todos: false
     comment_references: false
     avoid_setters_without_getters: false
-    sort_pub_dependencies: false
