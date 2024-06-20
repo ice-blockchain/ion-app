@@ -9,7 +9,7 @@ class UiConstants {
 class UiSize {
   UiSize._();
 
-  static final xSmall = 4.0.s;
-  static final small = 8.0.s;
-  static final medium = 16.0.s;
+  static double get xSmall => 4.0.s;
+  static double get small => 8.0.s;
+  static double get medium => 16.0.s;
 }
