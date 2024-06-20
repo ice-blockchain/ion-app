@@ -48,7 +48,7 @@ class ConfirmationSheet extends IceSimplePage {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      mockedCoinsDataArray[0].iconUrl.icon(),
+                      mockedCoinsDataArray[3].iconUrl.icon(),
                       SizedBox(width: 8.0.s),
                       Text(
                         '-${formData.usdtAmount} USDT',
