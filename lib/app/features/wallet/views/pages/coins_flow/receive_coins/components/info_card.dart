@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -22,7 +23,7 @@ class InfoCard extends StatelessWidget {
             Icons.info_outline,
             color: context.theme.appColors.primaryAccent,
           ),
-          SizedBox(width: 10.0.s),
+          SizedBox(width: UiSize.smallMedium),
           Expanded(
             child: Text(
               context.i18n.wallet_receive_info,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -48,7 +49,7 @@ class Favourites extends StatelessWidget {
                   size: 36.0.s,
                   tintColor: context.theme.appColors.primaryAccent,
                 ),
-                SizedBox(width: 10.0.s),
+                SizedBox(width: UiSize.smallMedium),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

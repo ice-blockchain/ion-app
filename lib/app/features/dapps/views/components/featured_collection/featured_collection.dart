@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/shadow_text/shadow_text.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -56,7 +57,7 @@ class FeaturedCollection extends StatelessWidget {
                             width: 30.0.s,
                           ),
                         ),
-                        SizedBox(width: 8.0.s),
+                        SizedBox(width: UiSize.small),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,

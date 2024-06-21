@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/constants/countries.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -27,7 +28,7 @@ class CountryCodeInput extends StatelessWidget {
                 country.flag,
                 style: TextStyle(fontSize: 24.0.s),
               ),
-              SizedBox(width: 8.0.s),
+              SizedBox(width: UiSize.small),
               Assets.images.icons.iconLoginDropdown.icon(
                 color: context.theme.appColors.secondaryText,
                 size: 15.0.s,
