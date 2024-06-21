@@ -13,5 +13,5 @@ class UiSize {
   static double get small => 8.0.s;
   static double get smallMedium => 10.0.s;
   static double get medium => 16.0.s;
-  static double get large => 24.0.s;
+  static double get smallLarge => 24.0.s;
 }
