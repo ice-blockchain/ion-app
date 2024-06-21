@@ -7,7 +7,9 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/confirmation_list_item.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_form_provider.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -21,7 +23,6 @@ class ConfirmationSheet extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
     final colors = context.theme.appColors;
-    final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
 
     final formData = ref.watch(sendCoinsFormControllerProvider);
@@ -45,22 +46,10 @@ class ConfirmationSheet extends IceSimplePage {
               child: Column(
                 children: <Widget>[
                   SizedBox(height: 16.0.s),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      mockedCoinsDataArray[3].iconUrl.icon(),
-                      SizedBox(width: 8.0.s),
-                      Text(
-                        '-${formData.usdtAmount} USDT',
-                        style: textTheme.headline2,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 4.0.s),
-                  Text(
-                    '~ ${formData.usdtAmount * 0.999} USD',
-                    style: textTheme.caption2
-                        .copyWith(color: colors.secondaryText),
+                  TransactionAmountSummary(
+                    usdtAmount: formData.usdtAmount,
+                    usdAmount: formData.usdtAmount * 0.999,
+                    icon: mockedCoinsDataArray[3].iconUrl.icon(),
                   ),
                   SizedBox(height: 16.0.s),
                   ConfirmationListItem.text(
@@ -98,7 +87,8 @@ class ConfirmationSheet extends IceSimplePage {
                   SizedBox(height: 16.0.s),
                   ConfirmationListItem.textWithIcon(
                     title: locale.wallet_arrival_time,
-                    value: '${formData.arrivalTime} min',
+                    value: '${formData.arrivalTime} '
+                        '${locale.wallet_arrival_time_minutes}',
                     icon: Assets.images.icons.iconBlockTime.icon(
                       size: 16.0.s,
                     ),
@@ -115,7 +105,7 @@ class ConfirmationSheet extends IceSimplePage {
                   Button(
                     label: Text('${locale.wallet_send_coins} - \$351.35'),
                     mainAxisSize: MainAxisSize.max,
-                    onPressed: () {},
+                    onPressed: () => IceRoutes.transactionResult.go(context),
                   ),
                   SizedBox(height: 16.0.s),
                 ],

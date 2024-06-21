@@ -1,6 +1,5 @@
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
-import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/model/send_coins_form_data.dart';
 import 'package:ice/app/features/wallets/providers/selected_wallet_id_provider.dart';
@@ -13,20 +12,15 @@ part 'send_coins_form_provider.g.dart';
 class SendCoinsFormController extends _$SendCoinsFormController {
   @override
   SendCoinsFormData build() {
-    ref.keepAlive();
-
     final walletId = ref.watch(selectedWalletIdNotifierProvider);
+    final walletsData = ref.watch(walletsDataNotifierProvider);
 
-    final wallet = ref.watch(
-      walletsDataNotifierProvider.select(
-        (Map<String, WalletData> walletsData) => walletsData[walletId],
-      ),
-    );
+    final wallet = walletsData[walletId]!;
 
     return SendCoinsFormData(
       selectedCoin: mockedCoinsDataArray[0],
       selectedNetwork: NetworkType.eth,
-      wallet: wallet!,
+      wallet: wallet,
       address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
       usdtAmount: 350,
       arrivalTime: 15,
@@ -48,8 +42,4 @@ class SendCoinsFormController extends _$SendCoinsFormController {
 
   void updateArrivalTime(int arrivalTime) =>
       state = state.copyWith(arrivalTime: arrivalTime);
-
-  void confirmForm() {
-    ref.keepAlive().close();
-  }
 }
