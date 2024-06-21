@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -11,7 +12,7 @@ class PostEngagementMetric extends StatelessWidget {
     this.value,
   });
 
-  static double get horizontalHitSlop => 12.0.s;
+  static double get horizontalHitSlop => UiSize.medium;
   static double get verticalHitSlop => 6.0.s;
 
   final Widget icon;
@@ -31,14 +32,14 @@ class PostEngagementMetric extends StatelessWidget {
           children: <Widget>[
             IconTheme(
               data: IconThemeData(
-                size: 16.0.s,
+                size: UiSize.large,
                 color: context.theme.appColors.onTertararyBackground,
               ),
               child: icon,
             ),
             if (value != null)
               Padding(
-                padding: EdgeInsets.only(left: 4.0.s),
+                padding: EdgeInsets.only(left: UiSize.xSmall),
                 child: Text(
                   value!,
                   style: context.theme.appTextThemes.caption2.copyWith(

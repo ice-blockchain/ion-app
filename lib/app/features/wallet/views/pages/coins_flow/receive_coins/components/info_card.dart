@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -12,10 +12,10 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8.0.s, horizontal: 18.0.s),
+      padding: EdgeInsets.symmetric(vertical: UiSize.small, horizontal: 18.0.s),
       decoration: BoxDecoration(
         color: context.theme.appColors.tertararyBackground,
-        borderRadius: BorderRadius.circular(16.0.s),
+        borderRadius: BorderRadius.circular(UiSize.large),
       ),
       child: Row(
         children: <Widget>[

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/shadow_text/shadow_text.dart';
-import 'package:ice/app/constants/ui.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -20,7 +20,7 @@ class FeaturedCollection extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         separatorBuilder: (BuildContext context, int index) =>
-            SizedBox(width: 12.0.s),
+            SizedBox(width: UiSize.medium),
         padding: EdgeInsets.symmetric(
           horizontal: ScreenSideOffset.defaultSmallMargin,
         ),
@@ -32,7 +32,7 @@ class FeaturedCollection extends StatelessWidget {
             child: Container(
               width: 240.0.s,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0.s),
+                borderRadius: BorderRadius.circular(UiSize.medium),
                 image: DecorationImage(
                   image: AssetImage(
                     assetBg,
@@ -43,14 +43,14 @@ class FeaturedCollection extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   Positioned(
-                    bottom: 12.0.s,
-                    left: 12.0.s,
+                    bottom: UiSize.medium,
+                    left: UiSize.medium,
                     child: Row(
                       children: <Widget>[
                         DecoratedBox(
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(8.0.s),
+                            borderRadius: BorderRadius.circular(UiSize.small),
                           ),
                           child: Image.asset(
                             items[index].iconImage,

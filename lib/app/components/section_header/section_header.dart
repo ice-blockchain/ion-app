@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/section_header/section_header_button.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -12,7 +13,7 @@ class SectionHeader extends StatelessWidget {
     this.onPress,
     this.leadingIcon,
     double? leadingIconOffset,
-  })  : leadingIconOffset = leadingIconOffset ?? 4.0.s,
+  })  : leadingIconOffset = leadingIconOffset ?? UiSize.xSmall,
         title = title ?? '';
 
   final String title;

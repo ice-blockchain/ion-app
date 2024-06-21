@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -56,7 +57,7 @@ class CategoriesCollection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8.0.s, top: 3.0.s),
+      padding: EdgeInsets.only(bottom: UiSize.small, top: 3.0.s),
       child: SizedBox(
         height: itemHeight,
         child: ListView.separated(
@@ -86,7 +87,7 @@ class CategoriesCollection extends StatelessWidget {
                   type: ButtonType.outlined,
                   backgroundColor: context.theme.appColors.tertararyBackground,
                   borderColor: context.theme.appColors.onTerararyFill,
-                  borderRadius: BorderRadius.circular(12.0.s),
+                  borderRadius: BorderRadius.circular(UiSize.medium),
                 ),
                 Text(
                   DAppsCategory.values[index].title(context),

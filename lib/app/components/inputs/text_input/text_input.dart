@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/inputs/hooks/use_text_changed.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_decoration.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/string.dart';
@@ -32,7 +33,7 @@ class TextInput extends HookWidget {
     EdgeInsetsGeometry? contentPadding,
   })  : scrollPadding = scrollPadding ?? EdgeInsets.all(20.0.s),
         contentPadding = contentPadding ??
-            EdgeInsets.symmetric(vertical: 13.0.s, horizontal: 16.0.s);
+            EdgeInsets.symmetric(vertical: 13.0.s, horizontal: UiSize.large);
 
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;

@@ -5,8 +5,8 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/language_list_item.dart';
@@ -49,7 +49,7 @@ class SelectLanguages extends IceSimplePage {
             child: CustomScrollView(
               slivers: <Widget>[
                 FloatingAppBar(
-                  topOffset: 16.0.s,
+                  topOffset: UiSize.large,
                   height: SearchInput.height,
                   child: ScreenSideOffset.small(
                     child: SearchInput(
@@ -60,7 +60,7 @@ class SelectLanguages extends IceSimplePage {
                 SliverList.separated(
                   itemCount: filteredLanguages.length,
                   separatorBuilder: (BuildContext _, int __) => SizedBox(
-                    height: 12.0.s,
+                    height: UiSize.medium,
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     final language = filteredLanguages[index];
@@ -84,7 +84,7 @@ class SelectLanguages extends IceSimplePage {
                 ),
                 SliverPadding(
                   padding: EdgeInsets.only(
-                    bottom: 16.0.s +
+                    bottom: UiSize.large +
                         (mayContinue
                             ? 0
                             : MediaQuery.paddingOf(context).bottom),
@@ -97,8 +97,8 @@ class SelectLanguages extends IceSimplePage {
             ScreenSideOffset.small(
               child: Padding(
                 padding: EdgeInsets.only(
-                  top: 8.0.s,
-                  bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
+                  top: UiSize.small,
+                  bottom: UiSize.large + MediaQuery.paddingOf(context).bottom,
                 ),
                 child: Button(
                   label: Text(context.i18n.button_continue),

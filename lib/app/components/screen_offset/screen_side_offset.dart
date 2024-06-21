@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/num.dart';
 
 enum ScreenOffsetSide { left, right }
@@ -37,7 +38,7 @@ class ScreenSideOffset extends StatelessWidget {
     );
   }
 
-  static double get defaultSmallMargin => 16.0.s;
+  static double get defaultSmallMargin => UiSize.large;
 
   static double get defaultLargeMargin => 44.0.s;
 

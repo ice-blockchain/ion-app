@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -22,7 +23,7 @@ class NetworkFee extends StatelessWidget {
           padding: EdgeInsets.only(left: 6.0.s),
           child: IconTheme(
             data: IconThemeData(
-              size: 16.0.s,
+              size: UiSize.large,
             ),
             child: ColorFiltered(
               colorFilter: ColorFilter.mode(
@@ -30,8 +31,8 @@ class NetworkFee extends StatelessWidget {
                 BlendMode.srcIn,
               ),
               child: Assets.images.icons.iconBlockInformation.image(
-                width: 16.0.s,
-                height: 16.0.s,
+                width: UiSize.large,
+                height: UiSize.large,
               ),
             ),
           ),

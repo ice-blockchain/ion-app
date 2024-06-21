@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/constants/countries.dart';
-import 'package:ice/app/constants/ui.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -16,11 +16,14 @@ class CountryCodeInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 4.0.s),
+      padding: EdgeInsets.only(left: UiSize.xSmall),
       child: TextButton(
         onPressed: onTap,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 8.0.s),
+          padding: EdgeInsets.symmetric(
+            horizontal: UiSize.medium,
+            vertical: UiSize.small,
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[

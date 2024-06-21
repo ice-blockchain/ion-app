@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/num.dart';
 
 class PostSkeletonText extends StatelessWidget {
@@ -16,9 +17,9 @@ class PostSkeletonText extends StatelessWidget {
       child: FractionallySizedBox(
         widthFactor: widthFactor,
         child: Container(
-          height: 12.0.s,
+          height: UiSize.medium,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4.0.s),
+            borderRadius: BorderRadius.circular(UiSize.xSmall),
             color: Colors.white,
           ),
         ),

@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separated_row.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/model/feed_filter.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_categories_dropdown.dart';
@@ -22,7 +22,7 @@ class FeedFilters extends HookWidget {
         scrollDirection: Axis.horizontal,
         child: ScreenSideOffset.small(
           child: SeparatedRow(
-            separator: SizedBox(width: 12.0.s),
+            separator: SizedBox(width: UiSize.medium),
             children: <Widget>[
               const FeedCategoriesDropdown(),
               ...FeedFilter.values.map(

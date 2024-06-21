@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -26,7 +27,7 @@ class WalletSwitcher extends HookConsumerWidget {
       leadingIcon: Avatar(
         size: 28.0.s,
         imageUrl: walletIcon,
-        borderRadius: BorderRadius.circular(10.0.s),
+        borderRadius: BorderRadius.circular(UiSize.smallMedium),
       ),
       leadingButtonOffset: 11.0.s,
       trailingIconOffset: 0.0.s,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SectionHeaderButton extends StatelessWidget {
@@ -11,8 +11,8 @@ class SectionHeaderButton extends StatelessWidget {
 
   final VoidCallback onPress;
 
-  static double get hitSlop => 10.0.s;
-  static double get iconSize => 24.0.s;
+  static double get hitSlop => UiSize.smallMedium;
+  static double get iconSize => UiSize.xLarge;
   static double get totalSize => iconSize + hitSlop * 2;
 
   @override

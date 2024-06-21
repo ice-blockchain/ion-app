@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/components/feed_modal_separator.dart';
 import 'package:ice/app/features/wallet/model/feed_type.dart';
@@ -29,7 +30,8 @@ class FeedModalItem extends StatelessWidget {
               color: feedType.getIconColor(context),
             ),
             child: Center(
-              child: feedType.iconAsset.icon(size: 24.0.s, color: Colors.white),
+              child: feedType.iconAsset
+                  .icon(size: UiSize.xLarge, color: Colors.white),
             ),
           ),
           backgroundColor: Colors.transparent,

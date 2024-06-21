@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coin_item.dart';
@@ -45,7 +45,7 @@ class CoinsTab extends HookConsumerWidget {
       itemCount: coins.length,
       separatorBuilder: (BuildContext context, int index) {
         return SizedBox(
-          height: 12.0.s,
+          height: UiSize.medium,
         );
       },
       itemBuilder: (BuildContext context, int index) {

@@ -4,6 +4,7 @@ import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/contacts_mock_data.dart';
@@ -25,7 +26,7 @@ class ContactsListView extends IcePage<ContactData> {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0.s),
+            padding: EdgeInsets.symmetric(vertical: UiSize.small),
             child: NavigationAppBar.screen(
               title: context.i18n.wallet_send_coins,
               showBackButton: false,
@@ -40,14 +41,14 @@ class ContactsListView extends IcePage<ContactData> {
             ),
           ),
           SizedBox(
-            height: 12.0.s,
+            height: UiSize.medium,
           ),
           Expanded(
             child: ListView.separated(
               itemCount: contacts.length,
               separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(
-                  height: 12.0.s,
+                  height: UiSize.medium,
                 );
               },
               itemBuilder: (BuildContext context, int index) {

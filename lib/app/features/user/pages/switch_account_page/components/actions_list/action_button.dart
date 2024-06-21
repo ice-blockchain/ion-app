@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/constants/ui_size.dart';
 
 class ActionButton extends StatelessWidget {
   const ActionButton({
@@ -17,7 +17,7 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0.s),
+      padding: EdgeInsets.symmetric(vertical: UiSize.small),
       child: Button(
         leadingIcon: icon,
         onPressed: onTap,

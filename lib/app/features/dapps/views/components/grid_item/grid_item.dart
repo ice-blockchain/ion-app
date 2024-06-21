@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/constants/ui.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -33,7 +33,7 @@ class GridItem extends HookWidget {
             height: 48.0.s,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12.0.s),
+              borderRadius: BorderRadius.circular(UiSize.medium),
             ),
             child: Image.asset(
               item.iconImage,
@@ -57,16 +57,16 @@ class GridItem extends HookWidget {
                     ),
                     if (item.isVerified != null && item.isVerified!)
                       Padding(
-                        padding: EdgeInsets.only(left: 4.0.s),
+                        padding: EdgeInsets.only(left: UiSize.xSmall),
                         child: IconTheme(
                           data: IconThemeData(
-                            size: 16.0.s,
+                            size: UiSize.large,
                             color:
                                 context.theme.appColors.onTertararyBackground,
                           ),
                           child: Assets.images.icons.iconBadgeVerify.image(
-                            width: 16.0.s,
-                            height: 16.0.s,
+                            width: UiSize.large,
+                            height: UiSize.large,
                           ),
                         ),
                       ),
@@ -82,11 +82,11 @@ class GridItem extends HookWidget {
                   children: <Widget>[
                     IconTheme(
                       data: IconThemeData(
-                        size: 12.0.s,
+                        size: UiSize.medium,
                         color: context.theme.appColors.onTertararyBackground,
                       ),
                       child: Assets.images.icons.iconButtonIceStroke
-                          .icon(size: 12.0.s),
+                          .icon(size: UiSize.medium),
                     ),
                     if (item.value != null)
                       Padding(

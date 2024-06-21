@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -17,11 +18,11 @@ class TrendingVideoAuthor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(8.0.s),
+      padding: EdgeInsets.all(UiSize.small),
       child: TextButton(
         onPressed: () {},
         child: Padding(
-          padding: EdgeInsets.all(4.0.s),
+          padding: EdgeInsets.all(UiSize.xSmall),
           child: Row(
             children: <Widget>[
               Container(
@@ -41,7 +42,7 @@ class TrendingVideoAuthor extends StatelessWidget {
               ),
               Flexible(
                 child: Padding(
-                  padding: EdgeInsets.only(left: 4.0.s),
+                  padding: EdgeInsets.only(left: UiSize.xSmall),
                   child: Text(
                     label,
                     overflow: TextOverflow.ellipsis,

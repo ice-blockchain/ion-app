@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/coin_transaction_data.dart';
@@ -98,7 +98,7 @@ class CoinDetailsPage extends IcePage<CoinData> {
                 itemCount: transactions.length,
                 separatorBuilder: (BuildContext context, int index) {
                   return SizedBox(
-                    height: 12.0.s,
+                    height: UiSize.medium,
                   );
                 },
                 itemBuilder: (BuildContext context, int index) {

@@ -4,9 +4,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallets/pages/wallets_modal/components/wallets_list/wallets_list.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -38,8 +38,8 @@ class WalletsModal extends IceSimplePage {
             ScreenSideOffset.small(child: const WalletsList()),
             Padding(
               padding: EdgeInsets.only(
-                bottom: 16.0.s,
-                top: 8.0.s,
+                bottom: UiSize.large,
+                top: UiSize.small,
                 left: ScreenSideOffset.defaultSmallMargin,
                 right: ScreenSideOffset.defaultSmallMargin,
               ),

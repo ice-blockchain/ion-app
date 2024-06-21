@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -29,7 +30,7 @@ class WalletHeader extends HookConsumerWidget {
                   color: context.theme.appColors.primaryText,
                 ),
               ),
-              SizedBox(width: 12.0.s),
+              SizedBox(width: UiSize.medium),
               NavigationButton(
                 onPressed: () {},
                 icon: Assets.images.icons.iconHeaderMenu.icon(
