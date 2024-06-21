@@ -50,9 +50,23 @@ class ReceiveInfoCard extends HookConsumerWidget {
                 ),
                 Text('(${networkType.getDisplayName(context)})'),
                 SizedBox(height: UiSize.small),
-                QrImageView(
-                  data: walletAddress,
-                  size: 150,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0.s),
+                  child: QrImageView(
+                    backgroundColor:
+                        context.theme.appColors.secondaryBackground,
+                    errorCorrectionLevel: QrErrorCorrectLevel.H,
+                    dataModuleStyle: QrDataModuleStyle(
+                      dataModuleShape: QrDataModuleShape.circle,
+                      color: context.theme.appColors.primaryText,
+                    ),
+                    embeddedImageStyle:
+                        QrEmbeddedImageStyle(size: Size(40.0.s, 40.0.s)),
+                    embeddedImage:
+                        AssetImage(Assets.images.qrCode.centerQr.path),
+                    data: walletAddress,
+                    size: 150.0.s,
+                  ),
                 ),
                 SizedBox(height: UiSize.large),
                 Text(
