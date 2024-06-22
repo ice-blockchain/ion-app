@@ -41,8 +41,8 @@ class Button extends StatelessWidget {
     this.minimumSize,
     double? leadingIconOffset,
     double? trailingIconOffset,
-  })  : leadingIconOffset = leadingIconOffset ?? UiSize.small,
-        trailingIconOffset = trailingIconOffset ?? UiSize.small;
+  })  : leadingIconOffset = leadingIconOffset ?? UiSize.xxSmall,
+        trailingIconOffset = trailingIconOffset ?? UiSize.xxSmall;
 
   factory Button.icon({
     required VoidCallback onPressed,
@@ -124,11 +124,11 @@ class Button extends StatelessWidget {
         OutlinedButton.styleFrom(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(
-            borderRadius:
-                borderRadius ?? BorderRadius.all(Radius.circular(UiSize.large)),
+            borderRadius: borderRadius ??
+                BorderRadius.all(Radius.circular(UiSize.medium)),
           ),
           minimumSize: minimumSize ?? Size(56.0.s, 56.0.s),
-          padding: EdgeInsets.symmetric(horizontal: UiSize.large),
+          padding: EdgeInsets.symmetric(horizontal: UiSize.medium),
           backgroundColor: _getBackgroundColor(context, type),
           side: BorderSide(
             color: _getBorderColor(context, type),
@@ -225,8 +225,8 @@ class ButtonLoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: UiSize.medium,
-      height: UiSize.medium,
+      width: UiSize.small,
+      height: UiSize.small,
       child: CircularProgressIndicator(
         strokeWidth: 2,
         color: context.theme.appColors.onPrimaryAccent,

@@ -28,7 +28,7 @@ class Header extends HookConsumerWidget {
                   color: context.theme.appColors.primaryText,
                 ),
               ),
-              SizedBox(width: UiSize.medium),
+              SizedBox(width: UiSize.small),
               NavigationButton(
                 onPressed: () => IceRoutes.scanWallet.push(context),
                 icon: Assets.images.icons.iconHeaderScan1.icon(

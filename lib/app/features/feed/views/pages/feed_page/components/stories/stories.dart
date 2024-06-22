@@ -24,7 +24,7 @@ class Stories extends HookConsumerWidget {
     );
     return Padding(
       padding: EdgeInsets.only(
-        bottom: UiSize.large,
+        bottom: UiSize.medium,
         top: 3.0.s,
       ),
       child: loading.value

@@ -50,7 +50,7 @@ class CoinsListView extends HookConsumerWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: UiSize.small),
+            padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
             child: NavigationAppBar.screen(
               title: context.i18n.wallet_send_coins,
               showBackButton: false,
@@ -65,14 +65,14 @@ class CoinsListView extends HookConsumerWidget {
             ),
           ),
           SizedBox(
-            height: UiSize.medium,
+            height: UiSize.small,
           ),
           Expanded(
             child: ListView.separated(
               itemCount: coins.length,
               separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(
-                  height: UiSize.medium,
+                  height: UiSize.small,
                 );
               },
               itemBuilder: (BuildContext context, int index) {

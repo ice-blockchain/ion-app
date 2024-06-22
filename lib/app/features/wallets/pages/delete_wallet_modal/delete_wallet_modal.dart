@@ -39,7 +39,7 @@ class DeleteWalletModal extends IcePage<WalletData> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 31.0.s, bottom: UiSize.xSmall),
+              padding: EdgeInsets.only(top: 31.0.s, bottom: UiSize.xxxSmall),
               child: Assets.images.misc.actionDeletewallet.icon(size: 80.0.s),
             ),
             Text(
@@ -50,7 +50,7 @@ class DeleteWalletModal extends IcePage<WalletData> {
             ),
             Padding(
               padding: EdgeInsets.only(
-                top: UiSize.small,
+                top: UiSize.xxSmall,
                 bottom: 30.0.s,
                 left: 36.0.s,
                 right: 36.0.s,

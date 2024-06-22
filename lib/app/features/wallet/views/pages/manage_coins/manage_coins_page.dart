@@ -71,7 +71,7 @@ class ManageCoinsPage extends IceSimplePage {
                       itemCount: manageCoinsData.length,
                       separatorBuilder: (BuildContext context, int index) {
                         return SizedBox(
-                          height: UiSize.medium,
+                          height: UiSize.small,
                         );
                       },
                       itemBuilder: (BuildContext context, int index) {

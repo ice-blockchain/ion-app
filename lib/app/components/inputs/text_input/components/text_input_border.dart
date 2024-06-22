@@ -6,7 +6,7 @@ class TextInputBorder extends InputBorder {
     super.borderSide = const BorderSide(),
     BorderRadius? borderRadius,
   }) : borderRadius =
-            borderRadius ?? BorderRadius.all(Radius.circular(UiSize.large));
+            borderRadius ?? BorderRadius.all(Radius.circular(UiSize.medium));
 
   final BorderRadius borderRadius;
 

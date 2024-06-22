@@ -36,7 +36,7 @@ class DAppsPage extends IceSimplePage {
                 Padding(
                   padding: EdgeInsets.only(top: 20.0.s, bottom: 7.0.s),
                   child: Container(
-                    height: UiSize.smallMedium,
+                    height: UiSize.xSmall,
                     color: context.theme.appColors.primaryBackground,
                   ),
                 ),
@@ -57,7 +57,7 @@ class DAppsPage extends IceSimplePage {
                 Apps(
                   title: context.i18n.dapps_section_title_recently_added,
                   items: mockedApps,
-                  topOffset: UiSize.small,
+                  topOffset: UiSize.xxSmall,
                   onPress: () {
                     IceRoutes.appsList.go(
                       context,

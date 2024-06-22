@@ -54,7 +54,7 @@ class PhoneAuthForm extends HookConsumerWidget {
             numbersOnly: true,
           ),
           SizedBox(
-            height: UiSize.large,
+            height: UiSize.medium,
           ),
           Button(
             disabled: loading.value,

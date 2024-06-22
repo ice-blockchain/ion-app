@@ -13,7 +13,7 @@ class SectionHeader extends StatelessWidget {
     this.onPress,
     this.leadingIcon,
     double? leadingIconOffset,
-  })  : leadingIconOffset = leadingIconOffset ?? UiSize.xSmall,
+  })  : leadingIconOffset = leadingIconOffset ?? UiSize.xxxSmall,
         title = title ?? '';
 
   final String title;

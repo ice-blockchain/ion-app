@@ -37,7 +37,7 @@ class CopiedTooltip extends HookConsumerWidget {
           ),
           decoration: BoxDecoration(
             color: context.theme.appColors.primaryText,
-            borderRadius: BorderRadius.circular(UiSize.small),
+            borderRadius: BorderRadius.circular(UiSize.xxSmall),
           ),
           alignment: Alignment.center,
           child: Text(

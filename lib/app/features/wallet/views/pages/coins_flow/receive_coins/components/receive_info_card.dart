@@ -41,7 +41,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
               children: <Widget>[
                 SizedBox(height: 20.0.s),
                 coinData.iconUrl.icon(size: 46.0.s),
-                SizedBox(height: UiSize.smallMedium),
+                SizedBox(height: UiSize.xSmall),
                 Text(
                   coinData.name,
                   style: context.theme.appTextThemes.body.copyWith(
@@ -49,7 +49,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
                   ),
                 ),
                 Text('(${networkType.getDisplayName(context)})'),
-                SizedBox(height: UiSize.small),
+                SizedBox(height: UiSize.xxSmall),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20.0.s),
                   child: QrImageView(
@@ -68,7 +68,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
                     size: 150.0.s,
                   ),
                 ),
-                SizedBox(height: UiSize.large),
+                SizedBox(height: UiSize.medium),
                 Text(
                   shortenAddress(walletAddress),
                   style: context.theme.appTextThemes.body.copyWith(
@@ -100,7 +100,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
                   ),
                   type: ButtonType.secondary,
                 ),
-                SizedBox(height: UiSize.large),
+                SizedBox(height: UiSize.medium),
               ],
             ),
           ),

@@ -7,7 +7,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/views/components/read_time_tile/read_time_tile.dart';
 import 'package:ice/app/utils/image.dart';
 
-double borderRadius = UiSize.medium;
+double borderRadius = UiSize.small;
 
 class PostImage extends StatelessWidget {
   const PostImage({
@@ -60,8 +60,8 @@ class PostImage extends StatelessWidget {
             if (minutesToRead != null) ...<Widget>[
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: UiSize.small,
-                  vertical: UiSize.xSmall,
+                  horizontal: UiSize.xxSmall,
+                  vertical: UiSize.xxxSmall,
                 ),
                 decoration: BoxDecoration(
                   color: context.theme.appColors.tertararyBackground,

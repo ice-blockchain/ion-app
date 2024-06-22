@@ -65,7 +65,7 @@ class MainTabNavigation extends ConsumerWidget {
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: context.theme.appColors.darkBlue.withOpacity(0.05),
-            blurRadius: UiSize.large,
+            blurRadius: UiSize.medium,
             offset: Offset(-2.0.s, -2.0.s),
           ),
         ],
@@ -93,7 +93,7 @@ class MainTabNavigation extends ConsumerWidget {
 
     return _buildHitBox(
       onTap: () => _goBranch(branchIndex),
-      child: tab.icon.icon(color: color, size: UiSize.xLarge),
+      child: tab.icon.icon(color: color, size: UiSize.sLarge),
     );
   }
 

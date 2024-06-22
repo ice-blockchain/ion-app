@@ -17,9 +17,9 @@ class PostSkeletonText extends StatelessWidget {
       child: FractionallySizedBox(
         widthFactor: widthFactor,
         child: Container(
-          height: UiSize.medium,
+          height: UiSize.small,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(UiSize.xSmall),
+            borderRadius: BorderRadius.circular(UiSize.xxxSmall),
             color: Colors.white,
           ),
         ),

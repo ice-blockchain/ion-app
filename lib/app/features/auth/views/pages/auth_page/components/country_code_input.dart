@@ -16,13 +16,13 @@ class CountryCodeInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: UiSize.xSmall),
+      padding: EdgeInsets.only(left: UiSize.xxxSmall),
       child: TextButton(
         onPressed: onTap,
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: UiSize.medium,
-            vertical: UiSize.small,
+            horizontal: UiSize.small,
+            vertical: UiSize.xxSmall,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -31,7 +31,7 @@ class CountryCodeInput extends StatelessWidget {
                 country.flag,
                 style: TextStyle(fontSize: 24.0.s),
               ),
-              SizedBox(width: UiSize.small),
+              SizedBox(width: UiSize.xxSmall),
               Assets.images.icons.iconLoginDropdown.icon(
                 color: context.theme.appColors.secondaryText,
                 size: 15.0.s,

@@ -32,10 +32,10 @@ class CoinAddressTile extends HookConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: context.theme.appColors.tertararyBackground,
-        borderRadius: BorderRadius.circular(UiSize.large),
+        borderRadius: BorderRadius.circular(UiSize.medium),
       ),
       padding: EdgeInsets.symmetric(
-        horizontal: UiSize.large,
+        horizontal: UiSize.medium,
         vertical: paddingVertical,
       ),
       child: Row(
@@ -46,7 +46,7 @@ class CoinAddressTile extends HookConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  coinData.iconUrl.icon(size: UiSize.large),
+                  coinData.iconUrl.icon(size: UiSize.medium),
                   SizedBox(
                     width: 6.0.s,
                   ),
@@ -106,7 +106,7 @@ class CoinAddressTile extends HookConsumerWidget {
             ],
           ),
           SizedBox(
-            width: UiSize.large,
+            width: UiSize.medium,
           ),
           NavigationButton(
             size: buttonSize,

@@ -43,7 +43,7 @@ class EnterCode extends IceSimplePage {
                   icon: Assets.images.misc.authEnterCode.icon(
                     size: 74.0.s,
                   ),
-                  iconOffset: UiSize.medium,
+                  iconOffset: UiSize.small,
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,

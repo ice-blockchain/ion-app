@@ -45,7 +45,7 @@ class CoinsTab extends HookConsumerWidget {
       itemCount: coins.length,
       separatorBuilder: (BuildContext context, int index) {
         return SizedBox(
-          height: UiSize.medium,
+          height: UiSize.small,
         );
       },
       itemBuilder: (BuildContext context, int index) {

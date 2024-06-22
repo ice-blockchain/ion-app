@@ -16,7 +16,7 @@ class TransactionSectionHeader extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.symmetric(
-        vertical: UiSize.smallMedium,
+        vertical: UiSize.xSmall,
       ),
       child: Text(
         date,

@@ -17,7 +17,7 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: UiSize.small),
+      padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
       child: Button(
         leadingIcon: icon,
         onPressed: onTap,

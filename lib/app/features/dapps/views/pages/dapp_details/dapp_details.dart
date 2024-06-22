@@ -45,7 +45,7 @@ class DAppDetails extends IceSimplePage {
       ),
       body: ScreenSideOffset.small(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(top: UiSize.smallMedium),
+          padding: EdgeInsets.only(top: UiSize.xSmall),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -53,7 +53,7 @@ class DAppDetails extends IceSimplePage {
                 AspectRatio(
                   aspectRatio: 343 / 200,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(UiSize.large),
+                    borderRadius: BorderRadius.circular(UiSize.medium),
                     child: Image.asset(
                       item.backgroundImage!,
                       fit: BoxFit.cover,
@@ -128,7 +128,7 @@ class DAppDetails extends IceSimplePage {
                     ),
                   ),
                   SizedBox(
-                    width: UiSize.smallMedium,
+                    width: UiSize.xSmall,
                   ),
                   Expanded(
                     child: DappDetailsInfoBlock(
@@ -150,7 +150,7 @@ class DAppDetails extends IceSimplePage {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(top: UiSize.large, bottom: 56.0.s),
+                padding: EdgeInsets.only(top: UiSize.medium, bottom: 56.0.s),
                 child: Button(
                   label: Text(
                     context.i18n.dapp_details_launch_dapp_button_title,

@@ -15,7 +15,7 @@ class TrendingVideoListItemSkeleton extends StatelessWidget {
       width: itemSize.width,
       height: itemSize.height,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(UiSize.large),
+        borderRadius: BorderRadius.circular(UiSize.medium),
         color: Colors.white,
       ),
     );

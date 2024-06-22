@@ -31,14 +31,14 @@ class CheckEmail extends IceSimplePage {
           AuthHeader(
             title: context.i18n.check_email_title,
             icon: Assets.images.misc.authEnvelope.icon(size: 74.0.s),
-            iconOffset: UiSize.medium,
+            iconOffset: UiSize.small,
           ),
           ScreenSideOffset.large(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: UiSize.smallMedium),
+                  padding: EdgeInsets.only(top: UiSize.xSmall),
                   child: Text(
                     context.i18n.check_email_subtitle,
                     style: context.theme.appTextThemes.subtitle2.copyWith(

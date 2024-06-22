@@ -20,8 +20,8 @@ class BottomAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        bottom: UiSize.large,
-        top: UiSize.medium,
+        bottom: UiSize.medium,
+        top: UiSize.small,
       ),
       child: Button(
         leadingIcon: asset.icon(),

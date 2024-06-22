@@ -33,7 +33,7 @@ class Balance extends HookConsumerWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: UiSize.large),
+            padding: EdgeInsets.only(top: UiSize.medium),
             child: Column(
               children: <Widget>[
                 Row(
@@ -47,10 +47,10 @@ class Balance extends HookConsumerWidget {
                       ),
                     ),
                     SizedBox(
-                      width: UiSize.xSmall,
+                      width: UiSize.xxxSmall,
                     ),
                     Assets.images.icons.iconArrowSelect
-                        .icon(size: UiSize.medium),
+                        .icon(size: UiSize.small),
                   ],
                 ),
                 Text(

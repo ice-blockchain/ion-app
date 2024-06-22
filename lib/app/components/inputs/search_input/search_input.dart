@@ -62,20 +62,20 @@ class SearchInput extends HookWidget {
                   borderSide: BorderSide(
                     color: context.theme.appColors.primaryBackground,
                   ),
-                  borderRadius: BorderRadius.circular(UiSize.large),
+                  borderRadius: BorderRadius.circular(UiSize.medium),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  borderRadius: BorderRadius.circular(UiSize.large),
+                  borderRadius: BorderRadius.circular(UiSize.medium),
                 ),
                 hintText: context.i18n.search_placeholder,
                 hintStyle: context.theme.appTextThemes.body.copyWith(
                   color: context.theme.appColors.tertararyText,
                 ),
                 prefixIcon: Padding(
-                  padding: EdgeInsets.only(left: UiSize.medium, right: 6.0.s),
+                  padding: EdgeInsets.only(left: UiSize.small, right: 6.0.s),
                   child: Assets.images.icons.iconFieldSearch.icon(
                     color: context.theme.appColors.tertararyText,
                     size: 18.0.s,
@@ -83,7 +83,7 @@ class SearchInput extends HookWidget {
                 ),
                 suffixIcon: loading
                     ? Padding(
-                        padding: EdgeInsets.all(UiSize.medium),
+                        padding: EdgeInsets.all(UiSize.small),
                         child: Assets.images.icons.iconFieldIceloader
                             .icon(size: 20.0.s),
                       )

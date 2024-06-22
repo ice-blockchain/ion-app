@@ -34,12 +34,12 @@ class FavouriteIcon extends StatelessWidget {
       },
       icon: Image.asset(
         iconPath,
-        width: UiSize.xLarge,
+        width: UiSize.sLarge,
         color: isFavourite ? null : tintColor,
       ),
       type: ButtonType.outlined,
       size: size ?? iconSideDimension,
-      borderRadius: BorderRadius.circular(borderRadius ?? UiSize.large),
+      borderRadius: BorderRadius.circular(borderRadius ?? UiSize.medium),
     );
   }
 }

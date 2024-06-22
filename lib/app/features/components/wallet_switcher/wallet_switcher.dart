@@ -27,7 +27,7 @@ class WalletSwitcher extends HookConsumerWidget {
       leadingIcon: Avatar(
         size: 28.0.s,
         imageUrl: walletIcon,
-        borderRadius: BorderRadius.circular(UiSize.smallMedium),
+        borderRadius: BorderRadius.circular(UiSize.xSmall),
       ),
       leadingButtonOffset: 11.0.s,
       trailingIconOffset: 0.0.s,

@@ -6,6 +6,6 @@ class StoryListSeparator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(width: UiSize.medium);
+    return SizedBox(width: UiSize.small);
   }
 }

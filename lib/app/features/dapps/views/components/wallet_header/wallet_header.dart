@@ -30,7 +30,7 @@ class WalletHeader extends HookConsumerWidget {
                   color: context.theme.appColors.primaryText,
                 ),
               ),
-              SizedBox(width: UiSize.medium),
+              SizedBox(width: UiSize.small),
               NavigationButton(
                 onPressed: () {},
                 icon: Assets.images.icons.iconHeaderMenu.icon(

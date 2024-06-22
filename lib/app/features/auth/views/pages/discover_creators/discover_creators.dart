@@ -31,7 +31,7 @@ class DiscoverCreators extends IceSimplePage {
       body: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(bottom: UiSize.large),
+            padding: EdgeInsets.only(bottom: UiSize.medium),
             child: AuthHeader(
               title: context.i18n.discover_creators_title,
               description: context.i18n.discover_creators_description,
@@ -42,7 +42,7 @@ class DiscoverCreators extends IceSimplePage {
               slivers: <Widget>[
                 SliverList.separated(
                   separatorBuilder: (BuildContext _, int __) => SizedBox(
-                    height: UiSize.small,
+                    height: UiSize.xxSmall,
                   ),
                   itemCount: creators.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -68,7 +68,7 @@ class DiscoverCreators extends IceSimplePage {
                 // TODO add ScreenBottomOffset.sliver factory for this case
                 SliverPadding(
                   padding: EdgeInsets.only(
-                    bottom: UiSize.large +
+                    bottom: UiSize.medium +
                         (mayContinue
                             ? 0
                             : MediaQuery.paddingOf(context).bottom),
@@ -81,8 +81,8 @@ class DiscoverCreators extends IceSimplePage {
             ScreenSideOffset.small(
               child: Padding(
                 padding: EdgeInsets.only(
-                  top: UiSize.small,
-                  bottom: UiSize.large + MediaQuery.paddingOf(context).bottom,
+                  top: UiSize.xxSmall,
+                  bottom: UiSize.medium + MediaQuery.paddingOf(context).bottom,
                 ),
                 child: Button(
                   disabled: authState is AuthenticationLoading,

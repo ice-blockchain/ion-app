@@ -26,7 +26,7 @@ class WalletTabsHeader extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: EdgeInsets.only(
-        top: UiSize.large - UiConstants.hitSlop,
+        top: UiSize.medium - UiConstants.hitSlop,
         left: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
         right: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
       ),

@@ -22,7 +22,7 @@ class FeedFilters extends HookWidget {
         scrollDirection: Axis.horizontal,
         child: ScreenSideOffset.small(
           child: SeparatedRow(
-            separator: SizedBox(width: UiSize.medium),
+            separator: SizedBox(width: UiSize.small),
             children: <Widget>[
               const FeedCategoriesDropdown(),
               ...FeedFilter.values.map(

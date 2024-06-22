@@ -22,7 +22,7 @@ class ManageWalletTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: UiSize.small),
+      padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
       child: ListItem(
         onTap: () {
           IceRoutes.editWallet.push(context, payload: walletData);
@@ -30,7 +30,7 @@ class ManageWalletTile extends StatelessWidget {
         leading: Avatar(
           size: 36.0.s,
           imageUrl: walletData.icon,
-          borderRadius: BorderRadius.circular(UiSize.smallMedium),
+          borderRadius: BorderRadius.circular(UiSize.xSmall),
         ),
         title: Text(
           walletData.name,
@@ -43,10 +43,10 @@ class ManageWalletTile extends StatelessWidget {
         ),
         trailing: Assets.images.icons.iconArrowRight.icon(),
         contentPadding: EdgeInsets.only(
-          left: UiSize.large,
+          left: UiSize.medium,
           top: 11.0.s,
           bottom: 11.0.s,
-          right: UiSize.medium,
+          right: UiSize.small,
         ),
         backgroundColor: context.theme.appColors.tertararyBackground,
       ),

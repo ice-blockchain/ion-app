@@ -41,7 +41,7 @@ class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Padding(
         padding: EdgeInsets.only(
-          bottom: UiSize.large,
+          bottom: UiSize.medium,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -22,7 +22,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: UiSize.small),
+            padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
             child: NavigationAppBar.screen(
               title: context.i18n.wallet_scan,
             ),
@@ -37,7 +37,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
                   },
                   overlay: QrScannerOverlayShape(
                     borderColor: context.theme.appColors.primaryAccent,
-                    borderRadius: UiSize.smallMedium,
+                    borderRadius: UiSize.xSmall,
                     borderLength: 30.0.s,
                     borderWidth: 6.0.s,
                     cutOutSize: 238.0.s,

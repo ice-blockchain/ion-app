@@ -50,7 +50,7 @@ class EmailAuthForm extends HookConsumerWidget {
             },
           ),
           SizedBox(
-            height: UiSize.large,
+            height: UiSize.medium,
           ),
           Button(
             disabled: loading.value,

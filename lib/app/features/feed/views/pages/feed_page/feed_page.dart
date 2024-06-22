@@ -36,7 +36,7 @@ class FeedPage extends IceSimplePage {
               child: Column(
                 children: <Widget>[
                   const Stories(),
-                  FeedListSeparator(height: UiSize.large),
+                  FeedListSeparator(height: UiSize.medium),
                   if (feedCategory == FeedCategory.feed) ...<Widget>[
                     const TrendingVideos(),
                     FeedListSeparator(),

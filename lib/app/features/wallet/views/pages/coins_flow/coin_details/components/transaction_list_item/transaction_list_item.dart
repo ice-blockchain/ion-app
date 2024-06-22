@@ -32,9 +32,9 @@ class TransactionListItem extends StatelessWidget {
       title: Text(transactionData.transactionType.getDisplayName(context)),
       subtitle: Row(
         children: <Widget>[
-          transactionData.networkType.iconAsset.icon(size: UiSize.large),
+          transactionData.networkType.iconAsset.icon(size: UiSize.medium),
           SizedBox(
-            width: UiSize.xSmall,
+            width: UiSize.xxxSmall,
           ),
           Text(
             toTimeDisplayValue(transactionData.timestamp),

@@ -11,7 +11,7 @@ class AppsCollection extends StatelessWidget {
   final List<DAppItem>? items;
 
   static double get itemWidth => 255.0.s;
-  static double get offsetBetweenItems => UiSize.large;
+  static double get offsetBetweenItems => UiSize.medium;
   static double get itemHeight => 54.0.s;
   static const int itemsPerColumn = 3;
   static const double containerAspectRatio = 0.235;

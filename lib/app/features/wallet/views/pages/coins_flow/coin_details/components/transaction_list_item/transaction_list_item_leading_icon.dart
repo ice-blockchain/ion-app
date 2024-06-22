@@ -44,7 +44,7 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: _getBackgroundColor(context),
-        borderRadius: BorderRadius.circular(UiSize.smallMedium),
+        borderRadius: BorderRadius.circular(UiSize.xSmall),
         border: Border.all(
           color: _getBorderColor(context),
           width: 1.0.s,

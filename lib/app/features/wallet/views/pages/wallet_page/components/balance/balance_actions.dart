@@ -30,7 +30,7 @@ class BalanceActions extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: UiSize.medium,
+          width: UiSize.small,
         ),
         Expanded(
           child: Button.compact(

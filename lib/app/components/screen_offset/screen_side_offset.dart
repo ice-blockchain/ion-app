@@ -38,7 +38,7 @@ class ScreenSideOffset extends StatelessWidget {
     );
   }
 
-  static double get defaultSmallMargin => UiSize.large;
+  static double get defaultSmallMargin => UiSize.medium;
 
   static double get defaultLargeMargin => 44.0.s;
 

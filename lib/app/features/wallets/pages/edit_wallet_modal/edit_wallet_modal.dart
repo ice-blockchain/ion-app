@@ -52,7 +52,7 @@ class EditWalletModal extends IcePage<WalletData> {
             ),
             ScreenSideOffset.small(
               child: Padding(
-                padding: EdgeInsets.only(top: 21.0.s, bottom: UiSize.xLarge),
+                padding: EdgeInsets.only(top: 21.0.s, bottom: UiSize.sLarge),
                 child: TextInput(
                   onChanged: (String newValue) => walletName.value = newValue,
                   controller: controller,
@@ -95,7 +95,7 @@ class EditWalletModal extends IcePage<WalletData> {
                     ),
             ),
             SizedBox(
-              height: MediaQuery.paddingOf(context).bottom + UiSize.large,
+              height: MediaQuery.paddingOf(context).bottom + UiSize.medium,
             ),
           ],
         ),

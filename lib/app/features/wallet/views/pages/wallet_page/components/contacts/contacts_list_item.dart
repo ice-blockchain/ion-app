@@ -28,7 +28,7 @@ class ContactsListItem extends StatelessWidget {
 
   static double get iceLogoSize => 20.0.s;
 
-  static double get iceLogoBorderRadius => UiSize.small;
+  static double get iceLogoBorderRadius => UiSize.xxSmall;
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +51,8 @@ class ContactsListItem extends StatelessWidget {
                 ),
                 if (hasIceAccount == true)
                   Positioned(
-                    right: -UiSize.xSmall,
-                    bottom: -UiSize.xSmall,
+                    right: -UiSize.xxxSmall,
+                    bottom: -UiSize.xxxSmall,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                         borderRadius:

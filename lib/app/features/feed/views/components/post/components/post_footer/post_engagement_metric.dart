@@ -12,7 +12,7 @@ class PostEngagementMetric extends StatelessWidget {
     this.value,
   });
 
-  static double get horizontalHitSlop => UiSize.medium;
+  static double get horizontalHitSlop => UiSize.small;
   static double get verticalHitSlop => 6.0.s;
 
   final Widget icon;
@@ -32,14 +32,14 @@ class PostEngagementMetric extends StatelessWidget {
           children: <Widget>[
             IconTheme(
               data: IconThemeData(
-                size: UiSize.large,
+                size: UiSize.medium,
                 color: context.theme.appColors.onTertararyBackground,
               ),
               child: icon,
             ),
             if (value != null)
               Padding(
-                padding: EdgeInsets.only(left: UiSize.xSmall),
+                padding: EdgeInsets.only(left: UiSize.xxxSmall),
                 child: Text(
                   value!,
                   style: context.theme.appTextThemes.caption2.copyWith(

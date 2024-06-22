@@ -19,7 +19,7 @@ class NftsSortingModal extends IceSimplePage {
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Padding(
         padding: EdgeInsets.only(
-          bottom: UiSize.large,
+          bottom: UiSize.medium,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -30,19 +30,19 @@ class NftsSortingModal extends IceSimplePage {
               actions: const <Widget>[NavigationCloseButton()],
             ),
             SizedBox(
-              height: UiSize.large,
+              height: UiSize.medium,
             ),
             const SortingButton(
               sortingType: NftSortingType.desc,
             ),
             SizedBox(
-              height: UiSize.large,
+              height: UiSize.medium,
             ),
             const SortingButton(
               sortingType: NftSortingType.asc,
             ),
             SizedBox(
-              height: UiSize.large,
+              height: UiSize.medium,
             ),
           ],
         ),

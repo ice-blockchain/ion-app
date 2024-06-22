@@ -38,8 +38,8 @@ class WalletsModal extends IceSimplePage {
             ScreenSideOffset.small(child: const WalletsList()),
             Padding(
               padding: EdgeInsets.only(
-                bottom: UiSize.large,
-                top: UiSize.small,
+                bottom: UiSize.medium,
+                top: UiSize.xxSmall,
                 left: ScreenSideOffset.defaultSmallMargin,
                 right: ScreenSideOffset.defaultSmallMargin,
               ),

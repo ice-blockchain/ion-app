@@ -26,15 +26,15 @@ class ContactButton extends HookConsumerWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border.all(color: colors.strokeElements),
-        borderRadius: BorderRadius.circular(UiSize.large),
+        borderRadius: BorderRadius.circular(UiSize.medium),
         color: colors.secondaryBackground,
       ),
       child: ListItem.user(
         contentPadding: EdgeInsets.only(
           left: ScreenSideOffset.defaultSmallMargin,
-          top: UiSize.smallMedium,
-          bottom: UiSize.smallMedium,
-          right: UiSize.small,
+          top: UiSize.xSmall,
+          bottom: UiSize.xSmall,
+          right: UiSize.xxSmall,
         ),
         title: Text(contact.name),
         subtitle: Text(contact.nickname!),
@@ -45,7 +45,7 @@ class ContactButton extends HookConsumerWidget {
         trailing: IconButton(
           onPressed: onClearContact,
           icon: Assets.images.icons.iconSheetClose.icon(
-            size: UiSize.large,
+            size: UiSize.medium,
             color: colors.primaryText,
           ),
         ),

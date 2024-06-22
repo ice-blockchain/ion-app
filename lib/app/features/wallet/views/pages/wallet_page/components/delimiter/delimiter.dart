@@ -15,7 +15,7 @@ class Delimiter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: padding,
-      height: UiSize.smallMedium,
+      height: UiSize.xSmall,
       color: context.theme.appColors.primaryBackground,
     );
   }

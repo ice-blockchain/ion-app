@@ -35,7 +35,7 @@ class Balance extends HookConsumerWidget {
           Padding(
             padding: EdgeInsets.only(
               top: 6.0.s - hitSlop,
-              bottom: UiSize.small - hitSlop,
+              bottom: UiSize.xxSmall - hitSlop,
             ),
             child: Row(
               children: <Widget>[
@@ -67,8 +67,8 @@ class Balance extends HookConsumerWidget {
           ),
           Padding(
             padding: EdgeInsets.only(
-              top: UiSize.medium,
-              bottom: UiSize.large,
+              top: UiSize.small,
+              bottom: UiSize.medium,
             ),
             child: BalanceActions(
               onReceive: () => IceRoutes.receiveCoin.push(context),

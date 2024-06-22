@@ -15,12 +15,12 @@ class ListItemsLoadingState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: EdgeInsets.only(top: UiSize.large),
+      padding: EdgeInsets.only(top: UiSize.medium),
       sliver: SliverToBoxAdapter(
         child: Skeleton(
           child: SeparatedColumn(
             separator: SizedBox(
-              height: UiSize.medium,
+              height: UiSize.small,
             ),
             children: List<Widget>.generate(
               itemCount,

@@ -16,7 +16,7 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: UiSize.medium),
+      padding: EdgeInsets.only(bottom: UiSize.small),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

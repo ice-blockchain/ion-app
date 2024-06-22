@@ -18,7 +18,7 @@ class _ButtonCompact extends Button {
           style: style.merge(
             OutlinedButton.styleFrom(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(UiSize.medium)),
+                borderRadius: BorderRadius.all(Radius.circular(UiSize.small)),
               ),
               minimumSize: minimumSize ?? Size(40.0.s, 40.0.s),
               backgroundColor: backgroundColor,

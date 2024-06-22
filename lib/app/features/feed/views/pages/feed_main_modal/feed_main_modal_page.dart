@@ -31,11 +31,11 @@ class FeedMainModalPage extends IceSimplePage {
               const FeedModalSeparator(),
               ListView.separated(
                 shrinkWrap: true,
-                padding: EdgeInsets.only(bottom: UiSize.smallMedium),
+                padding: EdgeInsets.only(bottom: UiSize.xSmall),
                 itemCount: feedTypeValues.length,
                 separatorBuilder: (BuildContext context, int index) {
                   return SizedBox(
-                    height: UiSize.medium,
+                    height: UiSize.small,
                   );
                 },
                 itemBuilder: (BuildContext context, int index) {

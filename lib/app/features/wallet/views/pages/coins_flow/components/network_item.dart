@@ -19,7 +19,7 @@ class NetworkItem extends StatelessWidget {
     return ListItem(
       title: Text(networkType.getDisplayName(context)),
       backgroundColor: context.theme.appColors.tertararyBackground,
-      leading: networkType.iconAsset.icon(size: UiSize.large),
+      leading: networkType.iconAsset.icon(size: UiSize.medium),
       onTap: onTap,
     );
   }

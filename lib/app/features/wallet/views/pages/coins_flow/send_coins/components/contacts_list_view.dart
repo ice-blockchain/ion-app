@@ -26,7 +26,7 @@ class ContactsListView extends IcePage<ContactData> {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: UiSize.small),
+            padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
             child: NavigationAppBar.screen(
               title: context.i18n.wallet_send_coins,
               showBackButton: false,
@@ -41,14 +41,14 @@ class ContactsListView extends IcePage<ContactData> {
             ),
           ),
           SizedBox(
-            height: UiSize.medium,
+            height: UiSize.small,
           ),
           Expanded(
             child: ListView.separated(
               itemCount: contacts.length,
               separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(
-                  height: UiSize.medium,
+                  height: UiSize.small,
                 );
               },
               itemBuilder: (BuildContext context, int index) {

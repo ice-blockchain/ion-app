@@ -49,7 +49,7 @@ class SelectLanguages extends IceSimplePage {
             child: CustomScrollView(
               slivers: <Widget>[
                 FloatingAppBar(
-                  topOffset: UiSize.large,
+                  topOffset: UiSize.medium,
                   height: SearchInput.height,
                   child: ScreenSideOffset.small(
                     child: SearchInput(
@@ -60,7 +60,7 @@ class SelectLanguages extends IceSimplePage {
                 SliverList.separated(
                   itemCount: filteredLanguages.length,
                   separatorBuilder: (BuildContext _, int __) => SizedBox(
-                    height: UiSize.medium,
+                    height: UiSize.small,
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     final language = filteredLanguages[index];
@@ -84,7 +84,7 @@ class SelectLanguages extends IceSimplePage {
                 ),
                 SliverPadding(
                   padding: EdgeInsets.only(
-                    bottom: UiSize.large +
+                    bottom: UiSize.medium +
                         (mayContinue
                             ? 0
                             : MediaQuery.paddingOf(context).bottom),
@@ -97,8 +97,8 @@ class SelectLanguages extends IceSimplePage {
             ScreenSideOffset.small(
               child: Padding(
                 padding: EdgeInsets.only(
-                  top: UiSize.small,
-                  bottom: UiSize.large + MediaQuery.paddingOf(context).bottom,
+                  top: UiSize.xxSmall,
+                  bottom: UiSize.medium + MediaQuery.paddingOf(context).bottom,
                 ),
                 child: Button(
                   label: Text(context.i18n.button_continue),

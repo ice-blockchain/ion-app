@@ -21,7 +21,7 @@ class TrendingVideoLikesButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: UiSize.medium),
+        padding: EdgeInsets.symmetric(horizontal: UiSize.small),
       ),
       onPressed: onPressed,
       child: Row(

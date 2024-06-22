@@ -16,7 +16,7 @@ class ProfileDetails extends HookConsumerWidget {
     super.key,
   });
 
-  double get verifiedIconSize => UiSize.large;
+  double get verifiedIconSize => UiSize.medium;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,10 +26,10 @@ class ProfileDetails extends HookConsumerWidget {
       alignment: Alignment.center,
       margin: EdgeInsets.symmetric(horizontal: 40.0.s),
       padding: EdgeInsets.fromLTRB(
-        UiSize.xLarge,
+        UiSize.sLarge,
         32.0.s,
-        UiSize.xLarge,
-        UiSize.xLarge,
+        UiSize.sLarge,
+        UiSize.sLarge,
       ),
       decoration: Decorations.borderBoxDecoration(context),
       child: Column(

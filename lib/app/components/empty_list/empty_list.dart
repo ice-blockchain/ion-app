@@ -25,7 +25,7 @@ class EmptyList extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           asset.icon(size: imageSize),
-          SizedBox(width: UiSize.small),
+          SizedBox(width: UiSize.xxSmall),
           Text(
             title,
             style: context.theme.appTextThemes.caption2.copyWith(

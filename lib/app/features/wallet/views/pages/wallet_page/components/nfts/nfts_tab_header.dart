@@ -31,7 +31,7 @@ class NftsTabHeader extends HookConsumerWidget {
     return SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.only(
-          bottom: UiSize.large - UiConstants.hitSlop,
+          bottom: UiSize.medium - UiConstants.hitSlop,
           left: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
           right: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
         ),
@@ -49,7 +49,7 @@ class NftsTabHeader extends HookConsumerWidget {
               padding: EdgeInsets.only(
                 left: UiConstants.hitSlop,
                 right: UiConstants.hitSlop,
-                top: UiSize.large - UiConstants.hitSlop,
+                top: UiSize.medium - UiConstants.hitSlop,
                 bottom: UiConstants.hitSlop,
               ),
               tabType: WalletTabType.nfts,

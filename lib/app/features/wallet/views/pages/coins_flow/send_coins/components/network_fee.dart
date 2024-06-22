@@ -23,7 +23,7 @@ class NetworkFee extends StatelessWidget {
           padding: EdgeInsets.only(left: 6.0.s),
           child: IconTheme(
             data: IconThemeData(
-              size: UiSize.large,
+              size: UiSize.medium,
             ),
             child: ColorFiltered(
               colorFilter: ColorFilter.mode(
@@ -31,8 +31,8 @@ class NetworkFee extends StatelessWidget {
                 BlendMode.srcIn,
               ),
               child: Assets.images.icons.iconBlockInformation.image(
-                width: UiSize.large,
-                height: UiSize.large,
+                width: UiSize.medium,
+                height: UiSize.medium,
               ),
             ),
           ),

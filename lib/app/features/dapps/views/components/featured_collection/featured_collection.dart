@@ -20,7 +20,7 @@ class FeaturedCollection extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         separatorBuilder: (BuildContext context, int index) =>
-            SizedBox(width: UiSize.medium),
+            SizedBox(width: UiSize.small),
         padding: EdgeInsets.symmetric(
           horizontal: ScreenSideOffset.defaultSmallMargin,
         ),
@@ -32,7 +32,7 @@ class FeaturedCollection extends StatelessWidget {
             child: Container(
               width: 240.0.s,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(UiSize.medium),
+                borderRadius: BorderRadius.circular(UiSize.small),
                 image: DecorationImage(
                   image: AssetImage(
                     assetBg,
@@ -43,21 +43,21 @@ class FeaturedCollection extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   Positioned(
-                    bottom: UiSize.medium,
-                    left: UiSize.medium,
+                    bottom: UiSize.small,
+                    left: UiSize.small,
                     child: Row(
                       children: <Widget>[
                         DecoratedBox(
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(UiSize.small),
+                            borderRadius: BorderRadius.circular(UiSize.xxSmall),
                           ),
                           child: Image.asset(
                             items[index].iconImage,
                             width: 30.0.s,
                           ),
                         ),
-                        SizedBox(width: UiSize.small),
+                        SizedBox(width: UiSize.xxSmall),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,

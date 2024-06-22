@@ -29,7 +29,7 @@ class Header extends StatelessWidget {
               onPressed: () {},
               assetName: Assets.images.icons.iconChatDarkmode.path,
             ),
-            SizedBox(width: UiSize.medium),
+            SizedBox(width: UiSize.small),
             HeaderAction(
               onPressed: () {
                 IceRoutes.switchAccount.go(context);

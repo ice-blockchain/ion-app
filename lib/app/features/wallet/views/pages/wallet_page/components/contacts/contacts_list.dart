@@ -30,7 +30,7 @@ class ContactsList extends HookConsumerWidget {
             scrollDirection: Axis.horizontal,
             itemCount: contactsDataArray.length,
             separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(width: UiSize.medium);
+              return SizedBox(width: UiSize.small);
             },
             itemBuilder: (BuildContext context, int index) {
               final contactData = contactsDataArray[index];

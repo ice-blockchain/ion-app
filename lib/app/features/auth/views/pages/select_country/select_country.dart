@@ -77,7 +77,7 @@ class SelectCountries extends IceSimplePage {
                                 country.flag,
                                 style: TextStyle(fontSize: 21.0.s),
                               ),
-                              SizedBox(width: UiSize.large),
+                              SizedBox(width: UiSize.medium),
                               Expanded(
                                 child: Text(
                                   country.name,
@@ -103,7 +103,8 @@ class SelectCountries extends IceSimplePage {
                 ),
                 SliverPadding(
                   padding: EdgeInsets.only(
-                    bottom: UiSize.large + MediaQuery.paddingOf(context).bottom,
+                    bottom:
+                        UiSize.medium + MediaQuery.paddingOf(context).bottom,
                   ),
                 ),
               ],

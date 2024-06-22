@@ -27,7 +27,7 @@ class WalletTile extends HookConsumerWidget {
     final isSelected = walletData.id == selectedWalletId;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: UiSize.small),
+      padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
       child: ListItem(
         isSelected: isSelected,
         onTap: () {
@@ -40,7 +40,7 @@ class WalletTile extends HookConsumerWidget {
         leading: Avatar(
           size: 36.0.s,
           imageUrl: walletData.icon,
-          borderRadius: BorderRadius.circular(UiSize.smallMedium),
+          borderRadius: BorderRadius.circular(UiSize.xSmall),
         ),
         title: Text(
           walletData.name,
@@ -58,7 +58,7 @@ class WalletTile extends HookConsumerWidget {
                 .icon(color: context.theme.appColors.onPrimaryAccent)
             : null,
         contentPadding:
-            EdgeInsets.symmetric(horizontal: UiSize.large, vertical: 11.0.s),
+            EdgeInsets.symmetric(horizontal: UiSize.medium, vertical: 11.0.s),
         backgroundColor: context.theme.appColors.tertararyBackground,
       ),
     );

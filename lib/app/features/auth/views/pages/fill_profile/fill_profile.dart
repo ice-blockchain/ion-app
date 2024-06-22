@@ -78,7 +78,7 @@ class FillProfile extends IceSimplePage {
                           scrollPadding: EdgeInsets.all(120.0.s),
                         ),
                         SizedBox(
-                          height: UiSize.large,
+                          height: UiSize.medium,
                         ),
                         TextInput(
                           prefixIcon: TextInputIcons(
@@ -103,7 +103,7 @@ class FillProfile extends IceSimplePage {
                           scrollPadding: EdgeInsets.all(120.0.s),
                         ),
                         SizedBox(
-                          height: UiSize.large,
+                          height: UiSize.medium,
                         ),
                         TextInput(
                           prefixIcon: TextInputIcons(

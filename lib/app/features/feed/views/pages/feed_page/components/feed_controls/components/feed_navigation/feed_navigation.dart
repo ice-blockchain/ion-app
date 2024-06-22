@@ -27,7 +27,7 @@ class FeedNavigation extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: UiSize.medium),
+            padding: EdgeInsets.only(left: UiSize.small),
             child: NavigationButton(
               onPressed: () {},
               icon: Assets.images.icons.iconHomeNotification.icon(
@@ -36,7 +36,7 @@ class FeedNavigation extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: UiSize.medium),
+            padding: EdgeInsets.only(left: UiSize.small),
             child: NavigationButton(
               onPressed: onFiltersPressed,
               icon: Assets.images.icons.iconHeaderMenu.icon(

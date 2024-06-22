@@ -19,14 +19,14 @@ class PostFooter extends StatelessWidget {
         0,
       );
 
-  static double get iconSize => UiSize.large;
+  static double get iconSize => UiSize.medium;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
         horizontalPadding,
-        UiSize.smallMedium,
+        UiSize.xSmall,
         horizontalPadding,
         0,
       ),

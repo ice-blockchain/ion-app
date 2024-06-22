@@ -32,10 +32,10 @@ class Favourites extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.only(
               left: ScreenSideOffset.defaultSmallMargin,
-              right: UiSize.smallMedium,
+              right: UiSize.xSmall,
             ),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(UiSize.large),
+              borderRadius: BorderRadius.circular(UiSize.medium),
               color: context.theme.appColors.tertararyBackground,
               border: Border.all(
                 color: context.theme.appColors.onTerararyFill,
@@ -45,11 +45,11 @@ class Favourites extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 FavouriteIcon(
-                  borderRadius: UiSize.medium,
+                  borderRadius: UiSize.small,
                   size: 36.0.s,
                   tintColor: context.theme.appColors.primaryAccent,
                 ),
-                SizedBox(width: UiSize.smallMedium),
+                SizedBox(width: UiSize.xSmall),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

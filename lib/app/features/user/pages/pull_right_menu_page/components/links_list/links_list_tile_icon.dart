@@ -29,7 +29,7 @@ class LinksListTileIcon extends StatelessWidget {
         border: Border.all(
           color: context.theme.appColors.onTerararyFill,
         ),
-        borderRadius: BorderRadius.circular(UiSize.medium),
+        borderRadius: BorderRadius.circular(UiSize.small),
       ),
       child: ImageIcon(
         AssetImage(iconAssetName),

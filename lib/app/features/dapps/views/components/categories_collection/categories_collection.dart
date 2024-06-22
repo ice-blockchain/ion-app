@@ -57,7 +57,7 @@ class CategoriesCollection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: UiSize.small, top: 3.0.s),
+      padding: EdgeInsets.only(bottom: UiSize.xxSmall, top: 3.0.s),
       child: SizedBox(
         height: itemHeight,
         child: ListView.separated(
@@ -87,7 +87,7 @@ class CategoriesCollection extends StatelessWidget {
                   type: ButtonType.outlined,
                   backgroundColor: context.theme.appColors.tertararyBackground,
                   borderColor: context.theme.appColors.onTerararyFill,
-                  borderRadius: BorderRadius.circular(UiSize.medium),
+                  borderRadius: BorderRadius.circular(UiSize.small),
                 ),
                 Text(
                   DAppsCategory.values[index].title(context),

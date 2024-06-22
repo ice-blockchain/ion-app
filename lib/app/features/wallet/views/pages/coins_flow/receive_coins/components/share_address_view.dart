@@ -35,7 +35,7 @@ class ShareAddressView extends IcePage<Map<String, dynamic>?> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(vertical: UiSize.small),
+          padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
           child: NavigationAppBar.screen(
             title: context.i18n.wallet_share_address,
             actions: const <Widget>[
@@ -44,7 +44,7 @@ class ShareAddressView extends IcePage<Map<String, dynamic>?> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: UiSize.large),
+          padding: EdgeInsets.symmetric(horizontal: UiSize.medium),
           child: Column(
             children: <Widget>[
               ReceiveInfoCard(
@@ -53,11 +53,11 @@ class ShareAddressView extends IcePage<Map<String, dynamic>?> {
                 walletAddress: walletAddress,
               ),
               SizedBox(
-                height: UiSize.large,
+                height: UiSize.medium,
               ),
               const InfoCard(),
               SizedBox(
-                height: UiSize.large,
+                height: UiSize.medium,
               ),
               Button.compact(
                 mainAxisSize: MainAxisSize.max,

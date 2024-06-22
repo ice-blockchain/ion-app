@@ -20,8 +20,8 @@ class FooterAction extends StatelessWidget {
     return TextButton.icon(
       style: TextButton.styleFrom(
         padding: EdgeInsets.symmetric(
-          horizontal: UiSize.medium,
-          vertical: UiSize.small,
+          horizontal: UiSize.small,
+          vertical: UiSize.xxSmall,
         ),
       ),
       label: Text(
@@ -30,7 +30,7 @@ class FooterAction extends StatelessWidget {
             .copyWith(color: context.theme.appColors.primaryText),
       ),
       icon: Padding(
-        padding: EdgeInsets.only(right: UiSize.medium),
+        padding: EdgeInsets.only(right: UiSize.small),
         child: icon,
       ),
       onPressed: onPressed,

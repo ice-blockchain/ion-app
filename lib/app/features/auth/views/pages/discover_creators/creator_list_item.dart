@@ -31,8 +31,8 @@ class CreatorListItem extends StatelessWidget {
         profilePicture: creator.imageUrl,
         verifiedBadge: creator.isVerified ?? false,
         backgroundColor: context.theme.appColors.tertararyBackground,
-        contentPadding: EdgeInsets.all(UiSize.medium),
-        borderRadius: BorderRadius.circular(UiSize.large),
+        contentPadding: EdgeInsets.all(UiSize.small),
+        borderRadius: BorderRadius.circular(UiSize.medium),
         trailing: Button(
           onPressed: onPressed,
           type: followed ? ButtonType.primary : ButtonType.outlined,

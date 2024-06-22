@@ -11,7 +11,7 @@ class FloatingAppBar extends StatelessWidget {
     super.key,
     double? bottomOffset,
     double? topOffset,
-  })  : bottomOffset = bottomOffset ?? UiSize.smallMedium,
+  })  : bottomOffset = bottomOffset ?? UiSize.xSmall,
         topOffset = topOffset ?? ScreenTopOffset.defaultMargin;
 
   final Widget child;

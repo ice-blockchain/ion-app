@@ -4,7 +4,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
-double iconSize = UiSize.large;
+double iconSize = UiSize.medium;
 
 class ReadTimeTile extends StatelessWidget {
   const ReadTimeTile({required this.minutesToRead, super.key});

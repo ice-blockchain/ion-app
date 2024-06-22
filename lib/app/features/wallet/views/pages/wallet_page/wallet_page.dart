@@ -57,7 +57,7 @@ class WalletPage extends IceSimplePage {
                 const ContactsList(),
                 Delimiter(
                   padding: EdgeInsets.only(
-                    top: UiSize.large,
+                    top: UiSize.medium,
                   ),
                 ),
                 WalletTabsHeader(

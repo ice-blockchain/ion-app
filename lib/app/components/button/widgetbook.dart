@@ -112,7 +112,7 @@ Widget iconButtonUseCase(BuildContext context) {
           ),
           style: OutlinedButton.styleFrom(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(UiSize.xSmall)),
+              borderRadius: BorderRadius.all(Radius.circular(UiSize.xxxSmall)),
             ),
           ),
           onPressed: () {},
@@ -156,7 +156,7 @@ Widget compactButtonUseCase(BuildContext context) {
               ),
             ),
             SizedBox(
-              width: UiSize.large,
+              width: UiSize.medium,
             ),
             Expanded(
               child: Button.compact(
@@ -239,7 +239,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
           leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.success,
             icon: Assets.images.icons.iconFeedStories.icon(
-              size: UiSize.xLarge,
+              size: UiSize.sLarge,
               color: context.theme.appColors.secondaryBackground,
             ),
           ),
@@ -250,7 +250,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
           leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.success,
             icon: Assets.images.icons.iconFeedStories.icon(
-              size: UiSize.xLarge,
+              size: UiSize.sLarge,
               color: context.theme.appColors.secondaryBackground,
             ),
           ),
@@ -262,7 +262,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
           leadingIcon: ButtonIconFrame(
             icon: Assets.images.icons.iconBadgeIcelogo.icon(size: 26.0.s),
           ),
-          leadingButtonOffset: UiSize.xSmall,
+          leadingButtonOffset: UiSize.xxxSmall,
           backgroundColor: context.theme.appColors.tertararyBackground,
           label: Text(
             'ice.wallet',

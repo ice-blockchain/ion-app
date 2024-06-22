@@ -23,7 +23,7 @@ class AccountsTile extends HookConsumerWidget {
     final activeUser = ref.watch(userDataNotifierProvider);
     final isActiveUser = userData.id == activeUser.id;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: UiSize.small),
+      padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
       child: ListItem.user(
         isSelected: isActiveUser,
         onTap: () {
@@ -46,7 +46,7 @@ class AccountsTile extends HookConsumerWidget {
             ? Assets.images.icons.iconCheckboxOn
                 .icon(color: context.theme.appColors.onPrimaryAccent)
             : null,
-        contentPadding: EdgeInsets.symmetric(horizontal: UiSize.medium),
+        contentPadding: EdgeInsets.symmetric(horizontal: UiSize.small),
         backgroundColor: context.theme.appColors.tertararyBackground,
         borderRadius: ListItem.defaultBorderRadius,
         constraints: ListItem.defaultConstraints,

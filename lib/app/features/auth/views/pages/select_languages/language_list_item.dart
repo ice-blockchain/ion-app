@@ -32,7 +32,7 @@ class LanguageListItem extends StatelessWidget {
           height: 44.0.s,
           decoration: BoxDecoration(
             color: context.theme.appColors.tertararyBackground,
-            borderRadius: BorderRadius.circular(UiSize.medium),
+            borderRadius: BorderRadius.circular(UiSize.small),
           ),
           child: ScreenSideOffset.small(
             child: Row(
@@ -45,7 +45,7 @@ class LanguageListItem extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: UiSize.large,
+                  width: UiSize.medium,
                 ),
                 Expanded(
                   child: Text(

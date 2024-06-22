@@ -30,7 +30,7 @@ class TransactionListHeaderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderRadius = BorderRadius.circular(UiSize.small);
+    final borderRadius = BorderRadius.circular(UiSize.xxSmall);
     return Material(
       borderRadius: borderRadius,
       child: InkWell(
@@ -51,7 +51,7 @@ class TransactionListHeaderItem extends StatelessWidget {
           ),
           child: Row(
             children: <Widget>[
-              networkType.iconAsset.icon(size: UiSize.large),
+              networkType.iconAsset.icon(size: UiSize.medium),
               SizedBox(
                 width: 6.0.s,
               ),

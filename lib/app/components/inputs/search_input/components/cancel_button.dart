@@ -15,12 +15,12 @@ class SearchCancelButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: UiSize.xSmall),
+      padding: EdgeInsets.symmetric(horizontal: UiSize.xxxSmall),
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
           minimumSize: Size(0, 40.0.s),
-          padding: EdgeInsets.symmetric(horizontal: UiSize.small),
+          padding: EdgeInsets.symmetric(horizontal: UiSize.xxSmall),
         ),
         child: Text(
           context.i18n.button_cancel,

@@ -42,7 +42,7 @@ class RequestContactAccessModal extends IceSimplePage {
               ),
             ),
             SizedBox(
-              height: UiSize.medium,
+              height: UiSize.small,
             ),
             Text(
               context.i18n.contacts_allow_pop_up_desc,

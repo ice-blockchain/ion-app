@@ -49,7 +49,7 @@ class AuthPage extends IceSimplePage {
                   else
                     const PhoneAuthForm(),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: UiSize.large),
+                    padding: EdgeInsets.symmetric(vertical: UiSize.medium),
                     child: Text(
                       context.i18n.auth_signIn_or,
                       style: context.theme.appTextThemes.caption.copyWith(
@@ -73,7 +73,8 @@ class AuthPage extends IceSimplePage {
                     mainAxisSize: MainAxisSize.max,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: UiSize.large, bottom: 20.0.s),
+                    padding:
+                        EdgeInsets.only(top: UiSize.medium, bottom: 20.0.s),
                     child: const Socials(),
                   ),
                   const SecuredByNotice(),

@@ -22,10 +22,10 @@ class DappDetailsInfoBlock extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 6.0.s),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(UiSize.large),
+          borderRadius: BorderRadius.circular(UiSize.medium),
           color: context.theme.appColors.tertararyBackground,
         ),
-        padding: EdgeInsets.all(UiSize.medium),
+        padding: EdgeInsets.all(UiSize.small),
         child: Row(
           children: <Widget>[
             Column(
@@ -40,8 +40,8 @@ class DappDetailsInfoBlock extends StatelessWidget {
                         padding: EdgeInsets.only(right: 6.0.s),
                         child: Image.asset(
                           iconPath!,
-                          width: UiSize.xLarge,
-                          height: UiSize.xLarge,
+                          width: UiSize.sLarge,
+                          height: UiSize.sLarge,
                           color: context.theme.appColors.primaryAccent,
                         ),
                       ),

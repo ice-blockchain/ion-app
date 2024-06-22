@@ -4,7 +4,7 @@ import 'package:ice/generated/assets.gen.dart';
 
 extension IconExtension on AssetGenImage {
   Widget icon({Color? color, double? size}) {
-    final iconSize = size ?? UiSize.xLarge;
+    final iconSize = size ?? UiSize.sLarge;
     return Image.asset(
       path,
       width: iconSize,

@@ -51,7 +51,7 @@ class ManageWalletsModal extends IceSimplePage {
             ),
             ScreenSideOffset.small(child: const ManageWalletsList()),
             SizedBox(
-              height: MediaQuery.paddingOf(context).bottom + UiSize.large,
+              height: MediaQuery.paddingOf(context).bottom + UiSize.medium,
             ),
           ],
         ),

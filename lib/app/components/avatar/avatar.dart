@@ -10,8 +10,7 @@ class Avatar extends StatelessWidget {
     super.key,
     BorderRadiusGeometry? borderRadius,
     BoxFit? fit,
-  })  : borderRadius =
-            borderRadius ?? BorderRadius.circular(UiSize.smallMedium),
+  })  : borderRadius = borderRadius ?? BorderRadius.circular(UiSize.xSmall),
         fit = fit ?? BoxFit.fitWidth;
 
   final double size;

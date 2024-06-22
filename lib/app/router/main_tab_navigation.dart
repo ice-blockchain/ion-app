@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -100,7 +101,7 @@ class MainTabNavigation extends HookWidget {
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: context.theme.appColors.darkBlue.withOpacity(0.05),
-            blurRadius: UiSize.large,
+            blurRadius: UiSize.medium,
             offset: Offset(-2.0.s, -2.0.s),
           ),
         ],
@@ -131,7 +132,7 @@ class MainTabNavigation extends HookWidget {
     return _buildHitBox(
       onTap: () =>
           _goBranch(branchIndex, isModalOpen, isButtonDisabled, context),
-      child: tab.icon.icon(color: color, size: UiSize.xLarge),
+      child: tab.icon.icon(color: color, size: UiSize.sLarge),
     );
   }
 

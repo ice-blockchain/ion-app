@@ -18,11 +18,11 @@ class TrendingVideoAuthor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(UiSize.small),
+      padding: EdgeInsets.all(UiSize.xxSmall),
       child: TextButton(
         onPressed: () {},
         child: Padding(
-          padding: EdgeInsets.all(UiSize.xSmall),
+          padding: EdgeInsets.all(UiSize.xxxSmall),
           child: Row(
             children: <Widget>[
               Container(
@@ -42,7 +42,7 @@ class TrendingVideoAuthor extends StatelessWidget {
               ),
               Flexible(
                 child: Padding(
-                  padding: EdgeInsets.only(left: UiSize.xSmall),
+                  padding: EdgeInsets.only(left: UiSize.xxxSmall),
                   child: Text(
                     label,
                     overflow: TextOverflow.ellipsis,

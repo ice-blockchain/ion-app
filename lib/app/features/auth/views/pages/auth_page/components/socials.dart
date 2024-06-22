@@ -74,7 +74,7 @@ class Socials extends HookConsumerWidget {
           ),
           if (isSecondRowVisible.value)
             Padding(
-              padding: EdgeInsets.only(top: UiSize.large),
+              padding: EdgeInsets.only(top: UiSize.medium),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <SocialAuthType>[

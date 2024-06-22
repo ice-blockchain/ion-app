@@ -24,13 +24,13 @@ class NetworkButton extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border.all(color: colors.strokeElements),
-        borderRadius: BorderRadius.circular(UiSize.large),
+        borderRadius: BorderRadius.circular(UiSize.medium),
         color: colors.secondaryBackground,
       ),
       child: ListItem(
         contentPadding: EdgeInsets.only(
           left: ScreenSideOffset.defaultSmallMargin,
-          right: UiSize.small,
+          right: UiSize.xxSmall,
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,11 +41,11 @@ class NetworkButton extends StatelessWidget {
                 color: colors.secondaryText,
               ),
             ),
-            SizedBox(height: UiSize.xSmall),
+            SizedBox(height: UiSize.xxxSmall),
             Row(
               children: <Widget>[
                 networkType.iconAsset.icon(),
-                SizedBox(width: UiSize.smallMedium),
+                SizedBox(width: UiSize.xSmall),
                 Expanded(
                   child: Text(
                     networkType.getDisplayName(context),
@@ -59,7 +59,7 @@ class NetworkButton extends StatelessWidget {
         backgroundColor: Colors.transparent,
         onTap: onTap,
         trailing: Padding(
-          padding: EdgeInsets.all(UiSize.small),
+          padding: EdgeInsets.all(UiSize.xxSmall),
           child: Assets.images.icons.iconArrowDown.icon(),
         ),
       ),

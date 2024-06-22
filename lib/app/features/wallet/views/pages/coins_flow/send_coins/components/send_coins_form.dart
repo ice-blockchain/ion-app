@@ -49,7 +49,7 @@ class SendCoinsForm extends IceSimplePage {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: UiSize.small),
+                  padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
                   child: NavigationAppBar.screen(
                     title: locale.wallet_send_coins,
                     actions: const <Widget>[
@@ -68,7 +68,7 @@ class SendCoinsForm extends IceSimplePage {
                           );
                         },
                       ),
-                      SizedBox(height: UiSize.medium),
+                      SizedBox(height: UiSize.small),
                       NetworkButton(
                         networkType: formController.selectedNetwork,
                         onTap: () {
@@ -77,13 +77,13 @@ class SendCoinsForm extends IceSimplePage {
                           );
                         },
                       ),
-                      SizedBox(height: UiSize.medium),
+                      SizedBox(height: UiSize.small),
                       ContactInputSwitcher(
                         selectedContact: selectedContact.value,
                         onContactSelected: (ContactData? contact) =>
                             selectedContact.value = contact,
                       ),
-                      SizedBox(height: UiSize.medium),
+                      SizedBox(height: UiSize.small),
                       TextInput(
                         labelText: locale.wallet_usdt_amount,
                         initialValue: '350.00',
@@ -92,7 +92,7 @@ class SendCoinsForm extends IceSimplePage {
                           label: locale.wallet_max,
                         ),
                       ),
-                      SizedBox(height: UiSize.smallMedium),
+                      SizedBox(height: UiSize.xSmall),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -104,11 +104,11 @@ class SendCoinsForm extends IceSimplePage {
                       ),
                       SizedBox(height: 17.0.s),
                       const ArrivalTime(),
-                      SizedBox(height: UiSize.medium),
+                      SizedBox(height: UiSize.small),
                       AppSlider(
                         onChanged: (double value) {},
                       ),
-                      SizedBox(height: UiSize.small),
+                      SizedBox(height: UiSize.xxSmall),
                       const NetworkFee(),
                       SizedBox(height: 45.0.s),
                       Button(
@@ -125,7 +125,7 @@ class SendCoinsForm extends IceSimplePage {
                         ),
                         onPressed: () {},
                       ),
-                      SizedBox(height: UiSize.large),
+                      SizedBox(height: UiSize.medium),
                     ],
                   ),
                 ),

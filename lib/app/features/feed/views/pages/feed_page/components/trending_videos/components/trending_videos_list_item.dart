@@ -34,7 +34,7 @@ class TrendingVideoListItem extends HookConsumerWidget {
         width: itemSize.width,
         height: itemSize.height,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(UiSize.large),
+          borderRadius: BorderRadius.circular(UiSize.medium),
           image: DecorationImage(
             image: CachedNetworkImageProvider(video.imageUrl),
             fit: BoxFit.cover,

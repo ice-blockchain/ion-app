@@ -22,7 +22,7 @@ class NftGridItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final BorderRadiusGeometry borderRadius =
-        BorderRadius.circular(UiSize.large);
+        BorderRadius.circular(UiSize.medium);
     final imageWidth = (MediaQuery.of(context).size.width -
             NftConstants.cellPadding * 4 -
             NftConstants.gridSpacing -

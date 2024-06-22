@@ -7,7 +7,7 @@ class FeedListSeparator extends StatelessWidget {
   FeedListSeparator({
     super.key,
     double? height,
-  }) : height = height ?? UiSize.medium;
+  }) : height = height ?? UiSize.small;
 
   final double height;
 

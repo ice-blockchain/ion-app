@@ -33,7 +33,7 @@ class GridItem extends HookWidget {
             height: 48.0.s,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(UiSize.medium),
+              borderRadius: BorderRadius.circular(UiSize.small),
             ),
             child: Image.asset(
               item.iconImage,
@@ -41,7 +41,7 @@ class GridItem extends HookWidget {
               fit: BoxFit.contain,
             ),
           ),
-          SizedBox(width: UiSize.smallMedium),
+          SizedBox(width: UiSize.xSmall),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,16 +57,16 @@ class GridItem extends HookWidget {
                     ),
                     if (item.isVerified != null && item.isVerified!)
                       Padding(
-                        padding: EdgeInsets.only(left: UiSize.xSmall),
+                        padding: EdgeInsets.only(left: UiSize.xxxSmall),
                         child: IconTheme(
                           data: IconThemeData(
-                            size: UiSize.large,
+                            size: UiSize.medium,
                             color:
                                 context.theme.appColors.onTertararyBackground,
                           ),
                           child: Assets.images.icons.iconBadgeVerify.image(
-                            width: UiSize.large,
-                            height: UiSize.large,
+                            width: UiSize.medium,
+                            height: UiSize.medium,
                           ),
                         ),
                       ),
@@ -82,11 +82,11 @@ class GridItem extends HookWidget {
                   children: <Widget>[
                     IconTheme(
                       data: IconThemeData(
-                        size: UiSize.medium,
+                        size: UiSize.small,
                         color: context.theme.appColors.onTertararyBackground,
                       ),
                       child: Assets.images.icons.iconButtonIceStroke
-                          .icon(size: UiSize.medium),
+                          .icon(size: UiSize.small),
                     ),
                     if (item.value != null)
                       Padding(

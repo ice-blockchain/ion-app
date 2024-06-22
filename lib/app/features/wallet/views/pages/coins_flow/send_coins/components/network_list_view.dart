@@ -22,7 +22,7 @@ class NetworkListView extends IceSimplePage {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(vertical: UiSize.small),
+          padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
           child: NavigationAppBar.screen(
             title: context.i18n.wallet_choose_network,
             actions: const <Widget>[
@@ -35,7 +35,7 @@ class NetworkListView extends IceSimplePage {
           itemCount: networkTypeValues.length,
           separatorBuilder: (BuildContext context, int index) {
             return SizedBox(
-              height: UiSize.medium,
+              height: UiSize.small,
             );
           },
           itemBuilder: (BuildContext context, int index) {

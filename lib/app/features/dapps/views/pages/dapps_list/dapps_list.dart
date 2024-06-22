@@ -45,7 +45,7 @@ class DAppsList extends IcePage<AppsRouteData> {
           Expanded(
             child: ScreenSideOffset.small(
               child: Padding(
-                padding: EdgeInsets.only(top: UiSize.medium),
+                padding: EdgeInsets.only(top: UiSize.small),
                 child: Column(
                   children: <Widget>[
                     if (payload?.isSearchVisible ?? false)
@@ -63,7 +63,7 @@ class DAppsList extends IcePage<AppsRouteData> {
                               )
                             : ListView.builder(
                                 padding: EdgeInsets.symmetric(
-                                  vertical: UiSize.smallMedium,
+                                  vertical: UiSize.xSmall,
                                 ),
                                 itemCount: filteredApps.length,
                                 itemBuilder: (BuildContext context, int index) {

@@ -14,7 +14,7 @@ class PostMenu extends StatelessWidget {
     return Container(
       width: 48.0.s,
       height: 48.0.s,
-      transform: Matrix4.translationValues(UiSize.medium, 0, 0),
+      transform: Matrix4.translationValues(UiSize.small, 0, 0),
       child: IconButton(
         onPressed: () {},
         icon: Assets.images.icons.iconMorePopup.icon(

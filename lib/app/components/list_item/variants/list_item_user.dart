@@ -31,7 +31,7 @@ class _ListItemUser extends ListItem {
           borderRadius: borderRadius ?? BorderRadius.zero,
           contentPadding: contentPadding ?? EdgeInsets.zero,
           leadingPadding:
-              leadingPadding ?? EdgeInsets.only(right: UiSize.small),
+              leadingPadding ?? EdgeInsets.only(right: UiSize.xxSmall),
           constraints: constraints ?? const BoxConstraints(),
           title: Row(
             children: <Widget>[
@@ -39,13 +39,13 @@ class _ListItemUser extends ListItem {
               Flexible(child: title),
               if (iceBadge)
                 Padding(
-                  padding: EdgeInsets.only(left: UiSize.xSmall),
+                  padding: EdgeInsets.only(left: UiSize.xxxSmall),
                   child: Assets.images.icons.iconBadgeIcelogo
                       .icon(size: badgeSize),
                 ),
               if (verifiedBadge)
                 Padding(
-                  padding: EdgeInsets.only(left: UiSize.xSmall),
+                  padding: EdgeInsets.only(left: UiSize.xxxSmall),
                   child:
                       Assets.images.icons.iconBadgeVerify.icon(size: badgeSize),
                 ),
@@ -62,7 +62,7 @@ class _ListItemUser extends ListItem {
 
   static double get avatarSize => 30.0.s;
 
-  static double get badgeSize => UiSize.large;
+  static double get badgeSize => UiSize.medium;
 
   @override
   Color _getBackgroundColor(BuildContext context) {

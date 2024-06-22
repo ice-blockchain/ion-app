@@ -9,7 +9,7 @@ class PostSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: UiSize.smallMedium),
+      padding: EdgeInsets.only(bottom: UiSize.xSmall),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -21,7 +21,7 @@ class PostSkeleton extends StatelessWidget {
             child: Container(
               height: 32.0.s,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(UiSize.smallMedium),
+                borderRadius: BorderRadius.circular(UiSize.xSmall),
                 color: Colors.white,
               ),
             ),

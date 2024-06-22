@@ -25,13 +25,13 @@ class CoinButton extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border.all(color: colors.strokeElements),
-        borderRadius: BorderRadius.circular(UiSize.large),
+        borderRadius: BorderRadius.circular(UiSize.medium),
         color: colors.secondaryBackground,
       ),
       child: ListItem(
         contentPadding: EdgeInsets.only(
           left: ScreenSideOffset.defaultSmallMargin,
-          right: UiSize.small,
+          right: UiSize.xxSmall,
         ),
         title: Text(
           coinData.name,
@@ -65,7 +65,7 @@ class CoinButton extends StatelessWidget {
             GestureDetector(
               onTap: onTap,
               child: Padding(
-                padding: EdgeInsets.all(UiSize.small),
+                padding: EdgeInsets.all(UiSize.xxSmall),
                 child: Assets.images.icons.iconArrowDown.icon(),
               ),
             ),

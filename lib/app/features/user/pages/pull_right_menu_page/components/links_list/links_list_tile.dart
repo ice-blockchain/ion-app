@@ -44,8 +44,8 @@ class LinksListTile extends StatelessWidget {
       trailing: Assets.images.icons.iconArrowRight.icon(
         color: context.theme.appColors.primaryText,
       ),
-      contentPadding: EdgeInsets.symmetric(vertical: UiSize.medium),
-      leadingPadding: EdgeInsets.only(right: UiSize.medium),
+      contentPadding: EdgeInsets.symmetric(vertical: UiSize.small),
+      leadingPadding: EdgeInsets.only(right: UiSize.small),
       backgroundColor: Colors.transparent,
       borderRadius: BorderRadius.zero,
     );

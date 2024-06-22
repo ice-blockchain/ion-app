@@ -25,8 +25,8 @@ class ArrivalTimeIndicator extends StatelessWidget {
         SizedBox(width: 5.0.s),
         Container(
           padding: EdgeInsets.symmetric(
-            horizontal: UiSize.small,
-            vertical: UiSize.xSmall,
+            horizontal: UiSize.xxSmall,
+            vertical: UiSize.xxxSmall,
           ),
           decoration: BoxDecoration(
             color: colors.onSecondaryBackground,
@@ -37,7 +37,7 @@ class ArrivalTimeIndicator extends StatelessWidget {
               Icon(
                 Icons.access_time,
                 color: colors.primaryAccent,
-                size: UiSize.large,
+                size: UiSize.medium,
               ),
               SizedBox(width: 5.0.s),
               Text(

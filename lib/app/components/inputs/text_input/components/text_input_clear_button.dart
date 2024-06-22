@@ -21,7 +21,7 @@ class TextInputClearButton extends StatelessWidget {
       icon: Padding(
         padding: EdgeInsets.all(6.0.s),
         child: Assets.images.icons.iconSheetClose.icon(
-          size: UiSize.large,
+          size: UiSize.medium,
           color: context.theme.appColors.secondaryText,
         ),
       ),

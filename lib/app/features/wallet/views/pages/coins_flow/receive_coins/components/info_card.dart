@@ -12,10 +12,11 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: UiSize.small, horizontal: 18.0.s),
+      padding:
+          EdgeInsets.symmetric(vertical: UiSize.xxSmall, horizontal: 18.0.s),
       decoration: BoxDecoration(
         color: context.theme.appColors.tertararyBackground,
-        borderRadius: BorderRadius.circular(UiSize.large),
+        borderRadius: BorderRadius.circular(UiSize.medium),
       ),
       child: Row(
         children: <Widget>[
@@ -23,7 +24,7 @@ class InfoCard extends StatelessWidget {
             Icons.info_outline,
             color: context.theme.appColors.primaryAccent,
           ),
-          SizedBox(width: UiSize.smallMedium),
+          SizedBox(width: UiSize.xSmall),
           Expanded(
             child: Text(
               context.i18n.wallet_receive_info,
