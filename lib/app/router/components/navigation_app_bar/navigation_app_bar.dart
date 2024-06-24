@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
-import 'package:ice/app/constants/ui.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -60,7 +60,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   static double get screenHeaderHeight => 56.0.s;
 
-  static double get actionButtonSide => 24.0.s;
+  static double get actionButtonSide => UiSize.large;
 
   final String title;
   final Widget? titleIcon;

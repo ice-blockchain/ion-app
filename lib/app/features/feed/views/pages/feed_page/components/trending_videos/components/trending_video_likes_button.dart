@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -20,7 +21,7 @@ class TrendingVideoLikesButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 12.0.s),
+        padding: EdgeInsets.symmetric(horizontal: UiSize.small),
       ),
       onPressed: onPressed,
       child: Row(

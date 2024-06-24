@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/links_list/links_list_tile_icon.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -44,8 +44,8 @@ class LinksListTile extends StatelessWidget {
       trailing: Assets.images.icons.iconArrowRight.icon(
         color: context.theme.appColors.primaryText,
       ),
-      contentPadding: EdgeInsets.symmetric(vertical: 12.0.s),
-      leadingPadding: EdgeInsets.only(right: 12.0.s),
+      contentPadding: EdgeInsets.symmetric(vertical: UiSize.small),
+      leadingPadding: EdgeInsets.only(right: UiSize.small),
       backgroundColor: Colors.transparent,
       borderRadius: BorderRadius.zero,
     );

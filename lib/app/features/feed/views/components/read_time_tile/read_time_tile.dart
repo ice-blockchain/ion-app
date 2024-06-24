@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
-double iconSize = 16.0.s;
+double iconSize = UiSize.medium;
 
 class ReadTimeTile extends StatelessWidget {
   const ReadTimeTile({required this.minutesToRead, super.key});

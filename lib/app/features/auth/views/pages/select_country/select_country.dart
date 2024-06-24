@@ -6,6 +6,7 @@ import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/constants/countries.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -76,7 +77,7 @@ class SelectCountries extends IceSimplePage {
                                 country.flag,
                                 style: TextStyle(fontSize: 21.0.s),
                               ),
-                              SizedBox(width: 16.0.s),
+                              SizedBox(width: UiSize.medium),
                               Expanded(
                                 child: Text(
                                   country.name,
@@ -102,7 +103,8 @@ class SelectCountries extends IceSimplePage {
                 ),
                 SliverPadding(
                   padding: EdgeInsets.only(
-                    bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
+                    bottom:
+                        UiSize.medium + MediaQuery.paddingOf(context).bottom,
                   ),
                 ),
               ],

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -44,7 +45,7 @@ class CodeFields extends StatelessWidget {
       autoDisposeControllers: false,
       pinTheme: PinTheme(
         shape: PinCodeFieldShape.box,
-        borderRadius: BorderRadius.circular(16.0.s),
+        borderRadius: BorderRadius.circular(UiSize.medium),
         fieldHeight: 56.0.s,
         fieldWidth: 50.0.s,
         borderWidth: 1,
@@ -64,7 +65,7 @@ class CodeFields extends StatelessWidget {
         inactiveBorderWidth: 1,
         disabledBorderWidth: 1,
         selectedBorderWidth: 1,
-        fieldOuterPadding: EdgeInsets.symmetric(horizontal: 8.0.s),
+        fieldOuterPadding: EdgeInsets.symmetric(horizontal: UiSize.xxSmall),
       ),
       animationDuration: const Duration(milliseconds: 300),
       keyboardType: TextInputType.number,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -40,7 +41,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
               children: <Widget>[
                 SizedBox(height: 20.0.s),
                 coinData.iconUrl.icon(size: 46.0.s),
-                SizedBox(height: 10.0.s),
+                SizedBox(height: UiSize.xSmall),
                 Text(
                   coinData.name,
                   style: context.theme.appTextThemes.body.copyWith(
@@ -48,7 +49,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
                   ),
                 ),
                 Text('(${networkType.getDisplayName(context)})'),
-                SizedBox(height: 8.0.s),
+                SizedBox(height: UiSize.xxSmall),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20.0.s),
                   child: QrImageView(
@@ -67,7 +68,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
                     size: 150.0.s,
                   ),
                 ),
-                SizedBox(height: 8.0.s),
+                SizedBox(height: UiSize.medium),
                 Text(
                   shortenAddress(walletAddress),
                   style: context.theme.appTextThemes.body.copyWith(
@@ -99,7 +100,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
                   ),
                   type: ButtonType.secondary,
                 ),
-                SizedBox(height: 16.0.s),
+                SizedBox(height: UiSize.medium),
               ],
             ),
           ),

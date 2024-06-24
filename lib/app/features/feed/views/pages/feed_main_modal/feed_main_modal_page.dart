@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/components/feed_modal_item.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/components/feed_modal_separator.dart';
@@ -30,11 +31,11 @@ class FeedMainModalPage extends IceSimplePage {
               const FeedModalSeparator(),
               ListView.separated(
                 shrinkWrap: true,
-                padding: EdgeInsets.only(bottom: 10.0.s),
+                padding: EdgeInsets.only(bottom: UiSize.xSmall),
                 itemCount: feedTypeValues.length,
                 separatorBuilder: (BuildContext context, int index) {
                   return SizedBox(
-                    height: 12.0.s,
+                    height: UiSize.small,
                   );
                 },
                 itemBuilder: (BuildContext context, int index) {

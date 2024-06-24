@@ -4,6 +4,7 @@ import 'package:ice/app/components/inputs/hooks/use_text_changed.dart';
 import 'package:ice/app/components/inputs/search_input/components/cancel_button.dart';
 import 'package:ice/app/components/inputs/search_input/components/search_clear_button.dart';
 import 'package:ice/app/components/inputs/search_input/hooks/use_node_focused.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -61,20 +62,20 @@ class SearchInput extends HookWidget {
                   borderSide: BorderSide(
                     color: context.theme.appColors.primaryBackground,
                   ),
-                  borderRadius: BorderRadius.circular(16.0.s),
+                  borderRadius: BorderRadius.circular(UiSize.medium),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  borderRadius: BorderRadius.circular(16.0.s),
+                  borderRadius: BorderRadius.circular(UiSize.medium),
                 ),
                 hintText: context.i18n.search_placeholder,
                 hintStyle: context.theme.appTextThemes.body.copyWith(
                   color: context.theme.appColors.tertararyText,
                 ),
                 prefixIcon: Padding(
-                  padding: EdgeInsets.only(left: 12.0.s, right: 6.0.s),
+                  padding: EdgeInsets.only(left: UiSize.small, right: 6.0.s),
                   child: Assets.images.icons.iconFieldSearch.icon(
                     color: context.theme.appColors.tertararyText,
                     size: 18.0.s,
@@ -82,7 +83,7 @@ class SearchInput extends HookWidget {
                 ),
                 suffixIcon: loading
                     ? Padding(
-                        padding: EdgeInsets.all(12.0.s),
+                        padding: EdgeInsets.all(UiSize.small),
                         child: Assets.images.icons.iconFieldIceloader
                             .icon(size: 20.0.s),
                       )

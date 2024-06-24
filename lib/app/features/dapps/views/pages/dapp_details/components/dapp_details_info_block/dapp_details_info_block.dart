@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -21,10 +22,10 @@ class DappDetailsInfoBlock extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 6.0.s),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.0.s),
+          borderRadius: BorderRadius.circular(UiSize.medium),
           color: context.theme.appColors.tertararyBackground,
         ),
-        padding: EdgeInsets.all(12.0.s),
+        padding: EdgeInsets.all(UiSize.small),
         child: Row(
           children: <Widget>[
             Column(
@@ -39,8 +40,8 @@ class DappDetailsInfoBlock extends StatelessWidget {
                         padding: EdgeInsets.only(right: 6.0.s),
                         child: Image.asset(
                           iconPath!,
-                          width: 24.0.s,
-                          height: 24.0.s,
+                          width: UiSize.large,
+                          height: UiSize.large,
                           color: context.theme.appColors.primaryAccent,
                         ),
                       ),

@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -40,7 +41,7 @@ class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Padding(
         padding: EdgeInsets.only(
-          bottom: 16.0.s,
+          bottom: UiSize.medium,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

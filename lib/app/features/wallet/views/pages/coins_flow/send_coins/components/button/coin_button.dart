@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/utils/num.dart';
@@ -24,13 +25,13 @@ class CoinButton extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border.all(color: colors.strokeElements),
-        borderRadius: BorderRadius.circular(16.0.s),
+        borderRadius: BorderRadius.circular(UiSize.medium),
         color: colors.secondaryBackground,
       ),
       child: ListItem(
         contentPadding: EdgeInsets.only(
           left: ScreenSideOffset.defaultSmallMargin,
-          right: 8.0.s,
+          right: UiSize.xxSmall,
         ),
         title: Text(
           coinData.name,
@@ -64,7 +65,7 @@ class CoinButton extends StatelessWidget {
             GestureDetector(
               onTap: onTap,
               child: Padding(
-                padding: EdgeInsets.all(8.0.s),
+                padding: EdgeInsets.all(UiSize.xxSmall),
                 child: Assets.images.icons.iconArrowDown.icon(),
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -31,10 +32,10 @@ class Favourites extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.only(
               left: ScreenSideOffset.defaultSmallMargin,
-              right: 10.0.s,
+              right: UiSize.xSmall,
             ),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.0.s),
+              borderRadius: BorderRadius.circular(UiSize.medium),
               color: context.theme.appColors.tertararyBackground,
               border: Border.all(
                 color: context.theme.appColors.onTerararyFill,
@@ -44,11 +45,11 @@ class Favourites extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 FavouriteIcon(
-                  borderRadius: 12.0.s,
+                  borderRadius: UiSize.small,
                   size: 36.0.s,
                   tintColor: context.theme.appColors.primaryAccent,
                 ),
-                SizedBox(width: 10.0.s),
+                SizedBox(width: UiSize.xSmall),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

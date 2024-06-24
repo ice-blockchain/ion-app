@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/model/trending_videos_overlay.dart';
 import 'package:ice/app/features/feed/providers/trending_videos_overlay_provider.dart';
@@ -33,7 +34,7 @@ class TrendingVideoListItem extends HookConsumerWidget {
         width: itemSize.width,
         height: itemSize.height,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.0.s),
+          borderRadius: BorderRadius.circular(UiSize.medium),
           image: DecorationImage(
             image: CachedNetworkImageProvider(video.imageUrl),
             fit: BoxFit.cover,

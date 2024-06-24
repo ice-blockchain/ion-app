@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/dapps/views/components/grid_item/grid_item.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
@@ -10,7 +11,7 @@ class AppsCollection extends StatelessWidget {
   final List<DAppItem>? items;
 
   static double get itemWidth => 255.0.s;
-  static double get offsetBetweenItems => 16.0.s;
+  static double get offsetBetweenItems => UiSize.medium;
   static double get itemHeight => 54.0.s;
   static const int itemsPerColumn = 3;
   static const double containerAspectRatio = 0.235;

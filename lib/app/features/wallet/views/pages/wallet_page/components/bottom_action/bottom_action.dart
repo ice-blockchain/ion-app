@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class BottomAction extends StatelessWidget {
@@ -20,8 +20,8 @@ class BottomAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        bottom: 16.0.s,
-        top: 12.0.s,
+        bottom: UiSize.medium,
+        top: UiSize.small,
       ),
       child: Button(
         leadingIcon: asset.icon(),

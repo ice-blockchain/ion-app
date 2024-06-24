@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -70,7 +71,7 @@ class ManageCoinsPage extends IceSimplePage {
                       itemCount: manageCoinsData.length,
                       separatorBuilder: (BuildContext context, int index) {
                         return SizedBox(
-                          height: 12.0.s,
+                          height: UiSize.small,
                         );
                       },
                       itemBuilder: (BuildContext context, int index) {

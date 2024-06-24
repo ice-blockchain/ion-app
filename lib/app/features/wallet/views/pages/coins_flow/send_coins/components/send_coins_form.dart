@@ -8,6 +8,7 @@ import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/slider/app_slider.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
@@ -48,7 +49,7 @@ class SendCoinsForm extends IceSimplePage {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0.s),
+                  padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
                   child: NavigationAppBar.screen(
                     title: locale.wallet_send_coins,
                     actions: const <Widget>[
@@ -67,7 +68,7 @@ class SendCoinsForm extends IceSimplePage {
                           );
                         },
                       ),
-                      SizedBox(height: 12.0.s),
+                      SizedBox(height: UiSize.small),
                       NetworkButton(
                         networkType: formController.selectedNetwork,
                         onTap: () {
@@ -76,13 +77,13 @@ class SendCoinsForm extends IceSimplePage {
                           );
                         },
                       ),
-                      SizedBox(height: 12.0.s),
+                      SizedBox(height: UiSize.small),
                       ContactInputSwitcher(
                         selectedContact: selectedContact.value,
                         onContactSelected: (ContactData? contact) =>
                             selectedContact.value = contact,
                       ),
-                      SizedBox(height: 12.0.s),
+                      SizedBox(height: UiSize.small),
                       TextInput(
                         labelText: locale.wallet_usdt_amount,
                         initialValue: '350.00',
@@ -91,7 +92,7 @@ class SendCoinsForm extends IceSimplePage {
                           label: locale.wallet_max,
                         ),
                       ),
-                      SizedBox(height: 10.0.s),
+                      SizedBox(height: UiSize.xSmall),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -103,11 +104,11 @@ class SendCoinsForm extends IceSimplePage {
                       ),
                       SizedBox(height: 17.0.s),
                       const ArrivalTime(),
-                      SizedBox(height: 12.0.s),
+                      SizedBox(height: UiSize.small),
                       AppSlider(
                         onChanged: (double value) {},
                       ),
-                      SizedBox(height: 8.0.s),
+                      SizedBox(height: UiSize.xxSmall),
                       const NetworkFee(),
                       SizedBox(height: 45.0.s),
                       Button(
@@ -124,7 +125,7 @@ class SendCoinsForm extends IceSimplePage {
                         ),
                         onPressed: () {},
                       ),
-                      SizedBox(height: 16.0.s),
+                      SizedBox(height: UiSize.medium),
                     ],
                   ),
                 ),

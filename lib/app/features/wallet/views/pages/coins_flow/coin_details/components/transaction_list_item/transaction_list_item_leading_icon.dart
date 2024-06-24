@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -43,7 +44,7 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: _getBackgroundColor(context),
-        borderRadius: BorderRadius.circular(10.0.s),
+        borderRadius: BorderRadius.circular(UiSize.xSmall),
         border: Border.all(
           color: _getBorderColor(context),
           width: 1.0.s,

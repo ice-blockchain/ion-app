@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -11,10 +12,11 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8.0.s, horizontal: 18.0.s),
+      padding:
+          EdgeInsets.symmetric(vertical: UiSize.xxSmall, horizontal: 18.0.s),
       decoration: BoxDecoration(
         color: context.theme.appColors.tertararyBackground,
-        borderRadius: BorderRadius.circular(16.0.s),
+        borderRadius: BorderRadius.circular(UiSize.medium),
       ),
       child: Row(
         children: <Widget>[
@@ -22,7 +24,7 @@ class InfoCard extends StatelessWidget {
             Icons.info_outline,
             color: context.theme.appColors.primaryAccent,
           ),
-          SizedBox(width: 10.0.s),
+          SizedBox(width: UiSize.xSmall),
           Expanded(
             child: Text(
               context.i18n.wallet_receive_info,

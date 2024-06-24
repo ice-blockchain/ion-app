@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/tooltip/copied_tooltip.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -31,10 +32,10 @@ class CoinAddressTile extends HookConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: context.theme.appColors.tertararyBackground,
-        borderRadius: BorderRadius.circular(16.0.s),
+        borderRadius: BorderRadius.circular(UiSize.medium),
       ),
       padding: EdgeInsets.symmetric(
-        horizontal: 16.0.s,
+        horizontal: UiSize.medium,
         vertical: paddingVertical,
       ),
       child: Row(
@@ -45,7 +46,7 @@ class CoinAddressTile extends HookConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  coinData.iconUrl.icon(size: 16.0.s),
+                  coinData.iconUrl.icon(size: UiSize.medium),
                   SizedBox(
                     width: 6.0.s,
                   ),
@@ -105,7 +106,7 @@ class CoinAddressTile extends HookConsumerWidget {
             ],
           ),
           SizedBox(
-            width: 16.0.s,
+            width: UiSize.medium,
           ),
           NavigationButton(
             size: buttonSize,

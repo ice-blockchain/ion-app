@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/components/network_item.dart';
@@ -22,7 +22,7 @@ class NetworkListReceiveView extends IcePage<CoinData> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0.s),
+          padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
           child: NavigationAppBar.screen(
             title: context.i18n.wallet_choose_network,
             actions: const <Widget>[
@@ -35,7 +35,7 @@ class NetworkListReceiveView extends IcePage<CoinData> {
           itemCount: networkTypeValues.length,
           separatorBuilder: (BuildContext context, int index) {
             return SizedBox(
-              height: 12.0.s,
+              height: UiSize.small,
             );
           },
           itemBuilder: (BuildContext context, int index) {

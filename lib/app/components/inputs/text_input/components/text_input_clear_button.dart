@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -19,8 +20,10 @@ class TextInputClearButton extends StatelessWidget {
       onPressed: controller.clear,
       icon: Padding(
         padding: EdgeInsets.all(6.0.s),
-        child: Assets.images.icons.iconSheetClose
-            .icon(size: 16.0.s, color: context.theme.appColors.secondaryText),
+        child: Assets.images.icons.iconSheetClose.icon(
+          size: UiSize.medium,
+          color: context.theme.appColors.secondaryText,
+        ),
       ),
     );
   }

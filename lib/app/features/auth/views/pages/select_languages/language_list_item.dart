@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -31,7 +32,7 @@ class LanguageListItem extends StatelessWidget {
           height: 44.0.s,
           decoration: BoxDecoration(
             color: context.theme.appColors.tertararyBackground,
-            borderRadius: BorderRadius.circular(12.0.s),
+            borderRadius: BorderRadius.circular(UiSize.small),
           ),
           child: ScreenSideOffset.small(
             child: Row(
@@ -44,7 +45,7 @@ class LanguageListItem extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 16.0.s,
+                  width: UiSize.medium,
                 ),
                 Expanded(
                   child: Text(

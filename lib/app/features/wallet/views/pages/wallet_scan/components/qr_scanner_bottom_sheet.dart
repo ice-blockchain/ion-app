@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -21,7 +22,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0.s),
+            padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
             child: NavigationAppBar.screen(
               title: context.i18n.wallet_scan,
             ),
@@ -36,7 +37,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
                   },
                   overlay: QrScannerOverlayShape(
                     borderColor: context.theme.appColors.primaryAccent,
-                    borderRadius: 10.0.s,
+                    borderRadius: UiSize.xSmall,
                     borderLength: 30.0.s,
                     borderWidth: 6.0.s,
                     cutOutSize: 238.0.s,

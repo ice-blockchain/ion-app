@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
 class ArrivalTimeIndicator extends StatelessWidget {
@@ -24,8 +25,8 @@ class ArrivalTimeIndicator extends StatelessWidget {
         SizedBox(width: 5.0.s),
         Container(
           padding: EdgeInsets.symmetric(
-            horizontal: 8.0.s,
-            vertical: 4.0.s,
+            horizontal: UiSize.xxSmall,
+            vertical: UiSize.xxxSmall,
           ),
           decoration: BoxDecoration(
             color: colors.onSecondaryBackground,
@@ -36,7 +37,7 @@ class ArrivalTimeIndicator extends StatelessWidget {
               Icon(
                 Icons.access_time,
                 color: colors.primaryAccent,
-                size: 16.0.s,
+                size: UiSize.medium,
               ),
               SizedBox(width: 5.0.s),
               Text(

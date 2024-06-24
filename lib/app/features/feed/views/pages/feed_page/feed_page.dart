@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
 import 'package:ice/app/features/feed/providers/feed_category_provider.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
@@ -36,7 +36,7 @@ class FeedPage extends IceSimplePage {
               child: Column(
                 children: <Widget>[
                   const Stories(),
-                  FeedListSeparator(height: 16.0.s),
+                  FeedListSeparator(height: UiSize.medium),
                   if (feedCategory == FeedCategory.feed) ...<Widget>[
                     const TrendingVideos(),
                     FeedListSeparator(),

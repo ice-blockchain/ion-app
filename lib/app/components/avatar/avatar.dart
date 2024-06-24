@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/utils/image.dart';
 
 class Avatar extends StatelessWidget {
@@ -10,7 +10,7 @@ class Avatar extends StatelessWidget {
     super.key,
     BorderRadiusGeometry? borderRadius,
     BoxFit? fit,
-  })  : borderRadius = borderRadius ?? BorderRadius.circular(10.0.s),
+  })  : borderRadius = borderRadius ?? BorderRadius.circular(UiSize.xSmall),
         fit = fit ?? BoxFit.fitWidth;
 
   final double size;

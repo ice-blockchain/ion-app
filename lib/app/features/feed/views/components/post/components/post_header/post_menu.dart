@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -13,7 +14,7 @@ class PostMenu extends StatelessWidget {
     return Container(
       width: 48.0.s,
       height: 48.0.s,
-      transform: Matrix4.translationValues(12.0.s, 0, 0),
+      transform: Matrix4.translationValues(UiSize.small, 0, 0),
       child: IconButton(
         onPressed: () {},
         icon: Assets.images.icons.iconMorePopup.icon(

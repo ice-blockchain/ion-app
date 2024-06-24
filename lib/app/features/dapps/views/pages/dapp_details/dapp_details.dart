@@ -5,6 +5,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/read_more_text/read_more_text.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -44,7 +45,7 @@ class DAppDetails extends IceSimplePage {
       ),
       body: ScreenSideOffset.small(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 10.0.s),
+          padding: EdgeInsets.only(top: UiSize.xSmall),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -52,7 +53,7 @@ class DAppDetails extends IceSimplePage {
                 AspectRatio(
                   aspectRatio: 343 / 200,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16.0.s),
+                    borderRadius: BorderRadius.circular(UiSize.medium),
                     child: Image.asset(
                       item.backgroundImage!,
                       fit: BoxFit.cover,
@@ -127,7 +128,7 @@ class DAppDetails extends IceSimplePage {
                     ),
                   ),
                   SizedBox(
-                    width: 10.0.s,
+                    width: UiSize.xSmall,
                   ),
                   Expanded(
                     child: DappDetailsInfoBlock(
@@ -149,7 +150,7 @@ class DAppDetails extends IceSimplePage {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(top: 16.0.s, bottom: 56.0.s),
+                padding: EdgeInsets.only(top: UiSize.medium, bottom: 56.0.s),
                 child: Button(
                   label: Text(
                     context.i18n.dapp_details_launch_dapp_button_title,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -32,7 +33,7 @@ class Balance extends HookConsumerWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: 16.0.s),
+            padding: EdgeInsets.only(top: UiSize.medium),
             child: Column(
               children: <Widget>[
                 Row(
@@ -46,9 +47,10 @@ class Balance extends HookConsumerWidget {
                       ),
                     ),
                     SizedBox(
-                      width: 4.0.s,
+                      width: UiSize.xxxSmall,
                     ),
-                    Assets.images.icons.iconArrowSelect.icon(size: 12.0.s),
+                    Assets.images.icons.iconArrowSelect
+                        .icon(size: UiSize.small),
                   ],
                 ),
                 Text(

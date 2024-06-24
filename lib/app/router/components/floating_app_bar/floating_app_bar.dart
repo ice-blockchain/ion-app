@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
 class FloatingAppBar extends StatelessWidget {
@@ -11,7 +11,7 @@ class FloatingAppBar extends StatelessWidget {
     super.key,
     double? bottomOffset,
     double? topOffset,
-  })  : bottomOffset = bottomOffset ?? 10.0.s,
+  })  : bottomOffset = bottomOffset ?? UiSize.xSmall,
         topOffset = topOffset ?? ScreenTopOffset.defaultMargin;
 
   final Widget child;
