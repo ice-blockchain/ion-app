@@ -13,6 +13,6 @@ class SendCoinsFormData with _$SendCoinsFormData {
     required NetworkType selectedNetwork,
     required String address,
     required double usdtAmount,
-    required int? arrivalTime,
+    required int arrivalTime,
   }) = _SendCoinsFormData;
 }

@@ -23,7 +23,7 @@ class ArrivalTimeIndicator extends HookConsumerWidget {
             color: colors.secondaryText,
           ),
         ),
-        SizedBox(width: 5.0.s),
+        SizedBox(width: 6.0.s),
         Container(
           padding: EdgeInsets.symmetric(
             horizontal: 8.0.s,
