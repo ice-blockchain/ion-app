@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -31,14 +30,14 @@ class CheckEmail extends IceSimplePage {
           AuthHeader(
             title: context.i18n.check_email_title,
             icon: Assets.images.misc.authEnvelope.icon(size: 74.0.s),
-            iconOffset: UiSize.small,
+            iconOffset: 12.0.s,
           ),
           ScreenSideOffset.large(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: UiSize.xSmall),
+                  padding: EdgeInsets.only(top: 10.0.s),
                   child: Text(
                     context.i18n.check_email_subtitle,
                     style: context.theme.appTextThemes.subtitle2.copyWith(

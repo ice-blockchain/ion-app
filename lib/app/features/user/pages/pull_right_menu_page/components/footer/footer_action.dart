@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
 class FooterAction extends StatelessWidget {
@@ -19,10 +19,7 @@ class FooterAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton.icon(
       style: TextButton.styleFrom(
-        padding: EdgeInsets.symmetric(
-          horizontal: UiSize.small,
-          vertical: UiSize.xxSmall,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 8.0.s),
       ),
       label: Text(
         label,
@@ -30,7 +27,7 @@ class FooterAction extends StatelessWidget {
             .copyWith(color: context.theme.appColors.primaryText),
       ),
       icon: Padding(
-        padding: EdgeInsets.only(right: UiSize.small),
+        padding: EdgeInsets.only(right: 12.0.s),
         child: icon,
       ),
       onPressed: onPressed,

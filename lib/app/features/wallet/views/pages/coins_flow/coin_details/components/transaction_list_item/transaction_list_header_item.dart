@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/constants.dart';
@@ -30,7 +29,7 @@ class TransactionListHeaderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderRadius = BorderRadius.circular(UiSize.xxSmall);
+    final borderRadius = BorderRadius.circular(8.0.s);
     return Material(
       borderRadius: borderRadius,
       child: InkWell(
@@ -51,7 +50,7 @@ class TransactionListHeaderItem extends StatelessWidget {
           ),
           child: Row(
             children: <Widget>[
-              networkType.iconAsset.icon(size: UiSize.medium),
+              networkType.iconAsset.icon(size: 16.0.s),
               SizedBox(
                 width: 6.0.s,
               ),

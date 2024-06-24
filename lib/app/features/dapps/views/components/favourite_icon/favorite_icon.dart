@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -34,12 +33,12 @@ class FavouriteIcon extends StatelessWidget {
       },
       icon: Image.asset(
         iconPath,
-        width: UiSize.large,
+        width: 24.0.s,
         color: isFavourite ? null : tintColor,
       ),
       type: ButtonType.outlined,
       size: size ?? iconSideDimension,
-      borderRadius: BorderRadius.circular(borderRadius ?? UiSize.medium),
+      borderRadius: BorderRadius.circular(borderRadius ?? 16.0.s),
     );
   }
 }

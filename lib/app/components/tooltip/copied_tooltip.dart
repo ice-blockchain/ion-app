@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/painters/triangle_painter.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -37,7 +36,7 @@ class CopiedTooltip extends HookConsumerWidget {
           ),
           decoration: BoxDecoration(
             color: context.theme.appColors.primaryText,
-            borderRadius: BorderRadius.circular(UiSize.xxSmall),
+            borderRadius: BorderRadius.circular(8.0.s),
           ),
           alignment: Alignment.center,
           child: Text(

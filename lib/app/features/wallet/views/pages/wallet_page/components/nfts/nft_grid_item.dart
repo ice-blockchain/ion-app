@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
@@ -21,8 +21,7 @@ class NftGridItem extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final BorderRadiusGeometry borderRadius =
-        BorderRadius.circular(UiSize.medium);
+    final BorderRadiusGeometry borderRadius = BorderRadius.circular(16.0.s);
     final imageWidth = (MediaQuery.of(context).size.width -
             NftConstants.cellPadding * 4 -
             NftConstants.gridSpacing -

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -35,7 +34,7 @@ class Balance extends HookConsumerWidget {
           Padding(
             padding: EdgeInsets.only(
               top: 6.0.s - hitSlop,
-              bottom: UiSize.xxSmall - hitSlop,
+              bottom: 8.0.s - hitSlop,
             ),
             child: Row(
               children: <Widget>[
@@ -67,8 +66,8 @@ class Balance extends HookConsumerWidget {
           ),
           Padding(
             padding: EdgeInsets.only(
-              top: UiSize.small,
-              bottom: UiSize.medium,
+              top: 12.0.s,
+              bottom: 16.0.s,
             ),
             child: BalanceActions(
               onReceive: () => IceRoutes.receiveCoin.push(context),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -39,7 +38,7 @@ class NftPrice extends HookConsumerWidget {
     return Row(
       children: <Widget>[
         Avatar(
-          size: UiSize.small,
+          size: 12.0.s,
           imageUrl: nftData.currencyIconUrl,
         ),
         SizedBox(

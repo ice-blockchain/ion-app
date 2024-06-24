@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -21,7 +20,7 @@ class TrendingVideoMenuButton extends StatelessWidget {
       child: IconButton(
         onPressed: onPressed,
         icon: Assets.images.icons.iconMorePopup.icon(
-          size: UiSize.medium,
+          size: 16.0.s,
           color: context.theme.appColors.secondaryBackground,
         ),
       ),

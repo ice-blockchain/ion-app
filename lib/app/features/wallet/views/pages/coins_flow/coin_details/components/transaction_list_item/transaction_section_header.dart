@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
 class TransactionSectionHeader extends StatelessWidget {
@@ -16,7 +16,7 @@ class TransactionSectionHeader extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       padding: EdgeInsets.symmetric(
-        vertical: UiSize.xSmall,
+        vertical: 10.0.s,
       ),
       child: Text(
         date,

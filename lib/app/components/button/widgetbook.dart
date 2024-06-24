@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -112,7 +111,7 @@ Widget iconButtonUseCase(BuildContext context) {
           ),
           style: OutlinedButton.styleFrom(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(UiSize.xxxSmall)),
+              borderRadius: BorderRadius.all(Radius.circular(4.0.s)),
             ),
           ),
           onPressed: () {},
@@ -156,7 +155,7 @@ Widget compactButtonUseCase(BuildContext context) {
               ),
             ),
             SizedBox(
-              width: UiSize.medium,
+              width: 16.0.s,
             ),
             Expanded(
               child: Button.compact(
@@ -239,7 +238,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
           leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.success,
             icon: Assets.images.icons.iconFeedStories.icon(
-              size: UiSize.large,
+              size: 24.0.s,
               color: context.theme.appColors.secondaryBackground,
             ),
           ),
@@ -250,7 +249,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
           leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.success,
             icon: Assets.images.icons.iconFeedStories.icon(
-              size: UiSize.large,
+              size: 24.0.s,
               color: context.theme.appColors.secondaryBackground,
             ),
           ),
@@ -262,7 +261,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
           leadingIcon: ButtonIconFrame(
             icon: Assets.images.icons.iconBadgeIcelogo.icon(size: 26.0.s),
           ),
-          leadingButtonOffset: UiSize.xxxSmall,
+          leadingButtonOffset: 4.0.s,
           backgroundColor: context.theme.appColors.tertararyBackground,
           label: Text(
             'ice.wallet',

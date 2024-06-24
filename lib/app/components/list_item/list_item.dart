@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -88,18 +87,14 @@ class ListItem extends StatelessWidget {
   final bool? isSelected;
 
   static BorderRadius get defaultBorderRadius =>
-      BorderRadius.all(Radius.circular(UiSize.medium));
+      BorderRadius.all(Radius.circular(16.0.s));
 
-  static EdgeInsets get defaultContentPadding => EdgeInsets.symmetric(
-        horizontal: UiSize.small,
-        vertical: UiSize.xSmall,
-      );
+  static EdgeInsets get defaultContentPadding =>
+      EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 10.0.s);
 
-  static EdgeInsets get defaultLeadingPadding =>
-      EdgeInsets.only(right: UiSize.xSmall);
+  static EdgeInsets get defaultLeadingPadding => EdgeInsets.only(right: 10.0.s);
 
-  static EdgeInsets get defaultTrailingPadding =>
-      EdgeInsets.only(left: UiSize.xSmall);
+  static EdgeInsets get defaultTrailingPadding => EdgeInsets.only(left: 10.0.s);
 
   static BoxConstraints get defaultConstraints =>
       BoxConstraints(minHeight: 60.0.s);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -29,7 +28,7 @@ class LinksListTileIcon extends StatelessWidget {
         border: Border.all(
           color: context.theme.appColors.onTerararyFill,
         ),
-        borderRadius: BorderRadius.circular(UiSize.small),
+        borderRadius: BorderRadius.circular(12.0.s),
       ),
       child: ImageIcon(
         AssetImage(iconAssetName),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -36,7 +35,7 @@ class DAppsPage extends IceSimplePage {
                 Padding(
                   padding: EdgeInsets.only(top: 20.0.s, bottom: 7.0.s),
                   child: Container(
-                    height: UiSize.xSmall,
+                    height: 10.0.s,
                     color: context.theme.appColors.primaryBackground,
                   ),
                 ),
@@ -57,7 +56,7 @@ class DAppsPage extends IceSimplePage {
                 Apps(
                   title: context.i18n.dapps_section_title_recently_added,
                   items: mockedApps,
-                  topOffset: UiSize.xxSmall,
+                  topOffset: 8.0.s,
                   onPress: () {
                     IceRoutes.appsList.go(
                       context,

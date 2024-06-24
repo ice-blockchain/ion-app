@@ -7,7 +7,6 @@ import 'package:ice/app/components/inputs/text_input/components/text_input_icons
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -78,7 +77,7 @@ class FillProfile extends IceSimplePage {
                           scrollPadding: EdgeInsets.all(120.0.s),
                         ),
                         SizedBox(
-                          height: UiSize.medium,
+                          height: 16.0.s,
                         ),
                         TextInput(
                           prefixIcon: TextInputIcons(
@@ -103,7 +102,7 @@ class FillProfile extends IceSimplePage {
                           scrollPadding: EdgeInsets.all(120.0.s),
                         ),
                         SizedBox(
-                          height: UiSize.medium,
+                          height: 16.0.s,
                         ),
                         TextInput(
                           prefixIcon: TextInputIcons(

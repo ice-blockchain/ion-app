@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -22,7 +21,7 @@ class ManageWalletTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
+      padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ListItem(
         onTap: () {
           IceRoutes.editWallet.push(context, payload: walletData);
@@ -30,7 +29,7 @@ class ManageWalletTile extends StatelessWidget {
         leading: Avatar(
           size: 36.0.s,
           imageUrl: walletData.icon,
-          borderRadius: BorderRadius.circular(UiSize.xSmall),
+          borderRadius: BorderRadius.circular(10.0.s),
         ),
         title: Text(
           walletData.name,
@@ -43,10 +42,10 @@ class ManageWalletTile extends StatelessWidget {
         ),
         trailing: Assets.images.icons.iconArrowRight.icon(),
         contentPadding: EdgeInsets.only(
-          left: UiSize.medium,
+          left: 16.0.s,
           top: 11.0.s,
           bottom: 11.0.s,
-          right: UiSize.small,
+          right: 12.0.s,
         ),
         backgroundColor: context.theme.appColors.tertararyBackground,
       ),

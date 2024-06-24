@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class BalanceActions extends StatelessWidget {
@@ -30,7 +30,7 @@ class BalanceActions extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: UiSize.small,
+          width: 12.0.s,
         ),
         Expanded(
           child: Button.compact(

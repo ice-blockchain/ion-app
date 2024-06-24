@@ -9,7 +9,6 @@ import 'package:ice/app/components/inputs/text_input/components/text_input_icons
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -52,7 +51,7 @@ class EditWalletModal extends IcePage<WalletData> {
             ),
             ScreenSideOffset.small(
               child: Padding(
-                padding: EdgeInsets.only(top: 21.0.s, bottom: UiSize.large),
+                padding: EdgeInsets.only(top: 21.0.s, bottom: 24.0.s),
                 child: TextInput(
                   onChanged: (String newValue) => walletName.value = newValue,
                   controller: controller,
@@ -94,9 +93,7 @@ class EditWalletModal extends IcePage<WalletData> {
                       backgroundColor: context.theme.appColors.attentionRed,
                     ),
             ),
-            SizedBox(
-              height: MediaQuery.paddingOf(context).bottom + UiSize.medium,
-            ),
+            SizedBox(height: MediaQuery.paddingOf(context).bottom + 16.0.s),
           ],
         ),
       ),

@@ -3,7 +3,7 @@ import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separated_column.dart';
 import 'package:ice/app/components/skeleton/skeleton.dart';
-import 'package:ice/app/constants/ui_size.dart';
+import 'package:ice/app/extensions/num.dart';
 
 class ListItemsLoadingState extends StatelessWidget {
   const ListItemsLoadingState({
@@ -15,12 +15,12 @@ class ListItemsLoadingState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: EdgeInsets.only(top: UiSize.medium),
+      padding: EdgeInsets.only(top: 16.0.s),
       sliver: SliverToBoxAdapter(
         child: Skeleton(
           child: SeparatedColumn(
             separator: SizedBox(
-              height: UiSize.small,
+              height: 12.0.s,
             ),
             children: List<Widget>.generate(
               itemCount,

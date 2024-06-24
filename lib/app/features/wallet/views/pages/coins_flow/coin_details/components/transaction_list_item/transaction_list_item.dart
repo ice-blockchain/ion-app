@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/coin_transaction_data.dart';
@@ -32,9 +31,9 @@ class TransactionListItem extends StatelessWidget {
       title: Text(transactionData.transactionType.getDisplayName(context)),
       subtitle: Row(
         children: <Widget>[
-          transactionData.networkType.iconAsset.icon(size: UiSize.medium),
+          transactionData.networkType.iconAsset.icon(size: 16.0.s),
           SizedBox(
-            width: UiSize.xxxSmall,
+            width: 4.0.s,
           ),
           Text(
             toTimeDisplayValue(transactionData.timestamp),

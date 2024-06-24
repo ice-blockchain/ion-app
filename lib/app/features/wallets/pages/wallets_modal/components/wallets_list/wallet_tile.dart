@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -27,7 +26,7 @@ class WalletTile extends HookConsumerWidget {
     final isSelected = walletData.id == selectedWalletId;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
+      padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ListItem(
         isSelected: isSelected,
         onTap: () {
@@ -40,7 +39,7 @@ class WalletTile extends HookConsumerWidget {
         leading: Avatar(
           size: 36.0.s,
           imageUrl: walletData.icon,
-          borderRadius: BorderRadius.circular(UiSize.xSmall),
+          borderRadius: BorderRadius.circular(10.0.s),
         ),
         title: Text(
           walletData.name,
@@ -58,7 +57,7 @@ class WalletTile extends HookConsumerWidget {
                 .icon(color: context.theme.appColors.onPrimaryAccent)
             : null,
         contentPadding:
-            EdgeInsets.symmetric(horizontal: UiSize.medium, vertical: 11.0.s),
+            EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 11.0.s),
         backgroundColor: context.theme.appColors.tertararyBackground,
       ),
     );

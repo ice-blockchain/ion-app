@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -43,7 +42,7 @@ class EnterCode extends IceSimplePage {
                   icon: Assets.images.misc.authEnterCode.icon(
                     size: 74.0.s,
                   ),
-                  iconOffset: UiSize.small,
+                  iconOffset: 12.0.s,
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,

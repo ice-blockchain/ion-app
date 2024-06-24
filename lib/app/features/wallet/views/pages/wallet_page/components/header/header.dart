@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/components/wallet_switcher/wallet_switcher.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -28,7 +28,7 @@ class Header extends HookConsumerWidget {
                   color: context.theme.appColors.primaryText,
                 ),
               ),
-              SizedBox(width: UiSize.small),
+              SizedBox(width: 12.0.s),
               NavigationButton(
                 onPressed: () => IceRoutes.scanWallet.push(context),
                 icon: Assets.images.icons.iconHeaderScan1.icon(

@@ -5,7 +5,6 @@ import 'package:ice/app/components/empty_list/empty_list.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
@@ -45,7 +44,7 @@ class DAppsList extends IcePage<AppsRouteData> {
           Expanded(
             child: ScreenSideOffset.small(
               child: Padding(
-                padding: EdgeInsets.only(top: UiSize.small),
+                padding: EdgeInsets.only(top: 12.0.s),
                 child: Column(
                   children: <Widget>[
                     if (payload?.isSearchVisible ?? false)
@@ -63,7 +62,7 @@ class DAppsList extends IcePage<AppsRouteData> {
                               )
                             : ListView.builder(
                                 padding: EdgeInsets.symmetric(
-                                  vertical: UiSize.xSmall,
+                                  vertical: 10.0.s,
                                 ),
                                 itemCount: filteredApps.length,
                                 itemBuilder: (BuildContext context, int index) {

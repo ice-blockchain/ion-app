@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/shadow_text/shadow_text.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -20,7 +19,7 @@ class FeaturedCollection extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         separatorBuilder: (BuildContext context, int index) =>
-            SizedBox(width: UiSize.small),
+            SizedBox(width: 12.0.s),
         padding: EdgeInsets.symmetric(
           horizontal: ScreenSideOffset.defaultSmallMargin,
         ),
@@ -32,7 +31,7 @@ class FeaturedCollection extends StatelessWidget {
             child: Container(
               width: 240.0.s,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(UiSize.small),
+                borderRadius: BorderRadius.circular(12.0.s),
                 image: DecorationImage(
                   image: AssetImage(
                     assetBg,
@@ -43,21 +42,21 @@ class FeaturedCollection extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   Positioned(
-                    bottom: UiSize.small,
-                    left: UiSize.small,
+                    bottom: 12.0.s,
+                    left: 12.0.s,
                     child: Row(
                       children: <Widget>[
                         DecoratedBox(
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(UiSize.xxSmall),
+                            borderRadius: BorderRadius.circular(8.0.s),
                           ),
                           child: Image.asset(
                             items[index].iconImage,
                             width: 30.0.s,
                           ),
                         ),
-                        SizedBox(width: UiSize.xxSmall),
+                        SizedBox(width: 8.0.s),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,

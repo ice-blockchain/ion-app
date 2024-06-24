@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -25,7 +24,7 @@ class AddressInputField extends StatelessWidget {
       initialValue: '0x93956a5688078e8f25df21ec0f24fd9fd7baf09545645645745',
       contentPadding: EdgeInsets.symmetric(
         vertical: 6.0.s,
-        horizontal: UiSize.medium,
+        horizontal: 16.0.s,
       ),
       suffixIcon: TextInputIcons(
         icons: <Widget>[

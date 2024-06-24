@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/providers/coins_provider.dart';
@@ -50,7 +49,7 @@ class CoinsListView extends HookConsumerWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: UiSize.xxSmall),
+            padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
               title: context.i18n.wallet_send_coins,
               showBackButton: false,
@@ -65,14 +64,14 @@ class CoinsListView extends HookConsumerWidget {
             ),
           ),
           SizedBox(
-            height: UiSize.small,
+            height: 12.0.s,
           ),
           Expanded(
             child: ListView.separated(
               itemCount: coins.length,
               separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(
-                  height: UiSize.small,
+                  height: 12.0.s,
                 );
               },
               itemBuilder: (BuildContext context, int index) {

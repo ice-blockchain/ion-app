@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui_size.dart';
+import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
