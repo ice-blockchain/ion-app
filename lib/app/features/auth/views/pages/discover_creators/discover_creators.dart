@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
@@ -31,7 +31,7 @@ class DiscoverCreators extends IceSimplePage {
       body: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(bottom: UiSize.medium),
+            padding: EdgeInsets.only(bottom: 16.0.s),
             child: AuthHeader(
               title: context.i18n.discover_creators_title,
               description: context.i18n.discover_creators_description,
@@ -42,7 +42,7 @@ class DiscoverCreators extends IceSimplePage {
               slivers: <Widget>[
                 SliverList.separated(
                   separatorBuilder: (BuildContext _, int __) => SizedBox(
-                    height: UiSize.xxSmall,
+                    height: 8.0.s,
                   ),
                   itemCount: creators.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -68,7 +68,7 @@ class DiscoverCreators extends IceSimplePage {
                 // TODO add ScreenBottomOffset.sliver factory for this case
                 SliverPadding(
                   padding: EdgeInsets.only(
-                    bottom: UiSize.medium +
+                    bottom: 16.0.s +
                         (mayContinue
                             ? 0
                             : MediaQuery.paddingOf(context).bottom),
@@ -81,8 +81,8 @@ class DiscoverCreators extends IceSimplePage {
             ScreenSideOffset.small(
               child: Padding(
                 padding: EdgeInsets.only(
-                  top: UiSize.xxSmall,
-                  bottom: UiSize.medium + MediaQuery.paddingOf(context).bottom,
+                  top: 8.0.s,
+                  bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
                 ),
                 child: Button(
                   disabled: authState is AuthenticationLoading,

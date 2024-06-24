@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -31,8 +30,8 @@ class CreatorListItem extends StatelessWidget {
         profilePicture: creator.imageUrl,
         verifiedBadge: creator.isVerified ?? false,
         backgroundColor: context.theme.appColors.tertararyBackground,
-        contentPadding: EdgeInsets.all(UiSize.small),
-        borderRadius: BorderRadius.circular(UiSize.medium),
+        contentPadding: EdgeInsets.all(12.0.s),
+        borderRadius: BorderRadius.circular(16.0.s),
         trailing: Button(
           onPressed: onPressed,
           type: followed ? ButtonType.primary : ButtonType.outlined,

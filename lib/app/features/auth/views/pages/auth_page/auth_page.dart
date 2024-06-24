@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -49,7 +48,7 @@ class AuthPage extends IceSimplePage {
                   else
                     const PhoneAuthForm(),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: UiSize.medium),
+                    padding: EdgeInsets.symmetric(vertical: 16.0.s),
                     child: Text(
                       context.i18n.auth_signIn_or,
                       style: context.theme.appTextThemes.caption.copyWith(
@@ -73,8 +72,7 @@ class AuthPage extends IceSimplePage {
                     mainAxisSize: MainAxisSize.max,
                   ),
                   Padding(
-                    padding:
-                        EdgeInsets.only(top: UiSize.medium, bottom: 20.0.s),
+                    padding: EdgeInsets.only(top: 16.0.s, bottom: 20.0.s),
                     child: const Socials(),
                   ),
                   const SecuredByNotice(),

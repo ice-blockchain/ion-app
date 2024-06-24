@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_engagement_metric.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_metric_space.dart';
@@ -19,14 +19,14 @@ class PostFooter extends StatelessWidget {
         0,
       );
 
-  static double get iconSize => UiSize.medium;
+  static double get iconSize => 16.0.s;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
         horizontalPadding,
-        UiSize.xSmall,
+        10.0.s,
         horizontalPadding,
         0,
       ),

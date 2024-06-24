@@ -1,7 +1,6 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -41,8 +40,8 @@ class Button extends StatelessWidget {
     this.minimumSize,
     double? leadingIconOffset,
     double? trailingIconOffset,
-  })  : leadingIconOffset = leadingIconOffset ?? UiSize.xxSmall,
-        trailingIconOffset = trailingIconOffset ?? UiSize.xxSmall;
+  })  : leadingIconOffset = leadingIconOffset ?? 8.0.s,
+        trailingIconOffset = trailingIconOffset ?? 8.0.s;
 
   factory Button.icon({
     required VoidCallback onPressed,
@@ -124,11 +123,11 @@ class Button extends StatelessWidget {
         OutlinedButton.styleFrom(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(
-            borderRadius: borderRadius ??
-                BorderRadius.all(Radius.circular(UiSize.medium)),
+            borderRadius:
+                borderRadius ?? BorderRadius.all(Radius.circular(16.0.s)),
           ),
           minimumSize: minimumSize ?? Size(56.0.s, 56.0.s),
-          padding: EdgeInsets.symmetric(horizontal: UiSize.medium),
+          padding: EdgeInsets.symmetric(horizontal: 16.0.s),
           backgroundColor: _getBackgroundColor(context, type),
           side: BorderSide(
             color: _getBorderColor(context, type),
@@ -225,8 +224,8 @@ class ButtonLoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: UiSize.small,
-      height: UiSize.small,
+      width: 12.0.s,
+      height: 12.0.s,
       child: CircularProgressIndicator(
         strokeWidth: 2,
         color: context.theme.appColors.onPrimaryAccent,

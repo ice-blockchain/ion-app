@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/constants/ui_size.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list_item.dart';
@@ -30,7 +30,7 @@ class ContactsList extends HookConsumerWidget {
             scrollDirection: Axis.horizontal,
             itemCount: contactsDataArray.length,
             separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(width: UiSize.small);
+              return SizedBox(width: 12.0.s);
             },
             itemBuilder: (BuildContext context, int index) {
               final contactData = contactsDataArray[index];

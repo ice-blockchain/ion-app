@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/constants/ui_size.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
@@ -74,7 +74,7 @@ class NftsTab extends HookConsumerWidget {
       itemCount: nfts.length,
       separatorBuilder: (BuildContext context, int index) {
         return SizedBox(
-          height: UiSize.small,
+          height: 12.0.s,
         );
       },
       itemBuilder: (BuildContext context, int index) {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/model/nft_sorting_type.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/components/sorting_button/sorting_button.dart';
@@ -19,7 +19,7 @@ class NftsSortingModal extends IceSimplePage {
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Padding(
         padding: EdgeInsets.only(
-          bottom: UiSize.medium,
+          bottom: 16.0.s,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -30,19 +30,19 @@ class NftsSortingModal extends IceSimplePage {
               actions: const <Widget>[NavigationCloseButton()],
             ),
             SizedBox(
-              height: UiSize.medium,
+              height: 16.0.s,
             ),
             const SortingButton(
               sortingType: NftSortingType.desc,
             ),
             SizedBox(
-              height: UiSize.medium,
+              height: 16.0.s,
             ),
             const SortingButton(
               sortingType: NftSortingType.asc,
             ),
             SizedBox(
-              height: UiSize.medium,
+              height: 16.0.s,
             ),
           ],
         ),

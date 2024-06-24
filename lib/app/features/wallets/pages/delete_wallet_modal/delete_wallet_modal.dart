@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -39,7 +38,7 @@ class DeleteWalletModal extends IcePage<WalletData> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 31.0.s, bottom: UiSize.xxxSmall),
+              padding: EdgeInsets.only(top: 31.0.s, bottom: 4.0.s),
               child: Assets.images.misc.actionDeletewallet.icon(size: 80.0.s),
             ),
             Text(
@@ -50,7 +49,7 @@ class DeleteWalletModal extends IcePage<WalletData> {
             ),
             Padding(
               padding: EdgeInsets.only(
-                top: UiSize.xxSmall,
+                top: 8.0.s,
                 bottom: 30.0.s,
                 left: 36.0.s,
                 right: 36.0.s,

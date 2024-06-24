@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -50,9 +49,7 @@ class ManageWalletsModal extends IceSimplePage {
               ),
             ),
             ScreenSideOffset.small(child: const ManageWalletsList()),
-            SizedBox(
-              height: MediaQuery.paddingOf(context).bottom + UiSize.medium,
-            ),
+            SizedBox(height: MediaQuery.paddingOf(context).bottom + 16.0.s),
           ],
         ),
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui_size.dart';
+import 'package:ice/app/extensions/num.dart';
 
 class TrendingVideoListItemSkeleton extends StatelessWidget {
   const TrendingVideoListItemSkeleton({
@@ -15,7 +15,7 @@ class TrendingVideoListItemSkeleton extends StatelessWidget {
       width: itemSize.width,
       height: itemSize.height,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(UiSize.medium),
+        borderRadius: BorderRadius.circular(16.0.s),
         color: Colors.white,
       ),
     );

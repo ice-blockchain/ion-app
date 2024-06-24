@@ -18,22 +18,22 @@ class _ButtonDropdown extends Button {
           style: style.merge(
             OutlinedButton.styleFrom(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(UiSize.small)),
+                borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
               ),
               minimumSize: Size.square(40.0.s),
               padding: leadingIcon != null
                   ? EdgeInsets.only(
-                      left: UiSize.xxxSmall,
-                      right: UiSize.xSmall,
+                      left: 4.0.s,
+                      right: 10.0.s,
                     )
                   : EdgeInsets.symmetric(horizontal: 14.0.s),
             ),
           ),
-          leadingIconOffset: leadingButtonOffset ?? UiSize.xSmall,
+          leadingIconOffset: leadingButtonOffset ?? 10.0.s,
           trailingIcon: (opened
                   ? Assets.images.icons.iconArrowUp
                   : Assets.images.icons.iconArrowDown)
               .icon(),
-          trailingIconOffset: trailingIconOffset ?? UiSize.xxSmall,
+          trailingIconOffset: trailingIconOffset ?? 8.0.s,
         );
 }

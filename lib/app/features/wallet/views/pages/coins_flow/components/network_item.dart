@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 
@@ -19,7 +18,7 @@ class NetworkItem extends StatelessWidget {
     return ListItem(
       title: Text(networkType.getDisplayName(context)),
       backgroundColor: context.theme.appColors.tertararyBackground,
-      leading: networkType.iconAsset.icon(size: UiSize.medium),
+      leading: networkType.iconAsset.icon(size: 16.0.s),
       onTap: onTap,
     );
   }

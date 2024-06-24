@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui_size.dart';
+import 'package:ice/app/extensions/num.dart';
 
 class TextInputBorder extends InputBorder {
   TextInputBorder({
     super.borderSide = const BorderSide(),
     BorderRadius? borderRadius,
-  }) : borderRadius =
-            borderRadius ?? BorderRadius.all(Radius.circular(UiSize.medium));
+  }) : borderRadius = borderRadius ?? BorderRadius.all(Radius.circular(16.0.s));
 
   final BorderRadius borderRadius;
 

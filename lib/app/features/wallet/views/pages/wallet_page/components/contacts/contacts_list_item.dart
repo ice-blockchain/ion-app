@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -28,7 +27,7 @@ class ContactsListItem extends StatelessWidget {
 
   static double get iceLogoSize => 20.0.s;
 
-  static double get iceLogoBorderRadius => UiSize.xxSmall;
+  static double get iceLogoBorderRadius => 8.0.s;
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +50,8 @@ class ContactsListItem extends StatelessWidget {
                 ),
                 if (hasIceAccount == true)
                   Positioned(
-                    right: -UiSize.xxxSmall,
-                    bottom: -UiSize.xxxSmall,
+                    right: -4.0.s,
+                    bottom: -4.0.s,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                         borderRadius:

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -26,15 +25,15 @@ class ContactButton extends HookConsumerWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border.all(color: colors.strokeElements),
-        borderRadius: BorderRadius.circular(UiSize.medium),
+        borderRadius: BorderRadius.circular(16.0.s),
         color: colors.secondaryBackground,
       ),
       child: ListItem.user(
         contentPadding: EdgeInsets.only(
           left: ScreenSideOffset.defaultSmallMargin,
-          top: UiSize.xSmall,
-          bottom: UiSize.xSmall,
-          right: UiSize.xxSmall,
+          top: 10.0.s,
+          bottom: 10.0.s,
+          right: 8.0.s,
         ),
         title: Text(contact.name),
         subtitle: Text(contact.nickname!),
@@ -45,7 +44,7 @@ class ContactButton extends HookConsumerWidget {
         trailing: IconButton(
           onPressed: onClearContact,
           icon: Assets.images.icons.iconSheetClose.icon(
-            size: UiSize.medium,
+            size: 16.0.s,
             color: colors.primaryText,
           ),
         ),

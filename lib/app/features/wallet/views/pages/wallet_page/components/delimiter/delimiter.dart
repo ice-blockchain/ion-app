@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
 class Delimiter extends StatelessWidget {
@@ -15,7 +15,7 @@ class Delimiter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: padding,
-      height: UiSize.xSmall,
+      height: 10.0.s,
       color: context.theme.appColors.primaryBackground,
     );
   }

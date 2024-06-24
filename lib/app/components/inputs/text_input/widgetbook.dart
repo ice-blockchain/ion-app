@@ -5,7 +5,6 @@ import 'package:ice/app/components/inputs/text_input/components/text_input_clear
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_text_button.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/string.dart';
@@ -56,10 +55,8 @@ Widget regularTextInputUseCase(BuildContext context) {
                 labelText: 'Multiline',
                 initialValue:
                     '0x93956a5688078e8f25df21ec0f24fd9fd7baf09545645645745',
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 5.0.s,
-                  horizontal: UiSize.medium,
-                ),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 5.0.s, horizontal: 16.0.s),
               ),
               TextInput(
                 labelText: 'Basic text input with prefix icon',

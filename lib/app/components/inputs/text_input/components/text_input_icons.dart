@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons_divider.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/num.dart';
 
 class TextInputIcons extends StatelessWidget {
@@ -24,7 +23,7 @@ class TextInputIcons extends StatelessWidget {
       children: <Widget>[
         if (hasLeftDivider)
           Padding(
-            padding: EdgeInsets.only(left: UiSize.medium),
+            padding: EdgeInsets.only(left: 16.0.s),
             child: const TextInputIconsDivider(),
           ),
         ConstrainedBox(
@@ -38,7 +37,7 @@ class TextInputIcons extends StatelessWidget {
         ),
         if (hasRightDivider)
           Padding(
-            padding: EdgeInsets.only(right: UiSize.medium),
+            padding: EdgeInsets.only(right: 16.0.s),
             child: const TextInputIconsDivider(),
           ),
       ],

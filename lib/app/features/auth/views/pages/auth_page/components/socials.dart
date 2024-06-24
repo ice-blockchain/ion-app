@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/data/models/social_auth_type.dart';
@@ -74,7 +73,7 @@ class Socials extends HookConsumerWidget {
           ),
           if (isSecondRowVisible.value)
             Padding(
-              padding: EdgeInsets.only(top: UiSize.medium),
+              padding: EdgeInsets.only(top: 16.0.s),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <SocialAuthType>[

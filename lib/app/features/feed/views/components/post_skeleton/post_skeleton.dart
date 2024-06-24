@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/views/components/post_skeleton/post_skeleton_text.dart';
 
@@ -9,7 +8,7 @@ class PostSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: UiSize.xSmall),
+      padding: EdgeInsets.only(bottom: 10.0.s),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -21,7 +20,7 @@ class PostSkeleton extends StatelessWidget {
             child: Container(
               height: 32.0.s,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(UiSize.xSmall),
+                borderRadius: BorderRadius.circular(10.0.s),
                 color: Colors.white,
               ),
             ),

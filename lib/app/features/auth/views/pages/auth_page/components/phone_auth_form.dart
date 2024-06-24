@@ -4,9 +4,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/constants/countries.dart';
-import 'package:ice/app/constants/ui_size.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country_return_data.dart';
@@ -54,7 +54,7 @@ class PhoneAuthForm extends HookConsumerWidget {
             numbersOnly: true,
           ),
           SizedBox(
-            height: UiSize.medium,
+            height: 16.0.s,
           ),
           Button(
             disabled: loading.value,
