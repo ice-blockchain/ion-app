@@ -60,7 +60,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   static double get screenHeaderHeight => 56.0.s;
 
-  static double get actionButtonSide => UiSize.sLarge;
+  static double get actionButtonSide => UiSize.large;
 
   final String title;
   final Widget? titleIcon;

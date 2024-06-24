@@ -40,8 +40,8 @@ class DappDetailsInfoBlock extends StatelessWidget {
                         padding: EdgeInsets.only(right: 6.0.s),
                         child: Image.asset(
                           iconPath!,
-                          width: UiSize.sLarge,
-                          height: UiSize.sLarge,
+                          width: UiSize.large,
+                          height: UiSize.large,
                           color: context.theme.appColors.primaryAccent,
                         ),
                       ),

@@ -132,7 +132,7 @@ class MainTabNavigation extends HookWidget {
     return _buildHitBox(
       onTap: () =>
           _goBranch(branchIndex, isModalOpen, isButtonDisabled, context),
-      child: tab.icon.icon(color: color, size: UiSize.sLarge),
+      child: tab.icon.icon(color: color, size: UiSize.large),
     );
   }
 

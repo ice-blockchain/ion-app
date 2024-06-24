@@ -34,7 +34,7 @@ class FavouriteIcon extends StatelessWidget {
       },
       icon: Image.asset(
         iconPath,
-        width: UiSize.sLarge,
+        width: UiSize.large,
         color: isFavourite ? null : tintColor,
       ),
       type: ButtonType.outlined,

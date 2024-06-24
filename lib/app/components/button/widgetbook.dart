@@ -239,7 +239,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
           leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.success,
             icon: Assets.images.icons.iconFeedStories.icon(
-              size: UiSize.sLarge,
+              size: UiSize.large,
               color: context.theme.appColors.secondaryBackground,
             ),
           ),
@@ -250,7 +250,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
           leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.success,
             icon: Assets.images.icons.iconFeedStories.icon(
-              size: UiSize.sLarge,
+              size: UiSize.large,
               color: context.theme.appColors.secondaryBackground,
             ),
           ),

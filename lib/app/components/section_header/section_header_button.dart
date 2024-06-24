@@ -12,7 +12,7 @@ class SectionHeaderButton extends StatelessWidget {
   final VoidCallback onPress;
 
   static double get hitSlop => UiSize.xSmall;
-  static double get iconSize => UiSize.sLarge;
+  static double get iconSize => UiSize.large;
   static double get totalSize => iconSize + hitSlop * 2;
 
   @override

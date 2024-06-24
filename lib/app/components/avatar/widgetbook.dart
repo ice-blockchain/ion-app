@@ -13,7 +13,7 @@ Widget regularButtonUseCase(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Avatar(
-          size: UiSize.sLarge,
+          size: UiSize.large,
           imageUrl:
               'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
         ),

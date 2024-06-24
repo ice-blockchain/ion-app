@@ -93,7 +93,7 @@ class MainTabNavigation extends ConsumerWidget {
 
     return _buildHitBox(
       onTap: () => _goBranch(branchIndex),
-      child: tab.icon.icon(color: color, size: UiSize.sLarge),
+      child: tab.icon.icon(color: color, size: UiSize.large),
     );
   }
 

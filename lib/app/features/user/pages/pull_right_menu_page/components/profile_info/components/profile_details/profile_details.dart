@@ -26,10 +26,10 @@ class ProfileDetails extends HookConsumerWidget {
       alignment: Alignment.center,
       margin: EdgeInsets.symmetric(horizontal: 40.0.s),
       padding: EdgeInsets.fromLTRB(
-        UiSize.sLarge,
+        UiSize.large,
         32.0.s,
-        UiSize.sLarge,
-        UiSize.sLarge,
+        UiSize.large,
+        UiSize.large,
       ),
       decoration: Decorations.borderBoxDecoration(context),
       child: Column(
