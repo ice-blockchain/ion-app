@@ -16,18 +16,23 @@ class _ListItemUser extends ListItem {
     EdgeInsetsGeometry? leadingPadding,
     BoxConstraints? constraints,
     String? profilePicture,
+    Widget? profilePictureWidget,
     bool verifiedBadge = false,
     bool iceBadge = false,
     super.isSelected,
     DateTime? timeago,
-  }) : super(
+  })  : assert(
+          profilePicture == null || profilePictureWidget == null,
+          'Either profilePicture or profilePictureWidget must be null',
+        ),
+        super(
           leading: leading ??
-              (profilePicture != null
-                  ? Avatar(
-                      size: avatarSize,
-                      imageUrl: profilePicture,
-                    )
-                  : null),
+              _buildLeading(
+                profilePicture,
+                profilePictureWidget,
+                verifiedBadge,
+                iceBadge,
+              ),
           borderRadius: borderRadius ?? BorderRadius.zero,
           contentPadding: contentPadding ?? EdgeInsets.zero,
           leadingPadding: leadingPadding ?? EdgeInsets.only(right: 8.0.s),
@@ -62,6 +67,38 @@ class _ListItemUser extends ListItem {
   static double get avatarSize => 30.0.s;
 
   static double get badgeSize => 16.0.s;
+
+  static Widget _buildLeading(
+    String? profilePicture,
+    Widget? profilePictureWidget,
+    bool verifiedBadge,
+    bool iceBadge,
+  ) {
+    if ((profilePictureWidget != null) || (profilePicture != null)) {
+      return Stack(
+        children: [
+          if (profilePictureWidget != null)
+            profilePictureWidget
+          else if (profilePicture != null)
+            Avatar(size: avatarSize, imageUrl: profilePicture),
+          if (verifiedBadge)
+            const Positioned(
+              bottom: 0,
+              right: 0,
+              child: Icon(Icons.verified, size: 16),
+            ),
+          if (iceBadge)
+            const Positioned(
+              top: 0,
+              right: 0,
+              child: Icon(Icons.ac_unit, size: 16),
+            ),
+        ],
+      );
+    } else {
+      return Container();
+    }
+  }
 
   @override
   Color _getBackgroundColor(BuildContext context) {

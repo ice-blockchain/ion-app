@@ -89,7 +89,7 @@
   "wallet_share_address": "Share address",
   "wallet_copy": "Copy",
   "wallet_scan": "Scan QR code",
-  "wallet_scan_hint":  "Scan the QR code to send cryptocurrency",
+  "wallet_scan_hint": "Scan the QR code to send cryptocurrency",
   "wallet_sent": "Sent",
   "wallet_received": "Received",
   "wallet_hide": "Hide 0.00",
@@ -153,5 +153,10 @@
   "feed_modal_video": "Video",
   "feed_modal_video_description": "Show the world in motion",
   "feed_modal_article": "Article",
-  "feed_modal_article_description": "Share your wisdom"
+  "feed_modal_article_description": "Share your wisdom",
+  "turn_notifications_title": "Turn on notifications",
+  "turn_notifications_description": "Receive notifications when you transfer and receive funds",
+  "turn_notifications_receive": "Receive notifications when your sending or receiving assets",
+  "turn_notifications_stay_up": "Stay up to date with the latest news",
+  "turn_notifications_chat": "Chat and receive notifications even if the application is closed"
 }

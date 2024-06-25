@@ -153,6 +153,11 @@
     "feed_modal_video",
     "feed_modal_video_description",
     "feed_modal_article",
-    "feed_modal_article_description"
+    "feed_modal_article_description",
+    "turn_notifications_title",
+    "turn_notifications_description",
+    "turn_notifications_receive",
+    "turn_notifications_stay_up",
+    "turn_notifications_chat"
   ]
 }
