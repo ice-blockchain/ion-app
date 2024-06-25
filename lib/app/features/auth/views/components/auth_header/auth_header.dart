@@ -30,7 +30,7 @@ class AuthHeader extends StatelessWidget {
           showBackButton: showBackButton,
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 52.0.s),
+          padding: EdgeInsets.symmetric(horizontal: 40.0.s),
           child: Column(
             children: <Widget>[
               if (icon != null)
@@ -41,18 +41,22 @@ class AuthHeader extends StatelessWidget {
               if (title.isNotEmpty)
                 Text(
                   title!,
+                  textAlign: TextAlign.center,
                   style: context.theme.appTextThemes.headline1.copyWith(
                     color: context.theme.appColors.primaryText,
                   ),
                 ),
-              if (description.isNotEmpty)
-                Text(
+              if (description.isNotEmpty) SizedBox(height: 8.0.s),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.0.s),
+                child: Text(
                   description!,
                   textAlign: TextAlign.center,
                   style: context.theme.appTextThemes.body2.copyWith(
                     color: context.theme.appColors.tertararyText,
                   ),
                 ),
+              ),
             ],
           ),
         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -16,10 +15,21 @@ class NotificationListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenSideOffset.small(
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 43.0.s),
       child: ListItem.user(
-        title: Text(notification.title),
-        subtitle: Text(notification.description),
+        title: Text(
+          notification.title,
+          style: context.theme.appTextThemes.body.copyWith(
+            color: context.theme.appColors.secondaryBackground,
+          ),
+        ),
+        subtitle: Text(
+          notification.description,
+          style: context.theme.appTextThemes.caption3.copyWith(
+            color: context.theme.appColors.secondaryBackground,
+          ),
+        ),
         profilePictureWidget: notification.image,
         iceBadge: notification.iceVerified ?? false,
         backgroundColor: context.theme.appColors.primaryAccent,
