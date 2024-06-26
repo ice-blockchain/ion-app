@@ -12,6 +12,7 @@ import 'package:ice/app/features/auth/views/components/auth_header/auth_header.d
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/description_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/mocked_notifications.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/notification_list_item.dart';
+import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -82,7 +83,21 @@ class TurnOnNotifications extends IceSimplePage {
                         child: Button(
                           label: Text(context.i18n.button_continue),
                           mainAxisSize: MainAxisSize.max,
-                          onPressed: () {},
+                          onPressed: () {
+                            ref
+                                .read(permissionsProvider.notifier)
+                                .requestPermission(
+                              PermissionType.Notifications,
+                              onDenied: () {
+                                //TODO:: Handle denied case
+                                Navigator.of(context).pop();
+                              },
+                              onGranted: () {
+                                //TODO:: Handle granted case
+                                Navigator.of(context).pop();
+                              },
+                            );
+                          },
                         ),
                       ),
                       SizedBox(height: 50.0.s),
