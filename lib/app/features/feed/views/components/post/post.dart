@@ -26,7 +26,7 @@ class Post extends StatelessWidget {
           PostBody(
             content: content,
           ),
-          const PostFooter(),
+          PostFooter(content),
         ],
       ),
     );

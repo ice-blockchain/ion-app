@@ -168,5 +168,11 @@
     "turn_notifications_new_message_title",
     "turn_notifications_new_message_description",
     "turn_notifications_new_message_time"
+    "feed_modal_article_description",
+    "feed_repost_type",
+    "feed_repost",
+    "feed_quote_post",
+    "feed_write_comment",
+    "feed_comment_hint"
   ]
 }
