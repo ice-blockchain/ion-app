@@ -63,6 +63,7 @@ Widget userListItemUseCase(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         ListItem.user(
+          context: context,
           title: const Text('Alina Proxima'),
           subtitle: const Text('@alinaproxima'),
           profilePicture:
@@ -70,6 +71,7 @@ Widget userListItemUseCase(BuildContext context) {
           verifiedBadge: true,
         ),
         ListItem.user(
+          context: context,
           title: const Text('Alina Proxima'),
           subtitle: const Text('@alinaproxima'),
           profilePicture:
@@ -82,6 +84,7 @@ Widget userListItemUseCase(BuildContext context) {
           ),
         ),
         ListItem.user(
+          context: context,
           title: const Text('Alina Proxima'),
           subtitle: const Text('@alinaproxima'),
           profilePicture:
@@ -95,6 +98,7 @@ Widget userListItemUseCase(BuildContext context) {
           onTap: () {},
         ),
         ListItem.user(
+          context: context,
           title: const Text('Alina Proxima'),
           subtitle: const Text('@alinaproxima'),
           profilePicture:

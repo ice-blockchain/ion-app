@@ -2,6 +2,7 @@ part of '../list_item.dart';
 
 class _ListItemUser extends ListItem {
   _ListItemUser({
+    required BuildContext context,
     required Widget title,
     required Widget subtitle,
     super.key,
@@ -19,6 +20,7 @@ class _ListItemUser extends ListItem {
     Widget? profilePictureWidget,
     bool verifiedBadge = false,
     bool iceBadge = false,
+    bool? profilePictureIceBadge = false,
     super.isSelected,
     DateTime? timeago,
   })  : assert(
@@ -28,10 +30,10 @@ class _ListItemUser extends ListItem {
         super(
           leading: leading ??
               _buildLeading(
+                context,
                 profilePicture,
                 profilePictureWidget,
-                verifiedBadge,
-                iceBadge,
+                profilePictureIceBadge,
               ),
           borderRadius: borderRadius ?? BorderRadius.zero,
           contentPadding: contentPadding ?? EdgeInsets.zero,
@@ -69,29 +71,45 @@ class _ListItemUser extends ListItem {
   static double get badgeSize => 16.0.s;
 
   static Widget _buildLeading(
+    BuildContext context,
     String? profilePicture,
     Widget? profilePictureWidget,
-    bool verifiedBadge,
-    bool iceBadge,
+    bool? profilePictureIceBadge,
   ) {
     if ((profilePictureWidget != null) || (profilePicture != null)) {
       return Stack(
+        clipBehavior: Clip.none,
         children: [
           if (profilePictureWidget != null)
             profilePictureWidget
           else if (profilePicture != null)
             Avatar(size: avatarSize, imageUrl: profilePicture),
-          if (verifiedBadge)
-            const Positioned(
-              bottom: 0,
-              right: 0,
-              child: Icon(Icons.verified, size: 16),
-            ),
-          if (iceBadge)
-            const Positioned(
-              top: 0,
-              right: 0,
-              child: Icon(Icons.ac_unit, size: 16),
+          if (profilePictureIceBadge != null && profilePictureIceBadge)
+            Positioned(
+              bottom: -2.0.s,
+              right: -2.0.s,
+              child: Column(
+                children: [
+                  Container(
+                    width: 12.0.s,
+                    height: 12.0.s,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3.5.s),
+                      border: Border.all(
+                        width: 1.0.s,
+                        color: context.theme.appColors.secondaryBackground,
+                      ),
+                      color: context.theme.appColors.darkBlue,
+                    ),
+                    child: Center(
+                      child: Assets.images.icons.iconIcelogoSecuredby.icon(
+                        color: context.theme.appColors.secondaryBackground,
+                        size: 10.0.s,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
         ],
       );

@@ -51,6 +51,7 @@ class ListItem extends StatelessWidget {
   }) = _ListItemWithCheckbox;
 
   factory ListItem.user({
+    required BuildContext context,
     required Widget title,
     required Widget subtitle,
     Key? key,
@@ -68,6 +69,7 @@ class ListItem extends StatelessWidget {
     Widget? profilePictureWidget,
     bool verifiedBadge,
     bool iceBadge,
+    bool? profilePictureIceBadge,
     bool isSelected,
     DateTime? timeago,
   }) = _ListItemUser;
