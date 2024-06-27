@@ -61,7 +61,7 @@ class ShareTypeView extends IcePage<String?> {
                   onPressed: () {
                     IceRoutes.quotePost.push(context, payload: payload);
                   },
-                  leadingIcon: Assets.images.icons.iconFeedQuotePost.icon(),
+                  leadingIcon: Assets.images.icons.iconFeedQuote.icon(),
                   label: Text(
                     context.i18n.feed_quote_post,
                     style: context.theme.appTextThemes.subtitle2,
