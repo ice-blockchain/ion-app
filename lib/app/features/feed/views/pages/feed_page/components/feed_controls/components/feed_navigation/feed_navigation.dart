@@ -5,7 +5,6 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -30,7 +29,7 @@ class FeedNavigation extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 12.0.s),
             child: NavigationButton(
-              onPressed: () => IceRoutes.notifications.go(context),
+              onPressed: () => {},
               icon: Assets.images.icons.iconHomeNotification.icon(
                 color: context.theme.appColors.primaryText,
               ),

@@ -10,7 +10,7 @@ class AuthHeader extends StatelessWidget {
   AuthHeader({
     super.key,
     this.title,
-    this.description,
+    this.description = '',
     this.icon,
     this.showBackButton = true,
     double? iconOffset,

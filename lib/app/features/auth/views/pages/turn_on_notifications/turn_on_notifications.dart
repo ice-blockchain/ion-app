@@ -8,6 +8,7 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/description_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/mocked_notifications.dart';
@@ -18,6 +19,13 @@ import 'package:ice/generated/assets.gen.dart';
 
 class TurnOnNotifications extends IceSimplePage {
   const TurnOnNotifications(super.route, super.payload, {super.key});
+
+  void handleSignIn(WidgetRef ref) {
+    ref.read(authProvider.notifier).signIn(
+          email: 'foo@bar.baz',
+          password: '123',
+        );
+  }
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
@@ -89,12 +97,10 @@ class TurnOnNotifications extends IceSimplePage {
                                 .requestPermission(
                               PermissionType.Notifications,
                               onDenied: () {
-                                //TODO:: Handle denied case
-                                Navigator.of(context).pop();
+                                handleSignIn(ref);
                               },
                               onGranted: () {
-                                //TODO:: Handle granted case
-                                Navigator.of(context).pop();
+                                handleSignIn(ref);
                               },
                             );
                           },

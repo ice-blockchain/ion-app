@@ -38,8 +38,9 @@ class NotificationListItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.0.s),
         trailing: Text(
           notification.time,
-          style: context.theme.appTextThemes.caption3
-              .copyWith(color: context.theme.appColors.tertararyBackground),
+          style: context.theme.appTextThemes.caption3.copyWith(
+            color: context.theme.appColors.tertararyBackground,
+          ),
         ),
         trailingPadding: EdgeInsets.only(left: 6.0.s),
       ),

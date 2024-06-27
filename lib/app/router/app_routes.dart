@@ -72,6 +72,7 @@ enum IceRoutes<PayloadType> {
       IceRoutes.nostrAuth,
       IceRoutes.nostrLogin,
       IceRoutes.enterCode,
+      IceRoutes.notifications,
     ],
   ),
   auth(
@@ -124,7 +125,6 @@ enum IceRoutes<PayloadType> {
     FeedPage.new,
     children: <IceRoutes<dynamic>>[
       IceRoutes.feedMainModal,
-      IceRoutes.notifications,
     ],
   ),
   feedMainModal(
