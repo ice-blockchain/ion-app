@@ -17,24 +17,24 @@ class BottomActionBar extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            icon: Assets.images.icons.iconFeedGallery.icon(),
+            icon: Assets.images.icons.iconGalleryOpen.icon(),
             onPressed: () {},
           ),
           SizedBox(width: 16.0.s),
           IconButton(
-            icon: Assets.images.icons.iconFeedCamera.icon(),
+            icon: Assets.images.icons.iconCameraOpen.icon(),
             onPressed: () {},
           ),
           SizedBox(width: 16.0.s),
           IconButton(
-            icon: Assets.images.icons.iconFeedFile.icon(),
+            icon: Assets.images.icons.iconFeedAddfile.icon(),
             onPressed: () {},
           ),
           const Spacer(),
           Button.icon(
             borderRadius: BorderRadius.circular(100.0.s),
             onPressed: () {},
-            icon: Assets.images.icons.iconFeedSend.icon(),
+            icon: Assets.images.icons.iconFeedSendbutton.icon(),
           ),
         ],
       ),

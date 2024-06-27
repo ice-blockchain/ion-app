@@ -42,7 +42,7 @@ class QuotePostModalPage extends IcePage<String?> {
                       style: context.theme.appTextThemes.subtitle,
                     ),
                     IconButton(
-                      icon: Assets.images.icons.iconFeedSmaller.icon(
+                      icon: Assets.images.icons.iconFeedScale.icon(
                         color: context.theme.appColors.quaternaryText,
                       ),
                       onPressed: () {},
