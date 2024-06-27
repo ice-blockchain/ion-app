@@ -37,8 +37,6 @@
 	<key>NSContactsUsageDescription</key>
 	<string>Contacts access helps you to invite more friends</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
-	<key>NSUserTrackingUsageDescription</key>
 	<string>This app requires access to notifications to keep you informed.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>

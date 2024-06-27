@@ -43,13 +43,10 @@ class Permissions extends _$Permissions {
     PermissionCallback? onLimited,
     PermissionCallback? onProvisional,
   }) async {
-    late Permission permission;
-    switch (permissionType) {
-      case PermissionType.Contacts:
-        permission = Permission.contacts;
-      case PermissionType.Notifications:
-        permission = Permission.notification;
-    }
+    late final permission = switch (permissionType) {
+      PermissionType.Contacts => Permission.contacts,
+      PermissionType.Notifications => Permission.notification,
+    };
 
     final permissionStatus = await permission.request();
 
