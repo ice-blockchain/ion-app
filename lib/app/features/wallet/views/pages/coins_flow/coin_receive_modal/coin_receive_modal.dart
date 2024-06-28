@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -14,8 +14,13 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
-class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
-  const CoinReceiveModal(super.route, super.payload, {super.key});
+// class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
+class CoinReceiveModal extends MyIcePage {
+  const CoinReceiveModal({required this.payload, super.key});
+
+  final CoinReceiveModalData payload;
+
+  // const CoinReceiveModal(super.route, super.payload, {super.key});
 
   NetworkType _getNetworkType(CoinReceiveModalData data) {
     if (data.networkType == NetworkType.all) {
@@ -28,12 +33,8 @@ class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    CoinReceiveModalData? payload,
+    // CoinReceiveModalData? payload,
   ) {
-    if (payload == null) {
-      return const SizedBox.shrink();
-    }
-
     final networkType = _getNetworkType(payload);
 
     return SheetContentScaffold(

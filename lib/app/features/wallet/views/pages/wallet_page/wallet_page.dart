@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/app/features/core/providers/permissions_provider_selectors.dart';
@@ -20,14 +20,16 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 
-class WalletPage extends IceSimplePage {
-  const WalletPage(super.route, super.payload, {super.key});
+class WalletPage extends MyIcePage {
+  const WalletPage({super.key});
+
+  // const WalletPage(super.route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
     final hasContactsPermission =
         hasPermissionSelector(ref, PermissionType.Contacts);
@@ -36,7 +38,8 @@ class WalletPage extends IceSimplePage {
       if (hasContactsPermission ?? false) {
         ref.read(contactsDataNotifierProvider.notifier).fetchContacts();
       } else {
-        IceRoutes.allowAccess.go(context);
+        // IceRoutes.allowAccess.go(context);
+        const AllowAccessRoute().go(context);
       }
     }, <Object?>[
       hasContactsPermission,

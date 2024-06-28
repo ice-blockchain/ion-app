@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/router/hooks/use_sheet_full_height.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class NostrAuth extends IceSimplePage {
-  const NostrAuth(super._route, super.payload, {super.key});
+class NostrAuth extends MyIcePage {
+  const NostrAuth({super.key});
+
+  // const NostrAuth(super._route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final sheetFullHeight = useSheetFullHeight(context);
 
     return SheetContent(
@@ -62,7 +64,8 @@ class NostrAuth extends IceSimplePage {
                     Button(
                       leadingIcon: Assets.images.icons.iconProfileLogin.icon(),
                       onPressed: () {
-                        IceRoutes.nostrLogin.push(context);
+                        // IceRoutes.nostrLogin.push(context);
+                        const NostrLoginRoute().push<void>(context);
                       },
                       label: Text(context.i18n.button_login),
                       mainAxisSize: MainAxisSize.max,

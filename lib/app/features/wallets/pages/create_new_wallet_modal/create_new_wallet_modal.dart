@@ -8,7 +8,7 @@ import 'package:ice/app/components/inputs/text_input/components/text_input_clear
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -19,14 +19,15 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
-class CreateNewWalletModal extends IceSimplePage {
-  const CreateNewWalletModal(super.route, super.payload, {super.key});
+class CreateNewWalletModal extends MyIcePage {
+  const CreateNewWalletModal({super.key});
+
+  // const CreateNewWalletModal(super.route, super.payload, {super.key});
 
   @override
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    void payload,
   ) {
     final walletName = useState('');
     final controller = useTextEditingController();

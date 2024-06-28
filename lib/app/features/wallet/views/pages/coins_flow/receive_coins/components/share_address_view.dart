@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -13,8 +13,13 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ShareAddressView extends IcePage<Map<String, dynamic>?> {
-  const ShareAddressView(super.route, super.payload, {super.key});
+// class ShareAddressView extends IcePage<Map<String, dynamic>?> {
+class ShareAddressView extends MyIcePage {
+  const ShareAddressView({required this.payload, super.key});
+
+  final Map<String, dynamic> payload;
+
+  // const ShareAddressView(super.route, super.payload, {super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
@@ -22,9 +27,8 @@ class ShareAddressView extends IcePage<Map<String, dynamic>?> {
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    Map<String, dynamic>? payload,
   ) {
-    final arguments = payload!;
+    final arguments = payload;
     final coinData = arguments['coinData'] as CoinData;
     final networkType = arguments['networkType'] as NetworkType;
 

@@ -9,7 +9,7 @@ import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -64,13 +64,20 @@ class Balance extends HookConsumerWidget {
             padding: EdgeInsets.only(bottom: 20.0.s, top: 11.0.s),
             child: BalanceActions(
               onReceive: () {
-                IceRoutes.coinReceive.push(
-                  context,
-                  payload: CoinReceiveModalData(
+                CoinReceiveRoute(
+                  $extra: CoinReceiveModalData(
                     coinData: coinData,
                     networkType: networkType,
                   ),
-                );
+                ).push<void>(context);
+
+                // IceRoutes.coinReceive.push(
+                //   context,
+                //   payload: CoinReceiveModalData(
+                //     coinData: coinData,
+                //     networkType: networkType,
+                //   ),
+                // );
               },
               onSend: () {},
             ),

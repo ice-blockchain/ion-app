@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
@@ -16,11 +16,13 @@ import 'package:ice/app/features/core/providers/permissions_provider_selectors.d
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class DiscoverCreators extends IceSimplePage {
-  const DiscoverCreators(super.route, super.payload, {super.key});
+class DiscoverCreators extends MyIcePage {
+  const DiscoverCreators({super.key});
+
+  // const DiscoverCreators(super.route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
 
     final hasNotificationsPermission =

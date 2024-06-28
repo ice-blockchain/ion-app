@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/components/network_item.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 
-class NetworkListReceiveView extends IcePage<CoinData> {
-  const NetworkListReceiveView(super.route, super.payload, {super.key});
+// class NetworkListReceiveView extends IcePage<CoinData> {
+class NetworkListReceiveView extends MyIcePage {
+  const NetworkListReceiveView({required this.payload, super.key});
+
+  final CoinData payload;
+
+  // const NetworkListReceiveView(super.route, super.payload, {super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, CoinData? payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -43,13 +48,20 @@ class NetworkListReceiveView extends IcePage<CoinData> {
               child: NetworkItem(
                 networkType: networkTypeValues[index],
                 onTap: () {
-                  IceRoutes.shareAddress.push(
-                    context,
-                    payload: <String, dynamic>{
+                  ShareAddressRoute(
+                    $extra: <String, dynamic>{
                       'coinData': payload,
                       'networkType': networkTypeValues[index],
                     },
-                  );
+                  ).push<void>(context);
+
+                  // IceRoutes.shareAddress.push(
+                  //   context,
+                  //   payload: <String, dynamic>{
+                  //     'coinData': payload,
+                  //     'networkType': networkTypeValues[index],
+                  //   },
+                  // );
                 },
               ),
             );

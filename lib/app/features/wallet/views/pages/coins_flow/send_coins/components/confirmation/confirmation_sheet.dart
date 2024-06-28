@@ -2,26 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/confirmation_list_item.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_form_provider.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ConfirmationSheet extends IceSimplePage {
-  const ConfirmationSheet(super.route, super.payload, {super.key});
+class ConfirmationSheet extends MyIcePage {
+  const ConfirmationSheet({super.key});
+
+  // const ConfirmationSheet(super.route, super.payload, {super.key});
 
   static const networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
@@ -105,7 +107,8 @@ class ConfirmationSheet extends IceSimplePage {
                   Button(
                     label: Text('${locale.wallet_send_coins} - \$351.35'),
                     mainAxisSize: MainAxisSize.max,
-                    onPressed: () => IceRoutes.transactionResult.go(context),
+                    // onPressed: () => IceRoutes.transactionResult.go(context),
+                    onPressed: () => const TransactionResultRoute().go(context),
                   ),
                   SizedBox(height: 16.0.s),
                 ],

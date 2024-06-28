@@ -5,7 +5,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 
 class FeaturedCollection extends StatelessWidget {
   const FeaturedCollection({required this.items, super.key});
@@ -27,7 +27,8 @@ class FeaturedCollection extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final assetBg = items[index].backgroundImage ?? '';
           return GestureDetector(
-            onTap: () => IceRoutes.dappsDetails.go(context),
+            // onTap: () => IceRoutes.dappsDetails.go(context),
+            onTap: () => const DAppDetailsRoute().go(context),
             child: Container(
               width: 240.0.s,
               decoration: BoxDecoration(

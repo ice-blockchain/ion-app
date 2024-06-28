@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/read_more_text/read_more_text.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -19,13 +19,17 @@ import 'package:ice/generated/assets.gen.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DAppDetails extends IceSimplePage {
-  DAppDetails(super._route, super.payload, {super.key});
+class DAppDetails extends MyIcePage {
+  DAppDetails({super.key});
+
+  // const DAppDetails({super.key});
+
+  // DAppDetails(super._route, super.payload, {super.key});
 
   final DAppItem item = mockedFeatured[2]; //TODO: get from params or provider
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContentScaffold(
       appBar: NavigationAppBar.screen(
         title: item.title,

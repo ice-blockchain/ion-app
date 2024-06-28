@@ -11,7 +11,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country_return_data.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 import 'package:ice/app/services/keyboard/keyboard.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -37,8 +37,15 @@ class PhoneAuthForm extends HookConsumerWidget {
             prefixIcon: CountryCodeInput(
               country: country.value,
               onTap: () async {
-                final data = await IceRoutes.selectCountries
+                // final data = await IceRoutes.selectCountries
+                //     .push<SelectCountryReturnData>(context);
+                // if (data != null) {
+                //   country.value = data.country;
+                // }
+
+                final data = await const SelectCountriesRoute()
                     .push<SelectCountryReturnData>(context);
+
                 if (data != null) {
                   country.value = data.country;
                 }
@@ -70,7 +77,8 @@ class PhoneAuthForm extends HookConsumerWidget {
                 await Future<void>.delayed(const Duration(seconds: 1));
                 loading.value = false;
                 hideKeyboardAndCallOnce(
-                  callback: () => IceRoutes.enterCode.push(context),
+                  // callback: () => IceRoutes.enterCode.push(context),
+                  callback: () => const EnterCodeRoute().push<void>(context),
                 );
               }
             },

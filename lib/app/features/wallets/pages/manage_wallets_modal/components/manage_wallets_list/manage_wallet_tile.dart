@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -24,7 +24,8 @@ class ManageWalletTile extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ListItem(
         onTap: () {
-          IceRoutes.editWallet.push(context, payload: walletData);
+          // IceRoutes.editWallet.push(context, payload: walletData);
+          EditWalletRoute($extra: walletData).push<void>(context);
         },
         leading: Avatar(
           size: 36.0.s,

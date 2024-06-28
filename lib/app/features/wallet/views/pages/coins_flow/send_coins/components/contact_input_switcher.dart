@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/address_input_field.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/contact_button.dart';
-import 'package:ice/app/router/app_routes.dart';
 
 class ContactInputSwitcher extends StatelessWidget {
   const ContactInputSwitcher({
@@ -29,10 +28,11 @@ class ContactInputSwitcher extends StatelessWidget {
   }
 
   Future<void> selectContact(BuildContext context) async {
-    final contact = await IceRoutes.contactsSelect.push<ContactData>(context);
+    // final contact = await IceRoutes.contactsSelect.
+    // push<ContactData>(context);
 
-    if (!context.mounted) return;
+    // if (!context.mounted) return;
 
-    onContactSelected(contact);
+    // onContactSelected(contact);
   }
 }

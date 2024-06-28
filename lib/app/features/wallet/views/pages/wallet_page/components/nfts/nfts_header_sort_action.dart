@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NftHeaderSortAction extends HookConsumerWidget {
@@ -20,7 +20,8 @@ class NftHeaderSortAction extends HookConsumerWidget {
     final color = context.theme.appColors.secondaryText;
     return TextButton(
       onPressed: () {
-        IceRoutes.nftsSorting.go(context);
+        // IceRoutes.nftsSorting.go(context);
+        const NftsSortingRoute().go(context);
       },
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),

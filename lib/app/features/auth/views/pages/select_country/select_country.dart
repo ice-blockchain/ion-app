@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/constants/countries.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -15,11 +15,13 @@ import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class SelectCountries extends IceSimplePage {
-  const SelectCountries(super._route, super.payload, {super.key});
+class SelectCountries extends MyIcePage {
+  const SelectCountries({super.key});
+
+  // const SelectCountries(super._route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 

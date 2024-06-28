@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
@@ -22,18 +22,23 @@ import 'package:ice/app/features/wallets/providers/selectors/wallets_data_select
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
-class CoinDetailsPage extends IcePage<CoinData> {
-  const CoinDetailsPage(super.route, super.payload, {super.key});
+// class CoinDetailsPage extends IcePage<CoinData> {
+class CoinDetailsPage extends MyIcePage {
+  const CoinDetailsPage({required this.payload, super.key});
+
+  // const CoinDetailsPage(super.route, super.payload, {super.key});
+
+  final CoinData payload;
 
   @override
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    CoinData? payload,
+    // CoinData? payload,
   ) {
     final scrollController = useScrollController();
     final walletId = walletIdSelector(ref);
-    final coinId = payload?.abbreviation ?? '';
+    final coinId = payload.abbreviation;
     final coinTransactionsMap = useTransactionsByDate(context, ref);
     final isLoading = coinTransactionsIsLoadingSelector(ref);
     final activeNetworkType = useState<NetworkType>(NetworkType.all);
@@ -50,10 +55,6 @@ class CoinDetailsPage extends IcePage<CoinData> {
       },
       <Object?>[walletId, coinId, activeNetworkType.value],
     );
-
-    if (payload == null) {
-      return const SizedBox.shrink();
-    }
     return Scaffold(
       appBar: NavigationAppBar.screen(
         title: payload.name,

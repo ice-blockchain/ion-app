@@ -5,7 +5,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/code_fields/code_fields.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class EnterCodeFields extends HookWidget {
@@ -37,7 +37,8 @@ class EnterCodeFields extends HookWidget {
               } else {
                 hideKeyboardAndCallOnce(
                   callback: () =>
-                      IceRoutes.fillProfile.pushReplacement(context),
+                      // IceRoutes.fillProfile.pushReplacement(context),
+                      const FillProfileRoute().pushReplacement(context),
                 );
               }
             },

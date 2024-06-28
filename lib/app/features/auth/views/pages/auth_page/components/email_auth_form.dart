@@ -10,7 +10,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 import 'package:ice/app/services/keyboard/keyboard.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -66,7 +66,8 @@ class EmailAuthForm extends HookConsumerWidget {
                 await Future<void>.delayed(const Duration(seconds: 1));
                 loading.value = false;
                 hideKeyboardAndCallOnce(
-                  callback: () => IceRoutes.checkEmail.push(context),
+                  // callback: () => IceRoutes.checkEmail.push(context),
+                  callback: () => const CheckEmailRoute().push<void>(context),
                 );
               }
             },

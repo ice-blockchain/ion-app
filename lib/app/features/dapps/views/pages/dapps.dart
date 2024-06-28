@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -11,13 +11,14 @@ import 'package:ice/app/features/dapps/views/components/categories/categories.da
 import 'package:ice/app/features/dapps/views/components/favourites/favourites.dart';
 import 'package:ice/app/features/dapps/views/components/wallet_header/wallet_header.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 
-class DAppsPage extends IceSimplePage {
-  const DAppsPage(super.route, super.payload, {super.key});
+class DAppsPage extends MyIcePage {
+  const DAppsPage({super.key});
+
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
 
     return Scaffold(
@@ -44,13 +45,21 @@ class DAppsPage extends IceSimplePage {
                   title: context.i18n.dapps_section_title_highest_ranked,
                   items: mockedApps,
                   onPress: () {
-                    IceRoutes.appsList.go(
-                      context,
-                      payload: AppsRouteData(
+                    DAppsListRoute(
+                      $extra: AppsRouteData(
                         title: context.i18n.dapps_section_title_highest_ranked,
                         items: mockedApps,
                       ),
-                    );
+                    ).go(context);
+
+                    // IceRoutes.appsList.go(
+                    //   context,
+                    //   payload: AppsRouteData(
+                    //     title:
+                    // context.i18n.dapps_section_title_highest_ranked,
+                    //     items: mockedApps,
+                    //   ),
+                    // );
                   },
                 ),
                 Apps(
@@ -58,24 +67,22 @@ class DAppsPage extends IceSimplePage {
                   items: mockedApps,
                   topOffset: 8.0.s,
                   onPress: () {
-                    IceRoutes.appsList.go(
-                      context,
-                      payload: AppsRouteData(
+                    DAppsListRoute(
+                      $extra: AppsRouteData(
                         title: context.i18n.dapps_section_title_recently_added,
                         items: mockedApps,
                       ),
-                    );
+                    ).go(context);
                   },
                 ),
                 Favourites(
                   onPress: () {
-                    IceRoutes.appsList.go(
-                      context,
-                      payload: AppsRouteData(
+                    DAppsListRoute(
+                      $extra: AppsRouteData(
                         title: context.i18n.dapps_section_title_favourites,
                         items: <DAppItem>[],
                       ),
-                    );
+                    ).go(context);
                   },
                 ),
               ],

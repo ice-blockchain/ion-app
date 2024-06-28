@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/features/core/providers/template_provider.dart';
 
 abstract class IceComponent extends HookConsumerWidget {
   const IceComponent({super.key});
@@ -9,9 +9,10 @@ abstract class IceComponent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final componentsConfig =
-        ComponentsConfigContext.of(context).componentsConfig;
-    final config = componentsConfig?[name];
+    final routeName = _routeName(context);
+
+    final templateConfig = ref.watch(templateConfigPageProvider(routeName));
+    final config = templateConfig?.components?[name];
 
     if (config?.hidden ?? false) {
       return const SizedBox.shrink();
@@ -21,4 +22,12 @@ abstract class IceComponent extends HookConsumerWidget {
   }
 
   Widget buildComponent(BuildContext context, WidgetRef ref, int variant);
+
+  String _routeName(BuildContext context) {
+    final route = ModalRoute.of(context);
+    if (route == null) {
+      return '';
+    }
+    return route.settings.name ?? '';
+  }
 }

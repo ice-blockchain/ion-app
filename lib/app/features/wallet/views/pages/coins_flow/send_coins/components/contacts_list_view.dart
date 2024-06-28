@@ -3,21 +3,26 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/contacts_mock_data.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-class ContactsListView extends IcePage<ContactData> {
-  const ContactsListView(
-    super.key,
-    super.payload,
-  );
+// class ContactsListView extends IcePage<ContactData> {
+class ContactsListView extends MyIcePage {
+  const ContactsListView({required this.payload, super.key});
+
+  final ContactData payload;
+
+  // const ContactsListView(
+  //   super.key,
+  //   super.payload,
+  // );
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, ContactData? payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final contacts = mockedContactDataArray;
 
     return FractionallySizedBox(

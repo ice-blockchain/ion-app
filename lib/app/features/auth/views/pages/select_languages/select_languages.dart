@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
+import 'package:ice/app/components/template/my_ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -12,15 +12,17 @@ import 'package:ice/app/features/auth/views/components/auth_header/auth_header.d
 import 'package:ice/app/features/auth/views/pages/select_languages/language_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 
-class SelectLanguages extends IceSimplePage {
-  const SelectLanguages(super._route, super.payload, {super.key});
+class SelectLanguages extends MyIcePage {
+  const SelectLanguages({super.key});
+
+  // const SelectLanguages(super._route, super.payload, {super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
 
     final selectedLanguages = useState<Set<Language>>(<Language>{});
@@ -105,7 +107,10 @@ class SelectLanguages extends IceSimplePage {
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
                     hideKeyboardAndCallOnce(
-                      callback: () => IceRoutes.discoverCreators.push(context),
+                      // callback: () => IceRoutes.discoverCreators.push
+                      // (context),
+                      callback: () =>
+                          const DiscoverCreatorsRoute().push<void>(context),
                     );
                   },
                 ),

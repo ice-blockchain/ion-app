@@ -4,18 +4,25 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/features/core/views/components/content_scaler.dart';
-import 'package:ice/app/features/core/views/components/lifecycle_watcher.dart';
-import 'package:ice/app/router/hooks/use_app_router.dart';
-import 'package:ice/app/services/riverpod/root_provider_scope.dart';
+import 'package:ice/app/router/my_app_routes.dart';
+import 'package:ice/app/services/logger/config.dart';
+import 'package:ice/app/services/riverpod/riverpod_logger.dart';
 import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/theme.dart';
 import 'package:ice/generated/app_localizations.dart';
 
 void main() async {
   runApp(
-    const RiverpodRootProviderScope(
-      child: LifecycleWatcher(child: IceApp()),
+    ProviderScope(
+      observers: <ProviderObserver>[
+        if (LoggerConfig.riverpodLogsEnabled) RiverpodLogger(),
+      ],
+      child: const IceApp(),
     ),
+    // const RiverpodRootProviderScope(
+    //   // child: LifecycleWatcher(child: IceApp()),
+    //   child: IceApp(),
+    // ),
   );
 }
 
@@ -27,20 +34,42 @@ class IceApp extends HookConsumerWidget {
     final appThemeMode = ref.watch(appThemeModeProvider);
     final template = ref.watch(appTemplateProvider);
 
-    final appRouter = useAppRouter(ref);
+    final goRouter = ref.watch(goRouterProvider);
+
+    // final appRouter = useAppRouter(ref);
 
     return ContentScaler(
-      child: MaterialApp.router(
-        localizationsDelegates: I18n.localizationsDelegates,
-        supportedLocales: I18n.supportedLocales,
-        theme: template.whenOrNull(
-          data: (Template data) => buildLightTheme(data.theme),
+      child: template.when(
+        data: (Template data) => MaterialApp.router(
+          localizationsDelegates: I18n.localizationsDelegates,
+          supportedLocales: I18n.supportedLocales,
+          theme: buildLightTheme(data.theme),
+          darkTheme: buildDarkTheme(data.theme),
+          themeMode: appThemeMode,
+          routeInformationProvider: goRouter.routeInformationProvider,
+          routerDelegate: goRouter.routerDelegate,
+          routeInformationParser: goRouter.routeInformationParser,
+          // restorationScopeId: 'router',
         ),
-        darkTheme: template.whenOrNull(
-          data: (Template data) => buildDarkTheme(data.theme),
+        loading: () => const Directionality(
+          textDirection: TextDirection.ltr,
+          child: Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
         ),
-        themeMode: appThemeMode,
-        routerConfig: appRouter,
+        error: (Object error, StackTrace? stackTrace) => Directionality(
+          textDirection: TextDirection.ltr,
+          child: Scaffold(
+            body: Center(
+              child: Text(
+                error.toString(),
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

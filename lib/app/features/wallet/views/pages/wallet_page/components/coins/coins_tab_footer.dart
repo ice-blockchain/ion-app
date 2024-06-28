@@ -5,7 +5,7 @@ import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coin
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/empty_state/empty_state.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/my_app_routes.dart';
 
 class CoinsTabFooter extends HookConsumerWidget {
   const CoinsTabFooter({
@@ -29,9 +29,10 @@ class CoinsTabFooter extends HookConsumerWidget {
           asset: tabType.bottomActionAsset,
           title: tabType.getBottomActionTitle(context),
           onTap: () {
-            IceRoutes.manageCoins.go(
-              context,
-            );
+            // IceRoutes.manageCoins.go(
+            //   context,
+            // );
+            const ManageCoinsRoute().go(context);
           },
         ),
       ),
