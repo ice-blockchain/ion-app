@@ -25,7 +25,6 @@ class AccountsTile extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ListItem.user(
-        context: context,
         isSelected: isActiveUser,
         onTap: () {
           if (!isActiveUser) {

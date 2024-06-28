@@ -63,8 +63,10 @@ class RequestContactAccessModal extends IceSimplePage {
               onPressed: () {
                 ref
                     .read(permissionsProvider.notifier)
-                    .requestPermission(PermissionType.Contacts);
-                Navigator.of(context).pop();
+                    .requestPermission(PermissionType.Contacts)
+                    .then((_) {
+                  Navigator.of(context).pop();
+                });
               },
             ),
           ],

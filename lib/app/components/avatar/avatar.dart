@@ -1,33 +1,83 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
+import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/utils/image.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 class Avatar extends StatelessWidget {
   Avatar({
     required this.size,
-    required this.imageUrl,
     super.key,
+    this.imageUrl,
+    this.iceBadge = false,
+    this.imageWidget,
     BorderRadiusGeometry? borderRadius,
     BoxFit? fit,
   })  : borderRadius = borderRadius ?? BorderRadius.circular(10.0.s),
-        fit = fit ?? BoxFit.fitWidth;
+        fit = fit ?? BoxFit.fitWidth,
+        assert(
+          imageUrl == null || imageWidget == null,
+          'Either imageUrl or imageWidget must be null',
+        );
 
   final double size;
-  final String imageUrl;
   final BorderRadiusGeometry borderRadius;
   final BoxFit fit;
+  final String? imageUrl;
+  final bool iceBadge;
+  final Widget? imageWidget;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: borderRadius,
-      child: CachedNetworkImage(
-        imageUrl: getAdaptiveImageUrl(imageUrl, size * 2),
-        width: size,
-        height: size,
-        fit: fit,
-      ),
-    );
+    if (imageWidget != null) {
+      return Stack(
+        clipBehavior: Clip.none,
+        children: [
+          imageWidget!,
+          if (iceBadge)
+            Positioned(
+              bottom: -2.0.s,
+              right: -2.0.s,
+              child: Column(
+                children: [
+                  Container(
+                    width: 12.0.s,
+                    height: 12.0.s,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3.5.s),
+                      border: Border.all(
+                        width: 1.0.s,
+                        color: context.theme.appColors.secondaryBackground,
+                      ),
+                      color: context.theme.appColors.darkBlue,
+                    ),
+                    child: Center(
+                      child: Assets.images.icons.iconIcelogoSecuredby.icon(
+                        color: context.theme.appColors.secondaryBackground,
+                        size: 10.0.s,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      );
+    } else if (imageUrl != null) {
+      return ClipRRect(
+        borderRadius: borderRadius,
+        child: CachedNetworkImage(
+          imageUrl: getAdaptiveImageUrl(imageUrl!, size * 2),
+          width: size,
+          height: size,
+          fit: fit,
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 }

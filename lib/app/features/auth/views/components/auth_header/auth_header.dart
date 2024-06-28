@@ -10,7 +10,7 @@ class AuthHeader extends StatelessWidget {
   AuthHeader({
     super.key,
     this.title,
-    this.description = '',
+    this.description,
     this.icon,
     this.showBackButton = true,
     double? iconOffset,
@@ -46,17 +46,18 @@ class AuthHeader extends StatelessWidget {
                     color: context.theme.appColors.primaryText,
                   ),
                 ),
-              if (description.isNotEmpty) SizedBox(height: 8.0.s),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.0.s),
-                child: Text(
-                  description!,
-                  textAlign: TextAlign.center,
-                  style: context.theme.appTextThemes.body2.copyWith(
-                    color: context.theme.appColors.tertararyText,
+              if (description.isNotEmpty)
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 12.0.s, right: 12.0.s, top: 8.0.s),
+                  child: Text(
+                    description!,
+                    textAlign: TextAlign.center,
+                    style: context.theme.appTextThemes.body2.copyWith(
+                      color: context.theme.appColors.tertararyText,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

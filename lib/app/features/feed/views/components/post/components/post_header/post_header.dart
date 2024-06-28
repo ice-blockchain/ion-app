@@ -17,7 +17,6 @@ class PostHeader extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(top: 2.0.s),
         child: ListItem.user(
-          context: context,
           title: const Text('Arnold Grey'),
           subtitle: const Text('@arnoldgrey'),
           profilePicture:

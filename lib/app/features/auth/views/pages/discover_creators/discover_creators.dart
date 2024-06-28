@@ -5,9 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
@@ -98,8 +96,7 @@ class DiscoverCreators extends IceSimplePage {
                   label: Text(context.i18n.button_continue),
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
-                    if (hasNotificationsPermission != null &&
-                        hasNotificationsPermission) {
+                    if (hasNotificationsPermission.falseOrValue) {
                       ref
                           .read(authProvider.notifier)
                           .signIn(email: 'foo@bar.baz', password: '123');

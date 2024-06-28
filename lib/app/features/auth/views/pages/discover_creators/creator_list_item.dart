@@ -25,7 +25,6 @@ class CreatorListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenSideOffset.small(
       child: ListItem.user(
-        context: context,
         title: Text(creator.name),
         subtitle: Text(creator.nickname),
         profilePicture: creator.imageUrl,

@@ -34,36 +34,15 @@ class Permissions extends _$Permissions {
     state = Map<PermissionType, PermissionStatus>.unmodifiable(permissions);
   }
 
-  Future<void> requestPermission(
-    PermissionType permissionType, {
-    PermissionCallback? onDenied,
-    PermissionCallback? onGranted,
-    PermissionCallback? onPermanentlyDenied,
-    PermissionCallback? onRestricted,
-    PermissionCallback? onLimited,
-    PermissionCallback? onProvisional,
-  }) async {
+  Future<PermissionStatus> requestPermission(
+    PermissionType permissionType,
+  ) async {
     late final permission = switch (permissionType) {
       PermissionType.Contacts => Permission.contacts,
       PermissionType.Notifications => Permission.notification,
     };
 
     final permissionStatus = await permission.request();
-
-    switch (permissionStatus) {
-      case PermissionStatus.denied:
-        if (onDenied != null) onDenied();
-      case PermissionStatus.granted:
-        if (onGranted != null) onGranted();
-      case PermissionStatus.permanentlyDenied:
-        if (onPermanentlyDenied != null) onPermanentlyDenied();
-      case PermissionStatus.restricted:
-        if (onRestricted != null) onRestricted();
-      case PermissionStatus.limited:
-        if (onLimited != null) onLimited();
-      case PermissionStatus.provisional:
-        if (onProvisional != null) onProvisional();
-    }
 
     final newState = Map<PermissionType, PermissionStatus>.from(state)
       ..update(
@@ -72,6 +51,8 @@ class Permissions extends _$Permissions {
         ifAbsent: () => permissionStatus,
       );
     state = Map<PermissionType, PermissionStatus>.unmodifiable(newState);
+
+    return permissionStatus;
   }
 
   PermissionStatus? getPermissionStatusForType(PermissionType type) {

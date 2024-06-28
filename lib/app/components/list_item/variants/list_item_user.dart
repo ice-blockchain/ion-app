@@ -2,7 +2,6 @@ part of '../list_item.dart';
 
 class _ListItemUser extends ListItem {
   _ListItemUser({
-    required BuildContext context,
     required Widget title,
     required Widget subtitle,
     super.key,
@@ -20,28 +19,25 @@ class _ListItemUser extends ListItem {
     Widget? profilePictureWidget,
     bool verifiedBadge = false,
     bool iceBadge = false,
-    bool? profilePictureIceBadge = false,
+    bool? showProfilePictureIceBadge,
     super.isSelected,
     DateTime? timeago,
-  })  : assert(
-          profilePicture == null || profilePictureWidget == null,
-          'Either profilePicture or profilePictureWidget must be null',
-        ),
-        super(
+  }) : super(
           leading: leading ??
-              _buildLeading(
-                context,
-                profilePicture,
-                profilePictureWidget,
-                profilePictureIceBadge,
-              ),
+              (profilePicture != null
+                  ? Avatar(
+                      size: avatarSize,
+                      imageUrl: profilePicture,
+                      iceBadge: showProfilePictureIceBadge ?? false,
+                      imageWidget: profilePictureWidget,
+                    )
+                  : null),
           borderRadius: borderRadius ?? BorderRadius.zero,
           contentPadding: contentPadding ?? EdgeInsets.zero,
           leadingPadding: leadingPadding ?? EdgeInsets.only(right: 8.0.s),
           constraints: constraints ?? const BoxConstraints(),
           title: Row(
             children: <Widget>[
-              // Flexible allows text to be truncated on overflow
               Flexible(child: title),
               if (iceBadge)
                 Padding(
@@ -58,10 +54,21 @@ class _ListItemUser extends ListItem {
             ],
           ),
           subtitle: Row(
+            crossAxisAlignment: CrossAxisAlignment
+                .start, // Aligns the Column to the top of the Row
             children: <Widget>[
-              // Flexible allows text to be truncated on overflow
               Flexible(child: subtitle),
-              if (timeago != null) _TimeAgo(date: timeago),
+              if (timeago != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 4),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _TimeAgo(date: timeago),
+                    ],
+                  ),
+                ),
             ],
           ),
         );
@@ -69,54 +76,6 @@ class _ListItemUser extends ListItem {
   static double get avatarSize => 30.0.s;
 
   static double get badgeSize => 16.0.s;
-
-  static Widget _buildLeading(
-    BuildContext context,
-    String? profilePicture,
-    Widget? profilePictureWidget,
-    bool? profilePictureIceBadge,
-  ) {
-    if ((profilePictureWidget != null) || (profilePicture != null)) {
-      return Stack(
-        clipBehavior: Clip.none,
-        children: [
-          if (profilePictureWidget != null)
-            profilePictureWidget
-          else if (profilePicture != null)
-            Avatar(size: avatarSize, imageUrl: profilePicture),
-          if (profilePictureIceBadge != null && profilePictureIceBadge)
-            Positioned(
-              bottom: -2.0.s,
-              right: -2.0.s,
-              child: Column(
-                children: [
-                  Container(
-                    width: 12.0.s,
-                    height: 12.0.s,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3.5.s),
-                      border: Border.all(
-                        width: 1.0.s,
-                        color: context.theme.appColors.secondaryBackground,
-                      ),
-                      color: context.theme.appColors.darkBlue,
-                    ),
-                    child: Center(
-                      child: Assets.images.icons.iconIcelogoSecuredby.icon(
-                        color: context.theme.appColors.secondaryBackground,
-                        size: 10.0.s,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      );
-    } else {
-      return Container();
-    }
-  }
 
   @override
   Color _getBackgroundColor(BuildContext context) {

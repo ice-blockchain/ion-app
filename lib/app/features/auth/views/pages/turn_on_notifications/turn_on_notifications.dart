@@ -95,14 +95,9 @@ class TurnOnNotifications extends IceSimplePage {
                             ref
                                 .read(permissionsProvider.notifier)
                                 .requestPermission(
-                              PermissionType.Notifications,
-                              onDenied: () {
-                                handleSignIn(ref);
-                              },
-                              onGranted: () {
-                                handleSignIn(ref);
-                              },
-                            );
+                                  PermissionType.Notifications,
+                                )
+                                .then((_) => handleSignIn(ref));
                           },
                         ),
                       ),

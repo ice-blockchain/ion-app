@@ -29,7 +29,6 @@ class ContactButton extends HookConsumerWidget {
         color: colors.secondaryBackground,
       ),
       child: ListItem.user(
-        context: context,
         contentPadding: EdgeInsets.only(
           left: ScreenSideOffset.defaultSmallMargin,
           top: 10.0.s,

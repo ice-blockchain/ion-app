@@ -55,7 +55,6 @@ class ContactsListView extends IcePage<ContactData> {
 
                 return ScreenSideOffset.small(
                   child: ListItem.user(
-                    context: context,
                     title: Text(contact.name),
                     subtitle: Text(contact.nickname!),
                     profilePicture: contact.icon,

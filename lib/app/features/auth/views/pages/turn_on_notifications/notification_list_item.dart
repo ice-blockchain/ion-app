@@ -18,8 +18,7 @@ class NotificationListItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 43.0.s),
       child: ListItem.user(
-        context: context,
-        profilePictureIceBadge: notification.iceVerified,
+        showProfilePictureIceBadge: notification.iceVerified,
         title: Text(
           notification.title,
           style: context.theme.appTextThemes.body.copyWith(
