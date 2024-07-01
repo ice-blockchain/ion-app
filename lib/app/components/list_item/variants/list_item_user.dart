@@ -24,7 +24,7 @@ class _ListItemUser extends ListItem {
     DateTime? timeago,
   }) : super(
           leading: leading ??
-              (profilePicture != null
+              (profilePicture != null || profilePictureWidget != null
                   ? Avatar(
                       size: avatarSize,
                       imageUrl: profilePicture,
