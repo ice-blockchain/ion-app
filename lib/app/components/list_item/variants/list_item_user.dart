@@ -58,14 +58,7 @@ class _ListItemUser extends ListItem {
                 .start, // Aligns the Column to the top of the Row
             children: <Widget>[
               Flexible(child: subtitle),
-              if (timeago != null)
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _TimeAgo(date: timeago),
-                  ],
-                ),
+              if (timeago != null) _TimeAgo(date: timeago),
             ],
           ),
         );

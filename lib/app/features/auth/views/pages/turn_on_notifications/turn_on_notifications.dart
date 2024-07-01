@@ -35,7 +35,7 @@ class TurnOnNotifications extends IceSimplePage {
             child: AuthHeader(
               title: context.i18n.turn_notifications_title,
               description: context.i18n.turn_notifications_description,
-              sidePadding: 12.0.s,
+              descriptionSidePadding: 12.0.s,
             ),
           ),
           Expanded(

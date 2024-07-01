@@ -13,15 +13,15 @@ class AuthHeader extends StatelessWidget {
     this.icon,
     this.showBackButton = true,
     double? iconOffset,
-    double? sidePadding,
+    double? descriptionSidePadding,
   })  : iconOffset = iconOffset ?? 19.0.s,
-        sidePadding = sidePadding ?? 0.0.s;
+        descriptionSidePadding = descriptionSidePadding ?? 0.0.s;
 
   final String? title;
   final String? description;
   final Widget? icon;
   final double iconOffset;
-  final double sidePadding;
+  final double descriptionSidePadding;
   final bool showBackButton;
 
   @override
@@ -51,8 +51,8 @@ class AuthHeader extends StatelessWidget {
               if (description?.isNotEmpty ?? false)
                 Padding(
                   padding: EdgeInsets.only(
-                    left: sidePadding,
-                    right: sidePadding,
+                    left: descriptionSidePadding,
+                    right: descriptionSidePadding,
                     top: 8.0.s,
                   ),
                   child: Text(
