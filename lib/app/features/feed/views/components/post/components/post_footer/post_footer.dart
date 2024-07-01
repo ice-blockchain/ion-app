@@ -1,8 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -10,13 +8,32 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_engagement_metric.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_metric_space.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class PostFooter extends HookConsumerWidget {
-  const PostFooter(this.content, {super.key});
+class PostFooter extends StatelessWidget {
+  const PostFooter({
+    required this.content,
+    required this.isCommentActive,
+    required this.isReposted,
+    required this.isLiked,
+    required this.onToggleComment,
+    required this.onToggleRepost,
+    required this.onToggleLike,
+    required this.onShareOptions,
+    required this.onIceStroke,
+    super.key,
+  });
 
   final String content;
+  final bool isCommentActive;
+  final bool isReposted;
+  final bool isLiked;
+  final VoidCallback onToggleComment;
+  final VoidCallback onToggleRepost;
+  final VoidCallback onToggleLike;
+  final VoidCallback onShareOptions;
+  final VoidCallback onIceStroke;
+
   static double get horizontalPadding => max(
         ScreenSideOffset.defaultSmallMargin -
             PostEngagementMetric.horizontalHitSlop,
@@ -26,20 +43,8 @@ class PostFooter extends HookConsumerWidget {
   static double get iconSize => 16.0.s;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isCommentActive = useState(false);
-    final isReposted = useState(false);
-    final isLiked = useState(false);
-
+  Widget build(BuildContext context) {
     final activeColor = context.theme.appColors.primaryAccent;
-
-    void toggleComment() => isCommentActive.value = !isCommentActive.value;
-    void toggleRepost() {
-      IceRoutes.shareType.push(context, payload: content);
-      isReposted.value = !isReposted.value;
-    }
-
-    void toggleLike() => isLiked.value = !isLiked.value;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -52,7 +57,7 @@ class PostFooter extends HookConsumerWidget {
         children: <Widget>[
           PostMetricSpace(
             child: PostEngagementMetric(
-              onPressed: toggleComment,
+              onPressed: onToggleComment,
               icon: Assets.images.icons.iconBlockComment.icon(
                 size: PostFooter.iconSize,
               ),
@@ -60,13 +65,13 @@ class PostFooter extends HookConsumerWidget {
                 size: PostFooter.iconSize,
               ),
               value: '121k',
-              isActive: isCommentActive.value,
+              isActive: isCommentActive,
               activeColor: activeColor,
             ),
           ),
           PostMetricSpace(
             child: PostEngagementMetric(
-              onPressed: toggleRepost,
+              onPressed: onToggleRepost,
               icon: Assets.images.icons.iconBlockRepost.icon(
                 size: PostFooter.iconSize,
               ),
@@ -75,13 +80,13 @@ class PostFooter extends HookConsumerWidget {
                 color: activeColor,
               ),
               value: '442k',
-              isActive: isReposted.value,
+              isActive: isReposted,
               activeColor: activeColor,
             ),
           ),
           PostMetricSpace(
             child: PostEngagementMetric(
-              onPressed: toggleLike,
+              onPressed: onToggleLike,
               icon: Assets.images.icons.iconVideoLikeOff.icon(
                 size: PostFooter.iconSize,
                 color: context.theme.appColors.onTertararyBackground,
@@ -91,13 +96,13 @@ class PostFooter extends HookConsumerWidget {
                 color: context.theme.appColors.attentionRed,
               ),
               value: '121k',
-              isActive: isLiked.value,
+              isActive: isLiked,
               activeColor: context.theme.appColors.attentionRed,
             ),
           ),
           PostMetricSpace(
             child: PostEngagementMetric(
-              onPressed: () {},
+              onPressed: onIceStroke,
               icon: Assets.images.icons.iconButtonIceStroke.icon(
                 size: PostFooter.iconSize,
                 color: context.theme.appColors.onTertararyBackground,
@@ -107,7 +112,7 @@ class PostFooter extends HookConsumerWidget {
             ),
           ),
           PostEngagementMetric(
-            onPressed: () {},
+            onPressed: onShareOptions,
             icon: Assets.images.icons.iconBlockShare.icon(
               size: PostFooter.iconSize,
             ),

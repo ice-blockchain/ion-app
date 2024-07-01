@@ -4,14 +4,43 @@ import 'package:ice/app/features/feed/views/components/post/components/post_body
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_menu.dart';
+import 'package:ice/app/router/app_routes.dart';
 
-class Post extends StatelessWidget {
+class Post extends StatefulWidget {
   const Post({
     required this.content,
     super.key,
   });
 
   final String content;
+
+  @override
+  State<Post> createState() => _PostState();
+}
+
+class _PostState extends State<Post> {
+  bool isCommentActive = false;
+  bool isReposted = false;
+  bool isLiked = false;
+
+  void toggleComment() {
+    setState(() {
+      isCommentActive = !isCommentActive;
+    });
+  }
+
+  void toggleRepost() {
+    IceRoutes.shareType.push(context, payload: widget.content);
+    setState(() {
+      isReposted = !isReposted;
+    });
+  }
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +53,19 @@ class Post extends StatelessWidget {
             trailing: PostMenu(),
           ),
           PostBody(
-            content: content,
+            content: widget.content,
           ),
-          PostFooter(content),
+          PostFooter(
+            content: widget.content,
+            isCommentActive: isCommentActive,
+            isReposted: isReposted,
+            isLiked: isLiked,
+            onToggleComment: toggleComment,
+            onToggleRepost: toggleRepost,
+            onToggleLike: toggleLike,
+            onShareOptions: () {},
+            onIceStroke: () {},
+          ),
         ],
       ),
     );
