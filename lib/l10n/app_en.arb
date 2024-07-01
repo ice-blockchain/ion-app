@@ -158,5 +158,14 @@
   "turn_notifications_description": "Receive notifications when you transfer and receive funds",
   "turn_notifications_receive": "Receive notifications when your sending or receiving assets",
   "turn_notifications_stay_up": "Stay up to date with the latest news",
-  "turn_notifications_chat": "Chat and receive notifications even if the application is closed"
+  "turn_notifications_chat": "Chat and receive notifications even if the application is closed",
+  "turn_notifications_sent_title": "Sent ICE",
+  "turn_notifications_sent_description": "You sent 12.43 ICE to @james",
+  "turn_notifications_sent_time": "15m ago",
+  "turn_notifications_new_follower_title": "New follower",
+  "turn_notifications_new_follower_description": "@curtis has started following you",
+  "turn_notifications_new_follower_time": "24m ago",
+  "turn_notifications_new_message_title": "New message",
+  "turn_notifications_new_message_description": "@marie has sent you a message",
+  "turn_notifications_new_message_time": "31m ago"
 }

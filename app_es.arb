@@ -158,6 +158,15 @@
     "turn_notifications_description",
     "turn_notifications_receive",
     "turn_notifications_stay_up",
-    "turn_notifications_chat"
+    "turn_notifications_chat",
+    "turn_notifications_sent_title",
+    "turn_notifications_sent_description",
+    "turn_notifications_sent_time",
+    "turn_notifications_new_follower_title",
+    "turn_notifications_new_follower_description",
+    "turn_notifications_new_follower_time",
+    "turn_notifications_new_message_title",
+    "turn_notifications_new_message_description",
+    "turn_notifications_new_message_time"
   ]
 }
