@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/string.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
@@ -14,12 +13,15 @@ class AuthHeader extends StatelessWidget {
     this.icon,
     this.showBackButton = true,
     double? iconOffset,
-  }) : iconOffset = iconOffset ?? 19.0.s;
+    double? sidePadding,
+  })  : iconOffset = iconOffset ?? 19.0.s,
+        sidePadding = sidePadding ?? 0.0.s;
 
   final String? title;
   final String? description;
   final Widget? icon;
   final double iconOffset;
+  final double sidePadding;
   final bool showBackButton;
 
   @override
@@ -38,7 +40,7 @@ class AuthHeader extends StatelessWidget {
                   padding: EdgeInsets.only(bottom: iconOffset),
                   child: icon,
                 ),
-              if (title.isNotEmpty)
+              if (title?.isNotEmpty ?? false)
                 Text(
                   title!,
                   textAlign: TextAlign.center,
@@ -46,10 +48,13 @@ class AuthHeader extends StatelessWidget {
                     color: context.theme.appColors.primaryText,
                   ),
                 ),
-              if (description.isNotEmpty)
+              if (description?.isNotEmpty ?? false)
                 Padding(
-                  padding:
-                      EdgeInsets.only(left: 12.0.s, right: 12.0.s, top: 8.0.s),
+                  padding: EdgeInsets.only(
+                    left: sidePadding,
+                    right: sidePadding,
+                    top: 8.0.s,
+                  ),
                   child: Text(
                     description!,
                     textAlign: TextAlign.center,

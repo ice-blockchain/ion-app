@@ -59,15 +59,12 @@ class _ListItemUser extends ListItem {
             children: <Widget>[
               Flexible(child: subtitle),
               if (timeago != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: 4),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _TimeAgo(date: timeago),
-                    ],
-                  ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _TimeAgo(date: timeago),
+                  ],
                 ),
             ],
           ),
