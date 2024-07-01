@@ -23,7 +23,7 @@ class ArticleImage extends StatelessWidget {
       borderRadius: BorderRadius.circular(12.0.s),
       child: Stack(
         alignment: minutesToReadAlignment,
-        children: <Widget>[
+        children: [
           AspectRatio(
             aspectRatio: 343 / 210,
             child: CachedNetworkImage(

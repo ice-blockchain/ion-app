@@ -13,7 +13,7 @@ Widget feedPostUseCase(BuildContext context) {
     body: ScreenSideOffset.small(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
+        children: [
           Article(
             id: 'test_article_id',
             title: 'The volume of the BNB Chain network increased in May 65%',
