@@ -4,9 +4,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_footer/components/bottom_action_bar.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_footer/components/comment_input.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_footer/components/post_container.dart';
+import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/bottom_action_bar.dart';
+import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/comment_input.dart';
+import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/post_container.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/generated/assets.gen.dart';
 
