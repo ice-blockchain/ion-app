@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class AuthHeader extends StatelessWidget {
@@ -48,7 +46,7 @@ class AuthHeader extends StatelessWidget {
                     color: context.theme.appColors.primaryText,
                   ),
                 ),
-              if (description?.isNotEmpty ?? false)
+              if (description.isNotEmpty)
                 Padding(
                   padding: EdgeInsets.only(
                     left: descriptionSidePadding,
