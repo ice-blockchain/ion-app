@@ -22,6 +22,7 @@ class PostList extends HookConsumerWidget {
       itemBuilder: (BuildContext context, int index) {
         return Post(
           content: posts[index].body,
+          isFooterVisible: true,
         );
       },
     );

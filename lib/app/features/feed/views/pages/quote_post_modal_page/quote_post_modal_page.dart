@@ -4,9 +4,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/bottom_action_bar.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/comment_input.dart';
-import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/post_container.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -57,7 +57,21 @@ class QuotePostModalPage extends IcePage<String?> {
                     child: Column(
                       children: [
                         const CommentInput(),
-                        PostContainer(content: payload ?? ''),
+                        Padding(
+                          padding: EdgeInsets.only(left: 40.0.s, top: 16.0.s),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: context.theme.appColors.onTerararyFill,
+                              ),
+                              borderRadius: BorderRadius.circular(16.0.s),
+                            ),
+                            child: Post(
+                              content: payload ?? '',
+                              isFooterVisible: false,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),

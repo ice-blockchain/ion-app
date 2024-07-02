@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -8,31 +10,15 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_engagement_metric.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_metric_space.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class PostFooter extends StatelessWidget {
+class PostFooter extends HookConsumerWidget {
   const PostFooter({
     required this.content,
-    required this.isCommentActive,
-    required this.isReposted,
-    required this.isLiked,
-    required this.onToggleComment,
-    required this.onToggleRepost,
-    required this.onToggleLike,
-    required this.onShareOptions,
-    required this.onIceStroke,
     super.key,
   });
-
   final String content;
-  final bool isCommentActive;
-  final bool isReposted;
-  final bool isLiked;
-  final VoidCallback onToggleComment;
-  final VoidCallback onToggleRepost;
-  final VoidCallback onToggleLike;
-  final VoidCallback onShareOptions;
-  final VoidCallback onIceStroke;
 
   static double get horizontalPadding => max(
         ScreenSideOffset.defaultSmallMargin -
@@ -43,8 +29,29 @@ class PostFooter extends StatelessWidget {
   static double get iconSize => 16.0.s;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isCommentActive = useState(false);
+    final isReposted = useState(false);
+    final isLiked = useState(false);
+
     final activeColor = context.theme.appColors.primaryAccent;
+
+    void onToggleComment() {
+      isCommentActive.value = !isCommentActive.value;
+    }
+
+    void onToggleRepost() {
+      IceRoutes.shareType.push(context, payload: content);
+      isReposted.value = !isReposted.value;
+    }
+
+    void onToggleLike() {
+      isLiked.value = !isLiked.value;
+    }
+
+    void onShareOptions() {}
+
+    void onIceStroke() {}
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -65,7 +72,7 @@ class PostFooter extends StatelessWidget {
                 size: PostFooter.iconSize,
               ),
               value: '121k',
-              isActive: isCommentActive,
+              isActive: isCommentActive.value,
               activeColor: activeColor,
             ),
           ),
@@ -80,7 +87,7 @@ class PostFooter extends StatelessWidget {
                 color: activeColor,
               ),
               value: '442k',
-              isActive: isReposted,
+              isActive: isReposted.value,
               activeColor: activeColor,
             ),
           ),
@@ -96,7 +103,7 @@ class PostFooter extends StatelessWidget {
                 color: context.theme.appColors.attentionRed,
               ),
               value: '121k',
-              isActive: isLiked,
+              isActive: isLiked.value,
               activeColor: context.theme.appColors.attentionRed,
             ),
           ),
