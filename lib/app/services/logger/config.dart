@@ -5,5 +5,5 @@ class LoggerConfig {
 
   static const bool routerLogsEnabled = true;
 
-  static const bool nostrLogsEnabled = false;
+  static const bool nostrLogsEnabled = true;
 }

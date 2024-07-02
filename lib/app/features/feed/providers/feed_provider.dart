@@ -23,7 +23,8 @@ class FeedNotifier extends _$FeedNotifier {
     state = AsyncData<List<PostData>>(
       events
           .map(
-            (EventMessage event) => PostData(id: event.id, body: event.content),
+            (EventMessage event) =>
+                PostData(id: event.id, body: event.content, media: {}),
           )
           .toList(),
     );
