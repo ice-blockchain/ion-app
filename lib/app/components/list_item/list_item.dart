@@ -65,8 +65,10 @@ class ListItem extends StatelessWidget {
     Color? backgroundColor,
     VoidCallback? onTap,
     String? profilePicture,
+    Widget? profilePictureWidget,
     bool verifiedBadge,
     bool iceBadge,
+    bool? showProfilePictureIceBadge,
     bool isSelected,
     DateTime? timeago,
   }) = _ListItemUser;

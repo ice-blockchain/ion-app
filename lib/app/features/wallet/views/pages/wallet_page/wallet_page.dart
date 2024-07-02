@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/app/features/core/providers/permissions_provider_selectors.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
@@ -28,7 +29,8 @@ class WalletPage extends IceSimplePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
     final scrollController = useScrollController();
-    final hasContactsPermission = hasContactsPermissionSelector(ref);
+    final hasContactsPermission =
+        hasPermissionSelector(ref, PermissionType.Contacts);
 
     useOnInit<void>(() {
       if (hasContactsPermission ?? false) {

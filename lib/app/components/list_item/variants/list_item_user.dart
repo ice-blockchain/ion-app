@@ -16,16 +16,20 @@ class _ListItemUser extends ListItem {
     EdgeInsetsGeometry? leadingPadding,
     BoxConstraints? constraints,
     String? profilePicture,
+    Widget? profilePictureWidget,
     bool verifiedBadge = false,
     bool iceBadge = false,
+    bool? showProfilePictureIceBadge,
     super.isSelected,
     DateTime? timeago,
   }) : super(
           leading: leading ??
-              (profilePicture != null
+              (profilePicture != null || profilePictureWidget != null
                   ? Avatar(
                       size: avatarSize,
                       imageUrl: profilePicture,
+                      iceBadge: showProfilePictureIceBadge ?? false,
+                      imageWidget: profilePictureWidget,
                     )
                   : null),
           borderRadius: borderRadius ?? BorderRadius.zero,
@@ -34,7 +38,6 @@ class _ListItemUser extends ListItem {
           constraints: constraints ?? const BoxConstraints(),
           title: Row(
             children: <Widget>[
-              // Flexible allows text to be truncated on overflow
               Flexible(child: title),
               if (iceBadge)
                 Padding(
@@ -51,8 +54,9 @@ class _ListItemUser extends ListItem {
             ],
           ),
           subtitle: Row(
+            crossAxisAlignment: CrossAxisAlignment
+                .start, // Aligns the Column to the top of the Row
             children: <Widget>[
-              // Flexible allows text to be truncated on overflow
               Flexible(child: subtitle),
               if (timeago != null) _TimeAgo(date: timeago),
             ],

@@ -5,35 +5,57 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'permissions_provider.g.dart';
 
-enum PermissionType { Contacts }
+enum PermissionType { Contacts, Notifications }
+
+typedef PermissionCallback = void Function();
 
 @Riverpod(keepAlive: true)
 class Permissions extends _$Permissions {
   @override
-  Map<PermissionType, bool> build() {
-    return Map<PermissionType, bool>.unmodifiable(<PermissionType, bool>{});
+  Map<PermissionType, PermissionStatus> build() {
+    return Map<PermissionType, PermissionStatus>.unmodifiable(
+      <PermissionType, PermissionStatus>{},
+    );
   }
 
   Future<void> checkAllPermissions() async {
-    final permissions = <PermissionType, bool>{};
+    final permissions = <PermissionType, PermissionStatus>{};
     final contactsPermissionStatus = await Permission.contacts.status;
-    permissions.putIfAbsent(
-      PermissionType.Contacts,
-      () => contactsPermissionStatus == PermissionStatus.granted,
-    );
-    state = Map<PermissionType, bool>.unmodifiable(permissions);
+    final notificationsPermissionStatus = await Permission.notification.status;
+    permissions
+      ..putIfAbsent(
+        PermissionType.Notifications,
+        () => notificationsPermissionStatus,
+      )
+      ..putIfAbsent(
+        PermissionType.Contacts,
+        () => contactsPermissionStatus,
+      );
+    state = Map<PermissionType, PermissionStatus>.unmodifiable(permissions);
   }
 
-  Future<void> requestContactsPermission() async {
-    await Permission.contacts.request();
-    // hardcode always as granted for now
-    const newIsGranted = true;
-    final newState = Map<PermissionType, bool>.from(state)
+  Future<PermissionStatus> requestPermission(
+    PermissionType permissionType,
+  ) async {
+    late final permission = switch (permissionType) {
+      PermissionType.Contacts => Permission.contacts,
+      PermissionType.Notifications => Permission.notification,
+    };
+
+    final permissionStatus = await permission.request();
+
+    final newState = Map<PermissionType, PermissionStatus>.from(state)
       ..update(
-        PermissionType.Contacts,
-        (_) => newIsGranted,
-        ifAbsent: () => newIsGranted,
+        permissionType,
+        (_) => permissionStatus,
+        ifAbsent: () => permissionStatus,
       );
-    state = Map<PermissionType, bool>.unmodifiable(newState);
+    state = Map<PermissionType, PermissionStatus>.unmodifiable(newState);
+
+    return permissionStatus;
+  }
+
+  PermissionStatus? getPermissionStatusForType(PermissionType type) {
+    return state[type];
   }
 }

@@ -11,6 +11,7 @@ import 'package:ice/app/features/auth/views/pages/nostr_auth/nostr_auth.dart';
 import 'package:ice/app/features/auth/views/pages/nostr_login/nostr_login.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
+import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
@@ -71,6 +72,7 @@ enum IceRoutes<PayloadType> {
       IceRoutes.nostrAuth,
       IceRoutes.nostrLogin,
       IceRoutes.enterCode,
+      IceRoutes.notifications,
     ],
   ),
   auth(
@@ -121,10 +123,16 @@ enum IceRoutes<PayloadType> {
   ),
   feed(
     FeedPage.new,
-    children: <IceRoutes<dynamic>>[IceRoutes.feedMainModal],
+    children: <IceRoutes<dynamic>>[
+      IceRoutes.feedMainModal,
+    ],
   ),
   feedMainModal(
     FeedMainModalPage.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  notifications(
+    TurnOnNotifications.new,
     type: IceRouteType.bottomSheet,
   ),
   dapps(
