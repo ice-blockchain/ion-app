@@ -33,51 +33,62 @@ class Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (imageWidget != null) {
-      return Stack(
-        clipBehavior: Clip.none,
+      return _buildImageWidgetWithBadge(context);
+    } else if (imageUrl != null) {
+      return _buildNetworkImage();
+    } else {
+      return const SizedBox();
+    }
+  }
+
+  Widget _buildImageWidgetWithBadge(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        imageWidget!,
+        if (iceBadge) _buildIceBadge(context),
+      ],
+    );
+  }
+
+  Widget _buildIceBadge(BuildContext context) {
+    return Positioned(
+      bottom: -2.0.s,
+      right: -2.0.s,
+      child: Column(
         children: [
-          imageWidget!,
-          if (iceBadge)
-            Positioned(
-              bottom: -2.0.s,
-              right: -2.0.s,
-              child: Column(
-                children: [
-                  Container(
-                    width: 12.0.s,
-                    height: 12.0.s,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3.5.s),
-                      border: Border.all(
-                        width: 1.0.s,
-                        color: context.theme.appColors.secondaryBackground,
-                      ),
-                      color: context.theme.appColors.darkBlue,
-                    ),
-                    child: Center(
-                      child: Assets.images.icons.iconIcelogoSecuredby.icon(
-                        color: context.theme.appColors.secondaryBackground,
-                        size: 10.0.s,
-                      ),
-                    ),
-                  ),
-                ],
+          Container(
+            width: 12.0.s,
+            height: 12.0.s,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3.5.s),
+              border: Border.all(
+                width: 1.0.s,
+                color: context.theme.appColors.secondaryBackground,
+              ),
+              color: context.theme.appColors.darkBlue,
+            ),
+            child: Center(
+              child: Assets.images.icons.iconIcelogoSecuredby.icon(
+                color: context.theme.appColors.secondaryBackground,
+                size: 10.0.s,
               ),
             ),
+          ),
         ],
-      );
-    } else if (imageUrl != null) {
-      return ClipRRect(
-        borderRadius: borderRadius,
-        child: CachedNetworkImage(
-          imageUrl: getAdaptiveImageUrl(imageUrl!, size * 2),
-          width: size,
-          height: size,
-          fit: fit,
-        ),
-      );
-    } else {
-      return Container();
-    }
+      ),
+    );
+  }
+
+  Widget _buildNetworkImage() {
+    return ClipRRect(
+      borderRadius: borderRadius,
+      child: CachedNetworkImage(
+        imageUrl: getAdaptiveImageUrl(imageUrl!, size * 2),
+        width: size,
+        height: size,
+        fit: fit,
+      ),
+    );
   }
 }

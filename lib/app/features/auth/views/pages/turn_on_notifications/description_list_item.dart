@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
 class DescriptionListItem extends StatelessWidget {
@@ -13,14 +14,13 @@ class DescriptionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 43.0.s),
+    return ScreenSideOffset.large(
       child: Row(
         children: [
           Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(right: 11.0.s),
+                padding: EdgeInsets.only(right: 10.0.s),
                 child: icon,
               ),
             ],
