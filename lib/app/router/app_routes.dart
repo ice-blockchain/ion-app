@@ -184,14 +184,15 @@ class DappsRoute extends BaseRouteData {
   Widget build(BuildContext context, GoRouterState state) => const DAppsPage();
 }
 
+@TypedGoRoute<ErrorRoute>(path: '/error')
 class ErrorRoute extends BaseRouteData {
-  ErrorRoute({required this.error});
+  ErrorRoute({required this.$extra});
 
-  final Exception error;
+  final Exception? $extra;
 
   @override
   Widget build(BuildContext context, GoRouterState state) => ErrorPage(
-        error: error,
+        error: $extra ?? Exception('Unknown error'),
       );
 }
 
@@ -343,8 +344,6 @@ class DAppsListRoute extends BaseRouteData {
 
 class DAppDetailsRoute extends BaseRouteData {
   DAppDetailsRoute() : super(transitionType: IceRouteType.bottomSheet);
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) => DAppDetails();
@@ -658,7 +657,7 @@ GoRouter goRouter(GoRouterRef ref) {
     },
     routes: $appRoutes,
     errorBuilder: (context, state) =>
-        ErrorRoute(error: state.error!).build(context, state),
+        ErrorRoute($extra: state.error).build(context, state),
     initialLocation: SplashRoute().location,
     debugLogDiagnostics: LoggerConfig.routerLogsEnabled,
     navigatorKey: rootNavigatorKey,
