@@ -73,7 +73,7 @@ class DAppsPage extends IcePage {
                         title: context.i18n.dapps_section_title_favourites,
                         items: <DAppItem>[],
                       ),
-                    ).go(context);
+                    ).push<void>(context);
                   },
                 ),
               ],

@@ -28,7 +28,7 @@ class CreateNewWalletModal extends IcePage {
     final controller = useTextEditingController();
 
     return FractionallySizedBox(
-      heightFactor: 0.54,
+      heightFactor: 0.55,
       child: Column(
         children: <Widget>[
           NavigationAppBar.modal(
