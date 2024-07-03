@@ -29,7 +29,7 @@ Widget feedPostUseCase(BuildContext context) {
           Post(
             postData: PostData(
               id: 'test_2',
-              body: '',
+              body: 'With one horizontal image',
               media: [
                 PostMediaData(
                   mediaType: MediaType.image,
@@ -42,7 +42,7 @@ Widget feedPostUseCase(BuildContext context) {
           Post(
             postData: PostData(
               id: 'test_2',
-              body: '',
+              body: 'With multiple horizontal image',
               media: [
                 PostMediaData(
                   mediaType: MediaType.image,
@@ -63,8 +63,22 @@ Widget feedPostUseCase(BuildContext context) {
           ),
           Post(
             postData: PostData(
-              id: 'test_2',
-              body: '',
+              id: 'test_3',
+              body: 'With one vertical image',
+              media: [
+                PostMediaData(
+                  mediaType: MediaType.image,
+                  url:
+                      'https://image.nostr.build/33b1f85f04390349c3526cadc11eb1409b0f9c89bc7e1dbc0785361ed7382510.jpg',
+                  dimension: '280x400',
+                ),
+              ],
+            ),
+          ),
+          Post(
+            postData: PostData(
+              id: 'test_4',
+              body: 'With multiple vertical images',
               media: [
                 PostMediaData(
                   mediaType: MediaType.image,
