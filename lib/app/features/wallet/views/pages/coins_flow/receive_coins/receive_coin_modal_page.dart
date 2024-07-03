@@ -21,6 +21,7 @@ class ReceiveCoinModalPage extends IceSimplePage {
             payload: coin,
           );
         },
+        type: CoinsListViewType.receive,
       ),
       backgroundColor: context.theme.appColors.secondaryBackground,
     );

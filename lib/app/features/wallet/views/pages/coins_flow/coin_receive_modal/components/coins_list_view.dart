@@ -14,13 +14,17 @@ import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
+enum CoinsListViewType { send, receive }
+
 class CoinsListView extends HookConsumerWidget {
   const CoinsListView({
     required this.onCoinItemTap,
+    this.type = CoinsListViewType.send,
     super.key,
   });
 
   final void Function(CoinData) onCoinItemTap;
+  final CoinsListViewType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,6 +48,10 @@ class CoinsListView extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final title = type == CoinsListViewType.receive
+        ? context.i18n.wallet_receive_coins
+        : context.i18n.wallet_send_coins;
+
     return FractionallySizedBox(
       heightFactor: 0.79,
       child: Column(
@@ -51,7 +59,7 @@ class CoinsListView extends HookConsumerWidget {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
-              title: context.i18n.wallet_send_coins,
+              title: title,
               showBackButton: false,
               actions: const <Widget>[
                 NavigationCloseButton(),
