@@ -21,8 +21,6 @@ import 'package:ice/generated/assets.gen.dart';
 class AuthPage extends IcePage {
   const AuthPage({super.key});
 
-  // const AuthPage(super._route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     final isEmailMode = useState(true);

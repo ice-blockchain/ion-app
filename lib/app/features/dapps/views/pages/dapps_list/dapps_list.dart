@@ -18,13 +18,10 @@ class DAppsList extends IcePage {
 
   final AppsRouteData payload;
 
-  // const DAppsList(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    // AppsRouteData? payload,
   ) {
     final searchText = useState('');
     final items = payload.items ?? <DAppItem>[];

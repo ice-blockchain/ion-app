@@ -19,8 +19,6 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 class CreateNewWalletModal extends IcePage {
   const CreateNewWalletModal({super.key});
 
-  // const CreateNewWalletModal(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(
     BuildContext context,

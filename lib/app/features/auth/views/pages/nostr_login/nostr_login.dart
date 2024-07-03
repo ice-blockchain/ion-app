@@ -22,8 +22,6 @@ import 'package:ice/generated/assets.gen.dart';
 class NostrLogin extends IcePage {
   const NostrLogin({super.key});
 
-  // const NostrLogin(super._route, super.payload, {super.key});
-
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override

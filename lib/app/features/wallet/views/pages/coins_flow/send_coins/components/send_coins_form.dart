@@ -26,8 +26,6 @@ import 'package:ice/generated/assets.gen.dart';
 class SendCoinsForm extends IcePage {
   const SendCoinsForm({super.key});
 
-  // const SendCoinsForm(super.route, super.payload, {super.key});
-
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
@@ -69,9 +67,6 @@ class SendCoinsForm extends IcePage {
                         coinData: formController.selectedCoin,
                         onTap: () {
                           CoinSendRoute().push<void>(context);
-                          // IceRoutes.coinSend.push(
-                          //   context,
-                          // );
                         },
                       ),
                       SizedBox(height: 12.0.s),
@@ -79,9 +74,6 @@ class SendCoinsForm extends IcePage {
                         networkType: formController.selectedNetwork,
                         onTap: () {
                           NetworkSelectRoute().push<void>(context);
-                          // IceRoutes.networkSelect.push(
-                          //   context,
-                          // );
                         },
                       ),
                       SizedBox(height: 12.0.s),
@@ -149,7 +141,6 @@ class SendCoinsForm extends IcePage {
                         ),
                         onPressed: () {
                           CoinsSendFormConfirmationRoute().push<void>(context);
-                          // IceRoutes.coinSendFormConfirmation.push(context);
                         },
                       ),
                       SizedBox(height: 16.0.s),

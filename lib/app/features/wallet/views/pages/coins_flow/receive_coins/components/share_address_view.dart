@@ -13,13 +13,10 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-// class ShareAddressView extends IcePage<Map<String, dynamic>?> {
 class ShareAddressView extends IcePage {
   const ShareAddressView({required this.payload, super.key});
 
   final Map<String, dynamic> payload;
-
-  // const ShareAddressView(super.route, super.payload, {super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 

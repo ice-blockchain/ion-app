@@ -10,8 +10,6 @@ import 'package:lottie/lottie.dart';
 class SplashPage extends IcePage {
   const SplashPage({super.key});
 
-  // const SplashPage(super.route, super.payload, {super.key});
-
   static const Color backgroundColor = Color(0xFF0166FF);
 
   @override

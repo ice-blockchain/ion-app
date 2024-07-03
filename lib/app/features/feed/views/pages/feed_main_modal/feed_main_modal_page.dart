@@ -11,8 +11,6 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 class FeedMainModalPage extends IcePage {
   const FeedMainModalPage({super.key});
 
-  // const FeedMainModalPage(super.route, super.payload, {super.key});
-
   static const List<FeedType> feedTypeValues = FeedType.values;
 
   @override

@@ -19,8 +19,6 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 class SelectLanguages extends IcePage {
   const SelectLanguages({super.key});
 
-  // const SelectLanguages(super._route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
@@ -107,8 +105,6 @@ class SelectLanguages extends IcePage {
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
                     hideKeyboardAndCallOnce(
-                      // callback: () => IceRoutes.discoverCreators.push
-                      // (context),
                       callback: () =>
                           DiscoverCreatorsRoute().push<void>(context),
                     );

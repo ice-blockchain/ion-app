@@ -37,12 +37,6 @@ class PhoneAuthForm extends HookConsumerWidget {
             prefixIcon: CountryCodeInput(
               country: country.value,
               onTap: () async {
-                // final data = await IceRoutes.selectCountries
-                //     .push<SelectCountryReturnData>(context);
-                // if (data != null) {
-                //   country.value = data.country;
-                // }
-
                 final data = await SelectCountriesRoute()
                     .push<SelectCountryReturnData>(context);
 
@@ -77,7 +71,6 @@ class PhoneAuthForm extends HookConsumerWidget {
                 await Future<void>.delayed(const Duration(seconds: 1));
                 loading.value = false;
                 hideKeyboardAndCallOnce(
-                  // callback: () => IceRoutes.enterCode.push(context),
                   callback: () => EnterCodeRoute().push<void>(context),
                 );
               }

@@ -16,8 +16,6 @@ import 'package:ice/generated/assets.gen.dart';
 class NostrAuth extends IcePage {
   const NostrAuth({super.key});
 
-  // const NostrAuth(super._route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     final sheetFullHeight = useSheetFullHeight(context);
@@ -64,7 +62,6 @@ class NostrAuth extends IcePage {
                     Button(
                       leadingIcon: Assets.images.icons.iconProfileLogin.icon(),
                       onPressed: () {
-                        // IceRoutes.nostrLogin.push(context);
                         NostrLoginRoute().push<void>(context);
                       },
                       label: Text(context.i18n.button_login),

@@ -10,16 +10,10 @@ import 'package:ice/app/features/wallet/providers/mock_data/contacts_mock_data.d
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-// class ContactsListView extends IcePage<ContactData> {
 class ContactsListView extends IcePage {
   const ContactsListView({required this.payload, super.key});
 
   final ContactData payload;
-
-  // const ContactsListView(
-  //   super.key,
-  //   super.payload,
-  // );
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {

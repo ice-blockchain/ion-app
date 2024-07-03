@@ -17,8 +17,6 @@ import 'package:ice/generated/assets.gen.dart';
 class CheckEmail extends IcePage {
   const CheckEmail({super.key});
 
-  // const CheckEmail(super._route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     const email = 'hello@ice.io';

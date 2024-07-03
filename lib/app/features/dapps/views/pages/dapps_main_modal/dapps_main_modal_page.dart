@@ -7,8 +7,6 @@ import 'package:ice/app/extensions/num.dart';
 class DappsMainModalPage extends IcePage {
   const DappsMainModalPage({super.key});
 
-  // const DappsMainModalPage(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return Scaffold(

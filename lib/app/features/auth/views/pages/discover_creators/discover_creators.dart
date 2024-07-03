@@ -23,8 +23,6 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 class DiscoverCreators extends IcePage {
   const DiscoverCreators({super.key});
 
-  // const DiscoverCreators(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);

@@ -9,8 +9,6 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 class WalletScanModalPage extends IcePage {
   const WalletScanModalPage({super.key});
 
-  // const WalletScanModalPage(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(

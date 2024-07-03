@@ -20,7 +20,6 @@ class Header extends StatelessWidget {
           children: <Widget>[
             HeaderAction(
               onPressed: () {
-                // IceRoutes.feed.go(context);
                 FeedRoute().go(context);
               },
               assetName: Assets.images.icons.iconChatBack.path,
@@ -33,7 +32,6 @@ class Header extends StatelessWidget {
             SizedBox(width: 12.0.s),
             HeaderAction(
               onPressed: () {
-                // IceRoutes.switchAccount.go(context);
                 SwitchAccountRoute().go(context);
               },
               assetName: Assets.images.icons.iconSwitchProfile.path,

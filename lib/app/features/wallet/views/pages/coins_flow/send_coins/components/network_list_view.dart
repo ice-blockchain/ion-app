@@ -13,8 +13,6 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 class NetworkListView extends IcePage {
   const NetworkListView({super.key});
 
-  // const NetworkListView(super.route, super.payload, {super.key});
-
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
@@ -49,10 +47,6 @@ class NetworkListView extends IcePage {
                       .selectNetwork(networkTypeValues[index]);
 
                   CoinsSendFormRoute().push<void>(context);
-
-                  // IceRoutes.coinSendForm.push(
-                  //   context,
-                  // );
                 },
               ),
             );

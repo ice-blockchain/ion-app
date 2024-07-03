@@ -14,8 +14,6 @@ import 'package:ice/generated/assets.gen.dart';
 class RequestContactAccessModal extends IcePage {
   const RequestContactAccessModal({super.key});
 
-  // const RequestContactAccessModal(super.route, super.payload, {super.key});
-
   static double get iceIconSize => 60.0.s;
 
   @override

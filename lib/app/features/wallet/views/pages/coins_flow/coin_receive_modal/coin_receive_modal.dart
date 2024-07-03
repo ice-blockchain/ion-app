@@ -13,13 +13,10 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_moda
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-// class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
 class CoinReceiveModal extends IcePage {
   const CoinReceiveModal({required this.payload, super.key});
 
   final CoinReceiveModalData payload;
-
-  // const CoinReceiveModal(super.route, super.payload, {super.key});
 
   NetworkType _getNetworkType(CoinReceiveModalData data) {
     if (data.networkType == NetworkType.all) {
@@ -32,7 +29,6 @@ class CoinReceiveModal extends IcePage {
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    // CoinReceiveModalData? payload,
   ) {
     final networkType = _getNetworkType(payload);
 

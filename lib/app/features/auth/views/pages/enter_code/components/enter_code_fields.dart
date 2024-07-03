@@ -36,9 +36,7 @@ class EnterCodeFields extends HookWidget {
                 errorController.add(ErrorAnimationType.shake);
               } else {
                 hideKeyboardAndCallOnce(
-                  callback: () =>
-                      // IceRoutes.fillProfile.pushReplacement(context),
-                      FillProfileRoute().pushReplacement(context),
+                  callback: () => FillProfileRoute().pushReplacement(context),
                 );
               }
             },

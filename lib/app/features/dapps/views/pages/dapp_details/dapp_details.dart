@@ -21,10 +21,6 @@ import 'package:url_launcher/url_launcher.dart';
 class DAppDetails extends IcePage {
   DAppDetails({super.key});
 
-  // const DAppDetails({super.key});
-
-  // DAppDetails(super._route, super.payload, {super.key});
-
   final DAppItem item = mockedFeatured[2]; //TODO: get from params or provider
 
   @override

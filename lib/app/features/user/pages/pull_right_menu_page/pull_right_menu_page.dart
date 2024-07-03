@@ -12,13 +12,10 @@ import 'package:ice/app/router/app_routes.dart';
 class PullRightMenuPage extends IcePage {
   const PullRightMenuPage({super.key});
 
-  // const PullRightMenuPage(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return PopScope(
       canPop: false,
-      // onPopInvoked: (_) => IceRoutes.feed.go(context),
       onPopInvoked: (_) => FeedRoute().go(context),
       child: Material(
         color: context.theme.appColors.secondaryBackground,

@@ -15,8 +15,6 @@ import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart
 class FeedPage extends HookConsumerWidget {
   const FeedPage({super.key});
 
-  // const FeedPage(super.payload, {super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();

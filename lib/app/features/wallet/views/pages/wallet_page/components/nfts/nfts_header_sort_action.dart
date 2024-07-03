@@ -20,7 +20,6 @@ class NftHeaderSortAction extends HookConsumerWidget {
     final color = context.theme.appColors.secondaryText;
     return TextButton(
       onPressed: () {
-        // IceRoutes.nftsSorting.go(context);
         NftsSortingRoute().go(context);
       },
       child: Padding(

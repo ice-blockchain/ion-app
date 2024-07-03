@@ -16,7 +16,6 @@ class PullRightMenuHandler extends StatelessWidget {
         if (details.velocity.pixelsPerSecond.dx > 100 &&
             details.velocity.pixelsPerSecond.dx >
                 details.velocity.pixelsPerSecond.dy) {
-          // IceRoutes.pullRightMenu.go(context);
           PullRightMenuRoute().go(context);
         }
       },

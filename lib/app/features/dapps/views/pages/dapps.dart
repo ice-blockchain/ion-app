@@ -51,15 +51,6 @@ class DAppsPage extends IcePage {
                         items: mockedApps,
                       ),
                     ).go(context);
-
-                    // IceRoutes.appsList.go(
-                    //   context,
-                    //   payload: AppsRouteData(
-                    //     title:
-                    // context.i18n.dapps_section_title_highest_ranked,
-                    //     items: mockedApps,
-                    //   ),
-                    // );
                   },
                 ),
                 Apps(

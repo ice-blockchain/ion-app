@@ -79,14 +79,6 @@ class CategoriesCollection extends StatelessWidget {
                         items: mockedApps,
                       ),
                     ).go(context);
-
-                    // IceRoutes.appsList.go(
-                    //   context,
-                    //   payload: AppsRouteData(
-                    //     title: DAppsCategory.values[index].title(context),
-                    //     items: mockedApps,
-                    //   ),
-                    // );
                   },
                   icon: DAppsCategory.values[index].icon,
                   size: itemWidth,

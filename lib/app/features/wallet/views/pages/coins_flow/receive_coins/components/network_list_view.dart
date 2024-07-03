@@ -11,13 +11,10 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-// class NetworkListReceiveView extends IcePage<CoinData> {
 class NetworkListReceiveView extends IcePage {
   const NetworkListReceiveView({required this.payload, super.key});
 
   final CoinData payload;
-
-  // const NetworkListReceiveView(super.route, super.payload, {super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
@@ -54,14 +51,6 @@ class NetworkListReceiveView extends IcePage {
                       'networkType': networkTypeValues[index],
                     },
                   ).push<void>(context);
-
-                  // IceRoutes.shareAddress.push(
-                  //   context,
-                  //   payload: <String, dynamic>{
-                  //     'coinData': payload,
-                  //     'networkType': networkTypeValues[index],
-                  //   },
-                  // );
                 },
               ),
             );

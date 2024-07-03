@@ -22,11 +22,8 @@ import 'package:ice/app/features/wallets/providers/selectors/wallets_data_select
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
-// class CoinDetailsPage extends IcePage<CoinData> {
 class CoinDetailsPage extends IcePage {
   const CoinDetailsPage({required this.payload, super.key});
-
-  // const CoinDetailsPage(super.route, super.payload, {super.key});
 
   final CoinData payload;
 
@@ -34,7 +31,6 @@ class CoinDetailsPage extends IcePage {
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    // CoinData? payload,
   ) {
     final scrollController = useScrollController();
     final walletId = walletIdSelector(ref);

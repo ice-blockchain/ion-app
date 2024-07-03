@@ -159,7 +159,7 @@ class SplashRoute extends BaseRouteData {
 class FeedRoute extends BaseRouteData {
   FeedRoute();
 
-  // static final $parentNavigatorKey = rootNavigatorKey;
+  static final $parentNavigatorKey = rootNavigatorKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const FeedPage();
@@ -168,7 +168,7 @@ class FeedRoute extends BaseRouteData {
 class ChatRoute extends BaseRouteData {
   ChatRoute();
 
-  // static final $parentNavigatorKey = rootNavigatorKey;
+  static final $parentNavigatorKey = rootNavigatorKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const ChatPage();
@@ -177,7 +177,7 @@ class ChatRoute extends BaseRouteData {
 class WalletRoute extends BaseRouteData {
   WalletRoute();
 
-  // static final $parentNavigatorKey = rootNavigatorKey;
+  static final $parentNavigatorKey = rootNavigatorKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const WalletPage();
@@ -186,13 +186,12 @@ class WalletRoute extends BaseRouteData {
 class DappsRoute extends BaseRouteData {
   DappsRoute();
 
-  // static final $parentNavigatorKey = rootNavigatorKey;
+  static final $parentNavigatorKey = rootNavigatorKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const DAppsPage();
 }
 
-// @TypedGoRoute<ErrorRoute>(path: '/error')
 class ErrorRoute extends BaseRouteData {
   ErrorRoute({required this.error});
 

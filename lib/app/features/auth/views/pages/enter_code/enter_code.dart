@@ -19,8 +19,6 @@ import 'package:ice/generated/assets.gen.dart';
 class EnterCode extends IcePage {
   const EnterCode({super.key});
 
-  // const EnterCode(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     const phoneNumber = '+101234567890';

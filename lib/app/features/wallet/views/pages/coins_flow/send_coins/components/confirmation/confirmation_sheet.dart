@@ -18,8 +18,6 @@ import 'package:ice/generated/assets.gen.dart';
 class ConfirmationSheet extends IcePage {
   const ConfirmationSheet({super.key});
 
-  // const ConfirmationSheet(super.route, super.payload, {super.key});
-
   static const networkTypeValues = NetworkType.values;
 
   @override
@@ -107,7 +105,6 @@ class ConfirmationSheet extends IcePage {
                   Button(
                     label: Text('${locale.wallet_send_coins} - \$351.35'),
                     mainAxisSize: MainAxisSize.max,
-                    // onPressed: () => IceRoutes.transactionResult.go(context),
                     onPressed: () => TransactionResultRoute().go(context),
                   ),
                   SizedBox(height: 16.0.s),

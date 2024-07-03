@@ -11,18 +11,11 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 class ReceiveCoinModalPage extends IcePage {
   const ReceiveCoinModalPage({super.key});
 
-  // const ReceiveCoinModalPage(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
       body: CoinsListView(
         onCoinItemTap: (CoinData coin) {
-          // IceRoutes.networkSelectReceive.push(
-          //   context,
-          //   payload: coin,
-          // );
-
           NetworkSelectReceiveRoute($extra: coin).push<void>(context);
         },
         type: CoinsListViewType.receive,

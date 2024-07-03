@@ -7,8 +7,6 @@ import 'package:ice/app/extensions/num.dart';
 class ChatMainModalPage extends IcePage {
   const ChatMainModalPage({super.key});
 
-  // const ChatMainModalPage(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return Scaffold(

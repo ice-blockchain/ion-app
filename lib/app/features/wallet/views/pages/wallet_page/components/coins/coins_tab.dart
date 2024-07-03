@@ -53,10 +53,6 @@ class CoinsTab extends HookConsumerWidget {
           child: CoinItem(
             coinData: coins[index],
             onTap: () {
-              // IceRoutes.coinDetails.go(
-              //   context,
-              //   payload: coins[index],
-              // );
               CoinsDetailsRoute($extra: coins[index]).go(context);
             },
           ),

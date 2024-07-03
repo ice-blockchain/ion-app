@@ -18,8 +18,6 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 class SelectCountries extends IcePage {
   const SelectCountries({super.key});
 
-  // const SelectCountries(super._route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     final searchText = useState('');

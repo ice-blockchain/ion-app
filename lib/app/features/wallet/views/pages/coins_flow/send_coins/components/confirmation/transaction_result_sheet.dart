@@ -13,8 +13,6 @@ import 'package:ice/generated/assets.gen.dart';
 class TransactionResultSheet extends IcePage {
   const TransactionResultSheet({super.key});
 
-  // const TransactionResultSheet(super.route, super.payload, {super.key});
-
   static const networkTypeValues = NetworkType.values;
 
   @override
@@ -70,7 +68,6 @@ class TransactionResultSheet extends IcePage {
               Expanded(
                 child: Button(
                   type: ButtonType.outlined,
-                  // onPressed: () => Navigator.pop(context),
                   onPressed: () => Navigator.pop(context),
                   leadingIcon: icons.iconSheetClose.icon(
                     color: colors.secondaryText,

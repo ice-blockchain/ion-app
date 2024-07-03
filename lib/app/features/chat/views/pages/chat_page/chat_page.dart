@@ -8,8 +8,6 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 class ChatPage extends IcePage {
   const ChatPage({super.key});
 
-  // const ChatPage(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return Scaffold(

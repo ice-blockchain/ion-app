@@ -9,17 +9,12 @@ import 'package:ice/app/router/app_routes.dart';
 class SendCoinModalPage extends IcePage {
   const SendCoinModalPage({super.key});
 
-  // const SendCoinModalPage(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return CoinsListView(
       onCoinItemTap: (CoinData coin) {
         ref.read(sendCoinsFormControllerProvider.notifier).selectCoin(coin);
         NetworkSelectRoute().push<void>(context);
-        // IceRoutes.networkSelect.push(
-        //   context,
-        // );
       },
     );
   }

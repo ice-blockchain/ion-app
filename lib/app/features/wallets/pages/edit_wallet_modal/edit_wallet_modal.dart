@@ -19,11 +19,8 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-// class EditWalletModal extends IcePage<WalletData> {
 class EditWalletModal extends IcePage {
   const EditWalletModal({required this.payload, super.key});
-
-  // const EditWalletModal(super.route, super.payload, {super.key});
 
   final WalletData payload;
 
@@ -81,8 +78,6 @@ class EditWalletModal extends IcePage {
                     )
                   : Button(
                       onPressed: () {
-                        // IceRoutes.deleteWallet
-                        //     .replace(context, payload: payload);
                         DeleteWalletRoute($extra: payload).replace(context);
                       },
                       leadingIcon: Assets.images.icons.iconBlockDelete

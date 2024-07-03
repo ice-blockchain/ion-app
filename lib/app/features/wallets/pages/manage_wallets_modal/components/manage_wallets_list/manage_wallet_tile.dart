@@ -24,7 +24,6 @@ class ManageWalletTile extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ListItem(
         onTap: () {
-          // IceRoutes.editWallet.push(context, payload: walletData);
           EditWalletRoute($extra: walletData).push<void>(context);
         },
         leading: Avatar(

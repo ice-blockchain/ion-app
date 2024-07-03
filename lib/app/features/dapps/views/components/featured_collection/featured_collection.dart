@@ -27,7 +27,6 @@ class FeaturedCollection extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final assetBg = items[index].backgroundImage ?? '';
           return GestureDetector(
-            // onTap: () => IceRoutes.dappsDetails.go(context),
             onTap: () => DAppDetailsRoute().go(context),
             child: Container(
               width: 240.0.s,

@@ -12,8 +12,6 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 class NftsSortingModal extends IcePage {
   const NftsSortingModal({super.key});
 
-  // const NftsSortingModal(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return Scaffold(

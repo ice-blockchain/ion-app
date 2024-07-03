@@ -15,8 +15,6 @@ import 'package:ice/generated/assets.gen.dart';
 class WalletsModal extends IcePage {
   const WalletsModal({super.key});
 
-  // const WalletsModal(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(
     BuildContext context,
@@ -42,7 +40,6 @@ class WalletsModal extends IcePage {
             child: Button(
               leadingIcon: Assets.images.icons.iconButtonManageWallet.icon(),
               onPressed: () {
-                // IceRoutes.manageWallets.push(context);
                 ManageWalletsRoute().push<void>(context);
               },
               label: Text(context.i18n.wallet_manage_wallets),

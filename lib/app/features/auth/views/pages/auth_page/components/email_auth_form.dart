@@ -66,7 +66,6 @@ class EmailAuthForm extends HookConsumerWidget {
                 await Future<void>.delayed(const Duration(seconds: 1));
                 loading.value = false;
                 hideKeyboardAndCallOnce(
-                  // callback: () => IceRoutes.checkEmail.push(context),
                   callback: () => CheckEmailRoute().push<void>(context),
                 );
               }

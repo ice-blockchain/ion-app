@@ -26,8 +26,6 @@ import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart
 class WalletPage extends IcePage {
   const WalletPage({super.key});
 
-  // const WalletPage(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
@@ -38,7 +36,6 @@ class WalletPage extends IcePage {
       if (hasContactsPermission ?? false) {
         ref.read(contactsDataNotifierProvider.notifier).fetchContacts();
       } else {
-        // IceRoutes.allowAccess.go(context);
         AllowAccessRoute().go(context);
       }
     }, <Object?>[

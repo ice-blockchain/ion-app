@@ -70,14 +70,6 @@ class Balance extends HookConsumerWidget {
                     networkType: networkType,
                   ),
                 ).push<void>(context);
-
-                // IceRoutes.coinReceive.push(
-                //   context,
-                //   payload: CoinReceiveModalData(
-                //     coinData: coinData,
-                //     networkType: networkType,
-                //   ),
-                // );
               },
               onSend: () {},
             ),

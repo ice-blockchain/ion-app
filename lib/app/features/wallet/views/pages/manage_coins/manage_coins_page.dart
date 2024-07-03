@@ -21,8 +21,6 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 class ManageCoinsPage extends IcePage {
   const ManageCoinsPage({super.key});
 
-  // const ManageCoinsPage(super._route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     final searchText = useState('');

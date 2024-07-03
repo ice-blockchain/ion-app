@@ -23,8 +23,6 @@ import 'package:ice/generated/assets.gen.dart';
 class FillProfile extends IcePage {
   const FillProfile({super.key});
 
-  // const FillProfile(super.route, super.payload, {super.key});
-
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -144,7 +142,6 @@ class FillProfile extends IcePage {
                               loading.value = false;
                               hideKeyboardAndCallOnce(
                                 callback: () =>
-                                    // IceRoutes.selectLanguages.push(context),
                                     SelectLanguagesRoute().push<void>(context),
                               );
                             }
