@@ -1,4 +1,3 @@
-// ignore_for_file: missing_provider_scope
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -21,10 +20,6 @@ void main() async {
       ],
       child: const IceApp(),
     ),
-    // const RiverpodRootProviderScope(
-    //   // child: LifecycleWatcher(child: IceApp()),
-    //   child: IceApp(),
-    // ),
   );
 }
 
@@ -35,10 +30,7 @@ class IceApp extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appThemeMode = ref.watch(appThemeModeProvider);
     final template = ref.watch(appTemplateProvider);
-
     final goRouter = ref.watch(goRouterProvider);
-
-    // final appRouter = useAppRouter(ref);
 
     return ContentScaler(
       child: template.when(
@@ -51,7 +43,6 @@ class IceApp extends HookConsumerWidget {
           routeInformationProvider: goRouter.routeInformationProvider,
           routerDelegate: goRouter.routerDelegate,
           routeInformationParser: goRouter.routeInformationParser,
-          // restorationScopeId: 'router',
         ),
         loading: () => const Directionality(
           textDirection: TextDirection.ltr,

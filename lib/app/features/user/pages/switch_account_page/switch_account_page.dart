@@ -11,8 +11,6 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 class SwitchAccountPage extends IcePage {
   const SwitchAccountPage({super.key});
 
-  // const SwitchAccountPage(super.route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return Scaffold(

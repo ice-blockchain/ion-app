@@ -14,8 +14,6 @@ import 'package:lottie/lottie.dart';
 class IntroPage extends IcePage {
   const IntroPage({super.key});
 
-  // const IntroPage(super._route, super.payload, {super.key});
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     final animation = useButtonAnimation();
@@ -39,7 +37,6 @@ class IntroPage extends IcePage {
               scale: animation,
               child: Button(
                 onPressed: () {
-                  // IceRoutes.auth.go(context);
                   AuthRoute().go(context);
                 },
                 label: Text(context.i18n.button_continue),
