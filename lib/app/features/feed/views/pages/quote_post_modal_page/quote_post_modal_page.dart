@@ -9,6 +9,7 @@ import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/bottom_action_bar.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/comment_input.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class QuotePostModalPage extends IcePage<PostData?> {
@@ -22,10 +23,12 @@ class QuotePostModalPage extends IcePage<PostData?> {
       throw Exception('Post can not be null');
     }
 
-    return Stack(
-      children: [
-        IntrinsicHeight(
-          child: Column(
+    return SheetContent(
+      backgroundColor: context.theme.appColors.secondaryBackground,
+      body: Stack(
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
                 padding:
@@ -87,14 +90,14 @@ class QuotePostModalPage extends IcePage<PostData?> {
               ),
             ],
           ),
-        ),
-        const Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: BottomActionBar(),
-        ),
-      ],
+          const Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: BottomActionBar(),
+          ),
+        ],
+      ),
     );
   }
 }
