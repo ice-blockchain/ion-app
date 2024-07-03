@@ -158,6 +158,12 @@
   "feed_quote_post":"Quote post",
   "feed_write_comment": "Write comment",
   "feed_comment_hint": "Write your comment!",
+  "feed_add_story": "Add to story",
+  "feed_copy_link": "Copy link",
+  "feed_bookmark": "Bookmark",
+  "feed_whatsapp": "WhatsApp",
+  "feed_more": "More",
+  "feed_send": "Send",
   "feed_modal_article_description": "Share your wisdom",
   "turn_notifications_title": "Turn on notifications",
   "turn_notifications_description": "Receive notifications when you transfer and receive funds",
@@ -172,5 +178,5 @@
   "turn_notifications_new_follower_time": "24m ago",
   "turn_notifications_new_message_title": "New message",
   "turn_notifications_new_message_description": "@marie has sent you a message",
-  "turn_notifications_new_message_time": "31m ago"
+  "turn_notifications_new_message_time": "31m ago",
 }

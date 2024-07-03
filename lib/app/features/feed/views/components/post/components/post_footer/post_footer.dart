@@ -50,7 +50,9 @@ class PostFooter extends HookConsumerWidget {
       isLiked.value = !isLiked.value;
     }
 
-    void onShareOptions() {}
+    void onShareOptions() {
+      IceRoutes.shareOptions.push(context);
+    }
 
     void onIceStroke() {}
 
