@@ -4,19 +4,20 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/model/post_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ShareTypeView extends IcePage<String?> {
+class ShareTypeView extends IcePage<PostData> {
   const ShareTypeView(super.route, super.payload, {super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, String? payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref, PostData? payload) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
