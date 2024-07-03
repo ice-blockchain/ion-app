@@ -50,7 +50,7 @@ class DAppsPage extends IcePage {
                         title: context.i18n.dapps_section_title_highest_ranked,
                         items: mockedApps,
                       ),
-                    ).go(context);
+                    ).push<void>(context);
                   },
                 ),
                 Apps(
@@ -63,7 +63,7 @@ class DAppsPage extends IcePage {
                         title: context.i18n.dapps_section_title_recently_added,
                         items: mockedApps,
                       ),
-                    ).go(context);
+                    ).push<void>(context);
                   },
                 ),
                 Favourites(
