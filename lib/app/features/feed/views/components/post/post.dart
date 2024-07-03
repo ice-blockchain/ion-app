@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/post_body.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_menu.dart';
 
-class Post extends StatefulWidget {
+class Post extends StatelessWidget {
   const Post({
     required this.content,
-    required this.isFooterVisible,
+    required this.footer,
     super.key,
   });
 
   final String content;
-  final bool isFooterVisible;
+  final Widget footer;
 
-  @override
-  State<Post> createState() => _PostState();
-}
-
-class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,9 +25,9 @@ class _PostState extends State<Post> {
             trailing: PostMenu(),
           ),
           PostBody(
-            content: widget.content,
+            content: content,
           ),
-          if (widget.isFooterVisible) PostFooter(content: widget.content),
+          footer,
         ],
       ),
     );

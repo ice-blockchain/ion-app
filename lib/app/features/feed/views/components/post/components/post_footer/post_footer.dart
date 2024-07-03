@@ -61,7 +61,7 @@ class PostFooter extends HookConsumerWidget {
         0,
       ),
       child: Row(
-        children: <Widget>[
+        children: [
           PostMetricSpace(
             child: PostEngagementMetric(
               onPressed: onToggleComment,

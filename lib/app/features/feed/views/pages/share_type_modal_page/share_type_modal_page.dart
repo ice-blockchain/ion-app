@@ -19,13 +19,13 @@ class ShareTypeView extends IcePage<String?> {
   Widget buildPage(BuildContext context, WidgetRef ref, String? payload) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
+      children: [
         Padding(
           padding: EdgeInsets.symmetric(vertical: 8.0.s),
           child: NavigationAppBar.screen(
             showBackButton: false,
             title: context.i18n.feed_repost_type,
-            actions: const <Widget>[
+            actions: const [
               NavigationCloseButton(),
             ],
           ),

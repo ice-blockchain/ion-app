@@ -68,7 +68,7 @@ class QuotePostModalPage extends IcePage<String?> {
                             ),
                             child: Post(
                               content: payload ?? '',
-                              isFooterVisible: false,
+                              footer: const SizedBox.shrink(),
                             ),
                           ),
                         ),

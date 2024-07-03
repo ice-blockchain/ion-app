@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/feed/model/post_data.dart';
+import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/list_separator/list_separator.dart';
 
@@ -22,7 +23,7 @@ class PostList extends HookConsumerWidget {
       itemBuilder: (BuildContext context, int index) {
         return Post(
           content: posts[index].body,
-          isFooterVisible: true,
+          footer: PostFooter(content: posts[index].body),
         );
       },
     );
