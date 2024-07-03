@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/my_ice_page.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -14,7 +14,7 @@ import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 // class DeleteWalletModal extends IcePage<WalletData> {
-class DeleteWalletModal extends MyIcePage {
+class DeleteWalletModal extends IcePage {
   const DeleteWalletModal({required this.payload, super.key});
 
   // const DeleteWalletModal(super.route, super.payload, {super.key});

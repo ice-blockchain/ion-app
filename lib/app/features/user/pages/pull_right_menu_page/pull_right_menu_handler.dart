@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/router/my_app_routes.dart';
+import 'package:ice/app/router/app_routes.dart';
 
 class PullRightMenuHandler extends StatelessWidget {
   const PullRightMenuHandler({
@@ -17,7 +17,7 @@ class PullRightMenuHandler extends StatelessWidget {
             details.velocity.pixelsPerSecond.dx >
                 details.velocity.pixelsPerSecond.dy) {
           // IceRoutes.pullRightMenu.go(context);
-          const PullRightMenuRoute().go(context);
+          PullRightMenuRoute().go(context);
         }
       },
       child: child,

@@ -7,7 +7,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
-import 'package:ice/app/router/my_app_routes.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 enum DAppsCategory {

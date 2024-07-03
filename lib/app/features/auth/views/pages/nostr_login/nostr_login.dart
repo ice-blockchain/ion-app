@@ -7,7 +7,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/my_ice_page.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -19,7 +19,7 @@ import 'package:ice/app/router/hooks/use_sheet_full_height.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class NostrLogin extends MyIcePage {
+class NostrLogin extends IcePage {
   const NostrLogin({super.key});
 
   // const NostrLogin(super._route, super.payload, {super.key});

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -8,21 +7,20 @@ import 'package:ice/app/components/inputs/text_input/components/text_input_clear
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/my_ice_page.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:ice/app/router/my_app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 // class EditWalletModal extends IcePage<WalletData> {
-class EditWalletModal extends MyIcePage {
+class EditWalletModal extends IcePage {
   const EditWalletModal({required this.payload, super.key});
 
   // const EditWalletModal(super.route, super.payload, {super.key});
@@ -39,7 +37,7 @@ class EditWalletModal extends MyIcePage {
     final isNameChanged =
         walletName.value != (payload.name) && walletName.value.isNotEmpty;
 
-    return SheetContentScaffold(
+    return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: SingleChildScrollView(
         child: Column(

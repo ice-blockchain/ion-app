@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_coins_form_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SendCoinsFormController extends _$SendCoinsFormController {
   @override
   SendCoinsFormData build() {

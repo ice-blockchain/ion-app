@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/read_more_text/read_more_text.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/my_ice_page.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -16,10 +16,9 @@ import 'package:ice/app/features/dapps/views/pages/mocks/mocked_featured.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DAppDetails extends MyIcePage {
+class DAppDetails extends IcePage {
   DAppDetails({super.key});
 
   // const DAppDetails({super.key});
@@ -30,7 +29,7 @@ class DAppDetails extends MyIcePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    return SheetContentScaffold(
+    return Scaffold(
       appBar: NavigationAppBar.screen(
         title: item.title,
         showBackButton: false,

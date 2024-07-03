@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/template/my_ice_page.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -14,7 +14,7 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/generated/assets.gen.dart';
 
 // class ShareAddressView extends IcePage<Map<String, dynamic>?> {
-class ShareAddressView extends MyIcePage {
+class ShareAddressView extends IcePage {
   const ShareAddressView({required this.payload, super.key});
 
   final Map<String, dynamic> payload;

@@ -1,10 +1,11 @@
 // ignore_for_file: missing_provider_scope
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/features/core/views/components/content_scaler.dart';
-import 'package:ice/app/router/my_app_routes.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/services/logger/config.dart';
 import 'package:ice/app/services/riverpod/riverpod_logger.dart';
 import 'package:ice/app/templates/template.dart';
@@ -12,6 +13,7 @@ import 'package:ice/app/theme/theme.dart';
 import 'package:ice/generated/app_localizations.dart';
 
 void main() async {
+  GoRouter.optionURLReflectsImperativeAPIs = true;
   runApp(
     ProviderScope(
       observers: <ProviderObserver>[

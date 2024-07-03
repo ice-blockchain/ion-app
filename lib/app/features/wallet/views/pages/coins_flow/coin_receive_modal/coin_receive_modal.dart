@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/my_ice_page.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -12,10 +12,9 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_moda
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 // class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
-class CoinReceiveModal extends MyIcePage {
+class CoinReceiveModal extends IcePage {
   const CoinReceiveModal({required this.payload, super.key});
 
   final CoinReceiveModalData payload;
@@ -37,7 +36,7 @@ class CoinReceiveModal extends MyIcePage {
   ) {
     final networkType = _getNetworkType(payload);
 
-    return SheetContentScaffold(
+    return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Padding(
         padding: EdgeInsets.only(

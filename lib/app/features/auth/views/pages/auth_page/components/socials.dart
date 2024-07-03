@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/data/models/social_auth_type.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/components/social_button.dart';
-import 'package:ice/app/router/my_app_routes.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class Socials extends HookConsumerWidget {
@@ -20,31 +20,31 @@ class Socials extends HookConsumerWidget {
       return switch (type) {
         SocialAuthType.apple => () {
             // IceRoutes.checkEmail.push(context);
-            const CheckEmailRoute().push<void>(context);
+            CheckEmailRoute().push<void>(context);
           },
         SocialAuthType.nostr => () {
             // IceRoutes.nostrAuth.push(context);
-            const NostrAuthRoute().push<void>(context);
+            NostrAuthRoute().push<void>(context);
           },
         SocialAuthType.x => () {
             // IceRoutes.fillProfile.push(context);
-            const FillProfileRoute().push<void>(context);
+            FillProfileRoute().push<void>(context);
           },
         SocialAuthType.fb => () {
             // IceRoutes.enterCode.push(context);
-            const EnterCodeRoute().push<void>(context);
+            EnterCodeRoute().push<void>(context);
           },
         SocialAuthType.github => () {
             // IceRoutes.selectLanguages.push(context);
-            const SelectLanguagesRoute().push<void>(context);
+            SelectLanguagesRoute().push<void>(context);
           },
         SocialAuthType.discord => () {
             // IceRoutes.discoverCreators.push(context);
-            const DiscoverCreatorsRoute().push<void>(context);
+            DiscoverCreatorsRoute().push<void>(context);
           },
         SocialAuthType.linkedin => () {
             // IceRoutes.discoverCreators.push(context);
-            const DiscoverCreatorsRoute().push<void>(context);
+            DiscoverCreatorsRoute().push<void>(context);
           },
       };
     }

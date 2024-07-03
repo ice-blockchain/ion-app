@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/template/my_ice_page.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
 
-class SplashPage extends MyIcePage {
+class SplashPage extends IcePage {
   const SplashPage({super.key});
 
   // const SplashPage(super.route, super.payload, {super.key});

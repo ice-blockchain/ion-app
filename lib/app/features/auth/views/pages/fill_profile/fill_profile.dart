@@ -6,7 +6,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/my_ice_page.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -14,13 +14,13 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/components/avatar_picker.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/app/router/my_app_routes.dart';
 import 'package:ice/app/services/keyboard/keyboard.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class FillProfile extends MyIcePage {
+class FillProfile extends IcePage {
   const FillProfile({super.key});
 
   // const FillProfile(super.route, super.payload, {super.key});
@@ -145,8 +145,7 @@ class FillProfile extends MyIcePage {
                               hideKeyboardAndCallOnce(
                                 callback: () =>
                                     // IceRoutes.selectLanguages.push(context),
-                                    const SelectLanguagesRoute()
-                                        .push<void>(context),
+                                    SelectLanguagesRoute().push<void>(context),
                               );
                             }
                           },

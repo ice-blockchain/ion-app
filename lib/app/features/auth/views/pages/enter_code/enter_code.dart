@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/template/my_ice_page.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -16,7 +16,7 @@ import 'package:ice/app/router/hooks/use_memoized_bottom_offset.dart';
 import 'package:ice/app/router/hooks/use_sheet_full_height.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class EnterCode extends MyIcePage {
+class EnterCode extends IcePage {
   const EnterCode({super.key});
 
   // const EnterCode(super.route, super.payload, {super.key});

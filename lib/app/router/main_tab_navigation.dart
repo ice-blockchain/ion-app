@@ -1,225 +1,137 @@
-// import 'dart:async';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_hooks/flutter_hooks.dart';
-// import 'package:go_router/go_router.dart';
-// import 'package:ice/app/extensions/asset_gen_image.dart';
-// import 'package:ice/app/extensions/build_context.dart';
-// import 'package:ice/app/extensions/num.dart';
-// import 'package:ice/app/extensions/theme_data.dart';
-// import 'package:ice/app/router/app_routes.dart';
-// import 'package:ice/generated/assets.gen.dart';
+import 'dart:developer';
 
-// class MainTabNavigation extends HookWidget {
-//   const MainTabNavigation({
-//     required this.navigationShell,
-//     Key? key,
-//   }) : super(
-//           key: key ?? const ValueKey<String>('MainTabNavigation'),
-//         );
-//   final StatefulNavigationShell navigationShell;
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/generated/assets.gen.dart';
 
-//   static const disabledTabs = <_Tabs>[
-//     _Tabs.chat,
-//     _Tabs.dapps,
-//     _Tabs.wallet,
-//   ];
+enum TabItem {
+  feed,
+  chat,
+  main,
+  dapps,
+  wallet;
 
-//   void _goBranch(
-//     int index,
-//     ValueNotifier<bool> isModalOpen,
-//     ValueNotifier<bool> isButtonDisabled,
-//     BuildContext context,
-//   ) {
-//     if (isModalOpen.value) {
-//       final selectedTab = _Tabs.values[navigationShell.currentIndex];
-//       selectedTab.mainModalRoute.pop(context);
-//       isModalOpen.value = false;
-//       isButtonDisabled.value = true;
-//       Timer(const Duration(milliseconds: 300), () {
-//         isButtonDisabled.value = false;
-//         navigationShell.goBranch(
-//           index,
-//           initialLocation: index == navigationShell.currentIndex,
-//         );
-//       });
-//     } else {
-//       navigationShell.goBranch(
-//         index,
-//         initialLocation: index == navigationShell.currentIndex,
-//       );
-//     }
-//   }
+  const TabItem();
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final isModalOpen = useState(false);
-//     final isButtonDisabled = useState(false);
+  AssetGenImage? get icon {
+    return switch (this) {
+      TabItem.feed => Assets.images.icons.iconHomeOff,
+      TabItem.chat => Assets.images.icons.iconChatOff,
+      TabItem.main => null,
+      TabItem.dapps => Assets.images.icons.iconDappOff,
+      TabItem.wallet => Assets.images.icons.iconsWalletOff
+    };
+  }
 
-//     return Scaffold(
-//       body: navigationShell,
-//       bottomNavigationBar:
-//           _buildNavigationBar(context, isModalOpen, isButtonDisabled),
-//     );
-//   }
+  int get navigationIndex => index > TabItem.main.index ? index - 1 : index;
+}
 
-//   Widget _buildNavigationBar(
-//     BuildContext context,
-//     ValueNotifier<bool> isModalOpen,
-//     ValueNotifier<bool> isButtonDisabled,
-//   ) {
-//     late final _Tabs selectedTab;
-//     final children = _Tabs.values.map((_Tabs tab) {
-//       final branch = _byTab(tab);
-//       final branchIndex = navigationShell.route.branches.indexOf(branch);
-//       final isSelected = navigationShell.currentIndex == branchIndex;
+class MainTabNavigation extends StatelessWidget {
+  const MainTabNavigation({
+    required this.navigationShell,
+    super.key,
+  });
 
-//       if (isSelected) {
-//         selectedTab = tab;
-//       }
+  final StatefulNavigationShell navigationShell;
 
-//       return _convertToWidget(
-//         tab,
-//         branchIndex,
-//         isSelected,
-//         context,
-//         isModalOpen,
-//         isButtonDisabled,
-//       );
-//     }).toList();
+  void _onTap(int index) {
+    final tabItem = TabItem.values[index];
+    if (tabItem == TabItem.main) {
+      _onMainButtonTap();
+      return;
+    }
 
-//     children.insert(
-//       (children.length / 2).ceil(),
-//       _buildMainButton(selectedTab, context, isModalOpen, isButtonDisabled),
-//     );
+    final adjustedIndex = tabItem.navigationIndex;
 
-//     return Container(
-//       height: 82.0.s,
-//       decoration: BoxDecoration(
-//         color: context.theme.appColors.secondaryBackground,
-//         boxShadow: <BoxShadow>[
-//           BoxShadow(
-//             color: context.theme.appColors.darkBlue.withOpacity(0.05),
-//             blurRadius: 16.0.s,
-//             offset: Offset(-2.0.s, -2.0.s),
-//           ),
-//         ],
-//       ),
-//       child: Padding(
-//         padding: EdgeInsets.only(top: 9.0.s, bottom: 23.0.s),
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceAround,
-//           children:
-//               children.map((Widget child) =>
-// Flexible(child: child)).toList(),
-//         ),
-//       ),
-//     );
-//   }
+    navigationShell.goBranch(
+      adjustedIndex,
+      initialLocation: adjustedIndex == navigationShell.currentIndex,
+    );
+  }
 
-//   Widget _convertToWidget(
-//     _Tabs tab,
-//     int branchIndex,
-//     bool isSelected,
-//     BuildContext context,
-//     ValueNotifier<bool> isModalOpen,
-//     ValueNotifier<bool> isButtonDisabled,
-//   ) {
-//     final color = isSelected
-//         ? context.theme.appColors.primaryAccent
-//         : context.theme.appColors.tertararyText;
+  void _onMainButtonTap() {
+    log('MainTabNavigation: Main button tapped');
+  }
 
-//     return _buildHitBox(
-//       onTap: () =>
-//           _goBranch(branchIndex, isModalOpen, isButtonDisabled, context),
-//       child: tab.icon.icon(color: color, size: 24.0.s),
-//     );
-//   }
+  int _adjustBottomNavIndex(int index) =>
+      index >= TabItem.main.index ? index + 1 : index;
 
-//   StatefulShellBranch _byTab(_Tabs tab) {
-//     return navigationShell.route.branches.firstWhere(
-//       (StatefulShellBranch branch) =>
-//           (branch.routes.single as GoRoute).name == tab.route.routeName,
-//     );
-//   }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: navigationShell,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _adjustBottomNavIndex(navigationShell.currentIndex),
+        onTap: _onTap,
+        items: _navBarItems(),
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: context.theme.appColors.secondaryBackground,
+        selectedItemColor: context.theme.appColors.primaryAccent,
+        unselectedItemColor: context.theme.appColors.tertararyText,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+      ),
+    );
+  }
 
-//   Widget _buildMainButton(
-//     _Tabs selectedTab,
-//     BuildContext context,
-//     ValueNotifier<bool> isModalOpen,
-//     ValueNotifier<bool> isButtonDisabled,
-//   ) {
-//     late final AssetGenImage image;
-//     if (isModalOpen.value) {
-//       image = Assets.images.logo.logoButtonClose;
-//     } else {
-//       image = Assets.images.logo.logoButton;
-//     }
+  List<BottomNavigationBarItem> _navBarItems() {
+    return TabItem.values.map((tabItem) {
+      if (tabItem == TabItem.main) {
+        return const BottomNavigationBarItem(
+          icon: _MainButton(),
+          label: '',
+        );
+      }
+      return BottomNavigationBarItem(
+        icon: _TabIcon(
+          icon: tabItem.icon!,
+          isSelected: _isTabSelected(tabItem),
+        ),
+        label: '',
+      );
+    }).toList();
+  }
 
-//     return _buildHitBox(
-//       ripple: false,
-//       onTap: () {
-//         // Disable the button if the selected tab is in the disabledTabs list
-//         if (disabledTabs.contains(selectedTab)) return;
+  bool _isTabSelected(TabItem tabItem) {
+    return navigationShell.currentIndex == tabItem.navigationIndex;
+  }
+}
 
-//         // Disable the button for 300ms to prevent double taps
-//         // and wait until the modal is fully closed/opened
-//         if (isButtonDisabled.value) return;
+class _TabIcon extends StatelessWidget {
+  const _TabIcon({
+    required this.icon,
+    required this.isSelected,
+  });
 
-//         if (isModalOpen.value) {
-//           selectedTab.mainModalRoute.pop(context);
-//           isModalOpen.value = false;
-//         } else {
-//           selectedTab.mainModalRoute.go(context);
-//           isModalOpen.value = true;
-//         }
+  final AssetGenImage icon;
+  final bool isSelected;
 
-//         isButtonDisabled.value = true;
-//         Timer(const Duration(milliseconds: 300), () {
-//           isButtonDisabled.value = false;
-//         });
-//       },
-//       child: image.image(height: 50.0.s),
-//     );
-//   }
+  @override
+  Widget build(BuildContext context) {
+    return icon.image(
+      width: 24.0.s,
+      height: 24.0.s,
+      color: isSelected
+          ? context.theme.appColors.primaryAccent
+          : context.theme.appColors.tertararyText,
+    );
+  }
+}
 
-//   Widget _buildHitBox({
-//     required VoidCallback onTap,
-//     required Widget child,
-//     bool ripple = true,
-//   }) {
-//     if (ripple) {
-//       return SizedBox.expand(
-//         child: IconButton(
-//           onPressed: onTap,
-//           icon: child,
-//         ),
-//       );
-//     }
+class _MainButton extends StatelessWidget {
+  const _MainButton();
 
-//     return GestureDetector(
-//       onTap: onTap,
-//       child: SizedBox.expand(child: child),
-//     );
-//   }
-// }
-
-// enum _Tabs {
-//   feed(IceRoutes.feed, IceRoutes.feedMainModal),
-//   chat(IceRoutes.chat, IceRoutes.chat),
-//   dapps(IceRoutes.dapps, IceRoutes.dapps),
-//   wallet(IceRoutes.wallet, IceRoutes.wallet);
-
-//   const _Tabs(this.route, this.mainModalRoute);
-
-//   final IceRoutes<dynamic> route;
-//   final IceRoutes<dynamic> mainModalRoute;
-
-//   AssetGenImage get icon {
-//     return switch (this) {
-//       _Tabs.feed => Assets.images.icons.iconHomeOff,
-//       _Tabs.chat => Assets.images.icons.iconChatOff,
-//       _Tabs.dapps => Assets.images.icons.iconDappOff,
-//       _Tabs.wallet => Assets.images.icons.iconsWalletOff,
-//     };
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 50.0.s,
+      height: 50.0.s,
+      child: Assets.images.logo.logoButton.image(
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+}

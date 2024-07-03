@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/my_ice_page.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -18,7 +18,7 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_done_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class ManageCoinsPage extends MyIcePage {
+class ManageCoinsPage extends IcePage {
   const ManageCoinsPage({super.key});
 
   // const ManageCoinsPage(super._route, super.payload, {super.key});

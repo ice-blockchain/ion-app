@@ -9,7 +9,7 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
-import 'package:ice/app/router/my_app_routes.dart';
+import 'package:ice/app/router/app_routes.dart';
 
 class CoinsTab extends HookConsumerWidget {
   const CoinsTab({

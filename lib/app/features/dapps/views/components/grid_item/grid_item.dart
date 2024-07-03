@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/components/favourite_icon/favorite_icon.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
-import 'package:ice/app/router/my_app_routes.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -24,7 +24,7 @@ class GridItem extends HookWidget {
     final isFavourite = useState(item.isFavourite);
     return InkWell(
       // onTap: () => IceRoutes.dappsDetails.go(context),
-      onTap: () => const DAppDetailsRoute().go(context),
+      onTap: () => DAppDetailsRoute().go(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[

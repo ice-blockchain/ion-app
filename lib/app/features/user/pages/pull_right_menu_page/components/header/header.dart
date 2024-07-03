@@ -3,7 +3,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/header/header_action.dart';
-import 'package:ice/app/router/my_app_routes.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class Header extends StatelessWidget {
@@ -21,7 +21,7 @@ class Header extends StatelessWidget {
             HeaderAction(
               onPressed: () {
                 // IceRoutes.feed.go(context);
-                const FeedRoute().go(context);
+                FeedRoute().go(context);
               },
               assetName: Assets.images.icons.iconChatBack.path,
             ),
@@ -34,7 +34,7 @@ class Header extends StatelessWidget {
             HeaderAction(
               onPressed: () {
                 // IceRoutes.switchAccount.go(context);
-                const SwitchAccountRoute().go(context);
+                SwitchAccountRoute().go(context);
               },
               assetName: Assets.images.icons.iconSwitchProfile.path,
             ),
