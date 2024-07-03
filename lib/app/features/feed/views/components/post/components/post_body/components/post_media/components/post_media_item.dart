@@ -28,7 +28,7 @@ class PostMediaItem extends StatelessWidget {
               aspectRatio: aspectRatio,
             ),
           MediaType.video => PostMediaVideo(
-              imageUrl: mediaItem.url,
+              videoUrl: mediaItem.url,
             ),
           _ => const SizedBox.shrink(),
         },

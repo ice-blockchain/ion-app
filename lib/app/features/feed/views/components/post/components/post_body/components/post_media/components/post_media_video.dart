@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
 class PostMediaVideo extends StatelessWidget {
-  const PostMediaVideo({required this.imageUrl, super.key});
+  const PostMediaVideo({required this.videoUrl, super.key});
 
-  final String imageUrl;
+  final String videoUrl;
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
-      child: Placeholder(
-        child: Text('Video is not implemented yet'),
-      ),
+    return const Placeholder(
+      child: Text('Video is not implemented yet'),
     );
   }
 }
