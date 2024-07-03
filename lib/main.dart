@@ -40,9 +40,7 @@ class IceApp extends HookConsumerWidget {
           theme: buildLightTheme(data.theme),
           darkTheme: buildDarkTheme(data.theme),
           themeMode: appThemeMode,
-          routeInformationProvider: goRouter.routeInformationProvider,
-          routerDelegate: goRouter.routerDelegate,
-          routeInformationParser: goRouter.routeInformationParser,
+          routerConfig: goRouter,
         ),
         loading: () => const Directionality(
           textDirection: TextDirection.ltr,
