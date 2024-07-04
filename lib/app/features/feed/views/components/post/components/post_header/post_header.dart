@@ -7,12 +7,16 @@ class PostHeader extends StatelessWidget {
   const PostHeader({
     super.key,
     this.trailing,
+    this.minHeight,
   });
 
   final Widget? trailing;
+  final double? minHeight;
 
   @override
   Widget build(BuildContext context) {
+    final minHeightDefault = 55.0.s;
+
     return ScreenSideOffset.small(
       child: Padding(
         padding: EdgeInsets.only(top: 2.0.s),
@@ -22,7 +26,7 @@ class PostHeader extends StatelessWidget {
           profilePicture:
               'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
           trailing: trailing,
-          constraints: BoxConstraints(minHeight: 55.0.s),
+          constraints: BoxConstraints(minHeight: minHeight ?? minHeightDefault),
           iceBadge: true,
           verifiedBadge: true,
         ),

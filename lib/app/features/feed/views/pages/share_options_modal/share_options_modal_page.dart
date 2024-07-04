@@ -25,7 +25,7 @@ class ShareOptionsTypeView extends IcePage<String?> {
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
               showBackButton: false,
-              title: context.i18n.feed_repost_type,
+              title: context.i18n.feed_share_via,
               actions: const [
                 NavigationCloseButton(),
               ],
@@ -41,6 +41,9 @@ class ShareOptionsTypeView extends IcePage<String?> {
                 ),
               ],
             ),
+          ),
+          SizedBox(
+            height: 14.0.s,
           ),
           const Expanded(child: ShareOptionsContent()),
         ],

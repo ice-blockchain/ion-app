@@ -165,6 +165,7 @@
     "feed_more",
     "feed_send",
     "feed_modal_article_description",
+    "feed_share_via",
     "turn_notifications_title",
     "turn_notifications_description",
     "turn_notifications_receive",

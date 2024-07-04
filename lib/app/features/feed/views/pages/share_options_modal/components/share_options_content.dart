@@ -29,13 +29,19 @@ class ShareOptionsContentState extends State<ShareOptionsContent> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Expanded(
-          child: ListView.builder(
+          child: ListView.separated(
             shrinkWrap: true,
             itemCount: isSelectedList.length,
+            separatorBuilder: (context, index) {
+              return SizedBox(
+                height: 14.0.s,
+              );
+            },
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () => _toggleSelection(index),
                 child: PostHeader(
+                  minHeight: 0.0.s,
                   trailing: _getCheckbox(index),
                 ),
               );
@@ -52,6 +58,7 @@ class ShareOptionsContentState extends State<ShareOptionsContent> {
   Widget _getCheckbox(int index) {
     return isSelectedList[index]
         ? Assets.images.icons.iconBlockCheckboxOn.icon()
-        : Assets.images.icons.iconBlockCheckboxOff.icon();
+        : Assets.images.icons.iconBlockCheckboxOff
+            .icon(color: context.theme.appColors.onTerararyFill);
   }
 }

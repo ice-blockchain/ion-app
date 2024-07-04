@@ -18,19 +18,23 @@ class ScrollMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Button.icon(
-          type: buttonType,
-          onPressed: onPressed,
-          icon: icon,
-        ),
-        SizedBox(height: 6.0.s),
-        Text(
-          label,
-          style: context.theme.appTextThemes.subtitle2,
-        ),
-      ],
+    return SizedBox(
+      width: 72.0.s,
+      child: Column(
+        children: [
+          Button.icon(
+            type: buttonType,
+            onPressed: onPressed,
+            icon: icon,
+          ),
+          SizedBox(height: 6.0.s),
+          Text(
+            label,
+            style: context.theme.appTextThemes.caption2,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }

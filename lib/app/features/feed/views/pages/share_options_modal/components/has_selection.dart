@@ -28,8 +28,12 @@ class HasSelection extends StatelessWidget {
               ],
             ),
             child: Padding(
-              padding:
-                  EdgeInsets.symmetric(vertical: 31.0.s, horizontal: 44.0.s),
+              padding: EdgeInsets.only(
+                top: 27.0.s,
+                left: 44.0.s,
+                right: 44.0.s,
+                bottom: 33.5.s,
+              ),
               child: Button.compact(
                 mainAxisSize: MainAxisSize.max,
                 minimumSize: Size(56.0.s, 56.0.s),
