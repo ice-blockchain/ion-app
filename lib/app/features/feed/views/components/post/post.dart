@@ -5,7 +5,6 @@ import 'package:ice/app/features/feed/views/components/post/components/post_body
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_menu.dart';
-import 'package:ice/app/router/app_routes.dart';
 
 class Post extends StatelessWidget {
   const Post({
