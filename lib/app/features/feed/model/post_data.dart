@@ -76,19 +76,19 @@ class PostData {
             case 'dim':
               dimension = value;
           }
-          if (url != null) {
-            result.add(
-              PostMedia(
-                url: url,
-                mediaType: mediaType == null || mediaType == MediaType.unknown
-                    ? MediaType.fromUrl(url)
-                    : mediaType,
-                mimeType: mimeType,
-                dimension: dimension,
-                blurhash: blurhash,
-              ),
-            );
-          }
+        }
+        if (url != null) {
+          result.add(
+            PostMedia(
+              url: url,
+              mediaType: mediaType == null || mediaType == MediaType.unknown
+                  ? MediaType.fromUrl(url)
+                  : mediaType,
+              mimeType: mimeType,
+              dimension: dimension,
+              blurhash: blurhash,
+            ),
+          );
         }
       }
       return result;

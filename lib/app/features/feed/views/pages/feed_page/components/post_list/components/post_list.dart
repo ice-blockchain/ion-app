@@ -20,9 +20,7 @@ class PostList extends HookConsumerWidget {
         return FeedListSeparator();
       },
       itemBuilder: (BuildContext context, int index) {
-        return Post(
-          postData: posts[index],
-        );
+        return Post(postData: posts[index]);
       },
     );
   }
