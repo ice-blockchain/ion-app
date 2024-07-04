@@ -21,11 +21,7 @@ class FeedNotifier extends _$FeedNotifier {
       ..addFilter(const RequestFilter(kinds: <int>[1], limit: 20));
     final events = await requestEvents(requestMessage, relay);
     state = AsyncData<List<PostData>>(
-      events
-          .map(
-            (EventMessage event) => PostData(id: event.id, body: event.content),
-          )
-          .toList(),
+      events.map(PostData.fromEventMessage).toList(),
     );
   }
 }

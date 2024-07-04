@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/feed/views/components/post_skeleton/post_skeleton_text.dart';
 
 class PostSkeleton extends StatelessWidget {
   const PostSkeleton({super.key});
@@ -25,13 +24,38 @@ class PostSkeleton extends StatelessWidget {
               ),
             ),
           ),
-          const PostSkeletonText(widthFactor: 0.8),
-          const PostSkeletonText(),
-          const PostSkeletonText(),
-          const PostSkeletonText(
+          const _PostSkeletonText(widthFactor: 0.8),
+          const _PostSkeletonText(),
+          const _PostSkeletonText(),
+          const _PostSkeletonText(
             widthFactor: 0.4,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _PostSkeletonText extends StatelessWidget {
+  const _PostSkeletonText({
+    this.widthFactor = 1,
+  });
+
+  final double widthFactor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 3.5.s),
+      child: FractionallySizedBox(
+        widthFactor: widthFactor,
+        child: Container(
+          height: 12.0.s,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4.0.s),
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }

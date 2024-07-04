@@ -14,12 +14,11 @@ class Post extends StatelessWidget {
   });
 
   final PostData postData;
+
   final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
-    final footerDefault = PostFooter(postData: postData);
-
     return Padding(
       padding: EdgeInsets.only(bottom: 12.0.s),
       child: Column(
@@ -28,10 +27,8 @@ class Post extends StatelessWidget {
           const PostHeader(
             trailing: PostMenu(),
           ),
-          PostBody(
-            content: postData.body,
-          ),
-          footer ?? footerDefault,
+          PostBody(postData: postData),
+          footer ?? PostFooter(postData: postData),
         ],
       ),
     );
