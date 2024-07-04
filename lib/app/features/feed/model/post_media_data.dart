@@ -1,8 +1,8 @@
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/core/model/media_type.dart';
 
-class PostMedia {
-  PostMedia({
+class PostMediaData {
+  PostMediaData({
     required this.mediaType,
     required this.url,
     this.mimeType,

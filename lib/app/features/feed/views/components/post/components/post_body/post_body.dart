@@ -3,7 +3,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/model/post_data.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_body/components/post_media_carousel.dart';
+import 'package:ice/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
 
 class PostBody extends StatelessWidget {
   const PostBody({
@@ -18,8 +18,7 @@ class PostBody extends StatelessWidget {
     return ScreenSideOffset.small(
       child: Column(
         children: [
-          if (postData.media.isNotEmpty)
-            PostMediaCarousel(media: postData.media),
+          if (postData.media.isNotEmpty) PostMedia(media: postData.media),
           Text(
             postData.body,
             style: context.theme.appTextThemes.body2.copyWith(

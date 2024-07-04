@@ -1,6 +1,6 @@
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/core/model/media_type.dart';
-import 'package:ice/app/features/feed/model/post_media.dart';
+import 'package:ice/app/features/feed/model/post_media_data.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 class PostData {
@@ -22,7 +22,7 @@ class PostData {
 
   final String body;
 
-  final List<PostMedia> media;
+  final List<PostMediaData> media;
 
   /// Parses a list of imeta tags (Media Attachments defined in NIP-92).
   ///
@@ -45,8 +45,8 @@ class PostData {
   /// file and add this metadata before the post is sent.
   /// The client MAY ignore imeta tags that do not match the URL in the event
   /// content.
-  static List<PostMedia> _parseEventMedia(List<List<String>> tags) {
-    return tags.fold<List<PostMedia>>([], (result, tag) {
+  static List<PostMediaData> _parseEventMedia(List<List<String>> tags) {
+    return tags.fold<List<PostMediaData>>([], (result, tag) {
       if (tag[0] == 'imeta') {
         String? url;
         MediaType? mediaType;
@@ -79,7 +79,7 @@ class PostData {
         }
         if (url != null) {
           result.add(
-            PostMedia(
+            PostMediaData(
               url: url,
               mediaType: mediaType == null || mediaType == MediaType.unknown
                   ? MediaType.fromUrl(url)
