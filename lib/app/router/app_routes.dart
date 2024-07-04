@@ -279,7 +279,7 @@ enum IceRoutes<PayloadType> {
     type: IceRouteType.bottomSheet,
   ),
   shareOptions(
-    ShareOptionsTypeView.new,
+    ShareOptionsPage.new,
     type: IceRouteType.bottomSheet,
   ),
   ;

@@ -4,13 +4,13 @@ import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/pages/share_options_modal/components/share_options_content.dart';
+import 'package:ice/app/features/feed/views/pages/share_options_modal/components/share_modal_page_content.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-class ShareOptionsTypeView extends IcePage<String?> {
-  const ShareOptionsTypeView(super.route, super.payload, {super.key});
+class ShareOptionsPage extends IcePage<String?> {
+  const ShareOptionsPage(super.route, super.payload, {super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
@@ -45,7 +45,7 @@ class ShareOptionsTypeView extends IcePage<String?> {
           SizedBox(
             height: 14.0.s,
           ),
-          const Expanded(child: ShareOptionsContent()),
+          const Expanded(child: ShareModalPageContent()),
         ],
       ),
     );

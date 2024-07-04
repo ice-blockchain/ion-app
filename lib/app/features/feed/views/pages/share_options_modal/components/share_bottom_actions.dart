@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/pages/share_options_modal/components/horizontal_scroll_menu.dart';
+import 'package:ice/app/features/feed/views/pages/share_options_modal/components/share_options_menu.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class HasSelection extends StatelessWidget {
-  const HasSelection({
-    required this.hasSelection,
+class ShareBottomActions extends StatelessWidget {
+  const ShareBottomActions({
+    required this.hasSelectedUsers,
     super.key,
   });
 
-  final bool hasSelection;
+  final bool hasSelectedUsers;
 
   @override
   Widget build(BuildContext context) {
-    return hasSelection
+    return hasSelectedUsers
         ? Container(
             decoration: BoxDecoration(
               color: context.theme.appColors.secondaryBackground,
@@ -46,6 +46,6 @@ class HasSelection extends StatelessWidget {
               ),
             ),
           )
-        : const HorizontalScrollMenu();
+        : const ShareOptionsMenu();
   }
 }

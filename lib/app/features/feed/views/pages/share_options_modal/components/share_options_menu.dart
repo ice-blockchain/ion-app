@@ -4,11 +4,11 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/feed/views/pages/share_options_modal/components/scroll_menu_item.dart';
+import 'package:ice/app/features/feed/views/pages/share_options_modal/components/share_options_menu_item.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class HorizontalScrollMenu extends StatelessWidget {
-  const HorizontalScrollMenu({super.key});
+class ShareOptionsMenu extends StatelessWidget {
+  const ShareOptionsMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +29,14 @@ class HorizontalScrollMenu extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              ScrollMenuItem(
+              ShareOptionsMenuItem(
                 buttonType: ButtonType.primary,
                 icon: Assets.images.icons.iconFeedStories.icon(),
                 label: context.i18n.feed_add_story,
                 onPressed: () {},
               ),
               SizedBox(width: 12.0.s),
-              ScrollMenuItem(
+              ShareOptionsMenuItem(
                 buttonType: ButtonType.dropdown,
                 icon: Assets.images.icons.iconBlockCopy1
                     .icon(color: Colors.black),
@@ -44,7 +44,7 @@ class HorizontalScrollMenu extends StatelessWidget {
                 onPressed: () {},
               ),
               SizedBox(width: 12.0.s),
-              ScrollMenuItem(
+              ShareOptionsMenuItem(
                 buttonType: ButtonType.dropdown,
                 icon:
                     Assets.images.icons.iconBookmarks.icon(color: Colors.black),
@@ -52,14 +52,14 @@ class HorizontalScrollMenu extends StatelessWidget {
                 onPressed: () {},
               ),
               SizedBox(width: 12.0.s),
-              ScrollMenuItem(
+              ShareOptionsMenuItem(
                 buttonType: ButtonType.dropdown,
                 icon: Assets.images.icons.iconFeedWhatsapp.icon(),
                 label: context.i18n.feed_whatsapp,
                 onPressed: () {},
               ),
               SizedBox(width: 12.0.s),
-              ScrollMenuItem(
+              ShareOptionsMenuItem(
                 buttonType: ButtonType.dropdown,
                 icon: Assets.images.icons.iconFeedMore.icon(),
                 label: context.i18n.feed_more,

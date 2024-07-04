@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
-class ScrollMenuItem extends StatelessWidget {
-  const ScrollMenuItem({
+class ShareOptionsMenuItem extends StatelessWidget {
+  const ShareOptionsMenuItem({
     required this.icon,
     required this.label,
     required this.onPressed,
