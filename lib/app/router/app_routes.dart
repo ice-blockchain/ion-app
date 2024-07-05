@@ -22,6 +22,7 @@ import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/quote_post_modal_page.dart';
+import 'package:ice/app/features/feed/views/pages/share_options_modal/share_options_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_type_modal_page/share_type_modal_page.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/switch_account_page.dart';
@@ -184,6 +185,7 @@ enum IceRoutes<PayloadType> {
       IceRoutes.deleteWallet,
       IceRoutes.shareType,
       IceRoutes.quotePost,
+      IceRoutes.shareOptions,
     ],
   ),
   wallets(
@@ -274,6 +276,10 @@ enum IceRoutes<PayloadType> {
   ),
   quotePost(
     QuotePostModalPage.new,
+    type: IceRouteType.bottomSheet,
+  ),
+  shareOptions(
+    ShareOptionsPage.new,
     type: IceRouteType.bottomSheet,
   ),
   ;

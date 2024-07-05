@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
-class CommentInput extends StatelessWidget {
-  const CommentInput({super.key});
+class QuotePostCommentInput extends StatelessWidget {
+  const QuotePostCommentInput({super.key});
 
   @override
   Widget build(BuildContext context) {

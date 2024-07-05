@@ -3,8 +3,8 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class BottomActionBar extends StatelessWidget {
-  const BottomActionBar({super.key});
+class QuotePostActionBar extends StatelessWidget {
+  const QuotePostActionBar({super.key});
 
   @override
   Widget build(BuildContext context) {
