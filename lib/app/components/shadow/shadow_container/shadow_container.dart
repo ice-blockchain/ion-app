@@ -11,12 +11,6 @@ class CustomBoxShadow extends StatelessWidget {
   final Widget child;
   final BoxShadow? boxShadow;
 
-  static const BoxShadow defaultBoxShadow = BoxShadow(
-    color: Color.fromRGBO(0, 0, 0, 0.5),
-    offset: Offset(0, -1),
-    blurRadius: 5,
-  );
-
   @override
   Widget build(BuildContext context) {
     final shadow = boxShadow ??
