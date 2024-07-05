@@ -36,14 +36,14 @@ class ShareOptionsPage extends IcePage<String?> {
               children: [
                 Expanded(
                   child: SearchInput(
-                    onTextChanged: (String st) {},
+                    onTextChanged: (String text) {},
                   ),
                 ),
               ],
             ),
           ),
           SizedBox(
-            height: 14.0.s,
+            height: 16.0.s,
           ),
           const Expanded(child: ShareModalPageContent()),
         ],
