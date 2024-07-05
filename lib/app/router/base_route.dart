@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum IceRouteType {
   single,
@@ -11,23 +10,17 @@ enum IceRouteType {
 abstract class BaseRouteData extends GoRouteData {
   BaseRouteData({
     required this.child,
-    this.transitionType = IceRouteType.single,
+    this.type = IceRouteType.single,
   });
-  final IceRouteType transitionType;
+  final IceRouteType type;
 
   final Widget child;
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return switch (transitionType) {
+    return switch (type) {
       IceRouteType.single => CupertinoPage<void>(child: child),
-      IceRouteType.bottomSheet => ScrollableNavigationSheetPage(
-          initialExtent: const Extent.proportional(0.5),
-          minExtent: const Extent.proportional(0.3),
-          maxExtent: const Extent.proportional(0.8),
-          key: state.pageKey,
-          child: child,
-        ),
+      IceRouteType.bottomSheet => CupertinoPage<void>(child: child),
       IceRouteType.slideFromLeft =>
         SlideFromLeftTransitionPage(child: child, state: state),
     };

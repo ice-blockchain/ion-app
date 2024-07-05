@@ -40,6 +40,7 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/compon
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contacts_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/network_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/send_coins_form.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/send_coin_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/manage_coins_page.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sorting_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
@@ -56,20 +57,14 @@ import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/router/main_tab_navigation.dart';
 import 'package:ice/app/services/logger/config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:sheet/route.dart';
+import 'package:sheet/sheet.dart';
 
 part 'app_routes.g.dart';
 
-final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
-  debugLabel: 'rootNavigator',
-);
-final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>(
-  debugLabel: 'shellNavigator',
-);
-final GlobalKey<NavigatorState> modalNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'modalNavigator');
-
-final transitionObserver = NavigationSheetTransitionObserver();
+final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
+final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');
+final modalPageNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'modalNav');
 
 @TypedStatefulShellRoute<AppShellRouteData>(
   branches: [
@@ -174,7 +169,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
 class AppShellRouteData extends StatefulShellRouteData {
   const AppShellRouteData();
 
-  static final $navigatorKey = shellNavigatorKey;
+  static final $navigatorKey = bottomBarNavigatorKey;
 
   @override
   Widget builder(
@@ -191,7 +186,7 @@ class AppShellRouteData extends StatefulShellRouteData {
 class ModalShellRouteData extends StatefulShellRouteData {
   const ModalShellRouteData();
 
-  static final $navigatorKey = modalNavigatorKey;
+  static final $navigatorKey = modalPageNavigatorKey;
   static final $parentNavigatorKey = rootNavigatorKey;
 
   @override
@@ -200,11 +195,14 @@ class ModalShellRouteData extends StatefulShellRouteData {
     GoRouterState state,
     StatefulNavigationShell navigationShell,
   ) {
-    return ModalSheetPage(
-      swipeDismissible: true,
-      child: ModalWrapper(
-        child: navigationShell,
-      ),
+    return SheetPage<void>(
+      stops: const [0, 0.3, 0.7, 1.0],
+      fit: SheetFit.loose,
+      key: state.pageKey,
+      child: navigationShell,
+      decorationBuilder: (context, child) {
+        return ModalWrapper(child: child);
+      },
     );
   }
 }
@@ -284,7 +282,7 @@ class AuthRoute extends BaseRouteData {
   AuthRoute()
       : super(
           child: const AuthPage(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 }
 
@@ -292,7 +290,7 @@ class SelectCountriesRoute extends BaseRouteData {
   SelectCountriesRoute()
       : super(
           child: const SelectCountries(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -302,7 +300,7 @@ class SelectLanguagesRoute extends BaseRouteData {
   SelectLanguagesRoute()
       : super(
           child: const SelectLanguages(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -312,7 +310,7 @@ class CheckEmailRoute extends BaseRouteData {
   CheckEmailRoute()
       : super(
           child: const CheckEmail(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -322,7 +320,7 @@ class FillProfileRoute extends BaseRouteData {
   FillProfileRoute()
       : super(
           child: const FillProfile(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -332,7 +330,7 @@ class DiscoverCreatorsRoute extends BaseRouteData {
   DiscoverCreatorsRoute()
       : super(
           child: const DiscoverCreators(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -342,7 +340,7 @@ class NostrAuthRoute extends BaseRouteData {
   NostrAuthRoute()
       : super(
           child: const NostrAuth(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -352,7 +350,7 @@ class NostrLoginRoute extends BaseRouteData {
   NostrLoginRoute()
       : super(
           child: const NostrLogin(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -362,7 +360,7 @@ class EnterCodeRoute extends BaseRouteData {
   EnterCodeRoute()
       : super(
           child: const EnterCode(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -373,7 +371,7 @@ class FeedMainModal extends BaseRouteData {
   FeedMainModal()
       : super(
           child: const FeedMainModalPage(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -401,7 +399,7 @@ class DAppDetailsRoute extends BaseRouteData {
   DAppDetailsRoute()
       : super(
           child: DAppDetails(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 }
 
@@ -415,7 +413,7 @@ class PullRightMenuRoute extends BaseRouteData {
   PullRightMenuRoute()
       : super(
           child: const PullRightMenuPage(),
-          transitionType: IceRouteType.slideFromLeft,
+          type: IceRouteType.slideFromLeft,
         );
 }
 
@@ -423,7 +421,7 @@ class SwitchAccountRoute extends BaseRouteData {
   SwitchAccountRoute()
       : super(
           child: const SwitchAccountPage(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -433,16 +431,15 @@ class AllowAccessRoute extends BaseRouteData {
   AllowAccessRoute()
       : super(
           child: const RequestContactAccessModal(),
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class NftsSortingRoute extends BaseRouteData {
   NftsSortingRoute()
       : super(
           child: const NftsSortingModal(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -451,8 +448,8 @@ class NftsSortingRoute extends BaseRouteData {
 class CoinSendRoute extends BaseRouteData {
   CoinSendRoute()
       : super(
-          child: const NotFoundPage(),
-          transitionType: IceRouteType.bottomSheet,
+          child: const SendCoinModalPage(),
+          type: IceRouteType.bottomSheet,
         );
 }
 
@@ -460,27 +457,23 @@ class ReceiveCoinRoute extends BaseRouteData {
   ReceiveCoinRoute()
       : super(
           child: const ReceiveCoinModalPage(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class ScanWalletRoute extends BaseRouteData {
   ScanWalletRoute()
       : super(
           child: const WalletScanModalPage(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class NetworkSelectRoute extends BaseRouteData {
   NetworkSelectRoute()
       : super(
           child: const NetworkListView(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 }
 
@@ -488,10 +481,8 @@ class NetworkSelectReceiveRoute extends BaseRouteData {
   NetworkSelectReceiveRoute({required this.$extra})
       : super(
           child: NetworkListReceiveView(payload: $extra),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 
   final CoinData $extra;
 }
@@ -500,10 +491,8 @@ class ShareAddressRoute extends BaseRouteData {
   ShareAddressRoute({required this.$extra})
       : super(
           child: ShareAddressView(payload: $extra),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 
   final Map<String, dynamic> $extra;
 }
@@ -512,7 +501,7 @@ class ContactsSelectRoute extends BaseRouteData {
   ContactsSelectRoute({required this.$extra})
       : super(
           child: ContactsListView(payload: $extra),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 
   final ContactData $extra;
@@ -522,7 +511,7 @@ class CoinsSendFormRoute extends BaseRouteData {
   CoinsSendFormRoute()
       : super(
           child: const SendCoinsForm(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 }
 
@@ -530,7 +519,7 @@ class CoinsSendFormConfirmationRoute extends BaseRouteData {
   CoinsSendFormConfirmationRoute()
       : super(
           child: const ConfirmationSheet(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 }
 
@@ -538,7 +527,7 @@ class TransactionResultRoute extends BaseRouteData {
   TransactionResultRoute()
       : super(
           child: const TransactionResultSheet(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
 }
 
@@ -553,10 +542,8 @@ class CoinReceiveRoute extends BaseRouteData {
   CoinReceiveRoute({required this.$extra})
       : super(
           child: CoinReceiveModal(payload: $extra),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 
   final CoinReceiveModalData $extra;
 }
@@ -565,50 +552,40 @@ class ManageCoinsRoute extends BaseRouteData {
   ManageCoinsRoute()
       : super(
           child: const ManageCoinsPage(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class WalletsRoute extends BaseRouteData {
   WalletsRoute()
       : super(
           child: const WalletsModal(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class ManageWalletsRoute extends BaseRouteData {
   ManageWalletsRoute()
       : super(
           child: const ManageWalletsModal(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class CreateWalletRoute extends BaseRouteData {
   CreateWalletRoute()
       : super(
           child: const CreateNewWalletModal(),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class EditWalletRoute extends BaseRouteData {
   EditWalletRoute({required this.$extra})
       : super(
           child: EditWalletModal(payload: $extra),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 
   final WalletData $extra;
 }
@@ -617,10 +594,8 @@ class DeleteWalletRoute extends BaseRouteData {
   DeleteWalletRoute({required this.$extra})
       : super(
           child: DeleteWalletModal(payload: $extra),
-          transitionType: IceRouteType.bottomSheet,
+          type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 
   final WalletData $extra;
 }
@@ -680,6 +655,5 @@ GoRouter goRouter(GoRouterRef ref) {
     initialLocation: SplashRoute().location,
     debugLogDiagnostics: LoggerConfig.routerLogsEnabled,
     navigatorKey: rootNavigatorKey,
-    observers: [transitionObserver],
   );
 }
