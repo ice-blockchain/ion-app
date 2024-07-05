@@ -15,14 +15,22 @@ enum MediaType {
   }
 
   factory MediaType.fromUrl(String url) {
-    final imageRegex = RegExp(r'\.(jpg|jpeg|png|gif|bmp|tiff|webp)$');
-    final videoRegex = RegExp(r'\.(mp4|avi|mov|wmv|flv|mkv|webm)$');
-    if (imageRegex.hasMatch(url)) {
+    if (isImageUrl(url)) {
       return MediaType.image;
-    } else if (videoRegex.hasMatch(url)) {
+    } else if (isVideoUrl(url)) {
       return MediaType.video;
     } else {
       return MediaType.unknown;
     }
+  }
+
+  static bool isImageUrl(String url) {
+    return RegExp(r'https?://\S+\.(?:jpg|jpeg|png|gif|bmp|svg|webp)')
+        .hasMatch(url);
+  }
+
+  static bool isVideoUrl(String url) {
+    return RegExp(r'https?://\S+\.(?:mp4|avi|mov|wmv|flv|mkv|webm)')
+        .hasMatch(url);
   }
 }
