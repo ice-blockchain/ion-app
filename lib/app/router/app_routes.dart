@@ -40,7 +40,6 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/compon
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contacts_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/network_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/send_coins_form.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/send_coin_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/manage_coins_page.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sorting_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
@@ -53,32 +52,35 @@ import 'package:ice/app/features/wallets/pages/manage_wallets_modal/manage_walle
 import 'package:ice/app/features/wallets/pages/wallets_modal/wallets_modal.dart';
 import 'package:ice/app/router/app_router_listenable.dart';
 import 'package:ice/app/router/base_route.dart';
+import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/router/main_tab_navigation.dart';
 import 'package:ice/app/services/logger/config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:sheet/sheet.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'app_routes.g.dart';
 
-final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
+  debugLabel: 'rootNavigator',
+);
+final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>(
+  debugLabel: 'shellNavigator',
+);
+final GlobalKey<NavigatorState> modalNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'modalNavigator');
+
+final transitionObserver = NavigationSheetTransitionObserver();
 
 @TypedStatefulShellRoute<AppShellRouteData>(
   branches: [
     TypedStatefulShellBranch<FeedBranchData>(
-      routes: [
-        TypedGoRoute<FeedRoute>(path: '/feed'),
-      ],
+      routes: [TypedGoRoute<FeedRoute>(path: '/feed')],
     ),
     TypedStatefulShellBranch<ChatBranchData>(
-      routes: [
-        TypedGoRoute<ChatRoute>(path: '/chat'),
-      ],
+      routes: [TypedGoRoute<ChatRoute>(path: '/chat')],
     ),
     TypedStatefulShellBranch<DappsBranchData>(
-      routes: [
-        TypedGoRoute<DappsRoute>(path: '/dapps'),
-      ],
+      routes: [TypedGoRoute<DappsRoute>(path: '/dapps')],
     ),
     TypedStatefulShellBranch<WalletBranchData>(
       routes: [
@@ -87,20 +89,74 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
           routes: [
             TypedGoRoute<AllowAccessRoute>(path: 'allow-access'),
             TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting'),
-            TypedGoRoute<CoinSendRoute>(path: 'coin-send'),
+            TypedStatefulShellRoute<ModalShellRouteData>(
+              branches: [
+                TypedStatefulShellBranch<CoinSendBranchData>(
+                  routes: [
+                    TypedGoRoute<CoinSendRoute>(
+                      path: 'coin-send',
+                      routes: [
+                        TypedGoRoute<NetworkSelectRoute>(
+                          path: 'network-select',
+                          routes: [
+                            TypedGoRoute<CoinsSendFormRoute>(
+                              path: 'coin-send-form',
+                              routes: [
+                                TypedGoRoute<CoinsSendFormConfirmationRoute>(
+                                  path: 'coin-send-form-confirmation',
+                                  routes: [
+                                    TypedGoRoute<TransactionResultRoute>(
+                                      path: 'transaction-result',
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            // TypedGoRoute<CoinSendRoute>(
+            //   path: 'coin-send',
+            //   routes: [
+            //     TypedGoRoute<NetworkSelectRoute>(
+            //       path: 'network-select',
+            //       routes: [
+            //         TypedGoRoute<CoinsSendFormRoute>(
+            //           path: 'coin-send-form',
+            //           routes: [
+            //             TypedGoRoute<CoinsSendFormConfirmationRoute>(
+            //               path: 'coin-send-form-confirmation',
+            //               routes: [
+            //                 TypedGoRoute<TransactionResultRoute>(
+            //                   path: 'transaction-result',
+            //                 ),
+            //               ],
+            //             ),
+            //           ],
+            //         ),
+            //       ],
+            //     ),
+            //   ],
+            // ),
             TypedGoRoute<ReceiveCoinRoute>(path: 'receive-coin'),
             TypedGoRoute<ScanWalletRoute>(path: 'scan-wallet'),
-            TypedGoRoute<NetworkSelectRoute>(path: 'network-select'),
+            // TypedGoRoute<NetworkSelectRoute>(path: 'network-select'),
             TypedGoRoute<NetworkSelectReceiveRoute>(
               path: 'network-select-receive',
             ),
             TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
             TypedGoRoute<ContactsSelectRoute>(path: 'contacts-select'),
-            TypedGoRoute<CoinsSendFormRoute>(path: 'coin-send-form'),
-            TypedGoRoute<CoinsSendFormConfirmationRoute>(
-              path: 'coin-send-form-confirmation',
-            ),
-            TypedGoRoute<TransactionResultRoute>(path: 'transaction-result'),
+            // TypedGoRoute<CoinsSendFormRoute>(path: 'coin-send-form'),
+            // TypedGoRoute<CoinsSendFormConfirmationRoute>(
+            //   path: 'coin-send-form-confirmation',
+            // ),
+            // TypedGoRoute<TransactionResultRoute>(path: 'transaction-result'),
             TypedGoRoute<CoinsDetailsRoute>(path: 'coin-details'),
             TypedGoRoute<CoinReceiveRoute>(path: 'coin-receive'),
             TypedGoRoute<ManageCoinsRoute>(path: 'manage-coins'),
@@ -132,6 +188,31 @@ class AppShellRouteData extends StatefulShellRouteData {
   }
 }
 
+class ModalShellRouteData extends StatefulShellRouteData {
+  const ModalShellRouteData();
+
+  static final $navigatorKey = modalNavigatorKey;
+  static final $parentNavigatorKey = rootNavigatorKey;
+
+  @override
+  Page<void> pageBuilder(
+    BuildContext context,
+    GoRouterState state,
+    StatefulNavigationShell navigationShell,
+  ) {
+    return ModalSheetPage(
+      swipeDismissible: true,
+      child: ModalWrapper(
+        child: navigationShell,
+      ),
+    );
+  }
+}
+
+class CoinSendBranchData extends StatefulShellBranchData {
+  const CoinSendBranchData();
+}
+
 class FeedBranchData extends StatefulShellBranchData {
   FeedBranchData();
 }
@@ -150,56 +231,35 @@ class DappsBranchData extends StatefulShellBranchData {
 
 @TypedGoRoute<SplashRoute>(path: '/splash')
 class SplashRoute extends BaseRouteData {
-  SplashRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const SplashPage();
+  SplashRoute() : super(child: const SplashPage());
 }
 
 class FeedRoute extends BaseRouteData {
-  FeedRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const FeedPage();
+  FeedRoute() : super(child: const FeedPage());
 }
 
 class ChatRoute extends BaseRouteData {
-  ChatRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const ChatPage();
+  ChatRoute() : super(child: const ChatPage());
 }
 
 class WalletRoute extends BaseRouteData {
-  WalletRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const WalletPage();
+  WalletRoute() : super(child: const WalletPage());
 }
 
 class DappsRoute extends BaseRouteData {
-  DappsRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const DAppsPage();
+  DappsRoute() : super(child: const DAppsPage());
 }
 
 @TypedGoRoute<ErrorRoute>(path: '/error')
 class ErrorRoute extends BaseRouteData {
-  ErrorRoute({required this.$extra});
+  ErrorRoute({required this.$extra})
+      : super(child: ErrorPage(error: $extra ?? Exception('Unknown error')));
 
   final Exception? $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => ErrorPage(
-        error: $extra ?? Exception('Unknown error'),
-      );
 }
 
 class NotFoundRoute extends BaseRouteData {
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const NotFoundPage();
+  NotFoundRoute() : super(child: const NotFoundPage());
 }
 
 @TypedGoRoute<IntroRoute>(
@@ -217,104 +277,106 @@ class NotFoundRoute extends BaseRouteData {
   ],
 )
 class IntroRoute extends BaseRouteData {
-  IntroRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const IntroPage();
+  IntroRoute() : super(child: const IntroPage());
 }
 
 class AuthRoute extends BaseRouteData {
-  AuthRoute() : super(transitionType: IceRouteType.bottomSheet);
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const AuthPage();
+  AuthRoute()
+      : super(
+          child: const AuthPage(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 }
 
 class SelectCountriesRoute extends BaseRouteData {
-  SelectCountriesRoute() : super(transitionType: IceRouteType.bottomSheet);
+  SelectCountriesRoute()
+      : super(
+          child: const SelectCountries(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const SelectCountries();
 }
 
 class SelectLanguagesRoute extends BaseRouteData {
-  SelectLanguagesRoute() : super(transitionType: IceRouteType.bottomSheet);
+  SelectLanguagesRoute()
+      : super(
+          child: const SelectLanguages(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const SelectLanguages();
 }
 
 class CheckEmailRoute extends BaseRouteData {
-  CheckEmailRoute() : super(transitionType: IceRouteType.bottomSheet);
+  CheckEmailRoute()
+      : super(
+          child: const CheckEmail(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const CheckEmail();
 }
 
 class FillProfileRoute extends BaseRouteData {
-  FillProfileRoute() : super(transitionType: IceRouteType.bottomSheet);
+  FillProfileRoute()
+      : super(
+          child: const FillProfile(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const FillProfile();
 }
 
 class DiscoverCreatorsRoute extends BaseRouteData {
-  DiscoverCreatorsRoute() : super(transitionType: IceRouteType.bottomSheet);
+  DiscoverCreatorsRoute()
+      : super(
+          child: const DiscoverCreators(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const DiscoverCreators();
 }
 
 class NostrAuthRoute extends BaseRouteData {
-  NostrAuthRoute() : super(transitionType: IceRouteType.bottomSheet);
+  NostrAuthRoute()
+      : super(
+          child: const NostrAuth(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const NostrAuth();
 }
 
 class NostrLoginRoute extends BaseRouteData {
-  NostrLoginRoute() : super(transitionType: IceRouteType.bottomSheet);
+  NostrLoginRoute()
+      : super(
+          child: const NostrLogin(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const NostrLogin();
 }
 
 class EnterCodeRoute extends BaseRouteData {
-  EnterCodeRoute() : super(transitionType: IceRouteType.bottomSheet);
+  EnterCodeRoute()
+      : super(
+          child: const EnterCode(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const EnterCode();
 }
 
 @TypedGoRoute<FeedMainModal>(path: '/feed-modal')
 class FeedMainModal extends BaseRouteData {
-  FeedMainModal() : super(transitionType: IceRouteType.bottomSheet);
+  FeedMainModal()
+      : super(
+          child: const FeedMainModalPage(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const FeedMainModalPage();
 }
 
 @TypedGoRoute<DAppsRoute>(
@@ -325,28 +387,22 @@ class FeedMainModal extends BaseRouteData {
   ],
 )
 class DAppsRoute extends BaseRouteData {
-  DAppsRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => const DAppsPage();
+  DAppsRoute() : super(child: const DAppsPage());
 }
 
 class DAppsListRoute extends BaseRouteData {
-  DAppsListRoute({required this.$extra});
+  DAppsListRoute({required this.$extra})
+      : super(child: DAppsList(payload: $extra));
 
   final AppsRouteData $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => DAppsList(
-        payload: $extra,
-      );
 }
 
 class DAppDetailsRoute extends BaseRouteData {
-  DAppDetailsRoute() : super(transitionType: IceRouteType.bottomSheet);
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) => DAppDetails();
+  DAppDetailsRoute()
+      : super(
+          child: DAppDetails(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 }
 
 @TypedGoRoute<PullRightMenuRoute>(
@@ -356,254 +412,217 @@ class DAppDetailsRoute extends BaseRouteData {
   ],
 )
 class PullRightMenuRoute extends BaseRouteData {
-  PullRightMenuRoute() : super(transitionType: IceRouteType.slideFromLeft);
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const PullRightMenuPage();
+  PullRightMenuRoute()
+      : super(
+          child: const PullRightMenuPage(),
+          transitionType: IceRouteType.slideFromLeft,
+        );
 }
 
 class SwitchAccountRoute extends BaseRouteData {
-  SwitchAccountRoute() : super(transitionType: IceRouteType.bottomSheet);
+  SwitchAccountRoute()
+      : super(
+          child: const SwitchAccountPage(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const SwitchAccountPage();
 }
 
 class AllowAccessRoute extends BaseRouteData {
   AllowAccessRoute()
       : super(
+          child: const RequestContactAccessModal(),
+        );
+
+  static final $parentNavigatorKey = rootNavigatorKey;
+}
+
+class NftsSortingRoute extends BaseRouteData {
+  NftsSortingRoute()
+      : super(
+          child: const NftsSortingModal(),
           transitionType: IceRouteType.bottomSheet,
         );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const RequestContactAccessModal();
-}
-
-class NftsSortingRoute extends BaseRouteData {
-  NftsSortingRoute() : super(transitionType: IceRouteType.bottomSheet);
-
-  static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const NftsSortingModal();
 }
 
 class CoinSendRoute extends BaseRouteData {
-  CoinSendRoute() : super(transitionType: IceRouteType.bottomSheet);
-
-  static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const SendCoinModalPage();
+  CoinSendRoute()
+      : super(
+          child: const NotFoundPage(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 }
 
 class ReceiveCoinRoute extends BaseRouteData {
-  ReceiveCoinRoute() : super(transitionType: IceRouteType.bottomSheet);
+  ReceiveCoinRoute()
+      : super(
+          child: const ReceiveCoinModalPage(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const ReceiveCoinModalPage();
 }
 
 class ScanWalletRoute extends BaseRouteData {
-  ScanWalletRoute() : super(transitionType: IceRouteType.bottomSheet);
+  ScanWalletRoute()
+      : super(
+          child: const WalletScanModalPage(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const WalletScanModalPage();
 }
 
 class NetworkSelectRoute extends BaseRouteData {
   NetworkSelectRoute()
       : super(
+          child: const NetworkListView(),
           transitionType: IceRouteType.bottomSheet,
-          sheetFit: SheetFit.expand,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const NetworkListView();
 }
 
 class NetworkSelectReceiveRoute extends BaseRouteData {
   NetworkSelectReceiveRoute({required this.$extra})
-      : super(transitionType: IceRouteType.bottomSheet);
+      : super(
+          child: NetworkListReceiveView(payload: $extra),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
 
   final CoinData $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      NetworkListReceiveView(payload: $extra);
 }
 
 class ShareAddressRoute extends BaseRouteData {
   ShareAddressRoute({required this.$extra})
-      : super(transitionType: IceRouteType.bottomSheet);
+      : super(
+          child: ShareAddressView(payload: $extra),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
 
   final Map<String, dynamic> $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      ShareAddressView(payload: $extra);
 }
 
 class ContactsSelectRoute extends BaseRouteData {
   ContactsSelectRoute({required this.$extra})
-      : super(transitionType: IceRouteType.bottomSheet);
-
-  static final $parentNavigatorKey = rootNavigatorKey;
+      : super(
+          child: ContactsListView(payload: $extra),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   final ContactData $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      ContactsListView(payload: $extra);
 }
 
 class CoinsSendFormRoute extends BaseRouteData {
   CoinsSendFormRoute()
       : super(
+          child: const SendCoinsForm(),
           transitionType: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const SendCoinsForm();
 }
 
 class CoinsSendFormConfirmationRoute extends BaseRouteData {
   CoinsSendFormConfirmationRoute()
-      : super(transitionType: IceRouteType.bottomSheet);
-
-  static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const ConfirmationSheet();
+      : super(
+          child: const ConfirmationSheet(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 }
 
 class TransactionResultRoute extends BaseRouteData {
   TransactionResultRoute()
       : super(
+          child: const TransactionResultSheet(),
           transitionType: IceRouteType.bottomSheet,
-          // initialExtent: 0.7,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const TransactionResultSheet();
 }
 
 class CoinsDetailsRoute extends BaseRouteData {
-  CoinsDetailsRoute({required this.$extra});
+  CoinsDetailsRoute({required this.$extra})
+      : super(child: CoinDetailsPage(payload: $extra));
 
   final CoinData $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      CoinDetailsPage(payload: $extra);
 }
 
 class CoinReceiveRoute extends BaseRouteData {
   CoinReceiveRoute({required this.$extra})
-      : super(transitionType: IceRouteType.bottomSheet);
+      : super(
+          child: CoinReceiveModal(payload: $extra),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
 
   final CoinReceiveModalData $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      CoinReceiveModal(payload: $extra);
 }
 
 class ManageCoinsRoute extends BaseRouteData {
-  ManageCoinsRoute() : super(transitionType: IceRouteType.bottomSheet);
+  ManageCoinsRoute()
+      : super(
+          child: const ManageCoinsPage(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const ManageCoinsPage();
 }
 
 class WalletsRoute extends BaseRouteData {
-  WalletsRoute() : super(transitionType: IceRouteType.bottomSheet);
+  WalletsRoute()
+      : super(
+          child: const WalletsModal(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const WalletsModal();
 }
 
 class ManageWalletsRoute extends BaseRouteData {
-  ManageWalletsRoute() : super(transitionType: IceRouteType.bottomSheet);
+  ManageWalletsRoute()
+      : super(
+          child: const ManageWalletsModal(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const ManageWalletsModal();
 }
 
 class CreateWalletRoute extends BaseRouteData {
-  CreateWalletRoute() : super(transitionType: IceRouteType.bottomSheet);
+  CreateWalletRoute()
+      : super(
+          child: const CreateNewWalletModal(),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const CreateNewWalletModal();
 }
 
 class EditWalletRoute extends BaseRouteData {
   EditWalletRoute({required this.$extra})
-      : super(transitionType: IceRouteType.bottomSheet);
+      : super(
+          child: EditWalletModal(payload: $extra),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
 
   final WalletData $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      EditWalletModal(payload: $extra);
 }
 
 class DeleteWalletRoute extends BaseRouteData {
   DeleteWalletRoute({required this.$extra})
-      : super(transitionType: IceRouteType.bottomSheet);
+      : super(
+          child: DeleteWalletModal(payload: $extra),
+          transitionType: IceRouteType.bottomSheet,
+        );
 
   static final $parentNavigatorKey = rootNavigatorKey;
 
   final WalletData $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      DeleteWalletModal(payload: $extra);
 }
 
 @Riverpod(keepAlive: true)
@@ -661,5 +680,6 @@ GoRouter goRouter(GoRouterRef ref) {
     initialLocation: SplashRoute().location,
     debugLogDiagnostics: LoggerConfig.routerLogsEnabled,
     navigatorKey: rootNavigatorKey,
+    observers: [transitionObserver],
   );
 }

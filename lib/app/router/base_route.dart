@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
-import 'package:sheet/route.dart';
-import 'package:sheet/sheet.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum IceRouteType {
   single,
@@ -12,21 +10,23 @@ enum IceRouteType {
 
 abstract class BaseRouteData extends GoRouteData {
   BaseRouteData({
+    required this.child,
     this.transitionType = IceRouteType.single,
-    this.sheetFit = SheetFit.loose,
   });
   final IceRouteType transitionType;
-  final SheetFit sheetFit;
+
+  final Widget child;
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    final child = build(context, state);
     return switch (transitionType) {
       IceRouteType.single => CupertinoPage<void>(child: child),
-      IceRouteType.bottomSheet => SheetPage<void>(
-          fit: sheetFit,
+      IceRouteType.bottomSheet => ScrollableNavigationSheetPage(
+          initialExtent: const Extent.proportional(0.5),
+          minExtent: const Extent.proportional(0.3),
+          maxExtent: const Extent.proportional(0.8),
           key: state.pageKey,
-          child: ModalWrapper(child: child),
+          child: child,
         ),
       IceRouteType.slideFromLeft =>
         SlideFromLeftTransitionPage(child: child, state: state),

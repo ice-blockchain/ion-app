@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/router/app_routes.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 class ModalWrapper extends StatelessWidget {
   const ModalWrapper({
@@ -20,9 +22,12 @@ class ModalWrapper extends StatelessWidget {
           topLeft: Radius.circular(30.0.s),
           topRight: Radius.circular(30.0.s),
         ),
-        child: Material(
-          color: context.theme.appColors.onPrimaryAccent,
-          child: child,
+        child: NavigationSheet(
+          transitionObserver: transitionObserver,
+          child: Material(
+            color: context.theme.appColors.onPrimaryAccent,
+            child: child,
+          ),
         ),
       ),
     );
