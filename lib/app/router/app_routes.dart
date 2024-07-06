@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/features/auth/data/models/auth_state.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
 import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
@@ -13,8 +11,6 @@ import 'package:ice/app/features/auth/views/pages/nostr_login/nostr_login.dart';
 import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
-import 'package:ice/app/features/core/providers/init_provider.dart';
-import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/not_found_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
@@ -51,20 +47,19 @@ import 'package:ice/app/features/wallets/pages/delete_wallet_modal/delete_wallet
 import 'package:ice/app/features/wallets/pages/edit_wallet_modal/edit_wallet_modal.dart';
 import 'package:ice/app/features/wallets/pages/manage_wallets_modal/manage_wallets_modal.dart';
 import 'package:ice/app/features/wallets/pages/wallets_modal/wallets_modal.dart';
-import 'package:ice/app/router/app_router_listenable.dart';
 import 'package:ice/app/router/base_route.dart';
 import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/router/main_tab_navigation.dart';
-import 'package:ice/app/services/logger/config.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sheet/route.dart';
 import 'package:sheet/sheet.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'app_routes.g.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
 final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');
 final modalPageNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'modalNav');
+final transitionObserver = NavigationSheetTransitionObserver();
 
 @TypedStatefulShellRoute<AppShellRouteData>(
   branches: [
@@ -82,28 +77,29 @@ final modalPageNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'modalNav');
         TypedGoRoute<WalletRoute>(
           path: '/wallet',
           routes: [
-            TypedGoRoute<AllowAccessRoute>(path: 'allow-access'),
+            TypedShellRoute<ModalShellRouteData>(
+              routes: [
+                TypedGoRoute<AllowAccessRoute>(path: 'allow-access'),
+              ],
+            ),
+            // TypedGoRoute<AllowAccessRoute>(path: 'allow-access'),
             TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting'),
-            TypedStatefulShellRoute<ModalShellRouteData>(
-              branches: [
-                TypedStatefulShellBranch<CoinSendBranchData>(
+            TypedShellRoute<ModalShellRouteData>(
+              routes: [
+                TypedGoRoute<CoinSendRoute>(
+                  path: 'coin-send',
                   routes: [
-                    TypedGoRoute<CoinSendRoute>(
-                      path: 'coin-send',
+                    TypedGoRoute<NetworkSelectRoute>(
+                      path: 'network-select',
                       routes: [
-                        TypedGoRoute<NetworkSelectRoute>(
-                          path: 'network-select',
+                        TypedGoRoute<CoinsSendFormRoute>(
+                          path: 'coin-send-form',
                           routes: [
-                            TypedGoRoute<CoinsSendFormRoute>(
-                              path: 'coin-send-form',
+                            TypedGoRoute<CoinsSendFormConfirmationRoute>(
+                              path: 'coin-send-form-confirmation',
                               routes: [
-                                TypedGoRoute<CoinsSendFormConfirmationRoute>(
-                                  path: 'coin-send-form-confirmation',
-                                  routes: [
-                                    TypedGoRoute<TransactionResultRoute>(
-                                      path: 'transaction-result',
-                                    ),
-                                  ],
+                                TypedGoRoute<TransactionResultRoute>(
+                                  path: 'transaction-result',
                                 ),
                               ],
                             ),
@@ -115,43 +111,17 @@ final modalPageNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'modalNav');
                 ),
               ],
             ),
-
-            // TypedGoRoute<CoinSendRoute>(
-            //   path: 'coin-send',
-            //   routes: [
-            //     TypedGoRoute<NetworkSelectRoute>(
-            //       path: 'network-select',
-            //       routes: [
-            //         TypedGoRoute<CoinsSendFormRoute>(
-            //           path: 'coin-send-form',
-            //           routes: [
-            //             TypedGoRoute<CoinsSendFormConfirmationRoute>(
-            //               path: 'coin-send-form-confirmation',
-            //               routes: [
-            //                 TypedGoRoute<TransactionResultRoute>(
-            //                   path: 'transaction-result',
-            //                 ),
-            //               ],
-            //             ),
-            //           ],
-            //         ),
-            //       ],
-            //     ),
-            //   ],
-            // ),
             TypedGoRoute<ReceiveCoinRoute>(path: 'receive-coin'),
-            TypedGoRoute<ScanWalletRoute>(path: 'scan-wallet'),
-            // TypedGoRoute<NetworkSelectRoute>(path: 'network-select'),
+            TypedShellRoute<ModalShellRouteData>(
+              routes: [
+                TypedGoRoute<ScanWalletRoute>(path: 'scan-wallet'),
+              ],
+            ),
             TypedGoRoute<NetworkSelectReceiveRoute>(
               path: 'network-select-receive',
             ),
             TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
             TypedGoRoute<ContactsSelectRoute>(path: 'contacts-select'),
-            // TypedGoRoute<CoinsSendFormRoute>(path: 'coin-send-form'),
-            // TypedGoRoute<CoinsSendFormConfirmationRoute>(
-            //   path: 'coin-send-form-confirmation',
-            // ),
-            // TypedGoRoute<TransactionResultRoute>(path: 'transaction-result'),
             TypedGoRoute<CoinsDetailsRoute>(path: 'coin-details'),
             TypedGoRoute<CoinReceiveRoute>(path: 'coin-receive'),
             TypedGoRoute<ManageCoinsRoute>(path: 'manage-coins'),
@@ -183,8 +153,10 @@ class AppShellRouteData extends StatefulShellRouteData {
   }
 }
 
-class ModalShellRouteData extends StatefulShellRouteData {
-  const ModalShellRouteData();
+class ModalShellRouteData extends ShellRouteData {
+  const ModalShellRouteData({this.fit});
+
+  final SheetFit? fit;
 
   static final $navigatorKey = modalPageNavigatorKey;
   static final $parentNavigatorKey = rootNavigatorKey;
@@ -193,22 +165,16 @@ class ModalShellRouteData extends StatefulShellRouteData {
   Page<void> pageBuilder(
     BuildContext context,
     GoRouterState state,
-    StatefulNavigationShell navigationShell,
+    Widget navigator,
   ) {
     return SheetPage<void>(
+      key: state.pageKey,
+      child: navigator,
       stops: const [0, 0.3, 0.7, 1.0],
       fit: SheetFit.loose,
-      key: state.pageKey,
-      child: navigationShell,
-      decorationBuilder: (context, child) {
-        return ModalWrapper(child: child);
-      },
+      decorationBuilder: (_, child) => ModalWrapper(child: child),
     );
   }
-}
-
-class CoinSendBranchData extends StatefulShellBranchData {
-  const CoinSendBranchData();
 }
 
 class FeedBranchData extends StatefulShellBranchData {
@@ -263,15 +229,53 @@ class NotFoundRoute extends BaseRouteData {
 @TypedGoRoute<IntroRoute>(
   path: '/intro',
   routes: [
-    TypedGoRoute<AuthRoute>(path: 'auth'),
-    TypedGoRoute<SelectCountriesRoute>(path: 'select-countries'),
-    TypedGoRoute<SelectLanguagesRoute>(path: 'select-languages'),
-    TypedGoRoute<CheckEmailRoute>(path: 'check-email'),
-    TypedGoRoute<FillProfileRoute>(path: 'fill-profile'),
-    TypedGoRoute<DiscoverCreatorsRoute>(path: 'discover-creators'),
-    TypedGoRoute<NostrAuthRoute>(path: 'nostr-auth'),
-    TypedGoRoute<NostrLoginRoute>(path: 'nostr-login'),
-    TypedGoRoute<EnterCodeRoute>(path: 'enter-code'),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<AuthRoute>(
+          path: 'auth',
+          routes: [
+            TypedGoRoute<SelectCountriesRoute>(
+              path: 'select-countries',
+              routes: [
+                TypedGoRoute<SelectLanguagesRoute>(
+                  path: 'select-languages',
+                  routes: [
+                    TypedGoRoute<CheckEmailRoute>(
+                      path: 'check-email',
+                      routes: [
+                        TypedGoRoute<FillProfileRoute>(
+                          path: 'fill-profile',
+                          routes: [
+                            TypedGoRoute<DiscoverCreatorsRoute>(
+                              path: 'discover-creators',
+                              routes: [
+                                TypedGoRoute<NostrAuthRoute>(
+                                  path: 'nostr-auth',
+                                  routes: [
+                                    TypedGoRoute<NostrLoginRoute>(
+                                      path: 'nostr-login',
+                                      routes: [
+                                        TypedGoRoute<EnterCodeRoute>(
+                                          path: 'enter-code',
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
   ],
 )
 class IntroRoute extends BaseRouteData {
@@ -292,8 +296,6 @@ class SelectCountriesRoute extends BaseRouteData {
           child: const SelectCountries(),
           type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class SelectLanguagesRoute extends BaseRouteData {
@@ -302,8 +304,6 @@ class SelectLanguagesRoute extends BaseRouteData {
           child: const SelectLanguages(),
           type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class CheckEmailRoute extends BaseRouteData {
@@ -312,8 +312,6 @@ class CheckEmailRoute extends BaseRouteData {
           child: const CheckEmail(),
           type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class FillProfileRoute extends BaseRouteData {
@@ -322,8 +320,6 @@ class FillProfileRoute extends BaseRouteData {
           child: const FillProfile(),
           type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class DiscoverCreatorsRoute extends BaseRouteData {
@@ -332,8 +328,6 @@ class DiscoverCreatorsRoute extends BaseRouteData {
           child: const DiscoverCreators(),
           type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class NostrAuthRoute extends BaseRouteData {
@@ -342,8 +336,6 @@ class NostrAuthRoute extends BaseRouteData {
           child: const NostrAuth(),
           type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class NostrLoginRoute extends BaseRouteData {
@@ -352,8 +344,6 @@ class NostrLoginRoute extends BaseRouteData {
           child: const NostrLogin(),
           type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class EnterCodeRoute extends BaseRouteData {
@@ -362,8 +352,6 @@ class EnterCodeRoute extends BaseRouteData {
           child: const EnterCode(),
           type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 @TypedGoRoute<FeedMainModal>(path: '/feed-modal')
@@ -441,8 +429,6 @@ class NftsSortingRoute extends BaseRouteData {
           child: const NftsSortingModal(),
           type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class CoinSendRoute extends BaseRouteData {
@@ -598,62 +584,4 @@ class DeleteWalletRoute extends BaseRouteData {
         );
 
   final WalletData $extra;
-}
-
-@Riverpod(keepAlive: true)
-GoRouter goRouter(GoRouterRef ref) {
-  final authState = ref.watch(authProvider);
-  final initState = ref.watch(initAppProvider);
-  final isAnimationCompleted = ref.watch(splashProvider);
-
-  return GoRouter(
-    refreshListenable: ref.read(appRouterListenableProvider.notifier),
-    redirect: (context, state) {
-      final isSplash = state.matchedLocation == SplashRoute().location;
-      final isAuthenticated = authState is Authenticated;
-      final isUnAuthenticated = authState is UnAuthenticated;
-      final isAuthUnknown = authState is AuthenticationUnknown;
-      final isAuthLoading = authState is AuthenticationLoading;
-      final isInitInProgress = initState.isLoading;
-      final isInitError = initState.hasError;
-      final isInitCompleted = initState.hasValue;
-
-      if (isInitError) {
-        return '/error';
-      }
-
-      if (isInitInProgress && !isSplash) {
-        return SplashRoute().location;
-      }
-
-      if (isInitCompleted && isSplash && isAnimationCompleted) {
-        if (isAuthenticated) {
-          return FeedRoute().location;
-        }
-        if (isUnAuthenticated) {
-          return IntroRoute().location;
-        }
-      }
-
-      if (isAuthLoading || isAuthUnknown) {
-        return null;
-      }
-
-      // if (isUnAuthenticated && state.matchedLocation != '/intro') {
-      //   return '/intro';
-      // }
-
-      if (isAuthenticated && state.matchedLocation == IntroRoute().location) {
-        return FeedRoute().location;
-      }
-
-      return null;
-    },
-    routes: $appRoutes,
-    errorBuilder: (context, state) =>
-        ErrorRoute($extra: state.error).build(context, state),
-    initialLocation: SplashRoute().location,
-    debugLogDiagnostics: LoggerConfig.routerLogsEnabled,
-    navigatorKey: rootNavigatorKey,
-  );
 }

@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/features/core/views/components/content_scaler.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/providers/go_router_provider.dart';
 import 'package:ice/app/services/logger/config.dart';
 import 'package:ice/app/services/riverpod/riverpod_logger.dart';
 import 'package:ice/app/templates/template.dart';
