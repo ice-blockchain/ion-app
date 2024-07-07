@@ -50,15 +50,12 @@ import 'package:ice/app/features/wallets/pages/wallets_modal/wallets_modal.dart'
 import 'package:ice/app/router/base_route.dart';
 import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/router/main_tab_navigation.dart';
-import 'package:sheet/route.dart';
-import 'package:sheet/sheet.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'app_routes.g.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
 final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');
-final modalPageNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'modalNav');
 final transitionObserver = NavigationSheetTransitionObserver();
 
 @TypedStatefulShellRoute<AppShellRouteData>(
@@ -82,7 +79,6 @@ final transitionObserver = NavigationSheetTransitionObserver();
                 TypedGoRoute<AllowAccessRoute>(path: 'allow-access'),
               ],
             ),
-            // TypedGoRoute<AllowAccessRoute>(path: 'allow-access'),
             TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting'),
             TypedShellRoute<ModalShellRouteData>(
               routes: [
@@ -97,11 +93,6 @@ final transitionObserver = NavigationSheetTransitionObserver();
                           routes: [
                             TypedGoRoute<CoinsSendFormConfirmationRoute>(
                               path: 'coin-send-form-confirmation',
-                              routes: [
-                                TypedGoRoute<TransactionResultRoute>(
-                                  path: 'transaction-result',
-                                ),
-                              ],
                             ),
                           ],
                         ),
@@ -109,27 +100,48 @@ final transitionObserver = NavigationSheetTransitionObserver();
                     ),
                   ],
                 ),
+                TypedGoRoute<TransactionResultRoute>(
+                  path: 'transaction-result',
+                ),
               ],
             ),
-            TypedGoRoute<ReceiveCoinRoute>(path: 'receive-coin'),
             TypedShellRoute<ModalShellRouteData>(
               routes: [
-                TypedGoRoute<ScanWalletRoute>(path: 'scan-wallet'),
+                TypedGoRoute<ReceiveCoinRoute>(
+                  path: 'receive-coin',
+                  routes: [
+                    TypedGoRoute<NetworkSelectReceiveRoute>(
+                      path: 'network-select-receive',
+                    ),
+                  ],
+                ),
+                TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
               ],
             ),
-            TypedGoRoute<NetworkSelectReceiveRoute>(
-              path: 'network-select-receive',
+            TypedShellRoute<ModalShellRouteData>(
+              routes: [TypedGoRoute<ScanWalletRoute>(path: 'scan-wallet')],
             ),
-            TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
             TypedGoRoute<ContactsSelectRoute>(path: 'contacts-select'),
             TypedGoRoute<CoinsDetailsRoute>(path: 'coin-details'),
             TypedGoRoute<CoinReceiveRoute>(path: 'coin-receive'),
             TypedGoRoute<ManageCoinsRoute>(path: 'manage-coins'),
-            TypedGoRoute<WalletsRoute>(path: 'wallets'),
-            TypedGoRoute<ManageWalletsRoute>(path: 'manage-wallets'),
-            TypedGoRoute<CreateWalletRoute>(path: 'create-wallet'),
-            TypedGoRoute<EditWalletRoute>(path: 'edit-wallet'),
-            TypedGoRoute<DeleteWalletRoute>(path: 'delete-wallet'),
+            TypedShellRoute<ModalShellRouteData>(
+              routes: [
+                TypedGoRoute<WalletsRoute>(
+                  path: 'wallets',
+                  routes: [
+                    TypedGoRoute<ManageWalletsRoute>(
+                      path: 'manage-wallets',
+                      routes: [
+                        TypedGoRoute<CreateWalletRoute>(path: 'create-wallet'),
+                        TypedGoRoute<EditWalletRoute>(path: 'edit-wallet'),
+                        TypedGoRoute<DeleteWalletRoute>(path: 'delete-wallet'),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ],
         ),
       ],
@@ -154,12 +166,10 @@ class AppShellRouteData extends StatefulShellRouteData {
 }
 
 class ModalShellRouteData extends ShellRouteData {
-  const ModalShellRouteData({this.fit});
+  const ModalShellRouteData();
 
-  final SheetFit? fit;
-
-  static final $navigatorKey = modalPageNavigatorKey;
   static final $parentNavigatorKey = rootNavigatorKey;
+  static final $observers = <NavigatorObserver>[transitionObserver];
 
   @override
   Page<void> pageBuilder(
@@ -167,12 +177,9 @@ class ModalShellRouteData extends ShellRouteData {
     GoRouterState state,
     Widget navigator,
   ) {
-    return SheetPage<void>(
-      key: state.pageKey,
-      child: navigator,
-      stops: const [0, 0.3, 0.7, 1.0],
-      fit: SheetFit.loose,
-      decorationBuilder: (_, child) => ModalWrapper(child: child),
+    return ModalSheetPage(
+      swipeDismissible: true,
+      child: ModalWrapper(child: navigator),
     );
   }
 }
@@ -394,7 +401,11 @@ class DAppDetailsRoute extends BaseRouteData {
 @TypedGoRoute<PullRightMenuRoute>(
   path: '/pull-right-menu',
   routes: [
-    TypedGoRoute<SwitchAccountRoute>(path: 'switch-account'),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<SwitchAccountRoute>(path: 'switch-account'),
+      ],
+    ),
   ],
 )
 class PullRightMenuRoute extends BaseRouteData {
@@ -411,8 +422,6 @@ class SwitchAccountRoute extends BaseRouteData {
           child: const SwitchAccountPage(),
           type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 class AllowAccessRoute extends BaseRouteData {
