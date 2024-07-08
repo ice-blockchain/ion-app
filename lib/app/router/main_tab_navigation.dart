@@ -20,7 +20,7 @@ enum TabItem {
     return switch (this) {
       TabItem.feed => Assets.images.icons.iconHomeOff,
       TabItem.chat => Assets.images.icons.iconChatOff,
-      TabItem.main => null,
+      TabItem.main => Assets.images.logo.logoButton,
       TabItem.dapps => Assets.images.icons.iconDappOff,
       TabItem.wallet => Assets.images.icons.iconsWalletOff
     };
@@ -80,8 +80,8 @@ class MainTabNavigation extends StatelessWidget {
   List<BottomNavigationBarItem> _navBarItems() {
     return TabItem.values.map((tabItem) {
       if (tabItem == TabItem.main) {
-        return const BottomNavigationBarItem(
-          icon: _MainButton(),
+        return BottomNavigationBarItem(
+          icon: _MainButton(icon: tabItem.icon!),
           label: '',
         );
       }
@@ -122,16 +122,16 @@ class _TabIcon extends StatelessWidget {
 }
 
 class _MainButton extends StatelessWidget {
-  const _MainButton();
+  const _MainButton({required this.icon});
+
+  final AssetGenImage icon;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 50.0.s,
       height: 50.0.s,
-      child: Assets.images.logo.logoButton.image(
-        fit: BoxFit.contain,
-      ),
+      child: icon.image(fit: BoxFit.contain),
     );
   }
 }
