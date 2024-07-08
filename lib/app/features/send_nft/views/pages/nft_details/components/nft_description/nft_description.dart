@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/block_background/block_background.dart';
 import 'package:ice/app/components/read_more_text/read_more_text.dart';
+import 'package:ice/app/components/rounded_card/card.dart';
 
 class NftDescription extends HookConsumerWidget {
   const NftDescription({
@@ -17,7 +17,7 @@ class NftDescription extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return BlockBackground(
+    return RoundedCard(
       child: ReadMoreText(
         description!,
       ),

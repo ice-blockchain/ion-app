@@ -30,7 +30,7 @@ class NftDetailsPage extends IcePage {
     return SheetContentScaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
       appBar: NavigationAppBar.screen(
-        title: 'Send NFT',
+        title: context.i18n.send_nft_navigation_title,
         showBackButton: false,
         actions: <Widget>[
           IconButton(
