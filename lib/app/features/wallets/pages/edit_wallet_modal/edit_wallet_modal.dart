@@ -17,6 +17,7 @@ import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class EditWalletModal extends IcePage {
@@ -34,9 +35,9 @@ class EditWalletModal extends IcePage {
     final isNameChanged =
         walletName.value != (payload.name) && walletName.value.isNotEmpty;
 
-    return FractionallySizedBox(
-      heightFactor: 0.55,
-      child: SingleChildScrollView(
+    return SheetContent(
+      backgroundColor: context.theme.appColors.secondaryBackground,
+      body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
