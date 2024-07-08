@@ -12,7 +12,6 @@ class WalletRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [TypedGoRoute<ScanWalletRoute>(path: 'scan-wallet')],
     ),
-    TypedGoRoute<ContactsSelectRoute>(path: 'contacts-select'),
     TypedGoRoute<CoinsDetailsRoute>(path: 'coin-details'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
@@ -27,7 +26,12 @@ class WalletRoutes {
       routes: [
         TypedGoRoute<CoinSendRoute>(path: 'coin-send'),
         TypedGoRoute<NetworkSelectRoute>(path: 'network-select'),
-        TypedGoRoute<CoinsSendFormRoute>(path: 'coin-send-form'),
+        TypedGoRoute<CoinsSendFormRoute>(
+          path: 'coin-send-form',
+          routes: [
+            TypedGoRoute<ContactsSelectRoute>(path: 'contacts-select'),
+          ],
+        ),
         TypedGoRoute<CoinsSendFormConfirmationRoute>(
           path: 'coin-send-form-confirmation',
         ),
@@ -131,6 +135,14 @@ class CoinsSendFormRoute extends BaseRouteData {
   CoinsSendFormRoute()
       : super(
           child: const SendCoinsForm(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ContactsSelectRoute extends BaseRouteData {
+  ContactsSelectRoute()
+      : super(
+          child: const ContactsListView(),
           type: IceRouteType.bottomSheet,
         );
 }

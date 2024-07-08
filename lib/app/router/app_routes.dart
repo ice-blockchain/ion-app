@@ -23,7 +23,6 @@ import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/switch_account_page.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
-import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/coin_details_page.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/coin_receive_modal.dart';
@@ -241,14 +240,4 @@ class SwitchAccountRoute extends BaseRouteData {
           child: const SwitchAccountPage(),
           type: IceRouteType.bottomSheet,
         );
-}
-
-class ContactsSelectRoute extends BaseRouteData {
-  ContactsSelectRoute({required this.$extra})
-      : super(
-          child: ContactsListView(payload: $extra),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final ContactData $extra;
 }
