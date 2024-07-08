@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/read_more_text/read_more_text.dart';
+import 'package:ice/app/components/rounded_card/card_bg.dart';
 import 'package:ice/app/components/rounded_card/rounded_card.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_description/nft_description.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_name/nft_name.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_picture/nft_picture.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
@@ -59,7 +60,12 @@ class NftDetailsPage extends IcePage {
                 networkSymbolIcon:
                     Assets.images.wallet.walletEth.icon(size: 16.0.s),
               ),
-              NftDescription(description: payload.description),
+              if (payload.description != null)
+                CardBg(
+                  child: ReadMoreText(
+                    payload.description!,
+                  ),
+                ),
               SizedBox(height: 12.0.s),
               RoundedCard.text(
                 title: context.i18n.send_nft_token_id,
