@@ -4,7 +4,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/model/post_data.dart';
+import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';

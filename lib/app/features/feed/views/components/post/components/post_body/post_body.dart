@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/feed/model/post_data.dart';
+import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
+import 'package:ice/app/features/feed/views/components/post/components/post_body/hooks/use_post_media.dart';
+import 'package:ice/app/services/text_parser/matchers/url_matcher.dart';
 
-class PostBody extends StatelessWidget {
+class PostBody extends HookConsumerWidget {
   const PostBody({
     required this.postData,
     super.key,
@@ -14,13 +17,23 @@ class PostBody extends StatelessWidget {
   final PostData postData;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final postMedia = usePostMedia(postData);
+
+    //TODO::temp impl
+    final postText =
+        postData.content.fold<StringBuffer>(StringBuffer(), (result, match) {
+      if (match.matcherType != UrlMatcher) {
+        result.write(match.text);
+      }
+      return result;
+    });
     return ScreenSideOffset.small(
       child: Column(
         children: [
-          if (postData.media.isNotEmpty) PostMedia(media: postData.media),
+          if (postMedia.isNotEmpty) PostMedia(media: postMedia),
           Text(
-            postData.body,
+            postText.toString(),
             style: context.theme.appTextThemes.body2.copyWith(
               color: context.theme.appColors.sharkText,
             ),

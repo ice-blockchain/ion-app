@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/features/feed/model/post_media_data.dart';
+import 'package:ice/app/features/feed/model/post/post_media_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_carousel_horizontal.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_carousel_vertical.dart';
 

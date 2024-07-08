@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/feed/model/post_data.dart';
+import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/list_separator/list_separator.dart';
 
