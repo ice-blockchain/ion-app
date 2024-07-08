@@ -78,7 +78,7 @@ class CategoriesCollection extends StatelessWidget {
                         title: DAppsCategory.values[index].title(context),
                         items: mockedApps,
                       ),
-                    ).go(context);
+                    ).push<void>(context);
                   },
                   icon: DAppsCategory.values[index].icon,
                   size: itemWidth,

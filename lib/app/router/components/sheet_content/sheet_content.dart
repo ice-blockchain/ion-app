@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 class SheetContent extends StatelessWidget {
   SheetContent({
@@ -20,7 +21,7 @@ class SheetContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO::handle top offset without transition
-    return Scaffold(
+    return SheetContentScaffold(
       backgroundColor:
           backgroundColor ?? context.theme.appColors.primaryBackground,
       body: body,
