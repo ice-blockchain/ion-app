@@ -14,7 +14,11 @@ class WalletRoutes {
     ),
     TypedGoRoute<ContactsSelectRoute>(path: 'contacts-select'),
     TypedGoRoute<CoinsDetailsRoute>(path: 'coin-details'),
-    TypedGoRoute<CoinReceiveRoute>(path: 'coin-receive'),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<CoinReceiveRoute>(path: 'coin-receive'),
+      ],
+    ),
     TypedGoRoute<ManageCoinsRoute>(path: 'manage-coins'),
   ];
 
