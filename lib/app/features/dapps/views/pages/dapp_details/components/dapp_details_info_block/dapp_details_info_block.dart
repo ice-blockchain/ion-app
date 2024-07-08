@@ -31,21 +31,24 @@ class DappDetailsInfoBlock extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 if (title != null) title!,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    if (iconPath != null)
-                      Padding(
-                        padding: EdgeInsets.only(right: 6.0.s),
-                        child: Image.asset(
-                          iconPath!,
-                          width: 24.0.s,
-                          height: 24.0.s,
-                          color: context.theme.appColors.primaryAccent,
+                Padding(
+                  padding: EdgeInsets.only(top: 4.0.s),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      if (iconPath != null)
+                        Padding(
+                          padding: EdgeInsets.only(right: 6.0.s),
+                          child: Image.asset(
+                            iconPath!,
+                            width: 24.0.s,
+                            height: 24.0.s,
+                            color: context.theme.appColors.primaryAccent,
+                          ),
                         ),
-                      ),
-                    if (value != null) value!,
-                  ],
+                      if (value != null) value!,
+                    ],
+                  ),
                 ),
               ],
             ),

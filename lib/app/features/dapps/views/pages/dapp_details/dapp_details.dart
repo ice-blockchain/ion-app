@@ -95,7 +95,7 @@ class DAppDetails extends IcePage {
                 if (item.value != null)
                   DappDetailsInfoBlock(
                     title: Text(
-                      'Tips',
+                      context.i18n.dapp_details_tips,
                       style: context.theme.appTextThemes.caption2.copyWith(
                         color: context.theme.appColors.secondaryText,
                       ),
@@ -113,7 +113,7 @@ class DAppDetails extends IcePage {
                     Expanded(
                       child: DappDetailsInfoBlock(
                         title: Text(
-                          'Games',
+                          context.i18n.dapp_details_tips_games,
                           style: context.theme.appTextThemes.caption2.copyWith(
                             color: context.theme.appColors.secondaryText,
                           ),
@@ -133,7 +133,7 @@ class DAppDetails extends IcePage {
                     Expanded(
                       child: DappDetailsInfoBlock(
                         title: Text(
-                          'Global Rank',
+                          context.i18n.dapp_details_tips_global_rank,
                           style: context.theme.appTextThemes.caption2.copyWith(
                             color: context.theme.appColors.secondaryText,
                           ),

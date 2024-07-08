@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/block_background/block_background.dart';
+import 'package:ice/app/components/rounded_card/card.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -18,7 +18,7 @@ class TitleValueBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlockBackground(
+    return RoundedCard(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[

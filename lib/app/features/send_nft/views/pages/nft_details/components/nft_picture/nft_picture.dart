@@ -9,8 +9,8 @@ class NftPicture extends HookConsumerWidget {
     super.key,
   });
 
-  double get imageWidth => 170;
-  double get imageHeight => 170;
+  static double get imageWidth => 170.0.s;
+  static double get imageHeight => 170.0.s;
 
   final String imageUrl;
 
