@@ -37,8 +37,8 @@ class ReadMoreText extends HookWidget {
 
     final link = TextSpan(
       text: showMore.value
-          ? context.i18n.common_show_more
-          : context.i18n.common_show_less,
+          ? ' ${context.i18n.common_show_more}'
+          : ' ${context.i18n.common_show_less}',
       recognizer: gestureRecognizer,
       style: context.theme.appTextThemes.body2
           .copyWith(color: context.theme.appColors.primaryAccent),

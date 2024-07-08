@@ -11,10 +11,12 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/
 class NftListItem extends StatelessWidget {
   const NftListItem({
     required this.nftData,
+    required this.onTap,
     super.key,
   });
 
   final NftData nftData;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class NftListItem extends StatelessWidget {
         size: 36.0.s,
         imageUrl: nftData.iconUrl,
       ),
+      onTap: onTap,
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
