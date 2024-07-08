@@ -13,7 +13,6 @@ import 'package:ice/app/features/auth/views/pages/select_languages/select_langua
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
-import 'package:ice/app/features/core/views/pages/not_found_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapp_details/dapp_details.dart';
@@ -166,10 +165,6 @@ class ErrorRoute extends BaseRouteData {
       : super(child: ErrorPage(error: $extra ?? Exception('Unknown error')));
 
   final Exception? $extra;
-}
-
-class NotFoundRoute extends BaseRouteData {
-  NotFoundRoute() : super(child: const NotFoundPage());
 }
 
 @TypedGoRoute<IntroRoute>(

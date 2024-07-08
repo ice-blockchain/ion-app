@@ -3,13 +3,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class DappsMainModalPage extends IcePage {
   const DappsMainModalPage({super.key});
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+    return SheetContent(
       body: ScreenSideOffset.small(
         child: SingleChildScrollView(
           child: Column(

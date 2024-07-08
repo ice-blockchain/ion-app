@@ -10,6 +10,7 @@ import 'package:ice/app/features/wallets/pages/wallets_modal/components/wallets_
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class WalletsModal extends IcePage {
@@ -20,35 +21,37 @@ class WalletsModal extends IcePage {
     BuildContext context,
     WidgetRef ref,
   ) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          NavigationAppBar.modal(
-            showBackButton: false,
-            title: context.i18n.wallet_wallets,
-            actions: const <Widget>[NavigationCloseButton()],
-          ),
-          ScreenSideOffset.small(child: const WalletsList()),
-          Padding(
-            padding: EdgeInsets.only(
-              bottom: 16.0.s,
-              top: 8.0.s,
-              left: ScreenSideOffset.defaultSmallMargin,
-              right: ScreenSideOffset.defaultSmallMargin,
+    return SheetContent(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            NavigationAppBar.modal(
+              showBackButton: false,
+              title: context.i18n.wallet_wallets,
+              actions: const <Widget>[NavigationCloseButton()],
             ),
-            child: Button(
-              leadingIcon: Assets.images.icons.iconButtonManageWallet.icon(),
-              onPressed: () {
-                ManageWalletsRoute().push<void>(context);
-              },
-              label: Text(context.i18n.wallet_manage_wallets),
-              mainAxisSize: MainAxisSize.max,
-              type: ButtonType.secondary,
+            ScreenSideOffset.small(child: const WalletsList()),
+            Padding(
+              padding: EdgeInsets.only(
+                bottom: 16.0.s,
+                top: 8.0.s,
+                left: ScreenSideOffset.defaultSmallMargin,
+                right: ScreenSideOffset.defaultSmallMargin,
+              ),
+              child: Button(
+                leadingIcon: Assets.images.icons.iconButtonManageWallet.icon(),
+                onPressed: () {
+                  ManageWalletsRoute().push<void>(context);
+                },
+                label: Text(context.i18n.wallet_manage_wallets),
+                mainAxisSize: MainAxisSize.max,
+                type: ButtonType.secondary,
+              ),
             ),
-          ),
-          SizedBox(height: 16.0.s),
-        ],
+            SizedBox(height: 16.0.s),
+          ],
+        ),
       ),
     );
   }
