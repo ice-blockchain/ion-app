@@ -18,7 +18,26 @@ class WalletRoutes {
         TypedGoRoute<CoinReceiveRoute>(path: 'coin-receive'),
       ],
     ),
-    TypedGoRoute<ManageCoinsRoute>(path: 'manage-coins'),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<ManageCoinsRoute>(path: 'manage-coins'),
+      ],
+    ),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<ShareOptionsRoute>(path: 'share-options'),
+      ],
+    ),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<ShareTypeRoute>(
+          path: 'share-type',
+          routes: [
+            TypedGoRoute<QuotePostModalRoute>(path: 'quote-post'),
+          ],
+        ),
+      ],
+    ),
   ];
 
   static const coinSendRoutes = <TypedRoute<RouteData>>[
@@ -230,4 +249,32 @@ class DeleteWalletRoute extends BaseRouteData {
         );
 
   final WalletData $extra;
+}
+
+class QuotePostModalRoute extends BaseRouteData {
+  QuotePostModalRoute({required this.$extra})
+      : super(
+          child: QuotePostModalPage(payload: $extra),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final PostData $extra;
+}
+
+class ShareOptionsRoute extends BaseRouteData {
+  ShareOptionsRoute()
+      : super(
+          child: const ShareOptionsPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ShareTypeRoute extends BaseRouteData {
+  ShareTypeRoute({required this.$extra})
+      : super(
+          child: ShareTypeView(payload: $extra),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final PostData $extra;
 }

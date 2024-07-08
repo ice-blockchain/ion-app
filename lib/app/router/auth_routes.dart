@@ -13,6 +13,7 @@ class AuthRoutes {
         TypedGoRoute<NostrAuthRoute>(path: 'nostr-auth'),
         TypedGoRoute<NostrLoginRoute>(path: 'nostr-login'),
         TypedGoRoute<EnterCodeRoute>(path: 'enter-code'),
+        TypedGoRoute<NotificationsRoute>(path: 'notifications'),
       ],
     ),
   ];
@@ -86,6 +87,14 @@ class EnterCodeRoute extends BaseRouteData {
   EnterCodeRoute()
       : super(
           child: const EnterCode(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class NotificationsRoute extends BaseRouteData {
+  NotificationsRoute()
+      : super(
+          child: const TurnOnNotifications(),
           type: IceRouteType.bottomSheet,
         );
 }
