@@ -162,7 +162,7 @@ class DappsRoute extends BaseRouteData {
 
 @TypedGoRoute<ErrorRoute>(path: '/error')
 class ErrorRoute extends BaseRouteData {
-  ErrorRoute({required this.$extra})
+  ErrorRoute({this.$extra})
       : super(child: ErrorPage(error: $extra ?? Exception('Unknown error')));
 
   final Exception? $extra;

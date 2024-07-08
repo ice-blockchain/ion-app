@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
@@ -12,7 +11,6 @@ import 'package:ice/app/theme/theme.dart';
 import 'package:ice/generated/app_localizations.dart';
 
 void main() async {
-  GoRouter.optionURLReflectsImperativeAPIs = true;
   runApp(
     ProviderScope(
       observers: <ProviderObserver>[
@@ -33,35 +31,17 @@ class IceApp extends HookConsumerWidget {
     final goRouter = ref.watch(goRouterProvider);
 
     return ContentScaler(
-      child: template.when(
-        data: (Template data) => MaterialApp.router(
-          localizationsDelegates: I18n.localizationsDelegates,
-          supportedLocales: I18n.supportedLocales,
-          theme: buildLightTheme(data.theme),
-          darkTheme: buildDarkTheme(data.theme),
-          themeMode: appThemeMode,
-          routerConfig: goRouter,
-        ),
-        loading: () => const Directionality(
-          textDirection: TextDirection.ltr,
-          child: Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
+      child: template.whenOrNull(
+            data: (Template data) => MaterialApp.router(
+              localizationsDelegates: I18n.localizationsDelegates,
+              supportedLocales: I18n.supportedLocales,
+              theme: buildLightTheme(data.theme),
+              darkTheme: buildDarkTheme(data.theme),
+              themeMode: appThemeMode,
+              routerConfig: goRouter,
             ),
-          ),
-        ),
-        error: (Object error, StackTrace? stackTrace) => Directionality(
-          textDirection: TextDirection.ltr,
-          child: Scaffold(
-            body: Center(
-              child: Text(
-                error.toString(),
-                style: const TextStyle(color: Colors.red),
-              ),
-            ),
-          ),
-        ),
-      ),
+          ) ??
+          const SizedBox.shrink(),
     );
   }
 }

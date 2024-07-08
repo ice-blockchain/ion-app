@@ -12,6 +12,8 @@ part 'go_router_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 GoRouter goRouter(GoRouterRef ref) {
+  GoRouter.optionURLReflectsImperativeAPIs = true;
+
   final authState = ref.watch(authProvider);
   final initState = ref.watch(initAppProvider);
   final isAnimationCompleted = ref.watch(splashProvider);
@@ -29,7 +31,7 @@ GoRouter goRouter(GoRouterRef ref) {
       final isInitCompleted = initState.hasValue;
 
       if (isInitError) {
-        return '/error';
+        return ErrorRoute().location;
       }
 
       if (isInitInProgress && !isSplash) {
@@ -49,9 +51,9 @@ GoRouter goRouter(GoRouterRef ref) {
         return null;
       }
 
-      // if (isUnAuthenticated && state.matchedLocation != '/intro') {
-      //   return '/intro';
-      // }
+      if (isUnAuthenticated && state.matchedLocation != IntroRoute().location) {
+        return IntroRoute().location;
+      }
 
       if (isAuthenticated && state.matchedLocation == IntroRoute().location) {
         return FeedRoute().location;

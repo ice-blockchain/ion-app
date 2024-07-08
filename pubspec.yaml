@@ -105,5 +105,10 @@ flutter_gen:
   integrations:
     lottie: true
 
+# Added dependency override for 'meta' to version 1.14.0 to resolve a conflict between 
+# 'riverpod_generator' and 'flutter_localizations'. 
+# 'riverpod_generator' requires 'analyzer' version 6.5.0, which in turn requires 'meta' version 1.14.0.
+# However, 'flutter_localizations' depends on 'meta' version 1.12.0. 
+# This override ensures compatibility between these dependencies.
 dependency_overrides:
   meta: 1.14.0
