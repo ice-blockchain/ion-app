@@ -47,12 +47,14 @@ import 'package:ice/app/features/wallets/pages/delete_wallet_modal/delete_wallet
 import 'package:ice/app/features/wallets/pages/edit_wallet_modal/edit_wallet_modal.dart';
 import 'package:ice/app/features/wallets/pages/manage_wallets_modal/manage_wallets_modal.dart';
 import 'package:ice/app/features/wallets/pages/wallets_modal/wallets_modal.dart';
-import 'package:ice/app/router/base_route.dart';
+import 'package:ice/app/router/base_route_data.dart';
 import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/router/main_tab_navigation.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'app_routes.g.dart';
+part 'auth_routes.dart';
+part 'wallet_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
 final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');
@@ -74,74 +76,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
         TypedGoRoute<WalletRoute>(
           path: '/wallet',
           routes: [
-            TypedShellRoute<ModalShellRouteData>(
-              routes: [
-                TypedGoRoute<AllowAccessRoute>(path: 'allow-access'),
-              ],
-            ),
-            TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting'),
-            TypedShellRoute<ModalShellRouteData>(
-              routes: [
-                TypedGoRoute<CoinSendRoute>(
-                  path: 'coin-send',
-                  routes: [
-                    TypedGoRoute<NetworkSelectRoute>(
-                      path: 'network-select',
-                      routes: [
-                        TypedGoRoute<CoinsSendFormRoute>(
-                          path: 'coin-send-form',
-                          routes: [
-                            TypedGoRoute<CoinsSendFormConfirmationRoute>(
-                              path: 'coin-send-form-confirmation',
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                TypedGoRoute<TransactionResultRoute>(
-                  path: 'transaction-result',
-                ),
-              ],
-            ),
-            TypedShellRoute<ModalShellRouteData>(
-              routes: [
-                TypedGoRoute<ReceiveCoinRoute>(
-                  path: 'receive-coin',
-                  routes: [
-                    TypedGoRoute<NetworkSelectReceiveRoute>(
-                      path: 'network-select-receive',
-                    ),
-                  ],
-                ),
-                TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
-              ],
-            ),
-            TypedShellRoute<ModalShellRouteData>(
-              routes: [TypedGoRoute<ScanWalletRoute>(path: 'scan-wallet')],
-            ),
-            TypedGoRoute<ContactsSelectRoute>(path: 'contacts-select'),
-            TypedGoRoute<CoinsDetailsRoute>(path: 'coin-details'),
-            TypedGoRoute<CoinReceiveRoute>(path: 'coin-receive'),
-            TypedGoRoute<ManageCoinsRoute>(path: 'manage-coins'),
-            TypedShellRoute<ModalShellRouteData>(
-              routes: [
-                TypedGoRoute<WalletsRoute>(
-                  path: 'wallets',
-                  routes: [
-                    TypedGoRoute<ManageWalletsRoute>(
-                      path: 'manage-wallets',
-                      routes: [
-                        TypedGoRoute<CreateWalletRoute>(path: 'create-wallet'),
-                        TypedGoRoute<EditWalletRoute>(path: 'edit-wallet'),
-                        TypedGoRoute<DeleteWalletRoute>(path: 'delete-wallet'),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            ...WalletRoutes.routes,
           ],
         ),
       ],
@@ -235,130 +170,10 @@ class NotFoundRoute extends BaseRouteData {
 
 @TypedGoRoute<IntroRoute>(
   path: '/intro',
-  routes: [
-    TypedShellRoute<ModalShellRouteData>(
-      routes: [
-        TypedGoRoute<AuthRoute>(
-          path: 'auth',
-          routes: [
-            TypedGoRoute<SelectCountriesRoute>(
-              path: 'select-countries',
-              routes: [
-                TypedGoRoute<SelectLanguagesRoute>(
-                  path: 'select-languages',
-                  routes: [
-                    TypedGoRoute<CheckEmailRoute>(
-                      path: 'check-email',
-                      routes: [
-                        TypedGoRoute<FillProfileRoute>(
-                          path: 'fill-profile',
-                          routes: [
-                            TypedGoRoute<DiscoverCreatorsRoute>(
-                              path: 'discover-creators',
-                              routes: [
-                                TypedGoRoute<NostrAuthRoute>(
-                                  path: 'nostr-auth',
-                                  routes: [
-                                    TypedGoRoute<NostrLoginRoute>(
-                                      path: 'nostr-login',
-                                      routes: [
-                                        TypedGoRoute<EnterCodeRoute>(
-                                          path: 'enter-code',
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    ),
-  ],
+  routes: [...AuthRoutes.routes],
 )
 class IntroRoute extends BaseRouteData {
   IntroRoute() : super(child: const IntroPage());
-}
-
-class AuthRoute extends BaseRouteData {
-  AuthRoute()
-      : super(
-          child: const AuthPage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class SelectCountriesRoute extends BaseRouteData {
-  SelectCountriesRoute()
-      : super(
-          child: const SelectCountries(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class SelectLanguagesRoute extends BaseRouteData {
-  SelectLanguagesRoute()
-      : super(
-          child: const SelectLanguages(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class CheckEmailRoute extends BaseRouteData {
-  CheckEmailRoute()
-      : super(
-          child: const CheckEmail(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class FillProfileRoute extends BaseRouteData {
-  FillProfileRoute()
-      : super(
-          child: const FillProfile(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class DiscoverCreatorsRoute extends BaseRouteData {
-  DiscoverCreatorsRoute()
-      : super(
-          child: const DiscoverCreators(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class NostrAuthRoute extends BaseRouteData {
-  NostrAuthRoute()
-      : super(
-          child: const NostrAuth(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class NostrLoginRoute extends BaseRouteData {
-  NostrLoginRoute()
-      : super(
-          child: const NostrLogin(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class EnterCodeRoute extends BaseRouteData {
-  EnterCodeRoute()
-      : super(
-          child: const EnterCode(),
-          type: IceRouteType.bottomSheet,
-        );
 }
 
 @TypedGoRoute<FeedMainModal>(path: '/feed-modal')
@@ -376,7 +191,11 @@ class FeedMainModal extends BaseRouteData {
   path: '/dapps',
   routes: [
     TypedGoRoute<DAppsListRoute>(path: 'apps-list'),
-    TypedGoRoute<DAppDetailsRoute>(path: 'dapps-details'),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<DAppDetailsRoute>(path: 'dapps-details'),
+      ],
+    ),
   ],
 )
 class DAppsRoute extends BaseRouteData {
@@ -424,74 +243,6 @@ class SwitchAccountRoute extends BaseRouteData {
         );
 }
 
-class AllowAccessRoute extends BaseRouteData {
-  AllowAccessRoute()
-      : super(
-          child: const RequestContactAccessModal(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class NftsSortingRoute extends BaseRouteData {
-  NftsSortingRoute()
-      : super(
-          child: const NftsSortingModal(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class CoinSendRoute extends BaseRouteData {
-  CoinSendRoute()
-      : super(
-          child: const SendCoinModalPage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class ReceiveCoinRoute extends BaseRouteData {
-  ReceiveCoinRoute()
-      : super(
-          child: const ReceiveCoinModalPage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class ScanWalletRoute extends BaseRouteData {
-  ScanWalletRoute()
-      : super(
-          child: const WalletScanModalPage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class NetworkSelectRoute extends BaseRouteData {
-  NetworkSelectRoute()
-      : super(
-          child: const NetworkListView(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class NetworkSelectReceiveRoute extends BaseRouteData {
-  NetworkSelectReceiveRoute({required this.$extra})
-      : super(
-          child: NetworkListReceiveView(payload: $extra),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final CoinData $extra;
-}
-
-class ShareAddressRoute extends BaseRouteData {
-  ShareAddressRoute({required this.$extra})
-      : super(
-          child: ShareAddressView(payload: $extra),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final Map<String, dynamic> $extra;
-}
-
 class ContactsSelectRoute extends BaseRouteData {
   ContactsSelectRoute({required this.$extra})
       : super(
@@ -500,97 +251,4 @@ class ContactsSelectRoute extends BaseRouteData {
         );
 
   final ContactData $extra;
-}
-
-class CoinsSendFormRoute extends BaseRouteData {
-  CoinsSendFormRoute()
-      : super(
-          child: const SendCoinsForm(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class CoinsSendFormConfirmationRoute extends BaseRouteData {
-  CoinsSendFormConfirmationRoute()
-      : super(
-          child: const ConfirmationSheet(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class TransactionResultRoute extends BaseRouteData {
-  TransactionResultRoute()
-      : super(
-          child: const TransactionResultSheet(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class CoinsDetailsRoute extends BaseRouteData {
-  CoinsDetailsRoute({required this.$extra})
-      : super(child: CoinDetailsPage(payload: $extra));
-
-  final CoinData $extra;
-}
-
-class CoinReceiveRoute extends BaseRouteData {
-  CoinReceiveRoute({required this.$extra})
-      : super(
-          child: CoinReceiveModal(payload: $extra),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final CoinReceiveModalData $extra;
-}
-
-class ManageCoinsRoute extends BaseRouteData {
-  ManageCoinsRoute()
-      : super(
-          child: const ManageCoinsPage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class WalletsRoute extends BaseRouteData {
-  WalletsRoute()
-      : super(
-          child: const WalletsModal(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class ManageWalletsRoute extends BaseRouteData {
-  ManageWalletsRoute()
-      : super(
-          child: const ManageWalletsModal(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class CreateWalletRoute extends BaseRouteData {
-  CreateWalletRoute()
-      : super(
-          child: const CreateNewWalletModal(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class EditWalletRoute extends BaseRouteData {
-  EditWalletRoute({required this.$extra})
-      : super(
-          child: EditWalletModal(payload: $extra),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final WalletData $extra;
-}
-
-class DeleteWalletRoute extends BaseRouteData {
-  DeleteWalletRoute({required this.$extra})
-      : super(
-          child: DeleteWalletModal(payload: $extra),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final WalletData $extra;
 }

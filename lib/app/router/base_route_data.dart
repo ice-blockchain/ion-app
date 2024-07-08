@@ -21,9 +21,8 @@ abstract class BaseRouteData extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return switch (type) {
       IceRouteType.single => CupertinoPage<void>(child: child),
-      IceRouteType.bottomSheet => ScrollableNavigationSheetPage<void>(
-          child: SheetContentScaffold(body: child),
-        ),
+      IceRouteType.bottomSheet =>
+        ScrollableNavigationSheetPage<void>(child: child),
       IceRouteType.slideFromLeft =>
         SlideFromLeftTransitionPage(child: child, state: state),
     };
