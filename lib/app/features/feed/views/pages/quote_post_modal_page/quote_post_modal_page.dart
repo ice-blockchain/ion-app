@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/model/post_data.dart';
+import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/quote_post_action_bar.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/quote_post_comment_input.dart';

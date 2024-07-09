@@ -8,7 +8,7 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/feed/model/post_data.dart';
+import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_engagement_metric.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_metric_space.dart';
 import 'package:ice/app/router/app_routes.dart';
