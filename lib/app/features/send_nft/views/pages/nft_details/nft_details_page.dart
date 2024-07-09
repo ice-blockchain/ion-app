@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/rounded_card/rounded_card.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/components/title_value_block/title_value_block.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_description/nft_description.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_name/nft_name.dart';
@@ -60,19 +60,23 @@ class NftDetailsPage extends IcePage {
                     Assets.images.wallet.walletEth.icon(size: 16.0.s),
               ),
               NftDescription(description: payload.description),
-              TitleValueBlock(
+              SizedBox(height: 12.0.s),
+              RoundedCard.text(
                 title: context.i18n.send_nft_token_id,
                 value: payload.identifier.toString(),
               ),
-              TitleValueBlock(
+              SizedBox(height: 12.0.s),
+              RoundedCard.text(
                 title: context.i18n.send_nft_token_network,
                 value: payload.network.toString(),
               ),
-              TitleValueBlock(
+              SizedBox(height: 12.0.s),
+              RoundedCard.text(
                 title: context.i18n.send_nft_token_standard,
                 value: payload.tokenStandard.toString(),
               ),
-              TitleValueBlock(
+              SizedBox(height: 12.0.s),
+              RoundedCard.text(
                 title: context.i18n.send_nft_token_contract_address,
                 value: payload.contractAddress.toString(),
               ),

@@ -4,31 +4,31 @@ import 'package:ice/app/extensions/extensions.dart';
 
 typedef TrailingWidgetBuilder = Widget Function(BuildContext);
 
-class ConfirmationListItem extends StatelessWidget {
-  const ConfirmationListItem._({
+class RoundedCard extends StatelessWidget {
+  const RoundedCard._({
     required this.title,
     required this.trailing,
   });
 
-  factory ConfirmationListItem.text({
+  factory RoundedCard.text({
     required String title,
     required String value,
   }) {
-    return ConfirmationListItem._(
+    return RoundedCard._(
       title: title,
       trailing: (BuildContext context) => Text(
         value,
-        style: context.theme.appTextThemes.caption3,
+        style: context.theme.appTextThemes.body2,
       ),
     );
   }
 
-  factory ConfirmationListItem.textWithIcon({
+  factory RoundedCard.textWithIcon({
     required String title,
     required String value,
     required Widget icon,
   }) {
-    return ConfirmationListItem._(
+    return RoundedCard._(
       title: title,
       trailing: (BuildContext context) => Row(
         mainAxisSize: MainAxisSize.min,
@@ -44,13 +44,13 @@ class ConfirmationListItem extends StatelessWidget {
     );
   }
 
-  factory ConfirmationListItem.withSecondaryText({
+  factory RoundedCard.withSecondaryText({
     required String title,
     required String value,
     required Widget icon,
     required String secondaryValue,
   }) {
-    return ConfirmationListItem._(
+    return RoundedCard._(
       title: title,
       trailing: (BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
