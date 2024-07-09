@@ -18,7 +18,7 @@ class PostData {
   PostData.fromRawContent({
     required this.id,
     required String rawContent,
-  }) : content = _contentParser.parse(rawContent);
+  }) : content = TextParser(matchers: [const UrlMatcher()]).parse(rawContent);
 
   factory PostData.fromEventMessage(EventMessage eventMessage) =
       _PostDataFromEvent;
@@ -27,9 +27,8 @@ class PostData {
 
   final List<TextMatch> content;
 
+  // Build metadata on demand (lazy)
   late PostMetadata metadata = _buildMetadata();
-
-  static final _contentParser = TextParser(matchers: [const UrlMatcher()]);
 
   PostMetadata _buildMetadata() {
     final media = content.fold<Map<String, PostMediaData>>(
@@ -49,13 +48,6 @@ class PostData {
   }
 
   @override
-  String toString() {
-    return '''
-      PostData(
-        id: $id,
-        content: $content,
-        metadata: $metadata
-      )
-    ''';
-  }
+  String toString() =>
+      'PostData(id: $id, content: $content, metadata: $metadata)';
 }

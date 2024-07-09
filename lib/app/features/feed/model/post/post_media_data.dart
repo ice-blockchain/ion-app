@@ -50,15 +50,7 @@ class PostMediaData {
 
   @override
   String toString() {
-    return '''
-      PostMedia(
-        mediaType: $mediaType,
-        url: $url,
-        mimeType: $mimeType,
-        blurhash: $blurhash,
-        dimension: $dimension,
-        aspectRatio: $aspectRatio
-      )
-    ''';
+    return 'PostMediaData(mediaType: $mediaType, url: $url, '
+        'mimeType: $mimeType, blurhash: $blurhash, dimension: $dimension)';
   }
 }

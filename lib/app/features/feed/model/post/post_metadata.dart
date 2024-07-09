@@ -6,4 +6,7 @@ class PostMetadata {
   });
 
   final Map<String, PostMediaData> media;
+
+  @override
+  String toString() => 'PostMetadata(media: $media)';
 }

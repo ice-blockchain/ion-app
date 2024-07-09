@@ -21,14 +21,7 @@ class TextMatch {
 
   @override
   String toString() {
-    return '''
-      TextMatch(
-        text: $text,
-        groups: $groups,
-        matcherType: $matcherType,
-        matcherIndex: $matcherIndex,
-        offset: $offset
-      )
-      ''';
+    return 'TextMatch(text: $text, groups: $groups, matcherType: $matcherType, '
+        'matcherIndex: $matcherIndex, offset: $offset)';
   }
 }
