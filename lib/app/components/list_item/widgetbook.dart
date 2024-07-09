@@ -108,3 +108,32 @@ Widget userListItemUseCase(BuildContext context) {
     ),
   );
 }
+
+@widgetbook.UseCase(
+  name: 'text',
+  type: ListItem,
+)
+Widget textListItemUseCase(BuildContext context) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        ListItem.text(
+          title: const Text('List Item title'),
+          value: 'List Item value',
+        ),
+        ListItem.textWithIcon(
+          title: const Text('List Item title'),
+          value: 'List Item value',
+          icon: Assets.images.icons.iconBadgeLinkedin.icon(),
+        ),
+        ListItem.textWithIcon(
+          title: const Text('List Item title'),
+          value: 'List Item value',
+          secondaryValue: 'Secondary value',
+          icon: Assets.images.icons.iconBadgeLinkedin.icon(),
+        ),
+      ],
+    ),
+  );
+}
