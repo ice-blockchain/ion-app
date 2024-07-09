@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 
-class ErrorPage extends IceSimplePage {
-  const ErrorPage(super._route, super.payload, {super.key});
+class ErrorPage extends StatelessWidget {
+  const ErrorPage({required this.error, super.key});
+
+  final Exception error;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
-    return const Scaffold(
+  Widget build(BuildContext context) {
+    return Scaffold(
       body: Center(
-        child: Text('Oops'),
+        child: Text('Oops: $error'),
       ),
     );
   }

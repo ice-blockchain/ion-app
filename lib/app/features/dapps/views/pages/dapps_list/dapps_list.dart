@@ -13,17 +13,18 @@ import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class DAppsList extends IcePage<AppsRouteData> {
-  const DAppsList(super.route, super.payload, {super.key});
+class DAppsList extends IcePage {
+  const DAppsList({required this.payload, super.key});
+
+  final AppsRouteData payload;
 
   @override
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    AppsRouteData? payload,
   ) {
     final searchText = useState('');
-    final items = payload?.items ?? <DAppItem>[];
+    final items = payload.items ?? <DAppItem>[];
 
     final filteredApps = searchText.value.isEmpty
         ? items
@@ -36,7 +37,7 @@ class DAppsList extends IcePage<AppsRouteData> {
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
-        title: payload?.title ?? '',
+        title: payload.title,
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -47,7 +48,7 @@ class DAppsList extends IcePage<AppsRouteData> {
                 padding: EdgeInsets.only(top: 12.0.s),
                 child: Column(
                   children: <Widget>[
-                    if (payload?.isSearchVisible ?? false)
+                    if (payload.isSearchVisible ?? false)
                       SearchInput(
                         onTextChanged: (String value) =>
                             searchText.value = value,

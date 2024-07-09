@@ -73,13 +73,12 @@ class CategoriesCollection extends StatelessWidget {
               children: <Widget>[
                 Button.icon(
                   onPressed: () {
-                    IceRoutes.appsList.go(
-                      context,
-                      payload: AppsRouteData(
+                    DAppsListRoute(
+                      $extra: AppsRouteData(
                         title: DAppsCategory.values[index].title(context),
                         items: mockedApps,
                       ),
-                    );
+                    ).push<void>(context);
                   },
                   icon: DAppsCategory.values[index].icon,
                   size: itemWidth,

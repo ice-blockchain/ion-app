@@ -20,13 +20,13 @@ import 'package:ice/app/services/keyboard/keyboard.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class FillProfile extends IceSimplePage {
-  const FillProfile(super.route, super.payload, {super.key});
+class FillProfile extends IcePage {
+  const FillProfile({super.key});
 
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final nameController = useTextEditingController();
     final nicknameController = useTextEditingController();
     final inviterController = useTextEditingController();
@@ -142,7 +142,7 @@ class FillProfile extends IceSimplePage {
                               loading.value = false;
                               hideKeyboardAndCallOnce(
                                 callback: () =>
-                                    IceRoutes.selectLanguages.push(context),
+                                    SelectLanguagesRoute().push<void>(context),
                               );
                             }
                           },

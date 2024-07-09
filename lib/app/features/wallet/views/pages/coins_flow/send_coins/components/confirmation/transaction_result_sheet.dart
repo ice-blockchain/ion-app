@@ -11,13 +11,13 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/provid
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class TransactionResultSheet extends IceSimplePage {
-  const TransactionResultSheet(super.route, super.payload, {super.key});
+class TransactionResultSheet extends IcePage {
+  const TransactionResultSheet({super.key});
 
   static const networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;

@@ -18,11 +18,11 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_done_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class ManageCoinsPage extends IceSimplePage {
-  const ManageCoinsPage(super._route, super.payload, {super.key});
+class ManageCoinsPage extends IcePage {
+  const ManageCoinsPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
 
     final manageCoinsData = manageCoinsDataSelector(ref);

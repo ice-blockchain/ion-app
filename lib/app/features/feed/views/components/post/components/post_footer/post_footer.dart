@@ -19,7 +19,7 @@ class PostFooter extends HookConsumerWidget {
     required this.postData,
     super.key,
   });
-  final PostData? postData;
+  final PostData postData;
 
   static double get horizontalPadding => max(
         ScreenSideOffset.defaultSmallMargin -
@@ -42,7 +42,7 @@ class PostFooter extends HookConsumerWidget {
     }
 
     void onToggleRepost() {
-      IceRoutes.shareType.push(context, payload: postData);
+      ShareTypeRoute($extra: postData).push<void>(context);
       isReposted.value = !isReposted.value;
     }
 
@@ -51,7 +51,7 @@ class PostFooter extends HookConsumerWidget {
     }
 
     void onShareOptions() {
-      IceRoutes.shareOptions.push(context);
+      ShareOptionsRoute().push<void>(context);
     }
 
     void onIceStroke() {}

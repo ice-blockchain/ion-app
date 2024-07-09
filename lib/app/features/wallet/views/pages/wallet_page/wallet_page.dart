@@ -23,11 +23,11 @@ import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 
-class WalletPage extends IceSimplePage {
-  const WalletPage(super.route, super.payload, {super.key});
+class WalletPage extends IcePage {
+  const WalletPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
     final hasContactsPermission =
         hasPermissionSelector(ref, PermissionType.Contacts);
@@ -36,7 +36,7 @@ class WalletPage extends IceSimplePage {
       if (hasContactsPermission ?? false) {
         ref.read(contactsDataNotifierProvider.notifier).fetchContacts();
       } else {
-        IceRoutes.allowAccess.go(context);
+        AllowAccessRoute().go(context);
       }
     }, <Object?>[
       hasContactsPermission,

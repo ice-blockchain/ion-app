@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
 import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
@@ -19,6 +18,7 @@ import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapp_details/dapp_details.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
+import 'package:ice/app/features/feed/model/post_data.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/quote_post_modal_page.dart';
@@ -27,9 +27,10 @@ import 'package:ice/app/features/feed/views/pages/share_type_modal_page/share_ty
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/switch_account_page.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
-import 'package:ice/app/features/wallet/model/contact_data.dart';
+import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/coin_details_page.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/coin_receive_modal.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/components/network_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/components/share_address_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/receive_coin_modal_page.dart';
@@ -49,283 +50,194 @@ import 'package:ice/app/features/wallets/pages/delete_wallet_modal/delete_wallet
 import 'package:ice/app/features/wallets/pages/edit_wallet_modal/edit_wallet_modal.dart';
 import 'package:ice/app/features/wallets/pages/manage_wallets_modal/manage_wallets_modal.dart';
 import 'package:ice/app/features/wallets/pages/wallets_modal/wallets_modal.dart';
+import 'package:ice/app/router/base_route_data.dart';
+import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
+import 'package:ice/app/router/main_tab_navigation.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
-const IceRoutes<void> initialPage = IceRoutes.splash;
+part 'app_routes.g.dart';
+part 'auth_routes.dart';
+part 'wallet_routes.dart';
 
-List<IceRoutes<dynamic>> iceRootRoutes = <IceRoutes<dynamic>>[
-  IceRoutes.splash,
-  IceRoutes.error,
-  IceRoutes.intro,
-  IceRoutes.home,
-  IceRoutes.pullRightMenu,
-];
+final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
+final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');
+final transitionObserver = NavigationSheetTransitionObserver();
 
-enum IceRoutes<PayloadType> {
-  splash(SplashPage.new),
-  error(ErrorPage.new),
-  intro(
-    IntroPage.new,
-    children: <IceRoutes<dynamic>>[
-      IceRoutes.auth,
-      IceRoutes.selectCountries,
-      IceRoutes.selectLanguages,
-      IceRoutes.checkEmail,
-      IceRoutes.fillProfile,
-      IceRoutes.discoverCreators,
-      IceRoutes.nostrAuth,
-      IceRoutes.nostrLogin,
-      IceRoutes.enterCode,
-      IceRoutes.notifications,
-    ],
-  ),
-  auth(
-    AuthPage.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  selectCountries(
-    SelectCountries.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  selectLanguages(
-    SelectLanguages.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  checkEmail(
-    CheckEmail.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  nostrAuth(
-    NostrAuth.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  nostrLogin(
-    NostrLogin.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  enterCode(
-    EnterCode.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  discoverCreators(
-    DiscoverCreators.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  fillProfile(
-    FillProfile.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  home(
-    null,
-    type: IceRouteType.bottomTabs,
-    children: <IceRoutes<dynamic>>[
-      IceRoutes.feed,
-      IceRoutes.dapps,
-      IceRoutes.chat,
-      IceRoutes.wallet,
-    ],
-  ),
-  feed(
-    FeedPage.new,
-    children: <IceRoutes<dynamic>>[
-      IceRoutes.feedMainModal,
-    ],
-  ),
-  feedMainModal(
-    FeedMainModalPage.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  notifications(
-    TurnOnNotifications.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  dapps(
-    DAppsPage.new,
-    children: <IceRoutes<dynamic>>[
-      IceRoutes.appsList,
-      IceRoutes.dappsDetails,
-    ],
-  ),
-  appsList<AppsRouteData>(DAppsList.new),
-  pullRightMenu(
-    PullRightMenuPage.new,
-    type: IceRouteType.slideFromLeft,
-    children: <IceRoutes<dynamic>>[
-      IceRoutes.switchAccount,
-    ],
-  ),
-  switchAccount(
-    SwitchAccountPage.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  chat(
-    ChatPage.new,
-  ),
-  wallet(
-    WalletPage.new,
-    children: <IceRoutes<dynamic>>[
-      IceRoutes.allowAccess,
-      IceRoutes.nftsSorting,
-      IceRoutes.coinSend,
-      IceRoutes.receiveCoin,
-      IceRoutes.scanWallet,
-      IceRoutes.networkSelect,
-      IceRoutes.networkSelectReceive,
-      IceRoutes.shareAddress,
-      IceRoutes.contactsSelect,
-      IceRoutes.coinSendForm,
-      IceRoutes.coinSendFormConfirmation,
-      IceRoutes.transactionResult,
-      IceRoutes.coinDetails,
-      IceRoutes.coinReceive,
-      IceRoutes.manageCoins,
-      IceRoutes.wallets,
-      IceRoutes.manageWallets,
-      IceRoutes.createWallet,
-      IceRoutes.editWallet,
-      IceRoutes.deleteWallet,
-      IceRoutes.shareType,
-      IceRoutes.quotePost,
-      IceRoutes.shareOptions,
-    ],
-  ),
-  wallets(
-    WalletsModal.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  manageWallets(
-    ManageWalletsModal.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  createWallet(
-    CreateNewWalletModal.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  editWallet(
-    EditWalletModal.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  deleteWallet(
-    DeleteWalletModal.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  allowAccess(
-    RequestContactAccessModal.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  nftsSorting(
-    NftsSortingModal.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  coinSendForm(
-    SendCoinsForm.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  coinSend(
-    SendCoinModalPage.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  scanWallet(
-    WalletScanModalPage.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  receiveCoin(
-    ReceiveCoinModalPage.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  coinSendFormConfirmation(
-    ConfirmationSheet.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  transactionResult(
-    TransactionResultSheet.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  coinReceive(
-    CoinReceiveModal.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  contactsSelect<ContactData>(
-    ContactsListView.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  networkSelect(
-    NetworkListView.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  networkSelectReceive(
-    NetworkListReceiveView.new,
-    type: IceRouteType.bottomSheet,
-  ),
+@TypedStatefulShellRoute<AppShellRouteData>(
+  branches: [
+    TypedStatefulShellBranch<FeedBranchData>(
+      routes: [TypedGoRoute<FeedRoute>(path: '/feed')],
+    ),
+    TypedStatefulShellBranch<ChatBranchData>(
+      routes: [TypedGoRoute<ChatRoute>(path: '/chat')],
+    ),
+    TypedStatefulShellBranch<DappsBranchData>(
+      routes: [TypedGoRoute<DappsRoute>(path: '/dapps')],
+    ),
+    TypedStatefulShellBranch<WalletBranchData>(
+      routes: [
+        TypedGoRoute<WalletRoute>(
+          path: '/wallet',
+          routes: [
+            ...WalletRoutes.routes,
+          ],
+        ),
+      ],
+    ),
+  ],
+)
+class AppShellRouteData extends StatefulShellRouteData {
+  const AppShellRouteData();
 
-  shareAddress(
-    ShareAddressView.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  manageCoins(
-    ManageCoinsPage.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  coinDetails<CoinData>(CoinDetailsPage.new),
-  dappsDetails(
-    DAppDetails.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  shareType(
-    ShareTypeView.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  quotePost(
-    QuotePostModalPage.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  shareOptions(
-    ShareOptionsPage.new,
-    type: IceRouteType.bottomSheet,
-  ),
-  ;
+  static final $navigatorKey = bottomBarNavigatorKey;
 
-  const IceRoutes(
-    this.builder, {
-    this.type = IceRouteType.single,
-    this.children,
-  });
-
-  final IceRouteType type;
-  final List<IceRoutes<dynamic>>? children;
-  final IcePageBuilder<PayloadType>? builder;
-
-  String get routeName => name;
-
-  void go(BuildContext context, {PayloadType? payload}) => context.goNamed(
-        routeName,
-        extra: payload,
-      );
-
-  Future<T?> push<T extends Object?>(
-    BuildContext context, {
-    PayloadType? payload,
-  }) =>
-      context.pushNamed(routeName, extra: payload);
-
-  void pushReplacement(BuildContext context, {PayloadType? payload}) {
-    return context.pushReplacementNamed(routeName, extra: payload);
+  @override
+  Widget builder(
+    BuildContext context,
+    GoRouterState state,
+    StatefulNavigationShell navigationShell,
+  ) {
+    return MainTabNavigation(
+      navigationShell: navigationShell,
+    );
   }
-
-  void replace(BuildContext context, {PayloadType? payload}) {
-    context.replaceNamed(routeName, extra: payload);
-  }
-
-  void pop(BuildContext context) => context.canPop() ? context.pop() : null;
 }
 
-typedef IcePageBuilder<PayloadType> = IcePage<PayloadType> Function(
-  IceRoutes<PayloadType> route,
-  dynamic payload,
-);
+class ModalShellRouteData extends ShellRouteData {
+  const ModalShellRouteData();
 
-enum IceRouteType {
-  single,
-  bottomSheet,
-  slideFromLeft,
-  bottomTabs;
+  static final $parentNavigatorKey = rootNavigatorKey;
+  static final $observers = <NavigatorObserver>[transitionObserver];
+
+  @override
+  Page<void> pageBuilder(
+    BuildContext context,
+    GoRouterState state,
+    Widget navigator,
+  ) {
+    return ModalSheetPage(
+      swipeDismissible: true,
+      child: ModalWrapper(child: navigator),
+    );
+  }
+}
+
+class FeedBranchData extends StatefulShellBranchData {
+  FeedBranchData();
+}
+
+class ChatBranchData extends StatefulShellBranchData {
+  const ChatBranchData();
+}
+
+class WalletBranchData extends StatefulShellBranchData {
+  const WalletBranchData();
+}
+
+class DappsBranchData extends StatefulShellBranchData {
+  const DappsBranchData();
+}
+
+@TypedGoRoute<SplashRoute>(path: '/splash')
+class SplashRoute extends BaseRouteData {
+  SplashRoute() : super(child: const SplashPage());
+}
+
+class FeedRoute extends BaseRouteData {
+  FeedRoute() : super(child: const FeedPage());
+}
+
+class ChatRoute extends BaseRouteData {
+  ChatRoute() : super(child: const ChatPage());
+}
+
+class WalletRoute extends BaseRouteData {
+  WalletRoute() : super(child: const WalletPage());
+}
+
+class DappsRoute extends BaseRouteData {
+  DappsRoute() : super(child: const DAppsPage());
+}
+
+@TypedGoRoute<ErrorRoute>(path: '/error')
+class ErrorRoute extends BaseRouteData {
+  ErrorRoute({this.$extra})
+      : super(child: ErrorPage(error: $extra ?? Exception('Unknown error')));
+
+  final Exception? $extra;
+}
+
+@TypedGoRoute<IntroRoute>(
+  path: '/intro',
+  routes: [...AuthRoutes.routes],
+)
+class IntroRoute extends BaseRouteData {
+  IntroRoute() : super(child: const IntroPage());
+}
+
+@TypedGoRoute<FeedMainModal>(path: '/feed-modal')
+class FeedMainModal extends BaseRouteData {
+  FeedMainModal()
+      : super(
+          child: const FeedMainModalPage(),
+          type: IceRouteType.bottomSheet,
+        );
+
+  static final $parentNavigatorKey = rootNavigatorKey;
+}
+
+@TypedGoRoute<DAppsRoute>(
+  path: '/dapps',
+  routes: [
+    TypedGoRoute<DAppsListRoute>(path: 'apps-list'),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<DAppDetailsRoute>(path: 'dapps-details'),
+      ],
+    ),
+  ],
+)
+class DAppsRoute extends BaseRouteData {
+  DAppsRoute() : super(child: const DAppsPage());
+}
+
+class DAppsListRoute extends BaseRouteData {
+  DAppsListRoute({required this.$extra})
+      : super(child: DAppsList(payload: $extra));
+
+  final AppsRouteData $extra;
+}
+
+class DAppDetailsRoute extends BaseRouteData {
+  DAppDetailsRoute()
+      : super(
+          child: DAppDetails(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+@TypedGoRoute<PullRightMenuRoute>(
+  path: '/pull-right-menu',
+  routes: [
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<SwitchAccountRoute>(path: 'switch-account'),
+      ],
+    ),
+  ],
+)
+class PullRightMenuRoute extends BaseRouteData {
+  PullRightMenuRoute()
+      : super(
+          child: const PullRightMenuPage(),
+          type: IceRouteType.slideFromLeft,
+        );
+}
+
+class SwitchAccountRoute extends BaseRouteData {
+  SwitchAccountRoute()
+      : super(
+          child: const SwitchAccountPage(),
+          type: IceRouteType.bottomSheet,
+        );
 }

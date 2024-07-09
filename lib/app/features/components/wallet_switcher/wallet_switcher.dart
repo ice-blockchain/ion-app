@@ -21,7 +21,7 @@ class WalletSwitcher extends HookConsumerWidget {
 
     return Button.dropdown(
       onPressed: () {
-        IceRoutes.wallets.push(context);
+        WalletsRoute().push<void>(context);
       },
       leadingIcon: Avatar(
         size: 28.0.s,

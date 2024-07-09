@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -9,29 +8,26 @@ import 'package:ice/app/components/inputs/text_input/components/text_input_icons
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class CreateNewWalletModal extends IceSimplePage {
-  const CreateNewWalletModal(super.route, super.payload, {super.key});
+class CreateNewWalletModal extends IcePage {
+  const CreateNewWalletModal({super.key});
 
   @override
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    void payload,
   ) {
     final walletName = useState('');
     final controller = useTextEditingController();
 
-    return SheetContentScaffold(
+    return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: SingleChildScrollView(
         child: Column(

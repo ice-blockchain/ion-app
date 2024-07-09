@@ -29,7 +29,7 @@ class ContactInputSwitcher extends StatelessWidget {
   }
 
   Future<void> selectContact(BuildContext context) async {
-    final contact = await IceRoutes.contactsSelect.push<ContactData>(context);
+    final contact = await ContactsSelectRoute().push<ContactData>(context);
 
     if (!context.mounted) return;
 

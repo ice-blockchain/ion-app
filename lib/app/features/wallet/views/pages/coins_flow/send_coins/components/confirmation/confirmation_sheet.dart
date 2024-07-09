@@ -15,13 +15,13 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ConfirmationSheet extends IceSimplePage {
-  const ConfirmationSheet(super.route, super.payload, {super.key});
+class ConfirmationSheet extends IcePage {
+  const ConfirmationSheet({super.key});
 
   static const networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
@@ -105,7 +105,7 @@ class ConfirmationSheet extends IceSimplePage {
                   Button(
                     label: Text('${locale.wallet_send_coins} - \$351.35'),
                     mainAxisSize: MainAxisSize.max,
-                    onPressed: () => IceRoutes.transactionResult.go(context),
+                    onPressed: () => TransactionResultRoute().go(context),
                   ),
                   SizedBox(height: 16.0.s),
                 ],

@@ -29,9 +29,7 @@ class CoinsTabFooter extends HookConsumerWidget {
           asset: tabType.bottomActionAsset,
           title: tabType.getBottomActionTitle(context),
           onTap: () {
-            IceRoutes.manageCoins.go(
-              context,
-            );
+            ManageCoinsRoute().go(context);
           },
         ),
       ),

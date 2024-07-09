@@ -12,17 +12,15 @@ import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class QuotePostModalPage extends IcePage<PostData?> {
-  const QuotePostModalPage(super.route, super.payload, {super.key});
+class QuotePostModalPage extends IcePage {
+  const QuotePostModalPage({required this.payload, super.key});
+
+  final PostData payload;
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, PostData? payload) {
-    if (payload == null) {
-      throw Exception('Post can not be null');
-    }
-
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Stack(

@@ -11,11 +11,11 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
 
-class IntroPage extends IceSimplePage {
-  const IntroPage(super._route, super.payload, {super.key});
+class IntroPage extends IcePage {
+  const IntroPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final animation = useButtonAnimation();
 
     return Scaffold(
@@ -37,7 +37,7 @@ class IntroPage extends IceSimplePage {
               scale: animation,
               child: Button(
                 onPressed: () {
-                  IceRoutes.auth.go(context);
+                  AuthRoute().go(context);
                 },
                 label: Text(context.i18n.button_continue),
                 leadingIcon: Assets.images.icons.iconIcelogoSecuredby

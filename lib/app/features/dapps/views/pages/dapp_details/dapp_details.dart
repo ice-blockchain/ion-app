@@ -16,17 +16,16 @@ import 'package:ice/app/features/dapps/views/pages/mocks/mocked_featured.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DAppDetails extends IceSimplePage {
-  DAppDetails(super._route, super.payload, {super.key});
+class DAppDetails extends IcePage {
+  DAppDetails({super.key});
 
   final DAppItem item = mockedFeatured[2]; //TODO: get from params or provider
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
-    return SheetContentScaffold(
+  Widget buildPage(BuildContext context, WidgetRef ref) {
+    return Scaffold(
       appBar: NavigationAppBar.screen(
         title: item.title,
         showBackButton: false,

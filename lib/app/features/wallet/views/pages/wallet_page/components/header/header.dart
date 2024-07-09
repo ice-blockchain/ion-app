@@ -30,7 +30,7 @@ class Header extends HookConsumerWidget {
               ),
               SizedBox(width: 12.0.s),
               NavigationButton(
-                onPressed: () => IceRoutes.scanWallet.push(context),
+                onPressed: () => ScanWalletRoute().push<void>(context),
                 icon: Assets.images.icons.iconHeaderScan1.icon(
                   color: context.theme.appColors.primaryText,
                 ),

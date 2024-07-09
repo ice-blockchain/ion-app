@@ -14,8 +14,8 @@ import 'package:ice/app/features/auth/views/pages/turn_on_notifications/notifica
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class TurnOnNotifications extends IceSimplePage {
-  const TurnOnNotifications(super.route, super.payload, {super.key});
+class TurnOnNotifications extends IcePage {
+  const TurnOnNotifications({super.key});
 
   void handleSignIn(WidgetRef ref) {
     ref.read(authProvider.notifier).signIn(
@@ -25,7 +25,7 @@ class TurnOnNotifications extends IceSimplePage {
   }
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(

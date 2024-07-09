@@ -15,11 +15,11 @@ import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class SelectCountries extends IceSimplePage {
-  const SelectCountries(super._route, super.payload, {super.key});
+class SelectCountries extends IcePage {
+  const SelectCountries({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 

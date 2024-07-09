@@ -19,13 +19,13 @@ import 'package:ice/app/router/hooks/use_sheet_full_height.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class NostrLogin extends IceSimplePage {
-  const NostrLogin(super._route, super.payload, {super.key});
+class NostrLogin extends IcePage {
+  const NostrLogin({super.key});
 
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final controller = useTextEditingController();
 
     final sheetFullHeight = useSheetFullHeight(context);

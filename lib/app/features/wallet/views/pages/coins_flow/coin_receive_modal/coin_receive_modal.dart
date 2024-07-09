@@ -12,10 +12,12 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_moda
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
-  const CoinReceiveModal(super.route, super.payload, {super.key});
+class CoinReceiveModal extends IcePage {
+  const CoinReceiveModal({required this.payload, super.key});
+
+  final CoinReceiveModalData payload;
 
   NetworkType _getNetworkType(CoinReceiveModalData data) {
     if (data.networkType == NetworkType.all) {
@@ -28,15 +30,10 @@ class CoinReceiveModal extends IcePage<CoinReceiveModalData> {
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    CoinReceiveModalData? payload,
   ) {
-    if (payload == null) {
-      return const SizedBox.shrink();
-    }
-
     final networkType = _getNetworkType(payload);
 
-    return SheetContentScaffold(
+    return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Padding(
         padding: EdgeInsets.only(

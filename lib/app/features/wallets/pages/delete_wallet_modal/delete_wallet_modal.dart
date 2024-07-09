@@ -13,8 +13,10 @@ import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class DeleteWalletModal extends IcePage<WalletData> {
-  const DeleteWalletModal(super.route, super.payload, {super.key});
+class DeleteWalletModal extends IcePage {
+  const DeleteWalletModal({required this.payload, super.key});
+
+  final WalletData payload;
 
   static double get buttonsSize => 56.0.s;
 
@@ -22,12 +24,7 @@ class DeleteWalletModal extends IcePage<WalletData> {
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    WalletData? payload,
   ) {
-    if (payload == null) {
-      return const SizedBox.shrink();
-    }
-
     final buttonMinimalSize = Size(buttonsSize, buttonsSize);
 
     return ScreenSideOffset.small(

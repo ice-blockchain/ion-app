@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'init_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<void> initApp(InitAppRef ref) async {
   Nostr.initialize();
   await ref.read(envProvider.future);

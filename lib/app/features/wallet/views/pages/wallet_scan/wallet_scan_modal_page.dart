@@ -6,11 +6,11 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_scan/components/qr_scanner_bottom_sheet.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class WalletScanModalPage extends IceSimplePage {
-  const WalletScanModalPage(super.route, super.payload, {super.key});
+class WalletScanModalPage extends IcePage {
+  const WalletScanModalPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
       body: const QRScannerBottomSheet(),
       backgroundColor: context.theme.appColors.secondaryBackground,

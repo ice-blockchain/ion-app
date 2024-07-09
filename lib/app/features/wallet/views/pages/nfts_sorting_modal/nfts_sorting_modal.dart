@@ -8,14 +8,13 @@ import 'package:ice/app/features/user/model/nft_sorting_type.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/components/sorting_button/sorting_button.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
-class NftsSortingModal extends IceSimplePage {
-  const NftsSortingModal(super.route, super.payload, {super.key});
+class NftsSortingModal extends IcePage {
+  const NftsSortingModal({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
-    return SheetContentScaffold(
+  Widget buildPage(BuildContext context, WidgetRef ref) {
+    return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Padding(
         padding: EdgeInsets.only(

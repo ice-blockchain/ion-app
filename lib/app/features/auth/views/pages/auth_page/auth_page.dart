@@ -18,11 +18,11 @@ import 'package:ice/app/features/auth/views/pages/auth_page/components/socials.d
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class AuthPage extends IceSimplePage {
-  const AuthPage(super._route, super.payload, {super.key});
+class AuthPage extends IcePage {
+  const AuthPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final isEmailMode = useState(true);
 
     return SheetContent(

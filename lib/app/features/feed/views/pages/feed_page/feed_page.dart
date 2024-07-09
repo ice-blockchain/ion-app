@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
 import 'package:ice/app/features/feed/providers/feed_category_provider.dart';
@@ -13,11 +12,11 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_handler.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 
-class FeedPage extends IceSimplePage {
-  const FeedPage(super.route, super.payload, {super.key});
+class FeedPage extends HookConsumerWidget {
+  const FeedPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
     final feedCategory = ref.watch(feedCategoryNotifierProvider);
 

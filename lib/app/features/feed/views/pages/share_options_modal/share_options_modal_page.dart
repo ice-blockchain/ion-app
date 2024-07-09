@@ -9,13 +9,13 @@ import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-class ShareOptionsPage extends IcePage<String?> {
-  const ShareOptionsPage(super.route, super.payload, {super.key});
+class ShareOptionsPage extends IcePage {
+  const ShareOptionsPage({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, String? payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     return FractionallySizedBox(
       heightFactor: 0.9,
       child: Column(

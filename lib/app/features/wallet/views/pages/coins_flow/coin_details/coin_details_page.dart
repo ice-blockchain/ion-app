@@ -22,18 +22,19 @@ import 'package:ice/app/features/wallets/providers/selectors/wallets_data_select
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
-class CoinDetailsPage extends IcePage<CoinData> {
-  const CoinDetailsPage(super.route, super.payload, {super.key});
+class CoinDetailsPage extends IcePage {
+  const CoinDetailsPage({required this.payload, super.key});
+
+  final CoinData payload;
 
   @override
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    CoinData? payload,
   ) {
     final scrollController = useScrollController();
     final walletId = walletIdSelector(ref);
-    final coinId = payload?.abbreviation ?? '';
+    final coinId = payload.abbreviation;
     final coinTransactionsMap = useTransactionsByDate(context, ref);
     final isLoading = coinTransactionsIsLoadingSelector(ref);
     final activeNetworkType = useState<NetworkType>(NetworkType.all);
@@ -50,10 +51,6 @@ class CoinDetailsPage extends IcePage<CoinData> {
       },
       <Object?>[walletId, coinId, activeNetworkType.value],
     );
-
-    if (payload == null) {
-      return const SizedBox.shrink();
-    }
     return Scaffold(
       appBar: NavigationAppBar.screen(
         title: payload.name,

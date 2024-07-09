@@ -8,18 +8,15 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_moda
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class ReceiveCoinModalPage extends IceSimplePage {
-  const ReceiveCoinModalPage(super.route, super.payload, {super.key});
+class ReceiveCoinModalPage extends IcePage {
+  const ReceiveCoinModalPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
       body: CoinsListView(
         onCoinItemTap: (CoinData coin) {
-          IceRoutes.networkSelectReceive.push(
-            context,
-            payload: coin,
-          );
+          NetworkSelectReceiveRoute($extra: coin).push<void>(context);
         },
         type: CoinsListViewType.receive,
       ),

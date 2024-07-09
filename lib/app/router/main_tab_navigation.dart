@@ -1,224 +1,137 @@
-import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class MainTabNavigation extends HookWidget {
+enum TabItem {
+  feed,
+  chat,
+  main,
+  dapps,
+  wallet;
+
+  const TabItem();
+
+  AssetGenImage? get icon {
+    return switch (this) {
+      TabItem.feed => Assets.images.icons.iconHomeOff,
+      TabItem.chat => Assets.images.icons.iconChatOff,
+      TabItem.main => Assets.images.logo.logoButton,
+      TabItem.dapps => Assets.images.icons.iconDappOff,
+      TabItem.wallet => Assets.images.icons.iconsWalletOff
+    };
+  }
+
+  int get navigationIndex => index > TabItem.main.index ? index - 1 : index;
+}
+
+class MainTabNavigation extends StatelessWidget {
   const MainTabNavigation({
     required this.navigationShell,
-    Key? key,
-  }) : super(
-          key: key ?? const ValueKey<String>('MainTabNavigation'),
-        );
+    super.key,
+  });
+
   final StatefulNavigationShell navigationShell;
 
-  static const disabledTabs = <_Tabs>[
-    _Tabs.chat,
-    _Tabs.dapps,
-    _Tabs.wallet,
-  ];
-
-  void _goBranch(
-    int index,
-    ValueNotifier<bool> isModalOpen,
-    ValueNotifier<bool> isButtonDisabled,
-    BuildContext context,
-  ) {
-    if (isModalOpen.value) {
-      final selectedTab = _Tabs.values[navigationShell.currentIndex];
-      selectedTab.mainModalRoute.pop(context);
-      isModalOpen.value = false;
-      isButtonDisabled.value = true;
-      Timer(const Duration(milliseconds: 300), () {
-        isButtonDisabled.value = false;
-        navigationShell.goBranch(
-          index,
-          initialLocation: index == navigationShell.currentIndex,
-        );
-      });
-    } else {
-      navigationShell.goBranch(
-        index,
-        initialLocation: index == navigationShell.currentIndex,
-      );
+  void _onTap(int index) {
+    final tabItem = TabItem.values[index];
+    if (tabItem == TabItem.main) {
+      _onMainButtonTap();
+      return;
     }
+
+    final adjustedIndex = tabItem.navigationIndex;
+
+    navigationShell.goBranch(
+      adjustedIndex,
+      initialLocation: adjustedIndex == navigationShell.currentIndex,
+    );
   }
+
+  void _onMainButtonTap() {
+    log('MainTabNavigation: Main button tapped');
+  }
+
+  int _adjustBottomNavIndex(int index) =>
+      index >= TabItem.main.index ? index + 1 : index;
 
   @override
   Widget build(BuildContext context) {
-    final isModalOpen = useState(false);
-    final isButtonDisabled = useState(false);
-
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar:
-          _buildNavigationBar(context, isModalOpen, isButtonDisabled),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _adjustBottomNavIndex(navigationShell.currentIndex),
+        onTap: _onTap,
+        items: _navBarItems(),
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: context.theme.appColors.secondaryBackground,
+        selectedItemColor: context.theme.appColors.primaryAccent,
+        unselectedItemColor: context.theme.appColors.tertararyText,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+      ),
     );
   }
 
-  Widget _buildNavigationBar(
-    BuildContext context,
-    ValueNotifier<bool> isModalOpen,
-    ValueNotifier<bool> isButtonDisabled,
-  ) {
-    late final _Tabs selectedTab;
-    final children = _Tabs.values.map((_Tabs tab) {
-      final branch = _byTab(tab);
-      final branchIndex = navigationShell.route.branches.indexOf(branch);
-      final isSelected = navigationShell.currentIndex == branchIndex;
-
-      if (isSelected) {
-        selectedTab = tab;
+  List<BottomNavigationBarItem> _navBarItems() {
+    return TabItem.values.map((tabItem) {
+      if (tabItem == TabItem.main) {
+        return BottomNavigationBarItem(
+          icon: _MainButton(icon: tabItem.icon!),
+          label: '',
+        );
       }
-
-      return _convertToWidget(
-        tab,
-        branchIndex,
-        isSelected,
-        context,
-        isModalOpen,
-        isButtonDisabled,
+      return BottomNavigationBarItem(
+        icon: _TabIcon(
+          icon: tabItem.icon!,
+          isSelected: _isTabSelected(tabItem),
+        ),
+        label: '',
       );
     }).toList();
-
-    children.insert(
-      (children.length / 2).ceil(),
-      _buildMainButton(selectedTab, context, isModalOpen, isButtonDisabled),
-    );
-
-    return Container(
-      height: 82.0.s,
-      decoration: BoxDecoration(
-        color: context.theme.appColors.secondaryBackground,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: context.theme.appColors.darkBlue.withOpacity(0.05),
-            blurRadius: 16.0.s,
-            offset: Offset(-2.0.s, -2.0.s),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(top: 9.0.s, bottom: 23.0.s),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children:
-              children.map((Widget child) => Flexible(child: child)).toList(),
-        ),
-      ),
-    );
   }
 
-  Widget _convertToWidget(
-    _Tabs tab,
-    int branchIndex,
-    bool isSelected,
-    BuildContext context,
-    ValueNotifier<bool> isModalOpen,
-    ValueNotifier<bool> isButtonDisabled,
-  ) {
-    final color = isSelected
-        ? context.theme.appColors.primaryAccent
-        : context.theme.appColors.tertararyText;
-
-    return _buildHitBox(
-      onTap: () =>
-          _goBranch(branchIndex, isModalOpen, isButtonDisabled, context),
-      child: tab.icon.icon(color: color, size: 24.0.s),
-    );
+  bool _isTabSelected(TabItem tabItem) {
+    return navigationShell.currentIndex == tabItem.navigationIndex;
   }
+}
 
-  StatefulShellBranch _byTab(_Tabs tab) {
-    return navigationShell.route.branches.firstWhere(
-      (StatefulShellBranch branch) =>
-          (branch.routes.single as GoRoute).name == tab.route.routeName,
-    );
-  }
+class _TabIcon extends StatelessWidget {
+  const _TabIcon({
+    required this.icon,
+    required this.isSelected,
+  });
 
-  Widget _buildMainButton(
-    _Tabs selectedTab,
-    BuildContext context,
-    ValueNotifier<bool> isModalOpen,
-    ValueNotifier<bool> isButtonDisabled,
-  ) {
-    late final AssetGenImage image;
-    if (isModalOpen.value) {
-      image = Assets.images.logo.logoButtonClose;
-    } else {
-      image = Assets.images.logo.logoButton;
-    }
+  final AssetGenImage icon;
+  final bool isSelected;
 
-    return _buildHitBox(
-      ripple: false,
-      onTap: () {
-        // Disable the button if the selected tab is in the disabledTabs list
-        if (disabledTabs.contains(selectedTab)) return;
-
-        // Disable the button for 300ms to prevent double taps
-        // and wait until the modal is fully closed/opened
-        if (isButtonDisabled.value) return;
-
-        if (isModalOpen.value) {
-          selectedTab.mainModalRoute.pop(context);
-          isModalOpen.value = false;
-        } else {
-          selectedTab.mainModalRoute.go(context);
-          isModalOpen.value = true;
-        }
-
-        isButtonDisabled.value = true;
-        Timer(const Duration(milliseconds: 300), () {
-          isButtonDisabled.value = false;
-        });
-      },
-      child: image.image(height: 50.0.s),
-    );
-  }
-
-  Widget _buildHitBox({
-    required VoidCallback onTap,
-    required Widget child,
-    bool ripple = true,
-  }) {
-    if (ripple) {
-      return SizedBox.expand(
-        child: IconButton(
-          onPressed: onTap,
-          icon: child,
-        ),
-      );
-    }
-
-    return GestureDetector(
-      onTap: onTap,
-      child: SizedBox.expand(child: child),
+  @override
+  Widget build(BuildContext context) {
+    return icon.image(
+      width: 24.0.s,
+      height: 24.0.s,
+      color: isSelected
+          ? context.theme.appColors.primaryAccent
+          : context.theme.appColors.tertararyText,
     );
   }
 }
 
-enum _Tabs {
-  feed(IceRoutes.feed, IceRoutes.feedMainModal),
-  chat(IceRoutes.chat, IceRoutes.chat),
-  dapps(IceRoutes.dapps, IceRoutes.dapps),
-  wallet(IceRoutes.wallet, IceRoutes.wallet);
+class _MainButton extends StatelessWidget {
+  const _MainButton({required this.icon});
 
-  const _Tabs(this.route, this.mainModalRoute);
+  final AssetGenImage icon;
 
-  final IceRoutes<dynamic> route;
-  final IceRoutes<dynamic> mainModalRoute;
-
-  AssetGenImage get icon {
-    return switch (this) {
-      _Tabs.feed => Assets.images.icons.iconHomeOff,
-      _Tabs.chat => Assets.images.icons.iconChatOff,
-      _Tabs.dapps => Assets.images.icons.iconDappOff,
-      _Tabs.wallet => Assets.images.icons.iconsWalletOff,
-    };
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 50.0.s,
+      height: 50.0.s,
+      child: icon.image(fit: BoxFit.contain),
+    );
   }
 }

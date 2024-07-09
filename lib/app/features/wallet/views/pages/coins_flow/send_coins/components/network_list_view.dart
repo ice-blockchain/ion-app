@@ -9,52 +9,54 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/provid
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class NetworkListView extends IceSimplePage {
-  const NetworkListView(super.route, super.payload, {super.key});
+class NetworkListView extends IcePage {
+  const NetworkListView({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0.s),
-          child: NavigationAppBar.screen(
-            title: context.i18n.wallet_choose_network,
-            actions: const <Widget>[
-              NavigationCloseButton(),
-            ],
+  Widget buildPage(BuildContext context, WidgetRef ref) {
+    return SheetContent(
+      backgroundColor: context.theme.appColors.secondaryBackground,
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0.s),
+            child: NavigationAppBar.screen(
+              title: context.i18n.wallet_choose_network,
+              actions: const [
+                NavigationCloseButton(),
+              ],
+            ),
           ),
-        ),
-        ListView.separated(
-          shrinkWrap: true,
-          itemCount: networkTypeValues.length,
-          separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              height: 12.0.s,
-            );
-          },
-          itemBuilder: (BuildContext context, int index) {
-            return ScreenSideOffset.small(
-              child: NetworkItem(
-                networkType: networkTypeValues[index],
-                onTap: () {
-                  ref
-                      .read(sendCoinsFormControllerProvider.notifier)
-                      .selectNetwork(networkTypeValues[index]);
+          ListView.separated(
+            shrinkWrap: true,
+            itemCount: networkTypeValues.length,
+            separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(
+                height: 12.0.s,
+              );
+            },
+            itemBuilder: (BuildContext context, int index) {
+              return ScreenSideOffset.small(
+                child: NetworkItem(
+                  networkType: networkTypeValues[index],
+                  onTap: () {
+                    ref
+                        .read(sendCoinsFormControllerProvider.notifier)
+                        .selectNetwork(networkTypeValues[index]);
 
-                  IceRoutes.coinSendForm.push(
-                    context,
-                  );
-                },
-              ),
-            );
-          },
-        ),
-      ],
+                    CoinsSendFormRoute().push<void>(context);
+                  },
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

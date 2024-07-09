@@ -3,14 +3,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
-class ChatMainModalPage extends IceSimplePage {
-  const ChatMainModalPage(super.route, super.payload, {super.key});
+class ChatMainModalPage extends IcePage {
+  const ChatMainModalPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
-    return SheetContentScaffold(
+  Widget buildPage(BuildContext context, WidgetRef ref) {
+    return Scaffold(
       body: ScreenSideOffset.small(
         child: SingleChildScrollView(
           child: Column(

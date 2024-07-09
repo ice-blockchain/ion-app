@@ -3,14 +3,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class WalletMainModalPage extends IceSimplePage {
-  const WalletMainModalPage(super.route, super.payload, {super.key});
+class WalletMainModalPage extends IcePage {
+  const WalletMainModalPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
-    return SheetContentScaffold(
+  Widget buildPage(BuildContext context, WidgetRef ref) {
+    return SheetContent(
       body: ScreenSideOffset.small(
         child: SingleChildScrollView(
           child: Column(

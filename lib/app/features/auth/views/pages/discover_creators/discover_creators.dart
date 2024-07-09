@@ -16,11 +16,11 @@ import 'package:ice/app/features/core/providers/permissions_provider_selectors.d
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class DiscoverCreators extends IceSimplePage {
-  const DiscoverCreators(super.route, super.payload, {super.key});
+class DiscoverCreators extends IcePage {
+  const DiscoverCreators({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
 
     final hasNotificationsPermission =
@@ -101,7 +101,7 @@ class DiscoverCreators extends IceSimplePage {
                           .read(authProvider.notifier)
                           .signIn(email: 'foo@bar.baz', password: '123');
                     } else {
-                      IceRoutes.notifications.go(context);
+                      NotificationsRoute().go(context);
                     }
                   },
                 ),

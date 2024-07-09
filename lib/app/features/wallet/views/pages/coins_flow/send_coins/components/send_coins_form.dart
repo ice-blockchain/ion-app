@@ -23,13 +23,13 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SendCoinsForm extends IceSimplePage {
-  const SendCoinsForm(super.route, super.payload, {super.key});
+class SendCoinsForm extends IcePage {
+  const SendCoinsForm({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final selectedContact = useState<ContactData?>(null);
 
     final colors = context.theme.appColors;
@@ -43,116 +43,109 @@ class SendCoinsForm extends IceSimplePage {
     );
 
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
-      body: FractionallySizedBox(
-        heightFactor: 0.9,
-        child: KeyboardDismissOnTap(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0.s),
-                  child: NavigationAppBar.screen(
-                    title: locale.wallet_send_coins,
-                    actions: const <Widget>[
-                      NavigationCloseButton(),
-                    ],
-                  ),
+      backgroundColor: colors.secondaryBackground,
+      body: KeyboardDismissOnTap(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0.s),
+                child: NavigationAppBar.screen(
+                  title: locale.wallet_send_coins,
+                  actions: const <Widget>[
+                    NavigationCloseButton(),
+                  ],
                 ),
-                ScreenSideOffset.small(
-                  child: Column(
-                    children: <Widget>[
-                      CoinButton(
-                        coinData: formController.selectedCoin,
-                        onTap: () {
-                          IceRoutes.coinSend.push(
-                            context,
-                          );
-                        },
-                      ),
-                      SizedBox(height: 12.0.s),
-                      NetworkButton(
-                        networkType: formController.selectedNetwork,
-                        onTap: () {
-                          IceRoutes.networkSelect.push(
-                            context,
-                          );
-                        },
-                      ),
-                      SizedBox(height: 12.0.s),
-                      ContactInputSwitcher(
-                        selectedContact: selectedContact.value,
-                        onContactSelected: (ContactData? contact) =>
-                            selectedContact.value = contact,
-                      ),
-                      SizedBox(height: 12.0.s),
-                      TextInput(
-                        controller: amountController,
-                        labelText: locale.wallet_usdt_amount,
-                        onChanged: (value) {
-                          ref
-                              .read(sendCoinsFormControllerProvider.notifier)
-                              .updateAmount(value);
-                        },
-                        suffixIcon: TextInputTextButton(
-                          onPressed: () {
-                            final maxAmount =
-                                formController.wallet.balance.toString();
-                            amountController.text = maxAmount;
-                            ref
-                                .read(sendCoinsFormControllerProvider.notifier)
-                                .updateAmount(maxAmount);
-                          },
-                          label: locale.wallet_max,
-                        ),
-                      ),
-                      SizedBox(height: 10.0.s),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          '~ 349.99 USD',
-                          style: textTheme.caption2.copyWith(
-                            color: colors.tertararyText,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 17.0.s),
-                      const ArrivalTime(),
-                      SizedBox(height: 12.0.s),
-                      AppSlider(
-                        initialValue: formController.arrivalTime.toDouble(),
-                        onChanged: (double value) {
-                          ref
-                              .read(sendCoinsFormControllerProvider.notifier)
-                              .updateArrivalTime(value.toInt());
-                        },
-                      ),
-                      SizedBox(height: 8.0.s),
-                      const NetworkFee(),
-                      SizedBox(height: 45.0.s),
-                      Button(
-                        label: Text(
-                          locale.button_continue,
-                        ),
-                        mainAxisSize: MainAxisSize.max,
-                        trailingIcon: ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                            colors.primaryBackground,
-                            BlendMode.srcIn,
-                          ),
-                          child: Assets.images.icons.iconButtonNext.icon(),
-                        ),
+              ),
+              ScreenSideOffset.small(
+                child: Column(
+                  children: <Widget>[
+                    CoinButton(
+                      coinData: formController.selectedCoin,
+                      onTap: () {
+                        CoinSendRoute().push<void>(context);
+                      },
+                    ),
+                    SizedBox(height: 12.0.s),
+                    NetworkButton(
+                      networkType: formController.selectedNetwork,
+                      onTap: () {
+                        NetworkSelectRoute().push<void>(context);
+                      },
+                    ),
+                    SizedBox(height: 12.0.s),
+                    ContactInputSwitcher(
+                      selectedContact: selectedContact.value,
+                      onContactSelected: (ContactData? contact) =>
+                          selectedContact.value = contact,
+                    ),
+                    SizedBox(height: 12.0.s),
+                    TextInput(
+                      controller: amountController,
+                      labelText: locale.wallet_usdt_amount,
+                      onChanged: (value) {
+                        ref
+                            .read(sendCoinsFormControllerProvider.notifier)
+                            .updateAmount(value);
+                      },
+                      suffixIcon: TextInputTextButton(
                         onPressed: () {
-                          IceRoutes.coinSendFormConfirmation.push(context);
+                          final maxAmount =
+                              formController.wallet.balance.toString();
+                          amountController.text = maxAmount;
+                          ref
+                              .read(sendCoinsFormControllerProvider.notifier)
+                              .updateAmount(maxAmount);
                         },
+                        label: locale.wallet_max,
                       ),
-                      SizedBox(height: 16.0.s),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 10.0.s),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '~ 349.99 USD',
+                        style: textTheme.caption2.copyWith(
+                          color: colors.tertararyText,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 17.0.s),
+                    const ArrivalTime(),
+                    SizedBox(height: 12.0.s),
+                    AppSlider(
+                      initialValue: formController.arrivalTime.toDouble(),
+                      onChanged: (double value) {
+                        ref
+                            .read(sendCoinsFormControllerProvider.notifier)
+                            .updateArrivalTime(value.toInt());
+                      },
+                    ),
+                    SizedBox(height: 8.0.s),
+                    const NetworkFee(),
+                    SizedBox(height: 45.0.s),
+                    Button(
+                      label: Text(
+                        locale.button_continue,
+                      ),
+                      mainAxisSize: MainAxisSize.max,
+                      trailingIcon: ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                          colors.primaryBackground,
+                          BlendMode.srcIn,
+                        ),
+                        child: Assets.images.icons.iconButtonNext.icon(),
+                      ),
+                      onPressed: () {
+                        CoinsSendFormConfirmationRoute().push<void>(context);
+                      },
+                    ),
+                    SizedBox(height: 16.0.s),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

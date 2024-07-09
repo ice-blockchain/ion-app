@@ -9,14 +9,14 @@ import 'package:ice/app/features/user/pages/pull_right_menu_page/components/link
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_info/profile_info.dart';
 import 'package:ice/app/router/app_routes.dart';
 
-class PullRightMenuPage extends IceSimplePage {
-  const PullRightMenuPage(super.route, super.payload, {super.key});
+class PullRightMenuPage extends IcePage {
+  const PullRightMenuPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) => IceRoutes.feed.go(context),
+      onPopInvoked: (_) => FeedRoute().go(context),
       child: Material(
         color: context.theme.appColors.secondaryBackground,
         child: const Stack(

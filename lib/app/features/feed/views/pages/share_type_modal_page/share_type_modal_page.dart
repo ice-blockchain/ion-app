@@ -11,13 +11,15 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ShareTypeView extends IcePage<PostData> {
-  const ShareTypeView(super.route, super.payload, {super.key});
+class ShareTypeView extends IcePage {
+  const ShareTypeView({required this.payload, super.key});
+
+  final PostData payload;
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, PostData? payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -60,7 +62,7 @@ class ShareTypeView extends IcePage<PostData> {
                   type: ButtonType.secondary,
                   backgroundColor: context.theme.appColors.tertararyBackground,
                   onPressed: () {
-                    IceRoutes.quotePost.push(context, payload: payload);
+                    QuotePostModalRoute($extra: payload).push<void>(context);
                   },
                   leadingIcon: Assets.images.icons.iconFeedQuote.icon(),
                   label: Text(

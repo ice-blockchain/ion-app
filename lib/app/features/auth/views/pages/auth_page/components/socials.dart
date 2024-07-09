@@ -19,25 +19,25 @@ class Socials extends HookConsumerWidget {
     Null Function() onPressHandler(SocialAuthType type) {
       return switch (type) {
         SocialAuthType.apple => () {
-            IceRoutes.checkEmail.push(context);
+            CheckEmailRoute().push<void>(context);
           },
         SocialAuthType.nostr => () {
-            IceRoutes.nostrAuth.push(context);
+            NostrAuthRoute().push<void>(context);
           },
         SocialAuthType.x => () {
-            IceRoutes.fillProfile.push(context);
+            FillProfileRoute().push<void>(context);
           },
         SocialAuthType.fb => () {
-            IceRoutes.enterCode.push(context);
+            EnterCodeRoute().push<void>(context);
           },
         SocialAuthType.github => () {
-            IceRoutes.selectLanguages.push(context);
+            SelectLanguagesRoute().push<void>(context);
           },
         SocialAuthType.discord => () {
-            IceRoutes.discoverCreators.push(context);
+            DiscoverCreatorsRoute().push<void>(context);
           },
         SocialAuthType.linkedin => () {
-            IceRoutes.discoverCreators.push(context);
+            DiscoverCreatorsRoute().push<void>(context);
           },
       };
     }

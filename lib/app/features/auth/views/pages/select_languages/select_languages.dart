@@ -16,11 +16,11 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class SelectLanguages extends IceSimplePage {
-  const SelectLanguages(super._route, super.payload, {super.key});
+class SelectLanguages extends IcePage {
+  const SelectLanguages({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
 
     final selectedLanguages = useState<Set<Language>>(<Language>{});
@@ -105,7 +105,8 @@ class SelectLanguages extends IceSimplePage {
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
                     hideKeyboardAndCallOnce(
-                      callback: () => IceRoutes.discoverCreators.push(context),
+                      callback: () =>
+                          DiscoverCreatorsRoute().push<void>(context),
                     );
                   },
                 ),

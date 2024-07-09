@@ -7,14 +7,13 @@ import 'package:ice/app/features/user/pages/switch_account_page/components/accou
 import 'package:ice/app/features/user/pages/switch_account_page/components/actions_list/actions_list.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
-class SwitchAccountPage extends IceSimplePage {
-  const SwitchAccountPage(super.route, super.payload, {super.key});
+class SwitchAccountPage extends IcePage {
+  const SwitchAccountPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref, void payload) {
-    return SheetContentScaffold(
+  Widget buildPage(BuildContext context, WidgetRef ref) {
+    return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

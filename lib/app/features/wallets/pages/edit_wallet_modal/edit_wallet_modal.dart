@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -18,28 +17,25 @@ import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
-class EditWalletModal extends IcePage<WalletData> {
-  const EditWalletModal(super.route, super.payload, {super.key});
+class EditWalletModal extends IcePage {
+  const EditWalletModal({required this.payload, super.key});
+
+  final WalletData payload;
 
   @override
   Widget buildPage(
     BuildContext context,
     WidgetRef ref,
-    WalletData? payload,
   ) {
-    final walletName = useState(payload?.name ?? '');
+    final walletName = useState(payload.name);
     final controller = useTextEditingController(text: walletName.value);
-    final isNameChanged = walletName.value != (payload?.name ?? '') &&
-        walletName.value.isNotEmpty;
+    final isNameChanged =
+        walletName.value != (payload.name) && walletName.value.isNotEmpty;
 
-    if (payload == null) {
-      return const SizedBox.shrink();
-    }
-
-    return SheetContentScaffold(
+    return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: SingleChildScrollView(
         child: Column(
@@ -83,8 +79,7 @@ class EditWalletModal extends IcePage<WalletData> {
                     )
                   : Button(
                       onPressed: () {
-                        IceRoutes.deleteWallet
-                            .replace(context, payload: payload);
+                        DeleteWalletRoute($extra: payload).replace(context);
                       },
                       leadingIcon: Assets.images.icons.iconBlockDelete
                           .icon(color: context.theme.appColors.onPrimaryAccent),

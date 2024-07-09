@@ -64,13 +64,12 @@ class Balance extends HookConsumerWidget {
             padding: EdgeInsets.only(bottom: 20.0.s, top: 11.0.s),
             child: BalanceActions(
               onReceive: () {
-                IceRoutes.coinReceive.push(
-                  context,
-                  payload: CoinReceiveModalData(
+                CoinReceiveRoute(
+                  $extra: CoinReceiveModalData(
                     coinData: coinData,
                     networkType: networkType,
                   ),
-                );
+                ).push<void>(context);
               },
               onSend: () {},
             ),

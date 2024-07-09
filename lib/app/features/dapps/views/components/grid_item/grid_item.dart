@@ -23,7 +23,7 @@ class GridItem extends HookWidget {
   Widget build(BuildContext context) {
     final isFavourite = useState(item.isFavourite);
     return InkWell(
-      onTap: () => IceRoutes.dappsDetails.push(context),
+      onTap: () => DAppDetailsRoute().push<void>(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
