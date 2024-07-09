@@ -24,14 +24,14 @@ class NftListItem extends StatelessWidget {
       title: Text(nftData.collectionName),
       subtitle: Text('#${nftData.identifier}'),
       backgroundColor: context.theme.appColors.tertararyBackground,
+      onTap: onTap,
       leading: Avatar(
         size: 36.0.s,
         imageUrl: nftData.iconUrl,
       ),
-      onTap: onTap,
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
+        children: [
           const Text(''),
           NftPrice(
             nftData: nftData,

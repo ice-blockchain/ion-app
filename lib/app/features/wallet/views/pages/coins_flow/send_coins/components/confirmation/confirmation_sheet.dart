@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/rounded_card/rounded_card.dart';
+import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
@@ -14,6 +14,7 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
+// import 'package:ice/generated/assets.gen.dart';
 
 class ConfirmationSheet extends IcePage {
   const ConfirmationSheet({super.key});
@@ -52,21 +53,21 @@ class ConfirmationSheet extends IcePage {
                     icon: mockedCoinsDataArray[3].iconUrl.icon(),
                   ),
                   SizedBox(height: 16.0.s),
-                  RoundedCard.text(
-                    title: locale.wallet_send_to,
+                  ListItem.text(
+                    title: Text(locale.wallet_send_to),
                     value: formData.address,
                   ),
                   SizedBox(height: 16.0.s),
-                  RoundedCard.textWithIcon(
-                    title: locale.wallet_asset,
+                  ListItem.textWithIcon(
+                    title: Text(locale.wallet_asset),
                     value: formData.selectedCoin.name,
                     icon: formData.selectedCoin.iconUrl.icon(
                       size: ScreenSideOffset.defaultSmallMargin,
                     ),
                   ),
                   SizedBox(height: 16.0.s),
-                  RoundedCard.withSecondaryText(
-                    title: locale.wallet_title,
+                  ListItem.textWithIcon(
+                    title: Text(locale.wallet_title),
                     value: formData.wallet.name,
                     icon: Image.network(
                       formData.wallet.icon,
@@ -77,16 +78,16 @@ class ConfirmationSheet extends IcePage {
                         '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
                   ),
                   SizedBox(height: 16.0.s),
-                  RoundedCard.textWithIcon(
-                    title: locale.wallet_network,
+                  ListItem.textWithIcon(
+                    title: Text(locale.wallet_network),
                     value: formData.selectedNetwork.name,
                     icon: formData.selectedNetwork.iconAsset.icon(
                       size: 16.0.s,
                     ),
                   ),
                   SizedBox(height: 16.0.s),
-                  RoundedCard.textWithIcon(
-                    title: locale.wallet_arrival_time,
+                  ListItem.textWithIcon(
+                    title: Text(locale.wallet_arrival_time),
                     value: '${formData.arrivalTime} '
                         '${locale.wallet_arrival_time_minutes}',
                     icon: Assets.images.icons.iconBlockTime.icon(
@@ -94,8 +95,8 @@ class ConfirmationSheet extends IcePage {
                     ),
                   ),
                   SizedBox(height: 16.0.s),
-                  RoundedCard.textWithIcon(
-                    title: locale.wallet_network_fee,
+                  ListItem.textWithIcon(
+                    title: Text(locale.wallet_network_fee),
                     value: '1.00 USDT',
                     icon: Assets.images.icons.iconBlockCoins.icon(
                       size: 16.0.s,

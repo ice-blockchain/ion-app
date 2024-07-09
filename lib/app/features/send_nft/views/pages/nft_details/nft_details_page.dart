@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/card/rounded_card.dart';
+import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/read_more_text/read_more_text.dart';
-import 'package:ice/app/components/rounded_card/card_bg.dart';
-import 'package:ice/app/components/rounded_card/rounded_card.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
@@ -52,6 +52,7 @@ class NftDetailsPage extends IcePage {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               NftPicture(imageUrl: payload.iconUrl),
+              SizedBox(height: 15.0.s),
               NftName(
                 name: payload.collectionName,
                 rank: payload.rank,
@@ -60,31 +61,32 @@ class NftDetailsPage extends IcePage {
                 networkSymbolIcon:
                     Assets.images.wallet.walletEth.icon(size: 16.0.s),
               ),
-              if (payload.description != null)
-                CardBg(
-                  child: ReadMoreText(
-                    payload.description!,
-                  ),
-                ),
               SizedBox(height: 12.0.s),
-              RoundedCard.text(
-                title: context.i18n.send_nft_token_id,
+              RoundedCard(
+                child: ReadMoreText(
+                  payload.description,
+                ),
+              ),
+              SizedBox(height: 12.0.s),
+              ListItem.text(
+                title: Text(context.i18n.send_nft_token_id),
                 value: payload.identifier.toString(),
               ),
               SizedBox(height: 12.0.s),
-              RoundedCard.text(
-                title: context.i18n.send_nft_token_network,
-                value: payload.network.toString(),
+              ListItem.textWithIcon(
+                title: Text(context.i18n.send_nft_token_network),
+                value: payload.network,
+                icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
               ),
               SizedBox(height: 12.0.s),
-              RoundedCard.text(
-                title: context.i18n.send_nft_token_standard,
-                value: payload.tokenStandard.toString(),
+              ListItem.text(
+                title: Text(context.i18n.send_nft_token_standard),
+                value: payload.tokenStandard,
               ),
               SizedBox(height: 12.0.s),
-              RoundedCard.text(
-                title: context.i18n.send_nft_token_contract_address,
-                value: payload.contractAddress.toString(),
+              ListItem.text(
+                title: Text(context.i18n.send_nft_token_contract_address),
+                value: payload.contractAddress,
               ),
               Padding(
                 padding: EdgeInsets.only(top: 12.0.s, bottom: 16.0.s),
