@@ -17,6 +17,8 @@ class DappDetailsInfoBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final showBottomPart = iconPath != null || value != null;
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.0.s),
       child: Container(
@@ -29,24 +31,25 @@ class DappDetailsInfoBlock extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             title ?? const SizedBox.shrink(),
-            Padding(
-              padding: EdgeInsets.only(top: 4.0.s),
-              child: Row(
-                children: <Widget>[
-                  if (iconPath != null)
-                    Padding(
-                      padding: EdgeInsets.only(right: 6.0.s),
-                      child: Image.asset(
-                        iconPath!,
-                        width: 24.0.s,
-                        height: 24.0.s,
-                        color: context.theme.appColors.primaryAccent,
+            if (showBottomPart)
+              Padding(
+                padding: EdgeInsets.only(top: 4.0.s),
+                child: Row(
+                  children: <Widget>[
+                    if (iconPath != null)
+                      Padding(
+                        padding: EdgeInsets.only(right: 6.0.s),
+                        child: Image.asset(
+                          iconPath!,
+                          width: 24.0.s,
+                          height: 24.0.s,
+                          color: context.theme.appColors.primaryAccent,
+                        ),
                       ),
-                    ),
-                  if (value != null) value!,
-                ],
+                    if (value != null) value!,
+                  ],
+                ),
               ),
-            ),
           ],
         ),
       ),
