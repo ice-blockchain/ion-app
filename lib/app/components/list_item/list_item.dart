@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 
 part './variants/list_item_checkbox.dart';
 part './variants/list_item_user.dart';
+part './variants/list_item_text.dart';
+part './variants/list_item_text_with_icon.dart';
 
 class ListItem extends StatelessWidget {
   ListItem({
@@ -72,6 +71,22 @@ class ListItem extends StatelessWidget {
     bool isSelected,
     DateTime? timeago,
   }) = _ListItemUser;
+
+  factory ListItem.text({
+    required Widget title,
+    required String value,
+    Key? key,
+    Color? backgroundColor,
+  }) = _ListItemText;
+
+  factory ListItem.textWithIcon({
+    required Widget title,
+    required String value,
+    required Widget icon,
+    String? secondaryValue,
+    Key? key,
+    Color? backgroundColor,
+  }) = _ListItemTextWithIcon;
 
   final Widget? leading;
   final Widget? title;

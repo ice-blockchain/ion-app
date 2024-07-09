@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/rounded_card/card_bg.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/components/card/rounded_card.dart';
+import 'package:ice/app/extensions/extensions.dart';
 
 class NftName extends HookConsumerWidget {
   const NftName({
@@ -15,15 +13,15 @@ class NftName extends HookConsumerWidget {
     super.key,
   });
 
-  final String? name;
-  final int? rank;
-  final double? price;
-  final String? networkSymbol;
-  final Widget? networkSymbolIcon;
+  final String name;
+  final int rank;
+  final double price;
+  final String networkSymbol;
+  final Widget networkSymbolIcon;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return CardBg(
+    return RoundedCard(
       child: Column(
         children: [
           Row(
@@ -32,7 +30,7 @@ class NftName extends HookConsumerWidget {
               Padding(
                 padding: EdgeInsets.only(right: 4.0.s),
                 child: Text(
-                  name ?? '',
+                  name,
                   maxLines: 2,
                   style: context.theme.appTextThemes.subtitle.copyWith(
                     color: context.theme.appColors.primaryText,
@@ -40,7 +38,7 @@ class NftName extends HookConsumerWidget {
                 ),
               ),
               Text(
-                '#${rank ?? ''}',
+                '#$rank',
                 style: context.theme.appTextThemes.subtitle2.copyWith(
                   color: context.theme.appColors.tertararyText,
                 ),
@@ -52,22 +50,21 @@ class NftName extends HookConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (networkSymbolIcon != null)
-                  Padding(
-                    padding: EdgeInsets.only(right: 5.0.s, top: 2.0.s),
-                    child: networkSymbolIcon,
-                  ),
+                Padding(
+                  padding: EdgeInsets.only(right: 5.0.s, top: 2.0.s),
+                  child: networkSymbolIcon,
+                ),
                 Padding(
                   padding: EdgeInsets.only(right: 4.0.s),
                   child: Text(
-                    '${price ?? ''}',
+                    '$price',
                     style: context.theme.appTextThemes.subtitle2.copyWith(
                       color: context.theme.appColors.primaryText,
                     ),
                   ),
                 ),
                 Text(
-                  networkSymbol ?? '',
+                  networkSymbol,
                   style: context.theme.appTextThemes.subtitle2.copyWith(
                     color: context.theme.appColors.tertararyText,
                   ),
