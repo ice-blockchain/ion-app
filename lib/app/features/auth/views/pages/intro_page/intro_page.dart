@@ -18,8 +18,7 @@ class IntroPage extends IcePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     final videoControllerAsync = ref.watch(videoControllerProvider);
-    final isButtonVisible = ref.watch(buttonVisibilityProvider);
-    final animation = useButtonAnimation();
+    final animation = useButtonAnimation(delay: const Duration(seconds: 10));
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -34,21 +33,20 @@ class IntroPage extends IcePage {
             ),
             orElse: () => const SizedBox.shrink(),
           ),
-          if (isButtonVisible.value ?? false)
-            Positioned(
-              left: 40.0.s,
-              right: 40.0.s,
-              bottom: MediaQuery.of(context).padding.bottom + 46.0.s,
-              child: ScaleTransition(
-                scale: animation,
-                child: Button(
-                  onPressed: () => AuthRoute().go(context),
-                  label: Text(context.i18n.button_continue),
-                  trailingIcon: Assets.images.icons.iconButtonNext
-                      .icon(color: context.theme.appColors.secondaryBackground),
-                ),
+          Positioned(
+            left: 40.0.s,
+            right: 40.0.s,
+            bottom: MediaQuery.of(context).padding.bottom + 46.0.s,
+            child: ScaleTransition(
+              scale: animation,
+              child: Button(
+                onPressed: () => AuthRoute().go(context),
+                label: Text(context.i18n.button_continue),
+                trailingIcon: Assets.images.icons.iconButtonNext
+                    .icon(color: context.theme.appColors.secondaryBackground),
               ),
             ),
+          ),
         ],
       ),
     );

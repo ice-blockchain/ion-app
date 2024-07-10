@@ -19,13 +19,3 @@ Future<Raw<VideoPlayerController>> videoController(
 
   return controller;
 }
-
-@riverpod
-Stream<bool> buttonVisibility(ButtonVisibilityRef ref) async* {
-  final videoController = await ref.watch(videoControllerProvider.future);
-
-  if (videoController.value.isInitialized) {
-    await Future<void>.delayed(const Duration(seconds: 10));
-    yield true;
-  }
-}
