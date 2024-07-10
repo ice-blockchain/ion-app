@@ -11,6 +11,7 @@
     "button_paste",
     "button_close",
     "button_send",
+    "button_confirm",
     "common_show_more",
     "common_show_less",
     "auth_privacy",

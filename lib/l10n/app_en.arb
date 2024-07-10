@@ -11,6 +11,7 @@
   "button_paste": "Paste from clipboard",
   "button_close": "Close",
   "button_send": "Send",
+  "button_confirm": "Confirm",
   "common_show_more": "Show more",
   "common_show_less": "Show less",
   "auth_privacy": "By continuing, you are agreeing to our [[:link]]Terms of Service[[/:link]] & [[:link]]Privacy Policy[[/:link]]",

@@ -3,17 +3,21 @@ part of '../list_item.dart';
 class _ListItemTextWithIcon extends ListItem {
   _ListItemTextWithIcon({
     required String value,
-    required Widget icon,
+    Widget? icon,
     String? secondaryValue,
     super.title,
     super.key,
     super.backgroundColor,
+    EdgeInsetsGeometry? contentPadding,
+    BoxConstraints? constraints,
   }) : super(
           trailing: _TrailingTextWithIcon(
             value: value,
             icon: icon,
             secondaryValue: secondaryValue,
           ),
+          contentPadding: contentPadding ?? ListItem.defaultTextContentPadding,
+          constraints: constraints ?? const BoxConstraints(),
         );
 
   @override
@@ -32,12 +36,12 @@ class _ListItemTextWithIcon extends ListItem {
 class _TrailingTextWithIcon extends StatelessWidget {
   const _TrailingTextWithIcon({
     required this.value,
-    required this.icon,
+    this.icon,
     this.secondaryValue,
   });
 
   final String value;
-  final Widget icon;
+  final Widget? icon;
   final String? secondaryValue;
 
   @override
@@ -45,7 +49,7 @@ class _TrailingTextWithIcon extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        icon,
+        icon ?? const SizedBox.shrink(),
         SizedBox(width: 8.0.s),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

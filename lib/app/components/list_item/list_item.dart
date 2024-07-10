@@ -6,7 +6,6 @@ import 'package:timeago_flutter/timeago_flutter.dart';
 
 part './variants/list_item_checkbox.dart';
 part './variants/list_item_user.dart';
-part './variants/list_item_text.dart';
 part './variants/list_item_text_with_icon.dart';
 
 class ListItem extends StatelessWidget {
@@ -77,12 +76,12 @@ class ListItem extends StatelessWidget {
     required String value,
     Key? key,
     Color? backgroundColor,
-  }) = _ListItemText;
+  }) = _ListItemTextWithIcon;
 
   factory ListItem.textWithIcon({
     required Widget title,
     required String value,
-    required Widget icon,
+    Widget? icon,
     String? secondaryValue,
     Key? key,
     Color? backgroundColor,
@@ -108,6 +107,8 @@ class ListItem extends StatelessWidget {
 
   static EdgeInsets get defaultContentPadding =>
       EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 10.0.s);
+
+  static EdgeInsets get defaultTextContentPadding => EdgeInsets.all(12.0.s);
 
   static EdgeInsets get defaultLeadingPadding => EdgeInsets.only(right: 10.0.s);
 
