@@ -9,6 +9,7 @@
     "button_close",
     "button_register",
     "button_send",
+    "button_confirm",
     "common_show_more",
     "common_show_less",
     "common_identity_key_name",

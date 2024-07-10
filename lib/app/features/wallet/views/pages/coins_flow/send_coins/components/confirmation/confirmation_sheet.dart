@@ -102,7 +102,7 @@ class ConfirmationSheet extends IcePage {
                   ),
                   SizedBox(height: 22.0.s),
                   Button(
-                    label: Text('${locale.wallet_send_coins} - \$351.35'),
+                    label: Text('${locale.button_confirm} - \$351.35'),
                     mainAxisSize: MainAxisSize.max,
                     onPressed: () => TransactionResultRoute().go(context),
                   ),
