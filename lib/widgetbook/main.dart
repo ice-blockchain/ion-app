@@ -24,20 +24,20 @@ class WidgetbookApp extends ConsumerWidget {
     final init = ref.watch(initAppProvider);
 
     return init.when(
-      data: (void data) => Widgetbook.material(
-        directories: directories,
-        addons: <WidgetbookAddon>[
-          AlignmentAddon(),
-          DeviceFrameAddon(
-            devices: Devices.all,
-          ),
-        ],
-        appBuilder: (BuildContext context, Widget child) {
-          final appThemeMode = ref.watch(appThemeModeProvider);
-          final template = ref.watch(appTemplateProvider);
+      data: (void data) => ContentScaler(
+        child: Widgetbook.material(
+          directories: directories,
+          addons: [
+            AlignmentAddon(),
+            DeviceFrameAddon(
+              devices: Devices.all,
+            ),
+          ],
+          appBuilder: (BuildContext context, Widget child) {
+            final appThemeMode = ref.watch(appThemeModeProvider);
+            final template = ref.watch(appTemplateProvider);
 
-          return ContentScaler(
-            child: MaterialApp(
+            return MaterialApp(
               localizationsDelegates: I18n.localizationsDelegates,
               supportedLocales: I18n.supportedLocales,
               theme: template.whenOrNull(
@@ -48,9 +48,9 @@ class WidgetbookApp extends ConsumerWidget {
               ),
               themeMode: appThemeMode,
               home: child,
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
       error: (Object err, StackTrace stack) => Text(err.toString()),
       loading: () => const CircularProgressIndicator(),
