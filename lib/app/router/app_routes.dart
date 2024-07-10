@@ -18,7 +18,7 @@ import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapp_details/dapp_details.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
-import 'package:ice/app/features/feed/model/post_data.dart';
+import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/quote_post_modal_page.dart';

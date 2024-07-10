@@ -51,10 +51,6 @@ GoRouter goRouter(GoRouterRef ref) {
         return null;
       }
 
-      if (isUnAuthenticated && state.matchedLocation != IntroRoute().location) {
-        return IntroRoute().location;
-      }
-
       if (isAuthenticated && state.matchedLocation == IntroRoute().location) {
         return FeedRoute().location;
       }
