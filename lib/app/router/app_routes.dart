@@ -27,6 +27,7 @@ import 'package:ice/app/features/feed/views/pages/share_type_modal_page/share_ty
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/switch_account_page.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
+import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/coin_details_page.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/coin_receive_modal.dart';
@@ -42,6 +43,7 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/compon
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/send_coin_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/manage_coins_page.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sorting_modal.dart';
+import 'package:ice/app/features/wallet/views/pages/one_contact_modal_page/one_contact_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_scan/wallet_scan_modal_page.dart';

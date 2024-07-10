@@ -12,12 +12,14 @@ class ContactsListItem extends StatelessWidget {
     required this.imageUrl,
     required this.label,
     required this.hasIceAccount,
+    required this.onTap,
     super.key,
   });
 
   final String imageUrl;
   final String label;
   final bool hasIceAccount;
+  final VoidCallback onTap;
 
   static double get width => 70.0.s;
 
@@ -32,17 +34,17 @@ class ContactsListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       child: SizedBox(
         width: width,
         height: height,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+          children: [
             Stack(
               clipBehavior: Clip.none,
               alignment: Alignment.bottomCenter,
-              children: <Widget>[
+              children: [
                 Avatar(
                   size: imageWidth,
                   imageUrl: imageUrl,
