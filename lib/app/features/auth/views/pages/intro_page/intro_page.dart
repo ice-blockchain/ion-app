@@ -7,27 +7,31 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/hooks/use_button_animation.dart';
+import 'package:ice/app/features/auth/views/pages/intro_page/providers/video_player_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:lottie/lottie.dart';
+import 'package:video_player/video_player.dart';
 
 class IntroPage extends IcePage {
   const IntroPage({super.key});
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    final animation = useButtonAnimation();
+    final videoControllerAsync = ref.watch(videoControllerProvider);
+    final animation = useButtonAnimation(delay: const Duration(seconds: 10));
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
-        children: <Widget>[
-          Center(
-            child: Assets.lottie.intro.lottie(
-              fit: BoxFit.fitWidth,
-              frameRate: const FrameRate(60),
-              repeat: false,
+        children: [
+          videoControllerAsync.maybeWhen(
+            data: (controller) => Center(
+              child: AspectRatio(
+                aspectRatio: controller.value.aspectRatio,
+                child: VideoPlayer(controller),
+              ),
             ),
+            orElse: () => const SizedBox.shrink(),
           ),
           Positioned(
             left: 40.0.s,
@@ -36,12 +40,8 @@ class IntroPage extends IcePage {
             child: ScaleTransition(
               scale: animation,
               child: Button(
-                onPressed: () {
-                  AuthRoute().go(context);
-                },
+                onPressed: () => AuthRoute().go(context),
                 label: Text(context.i18n.button_continue),
-                leadingIcon: Assets.images.icons.iconIcelogoSecuredby
-                    .icon(color: context.theme.appColors.secondaryBackground),
                 trailingIcon: Assets.images.icons.iconButtonNext
                     .icon(color: context.theme.appColors.secondaryBackground),
               ),

@@ -42,6 +42,7 @@ dependencies:
   timeago: ^3.6.1
   timeago_flutter: ^3.6.0
   url_launcher: ^6.0.12
+  video_player: ^2.9.1
   widgetbook: ^3.7.1
   widgetbook_annotation: ^3.1.0
 
@@ -88,6 +89,7 @@ flutter:
   assets:
     - .app.env
     - lib/app/templates/basic.json
+    - assets/videos/
     - assets/lottie/
     - assets/images/
     - assets/images/icons/
@@ -105,10 +107,10 @@ flutter_gen:
   integrations:
     lottie: true
 
-# Added dependency override for 'meta' to version 1.14.0 to resolve a conflict between 
-# 'riverpod_generator' and 'flutter_localizations'. 
+# Added dependency override for 'meta' to version 1.14.0 to resolve a conflict between
+# 'riverpod_generator' and 'flutter_localizations'.
 # 'riverpod_generator' requires 'analyzer' version 6.5.0, which in turn requires 'meta' version 1.14.0.
-# However, 'flutter_localizations' depends on 'meta' version 1.12.0. 
+# However, 'flutter_localizations' depends on 'meta' version 1.12.0.
 # This override ensures compatibility between these dependencies.
 dependency_overrides:
   meta: 1.14.0
