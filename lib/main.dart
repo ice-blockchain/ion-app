@@ -31,17 +31,18 @@ class IceApp extends HookConsumerWidget {
     final goRouter = ref.watch(goRouterProvider);
 
     return ContentScaler(
-      child: template.whenOrNull(
-            data: (Template data) => MaterialApp.router(
-              localizationsDelegates: I18n.localizationsDelegates,
-              supportedLocales: I18n.supportedLocales,
-              theme: buildLightTheme(data.theme),
-              darkTheme: buildDarkTheme(data.theme),
-              themeMode: appThemeMode,
-              routerConfig: goRouter,
-            ),
-          ) ??
-          const SizedBox.shrink(),
+      child: MaterialApp.router(
+        localizationsDelegates: I18n.localizationsDelegates,
+        supportedLocales: I18n.supportedLocales,
+        theme: template.whenOrNull(
+          data: (Template data) => buildLightTheme(data.theme),
+        ),
+        darkTheme: template.whenOrNull(
+          data: (Template data) => buildDarkTheme(data.theme),
+        ),
+        themeMode: appThemeMode,
+        routerConfig: goRouter,
+      ),
     );
   }
 }
