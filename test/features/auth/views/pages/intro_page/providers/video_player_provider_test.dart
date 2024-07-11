@@ -22,15 +22,9 @@ void main() {
   setUp(() {
     mockController = MockVideoPlayerController();
 
-    when(() => mockController.initialize()).thenAnswer(
-      (_) async => Future.value(),
-    );
-    when(() => mockController.setLooping(any())).thenAnswer(
-      (_) async => Future.value(),
-    );
-    when(() => mockController.play()).thenAnswer(
-      (_) async => Future.value(),
-    );
+    when(() => mockController.initialize()).thenAnswer((_) async => {});
+    when(() => mockController.setLooping(any())).thenAnswer((_) async => {});
+    when(() => mockController.play()).thenAnswer((_) async => {});
     when(() => mockController.value).thenReturn(
       const VideoPlayerValue(
         duration: Duration.zero,
