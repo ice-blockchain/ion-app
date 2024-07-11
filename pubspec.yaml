@@ -15,6 +15,7 @@ dependencies:
   email_validator: ^2.1.16
   flutter:
     sdk: flutter
+  flutter_animate: ^4.5.0
   flutter_dotenv: ^5.1.0
   flutter_hooks: ^0.20.1
   flutter_keyboard_visibility: ^6.0.0
