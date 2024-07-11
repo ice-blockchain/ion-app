@@ -23,11 +23,9 @@ class IntroPage extends HookWidget {
       body: Stack(
         children: [
           if (videoController.value.isInitialized)
-            Center(
-              child: AspectRatio(
-                aspectRatio: videoController.value.aspectRatio,
-                child: VideoPlayer(videoController),
-              ),
+            AspectRatio(
+              aspectRatio: videoController.value.aspectRatio,
+              child: VideoPlayer(videoController),
             ),
           Positioned(
             left: 40.0.s,
