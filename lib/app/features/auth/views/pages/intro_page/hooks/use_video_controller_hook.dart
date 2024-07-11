@@ -1,25 +1,20 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:video_player/video_player.dart';
 
-Future<void> initializeVideoController(VideoPlayerController controller) async {
-  await controller.initialize();
-  await controller.setLooping(true);
-  await controller.play();
-}
-
-VideoPlayerController useVideoController(
-  String assetPath, {
-  VideoPlayerController Function(String) createController =
-      VideoPlayerController.asset,
-}) {
+VideoPlayerController useVideoController(String assetPath) {
   final controller = useMemoized(
-    () => createController(assetPath),
+    () => VideoPlayerController.asset(assetPath),
     [assetPath],
   );
 
   useEffect(
     () {
-      Future.microtask(() => initializeVideoController(controller));
+      Future.microtask(() async {
+        await controller.initialize();
+        await controller.setLooping(true);
+        await controller.play();
+      });
+
       return controller.dispose;
     },
     [controller],
