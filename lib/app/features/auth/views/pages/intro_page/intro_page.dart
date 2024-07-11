@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -11,11 +12,11 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:video_player/video_player.dart';
 
-class IntroPage extends HookWidget {
+class IntroPage extends IcePage {
   const IntroPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildPage(BuildContext context, WidgetRef ref) {
     final videoController = useVideoController('assets/videos/intro.mp4');
 
     return Scaffold(
