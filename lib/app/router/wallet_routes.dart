@@ -38,6 +38,11 @@ class WalletRoutes {
         ),
       ],
     ),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<ContactRoute>(path: 'one-contact'),
+      ],
+    ),
   ];
 
   static const coinSendRoutes = <TypedRoute<RouteData>>[
@@ -272,9 +277,19 @@ class ShareOptionsRoute extends BaseRouteData {
 class ShareTypeRoute extends BaseRouteData {
   ShareTypeRoute({required this.$extra})
       : super(
-          child: ShareTypeView(payload: $extra),
+          child: ShareTypePage(payload: $extra),
           type: IceRouteType.bottomSheet,
         );
 
   final PostData $extra;
+}
+
+class ContactRoute extends BaseRouteData {
+  ContactRoute({required this.$extra})
+      : super(
+          child: ContactPage(contactData: $extra),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final ContactData $extra;
 }

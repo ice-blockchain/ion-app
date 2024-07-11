@@ -5,6 +5,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list_item.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/username.dart';
 
 class ContactsList extends HookConsumerWidget {
@@ -19,7 +20,7 @@ class ContactsList extends HookConsumerWidget {
       return const SizedBox();
     }
     return Column(
-      children: <Widget>[
+      children: [
         const ContactListHeader(),
         SizedBox(
           height: ContactsListItem.height,
@@ -35,6 +36,8 @@ class ContactsList extends HookConsumerWidget {
             itemBuilder: (BuildContext context, int index) {
               final contactData = contactsDataArray[index];
               return ContactsListItem(
+                onTap: () =>
+                    ContactRoute($extra: contactData).push<void>(context),
                 imageUrl: contactData.icon,
                 label: contactData.nickname != null
                     ? prefixUsername(

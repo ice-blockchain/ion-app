@@ -122,6 +122,8 @@
   "wallet_title": "Wallet",
   "wallet_transaction_successful": "Transfer successful",
   "wallet_transaction_details": "Details",
+  "wallet_invite_friends": "Invite friend",
+  "wallet_friends_does_not_have_account": "Your friend doesn’t have an Ice account.",
   "sorting_price_asc": "Price: low to high",
   "sorting_price_desc": "Price: high to low",
   "wallet_sorting_title": "Sorting the list",

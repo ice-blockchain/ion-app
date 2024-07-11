@@ -122,6 +122,8 @@
     "wallet_title",
     "wallet_transaction_successful",
     "wallet_transaction_details",
+    "wallet_invite_friends",
+    "wallet_friends_does_not_have_account",
     "sorting_price_asc",
     "sorting_price_desc",
     "wallet_sorting_title",
