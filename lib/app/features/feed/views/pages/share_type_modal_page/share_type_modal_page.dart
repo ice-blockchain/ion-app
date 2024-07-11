@@ -5,18 +5,15 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
-import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ShareTypeView extends IcePage {
-  const ShareTypeView({required this.payload, super.key});
+class ShareTypePage extends IcePage {
+  const ShareTypePage({required this.payload, super.key});
 
   final PostData payload;
-
-  static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {

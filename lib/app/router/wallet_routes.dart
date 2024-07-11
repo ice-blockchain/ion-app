@@ -40,7 +40,7 @@ class WalletRoutes {
     ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<OneContactRoute>(path: 'one-contact'),
+        TypedGoRoute<ContactRoute>(path: 'one-contact'),
       ],
     ),
   ];
@@ -277,17 +277,17 @@ class ShareOptionsRoute extends BaseRouteData {
 class ShareTypeRoute extends BaseRouteData {
   ShareTypeRoute({required this.$extra})
       : super(
-          child: ShareTypeView(payload: $extra),
+          child: ShareTypePage(payload: $extra),
           type: IceRouteType.bottomSheet,
         );
 
   final PostData $extra;
 }
 
-class OneContactRoute extends BaseRouteData {
-  OneContactRoute({required this.$extra})
+class ContactRoute extends BaseRouteData {
+  ContactRoute({required this.$extra})
       : super(
-          child: OneContactView(contactData: $extra),
+          child: ContactPage(contactData: $extra),
           type: IceRouteType.bottomSheet,
         );
 

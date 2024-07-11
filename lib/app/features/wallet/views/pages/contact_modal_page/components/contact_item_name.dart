@@ -1,0 +1,30 @@
+import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/wallet/model/contact_data.dart';
+import 'package:ice/generated/assets.gen.dart';
+
+class ContactItemName extends StatelessWidget {
+  const ContactItemName({
+    required this.contactData,
+    super.key,
+  });
+
+  final ContactData contactData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          contactData.name,
+          style: context.theme.appTextThemes.title,
+        ),
+        if (contactData.isVerified ?? false) ...[
+          SizedBox(width: 4.0.s),
+          Assets.images.icons.iconBadgeVerify.icon(size: 16.0.s),
+        ],
+      ],
+    );
+  }
+}

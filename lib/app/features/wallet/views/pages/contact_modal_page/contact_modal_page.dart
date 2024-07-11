@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
-import 'package:ice/app/features/wallet/model/network_type.dart';
-import 'package:ice/app/features/wallet/views/pages/one_contact_modal_page/components/one_contact_item.dart';
+import 'package:ice/app/features/wallet/views/pages/contact_modal_page/components/contact_item.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/utils/share.dart';
+import 'package:ice/app/services/share/share.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class OneContactView extends IcePage {
-  const OneContactView({required this.contactData, super.key});
+class ContactPage extends IcePage {
+  const ContactPage({required this.contactData, super.key});
 
   final ContactData contactData;
 
-  static const List<NetworkType> networkTypeValues = NetworkType.values;
-
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    return SafeArea(
+    return ScreenBottomOffset(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -29,7 +27,7 @@ class OneContactView extends IcePage {
             children: [
               Padding(
                 padding: EdgeInsets.only(top: 20.0.s),
-                child: OneContactItem(
+                child: ContactItem(
                   contactData: contactData,
                 ),
               ),
@@ -70,9 +68,6 @@ class OneContactView extends IcePage {
                     shareContent('Share', subject: 'Look what I found!'),
               ),
             ),
-          SizedBox(
-            height: 12.0.s,
-          ),
         ],
       ),
     );
