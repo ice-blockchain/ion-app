@@ -1,11 +1,11 @@
 # https://pub.dev/packages/flutter_launcher_icons
 flutter_launcher_icons:
-  image_path: "assets/images/launch_icon/launch_icon.png"
+  image_path: "assets/launch_icon/launch_icon.png"
 
   # Android 
   android: true
   adaptive_icon_background: "#120240"
-  adaptive_icon_foreground: "assets/images/launch_icon/launch_icon_foreground.png"
+  adaptive_icon_foreground: "assets/launch_icon/launch_icon_foreground.png"
 
   # iOS
   ios: true
