@@ -22,10 +22,6 @@ GoRouter goRouter(GoRouterRef ref) {
       final isAnimationCompleted = ref.read(splashProvider);
 
       final isSplash = state.matchedLocation == SplashRoute().location;
-      final isAuthenticated = authState is Authenticated;
-      final isUnAuthenticated = authState is UnAuthenticated;
-      final isAuthUnknown = authState is AuthenticationUnknown;
-      final isAuthLoading = authState is AuthenticationLoading;
       final isInitInProgress = initState.isLoading;
       final isInitError = initState.hasError;
       final isInitCompleted = initState.hasValue;
@@ -39,27 +35,22 @@ GoRouter goRouter(GoRouterRef ref) {
       }
 
       if (isInitCompleted && isSplash && isAnimationCompleted) {
-        if (isAuthenticated) {
-          return FeedRoute().location;
-        }
-        if (isUnAuthenticated) {
-          return IntroRoute().location;
-        }
+        return switch (authState) {
+          Authenticated() => FeedRoute().location,
+          UnAuthenticated() => IntroRoute().location,
+          _ => null
+        };
       }
 
-      if (isAuthLoading || isAuthUnknown) {
-        return null;
-      }
-
-      if (isAuthenticated &&
-          state.matchedLocation.startsWith(IntroRoute().location)) {
-        return FeedRoute().location;
-      } else if (isUnAuthenticated &&
-          !state.matchedLocation.startsWith(IntroRoute().location)) {
-        return IntroRoute().location;
-      }
-
-      return null;
+      return switch (authState) {
+        Authenticated()
+            when state.matchedLocation.startsWith(IntroRoute().location) =>
+          FeedRoute().location,
+        UnAuthenticated()
+            when !state.matchedLocation.startsWith(IntroRoute().location) =>
+          IntroRoute().location,
+        _ => null
+      };
     },
     routes: $appRoutes,
     errorBuilder: (context, state) =>
