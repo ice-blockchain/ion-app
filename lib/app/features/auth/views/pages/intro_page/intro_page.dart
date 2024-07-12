@@ -24,9 +24,11 @@ class IntroPage extends IcePage {
       body: Stack(
         children: [
           if (videoController.value.isInitialized)
-            AspectRatio(
-              aspectRatio: videoController.value.aspectRatio,
-              child: VideoPlayer(videoController),
+            Center(
+              child: AspectRatio(
+                aspectRatio: videoController.value.aspectRatio,
+                child: VideoPlayer(videoController),
+              ),
             ),
           Positioned(
             left: 40.0.s,
