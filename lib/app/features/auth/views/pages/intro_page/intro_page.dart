@@ -17,7 +17,7 @@ class IntroPage extends IcePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    final videoController = useVideoController('assets/videos/intro.mp4');
+    final videoController = useVideoController(Assets.videos.intro);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
