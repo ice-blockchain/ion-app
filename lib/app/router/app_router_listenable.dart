@@ -1,39 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'app_router_listenable.g.dart';
-
-@Riverpod(keepAlive: true)
-class AppRouterListenable extends _$AppRouterListenable implements Listenable {
-  VoidCallback? _routerListener;
-
-  @override
-  Future<void> build() async {
+class AppRouterNotifier extends ChangeNotifier {
+  AppRouterNotifier(this.ref) {
     ref
-      ..listenSelf((_, __) {
-        if (state.isLoading) {
-          return;
-        }
-        _routerListener?.call();
-      })
-      ..listen(authProvider, (previous, next) => _routerListener?.call())
-      ..listen(initAppProvider, (previous, next) => _routerListener?.call())
-      ..listen(
-        splashProvider,
-        (previous, next) => _routerListener?.call(),
-      );
+      ..listen(authProvider, (_, __) => notifyListeners())
+      ..listen(initAppProvider, (_, __) => notifyListeners())
+      ..listen(splashProvider, (_, __) => notifyListeners());
   }
 
-  @override
-  void addListener(VoidCallback listener) {
-    _routerListener = listener;
-  }
-
-  @override
-  void removeListener(VoidCallback listener) {
-    _routerListener = null;
-  }
+  final Ref ref;
 }
