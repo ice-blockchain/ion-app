@@ -14,13 +14,13 @@ part 'go_router_provider.g.dart';
 GoRouter goRouter(GoRouterRef ref) {
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
-  final authState = ref.watch(authProvider);
-  final initState = ref.watch(initAppProvider);
-  final isAnimationCompleted = ref.watch(splashProvider);
-
   return GoRouter(
-    refreshListenable: ref.read(appRouterListenableProvider.notifier),
+    refreshListenable: AppRouterNotifier(ref),
     redirect: (context, state) {
+      final authState = ref.read(authProvider);
+      final initState = ref.read(initAppProvider);
+      final isAnimationCompleted = ref.read(splashProvider);
+
       final isSplash = state.matchedLocation == SplashRoute().location;
       final isAuthenticated = authState is Authenticated;
       final isUnAuthenticated = authState is UnAuthenticated;
@@ -51,8 +51,12 @@ GoRouter goRouter(GoRouterRef ref) {
         return null;
       }
 
-      if (isAuthenticated && state.matchedLocation == IntroRoute().location) {
+      if (isAuthenticated &&
+          state.matchedLocation.startsWith(IntroRoute().location)) {
         return FeedRoute().location;
+      } else if (isUnAuthenticated &&
+          !state.matchedLocation.startsWith(IntroRoute().location)) {
+        return IntroRoute().location;
       }
 
       return null;
