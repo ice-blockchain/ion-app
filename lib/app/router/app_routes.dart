@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/features/auth/views/pages/auth_page/auth_page.dart';
-import 'package:ice/app/features/auth/views/pages/check_email/check_email.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
-import 'package:ice/app/features/auth/views/pages/enter_code/enter_code.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/intro_page.dart';
-import 'package:ice/app/features/auth/views/pages/nostr_auth/nostr_auth.dart';
-import 'package:ice/app/features/auth/views/pages/nostr_login/nostr_login.dart';
-import 'package:ice/app/features/auth/views/pages/select_country/select_country.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';

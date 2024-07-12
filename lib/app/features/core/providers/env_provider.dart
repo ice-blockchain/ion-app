@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ice/generated/assets.gen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'env_provider.g.dart';
@@ -9,11 +10,9 @@ enum EnvVariable { FOO }
 
 @Riverpod(keepAlive: true)
 class Env extends _$Env {
-  final String _filename = '.app.env';
-
   @override
   Future<void> build() async {
-    await dotenv.load(fileName: _filename);
+    await dotenv.load(fileName: Assets.aApp);
     final notDefined = _getNotDefined();
     if (notDefined.isNotEmpty) {
       throw Exception('Invalid ENV value for $notDefined');
