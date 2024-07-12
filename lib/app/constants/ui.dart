@@ -5,11 +5,3 @@ class UiConstants {
 
   static double get hitSlop => 8.0.s;
 }
-
-class UiSize {
-  UiSize._();
-
-  static double get xSmall => 4.0.s;
-  static double get small => 8.0.s;
-  static double get medium => 16.0.s;
-}

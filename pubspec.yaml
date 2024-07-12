@@ -33,7 +33,6 @@ dependencies:
   nostr_dart:
     git: https://github.com/ice-blockchain/nostr-dart.git
   permission_handler: ^11.3.0
-  pin_code_fields: ^8.0.1
   qr_code_scanner: ^1.0.1
   qr_flutter: ^4.1.0
   riverpod_annotation: ^2.3.5

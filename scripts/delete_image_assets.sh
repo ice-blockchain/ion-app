@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# TODO::improve
+# Deletes assets
+#
 # Usage Example:
 # ./scripts/delete_image_assets.sh ./assets/images/icons file1.png file2.png file3.png
 
