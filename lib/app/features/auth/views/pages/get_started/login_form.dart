@@ -8,6 +8,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -36,7 +37,9 @@ class LoginForm extends HookConsumerWidget {
                   icon: Assets.images.icons.iconBlockInformation.icon(
                     size: 16.0.s,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    IdentityInfoRoute().go(context);
+                  },
                 ),
               ],
             ),

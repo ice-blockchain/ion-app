@@ -18,19 +18,13 @@ class ModalWrapper extends StatelessWidget {
     return SafeArea(
       bottom: false,
       child: PopScope(
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0.s),
-            topRight: Radius.circular(30.0.s),
-          ),
-          child: NavigationSheet(
-            transitionObserver: transitionObserver,
-            child: Material(
-              borderRadius: BorderRadius.circular(16),
-              clipBehavior: Clip.antiAlias,
-              color: context.theme.appColors.onPrimaryAccent,
-              child: child,
-            ),
+        child: NavigationSheet(
+          transitionObserver: transitionObserver,
+          child: Material(
+            borderRadius: BorderRadius.circular(30.0.s),
+            clipBehavior: Clip.antiAlias,
+            color: context.theme.appColors.onPrimaryAccent,
+            child: child,
           ),
         ),
       ),

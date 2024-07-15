@@ -5,6 +5,7 @@ class AuthRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<GetStartedRoute>(path: 'get-started'),
+        TypedGoRoute<IdentityInfoRoute>(path: 'identity-info'),
         TypedGoRoute<SelectLanguagesRoute>(path: 'select-languages'),
         TypedGoRoute<FillProfileRoute>(path: 'fill-profile'),
         TypedGoRoute<DiscoverCreatorsRoute>(path: 'discover-creators'),
@@ -18,6 +19,14 @@ class GetStartedRoute extends BaseRouteData {
   GetStartedRoute()
       : super(
           child: const GetStartedPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class IdentityInfoRoute extends BaseRouteData {
+  IdentityInfoRoute()
+      : super(
+          child: const IdentityInfo(),
           type: IceRouteType.bottomSheet,
         );
 }

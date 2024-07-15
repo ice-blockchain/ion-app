@@ -53,7 +53,7 @@ class GetStartedPage extends IcePage {
                             Assets.images.icons.iconLoginCreateacc.icon(
                           color: context.theme.appColors.secondaryText,
                         ),
-                        onPressed: () async {},
+                        onPressed: () {},
                         label: Text(context.i18n.button_register),
                         mainAxisSize: MainAxisSize.max,
                       ),
