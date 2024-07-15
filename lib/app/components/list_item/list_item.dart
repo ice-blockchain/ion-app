@@ -22,7 +22,7 @@ class ListItem extends StatelessWidget {
     EdgeInsetsGeometry? trailingPadding,
     BoxConstraints? constraints,
     bool? switchTitleStyles,
-    String? secondaryValue,
+    Widget? secondaryValue,
     this.isSelected,
     this.backgroundColor,
     this.onTap,
@@ -32,7 +32,7 @@ class ListItem extends StatelessWidget {
         trailingPadding = trailingPadding ?? defaultTrailingPadding,
         switchTitleStyles = switchTitleStyles ?? false,
         constraints = constraints ?? defaultConstraints,
-        secondaryValue = secondaryValue ?? '';
+        secondaryValue = secondaryValue ?? const SizedBox.shrink();
 
   factory ListItem.checkbox({
     required VoidCallback onTap,
@@ -84,14 +84,14 @@ class ListItem extends StatelessWidget {
     required Widget title,
     required String value,
     Widget? icon,
-    String? secondaryValue,
+    Widget? secondaryValue,
     Key? key,
     Color? backgroundColor,
   }) = _ListItemTextWithIcon;
 
   final Widget? leading;
   final Widget? title;
-  final String? secondaryValue;
+  final Widget? secondaryValue;
   final Widget? subtitle;
   final bool switchTitleStyles;
   final Widget? trailing;
@@ -160,23 +160,13 @@ class ListItem extends StatelessWidget {
                   Padding(padding: trailingPadding, child: trailing),
               ],
             ),
-            Row(
-              children: [
-                if (secondaryValue.isNotEmpty)
-                  Flexible(
-                    child: DefaultTextStyle(
-                      style: switchTitleStyles
-                          ? _getDefaultSubtitleStyle(context)
-                          : _getDefaultTitleStyle(context),
-                      child: Text(
-                        secondaryValue!,
-                        textAlign: TextAlign.right,
-                        style: context.theme.appTextThemes.caption3.copyWith(),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+            if (secondaryValue != null)
+              DefaultTextStyle(
+                style: switchTitleStyles
+                    ? _getDefaultSubtitleStyle(context)
+                    : _getDefaultTitleStyle(context),
+                child: secondaryValue!,
+              ),
           ],
         ),
       ),

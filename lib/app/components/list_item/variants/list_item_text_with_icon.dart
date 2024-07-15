@@ -42,7 +42,7 @@ class _TrailingTextWithIcon extends StatelessWidget {
 
   final String value;
   final Widget? icon;
-  final String? secondaryValue;
+  final Widget? secondaryValue;
 
   @override
   Widget build(BuildContext context) {

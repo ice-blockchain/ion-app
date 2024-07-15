@@ -130,7 +130,11 @@ Widget textListItemUseCase(BuildContext context) {
         ListItem.textWithIcon(
           title: const Text('List Item title'),
           value: 'List Item value',
-          secondaryValue: 'Secondary value',
+          secondaryValue: Text(
+            'Secondary value',
+            textAlign: TextAlign.right,
+            style: context.theme.appTextThemes.caption3.copyWith(),
+          ),
           icon: Assets.images.icons.iconBadgeLinkedin.icon(),
         ),
       ],
