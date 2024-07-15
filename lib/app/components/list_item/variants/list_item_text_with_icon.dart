@@ -4,7 +4,7 @@ class _ListItemTextWithIcon extends ListItem {
   _ListItemTextWithIcon({
     required String value,
     Widget? icon,
-    String? secondaryValue,
+    super.secondaryValue,
     super.title,
     super.key,
     super.backgroundColor,
@@ -46,25 +46,30 @@ class _TrailingTextWithIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    return Column(
       children: [
-        icon ?? const SizedBox.shrink(),
-        SizedBox(width: 8.0.s),
-        Column(
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              value,
-              style: context.theme.appTextThemes.body2,
-            ),
-            //TODO(denisM): become multiline secondaryValue
-            if (secondaryValue.isNotEmpty)
-              Text(
-                secondaryValue!,
-                style: context.theme.appTextThemes.caption3.copyWith(),
-                maxLines: 2,
+            icon ?? const SizedBox.shrink(),
+            SizedBox(width: 8.0.s),
+            Flexible(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width / 2,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      value,
+                      style: context.theme.appTextThemes.body2,
+                    ),
+                  ],
+                ),
               ),
+            ),
           ],
         ),
       ],

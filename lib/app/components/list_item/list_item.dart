@@ -22,6 +22,7 @@ class ListItem extends StatelessWidget {
     EdgeInsetsGeometry? trailingPadding,
     BoxConstraints? constraints,
     bool? switchTitleStyles,
+    String? secondaryValue,
     this.isSelected,
     this.backgroundColor,
     this.onTap,
@@ -30,7 +31,8 @@ class ListItem extends StatelessWidget {
         leadingPadding = leadingPadding ?? defaultLeadingPadding,
         trailingPadding = trailingPadding ?? defaultTrailingPadding,
         switchTitleStyles = switchTitleStyles ?? false,
-        constraints = constraints ?? defaultConstraints;
+        constraints = constraints ?? defaultConstraints,
+        secondaryValue = secondaryValue ?? '';
 
   factory ListItem.checkbox({
     required VoidCallback onTap,
@@ -89,6 +91,7 @@ class ListItem extends StatelessWidget {
 
   final Widget? leading;
   final Widget? title;
+  final String? secondaryValue;
   final Widget? subtitle;
   final bool switchTitleStyles;
   final Widget? trailing;
@@ -124,35 +127,56 @@ class ListItem extends StatelessWidget {
       child: Container(
         constraints: constraints,
         padding: contentPadding,
-        child: Row(
-          children: <Widget>[
-            if (leading != null)
-              Padding(padding: leadingPadding, child: leading),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  if (title != null)
-                    DefaultTextStyle(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                if (leading != null)
+                  Padding(padding: leadingPadding, child: leading),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (title != null)
+                        DefaultTextStyle(
+                          style: switchTitleStyles
+                              ? _getDefaultSubtitleStyle(context)
+                              : _getDefaultTitleStyle(context),
+                          overflow: TextOverflow.ellipsis,
+                          child: title!,
+                        ),
+                      if (subtitle != null)
+                        DefaultTextStyle(
+                          style: switchTitleStyles
+                              ? _getDefaultTitleStyle(context)
+                              : _getDefaultSubtitleStyle(context),
+                          overflow: TextOverflow.ellipsis,
+                          child: subtitle!,
+                        ),
+                    ],
+                  ),
+                ),
+                if (trailing != null)
+                  Padding(padding: trailingPadding, child: trailing),
+              ],
+            ),
+            Row(
+              children: [
+                if (secondaryValue.isNotEmpty)
+                  Flexible(
+                    child: DefaultTextStyle(
                       style: switchTitleStyles
                           ? _getDefaultSubtitleStyle(context)
                           : _getDefaultTitleStyle(context),
-                      overflow: TextOverflow.ellipsis,
-                      child: title!,
+                      child: Text(
+                        secondaryValue!,
+                        textAlign: TextAlign.right,
+                        style: context.theme.appTextThemes.caption3.copyWith(),
+                      ),
                     ),
-                  if (subtitle != null)
-                    DefaultTextStyle(
-                      style: switchTitleStyles
-                          ? _getDefaultTitleStyle(context)
-                          : _getDefaultSubtitleStyle(context),
-                      overflow: TextOverflow.ellipsis,
-                      child: subtitle!,
-                    ),
-                ],
-              ),
+                  ),
+              ],
             ),
-            if (trailing != null)
-              Padding(padding: trailingPadding, child: trailing),
           ],
         ),
       ),
