@@ -58,10 +58,12 @@ class _TrailingTextWithIcon extends StatelessWidget {
               value,
               style: context.theme.appTextThemes.body2,
             ),
+            //TODO(denisM): become multiline secondaryValue
             if (secondaryValue.isNotEmpty)
               Text(
                 secondaryValue!,
-                style: context.theme.appTextThemes.caption3,
+                style: context.theme.appTextThemes.caption3.copyWith(),
+                maxLines: 2,
               ),
           ],
         ),
