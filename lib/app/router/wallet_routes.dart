@@ -44,6 +44,8 @@ class WalletRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<ContactRoute>(path: 'one-contact'),
+        TypedGoRoute<ContactCoinRoute>(path: 'contact-coin-send'),
+        TypedGoRoute<SendFundsResultRoute>(path: 'send-funds-result'),
       ],
     ),
   ];
@@ -303,6 +305,24 @@ class ContactRoute extends BaseRouteData {
         );
 
   final ContactData $extra;
+}
+
+class SendFundsResultRoute extends BaseRouteData {
+  SendFundsResultRoute({required this.$extra})
+      : super(
+          child: SendFundsResultPage(transaction: $extra),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final TransactionUiModel $extra;
+}
+
+class ContactCoinRoute extends BaseRouteData {
+  ContactCoinRoute()
+      : super(
+          child: const ContactCoinModalPage(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class NftDetailsRoute extends BaseRouteData {

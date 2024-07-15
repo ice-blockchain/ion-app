@@ -1,0 +1,4 @@
+enum ModalState {
+  transferSuccess,
+  somethingWentWrong,
+}

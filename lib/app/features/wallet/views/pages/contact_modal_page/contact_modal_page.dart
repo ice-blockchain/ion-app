@@ -51,7 +51,7 @@ class ContactPage extends IcePage {
             ScreenSideOffset.small(
               child: BalanceActions(
                 onReceive: () => ReceiveCoinRoute().push<void>(context),
-                onSend: () => CoinSendRoute().push<void>(context),
+                onSend: () => ContactCoinRoute().push<void>(context),
               ),
             )
           else
