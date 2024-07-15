@@ -18,10 +18,7 @@ class TurnOnNotifications extends IcePage {
   const TurnOnNotifications({super.key});
 
   void handleSignIn(WidgetRef ref) {
-    ref.read(authProvider.notifier).signIn(
-          email: 'foo@bar.baz',
-          password: '123',
-        );
+    ref.read(authProvider.notifier).signIn(keyName: '123');
   }
 
   @override

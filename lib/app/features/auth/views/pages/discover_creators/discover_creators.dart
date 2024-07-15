@@ -97,9 +97,7 @@ class DiscoverCreators extends IcePage {
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
                     if (hasNotificationsPermission.falseOrValue) {
-                      ref
-                          .read(authProvider.notifier)
-                          .signIn(email: 'foo@bar.baz', password: '123');
+                      ref.read(authProvider.notifier).signIn(keyName: '123');
                     } else {
                       NotificationsRoute().go(context);
                     }
