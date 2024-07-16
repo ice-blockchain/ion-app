@@ -14,7 +14,6 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
-// import 'package:ice/generated/assets.gen.dart';
 
 class ConfirmationSheet extends IcePage {
   const ConfirmationSheet({super.key});
