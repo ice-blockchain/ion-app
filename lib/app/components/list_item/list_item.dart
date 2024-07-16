@@ -5,8 +5,8 @@ import 'package:ice/generated/assets.gen.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 
 part './variants/list_item_checkbox.dart';
-part './variants/list_item_user.dart';
 part './variants/list_item_text_with_icon.dart';
+part './variants/list_item_user.dart';
 
 class ListItem extends StatelessWidget {
   ListItem({
@@ -22,7 +22,7 @@ class ListItem extends StatelessWidget {
     EdgeInsetsGeometry? trailingPadding,
     BoxConstraints? constraints,
     bool? switchTitleStyles,
-    Widget? secondaryValue,
+    this.secondary,
     this.isSelected,
     this.backgroundColor,
     this.onTap,
@@ -31,8 +31,7 @@ class ListItem extends StatelessWidget {
         leadingPadding = leadingPadding ?? defaultLeadingPadding,
         trailingPadding = trailingPadding ?? defaultTrailingPadding,
         switchTitleStyles = switchTitleStyles ?? false,
-        constraints = constraints ?? defaultConstraints,
-        secondaryValue = secondaryValue ?? const SizedBox.shrink();
+        constraints = constraints ?? defaultConstraints;
 
   factory ListItem.checkbox({
     required VoidCallback onTap,
@@ -84,14 +83,14 @@ class ListItem extends StatelessWidget {
     required Widget title,
     required String value,
     Widget? icon,
-    Widget? secondaryValue,
+    Widget? secondary,
     Key? key,
     Color? backgroundColor,
   }) = _ListItemTextWithIcon;
 
   final Widget? leading;
   final Widget? title;
-  final Widget? secondaryValue;
+  final Widget? secondary;
   final Widget? subtitle;
   final bool switchTitleStyles;
   final Widget? trailing;
@@ -160,12 +159,12 @@ class ListItem extends StatelessWidget {
                   Padding(padding: trailingPadding, child: trailing),
               ],
             ),
-            if (secondaryValue != null)
+            if (secondary != null)
               DefaultTextStyle(
                 style: switchTitleStyles
                     ? _getDefaultSubtitleStyle(context)
                     : _getDefaultTitleStyle(context),
-                child: secondaryValue!,
+                child: secondary!,
               ),
           ],
         ),

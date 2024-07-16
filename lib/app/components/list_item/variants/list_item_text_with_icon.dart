@@ -4,7 +4,7 @@ class _ListItemTextWithIcon extends ListItem {
   _ListItemTextWithIcon({
     required String value,
     Widget? icon,
-    super.secondaryValue,
+    super.secondary,
     super.title,
     super.key,
     super.backgroundColor,
@@ -14,7 +14,7 @@ class _ListItemTextWithIcon extends ListItem {
           trailing: _TrailingTextWithIcon(
             value: value,
             icon: icon,
-            secondaryValue: secondaryValue,
+            secondaryValue: secondary,
           ),
           contentPadding: contentPadding ?? ListItem.defaultTextContentPadding,
           constraints: constraints ?? const BoxConstraints(),
@@ -46,31 +46,30 @@ class _TrailingTextWithIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            icon ?? const SizedBox.shrink(),
-            SizedBox(width: 8.0.s),
-            Flexible(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width / 2,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      value,
-                      style: context.theme.appTextThemes.body2,
-                    ),
-                  ],
-                ),
-              ),
+        if (icon != null) ...[
+          icon!,
+          const SizedBox.shrink(),
+        ],
+        SizedBox(width: 8.0.s),
+        Flexible(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width / 2,
             ),
-          ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: context.theme.appTextThemes.body2,
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );
