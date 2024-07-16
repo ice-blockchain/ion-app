@@ -5,7 +5,9 @@ class WalletRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [TypedGoRoute<AllowAccessRoute>(path: 'allow-access')],
     ),
-    TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting'),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting')],
+    ),
     ...coinSendRoutes,
     ...coinReceiveRoutes,
     ...walletManagementRoutes,
