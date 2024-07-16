@@ -26,7 +26,6 @@ class TransactionResultSheet extends IcePage {
     final formData = ref.watch(sendCoinsFormControllerProvider);
 
     return SheetContent(
-      backgroundColor: colors.secondaryBackground,
       body: ScreenSideOffset.small(
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -36,7 +36,6 @@ class EditWalletModal extends IcePage {
         walletName.value != (payload.name) && walletName.value.isNotEmpty;
 
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

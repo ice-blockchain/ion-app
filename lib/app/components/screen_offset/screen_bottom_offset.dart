@@ -3,14 +3,14 @@ import 'package:ice/app/extensions/num.dart';
 
 class ScreenBottomOffset extends StatelessWidget {
   ScreenBottomOffset({
-    required this.child,
     super.key,
+    this.child,
     double? margin,
   }) : margin = margin ?? defaultMargin;
 
   static double get defaultMargin => 12.0.s;
 
-  final Widget child;
+  final Widget? child;
   final double margin;
 
   @override

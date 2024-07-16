@@ -7,7 +7,6 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/language_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
@@ -38,7 +37,6 @@ class SelectLanguages extends IcePage {
     final mayContinue = selectedLanguages.value.isNotEmpty;
 
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
         children: <Widget>[
           AuthHeader(

@@ -22,13 +22,11 @@ class ConfirmationSheet extends IcePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    final colors = context.theme.appColors;
     final locale = context.i18n;
 
     final formData = ref.watch(sendCoinsFormControllerProvider);
 
     return SheetContent(
-      backgroundColor: colors.secondaryBackground,
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

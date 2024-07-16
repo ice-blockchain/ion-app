@@ -43,7 +43,7 @@ class IntroPage extends IcePage {
                 ),
               ],
               child: Button(
-                onPressed: () => FillProfileRoute().go(context),
+                onPressed: () => GetStartedRoute().go(context),
                 label: Text(context.i18n.button_continue),
                 trailingIcon: Assets.images.icons.iconButtonNext.icon(
                   color: context.theme.appColors.secondaryBackground,

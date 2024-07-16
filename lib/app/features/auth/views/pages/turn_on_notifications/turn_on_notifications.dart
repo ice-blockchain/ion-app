@@ -6,7 +6,6 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/descriptions.dart';
@@ -18,16 +17,12 @@ class TurnOnNotifications extends IcePage {
   const TurnOnNotifications({super.key});
 
   void handleSignIn(WidgetRef ref) {
-    ref.read(authProvider.notifier).signIn(
-          email: 'foo@bar.baz',
-          password: '123',
-        );
+    ref.read(authProvider.notifier).signIn(keyName: '123');
   }
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
         children: <Widget>[
           Padding(

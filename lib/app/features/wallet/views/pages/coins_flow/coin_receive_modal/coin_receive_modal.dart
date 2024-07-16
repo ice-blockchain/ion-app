@@ -34,7 +34,6 @@ class CoinReceiveModal extends IcePage {
     final networkType = _getNetworkType(payload);
 
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: Padding(
         padding: EdgeInsets.only(
           bottom: 16.0.s,

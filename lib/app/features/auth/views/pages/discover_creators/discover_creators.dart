@@ -31,7 +31,6 @@ class DiscoverCreators extends IcePage {
     final mayContinue = followedCreators.value.isNotEmpty;
 
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
         children: <Widget>[
           Padding(
@@ -97,9 +96,7 @@ class DiscoverCreators extends IcePage {
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
                     if (hasNotificationsPermission.falseOrValue) {
-                      ref
-                          .read(authProvider.notifier)
-                          .signIn(email: 'foo@bar.baz', password: '123');
+                      ref.read(authProvider.notifier).signIn(keyName: '123');
                     } else {
                       NotificationsRoute().go(context);
                     }

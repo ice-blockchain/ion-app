@@ -21,7 +21,6 @@ class NetworkListReceiveView extends IcePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[

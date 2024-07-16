@@ -43,7 +43,6 @@ class SendCoinsForm extends IcePage {
     );
 
     return SheetContent(
-      backgroundColor: colors.secondaryBackground,
       body: KeyboardDismissOnTap(
         child: SingleChildScrollView(
           child: Column(

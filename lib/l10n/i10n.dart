@@ -12,7 +12,7 @@ RegExp tagRegex(String tag, {bool isSingular = true}) {
 TextSpan replaceString(
   String input,
   RegExp regex,
-  Widget Function(String, int) onMatch,
+  InlineSpan Function(String, int) onMatch,
 ) {
   final matches = regex.allMatches(input);
   final spans = <InlineSpan>[];
@@ -25,7 +25,7 @@ TextSpan replaceString(
 
     final linkText = match.group(1)!;
     spans.add(
-      WidgetSpan(child: onMatch(linkText, index)),
+      onMatch(linkText, index),
     );
 
     lastMatchEnd = match.end;

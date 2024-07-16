@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
+import 'package:ice/app/features/auth/views/pages/get_started/get_started.dart';
+import 'package:ice/app/features/auth/views/pages/identity_info/identity_info.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/intro_page.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
