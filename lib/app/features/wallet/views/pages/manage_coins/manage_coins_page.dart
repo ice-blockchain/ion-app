@@ -6,7 +6,6 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/components/empty_state/empty_state.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/components/manage_coin_item/manage_coin_item.dart';
@@ -38,7 +37,6 @@ class ManageCoinsPage extends IcePage {
     );
 
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
         children: <Widget>[
           NavigationAppBar.modal(

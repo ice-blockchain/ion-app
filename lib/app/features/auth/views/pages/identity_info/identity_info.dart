@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -15,7 +14,6 @@ class IdentityInfo extends IcePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

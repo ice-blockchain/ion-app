@@ -31,7 +31,6 @@ class ShareAddressView extends IcePage {
     const walletAddress = '0x122abc456def789ghij012klmno345pqrs678tuv';
 
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[

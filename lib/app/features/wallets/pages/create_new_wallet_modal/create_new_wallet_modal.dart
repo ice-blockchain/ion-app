@@ -28,7 +28,6 @@ class CreateNewWalletModal extends IcePage {
     final controller = useTextEditingController();
 
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

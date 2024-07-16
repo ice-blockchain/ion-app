@@ -34,7 +34,6 @@ class FillProfile extends IcePage {
     final loading = useState(false);
 
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: KeyboardDismissOnTap(
         child: SizedBox(
           height: double.infinity,

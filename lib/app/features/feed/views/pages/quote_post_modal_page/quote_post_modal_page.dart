@@ -22,7 +22,6 @@ class QuotePostModalPage extends IcePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: Stack(
         children: [
           Column(

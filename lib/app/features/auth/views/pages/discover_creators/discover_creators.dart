@@ -31,7 +31,6 @@ class DiscoverCreators extends IcePage {
     final mayContinue = followedCreators.value.isNotEmpty;
 
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
         children: <Widget>[
           Padding(

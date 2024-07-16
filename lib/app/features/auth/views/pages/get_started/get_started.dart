@@ -21,7 +21,6 @@ class GetStartedPage extends IcePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
-      backgroundColor: context.theme.appColors.secondaryBackground,
       body: KeyboardDismissOnTap(
         child: SizedBox(
           height: double.infinity,
