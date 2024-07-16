@@ -4,7 +4,7 @@ class _ListItemTextWithIcon extends ListItem {
   _ListItemTextWithIcon({
     required String value,
     Widget? icon,
-    String? secondaryValue,
+    super.secondary,
     super.title,
     super.key,
     super.backgroundColor,
@@ -14,8 +14,9 @@ class _ListItemTextWithIcon extends ListItem {
           trailing: _TrailingTextWithIcon(
             value: value,
             icon: icon,
-            secondaryValue: secondaryValue,
+            secondary: secondary,
           ),
+          trailingPadding: EdgeInsets.zero,
           contentPadding: contentPadding ?? ListItem.defaultTextContentPadding,
           constraints: constraints ?? const BoxConstraints(),
         );
@@ -37,35 +38,35 @@ class _TrailingTextWithIcon extends StatelessWidget {
   const _TrailingTextWithIcon({
     required this.value,
     this.icon,
-    this.secondaryValue,
+    this.secondary,
   });
 
   final String value;
   final Widget? icon;
-  final String? secondaryValue;
+  final Widget? secondary;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        icon ?? const SizedBox.shrink(),
-        SizedBox(width: 8.0.s),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Flexible(
+      child: FractionallySizedBox(
+        widthFactor: 1,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text(
-              value,
-              style: context.theme.appTextThemes.body2,
-            ),
-            if (secondaryValue.isNotEmpty)
-              Text(
-                secondaryValue!,
-                style: context.theme.appTextThemes.caption3,
+            if (icon != null) ...[
+              icon!,
+              SizedBox(width: 8.0.s),
+            ],
+            Flexible(
+              child: Text(
+                value,
+                style: context.theme.appTextThemes.body2,
               ),
+            ),
           ],
         ),
-      ],
+      ),
     );
   }
 }

@@ -72,8 +72,11 @@ class ConfirmationSheet extends IcePage {
                       width: ScreenSideOffset.defaultSmallMargin,
                       height: ScreenSideOffset.defaultSmallMargin,
                     ),
-                    secondaryValue:
-                        '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
+                    secondary: Text(
+                      '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
+                      textAlign: TextAlign.right,
+                      style: context.theme.appTextThemes.caption3.copyWith(),
+                    ),
                   ),
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(

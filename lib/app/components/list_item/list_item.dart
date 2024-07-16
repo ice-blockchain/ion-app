@@ -5,8 +5,8 @@ import 'package:ice/generated/assets.gen.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 
 part './variants/list_item_checkbox.dart';
-part './variants/list_item_user.dart';
 part './variants/list_item_text_with_icon.dart';
+part './variants/list_item_user.dart';
 
 class ListItem extends StatelessWidget {
   ListItem({
@@ -22,6 +22,7 @@ class ListItem extends StatelessWidget {
     EdgeInsetsGeometry? trailingPadding,
     BoxConstraints? constraints,
     bool? switchTitleStyles,
+    this.secondary,
     this.isSelected,
     this.backgroundColor,
     this.onTap,
@@ -82,13 +83,14 @@ class ListItem extends StatelessWidget {
     required Widget title,
     required String value,
     Widget? icon,
-    String? secondaryValue,
+    Widget? secondary,
     Key? key,
     Color? backgroundColor,
   }) = _ListItemTextWithIcon;
 
   final Widget? leading;
   final Widget? title;
+  final Widget? secondary;
   final Widget? subtitle;
   final bool switchTitleStyles;
   final Widget? trailing;
@@ -124,35 +126,52 @@ class ListItem extends StatelessWidget {
       child: Container(
         constraints: constraints,
         padding: contentPadding,
-        child: Row(
-          children: <Widget>[
-            if (leading != null)
-              Padding(padding: leadingPadding, child: leading),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  if (title != null)
-                    DefaultTextStyle(
-                      style: switchTitleStyles
-                          ? _getDefaultSubtitleStyle(context)
-                          : _getDefaultTitleStyle(context),
-                      overflow: TextOverflow.ellipsis,
-                      child: title!,
-                    ),
-                  if (subtitle != null)
-                    DefaultTextStyle(
-                      style: switchTitleStyles
-                          ? _getDefaultTitleStyle(context)
-                          : _getDefaultSubtitleStyle(context),
-                      overflow: TextOverflow.ellipsis,
-                      child: subtitle!,
-                    ),
-                ],
-              ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                if (leading != null)
+                  if (leadingPadding != EdgeInsets.zero)
+                    Padding(padding: leadingPadding, child: leading)
+                  else
+                    leading!,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (title != null)
+                        DefaultTextStyle(
+                          style: switchTitleStyles
+                              ? _getDefaultSubtitleStyle(context)
+                              : _getDefaultTitleStyle(context),
+                          overflow: TextOverflow.ellipsis,
+                          child: title!,
+                        ),
+                      if (subtitle != null)
+                        DefaultTextStyle(
+                          style: switchTitleStyles
+                              ? _getDefaultTitleStyle(context)
+                              : _getDefaultSubtitleStyle(context),
+                          overflow: TextOverflow.ellipsis,
+                          child: subtitle!,
+                        ),
+                    ],
+                  ),
+                ),
+                if (trailing != null)
+                  if (trailingPadding != EdgeInsets.zero)
+                    Padding(padding: trailingPadding, child: trailing)
+                  else
+                    trailing!,
+              ],
             ),
-            if (trailing != null)
-              Padding(padding: trailingPadding, child: trailing),
+            if (secondary != null)
+              DefaultTextStyle(
+                style: switchTitleStyles
+                    ? _getDefaultSubtitleStyle(context)
+                    : _getDefaultTitleStyle(context),
+                child: secondary!,
+              ),
           ],
         ),
       ),
