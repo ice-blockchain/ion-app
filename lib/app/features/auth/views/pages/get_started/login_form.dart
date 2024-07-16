@@ -7,12 +7,9 @@ import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/auth/views/components/auth_footer/auth_footer.dart';
+import 'package:ice/app/features/auth/views/pages/get_started/identity_info.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_drag_handle.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_shape.dart';
+import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -42,32 +39,9 @@ class LoginForm extends HookConsumerWidget {
                     size: 16.0.s,
                   ),
                   onPressed: () {
-                    showModalBottomSheet<void>(
-                      useRootNavigator: true,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
+                    showSimpleBottomSheet<void>(
                       context: context,
-                      builder: (context) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            SheetDragHandle(),
-                            SheetShape(
-                              child: Column(
-                                children: [
-                                  NavigationAppBar.modal(
-                                    showBackButton: false,
-                                    title: context.i18n.wallet_receive,
-                                    actions: const [NavigationCloseButton()],
-                                  ),
-                                  const AuthFooter(),
-                                ],
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                      child: const IdentityInfo(),
                     );
                   },
                 ),
