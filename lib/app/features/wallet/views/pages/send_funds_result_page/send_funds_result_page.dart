@@ -7,7 +7,9 @@ import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/compo
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/components/send_funds_result_error_message.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/components/send_funds_result_icon.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/components/send_funds_result_message.dart';
+import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/modal_state.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_ui_model.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
 class SendFundsResultPage extends HookConsumerWidget {
@@ -23,23 +25,31 @@ class SendFundsResultPage extends HookConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: EdgeInsets.only(top: 8.0.s),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                NavigationCloseButton(),
-              ],
-            ),
+          Stack(
+            children: [
+              NavigationAppBar.modal(
+                showBackButton: false,
+                actions: const [NavigationCloseButton()],
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 40.0.s),
+                  child: SendFundsResultIcon(transaction: transaction),
+                ),
+              ),
+            ],
           ),
-          SendFundsResultIcon(transaction: transaction),
           SizedBox(height: 10.0.s),
           SendFundsResultMessage(transaction: transaction),
           SizedBox(height: 10.0.s),
-          SendFundsResultErrorMessage(
-            transaction: transaction,
-            showErrorDetails: showErrorDetails,
-          ),
+          if (transaction.state == ModalState.transferSuccess)
+            SizedBox(height: 6.0.s),
+          if (transaction.state == ModalState.somethingWentWrong)
+            SendFundsResultErrorMessage(
+              transaction: transaction,
+              showErrorDetails: showErrorDetails,
+            ),
           SizedBox(height: 20.0.s),
           SendFundsResultDetails(
             transaction: transaction,

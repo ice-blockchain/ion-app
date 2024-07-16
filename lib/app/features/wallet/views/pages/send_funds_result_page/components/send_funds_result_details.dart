@@ -44,13 +44,12 @@ class SendFundsResultDetails extends StatelessWidget {
               color: context.theme.appColors.onTertararyBackground,
             ),
           ),
-          if (transaction.state == ModalState.transferSuccess)
+          if (transaction.state == ModalState.transferSuccess) ...[
             SizedBox(height: 29.0.s),
-          if (transaction.state == ModalState.transferSuccess)
             _buildButtons(context),
-          if (transaction.state == ModalState.somethingWentWrong)
+          ],
+          if (transaction.state == ModalState.somethingWentWrong) ...[
             SizedBox(height: 16.0.s),
-          if (transaction.state == ModalState.somethingWentWrong)
             ScreenSideOffset.small(
               child: Button.compact(
                 mainAxisSize: MainAxisSize.max,
@@ -62,17 +61,18 @@ class SendFundsResultDetails extends StatelessWidget {
                 onPressed: () {},
               ),
             ),
+          ],
         ],
       );
     } else if (transaction.type == TransactionType.nft) {
-      //TODO(Ice-Herakles): Implement nft UI
+      //TODO: Implement nft UI
       return const SizedBox.shrink();
     } else {
       return const SizedBox.shrink();
     }
   }
 
-  ScreenSideOffset _buildButtons(BuildContext context) {
+  Widget _buildButtons(BuildContext context) {
     return ScreenSideOffset.small(
       child: Row(
         children: [
