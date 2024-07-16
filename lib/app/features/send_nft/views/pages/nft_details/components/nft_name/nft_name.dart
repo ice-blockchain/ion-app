@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/rounded_card/card.dart';
+import 'package:ice/app/components/rounded_card/card_bg.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -23,7 +23,7 @@ class NftName extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return RoundedCard(
+    return CardBg(
       child: Column(
         children: [
           Row(

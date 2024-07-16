@@ -83,9 +83,7 @@ class NftsTab extends HookConsumerWidget {
           child: NftListItem(
             nftData: nfts[index],
             onTap: () {
-              NftDetailsRoute($extra: nfts[index]).push<void>(
-                context,
-              );
+              NftDetailsRoute($extra: nfts[index]).push<void>(context);
             },
           ),
         );

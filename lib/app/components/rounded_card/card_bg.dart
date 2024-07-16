@@ -3,8 +3,8 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
-class RoundedCard extends StatelessWidget {
-  const RoundedCard({
+class CardBg extends StatelessWidget {
+  const CardBg({
     required this.child,
     this.padding,
     this.margin,

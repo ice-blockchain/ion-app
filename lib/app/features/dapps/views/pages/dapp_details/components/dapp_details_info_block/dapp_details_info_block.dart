@@ -25,32 +25,27 @@ class DappDetailsInfoBlock extends StatelessWidget {
           color: context.theme.appColors.tertararyBackground,
         ),
         padding: EdgeInsets.all(12.0.s),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                if (title != null) title!,
-                Padding(
-                  padding: EdgeInsets.only(top: 4.0.s),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      if (iconPath != null)
-                        Padding(
-                          padding: EdgeInsets.only(right: 6.0.s),
-                          child: Image.asset(
-                            iconPath!,
-                            width: 24.0.s,
-                            height: 24.0.s,
-                            color: context.theme.appColors.primaryAccent,
-                          ),
-                        ),
-                      if (value != null) value!,
-                    ],
-                  ),
-                ),
-              ],
+            title ?? const SizedBox.shrink(),
+            Padding(
+              padding: EdgeInsets.only(top: 4.0.s),
+              child: Row(
+                children: <Widget>[
+                  if (iconPath != null)
+                    Padding(
+                      padding: EdgeInsets.only(right: 6.0.s),
+                      child: Image.asset(
+                        iconPath!,
+                        width: 24.0.s,
+                        height: 24.0.s,
+                        color: context.theme.appColors.primaryAccent,
+                      ),
+                    ),
+                  if (value != null) value!,
+                ],
+              ),
             ),
           ],
         ),
