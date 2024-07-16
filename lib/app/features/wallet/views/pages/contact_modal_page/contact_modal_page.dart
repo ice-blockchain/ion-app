@@ -9,6 +9,7 @@ import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/views/pages/contact_modal_page/components/contact_item.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/services/share/share.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -19,8 +20,8 @@ class ContactPage extends IcePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    return ScreenBottomOffset(
-      child: Column(
+    return SheetContent(
+      body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Stack(
@@ -68,6 +69,7 @@ class ContactPage extends IcePage {
                     shareContent('Share', subject: 'Look what I found!'),
               ),
             ),
+          ScreenBottomOffset(),
         ],
       ),
     );
