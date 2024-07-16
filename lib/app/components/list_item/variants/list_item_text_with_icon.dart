@@ -14,7 +14,7 @@ class _ListItemTextWithIcon extends ListItem {
           trailing: _TrailingTextWithIcon(
             value: value,
             icon: icon,
-            secondaryValue: secondary,
+            secondary: secondary,
           ),
           contentPadding: contentPadding ?? ListItem.defaultTextContentPadding,
           constraints: constraints ?? const BoxConstraints(),
@@ -37,41 +37,32 @@ class _TrailingTextWithIcon extends StatelessWidget {
   const _TrailingTextWithIcon({
     required this.value,
     this.icon,
-    this.secondaryValue,
+    this.secondary,
   });
 
   final String value;
   final Widget? icon;
-  final Widget? secondaryValue;
+  final Widget? secondary;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (icon != null) ...[
-          icon!,
-          const SizedBox.shrink(),
-        ],
-        SizedBox(width: 8.0.s),
-        Flexible(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width / 2,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  value,
-                  style: context.theme.appTextThemes.body2,
-                ),
-              ],
+    return Expanded(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (icon != null) ...[
+            icon!,
+            SizedBox(width: 8.0.s),
+          ],
+          Flexible(
+            child: Text(
+              value,
+              style: context.theme.appTextThemes.body2,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
