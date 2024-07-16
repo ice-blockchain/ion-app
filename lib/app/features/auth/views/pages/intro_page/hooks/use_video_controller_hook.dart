@@ -7,10 +7,13 @@ VideoPlayerController useVideoController(String assetPath) {
     [assetPath],
   );
 
+  final isInitialized = useState(false);
+
   useEffect(
     () {
       Future.microtask(() async {
         await controller.initialize();
+        isInitialized.value = true;
         await controller.setLooping(true);
         await controller.play();
       });
