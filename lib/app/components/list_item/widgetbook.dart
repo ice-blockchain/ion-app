@@ -11,24 +11,26 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
   type: ListItem,
 )
 Widget regularListItemUseCase(BuildContext context) {
-  return Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        ListItem(
-          title: const Text('Simple'),
-          subtitle: const Text('List Item'),
-          backgroundColor: context.theme.appColors.primaryBackground,
-          leading: Assets.images.icons.iconBadgeLinkedin.icon(),
-        ),
-        ListItem(
-          title: const Text('With On Tap'),
-          subtitle: const Text('List Item'),
-          onTap: () {},
-          backgroundColor: context.theme.appColors.primaryBackground,
-          trailing: Assets.images.icons.iconArrowRight.icon(),
-        ),
-      ],
+  return Scaffold(
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          ListItem(
+            title: const Text('Simple'),
+            subtitle: const Text('List Item'),
+            backgroundColor: context.theme.appColors.primaryBackground,
+            leading: Assets.images.icons.iconBadgeLinkedin.icon(),
+          ),
+          ListItem(
+            title: const Text('With On Tap'),
+            subtitle: const Text('List Item'),
+            onTap: () {},
+            backgroundColor: context.theme.appColors.primaryBackground,
+            trailing: Assets.images.icons.iconArrowRight.icon(),
+          ),
+        ],
+      ),
     ),
   );
 }
@@ -38,17 +40,19 @@ Widget regularListItemUseCase(BuildContext context) {
   type: ListItem,
 )
 Widget checkboxListItemUseCase(BuildContext context) {
-  return Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        ListItem.checkbox(
-          value: true,
-          title: const Text('With On Tap'),
-          subtitle: const Text('List Item!!'),
-          onTap: () {},
-        ),
-      ],
+  return Scaffold(
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          ListItem.checkbox(
+            value: true,
+            title: const Text('With On Tap'),
+            subtitle: const Text('List Item!!'),
+            onTap: () {},
+          ),
+        ],
+      ),
     ),
   );
 }
@@ -58,53 +62,55 @@ Widget checkboxListItemUseCase(BuildContext context) {
   type: ListItem,
 )
 Widget userListItemUseCase(BuildContext context) {
-  return Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        ListItem.user(
-          title: const Text('Alina Proxima'),
-          subtitle: const Text('@alinaproxima'),
-          profilePicture:
-              'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-          verifiedBadge: true,
-        ),
-        ListItem.user(
-          title: const Text('Alina Proxima'),
-          subtitle: const Text('@alinaproxima'),
-          profilePicture:
-              'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-          verifiedBadge: true,
-          iceBadge: true,
-          trailing: IconButton(
-            icon: Assets.images.icons.iconMorePopup.icon(),
-            onPressed: () {},
+  return Scaffold(
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          ListItem.user(
+            title: const Text('Alina Proxima'),
+            subtitle: const Text('@alinaproxima'),
+            profilePicture:
+                'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+            verifiedBadge: true,
           ),
-        ),
-        ListItem.user(
-          title: const Text('Alina Proxima'),
-          subtitle: const Text('@alinaproxima'),
-          profilePicture:
-              'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-          verifiedBadge: true,
-          iceBadge: true,
-          trailing: IconButton(
-            icon: Assets.images.icons.iconCheckboxOn.icon(),
-            onPressed: () {},
+          ListItem.user(
+            title: const Text('Alina Proxima'),
+            subtitle: const Text('@alinaproxima'),
+            profilePicture:
+                'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+            verifiedBadge: true,
+            iceBadge: true,
+            trailing: IconButton(
+              icon: Assets.images.icons.iconMorePopup.icon(),
+              onPressed: () {},
+            ),
           ),
-          onTap: () {},
-        ),
-        ListItem.user(
-          title: const Text('Alina Proxima'),
-          subtitle: const Text('@alinaproxima'),
-          profilePicture:
-              'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-          verifiedBadge: true,
-          iceBadge: true,
-          timeago: DateTime(2024, 2, 27, 11),
-          onTap: () {},
-        ),
-      ],
+          ListItem.user(
+            title: const Text('Alina Proxima'),
+            subtitle: const Text('@alinaproxima'),
+            profilePicture:
+                'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+            verifiedBadge: true,
+            iceBadge: true,
+            trailing: IconButton(
+              icon: Assets.images.icons.iconCheckboxOn.icon(),
+              onPressed: () {},
+            ),
+            onTap: () {},
+          ),
+          ListItem.user(
+            title: const Text('Alina Proxima'),
+            subtitle: const Text('@alinaproxima'),
+            profilePicture:
+                'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+            verifiedBadge: true,
+            iceBadge: true,
+            timeago: DateTime(2024, 2, 27, 11),
+            onTap: () {},
+          ),
+        ],
+      ),
     ),
   );
 }
@@ -114,30 +120,32 @@ Widget userListItemUseCase(BuildContext context) {
   type: ListItem,
 )
 Widget textListItemUseCase(BuildContext context) {
-  return Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        ListItem.text(
-          title: const Text('List Item title'),
-          value: 'List Item value',
-        ),
-        ListItem.textWithIcon(
-          title: const Text('List Item title'),
-          value: 'List Item value',
-          icon: Assets.images.icons.iconBadgeLinkedin.icon(),
-        ),
-        ListItem.textWithIcon(
-          title: const Text('List Item title'),
-          value: 'List Item value',
-          secondary: Text(
-            'Secondary value',
-            textAlign: TextAlign.right,
-            style: context.theme.appTextThemes.caption3.copyWith(),
+  return Scaffold(
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          ListItem.text(
+            title: const Text('List Item title'),
+            value: 'List Item value',
           ),
-          icon: Assets.images.icons.iconBadgeLinkedin.icon(),
-        ),
-      ],
+          ListItem.textWithIcon(
+            title: const Text('List Item title'),
+            value: 'List Item value long long long long long',
+            icon: Assets.images.icons.iconBadgeLinkedin.icon(),
+          ),
+          ListItem.textWithIcon(
+            title: const Text('List Item title'),
+            value: 'List Item value',
+            secondary: Text(
+              'Secondary value',
+              textAlign: TextAlign.right,
+              style: context.theme.appTextThemes.caption3.copyWith(),
+            ),
+            icon: Assets.images.icons.iconBadgeLinkedin.icon(),
+          ),
+        ],
+      ),
     ),
   );
 }

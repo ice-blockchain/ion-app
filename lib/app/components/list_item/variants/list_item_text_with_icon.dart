@@ -16,6 +16,7 @@ class _ListItemTextWithIcon extends ListItem {
             icon: icon,
             secondary: secondary,
           ),
+          trailingPadding: EdgeInsets.zero,
           contentPadding: contentPadding ?? ListItem.defaultTextContentPadding,
           constraints: constraints ?? const BoxConstraints(),
         );
@@ -46,22 +47,25 @@ class _TrailingTextWithIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          if (icon != null) ...[
-            icon!,
-            SizedBox(width: 8.0.s),
-          ],
-          Flexible(
-            child: Text(
-              value,
-              style: context.theme.appTextThemes.body2,
+    return Flexible(
+      child: FractionallySizedBox(
+        widthFactor: 1,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (icon != null) ...[
+              icon!,
+              SizedBox(width: 8.0.s),
+            ],
+            Flexible(
+              child: Text(
+                value,
+                style: context.theme.appTextThemes.body2,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

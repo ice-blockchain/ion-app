@@ -131,7 +131,10 @@ class ListItem extends StatelessWidget {
             Row(
               children: [
                 if (leading != null)
-                  Padding(padding: leadingPadding, child: leading),
+                  if (leadingPadding != EdgeInsets.zero)
+                    Padding(padding: leadingPadding, child: leading)
+                  else
+                    leading!,
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,7 +159,10 @@ class ListItem extends StatelessWidget {
                   ),
                 ),
                 if (trailing != null)
-                  Padding(padding: trailingPadding, child: trailing),
+                  if (trailingPadding != EdgeInsets.zero)
+                    Padding(padding: trailingPadding, child: trailing)
+                  else
+                    trailing!,
               ],
             ),
             if (secondary != null)
