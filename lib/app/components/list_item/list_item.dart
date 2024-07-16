@@ -124,6 +124,7 @@ class ListItem extends StatelessWidget {
     return _buildMainContainer(
       context: context,
       child: Container(
+        alignment: Alignment.center,
         constraints: constraints,
         padding: contentPadding,
         child: Column(
