@@ -61,16 +61,16 @@ final transitionObserver = NavigationSheetTransitionObserver();
 
 @TypedStatefulShellRoute<AppShellRouteData>(
   branches: [
-    TypedStatefulShellBranch<FeedBranchData>(
+    TypedStatefulShellBranch(
       routes: [TypedGoRoute<FeedRoute>(path: '/feed')],
     ),
-    TypedStatefulShellBranch<ChatBranchData>(
+    TypedStatefulShellBranch(
       routes: [TypedGoRoute<ChatRoute>(path: '/chat')],
     ),
-    TypedStatefulShellBranch<DappsBranchData>(
+    TypedStatefulShellBranch(
       routes: [TypedGoRoute<DappsRoute>(path: '/dapps')],
     ),
-    TypedStatefulShellBranch<WalletBranchData>(
+    TypedStatefulShellBranch(
       routes: [
         TypedGoRoute<WalletRoute>(
           path: '/wallet',
@@ -116,22 +116,6 @@ class ModalShellRouteData extends ShellRouteData {
       child: ModalWrapper(child: navigator),
     );
   }
-}
-
-class FeedBranchData extends StatefulShellBranchData {
-  FeedBranchData();
-}
-
-class ChatBranchData extends StatefulShellBranchData {
-  const ChatBranchData();
-}
-
-class WalletBranchData extends StatefulShellBranchData {
-  const WalletBranchData();
-}
-
-class DappsBranchData extends StatefulShellBranchData {
-  const DappsBranchData();
 }
 
 @TypedGoRoute<SplashRoute>(path: '/splash')

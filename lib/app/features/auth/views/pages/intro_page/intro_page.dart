@@ -7,7 +7,7 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/auth/views/pages/intro_page/providers/video_player_provider.dart';
+import 'package:ice/app/features/auth/views/pages/intro_page/hooks/use_video_controller_hook.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:video_player/video_player.dart';
@@ -17,21 +17,19 @@ class IntroPage extends IcePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    final videoControllerAsync = ref.watch(videoControllerProvider);
+    final videoController = useVideoController(Assets.videos.intro);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          videoControllerAsync.maybeWhen(
-            data: (controller) => Center(
+          if (videoController.value.isInitialized)
+            Center(
               child: AspectRatio(
-                aspectRatio: controller.value.aspectRatio,
-                child: VideoPlayer(controller),
+                aspectRatio: videoController.value.aspectRatio,
+                child: VideoPlayer(videoController),
               ),
             ),
-            orElse: () => const SizedBox.shrink(),
-          ),
           Positioned(
             left: 40.0.s,
             right: 40.0.s,
