@@ -7,6 +7,7 @@
   "button_delete": "Delete",
   "button_close": "Close",
   "button_register": "Register",
+  "button_send": "Send",
   "common_show_more": "Show more",
   "common_show_less": "Show less",
   "common_identity_key_name": "Identity key name",
@@ -164,5 +165,10 @@
   "turn_notifications_new_follower_time": "24m ago",
   "turn_notifications_new_message_title": "New message",
   "turn_notifications_new_message_description": "@marie has sent you a message",
-  "turn_notifications_new_message_time": "31m ago"
+  "turn_notifications_new_message_time": "31m ago",
+  "send_nft_description": "Description",
+  "send_nft_token_id": "Token ID",
+  "send_nft_token_network": "Network",
+  "send_nft_token_standard": "Token standard",
+  "send_nft_token_contract_address": "Contract address"
 }

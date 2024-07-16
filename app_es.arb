@@ -8,6 +8,7 @@
     "button_delete",
     "button_close",
     "button_register",
+    "button_send",
     "common_show_more",
     "common_show_less",
     "common_identity_key_name",
@@ -165,6 +166,11 @@
     "turn_notifications_new_follower_time",
     "turn_notifications_new_message_title",
     "turn_notifications_new_message_description",
-    "turn_notifications_new_message_time"
+    "turn_notifications_new_message_time",
+    "send_nft_description",
+    "send_nft_token_id",
+    "send_nft_token_network",
+    "send_nft_token_standard",
+    "send_nft_token_contract_address"
   ]
 }

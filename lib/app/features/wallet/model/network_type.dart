@@ -14,7 +14,7 @@ enum NetworkType {
     return switch (this) {
       NetworkType.all => context.i18n.core_all,
       NetworkType.arbitrum => 'Arbitrum One',
-      NetworkType.eth => 'Etherium',
+      NetworkType.eth => 'Ethereum',
       NetworkType.tron => 'Tron',
       NetworkType.matic => 'Polygon',
       NetworkType.solana => 'Solana',
