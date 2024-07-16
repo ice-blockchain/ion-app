@@ -67,17 +67,29 @@ final transitionObserver = NavigationSheetTransitionObserver();
   branches: [
     TypedStatefulShellBranch(
       routes: [
-        TypedGoRoute<FeedRoute>(
-          path: '/feed',
-          routes: [TypedGoRoute<PostDetailsRoute>(path: 'post')],
+        TypedGoRoute<FeedRoute>(path: '/feed'),
+        TypedShellRoute<SheetRouteData>(
+          routes: [TypedGoRoute<FeedMainModal>(path: '/feed-main-modal'),
+            TypedGoRoute<PostDetailsRoute>(path: 'post'),
+          ],
         ),
       ],
     ),
     TypedStatefulShellBranch(
-      routes: [TypedGoRoute<ChatRoute>(path: '/chat')],
+      routes: [
+        TypedGoRoute<ChatRoute>(path: '/chat'),
+        TypedShellRoute<SheetRouteData>(
+          routes: [TypedGoRoute<FeedMainModal>(path: '/feed-main-modal')],
+        ),
+      ],
     ),
     TypedStatefulShellBranch(
-      routes: [TypedGoRoute<DappsRoute>(path: '/dapps')],
+      routes: [
+        TypedGoRoute<DappsRoute>(path: '/dapps'),
+        TypedShellRoute<SheetRouteData>(
+          routes: [TypedGoRoute<FeedMainModal>(path: '/feed-main-modal')],
+        ),
+      ],
     ),
     TypedStatefulShellBranch(
       routes: [
@@ -86,6 +98,9 @@ final transitionObserver = NavigationSheetTransitionObserver();
           routes: [
             ...WalletRoutes.routes,
           ],
+        ),
+        TypedShellRoute<SheetRouteData>(
+          routes: [TypedGoRoute<FeedMainModal>(path: '/feed-main-modal')],
         ),
       ],
     ),
@@ -164,15 +179,12 @@ class IntroRoute extends BaseRouteData {
   IntroRoute() : super(child: const IntroPage());
 }
 
-@TypedGoRoute<FeedMainModal>(path: '/feed-modal')
 class FeedMainModal extends BaseRouteData {
   FeedMainModal()
       : super(
           child: const FeedMainModalPage(),
           type: IceRouteType.bottomSheet,
         );
-
-  static final $parentNavigatorKey = rootNavigatorKey;
 }
 
 @TypedGoRoute<DAppsRoute>(

@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ice/app/router/components/modal_wrapper/modal_wrapper2.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum IceRouteType {
   single,
   bottomSheet,
   slideFromLeft,
+  modalSheet,
 }
 
 abstract class BaseRouteData extends GoRouteData {
@@ -19,12 +21,29 @@ abstract class BaseRouteData extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
+    // final sheetController = DefaultSheetController.of(context);
+    // final metrics = sheetController.value;
+
     return switch (type) {
       IceRouteType.single => CupertinoPage<void>(child: child),
-      IceRouteType.bottomSheet =>
-        ScrollableNavigationSheetPage<void>(child: child),
+      IceRouteType.bottomSheet => ScrollableNavigationSheetPage<void>(
+          child: child,
+          // minExtent: metrics.hasDimensions
+          //     ? Extent.pixels(metrics.minPixels)
+          //     : const Extent.proportional(0),
+        ),
       IceRouteType.slideFromLeft =>
         SlideFromLeftTransitionPage(child: child, state: state),
+      IceRouteType.modalSheet => ModalSheetPage(
+          swipeDismissible: true,
+          child: ModalWrapper2(child: child),
+        ),
+      // CupertinoPage(
+      //   key: state.pageKey,
+      //   child: DraggableSheet(
+      //     child: ModalWrapper2(child: child),
+      //   ),
+      // ),
     };
   }
 

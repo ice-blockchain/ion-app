@@ -16,6 +16,7 @@ class ModalWrapper extends StatelessWidget {
       bottom: false,
       child: PopScope(
         child: NavigationSheet(
+          controller: DefaultSheetController.of(context),
           transitionObserver: transitionObserver,
           child: child,
         ),

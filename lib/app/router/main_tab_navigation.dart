@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum TabItem {
   feed,
@@ -29,31 +31,55 @@ enum TabItem {
   int get navigationIndex => index > TabItem.main.index ? index - 1 : index;
 }
 
+// ignore: must_be_immutable
 class MainTabNavigation extends StatelessWidget {
-  const MainTabNavigation({
+  MainTabNavigation({
     required this.navigationShell,
     super.key,
   });
 
   final StatefulNavigationShell navigationShell;
+  late SheetController sheetController;
 
-  void _onTap(int index) {
+  void _onTap(BuildContext context, int index) {
     final tabItem = TabItem.values[index];
     if (tabItem == TabItem.main) {
-      _onMainButtonTap();
-      return;
+      _onMainButtonTap(context);
+    } else {
+      final metrics = sheetController.value;
+      if (metrics.hasDimensions && context.canPop()) {
+        // Collapse the sheet to reveal the map behind.
+        // sheetController.animateTo(
+        //   // Extent.pixels(metrics.minPixels),
+        //   const Extent.proportional(0),
+        //   curve: Curves.fastOutSlowIn,
+        // );
+        context.pop();
+      } else {
+        final adjustedIndex = tabItem.navigationIndex;
+
+        navigationShell.goBranch(
+          adjustedIndex,
+          initialLocation: adjustedIndex == navigationShell.currentIndex,
+        );
+      }
     }
-
-    final adjustedIndex = tabItem.navigationIndex;
-
-    navigationShell.goBranch(
-      adjustedIndex,
-      initialLocation: adjustedIndex == navigationShell.currentIndex,
-    );
   }
 
-  void _onMainButtonTap() {
+  void _onMainButtonTap(BuildContext context) {
     log('MainTabNavigation: Main button tapped');
+    final metrics = sheetController.value;
+    if (metrics.hasDimensions && context.canPop()) {
+      // Collapse the sheet to reveal the map behind.
+      // sheetController.animateTo(
+      //   // Extent.pixels(metrics.minPixels),
+      //   const Extent.proportional(0),
+      //   curve: Curves.fastOutSlowIn,
+      // );
+      context.pop();
+    } else {
+      FeedMainModal().push<void>(context);
+    }
   }
 
   int _adjustBottomNavIndex(int index) =>
@@ -61,11 +87,13 @@ class MainTabNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    sheetController = DefaultSheetController.of(context);
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _adjustBottomNavIndex(navigationShell.currentIndex),
-        onTap: _onTap,
+        onTap: (value) => _onTap(context, value),
         items: _navBarItems(),
         type: BottomNavigationBarType.fixed,
         backgroundColor: context.theme.appColors.secondaryBackground,
