@@ -21,11 +21,10 @@ class RequestContactAccessModal extends IcePage {
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
       body: Padding(
-        padding: EdgeInsets.fromLTRB(
-          ScreenSideOffset.defaultSmallMargin,
-          30.0.s,
-          ScreenSideOffset.defaultSmallMargin,
-          ScreenSideOffset.defaultSmallMargin,
+        padding: EdgeInsets.only(
+          left: ScreenSideOffset.defaultSmallMargin,
+          top: 30.0.s,
+          right: ScreenSideOffset.defaultSmallMargin,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

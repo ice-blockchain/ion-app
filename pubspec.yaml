@@ -101,6 +101,7 @@ flutter:
     - assets/images/misc/
     - assets/images/qr_code/
     - assets/images/notifications/
+    - assets/images/identity/
 
 flutter_gen:
   output: lib/generated/

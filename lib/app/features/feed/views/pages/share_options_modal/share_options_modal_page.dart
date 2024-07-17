@@ -8,6 +8,7 @@ import 'package:ice/app/features/feed/views/pages/share_options_modal/components
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class ShareOptionsPage extends IcePage {
   const ShareOptionsPage({super.key});
@@ -16,9 +17,8 @@ class ShareOptionsPage extends IcePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    return FractionallySizedBox(
-      heightFactor: 0.9,
-      child: Column(
+    return SheetContent(
+      body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(

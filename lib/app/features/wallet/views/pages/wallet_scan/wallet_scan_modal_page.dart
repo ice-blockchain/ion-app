@@ -9,8 +9,8 @@ class WalletScanModalPage extends IcePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    return SheetContent(
-      body: const QRScannerBottomSheet(),
+    return const SheetContent(
+      body: QRScannerBottomSheet(),
     );
   }
 }
