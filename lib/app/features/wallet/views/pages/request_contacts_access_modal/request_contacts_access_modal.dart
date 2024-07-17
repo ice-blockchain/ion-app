@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
@@ -20,11 +21,10 @@ class RequestContactAccessModal extends IcePage {
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
       body: Padding(
-        padding: EdgeInsets.fromLTRB(
-          ScreenSideOffset.defaultSmallMargin,
-          30.0.s,
-          ScreenSideOffset.defaultSmallMargin,
-          ScreenSideOffset.defaultSmallMargin,
+        padding: EdgeInsets.only(
+          left: ScreenSideOffset.defaultSmallMargin,
+          top: 30.0.s,
+          right: ScreenSideOffset.defaultSmallMargin,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -68,6 +68,7 @@ class RequestContactAccessModal extends IcePage {
                 });
               },
             ),
+            ScreenBottomOffset(),
           ],
         ),
       ),
