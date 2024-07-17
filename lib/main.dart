@@ -9,7 +9,6 @@ import 'package:ice/app/services/riverpod/riverpod_logger.dart';
 import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/theme.dart';
 import 'package:ice/generated/app_localizations.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 void main() async {
   runApp(
@@ -32,19 +31,17 @@ class IceApp extends HookConsumerWidget {
     final goRouter = ref.watch(goRouterProvider);
 
     return ContentScaler(
-      child: DefaultSheetController(
-        child: MaterialApp.router(
-          localizationsDelegates: I18n.localizationsDelegates,
-          supportedLocales: I18n.supportedLocales,
-          theme: template.whenOrNull(
-            data: (Template data) => buildLightTheme(data.theme),
-          ),
-          darkTheme: template.whenOrNull(
-            data: (Template data) => buildDarkTheme(data.theme),
-          ),
-          themeMode: appThemeMode,
-          routerConfig: goRouter,
+      child: MaterialApp.router(
+        localizationsDelegates: I18n.localizationsDelegates,
+        supportedLocales: I18n.supportedLocales,
+        theme: template.whenOrNull(
+          data: (Template data) => buildLightTheme(data.theme),
         ),
+        darkTheme: template.whenOrNull(
+          data: (Template data) => buildDarkTheme(data.theme),
+        ),
+        themeMode: appThemeMode,
+        routerConfig: goRouter,
       ),
     );
   }

@@ -1,13 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum TabItem {
   feed,
@@ -31,101 +32,126 @@ enum TabItem {
   int get navigationIndex => index > TabItem.main.index ? index - 1 : index;
 }
 
-// ignore: must_be_immutable
-class MainTabNavigation extends StatelessWidget {
-  MainTabNavigation({
+class MainTabNavigation extends HookConsumerWidget {
+  const MainTabNavigation({
     required this.navigationShell,
     super.key,
   });
 
   final StatefulNavigationShell navigationShell;
-  late SheetController sheetController;
-
-  void _onTap(BuildContext context, int index) {
-    final tabItem = TabItem.values[index];
-    if (tabItem == TabItem.main) {
-      _onMainButtonTap(context);
-    } else {
-      final metrics = sheetController.value;
-      if (metrics.hasDimensions && context.canPop()) {
-        // Collapse the sheet to reveal the map behind.
-        // sheetController.animateTo(
-        //   // Extent.pixels(metrics.minPixels),
-        //   const Extent.proportional(0),
-        //   curve: Curves.fastOutSlowIn,
-        // );
-        context.pop();
-      } else {
-        final adjustedIndex = tabItem.navigationIndex;
-
-        navigationShell.goBranch(
-          adjustedIndex,
-          initialLocation: adjustedIndex == navigationShell.currentIndex,
-        );
-      }
-    }
-  }
-
-  void _onMainButtonTap(BuildContext context) {
-    log('MainTabNavigation: Main button tapped');
-    final metrics = sheetController.value;
-    if (metrics.hasDimensions && context.canPop()) {
-      // Collapse the sheet to reveal the map behind.
-      // sheetController.animateTo(
-      //   // Extent.pixels(metrics.minPixels),
-      //   const Extent.proportional(0),
-      //   curve: Curves.fastOutSlowIn,
-      // );
-      context.pop();
-    } else {
-      FeedMainModal().push<void>(context);
-    }
-  }
-
-  int _adjustBottomNavIndex(int index) =>
-      index >= TabItem.main.index ? index + 1 : index;
 
   @override
-  Widget build(BuildContext context) {
-    sheetController = DefaultSheetController.of(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isModalOpen = useState(false);
+
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.canPop()) {
+            isModalOpen.value = true;
+          }
+        });
+        return null;
+      },
+      [],
+    );
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _adjustBottomNavIndex(navigationShell.currentIndex),
-        onTap: (value) => _onTap(context, value),
-        items: _navBarItems(),
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: context.theme.appColors.secondaryBackground,
-        selectedItemColor: context.theme.appColors.primaryAccent,
-        unselectedItemColor: context.theme.appColors.tertararyText,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
+      bottomNavigationBar: Builder(
+        builder: (context) {
+          log('Rebuilding BottomNavigationBar, '
+              'isModalOpen: ${isModalOpen.value}');
+          return BottomNavigationBar(
+            currentIndex: _adjustBottomNavIndex(navigationShell.currentIndex),
+            onTap: (index) => _onTap(context, isModalOpen, index),
+            items:
+                _navBarItems(isModalOpen.value, navigationShell.currentIndex),
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            selectedItemColor: Theme.of(context).colorScheme.primary,
+            unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+          );
+        },
       ),
     );
   }
 
-  List<BottomNavigationBarItem> _navBarItems() {
+  void _onTap(
+    BuildContext context,
+    ValueNotifier<bool> isModalOpen,
+    int index,
+  ) {
+    final tabItem = TabItem.values[index];
+    if (tabItem == TabItem.main) {
+      _onMainButtonTap(context, isModalOpen);
+    } else {
+      if (isModalOpen.value) {
+        context.pop();
+        isModalOpen.value = false;
+      }
+
+      final adjustedIndex = tabItem.navigationIndex;
+      navigationShell.goBranch(
+        adjustedIndex,
+        initialLocation: adjustedIndex == navigationShell.currentIndex,
+      );
+    }
+  }
+
+  void _onMainButtonTap(BuildContext context, ValueNotifier<bool> isModalOpen) {
+    if (context.canPop()) {
+      context.pop();
+      isModalOpen.value = false;
+    } else {
+      final currentIndex = navigationShell.currentIndex;
+      final currentTab = TabItem.values.firstWhere(
+        (tab) => tab != TabItem.main && tab.navigationIndex == currentIndex,
+        orElse: () => TabItem.main,
+      );
+
+      switch (currentTab) {
+        case TabItem.feed:
+          FeedMainModalRoute().push<void>(context);
+        case TabItem.chat:
+          ChatMainModalRoute().push<void>(context);
+        case TabItem.dapps:
+          DappsMainModalRoute().push<void>(context);
+        case TabItem.wallet:
+          WalletMainModalRoute().push<void>(context);
+        case TabItem.main:
+          // Handle main tab if needed
+          break;
+      }
+      isModalOpen.value = true;
+    }
+  }
+
+  List<BottomNavigationBarItem> _navBarItems(
+    bool isModalOpen,
+    int currentIndex,
+  ) {
     return TabItem.values.map((tabItem) {
       if (tabItem == TabItem.main) {
         return BottomNavigationBarItem(
-          icon: _MainButton(icon: tabItem.icon!),
+          icon: _MainButton(isModalOpen: isModalOpen),
           label: '',
         );
       }
       return BottomNavigationBarItem(
         icon: _TabIcon(
           icon: tabItem.icon!,
-          isSelected: _isTabSelected(tabItem),
+          isSelected: currentIndex == tabItem.navigationIndex,
         ),
         label: '',
       );
     }).toList();
   }
 
-  bool _isTabSelected(TabItem tabItem) {
-    return navigationShell.currentIndex == tabItem.navigationIndex;
-  }
+  int _adjustBottomNavIndex(int index) =>
+      index >= TabItem.main.index ? index + 1 : index;
 }
 
 class _TabIcon extends StatelessWidget {
@@ -150,15 +176,20 @@ class _TabIcon extends StatelessWidget {
 }
 
 class _MainButton extends StatelessWidget {
-  const _MainButton({required this.icon});
+  const _MainButton({required this.isModalOpen});
 
-  final AssetGenImage icon;
+  final bool isModalOpen;
 
   @override
   Widget build(BuildContext context) {
+    log('_MainButton build, isModalOpen: $isModalOpen');
+    final icon = isModalOpen
+        ? Assets.images.logo.logoButtonClose
+        : Assets.images.logo.logoButton;
+
     return SizedBox(
-      width: 50.0.s,
-      height: 50.0.s,
+      width: 50,
+      height: 50,
       child: icon.image(fit: BoxFit.contain),
     );
   }
