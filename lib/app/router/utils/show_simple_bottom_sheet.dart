@@ -5,9 +5,10 @@ import 'package:ice/app/router/components/sheet_content/sheet_shape.dart';
 Future<T?> showSimpleBottomSheet<T>({
   required BuildContext context,
   required Widget child,
+  bool useRootNavigator = true,
 }) {
   return showModalBottomSheet<T>(
-    useRootNavigator: true,
+    useRootNavigator: useRootNavigator,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     context: context,
