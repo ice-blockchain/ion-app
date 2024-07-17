@@ -30,7 +30,7 @@ class DeleteWalletModal extends IcePage {
     return ScreenSideOffset.small(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
+        children: [
           Padding(
             padding: EdgeInsets.only(top: 31.0.s, bottom: 4.0.s),
             child: Assets.images.misc.actionDeletewallet.icon(size: 80.0.s),
@@ -58,7 +58,7 @@ class DeleteWalletModal extends IcePage {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
+            children: [
               Expanded(
                 child: Button.compact(
                   type: ButtonType.outlined,

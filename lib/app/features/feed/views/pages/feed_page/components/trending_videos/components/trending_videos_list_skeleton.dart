@@ -27,7 +27,7 @@ class TrendingVideosListSkeleton extends StatelessWidget {
           child: ScreenSideOffset.small(
             child: SeparatedRow(
               separator: const TrendingVideosListSeparator(),
-              children: List<Widget>.generate(
+              children: List.generate(
                 numberOfItems,
                 (int i) => TrendingVideoListItemSkeleton(
                   itemSize: listOverlay.itemSize,

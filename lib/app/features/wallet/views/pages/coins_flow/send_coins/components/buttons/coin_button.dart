@@ -45,10 +45,10 @@ class CoinButton extends StatelessWidget {
         onTap: onTap,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
+              children: [
                 Text(
                   coinData.amount.toString(),
                   style: textTheme.body,

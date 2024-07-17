@@ -14,7 +14,7 @@ class ChatMainModalPage extends IcePage {
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
+            children: [
               SizedBox(
                 height: 250.0.s,
                 child: const Center(

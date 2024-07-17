@@ -16,7 +16,7 @@ class ArrivalTimeIndicator extends HookConsumerWidget {
     final arrivalTime = arrivalTimeSelector(ref);
 
     return Row(
-      children: <Widget>[
+      children: [
         Text(
           locale.wallet_arrival_time_type_normal,
           style: textTheme.body2.copyWith(
@@ -34,7 +34,7 @@ class ArrivalTimeIndicator extends HookConsumerWidget {
             borderRadius: BorderRadius.circular(15.0.s),
           ),
           child: Row(
-            children: <Widget>[
+            children: [
               Assets.images.icons.iconBlockTime.icon(
                 size: 12.0.s,
               ),

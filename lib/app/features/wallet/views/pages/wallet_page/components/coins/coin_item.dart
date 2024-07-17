@@ -30,7 +30,7 @@ class CoinItem extends HookConsumerWidget {
       onTap: onTap,
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
+        children: [
           Text(
             isBalanceVisible ? coinData.amount.toString() : '****',
             style: context.theme.appTextThemes.body

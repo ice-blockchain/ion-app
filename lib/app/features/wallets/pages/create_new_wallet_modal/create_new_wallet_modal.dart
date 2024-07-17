@@ -31,10 +31,10 @@ class CreateNewWalletModal extends IcePage {
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             NavigationAppBar.modal(
               title: context.i18n.wallet_create_new,
-              actions: const <Widget>[NavigationCloseButton()],
+              actions: const [NavigationCloseButton()],
             ),
             ScreenSideOffset.small(
               child: Padding(
@@ -46,7 +46,7 @@ class CreateNewWalletModal extends IcePage {
                   suffixIcon: walletName.value.isEmpty
                       ? null
                       : TextInputIcons(
-                          icons: <Widget>[
+                          icons: [
                             TextInputClearButton(
                               controller: controller,
                             ),

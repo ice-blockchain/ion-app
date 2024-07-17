@@ -17,7 +17,7 @@ class FeedModalItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: <Widget>[
+      children: [
         ListItem(
           title: Text(feedType.getDisplayName(context)),
           subtitle: Text(feedType.getDescription(context)),

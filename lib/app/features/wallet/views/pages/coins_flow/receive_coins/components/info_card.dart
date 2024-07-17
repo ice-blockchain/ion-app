@@ -17,7 +17,7 @@ class InfoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.0.s),
       ),
       child: Row(
-        children: <Widget>[
+        children: [
           Icon(
             Icons.info_outline,
             color: context.theme.appColors.primaryAccent,

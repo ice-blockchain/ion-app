@@ -23,7 +23,7 @@ class Post extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 12.0.s),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+        children: [
           const PostHeader(
             trailing: PostMenu(),
           ),

@@ -15,7 +15,7 @@ Widget regularListItemUseCase(BuildContext context) {
     body: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
+        children: [
           ListItem(
             title: const Text('Simple'),
             subtitle: const Text('List Item'),
@@ -44,7 +44,7 @@ Widget checkboxListItemUseCase(BuildContext context) {
     body: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
+        children: [
           ListItem.checkbox(
             value: true,
             title: const Text('With On Tap'),
@@ -66,7 +66,7 @@ Widget userListItemUseCase(BuildContext context) {
     body: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
+        children: [
           ListItem.user(
             title: const Text('Alina Proxima'),
             subtitle: const Text('@alinaproxima'),
@@ -124,7 +124,7 @@ Widget textListItemUseCase(BuildContext context) {
     body: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
+        children: [
           ListItem.text(
             title: const Text('List Item title'),
             value: 'List Item value',

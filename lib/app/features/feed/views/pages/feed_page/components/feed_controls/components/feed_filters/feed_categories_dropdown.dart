@@ -44,7 +44,7 @@ class FeedCategoriesDropdown extends HookConsumerWidget {
                   category;
             },
             child: Row(
-              children: <Widget>[
+              children: [
                 ButtonIconFrame(
                   color: category.getColor(context),
                   icon: category.getIcon(context),

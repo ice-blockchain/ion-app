@@ -26,7 +26,7 @@ class GridItem extends HookWidget {
       onTap: () => DAppDetailsRoute().push<void>(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
+        children: [
           Container(
             width: 48.0.s,
             height: 48.0.s,
@@ -45,9 +45,9 @@ class GridItem extends HookWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+              children: [
                 Row(
-                  children: <Widget>[
+                  children: [
                     Text(
                       item.title,
                       style: context.theme.appTextThemes.body.copyWith(
@@ -78,7 +78,7 @@ class GridItem extends HookWidget {
                   ),
                 ),
                 Row(
-                  children: <Widget>[
+                  children: [
                     IconTheme(
                       data: IconThemeData(
                         size: 12.0.s,

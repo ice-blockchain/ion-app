@@ -22,7 +22,7 @@ class ListItemsLoadingState extends StatelessWidget {
             separator: SizedBox(
               height: 12.0.s,
             ),
-            children: List<Widget>.generate(
+            children: List.generate(
               itemCount,
               (int i) => ScreenSideOffset.small(child: ListItem()),
             ).toList(),

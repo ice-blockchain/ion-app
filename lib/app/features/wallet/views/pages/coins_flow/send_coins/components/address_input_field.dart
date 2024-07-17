@@ -27,7 +27,7 @@ class AddressInputField extends StatelessWidget {
         horizontal: 16.0.s,
       ),
       suffixIcon: TextInputIcons(
-        icons: <Widget>[
+        icons: [
           IconButton(
             icon: Assets.images.icons.iconContactList.icon(),
             onPressed: onOpenContactList,

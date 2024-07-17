@@ -24,14 +24,14 @@ class DAppsPage extends IcePage {
     return Scaffold(
       body: CustomScrollView(
         controller: scrollController,
-        slivers: <Widget>[
+        slivers: [
           FloatingAppBar(
             height: WalletHeader.height,
             child: const WalletHeader(),
           ),
           SliverToBoxAdapter(
             child: Column(
-              children: <Widget>[
+              children: [
                 const Featured(),
                 Padding(
                   padding: EdgeInsets.only(top: 20.0.s, bottom: 7.0.s),

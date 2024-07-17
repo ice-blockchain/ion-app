@@ -143,7 +143,7 @@ class Button extends StatelessWidget {
           child: Row(
             mainAxisSize: mainAxisSize,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+            children: [
               if (leadingIcon != null) leadingIcon!,
               if (label != null)
                 Flexible(

@@ -21,7 +21,7 @@ class FeedMainModalPage extends IcePage {
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
+            children: [
               NavigationAppBar.screen(
                 title: context.i18n.feed_modal_title,
                 showBackButton: false,

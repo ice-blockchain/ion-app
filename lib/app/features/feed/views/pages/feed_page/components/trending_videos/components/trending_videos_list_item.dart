@@ -41,13 +41,13 @@ class TrendingVideoListItem extends HookConsumerWidget {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+          children: [
             SizedBox(
               height: 40.0.s,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
+                children: [
                   TrendingVideoLikesButton(
                     likes: video.likes,
                     onPressed: () {},

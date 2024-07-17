@@ -24,7 +24,7 @@ class TurnOnNotifications extends IcePage {
   Widget buildPage(BuildContext context, WidgetRef ref) {
     return SheetContent(
       body: Column(
-        children: <Widget>[
+        children: [
           Padding(
             padding: EdgeInsets.only(bottom: 16.0.s),
             child: AuthHeader(
@@ -35,7 +35,7 @@ class TurnOnNotifications extends IcePage {
           ),
           Expanded(
             child: CustomScrollView(
-              slivers: <Widget>[
+              slivers: [
                 const SliverToBoxAdapter(
                   child: Notifications(),
                 ),

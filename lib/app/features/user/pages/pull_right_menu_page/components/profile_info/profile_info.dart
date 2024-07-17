@@ -30,7 +30,7 @@ class ProfileInfo extends HookWidget {
       child: Stack(
         alignment: Alignment.bottomCenter,
         clipBehavior: Clip.none,
-        children: <Widget>[
+        children: [
           const BackgroundPicture(),
           Positioned(
             bottom: -bottomOverflow.value,

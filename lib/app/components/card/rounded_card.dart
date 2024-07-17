@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
 class RoundedCard extends StatelessWidget {
-  // Add to widget book
   const RoundedCard({
     required this.child,
     this.padding,

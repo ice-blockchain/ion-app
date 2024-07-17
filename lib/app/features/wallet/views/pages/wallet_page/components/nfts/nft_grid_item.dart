@@ -37,7 +37,7 @@ class NftGridItem extends HookConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
+        children: [
           ClipRRect(
             borderRadius: borderRadius,
             child: CachedNetworkImage(
@@ -56,7 +56,7 @@ class NftGridItem extends HookConsumerWidget {
             overflow: TextOverflow.ellipsis,
           ),
           Row(
-            children: <Widget>[
+            children: [
               Text(
                 '#${nftData.identifier}',
                 style: context.theme.appTextThemes.subtitle3.copyWith(

@@ -55,13 +55,13 @@ class CoinsListView extends HookConsumerWidget {
     return FractionallySizedBox(
       heightFactor: 0.79,
       child: Column(
-        children: <Widget>[
+        children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
               title: title,
               showBackButton: false,
-              actions: const <Widget>[
+              actions: const [
                 NavigationCloseButton(),
               ],
             ),

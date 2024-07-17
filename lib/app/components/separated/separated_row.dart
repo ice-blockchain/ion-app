@@ -11,7 +11,7 @@ class SeparatedRow extends Row {
     super.textDirection,
     super.verticalDirection,
     super.textBaseline,
-    List<Widget> children = const <Widget>[],
+    List<Widget> children = const [],
   }) : super(
           children: children.intersperse(separator).toList(),
         );

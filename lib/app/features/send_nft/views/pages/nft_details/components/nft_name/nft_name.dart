@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/card/rounded_card.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
-class NftName extends HookConsumerWidget {
+class NftName extends StatelessWidget {
   const NftName({
     required this.name,
     required this.rank,
@@ -20,7 +19,7 @@ class NftName extends HookConsumerWidget {
   final Widget networkSymbolIcon;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return RoundedCard(
       child: Column(
         children: [

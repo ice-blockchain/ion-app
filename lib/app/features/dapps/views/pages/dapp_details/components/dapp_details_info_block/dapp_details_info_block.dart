@@ -29,13 +29,13 @@ class DappDetailsInfoBlock extends StatelessWidget {
         padding: EdgeInsets.all(12.0.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          children: [
             title ?? const SizedBox.shrink(),
             if (showBottomPart)
               Padding(
                 padding: EdgeInsets.only(top: 4.0.s),
                 child: Row(
-                  children: <Widget>[
+                  children: [
                     if (iconPath != null)
                       Padding(
                         padding: EdgeInsets.only(right: 6.0.s),

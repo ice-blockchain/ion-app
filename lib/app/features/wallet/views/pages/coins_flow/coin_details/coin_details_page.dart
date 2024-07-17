@@ -58,10 +58,10 @@ class CoinDetailsPage extends IcePage {
       ),
       body: CustomScrollView(
         controller: scrollController,
-        slivers: <Widget>[
+        slivers: [
           SliverToBoxAdapter(
             child: Column(
-              children: <Widget>[
+              children: [
                 const Delimiter(),
                 Balance(
                   coinData: payload,
@@ -85,7 +85,7 @@ class CoinDetailsPage extends IcePage {
             for (final MapEntry<String, List<CoinTransactionData>>(
                   key: String date,
                   value: List<CoinTransactionData> transactions
-                ) in coinTransactionsMap.entries) ...<Widget>[
+                ) in coinTransactionsMap.entries) ...[
               SliverToBoxAdapter(
                 child: TransactionSectionHeader(
                   date: date,

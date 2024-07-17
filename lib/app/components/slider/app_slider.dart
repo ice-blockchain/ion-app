@@ -76,7 +76,7 @@ class AppSlider extends HookWidget {
             height: sliderHeight.s,
             child: Stack(
               alignment: Alignment.center,
-              children: <Widget>[
+              children: [
                 TrackBar.inactive(
                   trackBarHeight: trackBarHeight,
                   color: context.theme.appColors.onTerararyFill,

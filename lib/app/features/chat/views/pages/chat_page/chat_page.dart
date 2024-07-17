@@ -18,7 +18,7 @@ class ChatPage extends IcePage {
         decoration: BoxDecoration(color: context.theme.appColors.attentionRed),
         child: Center(
           child: Column(
-            children: <Widget>[
+            children: [
               ElevatedButton(
                 onPressed: () {},
                 child: const Text('Open Error Modal'),

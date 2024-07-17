@@ -39,10 +39,10 @@ class EditWalletModal extends IcePage {
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             NavigationAppBar.modal(
               title: context.i18n.wallet_edit,
-              actions: const <Widget>[NavigationCloseButton()],
+              actions: const [NavigationCloseButton()],
             ),
             ScreenSideOffset.small(
               child: Padding(
@@ -54,7 +54,7 @@ class EditWalletModal extends IcePage {
                   suffixIcon: walletName.value.isEmpty
                       ? null
                       : TextInputIcons(
-                          icons: <Widget>[
+                          icons: [
                             TextInputClearButton(
                               controller: controller,
                             ),

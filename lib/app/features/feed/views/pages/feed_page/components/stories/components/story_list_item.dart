@@ -33,11 +33,11 @@ class StoryListItem extends StatelessWidget {
         height: height,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+          children: [
             Stack(
               clipBehavior: Clip.none,
               alignment: Alignment.bottomCenter,
-              children: <Widget>[
+              children: [
                 Avatar(
                   size: width,
                   imageUrl: imageUrl,

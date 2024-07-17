@@ -38,15 +38,15 @@ class ManageCoinsPage extends IcePage {
 
     return SheetContent(
       body: Column(
-        children: <Widget>[
+        children: [
           NavigationAppBar.modal(
             showBackButton: false,
             title: context.i18n.wallet_manage_coins,
-            actions: const <Widget>[NavigationDoneButton()],
+            actions: const [NavigationDoneButton()],
           ),
           Expanded(
             child: CustomScrollView(
-              slivers: <Widget>[
+              slivers: [
                 FloatingAppBar(
                   height: SearchInput.height,
                   child: ScreenSideOffset.small(

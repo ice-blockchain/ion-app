@@ -33,12 +33,12 @@ class ShareAddressView extends IcePage {
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
+        children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
               title: context.i18n.wallet_share_address,
-              actions: const <Widget>[
+              actions: const [
                 NavigationCloseButton(),
               ],
             ),
@@ -46,7 +46,7 @@ class ShareAddressView extends IcePage {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0.s),
             child: Column(
-              children: <Widget>[
+              children: [
                 ReceiveInfoCard(
                   coinData: coinData,
                   networkType: networkType,

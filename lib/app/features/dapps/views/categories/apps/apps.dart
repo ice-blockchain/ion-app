@@ -35,7 +35,7 @@ class Apps extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: topOffset ?? 6.0.s),
       child: Column(
-        children: <Widget>[
+        children: [
           SectionHeader(title: title, onPress: onPress),
           AppsCollection(items: items),
         ],

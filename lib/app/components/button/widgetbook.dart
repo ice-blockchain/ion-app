@@ -16,7 +16,7 @@ Widget regularButtonUseCase(BuildContext context) {
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
+      children: [
         Button(
           label: Text(
             context.knobs.string(
@@ -93,7 +93,7 @@ Widget iconButtonUseCase(BuildContext context) {
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
+      children: [
         Button.icon(
           icon: Assets.images.icons.iconHeaderMenu.icon(),
           onPressed: () {},
@@ -138,10 +138,10 @@ Widget compactButtonUseCase(BuildContext context) {
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
+      children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+          children: [
             Expanded(
               child: Button.compact(
                 leadingIcon: Assets.images.icons.iconButtonReceive.icon(),
@@ -185,7 +185,7 @@ Widget menuButtonUseCase(BuildContext context) {
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
+      children: [
         Button.menu(
           onPressed: () {},
           leadingIcon: ButtonIconFrame(
@@ -232,7 +232,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
+      children: [
         Button.dropdown(
           onPressed: () {},
           leadingIcon: ButtonIconFrame(

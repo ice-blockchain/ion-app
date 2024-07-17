@@ -19,7 +19,7 @@ class BalanceActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
+      children: [
         Expanded(
           child: Button.compact(
             leadingIcon: Assets.images.icons.iconButtonSend.icon(),

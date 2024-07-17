@@ -26,7 +26,7 @@ Widget regularTextInputUseCase(BuildContext context) {
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
+            children: [
               TextInput(
                 labelText: 'Basic text input',
               ),
@@ -61,7 +61,7 @@ Widget regularTextInputUseCase(BuildContext context) {
               TextInput(
                 labelText: 'Basic text input with prefix icon',
                 prefixIcon: TextInputIcons(
-                  icons: <Widget>[
+                  icons: [
                     Assets.images.icons.iconBadgeCompany.icon(),
                   ],
                   hasRightDivider: true,
@@ -70,7 +70,7 @@ Widget regularTextInputUseCase(BuildContext context) {
               TextInput(
                 labelText: 'Basic text input with suffix buttons',
                 suffixIcon: TextInputIcons(
-                  icons: <Widget>[
+                  icons: [
                     IconButton(
                       icon: Assets.images.icons.iconBlockEyeOn.icon(),
                       onPressed: () {},
@@ -117,7 +117,7 @@ class TextInputWithClear extends HookWidget {
       controller: controller,
       labelText: 'With clear button',
       suffixIcon: TextInputIcons(
-        icons: <Widget>[
+        icons: [
           TextInputClearButton(
             controller: controller,
           ),

@@ -10,7 +10,7 @@ Widget regularRoundedCardUseCase(BuildContext context) {
   return const Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
+      children: [
         RoundedCard(
           child: Text('Simple Rounded Card'),
         ),

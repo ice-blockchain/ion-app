@@ -29,7 +29,7 @@ class DAppDetails extends IcePage {
       appBar: NavigationAppBar.screen(
         title: item.title,
         showBackButton: false,
-        actions: <Widget>[
+        actions: [
           IconButton(
             icon: Assets.images.icons.iconSheetClose.icon(
               size: NavigationAppBar.actionButtonSide,
@@ -48,7 +48,7 @@ class DAppDetails extends IcePage {
             padding: EdgeInsets.only(top: 10.0.s),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
+              children: [
                 if (item.backgroundImage != null)
                   AspectRatio(
                     aspectRatio: 343 / 200,
@@ -109,7 +109,7 @@ class DAppDetails extends IcePage {
                     iconPath: Assets.images.icons.iconButtonIceStroke.path,
                   ),
                 Row(
-                  children: <Widget>[
+                  children: [
                     Expanded(
                       child: DappDetailsInfoBlock(
                         title: Text(

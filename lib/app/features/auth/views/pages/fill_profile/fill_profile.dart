@@ -41,7 +41,7 @@ class FillProfile extends IcePage {
             child: Form(
               key: _formKey,
               child: Column(
-                children: <Widget>[
+                children: [
                   AuthHeader(
                     title: context.i18n.fill_profile_title,
                     description: context.i18n.fill_profile_description,
@@ -49,7 +49,7 @@ class FillProfile extends IcePage {
                   ),
                   ScreenSideOffset.large(
                     child: Column(
-                      children: <Widget>[
+                      children: [
                         SizedBox(
                           height: 20.0.s,
                         ),
@@ -62,7 +62,7 @@ class FillProfile extends IcePage {
                         TextInput(
                           prefixIcon: TextInputIcons(
                             hasRightDivider: true,
-                            icons: <Widget>[
+                            icons: [
                               Assets.images.icons.iconFieldName.icon(),
                             ],
                           ),
@@ -81,7 +81,7 @@ class FillProfile extends IcePage {
                         TextInput(
                           prefixIcon: TextInputIcons(
                             hasRightDivider: true,
-                            icons: <Widget>[
+                            icons: [
                               Assets.images.icons.iconFieldNickname.icon(),
                             ],
                           ),
@@ -106,7 +106,7 @@ class FillProfile extends IcePage {
                         TextInput(
                           prefixIcon: TextInputIcons(
                             hasRightDivider: true,
-                            icons: <Widget>[
+                            icons: [
                               Assets.images.icons.iconFieldInviter.icon(),
                             ],
                           ),

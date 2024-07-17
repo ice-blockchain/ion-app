@@ -20,7 +20,7 @@ class TextInputIcons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
+      children: [
         if (hasLeftDivider)
           Padding(
             padding: EdgeInsets.only(left: 16.0.s),

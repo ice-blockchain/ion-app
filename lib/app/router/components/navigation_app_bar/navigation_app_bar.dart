@@ -89,7 +89,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+              children: [
                 titleIcon!,
                 SizedBox(
                   width: 6.0.s,

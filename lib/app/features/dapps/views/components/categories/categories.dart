@@ -9,7 +9,7 @@ class Categories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: <Widget>[
+      children: [
         SectionHeader(title: context.i18n.dapps_section_title_categories),
         const CategoriesCollection(),
       ],

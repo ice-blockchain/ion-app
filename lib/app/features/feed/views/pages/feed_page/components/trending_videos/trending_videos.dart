@@ -29,7 +29,7 @@ class TrendingVideos extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: 18.0.s),
       child: Column(
-        children: <Widget>[
+        children: [
           SectionHeader(
             onPress: () {},
             title: context.i18n.feed_trending_videos,

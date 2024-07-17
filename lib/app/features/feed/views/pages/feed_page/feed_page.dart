@@ -24,7 +24,7 @@ class FeedPage extends HookConsumerWidget {
       child: Scaffold(
         body: CustomScrollView(
           controller: scrollController,
-          slivers: <Widget>[
+          slivers: [
             FloatingAppBar(
               height: FeedControls.height,
               child: FeedControls(
@@ -33,10 +33,10 @@ class FeedPage extends HookConsumerWidget {
             ),
             SliverToBoxAdapter(
               child: Column(
-                children: <Widget>[
+                children: [
                   const Stories(),
                   FeedListSeparator(height: 16.0.s),
-                  if (feedCategory == FeedCategory.feed) ...<Widget>[
+                  if (feedCategory == FeedCategory.feed) ...[
                     const TrendingVideos(),
                     FeedListSeparator(),
                   ],

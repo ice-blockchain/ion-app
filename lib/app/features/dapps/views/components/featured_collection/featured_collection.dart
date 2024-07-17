@@ -40,12 +40,12 @@ class FeaturedCollection extends StatelessWidget {
                 ),
               ),
               child: Stack(
-                children: <Widget>[
+                children: [
                   Positioned(
                     bottom: 12.0.s,
                     left: 12.0.s,
                     child: Row(
-                      children: <Widget>[
+                      children: [
                         DecoratedBox(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -60,7 +60,7 @@ class FeaturedCollection extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
+                          children: [
                             ShadowText(
                               child: Text(
                                 items[index].title,

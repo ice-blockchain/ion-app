@@ -12,7 +12,7 @@ class Featured extends IceComponent {
   @override
   Widget buildComponent(BuildContext context, WidgetRef ref, int variant) {
     return Column(
-      children: <Widget>[
+      children: [
         SectionHeader(title: context.i18n.dapps_section_title_featured),
         FeaturedCollection(items: mockedFeatured),
       ],

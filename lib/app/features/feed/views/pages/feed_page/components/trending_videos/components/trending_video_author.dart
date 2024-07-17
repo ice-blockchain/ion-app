@@ -23,7 +23,7 @@ class TrendingVideoAuthor extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(4.0.s),
           child: Row(
-            children: <Widget>[
+            children: [
               Container(
                 width: 20.0.s,
                 height: 20.0.s,

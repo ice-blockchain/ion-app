@@ -38,14 +38,14 @@ class SelectLanguages extends IcePage {
 
     return SheetContent(
       body: Column(
-        children: <Widget>[
+        children: [
           AuthHeader(
             title: context.i18n.select_languages_title,
             description: context.i18n.select_languages_description,
           ),
           Expanded(
             child: CustomScrollView(
-              slivers: <Widget>[
+              slivers: [
                 FloatingAppBar(
                   topOffset: 16.0.s,
                   height: SearchInput.height,

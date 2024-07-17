@@ -33,7 +33,7 @@ class NftDetailsPage extends IcePage {
       appBar: NavigationAppBar.screen(
         title: context.i18n.send_nft_navigation_title,
         showBackButton: false,
-        actions: <Widget>[
+        actions: [
           IconButton(
             icon: Assets.images.icons.iconSheetClose.icon(
               size: NavigationAppBar.actionButtonSide,
@@ -50,7 +50,7 @@ class NftDetailsPage extends IcePage {
           padding: EdgeInsets.only(top: 10.0.s),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
+            children: [
               NftPicture(imageUrl: payload.iconUrl),
               SizedBox(height: 15.0.s),
               NftName(

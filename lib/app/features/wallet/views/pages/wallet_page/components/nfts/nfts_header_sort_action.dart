@@ -25,7 +25,7 @@ class NftHeaderSortAction extends HookConsumerWidget {
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Row(
-          children: <Widget>[
+          children: [
             Text(
               nftSortingType.getTitle(context),
               style: context.theme.appTextThemes.caption.copyWith(

@@ -21,7 +21,7 @@ class NftHeaderLayoutAction extends HookConsumerWidget {
     final inactiveColor = context.theme.appColors.tertararyText;
 
     return Row(
-      children: <Widget>[
+      children: [
         TextButton(
           onPressed: () {
             ref

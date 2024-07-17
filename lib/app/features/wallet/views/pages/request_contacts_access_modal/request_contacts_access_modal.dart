@@ -28,7 +28,7 @@ class RequestContactAccessModal extends IcePage {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             Assets.images.wallet.walletIce.icon(size: iceIconSize),
             SizedBox(
               height: ScreenSideOffset.defaultSmallMargin,

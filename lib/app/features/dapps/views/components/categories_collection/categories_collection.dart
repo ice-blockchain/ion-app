@@ -70,7 +70,7 @@ class CategoriesCollection extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
+              children: [
                 Button.icon(
                   onPressed: () {
                     DAppsListRoute(
