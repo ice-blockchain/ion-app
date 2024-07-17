@@ -13,11 +13,18 @@ class SendFundsResultIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (transaction.state) {
-      Success() => Assets.images.misc.actionContactsendSuccess.icon(
-          size: 80.0.s,
+      SuccessSend() => Assets.images.icons.actionSendfunds.iconWithDimensions(
+          width: 74.0.s,
+          height: 76.0.s,
         ),
-      Error() => Assets.images.misc.actionContactsendError.icon(
-          size: 80.0.s,
+      SuccessContact() =>
+        Assets.images.misc.actionContactsendSuccess.iconWithDimensions(
+          width: 63.0.s,
+          height: 76.0.s,
+        ),
+      Error() => Assets.images.misc.actionContactsendError.iconWithDimensions(
+          width: 65.0.s,
+          height: 76.0.s,
         ),
     };
   }

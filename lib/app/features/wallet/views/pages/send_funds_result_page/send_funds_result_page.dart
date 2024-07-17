@@ -25,30 +25,60 @@ class SendFundsResultPage extends HookConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Stack(
-            children: [
-              NavigationAppBar.modal(
-                showBackButton: false,
-                actions: const [NavigationCloseButton()],
+          switch (transaction.state) {
+            SuccessSend() => Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40.0.s),
+                      child: SendFundsResultIcon(transaction: transaction),
+                    ),
+                  ),
+                ],
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 40.0.s),
-                  child: SendFundsResultIcon(transaction: transaction),
-                ),
+            SuccessContact() => Stack(
+                children: [
+                  NavigationAppBar.modal(
+                    showBackButton: false,
+                    actions: const [NavigationCloseButton()],
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40.0.s),
+                      child: SendFundsResultIcon(transaction: transaction),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            Error() => Stack(
+                children: [
+                  NavigationAppBar.modal(
+                    showBackButton: false,
+                    actions: const [NavigationCloseButton()],
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40.0.s),
+                      child: SendFundsResultIcon(transaction: transaction),
+                    ),
+                  ),
+                ],
+              ),
+          },
           SizedBox(height: 10.0.s),
           SendFundsResultMessage(transaction: transaction),
           SizedBox(height: 10.0.s),
-          if (transaction.state is Success) SizedBox(height: 6.0.s),
-          if (transaction.state is Error)
-            SendFundsResultErrorMessage(
-              transaction: transaction,
-              showErrorDetails: showErrorDetails,
-            ),
+          switch (transaction.state) {
+            SuccessSend() => SizedBox(height: 6.0.s),
+            SuccessContact() => SizedBox(height: 6.0.s),
+            Error() => SendFundsResultErrorMessage(
+                transaction: transaction,
+                showErrorDetails: showErrorDetails,
+              ),
+          },
           SizedBox(height: 20.0.s),
           SendFundsResultDetails(
             transaction: transaction,

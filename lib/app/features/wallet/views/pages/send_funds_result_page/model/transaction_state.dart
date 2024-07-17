@@ -1,6 +1,8 @@
 sealed class TransactionState {}
 
-class Success extends TransactionState {}
+class SuccessContact extends TransactionState {}
+
+class SuccessSend extends TransactionState {}
 
 class Error extends TransactionState {
   Error(this.errorDetails);

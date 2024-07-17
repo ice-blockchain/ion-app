@@ -11,7 +11,13 @@ class SendFundsResultMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (transaction.state) {
-      Success() => Text(
+      SuccessSend() => Text(
+          context.i18n.wallet_funds_successful,
+          style: context.theme.appTextThemes.title.copyWith(
+            color: context.theme.appColors.primaryAccent,
+          ),
+        ),
+      SuccessContact() => Text(
           context.i18n.wallet_funds_successful,
           style: context.theme.appTextThemes.title.copyWith(
             color: context.theme.appColors.primaryAccent,

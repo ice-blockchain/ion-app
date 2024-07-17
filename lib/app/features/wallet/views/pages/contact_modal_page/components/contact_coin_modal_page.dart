@@ -19,7 +19,7 @@ class ContactCoinModalPage extends IcePage {
         onCoinItemTap: (CoinData coin) {
           SendFundsResultRoute(
             $extra: TransactionUiModel(
-              state: Error('Error 8594. Your transaction failed'),
+              state: SuccessSend(),
               coin: coin,
               type: CoinTransaction(),
             ),

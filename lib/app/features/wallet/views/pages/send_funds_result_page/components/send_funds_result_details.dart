@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/components/send_funds_success_send_button.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_state.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_type.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_ui_model.dart';
@@ -22,54 +23,64 @@ class SendFundsResultDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = '${formatToCurrency(transaction.coin.amount, '')} '
         '${transaction.coin.abbreviation}';
-    if (transaction.type is CoinTransaction) {
-      return Column(
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              transaction.coin.iconUrl.icon(size: 24.0.s),
-              SizedBox(width: 12.0.s),
-              Text(
-                text,
-                style: context.theme.appTextThemes.headline2,
-              ),
-            ],
-          ),
-          SizedBox(height: 4.0.s),
-          Text(
-            '~ ${formatToCurrency(transaction.coin.balance)}',
-            style: context.theme.appTextThemes.subtitle2.copyWith(
-              color: context.theme.appColors.onTertararyBackground,
-            ),
-          ),
-          if (transaction.state is Success) ...[
-            SizedBox(height: 29.0.s),
-            _buildButtons(context),
-          ],
-          if (transaction.state is Error) ...[
-            SizedBox(height: 16.0.s),
-            ScreenSideOffset.small(
-              child: Button.compact(
-                mainAxisSize: MainAxisSize.max,
-                minimumSize: Size(56.0.s, 56.0.s),
-                leadingIcon: Assets.images.icons.iconButtonTryagain.icon(),
-                label: Text(
-                  context.i18n.wallet_try_again,
+
+    return switch (transaction.type) {
+      CoinTransaction() => Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                transaction.coin.iconUrl.icon(size: 24.0.s),
+                SizedBox(width: 12.0.s),
+                Text(
+                  text,
+                  style: context.theme.appTextThemes.headline2,
                 ),
-                onPressed: () {},
+              ],
+            ),
+            SizedBox(height: 4.0.s),
+            Text(
+              '~ ${formatToCurrency(transaction.coin.balance)}',
+              style: context.theme.appTextThemes.subtitle2.copyWith(
+                color: context.theme.appColors.onTertararyBackground,
               ),
             ),
+            switch (transaction.state) {
+              SuccessSend() => Column(
+                  children: [
+                    SizedBox(height: 31.0.s),
+                    const SendFundsSuccessSendButton(),
+                  ],
+                ),
+              SuccessContact() => Column(
+                  children: [
+                    SizedBox(height: 29.0.s),
+                    _buildButtons(context),
+                  ],
+                ),
+              Error() => Column(
+                  children: [
+                    SizedBox(height: 16.0.s),
+                    ScreenSideOffset.small(
+                      child: Button.compact(
+                        mainAxisSize: MainAxisSize.max,
+                        minimumSize: Size(56.0.s, 56.0.s),
+                        leadingIcon:
+                            Assets.images.icons.iconButtonTryagain.icon(),
+                        label: Text(
+                          context.i18n.wallet_try_again,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ],
+                ),
+            },
           ],
-        ],
-      );
-    } else if (transaction.type is NftTransaction) {
-      //TODO: Implement nft UI
-      return const SizedBox.shrink();
-    } else {
-      return const SizedBox.shrink();
-    }
+        ),
+      NftTransaction() => const SizedBox.shrink(), //TODO: Implement nft UI
+    };
   }
 
   Widget _buildButtons(BuildContext context) {
