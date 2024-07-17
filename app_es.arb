@@ -178,6 +178,7 @@
     "send_nft_token_network",
     "send_nft_token_standard",
     "send_nft_token_contract_address",
-    "send_nft_title"
+    "send_nft_title",
+    "post_page_title"
   ]
 }
