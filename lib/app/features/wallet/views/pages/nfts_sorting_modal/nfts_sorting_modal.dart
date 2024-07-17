@@ -23,11 +23,11 @@ class NftsSortingModal extends IcePage {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             NavigationAppBar.modal(
               showBackButton: false,
               title: context.i18n.wallet_sorting_title,
-              actions: const <Widget>[NavigationCloseButton()],
+              actions: const [NavigationCloseButton()],
             ),
             SizedBox(
               height: 16.0.s,

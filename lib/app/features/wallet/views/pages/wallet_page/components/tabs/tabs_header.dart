@@ -32,7 +32,7 @@ class WalletTabsHeader extends HookConsumerWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
+        children: [
           WalletTabsHeaderTab(
             isActive: activeTab == WalletTabType.coins,
             tabType: WalletTabType.coins,

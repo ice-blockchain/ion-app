@@ -35,7 +35,7 @@ class GetStartedPage extends IcePage {
                 ),
                 ScreenSideOffset.large(
                   child: Column(
-                    children: <Widget>[
+                    children: [
                       SizedBox(height: 56.0.s),
                       const LoginForm(),
                       SizedBox(height: 14.0.s),

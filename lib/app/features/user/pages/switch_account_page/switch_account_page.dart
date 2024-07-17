@@ -17,11 +17,11 @@ class SwitchAccountPage extends IcePage {
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             NavigationAppBar.modal(
               showBackButton: false,
               title: context.i18n.profile_switch_user_header,
-              actions: const <Widget>[
+              actions: const [
                 NavigationCloseButton(),
               ],
             ),

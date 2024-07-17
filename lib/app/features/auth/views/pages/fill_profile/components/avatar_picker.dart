@@ -27,7 +27,7 @@ class AvatarPicker extends HookWidget {
     }
 
     return Stack(
-      children: <Widget>[
+      children: [
         if (avatar.value != null)
           CircleAvatar(
             radius: 50.0.s,

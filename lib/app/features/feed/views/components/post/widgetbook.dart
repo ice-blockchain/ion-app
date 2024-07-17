@@ -15,7 +15,7 @@ Widget feedPostUseCase(BuildContext context) {
     body: SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
+        children: [
           Post(
             postData: PostData.fromRawContent(
               id: 'test_1',

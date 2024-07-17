@@ -10,7 +10,7 @@ class PostSkeleton extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 10.0.s),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+        children: [
           Padding(
             padding: EdgeInsets.only(
               top: 14.5.s,

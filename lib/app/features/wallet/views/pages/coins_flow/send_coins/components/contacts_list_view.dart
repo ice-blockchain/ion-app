@@ -20,13 +20,13 @@ class ContactsListView extends IcePage {
     return FractionallySizedBox(
       heightFactor: 0.79,
       child: Column(
-        children: <Widget>[
+        children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
               title: context.i18n.wallet_send_coins,
               showBackButton: false,
-              actions: const <Widget>[
+              actions: const [
                 NavigationCloseButton(),
               ],
             ),

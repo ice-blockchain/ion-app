@@ -27,7 +27,7 @@ class CopiedTooltip extends HookConsumerWidget {
     });
 
     return Column(
-      children: <Widget>[
+      children: [
         Container(
           key: tooltipKey,
           height: 22.0.s,

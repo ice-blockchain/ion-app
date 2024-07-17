@@ -18,7 +18,7 @@ class PostListSkeleton extends StatelessWidget {
       child: Skeleton(
         child: SeparatedColumn(
           separator: FeedListSeparator(),
-          children: List<Widget>.generate(
+          children: List.generate(
             numberOfItems,
             (int i) => ScreenSideOffset.small(child: const PostSkeleton()),
           ).toList(),

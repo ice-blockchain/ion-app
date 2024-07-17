@@ -42,7 +42,7 @@ class Favourites extends StatelessWidget {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
+              children: [
                 FavouriteIcon(
                   borderRadius: 12.0.s,
                   size: 36.0.s,
@@ -53,7 +53,7 @@ class Favourites extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
+                    children: [
                       Text(
                         context.i18n.dapps_section_title_favourites,
                         style: context.theme.appTextThemes.body.copyWith(

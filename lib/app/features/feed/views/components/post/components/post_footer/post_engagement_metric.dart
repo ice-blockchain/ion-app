@@ -38,7 +38,7 @@ class PostEngagementMetric extends StatelessWidget {
           horizontal: horizontalHitSlop,
         ),
         child: Row(
-          children: <Widget>[
+          children: [
             IconTheme(
               data: IconThemeData(
                 size: 16.0.s,

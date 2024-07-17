@@ -32,7 +32,7 @@ class DiscoverCreators extends IcePage {
 
     return SheetContent(
       body: Column(
-        children: <Widget>[
+        children: [
           Padding(
             padding: EdgeInsets.only(bottom: 16.0.s),
             child: AuthHeader(
@@ -42,7 +42,7 @@ class DiscoverCreators extends IcePage {
           ),
           Expanded(
             child: CustomScrollView(
-              slivers: <Widget>[
+              slivers: [
                 SliverList.separated(
                   separatorBuilder: (BuildContext _, int __) => SizedBox(
                     height: 8.0.s,

@@ -32,7 +32,7 @@ class EmptyState extends HookConsumerWidget {
       child: ScreenSideOffset.small(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+          children: [
             Expanded(
               child: EmptyList(
                 asset: asset,

@@ -18,7 +18,7 @@ class Footer extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 8.0.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          children: [
             FooterAction(
               onPressed: () {},
               icon: Assets.images.icons.iconProfileSettings.icon(),

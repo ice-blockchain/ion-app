@@ -16,7 +16,7 @@ class StoryListItemSkeleton extends StatelessWidget {
       height: StoryListItem.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
+        children: [
           Container(
             width: StoryListItem.width,
             height: StoryListItem.width,

@@ -17,7 +17,7 @@ class ActionsList extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final activeUser = ref.watch(userDataNotifierProvider);
     return Column(
-      children: <Widget>[
+      children: [
         ActionButton(
           icon: Assets.images.icons.iconLoginCreateacc.icon(),
           label: context.i18n.profile_create_new_account,

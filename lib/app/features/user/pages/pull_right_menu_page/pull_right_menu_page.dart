@@ -17,10 +17,10 @@ class PullRightMenuPage extends IcePage {
       color: context.theme.appColors.secondaryBackground,
       child: const Stack(
         alignment: Alignment.topCenter,
-        children: <Widget>[
+        children: [
           SingleChildScrollView(
             child: Column(
-              children: <Widget>[
+              children: [
                 ProfileInfo(),
                 LinksList(),
                 Footer(),

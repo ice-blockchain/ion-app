@@ -30,7 +30,7 @@ class TransactionListItem extends StatelessWidget {
     return ListItem(
       title: Text(transactionData.transactionType.getDisplayName(context)),
       subtitle: Row(
-        children: <Widget>[
+        children: [
           transactionData.networkType.iconAsset.icon(size: 16.0.s),
           SizedBox(
             width: 4.0.s,
@@ -46,7 +46,7 @@ class TransactionListItem extends StatelessWidget {
       ),
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
+        children: [
           Text(
             '${transactionData.transactionType.sign}'
             '${formatToCurrency(transactionData.coinAmount, '')} '

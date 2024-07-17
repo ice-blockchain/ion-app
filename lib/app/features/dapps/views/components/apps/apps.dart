@@ -30,7 +30,7 @@ class Apps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: <Widget>[
+      children: [
         SectionHeader(title: title, onPress: onPress),
         AppsCollection(items: items),
       ],

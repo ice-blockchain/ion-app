@@ -33,7 +33,7 @@ class NetworkButton extends StatelessWidget {
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          children: [
             Text(
               context.i18n.wallet_network,
               style: textTheme.caption3.copyWith(
@@ -42,7 +42,7 @@ class NetworkButton extends StatelessWidget {
             ),
             SizedBox(height: 4.0.s),
             Row(
-              children: <Widget>[
+              children: [
                 networkType.iconAsset.icon(),
                 SizedBox(width: 10.0.s),
                 Expanded(

@@ -30,15 +30,15 @@ class Balance extends HookConsumerWidget {
 
     return ScreenSideOffset.small(
       child: Column(
-        children: <Widget>[
+        children: [
           Padding(
             padding: EdgeInsets.only(top: 16.0.s),
             child: Column(
-              children: <Widget>[
+              children: [
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
+                  children: [
                     Text(
                       text,
                       style: context.theme.appTextThemes.headline1.copyWith(

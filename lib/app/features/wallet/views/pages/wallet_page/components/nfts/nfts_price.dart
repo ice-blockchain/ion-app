@@ -36,7 +36,7 @@ class NftPrice extends HookConsumerWidget {
     }
 
     return Row(
-      children: <Widget>[
+      children: [
         Avatar(
           size: 12.0.s,
           imageUrl: nftData.currencyIconUrl,

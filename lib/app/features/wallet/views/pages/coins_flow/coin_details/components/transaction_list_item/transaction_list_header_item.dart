@@ -49,7 +49,7 @@ class TransactionListHeaderItem extends StatelessWidget {
             horizontal: 5.0.s,
           ),
           child: Row(
-            children: <Widget>[
+            children: [
               networkType.iconAsset.icon(size: 16.0.s),
               SizedBox(
                 width: 6.0.s,

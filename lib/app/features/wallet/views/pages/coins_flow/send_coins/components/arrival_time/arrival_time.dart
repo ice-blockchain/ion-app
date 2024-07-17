@@ -9,7 +9,7 @@ class ArrivalTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: <Widget>[
+      children: [
         Text(
           context.i18n.wallet_arrival_time,
           style: context.theme.appTextThemes.body,

@@ -7,6 +7,8 @@
   "button_delete": "Delete",
   "button_close": "Close",
   "button_register": "Register",
+  "button_send": "Send",
+  "button_confirm": "Confirm",
   "common_show_more": "Show more",
   "common_show_less": "Show less",
   "common_identity_key_name": "Identity key name",
@@ -45,6 +47,10 @@
   "dapps_favourites_added": "{count} added dApps",
   "dapps_favourites_empty_title": "You have no favourites dApps yet",
   "dapp_details_launch_dapp_button_title": "Launch dApp",
+  "dapp_details_tips": "Tips",
+  "dapp_details_tips_games": "Games",
+  "dapp_details_tips_global_rank": "Global Rank",
+  "dapp_details_tips_vote": "Vote",
   "search_placeholder": "Search",
   "profile_following": "Following",
   "profile_followers": "Followers",
@@ -164,5 +170,12 @@
   "turn_notifications_new_follower_time": "24m ago",
   "turn_notifications_new_message_title": "New message",
   "turn_notifications_new_message_description": "@marie has sent you a message",
-  "turn_notifications_new_message_time": "31m ago"
+  "turn_notifications_new_message_time": "31m ago",
+  "send_nft_navigation_title": "Send NFT",
+  "send_nft_description": "Description",
+  "send_nft_token_id": "Token ID",
+  "send_nft_token_network": "Network",
+  "send_nft_token_standard": "Token standard",
+  "send_nft_token_contract_address": "Contract address",
+  "send_nft_title": "Send NFT"
 }

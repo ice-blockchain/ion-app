@@ -15,7 +15,7 @@ class ProfileDetailsCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: <Widget>[
+      children: [
         Text(
           title,
           style: context.theme.appTextThemes.caption3.copyWith(

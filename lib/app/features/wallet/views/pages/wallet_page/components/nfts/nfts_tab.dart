@@ -13,6 +13,7 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
+import 'package:ice/app/router/app_routes.dart';
 
 class NftsTab extends HookConsumerWidget {
   const NftsTab({
@@ -81,6 +82,9 @@ class NftsTab extends HookConsumerWidget {
         return ScreenSideOffset.small(
           child: NftListItem(
             nftData: nfts[index],
+            onTap: () {
+              NftDetailsRoute($extra: nfts[index]).push<void>(context);
+            },
           ),
         );
       },

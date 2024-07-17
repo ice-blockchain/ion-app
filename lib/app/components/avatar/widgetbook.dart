@@ -11,7 +11,7 @@ Widget regularButtonUseCase(BuildContext context) {
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
+      children: [
         Avatar(
           size: 24.0.s,
           imageUrl:

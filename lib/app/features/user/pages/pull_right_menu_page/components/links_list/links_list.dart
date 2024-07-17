@@ -20,7 +20,7 @@ class LinksList extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 30.0.s, vertical: 6.0.s),
       decoration: Decorations.borderBoxDecoration(context),
       child: Column(
-        children: <Widget>[
+        children: [
           LinksListTile(
             iconAssetName: Assets.images.icons.iconProfileUser.path,
             iconTintColor: context.theme.appColors.orangePeel,

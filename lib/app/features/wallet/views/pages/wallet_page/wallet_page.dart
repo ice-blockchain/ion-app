@@ -47,14 +47,14 @@ class WalletPage extends IcePage {
     return Scaffold(
       body: CustomScrollView(
         controller: scrollController,
-        slivers: <Widget>[
+        slivers: [
           FloatingAppBar(
             height: FeedControls.height,
             child: const Header(),
           ),
           SliverToBoxAdapter(
             child: Column(
-              children: <Widget>[
+              children: [
                 const Balance(),
                 const ContactsList(),
                 Delimiter(

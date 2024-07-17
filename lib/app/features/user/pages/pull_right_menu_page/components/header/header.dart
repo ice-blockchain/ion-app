@@ -17,7 +17,7 @@ class Header extends StatelessWidget {
       child: ScreenSideOffset.small(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          children: [
             HeaderAction(
               onPressed: () {
                 FeedRoute().go(context);

@@ -20,7 +20,7 @@ class FeedNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenSideOffset.small(
       child: Row(
-        children: <Widget>[
+        children: [
           Expanded(
             child: SearchInput(
               onTextChanged: (String st) {},

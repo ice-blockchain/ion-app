@@ -45,7 +45,7 @@ class ReadMoreText extends HookWidget {
     );
 
     final delimiter = TextSpan(
-      text: showMore.value ? ellipsis : '',
+      text: showMore.value ? '$ellipsis ' : ' ',
       recognizer: gestureRecognizer,
     );
 

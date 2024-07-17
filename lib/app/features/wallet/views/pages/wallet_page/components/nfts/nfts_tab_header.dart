@@ -37,10 +37,10 @@ class NftsTabHeader extends HookConsumerWidget {
           right: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
         ),
         child: Column(
-          children: <Widget>[
+          children: [
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
+              children: [
                 NftHeaderSortAction(),
                 Spacer(),
                 NftHeaderLayoutAction(),

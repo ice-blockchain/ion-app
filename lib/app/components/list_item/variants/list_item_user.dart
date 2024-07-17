@@ -37,7 +37,7 @@ class _ListItemUser extends ListItem {
           leadingPadding: leadingPadding ?? EdgeInsets.only(right: 8.0.s),
           constraints: constraints ?? const BoxConstraints(),
           title: Row(
-            children: <Widget>[
+            children: [
               Flexible(child: title),
               if (iceBadge)
                 Padding(
@@ -56,7 +56,7 @@ class _ListItemUser extends ListItem {
           subtitle: Row(
             crossAxisAlignment: CrossAxisAlignment
                 .start, // Aligns the Column to the top of the Row
-            children: <Widget>[
+            children: [
               Flexible(child: subtitle),
               if (timeago != null) _TimeAgo(date: timeago),
             ],

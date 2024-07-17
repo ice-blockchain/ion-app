@@ -43,7 +43,7 @@ class SearchInput extends HookWidget {
     );
 
     return Row(
-      children: <Widget>[
+      children: [
         Expanded(
           child: SizedBox(
             height: height,

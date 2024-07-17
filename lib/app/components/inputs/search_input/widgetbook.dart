@@ -12,7 +12,7 @@ Widget regularSearchInputUseCase(BuildContext context) {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
+        children: [
           SearchInput(
             onTextChanged: (String text) {},
           ),

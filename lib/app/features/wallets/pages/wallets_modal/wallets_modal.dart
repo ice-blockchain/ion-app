@@ -25,11 +25,11 @@ class WalletsModal extends IcePage {
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             NavigationAppBar.modal(
               showBackButton: false,
               title: context.i18n.wallet_wallets,
-              actions: const <Widget>[NavigationCloseButton()],
+              actions: const [NavigationCloseButton()],
             ),
             ScreenSideOffset.small(child: const WalletsList()),
             Padding(

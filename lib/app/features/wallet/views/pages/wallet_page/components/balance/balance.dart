@@ -30,14 +30,14 @@ class Balance extends HookConsumerWidget {
     return ScreenSideOffset.small(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+        children: [
           Padding(
             padding: EdgeInsets.only(
               top: 6.0.s - hitSlop,
               bottom: 8.0.s - hitSlop,
             ),
             child: Row(
-              children: <Widget>[
+              children: [
                 Text(
                   context.i18n.wallet_balance,
                   style: context.theme.appTextThemes.subtitle2

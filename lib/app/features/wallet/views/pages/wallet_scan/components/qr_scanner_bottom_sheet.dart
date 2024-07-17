@@ -19,7 +19,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
     return FractionallySizedBox(
       heightFactor: 0.95,
       child: Column(
-        children: <Widget>[
+        children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
@@ -28,7 +28,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
           ),
           Expanded(
             child: Stack(
-              children: <Widget>[
+              children: [
                 QRView(
                   onQRViewCreated: (QRViewController controller) {
                     controller.scannedDataStream

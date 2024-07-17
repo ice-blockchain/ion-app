@@ -38,13 +38,13 @@ class CoinAddressTile extends HookConsumerWidget {
         vertical: paddingVertical,
       ),
       child: Row(
-        children: <Widget>[
+        children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+            children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+                children: [
                   coinData.iconUrl.icon(size: 16.0.s),
                   SizedBox(
                     width: 6.0.s,
@@ -77,7 +77,7 @@ class CoinAddressTile extends HookConsumerWidget {
           const Spacer(),
           Stack(
             clipBehavior: Clip.none,
-            children: <Widget>[
+            children: [
               NavigationButton(
                 icon: Assets.images.icons.iconBlockCopyBlue.icon(
                   color: context.theme.appColors.primaryText,

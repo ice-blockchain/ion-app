@@ -32,7 +32,7 @@ class WalletTabsHeaderHideAction extends HookConsumerWidget {
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Row(
-          children: <Widget>[
+          children: [
             if (isZeroValueAssetsVisible)
               asset.icon(
                 color: actionColor,

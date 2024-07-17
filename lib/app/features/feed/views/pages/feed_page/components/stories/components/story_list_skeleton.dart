@@ -24,7 +24,7 @@ class StoryListSkeleton extends StatelessWidget {
           child: ScreenSideOffset.small(
             child: SeparatedRow(
               separator: const StoryListSeparator(),
-              children: List<Widget>.generate(
+              children: List.generate(
                 numberOfItems,
                 (int i) => const StoryListItemSkeleton(),
               ).toList(),

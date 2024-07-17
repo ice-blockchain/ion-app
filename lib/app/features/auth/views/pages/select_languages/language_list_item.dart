@@ -35,7 +35,7 @@ class LanguageListItem extends StatelessWidget {
           ),
           child: ScreenSideOffset.small(
             child: Row(
-              children: <Widget>[
+              children: [
                 Text(
                   language.flag,
                   style: context.theme.appTextThemes.subtitle2.copyWith(

@@ -29,7 +29,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
     final isCopied = useState<bool>(false);
 
     return Row(
-      children: <Widget>[
+      children: [
         Expanded(
           child: DecoratedBox(
             decoration: BoxDecoration(
@@ -37,7 +37,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
-              children: <Widget>[
+              children: [
                 SizedBox(height: 20.0.s),
                 coinData.iconUrl.icon(size: 46.0.s),
                 SizedBox(height: 10.0.s),

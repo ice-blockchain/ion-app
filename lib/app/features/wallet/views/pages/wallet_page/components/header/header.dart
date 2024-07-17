@@ -18,10 +18,10 @@ class Header extends HookConsumerWidget {
     return ScreenSideOffset.small(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
+        children: [
           const WalletSwitcher(),
           Row(
-            children: <Widget>[
+            children: [
               NavigationButton(
                 onPressed: () {},
                 icon: Assets.images.icons.iconHeaderCopy.icon(

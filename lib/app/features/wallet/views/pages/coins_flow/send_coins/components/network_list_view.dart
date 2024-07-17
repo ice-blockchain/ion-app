@@ -21,7 +21,7 @@ class NetworkListView extends IcePage {
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
+        children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(

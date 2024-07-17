@@ -16,7 +16,7 @@ class PlusIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: <Widget>[
+      children: [
         Container(
           width: size,
           height: size,

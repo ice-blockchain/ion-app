@@ -27,17 +27,17 @@ class ProfileDetails extends HookConsumerWidget {
       padding: EdgeInsets.fromLTRB(24.0.s, 32.0.s, 24.0.s, 24.0.s),
       decoration: Decorations.borderBoxDecoration(context),
       child: Column(
-        children: <Widget>[
+        children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+            children: [
               Text(
                 userData.name,
                 style: context.theme.appTextThemes.title.copyWith(
                   color: context.theme.appColors.primaryText,
                 ),
               ),
-              if (userData.isVerified ?? false) ...<Widget>[
+              if (userData.isVerified ?? false) ...[
                 SizedBox(width: 6.0.s),
                 Assets.images.icons.iconBadgeVerify
                     .icon(size: verifiedIconSize),
@@ -58,7 +58,7 @@ class ProfileDetails extends HookConsumerWidget {
           IntrinsicHeight(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+              children: [
                 ProfileDetailsCell(
                   title: context.i18n.profile_following,
                   value: userData.following ?? 0,

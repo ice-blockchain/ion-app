@@ -23,7 +23,7 @@ class FeedFilters extends HookWidget {
         child: ScreenSideOffset.small(
           child: SeparatedRow(
             separator: SizedBox(width: 12.0.s),
-            children: <Widget>[
+            children: [
               const FeedCategoriesDropdown(),
               ...FeedFilter.values.map(
                 (FeedFilter filter) => Button.menu(

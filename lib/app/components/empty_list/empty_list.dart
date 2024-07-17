@@ -22,7 +22,7 @@ class EmptyList extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
+        children: [
           asset.icon(size: imageSize),
           SizedBox(height: 8.0.s),
           Text(

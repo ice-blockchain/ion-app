@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 
 part './variants/list_item_checkbox.dart';
+part './variants/list_item_text_with_icon.dart';
 part './variants/list_item_user.dart';
 
 class ListItem extends StatelessWidget {
@@ -24,6 +22,7 @@ class ListItem extends StatelessWidget {
     EdgeInsetsGeometry? trailingPadding,
     BoxConstraints? constraints,
     bool? switchTitleStyles,
+    this.secondary,
     this.isSelected,
     this.backgroundColor,
     this.onTap,
@@ -73,8 +72,25 @@ class ListItem extends StatelessWidget {
     DateTime? timeago,
   }) = _ListItemUser;
 
+  factory ListItem.text({
+    required Widget title,
+    required String value,
+    Key? key,
+    Color? backgroundColor,
+  }) = _ListItemTextWithIcon;
+
+  factory ListItem.textWithIcon({
+    required Widget title,
+    required String value,
+    Widget? icon,
+    Widget? secondary,
+    Key? key,
+    Color? backgroundColor,
+  }) = _ListItemTextWithIcon;
+
   final Widget? leading;
   final Widget? title;
+  final Widget? secondary;
   final Widget? subtitle;
   final bool switchTitleStyles;
   final Widget? trailing;
@@ -106,37 +122,55 @@ class ListItem extends StatelessWidget {
     return _buildMainContainer(
       context: context,
       child: Container(
+        alignment: Alignment.center,
         constraints: constraints,
         padding: contentPadding,
-        child: Row(
-          children: <Widget>[
-            if (leading != null)
-              Padding(padding: leadingPadding, child: leading),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  if (title != null)
-                    DefaultTextStyle(
-                      style: switchTitleStyles
-                          ? _getDefaultSubtitleStyle(context)
-                          : _getDefaultTitleStyle(context),
-                      overflow: TextOverflow.ellipsis,
-                      child: title!,
-                    ),
-                  if (subtitle != null)
-                    DefaultTextStyle(
-                      style: switchTitleStyles
-                          ? _getDefaultTitleStyle(context)
-                          : _getDefaultSubtitleStyle(context),
-                      overflow: TextOverflow.ellipsis,
-                      child: subtitle!,
-                    ),
-                ],
-              ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                if (leading != null)
+                  if (leadingPadding != EdgeInsets.zero)
+                    Padding(padding: leadingPadding, child: leading)
+                  else
+                    leading!,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (title != null)
+                        DefaultTextStyle(
+                          style: switchTitleStyles
+                              ? _getDefaultSubtitleStyle(context)
+                              : _getDefaultTitleStyle(context),
+                          overflow: TextOverflow.ellipsis,
+                          child: title!,
+                        ),
+                      if (subtitle != null)
+                        DefaultTextStyle(
+                          style: switchTitleStyles
+                              ? _getDefaultTitleStyle(context)
+                              : _getDefaultSubtitleStyle(context),
+                          overflow: TextOverflow.ellipsis,
+                          child: subtitle!,
+                        ),
+                    ],
+                  ),
+                ),
+                if (trailing != null)
+                  if (trailingPadding != EdgeInsets.zero)
+                    Padding(padding: trailingPadding, child: trailing)
+                  else
+                    trailing!,
+              ],
             ),
-            if (trailing != null)
-              Padding(padding: trailingPadding, child: trailing),
+            if (secondary != null)
+              DefaultTextStyle(
+                style: switchTitleStyles
+                    ? _getDefaultSubtitleStyle(context)
+                    : _getDefaultTitleStyle(context),
+                child: secondary!,
+              ),
           ],
         ),
       ),

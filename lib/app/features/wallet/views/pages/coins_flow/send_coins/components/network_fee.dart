@@ -11,7 +11,7 @@ class NetworkFee extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: <Widget>[
+      children: [
         Text(
           context.i18n.wallet_network_fee,
           style: context.theme.appTextThemes.body.copyWith(

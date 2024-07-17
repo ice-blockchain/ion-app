@@ -47,19 +47,19 @@ class SendCoinsForm extends IcePage {
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
+            children: [
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0.s),
                 child: NavigationAppBar.screen(
                   title: locale.wallet_send_coins,
-                  actions: const <Widget>[
+                  actions: const [
                     NavigationCloseButton(),
                   ],
                 ),
               ),
               ScreenSideOffset.small(
                 child: Column(
-                  children: <Widget>[
+                  children: [
                     CoinButton(
                       coinData: formController.selectedCoin,
                       onTap: () {
