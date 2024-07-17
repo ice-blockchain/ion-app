@@ -56,34 +56,47 @@ class SendFundsResultDetails extends StatelessWidget {
               SuccessContact() => Column(
                   children: [
                     SizedBox(height: 29.0.s),
-                    _buildButtons(context),
+                    const _BuildButtonSection(),
                   ],
                 ),
-              Error() => Column(
-                  children: [
-                    SizedBox(height: 16.0.s),
-                    ScreenSideOffset.small(
-                      child: Button.compact(
-                        mainAxisSize: MainAxisSize.max,
-                        minimumSize: Size(56.0.s, 56.0.s),
-                        leadingIcon:
-                            Assets.images.icons.iconButtonTryagain.icon(),
-                        label: Text(
-                          context.i18n.wallet_try_again,
-                        ),
-                        onPressed: () {},
-                      ),
-                    ),
-                  ],
-                ),
+              Error() => const _BuildErrorSection(),
             },
           ],
         ),
       NftTransaction() => const SizedBox.shrink(), //TODO: Implement nft UI
     };
   }
+}
 
-  Widget _buildButtons(BuildContext context) {
+class _BuildErrorSection extends StatelessWidget {
+  const _BuildErrorSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: 16.0.s),
+        ScreenSideOffset.small(
+          child: Button.compact(
+            mainAxisSize: MainAxisSize.max,
+            minimumSize: Size(56.0.s, 56.0.s),
+            leadingIcon: Assets.images.icons.iconButtonTryagain.icon(),
+            label: Text(
+              context.i18n.wallet_try_again,
+            ),
+            onPressed: () {},
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BuildButtonSection extends StatelessWidget {
+  const _BuildButtonSection();
+
+  @override
+  Widget build(BuildContext context) {
     return ScreenSideOffset.small(
       child: Row(
         children: [

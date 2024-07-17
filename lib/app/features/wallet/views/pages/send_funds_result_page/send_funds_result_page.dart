@@ -26,47 +26,9 @@ class SendFundsResultPage extends HookConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           switch (transaction.state) {
-            SuccessSend() => Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 40.0.s),
-                      child: SendFundsResultIcon(transaction: transaction),
-                    ),
-                  ),
-                ],
-              ),
-            SuccessContact() => Stack(
-                children: [
-                  NavigationAppBar.modal(
-                    showBackButton: false,
-                    actions: const [NavigationCloseButton()],
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 40.0.s),
-                      child: SendFundsResultIcon(transaction: transaction),
-                    ),
-                  ),
-                ],
-              ),
-            Error() => Stack(
-                children: [
-                  NavigationAppBar.modal(
-                    showBackButton: false,
-                    actions: const [NavigationCloseButton()],
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 40.0.s),
-                      child: SendFundsResultIcon(transaction: transaction),
-                    ),
-                  ),
-                ],
-              ),
+            SuccessSend() => _BuildIcon(transaction: transaction),
+            SuccessContact() => _BuildIconWithClose(transaction: transaction),
+            Error() => _BuildIconWithClose(transaction: transaction),
           },
           SizedBox(height: 10.0.s),
           SendFundsResultMessage(transaction: transaction),
@@ -86,6 +48,56 @@ class SendFundsResultPage extends HookConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _BuildIcon extends StatelessWidget {
+  const _BuildIcon({
+    required this.transaction,
+  });
+
+  final TransactionUiModel transaction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: EdgeInsets.only(top: 40.0.s),
+            child: SendFundsResultIcon(transaction: transaction),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BuildIconWithClose extends StatelessWidget {
+  const _BuildIconWithClose({
+    required this.transaction,
+  });
+
+  final TransactionUiModel transaction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        NavigationAppBar.modal(
+          showBackButton: false,
+          actions: const [NavigationCloseButton()],
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: EdgeInsets.only(top: 40.0.s),
+            child: SendFundsResultIcon(transaction: transaction),
+          ),
+        ),
+      ],
     );
   }
 }
