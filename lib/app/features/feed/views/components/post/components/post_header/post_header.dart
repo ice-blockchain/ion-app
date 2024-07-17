@@ -13,19 +13,17 @@ class PostHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenSideOffset.small(
-      child: Padding(
-        padding: EdgeInsets.only(top: 2.0.s),
-        child: ListItem.user(
-          title: const Text('Arnold Grey'),
-          subtitle: const Text('@arnoldgrey'),
-          profilePicture:
-              'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-          trailing: trailing,
-          constraints: BoxConstraints(minHeight: 55.0.s),
-          iceBadge: true,
-          verifiedBadge: true,
-        ),
+    return Padding(
+      padding: EdgeInsets.only(top: 2.0.s),
+      child: ListItem.user(
+        title: const Text('Arnold Grey'),
+        subtitle: const Text('@arnoldgrey'),
+        profilePicture:
+        'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+        trailing: trailing,
+        constraints: BoxConstraints(minHeight: 55.0.s),
+        iceBadge: true,
+        verifiedBadge: true,
       ),
     );
   }

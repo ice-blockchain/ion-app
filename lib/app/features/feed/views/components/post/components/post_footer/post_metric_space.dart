@@ -10,6 +10,7 @@ class PostMetricSpace extends StatelessWidget {
     return Expanded(
       child: Container(
         alignment: Alignment.centerLeft,
+        // TODO: Get rid of IntrinsicWidth
         child: IntrinsicWidth(
           child: child,
         ),

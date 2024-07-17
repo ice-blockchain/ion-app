@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
@@ -21,25 +20,22 @@ class PostBody extends HookConsumerWidget {
     final postMedia = usePostMedia(postData);
 
     //TODO::temp impl
-    final postText =
-        postData.content.fold<StringBuffer>(StringBuffer(), (result, match) {
+    final postText = postData.content.fold<StringBuffer>(StringBuffer(), (result, match) {
       if (match.matcherType != UrlMatcher) {
         result.write(match.text);
       }
       return result;
     });
-    return ScreenSideOffset.small(
-      child: Column(
-        children: [
-          if (postMedia.isNotEmpty) PostMedia(media: postMedia),
-          Text(
-            postText.toString(),
-            style: context.theme.appTextThemes.body2.copyWith(
-              color: context.theme.appColors.sharkText,
-            ),
+    return Column(
+      children: [
+        if (postMedia.isNotEmpty) PostMedia(media: postMedia),
+        Text(
+          postText.toString(),
+          style: context.theme.appTextThemes.body2.copyWith(
+            color: context.theme.appColors.sharkText,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

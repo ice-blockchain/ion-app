@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/post_body.dart';
@@ -19,8 +20,7 @@ class Post extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.0.s),
+    return ScreenSideOffset.small(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -28,7 +28,9 @@ class Post extends StatelessWidget {
             trailing: PostMenu(),
           ),
           PostBody(postData: postData),
+          SizedBox(height: 10.0.s),
           footer ?? PostFooter(postData: postData),
+          SizedBox(height: 12.0.s),
         ],
       ),
     );
