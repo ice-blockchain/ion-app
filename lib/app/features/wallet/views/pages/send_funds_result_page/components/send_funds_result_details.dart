@@ -3,68 +3,58 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/components/send_funds_success_send_button.dart';
+import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/components/send_funds_summary.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_state.dart';
-import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_type.dart';
-import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_ui_model.dart';
-import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SendFundsResultDetails extends StatelessWidget {
   const SendFundsResultDetails({
-    required this.transaction,
+    required this.transactionState,
     required this.showErrorDetails,
     super.key,
   });
 
-  final TransactionUiModel transaction;
+  final TransactionState transactionState;
   final ValueNotifier<bool> showErrorDetails;
 
   @override
   Widget build(BuildContext context) {
-    final text = '${formatToCurrency(transaction.coin.amount, '')} '
-        '${transaction.coin.abbreviation}';
-
-    return switch (transaction.type) {
-      CoinTransaction() => Column(
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
+      children: [
+        switch (transactionState) {
+          SuccessContactTransactionState(coin: final coin, type: final type) =>
+            SendFundsSummary(
+              type: type,
+              coin: coin,
+            ),
+          SuccessSendTransactionState(coin: final coin, type: final type) =>
+            SendFundsSummary(
+              type: type,
+              coin: coin,
+            ),
+          ErrorTransactionState(coin: final coin, type: final type) =>
+            SendFundsSummary(
+              type: type,
+              coin: coin,
+            ),
+        },
+        switch (transactionState) {
+          SuccessSendTransactionState() => Column(
               children: [
-                transaction.coin.iconUrl.icon(size: 24.0.s),
-                SizedBox(width: 12.0.s),
-                Text(
-                  text,
-                  style: context.theme.appTextThemes.headline2,
-                ),
+                SizedBox(height: 31.0.s),
+                const SendFundsSuccessSendButton(),
               ],
             ),
-            SizedBox(height: 4.0.s),
-            Text(
-              '~ ${formatToCurrency(transaction.coin.balance)}',
-              style: context.theme.appTextThemes.subtitle2.copyWith(
-                color: context.theme.appColors.onTertararyBackground,
-              ),
+          SuccessContactTransactionState() => Column(
+              children: [
+                SizedBox(height: 29.0.s),
+                const _BuildButtonSection(),
+              ],
             ),
-            switch (transaction.state) {
-              SuccessSend() => Column(
-                  children: [
-                    SizedBox(height: 31.0.s),
-                    const SendFundsSuccessSendButton(),
-                  ],
-                ),
-              SuccessContact() => Column(
-                  children: [
-                    SizedBox(height: 29.0.s),
-                    const _BuildButtonSection(),
-                  ],
-                ),
-              Error() => const _BuildErrorSection(),
-            },
-          ],
-        ),
-      NftTransaction() => const SizedBox.shrink(), //TODO: Implement nft UI
-    };
+          ErrorTransactionState() => const _BuildErrorSection(),
+        },
+      ],
+    );
   }
 }
 

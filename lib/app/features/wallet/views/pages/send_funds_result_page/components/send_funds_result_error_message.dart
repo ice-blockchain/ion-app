@@ -2,21 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_state.dart';
-import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_ui_model.dart';
 
 class SendFundsResultErrorMessage extends StatelessWidget {
   const SendFundsResultErrorMessage({
-    required this.transaction,
+    required this.transactionState,
     required this.showErrorDetails,
     super.key,
   });
 
-  final TransactionUiModel transaction;
+  final TransactionState transactionState;
   final ValueNotifier<bool> showErrorDetails;
 
   @override
   Widget build(BuildContext context) {
-    final error = transaction.state as Error;
+    final error = transactionState as ErrorTransactionState;
     return Column(
       children: [
         if (!showErrorDetails.value)

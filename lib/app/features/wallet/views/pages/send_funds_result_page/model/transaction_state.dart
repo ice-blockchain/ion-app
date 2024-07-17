@@ -1,10 +1,23 @@
+import 'package:ice/app/features/wallet/model/coin_data.dart';
+import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_type.dart';
+
 sealed class TransactionState {}
 
-class SuccessContact extends TransactionState {}
+class SuccessContactTransactionState extends TransactionState {
+  SuccessContactTransactionState(this.type, this.coin);
+  final TransactionType type;
+  final CoinData coin;
+}
 
-class SuccessSend extends TransactionState {}
+class SuccessSendTransactionState extends TransactionState {
+  SuccessSendTransactionState(this.type, this.coin);
+  final TransactionType type;
+  final CoinData coin;
+}
 
-class Error extends TransactionState {
-  Error(this.errorDetails);
+class ErrorTransactionState<T> extends TransactionState {
+  ErrorTransactionState(this.coin, this.type, this.errorDetails);
+  final TransactionType type;
+  final CoinData coin;
   final String errorDetails;
 }

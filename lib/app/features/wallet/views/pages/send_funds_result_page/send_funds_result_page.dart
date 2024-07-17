@@ -8,14 +8,13 @@ import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/compo
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/components/send_funds_result_icon.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/components/send_funds_result_message.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_state.dart';
-import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_ui_model.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
 class SendFundsResultPage extends HookConsumerWidget {
-  const SendFundsResultPage({required this.transaction, super.key});
+  const SendFundsResultPage({required this.transactionState, super.key});
 
-  final TransactionUiModel transaction;
+  final TransactionState transactionState;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,25 +24,28 @@ class SendFundsResultPage extends HookConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          switch (transaction.state) {
-            SuccessSend() => _BuildIcon(transaction: transaction),
-            SuccessContact() => _BuildIconWithClose(transaction: transaction),
-            Error() => _BuildIconWithClose(transaction: transaction),
+          switch (transactionState) {
+            SuccessSendTransactionState() =>
+              _BuildIcon(transactionState: transactionState),
+            SuccessContactTransactionState() =>
+              _BuildIconWithClose(transactionState: transactionState),
+            ErrorTransactionState() =>
+              _BuildIconWithClose(transactionState: transactionState),
           },
           SizedBox(height: 10.0.s),
-          SendFundsResultMessage(transaction: transaction),
+          SendFundsResultMessage(transactionState: transactionState),
           SizedBox(height: 10.0.s),
-          switch (transaction.state) {
-            SuccessSend() => SizedBox(height: 6.0.s),
-            SuccessContact() => SizedBox(height: 6.0.s),
-            Error() => SendFundsResultErrorMessage(
-                transaction: transaction,
+          switch (transactionState) {
+            SuccessSendTransactionState() => SizedBox(height: 6.0.s),
+            SuccessContactTransactionState() => SizedBox(height: 6.0.s),
+            ErrorTransactionState() => SendFundsResultErrorMessage(
+                transactionState: transactionState,
                 showErrorDetails: showErrorDetails,
               ),
           },
           SizedBox(height: 20.0.s),
           SendFundsResultDetails(
-            transaction: transaction,
+            transactionState: transactionState,
             showErrorDetails: showErrorDetails,
           ),
         ],
@@ -54,10 +56,10 @@ class SendFundsResultPage extends HookConsumerWidget {
 
 class _BuildIcon extends StatelessWidget {
   const _BuildIcon({
-    required this.transaction,
+    required this.transactionState,
   });
 
-  final TransactionUiModel transaction;
+  final TransactionState transactionState;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +69,7 @@ class _BuildIcon extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: Padding(
             padding: EdgeInsets.only(top: 40.0.s),
-            child: SendFundsResultIcon(transaction: transaction),
+            child: SendFundsResultIcon(transactionState: transactionState),
           ),
         ),
       ],
@@ -77,10 +79,10 @@ class _BuildIcon extends StatelessWidget {
 
 class _BuildIconWithClose extends StatelessWidget {
   const _BuildIconWithClose({
-    required this.transaction,
+    required this.transactionState,
   });
 
-  final TransactionUiModel transaction;
+  final TransactionState transactionState;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +96,7 @@ class _BuildIconWithClose extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: Padding(
             padding: EdgeInsets.only(top: 40.0.s),
-            child: SendFundsResultIcon(transaction: transaction),
+            child: SendFundsResultIcon(transactionState: transactionState),
           ),
         ),
       ],

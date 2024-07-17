@@ -310,11 +310,11 @@ class ContactRoute extends BaseRouteData {
 class SendFundsResultRoute extends BaseRouteData {
   SendFundsResultRoute({required this.$extra})
       : super(
-          child: SendFundsResultPage(transaction: $extra),
+          child: SendFundsResultPage(transactionState: $extra),
           type: IceRouteType.bottomSheet,
         );
 
-  final TransactionUiModel $extra;
+  final TransactionState $extra;
 }
 
 class ContactCoinRoute extends BaseRouteData {
