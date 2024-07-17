@@ -17,9 +17,11 @@ class _ListItemTextWithIcon extends ListItem {
             secondary: secondary,
           ),
           trailingPadding: EdgeInsets.zero,
-          contentPadding: contentPadding ?? ListItem.defaultTextContentPadding,
+          contentPadding: contentPadding ?? defaultTextContentPadding,
           constraints: constraints ?? const BoxConstraints(),
         );
+
+  static EdgeInsets get defaultTextContentPadding => EdgeInsets.all(12.0.s);
 
   @override
   Color _getBackgroundColor(BuildContext context) {

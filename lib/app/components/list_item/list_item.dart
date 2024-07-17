@@ -110,8 +110,6 @@ class ListItem extends StatelessWidget {
   static EdgeInsets get defaultContentPadding =>
       EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 10.0.s);
 
-  static EdgeInsets get defaultTextContentPadding => EdgeInsets.all(12.0.s);
-
   static EdgeInsets get defaultLeadingPadding => EdgeInsets.only(right: 10.0.s);
 
   static EdgeInsets get defaultTrailingPadding => EdgeInsets.only(left: 10.0.s);

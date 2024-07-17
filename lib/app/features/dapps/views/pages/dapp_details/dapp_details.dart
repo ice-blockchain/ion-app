@@ -14,9 +14,9 @@ import 'package:ice/app/features/dapps/views/pages/dapp_details/components/dapp_
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_featured.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ice/app/services/browser/browser.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DAppDetails extends IcePage {
   DAppDetails({super.key});
@@ -79,9 +79,8 @@ class DAppDetails extends IcePage {
                     iconPath: Assets.images.icons.iconWalletLink.path,
                     value: InkWell(
                       onTap: () async {
-                        final uri = Uri(path: item.link);
-                        if (await canLaunchUrl(uri)) {
-                          await launchUrl(uri);
+                        if (item.link != null) {
+                          await openUrl(item.link!);
                         }
                       },
                       child: Text(
