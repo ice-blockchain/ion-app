@@ -43,7 +43,9 @@ class WalletRoutes {
     ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<ContactRoute>(path: 'one-contact'),
+        TypedGoRoute<ContactRoute>(
+          path: 'one-contact',
+        ),
       ],
     ),
   ];
@@ -147,13 +149,11 @@ class NetworkSelectRoute extends BaseRouteData {
 }
 
 class NetworkSelectReceiveRoute extends BaseRouteData {
-  NetworkSelectReceiveRoute({required this.$extra})
+  NetworkSelectReceiveRoute()
       : super(
-          child: NetworkListReceiveView(payload: $extra),
+          child: const NetworkListReceiveView(),
           type: IceRouteType.bottomSheet,
         );
-
-  final CoinData $extra;
 }
 
 class ShareAddressRoute extends BaseRouteData {

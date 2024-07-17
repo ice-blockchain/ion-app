@@ -3,18 +3,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/components/network_item.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class NetworkListReceiveView extends IcePage {
-  const NetworkListReceiveView({required this.payload, super.key});
-
-  final CoinData payload;
+  const NetworkListReceiveView({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
@@ -46,12 +42,12 @@ class NetworkListReceiveView extends IcePage {
                 child: NetworkItem(
                   networkType: networkTypeValues[index],
                   onTap: () {
-                    ShareAddressRoute(
-                      $extra: <String, dynamic>{
-                        'coinData': payload,
-                        'networkType': networkTypeValues[index],
-                      },
-                    ).push<void>(context);
+                    // ShareAddressRoute(
+                    //   $extra: <String, dynamic>{
+                    //     'coinData': payload,
+                    //     'networkType': networkTypeValues[index],
+                    //   },
+                    // ).push<void>(context);
                   },
                 ),
               );
