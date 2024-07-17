@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_state.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_ui_model.dart';
 
 class SendFundsResultErrorMessage extends StatelessWidget {
@@ -15,6 +16,7 @@ class SendFundsResultErrorMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final error = transaction.state as Error;
     return Column(
       children: [
         if (!showErrorDetails.value)
@@ -28,7 +30,7 @@ class SendFundsResultErrorMessage extends StatelessWidget {
                   .copyWith(color: context.theme.appColors.primaryAccent),
             ),
           ),
-        if (showErrorDetails.value && transaction.errorDetails != null)
+        if (showErrorDetails.value)
           ScreenSideOffset.small(
             child: Container(
               decoration: BoxDecoration(
@@ -45,7 +47,7 @@ class SendFundsResultErrorMessage extends StatelessWidget {
                 ),
                 child: Text(
                   textAlign: TextAlign.center,
-                  transaction.errorDetails!,
+                  error.errorDetails,
                   style: context.theme.appTextThemes.body,
                 ),
               ),

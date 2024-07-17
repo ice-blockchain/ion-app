@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/modal_state.dart';
+import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_state.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_type.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_ui_model.dart';
 import 'package:ice/app/utils/num.dart';
@@ -22,7 +22,7 @@ class SendFundsResultDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = '${formatToCurrency(transaction.coin.amount, '')} '
         '${transaction.coin.abbreviation}';
-    if (transaction.type == TransactionType.coin) {
+    if (transaction.type is CoinTransaction) {
       return Column(
         children: [
           Row(
@@ -44,11 +44,11 @@ class SendFundsResultDetails extends StatelessWidget {
               color: context.theme.appColors.onTertararyBackground,
             ),
           ),
-          if (transaction.state == ModalState.transferSuccess) ...[
+          if (transaction.state is Success) ...[
             SizedBox(height: 29.0.s),
             _buildButtons(context),
           ],
-          if (transaction.state == ModalState.somethingWentWrong) ...[
+          if (transaction.state is Error) ...[
             SizedBox(height: 16.0.s),
             ScreenSideOffset.small(
               child: Button.compact(
@@ -64,7 +64,7 @@ class SendFundsResultDetails extends StatelessWidget {
           ],
         ],
       );
-    } else if (transaction.type == TransactionType.nft) {
+    } else if (transaction.type is NftTransaction) {
       //TODO: Implement nft UI
       return const SizedBox.shrink();
     } else {

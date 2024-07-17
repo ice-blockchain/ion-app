@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/modal_state.dart';
+import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_state.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_ui_model.dart';
 
 class SendFundsResultMessage extends StatelessWidget {
@@ -10,19 +10,17 @@ class SendFundsResultMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (transaction.state) {
-      case ModalState.transferSuccess:
-        return Text(
+    return switch (transaction.state) {
+      Success() => Text(
           context.i18n.wallet_funds_successful,
           style: context.theme.appTextThemes.title.copyWith(
             color: context.theme.appColors.primaryAccent,
           ),
-        );
-      case ModalState.somethingWentWrong:
-        return Text(
+        ),
+      Error() => Text(
           context.i18n.wallet_funds_error,
           style: context.theme.appTextThemes.title,
-        );
-    }
+        ),
+    };
   }
 }

@@ -7,7 +7,7 @@ import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/compo
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/components/send_funds_result_error_message.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/components/send_funds_result_icon.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/components/send_funds_result_message.dart';
-import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/modal_state.dart';
+import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_state.dart';
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_ui_model.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -43,9 +43,8 @@ class SendFundsResultPage extends HookConsumerWidget {
           SizedBox(height: 10.0.s),
           SendFundsResultMessage(transaction: transaction),
           SizedBox(height: 10.0.s),
-          if (transaction.state == ModalState.transferSuccess)
-            SizedBox(height: 6.0.s),
-          if (transaction.state == ModalState.somethingWentWrong)
+          if (transaction.state is Success) SizedBox(height: 6.0.s),
+          if (transaction.state is Error)
             SendFundsResultErrorMessage(
               transaction: transaction,
               showErrorDetails: showErrorDetails,
