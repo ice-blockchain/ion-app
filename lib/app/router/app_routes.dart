@@ -18,7 +18,6 @@ import 'package:ice/app/features/dapps/views/pages/dapps_main_modal/dapps_main_m
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
-import 'package:ice/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/quote_post_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_options_modal/share_options_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_type_modal_page/share_type_modal_page.dart';
@@ -80,17 +79,21 @@ final transitionObserver = NavigationSheetTransitionObserver();
     ),
     TypedStatefulShellBranch(
       routes: [
-        TypedGoRoute<ChatRoute>(path: '/chat'),
-        TypedShellRoute<SheetRouteData>(
-          routes: [TypedGoRoute<FeedMainModal>(path: '/feed-main-modal')],
+        TypedGoRoute<ChatRoute>(
+          path: '/chat',
+          routes: [
+            TypedGoRoute<ChatMainModalRoute>(path: 'chat-main-modal'),
+          ],
         ),
       ],
     ),
     TypedStatefulShellBranch(
       routes: [
-        TypedGoRoute<DappsRoute>(path: '/dapps'),
-        TypedShellRoute<SheetRouteData>(
-          routes: [TypedGoRoute<FeedMainModal>(path: '/feed-main-modal')],
+        TypedGoRoute<DappsRoute>(
+          path: '/dapps',
+          routes: [
+            TypedGoRoute<DappsMainModalRoute>(path: 'dapps-main-modal'),
+          ],
         ),
       ],
     ),
@@ -100,10 +103,8 @@ final transitionObserver = NavigationSheetTransitionObserver();
           path: '/wallet',
           routes: [
             ...WalletRoutes.routes,
+            TypedGoRoute<WalletMainModalRoute>(path: 'wallet-main-modal'),
           ],
-        ),
-        TypedShellRoute<SheetRouteData>(
-          routes: [TypedGoRoute<FeedMainModal>(path: '/feed-main-modal')],
         ),
       ],
     ),
@@ -182,11 +183,39 @@ class IntroRoute extends BaseRouteData {
   IntroRoute() : super(child: const IntroPage());
 }
 
-class FeedMainModal extends BaseRouteData {
-  FeedMainModal()
+// @TypedGoRoute<FeedMainModalRoute>(path: '/feed-modal')
+class FeedMainModalRoute extends BaseRouteData {
+  FeedMainModalRoute()
       : super(
           child: const FeedMainModalPage(),
-          type: IceRouteType.bottomSheet,
+          type: IceRouteType.modalSheet,
+        );
+}
+
+// @TypedGoRoute<ChatMainModalRoute>(path: '/chat-modal')
+class ChatMainModalRoute extends BaseRouteData {
+  ChatMainModalRoute()
+      : super(
+          child: const ChatMainModalPage(),
+          type: IceRouteType.modalSheet,
+        );
+}
+
+// @TypedGoRoute<DappsMainModalRoute>(path: '/dapps-modal')
+class DappsMainModalRoute extends BaseRouteData {
+  DappsMainModalRoute()
+      : super(
+          child: const DappsMainModalPage(),
+          type: IceRouteType.modalSheet,
+        );
+}
+
+// @TypedGoRoute<WalletMainModalRoute>(path: '/wallet-modal')
+class WalletMainModalRoute extends BaseRouteData {
+  WalletMainModalRoute()
+      : super(
+          child: const WalletMainModalPage(),
+          type: IceRouteType.modalSheet,
         );
 }
 

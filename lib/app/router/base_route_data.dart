@@ -1,5 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/main_tab_navigation.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum IceRouteType {
@@ -28,11 +34,15 @@ abstract class BaseRouteData extends GoRouteData {
       IceRouteType.slideFromLeft =>
         SlideFromLeftTransitionPage(child: child, state: state),
       IceRouteType.modalSheet => ModalSheetPage<void>(
+          swipeDismissible: true,
           key: state.pageKey,
           child: DraggableSheet(
-            // controller: DefaultSheetController.of(context),
-            child: child,
-            // child: _ModalContent(child: child),
+            controller: DefaultSheetController.of(context),
+            // child: child,
+            child: _ModalContent(
+              state: state,
+              child: child,
+            ),
             // child: child,
           ),
         ),
@@ -61,4 +71,72 @@ class SlideFromLeftTransitionPage extends CustomTransitionPage<void> {
             );
           },
         );
+}
+
+class _ModalContent extends HookConsumerWidget {
+  const _ModalContent({required this.child, required this.state});
+
+  final Widget child;
+  final GoRouterState state;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bottomSheetNotifier = ref.watch(bottomSheetStateProvider.notifier);
+    final controller = DefaultSheetController.of(context);
+
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final metrics = controller.value;
+          log('_ModalContent - useEffect: metrics: $metrics');
+          if (!metrics.hasDimensions) {
+            final currentTab = _getCurrentTab(state);
+            log('_ModalContent - useEffect: closing sheet for $currentTab');
+            bottomSheetNotifier.closeCurrentSheet(currentTab);
+            popRoute();
+          }
+        });
+        return null;
+      },
+      [],
+    );
+
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (!didPop) {
+          final controller = DefaultSheetController.of(context);
+          final metrics = controller.value;
+
+          log('_ModalContent - onPopInvoked: metrics: $metrics');
+
+          if (!context.mounted) return;
+
+          if (metrics.hasDimensions) {
+            final currentTab = _getCurrentTab(state);
+            log('_ModalContent - onPopInvoked: closing sheet for $currentTab');
+            bottomSheetNotifier.closeCurrentSheet(currentTab);
+            await popRoute();
+          }
+        }
+      },
+      child: child,
+    );
+  }
+
+  TabItem _getCurrentTab(GoRouterState state) {
+    if (state.matchedLocation.startsWith(FeedRoute().location)) {
+      return TabItem.feed;
+    }
+    if (state.matchedLocation.startsWith(ChatRoute().location)) {
+      return TabItem.chat;
+    }
+    if (state.matchedLocation.startsWith(DappsRoute().location)) {
+      return TabItem.dapps;
+    }
+    if (state.matchedLocation.startsWith(WalletRoute().location)) {
+      return TabItem.wallet;
+    }
+    return TabItem.main;
+  }
 }
