@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/feed_provider.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/post_list/components/post_list.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/post_list/components/post_list_skeleton.dart';
+import 'package:ice/app/features/feed/views/components/post_list/components/post_list.dart';
+import 'package:ice/app/features/feed/views/components/post_list/components/post_list_skeleton.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 
 class Posts extends HookConsumerWidget {
@@ -18,9 +18,7 @@ class Posts extends HookConsumerWidget {
     });
 
     return posts.maybeWhen(
-      data: (List<PostData> data) => PostList(
-        posts: data,
-      ),
+      data: (List<PostData> data) => PostList(posts: data),
       orElse: () => const PostListSkeleton(),
     );
   }
