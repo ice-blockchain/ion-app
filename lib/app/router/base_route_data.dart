@@ -31,6 +31,10 @@ abstract class BaseRouteData extends GoRouteData {
       IceRouteType.mainModalSheet => ModalSheetPage<void>(
           swipeDismissible: true,
           key: state.pageKey,
+          // DraggableSheet does not work with scrollable widgets.
+          // If you want to use a scrollable widget as its content,
+          // use ScrollableSheet instead.
+          // See example in smooth_sheets package.
           child: DraggableSheet(
             controller: DefaultSheetController.of(context),
             child: MainModalContent(

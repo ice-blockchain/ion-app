@@ -32,6 +32,14 @@ class IceApp extends HookConsumerWidget {
     final goRouter = ref.watch(goRouterProvider);
 
     return ContentScaler(
+      // Provides a SheetController to the descendant widgets
+      // to perform some sheet extent driven animations.
+      // The sheet will look up and use this controller unless
+      // another one is manually specified in the constructor.
+      // The descendant widgets can also get this controller by
+      // calling 'DefaultSheetController.of(context)'.
+      //
+      // See example in smooth_sheets package.
       child: DefaultSheetController(
         child: MaterialApp.router(
           localizationsDelegates: I18n.localizationsDelegates,
