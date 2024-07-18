@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'receive_coins_form_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod()
 class ReceiveCoinsFormController extends _$ReceiveCoinsFormController {
   @override
   ReceiveCoinsFormData build() {
