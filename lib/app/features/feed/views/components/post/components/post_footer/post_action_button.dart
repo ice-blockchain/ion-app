@@ -13,8 +13,6 @@ class PostActionButton extends StatelessWidget {
     this.activeColor,
   });
 
-  static double get verticalHitSlop => 6.0.s;
-
   final Widget icon;
   final Widget? activeIcon;
   final String? value;
