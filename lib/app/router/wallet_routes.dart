@@ -41,18 +41,12 @@ class WalletRoutes {
         ),
       ],
     ),
-    TypedShellRoute<ModalShellRouteData>(
-      routes: [
-        TypedGoRoute<ContactRoute>(
-          path: 'one-contact',
-        ),
-      ],
-    ),
   ];
 
   static const coinSendRoutes = <TypedRoute<RouteData>>[
     TypedShellRoute<ModalShellRouteData>(
       routes: [
+        TypedGoRoute<ContactRoute>(path: 'one-contact'),
         TypedGoRoute<CoinSendRoute>(path: 'coin-send'),
         TypedGoRoute<NetworkSelectRoute>(path: 'network-select'),
         TypedGoRoute<CoinsSendFormRoute>(
@@ -65,6 +59,9 @@ class WalletRoutes {
           path: 'coin-send-form-confirmation',
         ),
         TypedGoRoute<TransactionResultRoute>(path: 'transaction-result'),
+        TypedGoRoute<ReceiveCoinRoute>(path: 'receive-coin'),
+        TypedGoRoute<NetworkSelectReceiveRoute>(path: 'network-select-receive'),
+        TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
       ],
     ),
   ];
@@ -78,13 +75,9 @@ class WalletRoutes {
   ];
 
   static const coinReceiveRoutes = <TypedRoute<RouteData>>[
-    TypedShellRoute<ModalShellRouteData>(
-      routes: [
-        TypedGoRoute<ReceiveCoinRoute>(path: 'receive-coin'),
-        TypedGoRoute<NetworkSelectReceiveRoute>(path: 'network-select-receive'),
-        TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
-      ],
-    ),
+    TypedGoRoute<ReceiveCoinRoute>(path: 'receive-coin'),
+    TypedGoRoute<NetworkSelectReceiveRoute>(path: 'network-select-receive'),
+    TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
   ];
 
   static const walletManagementRoutes = <TypedRoute<RouteData>>[
@@ -297,6 +290,16 @@ class ShareTypeRoute extends BaseRouteData {
 
 class ContactRoute extends BaseRouteData {
   ContactRoute({required this.$extra})
+      : super(
+          child: ContactPage(contactData: $extra),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final ContactData $extra;
+}
+
+class ContactReceiveRoute extends BaseRouteData {
+  ContactReceiveRoute({required this.$extra})
       : super(
           child: ContactPage(contactData: $extra),
           type: IceRouteType.bottomSheet,
