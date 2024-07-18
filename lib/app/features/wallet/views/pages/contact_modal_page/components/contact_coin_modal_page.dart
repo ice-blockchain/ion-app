@@ -17,8 +17,8 @@ class ContactCoinModalPage extends IcePage {
       body: CoinsListView(
         onCoinItemTap: (CoinData coin) {
           SendFundsResultRoute(
-            $extra: SuccessSendTransactionState(
-              TransactionType.nftTransaction,
+            $extra: SuccessContactTransactionState(
+              TransactionType.coinTransaction,
               coin,
             ), //TODO: get data from network
           ).push<void>(context);

@@ -9,6 +9,7 @@ import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/views/pages/contact_modal_page/components/contact_item.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/services/share/share.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -19,56 +20,58 @@ class ContactPage extends IcePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    return ScreenBottomOffset(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 20.0.s),
-                child: ContactItem(
-                  contactData: contactData,
-                ),
-              ),
-              if (contactData.hasIceAccount)
-                Positioned(
-                  top: 16.0.s,
-                  right: 16.0.s,
-                  child: Button.icon(
-                    size: 32.0.s,
-                    type: ButtonType.dropdown,
-                    onPressed: () {},
-                    icon: Assets.images.icons.iconButtonHistory.image(),
+    return SheetContent(
+      body: ScreenBottomOffset(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 20.0.s),
+                  child: ContactItem(
+                    contactData: contactData,
                   ),
                 ),
-            ],
-          ),
-          SizedBox(
-            height: 20.0.s,
-          ),
-          if (contactData.hasIceAccount)
-            ScreenSideOffset.small(
-              child: BalanceActions(
-                onReceive: () => ReceiveCoinRoute().push<void>(context),
-                onSend: () => ContactCoinRoute().push<void>(context),
-              ),
-            )
-          else
-            ScreenSideOffset.small(
-              child: Button.compact(
-                mainAxisSize: MainAxisSize.max,
-                minimumSize: Size(56.0.s, 56.0.s),
-                leadingIcon: Assets.images.icons.iconButtonInvite
-                    .icon(color: context.theme.appColors.onPrimaryAccent),
-                label: Text(
-                  context.i18n.wallet_invite_friends,
-                ),
-                onPressed: () =>
-                    shareContent('Share', subject: 'Look what I found!'),
-              ),
+                if (contactData.hasIceAccount)
+                  Positioned(
+                    top: 16.0.s,
+                    right: 16.0.s,
+                    child: Button.icon(
+                      size: 32.0.s,
+                      type: ButtonType.dropdown,
+                      onPressed: () {},
+                      icon: Assets.images.icons.iconButtonHistory.image(),
+                    ),
+                  ),
+              ],
             ),
-        ],
+            SizedBox(
+              height: 20.0.s,
+            ),
+            if (contactData.hasIceAccount)
+              ScreenSideOffset.small(
+                child: BalanceActions(
+                  onReceive: () => ReceiveCoinRoute().push<void>(context),
+                  onSend: () => ContactCoinRoute().push<void>(context),
+                ),
+              )
+            else
+              ScreenSideOffset.small(
+                child: Button.compact(
+                  mainAxisSize: MainAxisSize.max,
+                  minimumSize: Size(56.0.s, 56.0.s),
+                  leadingIcon: Assets.images.icons.iconButtonInvite
+                      .icon(color: context.theme.appColors.onPrimaryAccent),
+                  label: Text(
+                    context.i18n.wallet_invite_friends,
+                  ),
+                  onPressed: () =>
+                      shareContent('Share', subject: 'Look what I found!'),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

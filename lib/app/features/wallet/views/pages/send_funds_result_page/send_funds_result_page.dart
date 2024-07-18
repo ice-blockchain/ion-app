@@ -10,6 +10,7 @@ import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/compo
 import 'package:ice/app/features/wallet/views/pages/send_funds_result_page/model/transaction_state.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class SendFundsResultPage extends HookConsumerWidget {
   const SendFundsResultPage({required this.transactionState, super.key});
@@ -20,35 +21,37 @@ class SendFundsResultPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final showErrorDetails = useState(false);
 
-    return ScreenBottomOffset(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          switch (transactionState) {
-            SuccessSendTransactionState() =>
-              _BuildIcon(transactionState: transactionState),
-            SuccessContactTransactionState() =>
-              _BuildIconWithClose(transactionState: transactionState),
-            ErrorTransactionState() =>
-              _BuildIconWithClose(transactionState: transactionState),
-          },
-          SizedBox(height: 10.0.s),
-          SendFundsResultMessage(transactionState: transactionState),
-          SizedBox(height: 10.0.s),
-          switch (transactionState) {
-            SuccessSendTransactionState() => SizedBox(height: 6.0.s),
-            SuccessContactTransactionState() => SizedBox(height: 6.0.s),
-            ErrorTransactionState() => SendFundsResultErrorMessage(
-                transactionState: transactionState,
-                showErrorDetails: showErrorDetails,
-              ),
-          },
-          SizedBox(height: 20.0.s),
-          SendFundsResultDetails(
-            transactionState: transactionState,
-            showErrorDetails: showErrorDetails,
-          ),
-        ],
+    return SheetContent(
+      body: ScreenBottomOffset(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            switch (transactionState) {
+              SuccessSendTransactionState() =>
+                _BuildIcon(transactionState: transactionState),
+              SuccessContactTransactionState() =>
+                _BuildIconWithClose(transactionState: transactionState),
+              ErrorTransactionState() =>
+                _BuildIconWithClose(transactionState: transactionState),
+            },
+            SizedBox(height: 10.0.s),
+            SendFundsResultMessage(transactionState: transactionState),
+            SizedBox(height: 10.0.s),
+            switch (transactionState) {
+              SuccessSendTransactionState() => SizedBox(height: 6.0.s),
+              SuccessContactTransactionState() => SizedBox(height: 6.0.s),
+              ErrorTransactionState() => SendFundsResultErrorMessage(
+                  transactionState: transactionState,
+                  showErrorDetails: showErrorDetails,
+                ),
+            },
+            SizedBox(height: 20.0.s),
+            SendFundsResultDetails(
+              transactionState: transactionState,
+              showErrorDetails: showErrorDetails,
+            ),
+          ],
+        ),
       ),
     );
   }

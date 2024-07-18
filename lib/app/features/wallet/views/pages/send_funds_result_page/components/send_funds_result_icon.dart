@@ -19,13 +19,13 @@ class SendFundsResultIcon extends StatelessWidget {
         ),
       SuccessContactTransactionState() =>
         Assets.images.misc.actionContactsendSuccess.iconWithDimensions(
-          width: 63.0.s,
-          height: 76.0.s,
+          width: 80.0.s,
+          height: 80.0.s,
         ),
       ErrorTransactionState() =>
         Assets.images.misc.actionContactsendError.iconWithDimensions(
-          width: 65.0.s,
-          height: 76.0.s,
+          width: 80.0.s,
+          height: 80.0.s,
         ),
     };
   }
