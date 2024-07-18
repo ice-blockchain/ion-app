@@ -5,9 +5,6 @@ import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/app/router/app_router_listenable.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/main_tab_navigation.dart';
-import 'package:ice/app/router/providers/bottom_sheet_state_provider.dart';
-import 'package:ice/app/router/utils/router_utils.dart';
 import 'package:ice/app/services/logger/config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,10 +42,6 @@ GoRouter goRouter(GoRouterRef ref) {
         };
       }
 
-      if (state.matchedLocation.endsWith('-main-modal')) {
-        return _handleModalRedirect(ref, state);
-      }
-
       return switch (authState) {
         Authenticated()
             when state.matchedLocation.startsWith(IntroRoute().location) =>
@@ -66,19 +59,4 @@ GoRouter goRouter(GoRouterRef ref) {
     debugLogDiagnostics: LoggerConfig.routerLogsEnabled,
     navigatorKey: rootNavigatorKey,
   );
-}
-
-String? _handleModalRedirect(GoRouterRef ref, GoRouterState state) {
-  final bottomSheetState = ref.read(bottomSheetStateProvider);
-  final currentTab = getCurrentTab(state.matchedLocation);
-  if (!bottomSheetState[currentTab]!) {
-    return switch (currentTab) {
-      TabItem.feed => FeedRoute().location,
-      TabItem.chat => ChatRoute().location,
-      TabItem.dapps => DappsRoute().location,
-      TabItem.wallet => WalletRoute().location,
-      TabItem.main => null,
-    };
-  }
-  return null;
 }

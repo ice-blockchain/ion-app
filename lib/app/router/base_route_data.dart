@@ -1,12 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/main_tab_navigation.dart';
 import 'package:ice/app/router/providers/bottom_sheet_state_provider.dart';
-import 'package:ice/app/router/utils/router_utils.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum IceRouteType {
@@ -74,7 +73,7 @@ class SlideFromLeftTransitionPage extends CustomTransitionPage<void> {
         );
 }
 
-class _ModalContent extends HookConsumerWidget {
+class _ModalContent extends ConsumerWidget {
   const _ModalContent({required this.child, required this.state});
 
   final Widget child;
@@ -85,34 +84,17 @@ class _ModalContent extends HookConsumerWidget {
     final bottomSheetNotifier = ref.watch(bottomSheetStateProvider.notifier);
     final controller = DefaultSheetController.of(context);
 
-    useEffect(
-      () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          final metrics = controller.value;
-          if (!metrics.hasDimensions) {
-            final currentTab = getCurrentTab(state.matchedLocation);
-            bottomSheetNotifier.closeCurrentSheet(currentTab);
-            popRoute();
-          }
-        });
-        return null;
-      },
-      [],
-    );
-
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
         if (!didPop) {
-          final controller = DefaultSheetController.of(context);
           final metrics = controller.value;
-
           log('_ModalContent - onPopInvoked: metrics: $metrics');
 
           if (!context.mounted) return;
 
-          if (metrics.hasDimensions) {
-            final currentTab = getCurrentTab(state.matchedLocation);
+          if (!metrics.hasDimensions || metrics.pixels <= metrics.minPixels) {
+            final currentTab = _getCurrentTab(state.matchedLocation);
             log('_ModalContent - onPopInvoked: closing sheet for $currentTab');
             bottomSheetNotifier.closeCurrentSheet(currentTab);
             await popRoute();
@@ -121,5 +103,13 @@ class _ModalContent extends HookConsumerWidget {
       },
       child: child,
     );
+  }
+
+  TabItem _getCurrentTab(String location) {
+    if (location.startsWith(FeedRoute().location)) return TabItem.feed;
+    if (location.startsWith(ChatRoute().location)) return TabItem.chat;
+    if (location.startsWith(DappsRoute().location)) return TabItem.dapps;
+    if (location.startsWith(WalletRoute().location)) return TabItem.wallet;
+    return TabItem.main;
   }
 }
