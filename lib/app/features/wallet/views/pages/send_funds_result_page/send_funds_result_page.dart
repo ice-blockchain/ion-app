@@ -26,25 +26,16 @@ class SendFundsResultPage extends HookConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            switch (transactionState) {
-              SuccessSendTransactionState() =>
-                _BuildIcon(transactionState: transactionState),
-              SuccessContactTransactionState() =>
-                _BuildIconWithClose(transactionState: transactionState),
-              ErrorTransactionState() =>
-                _BuildIconWithClose(transactionState: transactionState),
-            },
+            _TransactionIcon(
+              transactionState: transactionState,
+            ),
             SizedBox(height: 10.0.s),
             SendFundsResultMessage(transactionState: transactionState),
             SizedBox(height: 10.0.s),
-            switch (transactionState) {
-              SuccessSendTransactionState() => SizedBox(height: 6.0.s),
-              SuccessContactTransactionState() => SizedBox(height: 6.0.s),
-              ErrorTransactionState() => SendFundsResultErrorMessage(
-                  transactionState: transactionState,
-                  showErrorDetails: showErrorDetails,
-                ),
-            },
+            _TransactionBody(
+              transactionState: transactionState,
+              showErrorDetails: showErrorDetails,
+            ),
             SizedBox(height: 20.0.s),
             SendFundsResultDetails(
               transactionState: transactionState,
@@ -54,6 +45,48 @@ class SendFundsResultPage extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class _TransactionBody extends StatelessWidget {
+  const _TransactionBody({
+    required this.transactionState,
+    required this.showErrorDetails,
+  });
+
+  final TransactionState transactionState;
+  final ValueNotifier<bool> showErrorDetails;
+
+  @override
+  Widget build(BuildContext context) {
+    return switch (transactionState) {
+      SuccessSendTransactionState() => SizedBox(height: 6.0.s),
+      SuccessContactTransactionState() => SizedBox(height: 6.0.s),
+      ErrorTransactionState() => SendFundsResultErrorMessage(
+          transactionState: transactionState,
+          showErrorDetails: showErrorDetails,
+        ),
+    };
+  }
+}
+
+class _TransactionIcon extends StatelessWidget {
+  const _TransactionIcon({
+    required this.transactionState,
+  });
+
+  final TransactionState transactionState;
+
+  @override
+  Widget build(BuildContext context) {
+    return switch (transactionState) {
+      SuccessSendTransactionState() =>
+        _BuildIcon(transactionState: transactionState),
+      SuccessContactTransactionState() =>
+        _BuildIconWithClose(transactionState: transactionState),
+      ErrorTransactionState() =>
+        _BuildIconWithClose(transactionState: transactionState),
+    };
   }
 }
 
