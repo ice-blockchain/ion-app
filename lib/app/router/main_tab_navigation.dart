@@ -38,12 +38,14 @@ class MainTabNavigation extends HookConsumerWidget {
 
   final StatefulNavigationShell navigationShell;
 
+  static final Map<int, TabItem> _navigationIndexToTab = {
+    for (var tab in TabItem.values)
+      if (tab != TabItem.main) tab.navigationIndex: tab,
+  };
+
   TabItem _getCurrentTab() {
     final adjustedIndex = navigationShell.currentIndex;
-    return TabItem.values.firstWhere(
-      (tab) => tab != TabItem.main && tab.navigationIndex == adjustedIndex,
-      orElse: () => TabItem.main,
-    );
+    return _navigationIndexToTab[adjustedIndex] ?? TabItem.main;
   }
 
   @override
@@ -52,7 +54,7 @@ class MainTabNavigation extends HookConsumerWidget {
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _adjustBottomNavIndex(navigationShell.currentIndex),
-        onTap: (index) => _onTap(context, ref, index),
+        onTap: (index) => _onTabSelected(context, ref, index),
         items: _navBarItems(ref),
         type: BottomNavigationBarType.fixed,
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -64,35 +66,32 @@ class MainTabNavigation extends HookConsumerWidget {
     );
   }
 
-  void _onTap(
-    BuildContext context,
-    WidgetRef ref,
-    int index,
-  ) {
+  void _onTabSelected(BuildContext context, WidgetRef ref, int index) {
     final tabItem = TabItem.values[index];
     if (tabItem == TabItem.main) {
-      _onMainButtonTap(context, ref);
+      _handleMainButtonTap(context, ref);
     } else {
-      final bottomSheetNotifier = ref.read(bottomSheetStateProvider.notifier);
-      final currentTab = _getCurrentTab();
-
-      if (bottomSheetNotifier.isSheetOpen(currentTab)) {
-        context.pop();
-        bottomSheetNotifier.closeCurrentSheet(currentTab);
-      }
-
-      final adjustedIndex = tabItem.navigationIndex;
-      navigationShell.goBranch(
-        adjustedIndex,
-        initialLocation: true,
-      );
+      _navigateToTab(context, ref, tabItem);
     }
   }
 
-  void _onMainButtonTap(
-    BuildContext context,
-    WidgetRef ref,
-  ) {
+  void _navigateToTab(BuildContext context, WidgetRef ref, TabItem tabItem) {
+    final bottomSheetNotifier = ref.read(bottomSheetStateProvider.notifier);
+    final currentTab = _getCurrentTab();
+
+    if (bottomSheetNotifier.isSheetOpen(currentTab)) {
+      context.pop();
+      bottomSheetNotifier.closeCurrentSheet(currentTab);
+    }
+
+    final adjustedIndex = tabItem.navigationIndex;
+    navigationShell.goBranch(
+      adjustedIndex,
+      initialLocation: true,
+    );
+  }
+
+  void _handleMainButtonTap(BuildContext context, WidgetRef ref) {
     final currentTab = _getCurrentTab();
     final bottomSheetNotifier = ref.read(bottomSheetStateProvider.notifier);
 
@@ -101,19 +100,22 @@ class MainTabNavigation extends HookConsumerWidget {
       bottomSheetNotifier.closeCurrentSheet(currentTab);
     } else {
       bottomSheetNotifier.setSheetState(currentTab, isOpen: true);
-      switch (currentTab) {
-        case TabItem.feed:
-          FeedMainModalRoute().go(context);
-        case TabItem.chat:
-          ChatMainModalRoute().go(context);
-        case TabItem.dapps:
-          DappsMainModalRoute().go(context);
-        case TabItem.wallet:
-          WalletMainModalRoute().go(context);
-        case TabItem.main:
-          // Handle main tab if needed
-          break;
-      }
+      _openMainModalForCurrentTab(context, currentTab);
+    }
+  }
+
+  void _openMainModalForCurrentTab(BuildContext context, TabItem currentTab) {
+    switch (currentTab) {
+      case TabItem.feed:
+        FeedMainModalRoute().go(context);
+      case TabItem.chat:
+        ChatMainModalRoute().go(context);
+      case TabItem.dapps:
+        DappsMainModalRoute().go(context);
+      case TabItem.wallet:
+        WalletMainModalRoute().go(context);
+      case TabItem.main:
+        break;
     }
   }
 
