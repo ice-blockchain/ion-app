@@ -7,17 +7,19 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/list_sepa
 class PostList extends HookConsumerWidget {
   const PostList({
     required this.posts,
+    this.separatorHeight,
     super.key,
   });
 
   final List<PostData> posts;
+  final double? separatorHeight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SliverList.separated(
       itemCount: posts.length,
       separatorBuilder: (BuildContext context, int index) {
-        return FeedListSeparator();
+        return FeedListSeparator(height: separatorHeight);
       },
       itemBuilder: (BuildContext context, int index) {
         return Post(postData: posts[index]);

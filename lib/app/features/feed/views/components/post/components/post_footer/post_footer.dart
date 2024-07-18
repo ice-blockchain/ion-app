@@ -6,19 +6,27 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_engagement_metric.dart';
+import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_action_button.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
+typedef ActionIconBuilder = Widget Function(
+  BuildContext context,
+  Widget child,
+  VoidCallback onPressed,
+);
+
 class PostFooter extends HookConsumerWidget {
-  const PostFooter({
+  PostFooter({
     required this.postData,
     this.actionBuilder,
+    double? bottomPadding,
     super.key,
-  });
+  }) : bottomPadding = bottomPadding ?? 16.0.s;
 
   final PostData postData;
-  final TransitionBuilder? actionBuilder;
+  final ActionIconBuilder? actionBuilder;
+  final double bottomPadding;
 
   static double get iconSize => 16.0.s;
 
@@ -49,8 +57,7 @@ class PostFooter extends HookConsumerWidget {
 
     void onIceStroke() {}
 
-    final commentsActionIcon = PostEngagementMetric(
-      onPressed: onToggleComment,
+    final commentsActionIcon = PostActionButton(
       icon: Assets.images.icons.iconBlockComment.icon(
         size: PostFooter.iconSize,
       ),
@@ -62,8 +69,7 @@ class PostFooter extends HookConsumerWidget {
       activeColor: activeColor,
     );
 
-    final repostsActionIcon = PostEngagementMetric(
-      onPressed: onToggleRepost,
+    final repostsActionIcon = PostActionButton(
       icon: Assets.images.icons.iconBlockRepost.icon(
         size: PostFooter.iconSize,
       ),
@@ -76,8 +82,7 @@ class PostFooter extends HookConsumerWidget {
       activeColor: activeColor,
     );
 
-    final likesActionIcon = PostEngagementMetric(
-      onPressed: onToggleLike,
+    final likesActionIcon = PostActionButton(
       icon: Assets.images.icons.iconVideoLikeOff.icon(
         size: PostFooter.iconSize,
         color: context.theme.appColors.onTertararyBackground,
@@ -91,8 +96,7 @@ class PostFooter extends HookConsumerWidget {
       activeColor: context.theme.appColors.attentionRed,
     );
 
-    final iceActionIcon = PostEngagementMetric(
-      onPressed: onIceStroke,
+    final iceActionIcon = PostActionButton(
       icon: Assets.images.icons.iconButtonIceStroke.icon(
         size: PostFooter.iconSize,
         color: context.theme.appColors.onTertararyBackground,
@@ -101,38 +105,45 @@ class PostFooter extends HookConsumerWidget {
       activeColor: activeColor,
     );
 
-    final shareActionIcon = PostEngagementMetric(
-      onPressed: onShareOptions,
+    final shareActionIcon = PostActionButton(
       icon: Assets.images.icons.iconBlockShare.icon(
         size: PostFooter.iconSize,
       ),
       activeColor: activeColor,
     );
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _ActionIcon(
-          actionBuilder: actionBuilder,
-          child: commentsActionIcon,
-        ),
-        _ActionIcon(
-          actionBuilder: actionBuilder,
-          child: repostsActionIcon,
-        ),
-        _ActionIcon(
-          actionBuilder: actionBuilder,
-          child: likesActionIcon,
-        ),
-        _ActionIcon(
-          actionBuilder: actionBuilder,
-          child: iceActionIcon,
-        ),
-        _ActionIcon(
-          actionBuilder: actionBuilder,
-          child: shareActionIcon,
-        ),
-      ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomPadding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _ActionIcon(
+            onPressed: onToggleComment,
+            actionBuilder: actionBuilder,
+            child: commentsActionIcon,
+          ),
+          _ActionIcon(
+            onPressed: onToggleRepost,
+            actionBuilder: actionBuilder,
+            child: repostsActionIcon,
+          ),
+          _ActionIcon(
+            onPressed: onToggleLike,
+            actionBuilder: actionBuilder,
+            child: likesActionIcon,
+          ),
+          _ActionIcon(
+            onPressed: onIceStroke,
+            actionBuilder: actionBuilder,
+            child: iceActionIcon,
+          ),
+          _ActionIcon(
+            onPressed: onShareOptions,
+            actionBuilder: actionBuilder,
+            child: shareActionIcon,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -140,19 +151,26 @@ class PostFooter extends HookConsumerWidget {
 class _ActionIcon extends StatelessWidget {
   const _ActionIcon({
     required this.child,
+    required this.onPressed,
     this.actionBuilder,
   });
 
   final Widget child;
-  final TransitionBuilder? actionBuilder;
+  final VoidCallback onPressed;
+  final ActionIconBuilder? actionBuilder;
 
   @override
   Widget build(BuildContext context) {
     return actionBuilder == null
-        ? child
+        ? InkResponse(
+            onTap: onPressed,
+            splashFactory: InkRipple.splashFactory,
+            child: child,
+          )
         : actionBuilder!(
             context,
             child,
+            onPressed,
           );
   }
 }

@@ -18,9 +18,7 @@ class Posts extends HookConsumerWidget {
     });
 
     return posts.maybeWhen(
-      data: (List<PostData> data) => PostList(
-        posts: data,
-      ),
+      data: (List<PostData> data) => PostList(posts: data),
       orElse: () => const PostListSkeleton(),
     );
   }

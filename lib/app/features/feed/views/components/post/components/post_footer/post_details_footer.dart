@@ -1,7 +1,8 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
+import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_details_action_button.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
 
 class PostDetailsFooter extends HookConsumerWidget {
@@ -29,37 +30,13 @@ class PostDetailsFooter extends HookConsumerWidget {
         SizedBox(height: 12.0.s),
         PostFooter(
           postData: postData,
-          actionBuilder: (context, child) => PostDetailsActionWrapper(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 6.0.s),
-              child: child,
-            ),
+          bottomPadding: 12.0.s,
+          actionBuilder: (context, child, onPressed) => PostDetailsActionButton(
+            onPressed: onPressed,
+            child: child,
           ),
         ),
       ],
-    );
-  }
-}
-
-class PostDetailsActionWrapper extends StatelessWidget {
-  const PostDetailsActionWrapper({
-    required this.child,
-    super.key,
-  });
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.theme.appColors;
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colors.tertararyBackground,
-        border: Border.all(color: colors.onTerararyFill),
-        borderRadius: BorderRadius.circular(12.0.s),
-      ),
-      child: child,
     );
   }
 }
