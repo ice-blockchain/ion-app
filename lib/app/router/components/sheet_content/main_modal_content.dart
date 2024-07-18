@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,7 +24,6 @@ class ModalContent extends ConsumerWidget {
 
           if (!metrics.hasDimensions || metrics.pixels <= metrics.minPixels) {
             final currentTab = _getCurrentTab(state.matchedLocation);
-            log('_ModalContent - onPopInvoked: closing sheet for $currentTab');
             ref
                 .read(bottomSheetStateProvider.notifier)
                 .closeCurrentSheet(currentTab);

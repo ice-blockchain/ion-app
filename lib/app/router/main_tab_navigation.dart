@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -49,23 +48,11 @@ class MainTabNavigation extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomSheetState = ref.watch(bottomSheetStateProvider);
-    final currentTab = _getCurrentTab();
-    final isModalOpen = useState(bottomSheetState[currentTab] ?? false);
-
-    useEffect(
-      () {
-        isModalOpen.value = bottomSheetState[currentTab] ?? false;
-        return null;
-      },
-      [currentTab, bottomSheetState],
-    );
-
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _adjustBottomNavIndex(navigationShell.currentIndex),
-        onTap: (index) => _onTap(context, ref, isModalOpen, index),
+        onTap: (index) => _onTap(context, ref, index),
         items: _navBarItems(ref),
         type: BottomNavigationBarType.fixed,
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -80,19 +67,17 @@ class MainTabNavigation extends HookConsumerWidget {
   void _onTap(
     BuildContext context,
     WidgetRef ref,
-    ValueNotifier<bool> isModalOpen,
     int index,
   ) {
     final tabItem = TabItem.values[index];
     if (tabItem == TabItem.main) {
-      _onMainButtonTap(context, ref, isModalOpen);
+      _onMainButtonTap(context, ref);
     } else {
       final bottomSheetNotifier = ref.read(bottomSheetStateProvider.notifier);
       final currentTab = _getCurrentTab();
 
-      if (isModalOpen.value) {
+      if (bottomSheetNotifier.isSheetOpen(currentTab)) {
         context.pop();
-        isModalOpen.value = false;
         bottomSheetNotifier.closeCurrentSheet(currentTab);
       }
 
@@ -107,7 +92,6 @@ class MainTabNavigation extends HookConsumerWidget {
   void _onMainButtonTap(
     BuildContext context,
     WidgetRef ref,
-    ValueNotifier<bool> isModalOpen,
   ) {
     final currentTab = _getCurrentTab();
     final bottomSheetNotifier = ref.read(bottomSheetStateProvider.notifier);
@@ -115,10 +99,8 @@ class MainTabNavigation extends HookConsumerWidget {
     if (bottomSheetNotifier.isSheetOpen(currentTab)) {
       context.pop();
       bottomSheetNotifier.closeCurrentSheet(currentTab);
-      isModalOpen.value = false;
     } else {
       bottomSheetNotifier.setSheetState(currentTab, isOpen: true);
-      isModalOpen.value = true;
       switch (currentTab) {
         case TabItem.feed:
           FeedMainModalRoute().go(context);
