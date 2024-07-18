@@ -5,6 +5,7 @@ import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart
 import 'package:ice/app/features/auth/views/pages/get_started/get_started.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/intro_page.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
+import 'package:ice/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
 import 'package:ice/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';

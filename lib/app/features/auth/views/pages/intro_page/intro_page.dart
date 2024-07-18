@@ -39,7 +39,7 @@ class IntroPage extends IcePage {
                 ScaleEffect(
                   duration: 500.ms,
                   curve: Curves.easeOutBack,
-                  delay: 10.seconds,
+                  delay: 0.seconds,
                 ),
               ],
               child: Button(

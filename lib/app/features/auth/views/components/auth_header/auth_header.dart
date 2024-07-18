@@ -12,7 +12,7 @@ class AuthHeader extends StatelessWidget {
     this.showBackButton = true,
     double? iconOffset,
     double? descriptionSidePadding,
-  })  : iconOffset = iconOffset ?? 19.0.s,
+  })  : iconOffset = iconOffset ?? 20.0.s,
         descriptionSidePadding = descriptionSidePadding ?? 0.0.s;
 
   final String? title;

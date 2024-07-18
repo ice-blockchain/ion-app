@@ -12,6 +12,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/components/avatar_picker.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -45,7 +46,10 @@ class FillProfile extends IcePage {
                   AuthHeader(
                     title: context.i18n.fill_profile_title,
                     description: context.i18n.fill_profile_description,
-                    icon: Assets.images.logo.logoIce.icon(size: 65.0.s),
+                    icon: AuthHeaderIcon(
+                      icon: Assets.images.icons.iconLoginIcelogo
+                          .icon(size: 36.0.s),
+                    ),
                   ),
                   ScreenSideOffset.large(
                     child: Column(
