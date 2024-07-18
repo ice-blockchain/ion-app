@@ -18,6 +18,7 @@ import 'package:ice/app/features/dapps/views/pages/dapps_main_modal/dapps_main_m
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
+import 'package:ice/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/quote_post_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_options_modal/share_options_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_type_modal_page/share_type_modal_page.dart';
@@ -69,10 +70,11 @@ final transitionObserver = NavigationSheetTransitionObserver();
   branches: [
     TypedStatefulShellBranch(
       routes: [
-        TypedGoRoute<FeedRoute>(path: '/feed'),
-        TypedShellRoute<SheetRouteData>(
-          routes: [TypedGoRoute<FeedMainModal>(path: '/feed-main-modal'),
+        TypedGoRoute<FeedRoute>(
+          path: '/feed',
+          routes: [
             TypedGoRoute<PostDetailsRoute>(path: 'post'),
+            TypedGoRoute<FeedMainModalRoute>(path: 'feed-main-modal'),
           ],
         ),
       ],
@@ -183,7 +185,6 @@ class IntroRoute extends BaseRouteData {
   IntroRoute() : super(child: const IntroPage());
 }
 
-// @TypedGoRoute<FeedMainModalRoute>(path: '/feed-modal')
 class FeedMainModalRoute extends BaseRouteData {
   FeedMainModalRoute()
       : super(
@@ -192,7 +193,6 @@ class FeedMainModalRoute extends BaseRouteData {
         );
 }
 
-// @TypedGoRoute<ChatMainModalRoute>(path: '/chat-modal')
 class ChatMainModalRoute extends BaseRouteData {
   ChatMainModalRoute()
       : super(
@@ -201,7 +201,6 @@ class ChatMainModalRoute extends BaseRouteData {
         );
 }
 
-// @TypedGoRoute<DappsMainModalRoute>(path: '/dapps-modal')
 class DappsMainModalRoute extends BaseRouteData {
   DappsMainModalRoute()
       : super(
@@ -210,7 +209,6 @@ class DappsMainModalRoute extends BaseRouteData {
         );
 }
 
-// @TypedGoRoute<WalletMainModalRoute>(path: '/wallet-modal')
 class WalletMainModalRoute extends BaseRouteData {
   WalletMainModalRoute()
       : super(
