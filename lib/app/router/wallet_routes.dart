@@ -150,13 +150,11 @@ class NetworkSelectReceiveRoute extends BaseRouteData {
 }
 
 class ShareAddressRoute extends BaseRouteData {
-  ShareAddressRoute({required this.$extra})
+  ShareAddressRoute()
       : super(
-          child: ShareAddressView(payload: $extra),
+          child: const ShareAddressView(),
           type: IceRouteType.bottomSheet,
         );
-
-  final Map<String, dynamic> $extra;
 }
 
 class CoinsSendFormRoute extends BaseRouteData {

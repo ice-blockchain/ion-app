@@ -5,6 +5,8 @@ import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/components/network_item.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -42,12 +44,10 @@ class NetworkListReceiveView extends IcePage {
                 child: NetworkItem(
                   networkType: networkTypeValues[index],
                   onTap: () {
-                    // ShareAddressRoute(
-                    //   $extra: <String, dynamic>{
-                    //     'coinData': payload,
-                    //     'networkType': networkTypeValues[index],
-                    //   },
-                    // ).push<void>(context);
+                    ref
+                        .read(receiveCoinsFormControllerProvider.notifier)
+                        .selectNetwork(networkTypeValues[index]);
+                    ShareAddressRoute().push<void>(context);
                   },
                 ),
               );

@@ -3,9 +3,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_form_provider.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coin_item.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
@@ -23,7 +24,7 @@ class CoinsListView extends HookConsumerWidget {
     super.key,
   });
 
-  final void Function() onCoinItemTap;
+  final void Function(CoinData coin) onCoinItemTap;
   final CoinsListViewType type;
 
   @override
@@ -88,9 +89,9 @@ class CoinsListView extends HookConsumerWidget {
                     coinData: coins[index],
                     onTap: () {
                       ref
-                          .read(sendCoinsFormControllerProvider.notifier)
+                          .read(receiveCoinsFormControllerProvider.notifier)
                           .selectCoin(coins[index]);
-                      onCoinItemTap();
+                      onCoinItemTap(coins[index]);
                     },
                   ),
                 );
