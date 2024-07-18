@@ -37,7 +37,6 @@ abstract class BaseRouteData extends GoRouteData {
               state: state,
               child: child,
             ),
-            // child: child,
           ),
         ),
     };
