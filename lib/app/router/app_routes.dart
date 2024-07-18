@@ -66,7 +66,12 @@ final transitionObserver = NavigationSheetTransitionObserver();
 @TypedStatefulShellRoute<AppShellRouteData>(
   branches: [
     TypedStatefulShellBranch(
-      routes: [TypedGoRoute<FeedRoute>(path: '/feed')],
+      routes: [
+        TypedGoRoute<FeedRoute>(
+          path: '/feed',
+          routes: [TypedGoRoute<PostDetailsRoute>(path: 'post')],
+        ),
+      ],
     ),
     TypedStatefulShellBranch(
       routes: [TypedGoRoute<ChatRoute>(path: '/chat')],
@@ -226,7 +231,6 @@ class SwitchAccountRoute extends BaseRouteData {
         );
 }
 
-@TypedGoRoute<PostDetailsRoute>(path: '/post')
 class PostDetailsRoute extends BaseRouteData {
   PostDetailsRoute({required this.$extra})
       : super(
