@@ -33,7 +33,7 @@ abstract class BaseRouteData extends GoRouteData {
           key: state.pageKey,
           child: DraggableSheet(
             controller: DefaultSheetController.of(context),
-            child: ModalContent(
+            child: MainModalContent(
               state: state,
               child: child,
             ),

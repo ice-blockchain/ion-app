@@ -6,8 +6,8 @@ import 'package:ice/app/router/main_tab_navigation.dart';
 import 'package:ice/app/router/providers/bottom_sheet_state_provider.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
-class ModalContent extends ConsumerWidget {
-  const ModalContent({required this.child, required this.state, super.key});
+class MainModalContent extends ConsumerWidget {
+  const MainModalContent({required this.child, required this.state, super.key});
 
   final Widget child;
   final GoRouterState state;
