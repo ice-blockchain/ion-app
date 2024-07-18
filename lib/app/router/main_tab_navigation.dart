@@ -8,41 +8,8 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/providers/bottom_sheet_state_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'main_tab_navigation.g.dart';
-
-@Riverpod(keepAlive: true)
-class BottomSheetState extends _$BottomSheetState {
-  @override
-  Map<TabItem, bool> build() {
-    return {
-      for (final tab in TabItem.values)
-        if (tab != TabItem.main) tab: false,
-    };
-  }
-
-  void setSheetState(TabItem tab, {required bool isOpen}) {
-    log('BottomSheetState - setSheetState: setting $tab to $isOpen');
-    state = {...state, tab: isOpen};
-  }
-
-  void closeCurrentSheet(TabItem currentTab) {
-    if (state[currentTab] ?? false) {
-      log('BottomSheetState - closeCurrentSheet: '
-          'closing sheet for $currentTab');
-      state = {...state, currentTab: false};
-    }
-  }
-
-  bool isSheetOpen(TabItem tab) {
-    final isOpen = state[tab] ?? false;
-    log('BottomSheetState - isSheetOpen: '
-        '$tab is ${isOpen ? 'open' : 'closed'}');
-    return isOpen;
-  }
-}
 
 enum TabItem {
   feed,
@@ -86,7 +53,6 @@ class MainTabNavigation extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomSheetState = ref.watch(bottomSheetStateProvider);
     final currentTab = _getCurrentTab();
-
     final isModalOpen = useState(bottomSheetState[currentTab] ?? false);
 
     useEffect(
