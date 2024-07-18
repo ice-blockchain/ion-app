@@ -48,7 +48,10 @@ class SendFundsResultDetails extends StatelessWidget {
           SuccessContactTransactionState() => Column(
               children: [
                 SizedBox(height: 29.0.s),
-                const _BuildButtonSection(),
+                _BuildButtonSection(
+                  onPressIconShare: () {},
+                  onPressViewExplorer: () {},
+                ),
               ],
             ),
           ErrorTransactionState() => const _BuildErrorSection(),
@@ -83,7 +86,12 @@ class _BuildErrorSection extends StatelessWidget {
 }
 
 class _BuildButtonSection extends StatelessWidget {
-  const _BuildButtonSection();
+  const _BuildButtonSection({
+    required this.onPressIconShare,
+    required this.onPressViewExplorer,
+  });
+  final VoidCallback onPressIconShare;
+  final VoidCallback onPressViewExplorer;
 
   @override
   Widget build(BuildContext context) {
@@ -98,14 +106,14 @@ class _BuildButtonSection extends StatelessWidget {
               label: Text(
                 context.i18n.wallet_funds_view_explorer,
               ),
-              onPressed: () {},
+              onPressed: onPressViewExplorer,
             ),
           ),
           SizedBox(width: 13.0.s),
           Button.icon(
             type: ButtonType.secondary,
             icon: Assets.images.icons.iconButtonShare.icon(),
-            onPressed: () {},
+            onPressed: onPressIconShare,
           ),
         ],
       ),
