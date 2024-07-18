@@ -16,6 +16,7 @@ import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
+import 'package:ice/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/quote_post_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_options_modal/share_options_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_type_modal_page/share_type_modal_page.dart';
@@ -223,4 +224,16 @@ class SwitchAccountRoute extends BaseRouteData {
           child: const SwitchAccountPage(),
           type: IceRouteType.bottomSheet,
         );
+}
+
+@TypedGoRoute<PostDetailsRoute>(path: '/post')
+class PostDetailsRoute extends BaseRouteData {
+  PostDetailsRoute({required this.$extra})
+      : super(
+          child: PostDetailsPage(
+            postData: $extra,
+          ),
+        );
+
+  final PostData $extra;
 }
