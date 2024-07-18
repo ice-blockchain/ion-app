@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -86,7 +84,6 @@ class MainTabNavigation extends HookConsumerWidget {
     int index,
   ) {
     final tabItem = TabItem.values[index];
-    log('_onTap: tapped on $tabItem');
     if (tabItem == TabItem.main) {
       _onMainButtonTap(context, ref, isModalOpen);
     } else {
@@ -94,14 +91,12 @@ class MainTabNavigation extends HookConsumerWidget {
       final currentTab = _getCurrentTab();
 
       if (isModalOpen.value) {
-        log('_onTap: closing sheet for $currentTab');
-        popRoute();
+        context.pop();
         isModalOpen.value = false;
         bottomSheetNotifier.closeCurrentSheet(currentTab);
       }
 
       final adjustedIndex = tabItem.navigationIndex;
-      log('_onTap: switching to branch $adjustedIndex');
       navigationShell.goBranch(
         adjustedIndex,
         initialLocation: true,
@@ -115,16 +110,13 @@ class MainTabNavigation extends HookConsumerWidget {
     ValueNotifier<bool> isModalOpen,
   ) {
     final currentTab = _getCurrentTab();
-    log('_onMainButtonTap: current tab is $currentTab');
     final bottomSheetNotifier = ref.read(bottomSheetStateProvider.notifier);
 
     if (bottomSheetNotifier.isSheetOpen(currentTab)) {
-      log('_onMainButtonTap: closing sheet for $currentTab');
-      popRoute();
+      context.pop();
       bottomSheetNotifier.closeCurrentSheet(currentTab);
       isModalOpen.value = false;
     } else {
-      log('_onMainButtonTap: opening sheet for $currentTab');
       bottomSheetNotifier.setSheetState(currentTab, isOpen: true);
       isModalOpen.value = true;
       switch (currentTab) {

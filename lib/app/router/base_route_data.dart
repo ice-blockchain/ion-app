@@ -1,18 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/main_tab_navigation.dart';
-import 'package:ice/app/router/providers/bottom_sheet_state_provider.dart';
+import 'package:ice/app/router/components/sheet_content/main_modal_content.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum IceRouteType {
   single,
   bottomSheet,
   slideFromLeft,
-  modalSheet,
+  mainModalSheet,
 }
 
 abstract class BaseRouteData extends GoRouteData {
@@ -33,13 +28,12 @@ abstract class BaseRouteData extends GoRouteData {
         ),
       IceRouteType.slideFromLeft =>
         SlideFromLeftTransitionPage(child: child, state: state),
-      IceRouteType.modalSheet => ModalSheetPage<void>(
+      IceRouteType.mainModalSheet => ModalSheetPage<void>(
           swipeDismissible: true,
           key: state.pageKey,
           child: DraggableSheet(
             controller: DefaultSheetController.of(context),
-            // child: child,
-            child: _ModalContent(
+            child: ModalContent(
               state: state,
               child: child,
             ),
@@ -48,9 +42,6 @@ abstract class BaseRouteData extends GoRouteData {
         ),
     };
   }
-
-  @override
-  Widget build(BuildContext context, GoRouterState state);
 }
 
 class SlideFromLeftTransitionPage extends CustomTransitionPage<void> {
@@ -71,45 +62,4 @@ class SlideFromLeftTransitionPage extends CustomTransitionPage<void> {
             );
           },
         );
-}
-
-class _ModalContent extends ConsumerWidget {
-  const _ModalContent({required this.child, required this.state});
-
-  final Widget child;
-  final GoRouterState state;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final bottomSheetNotifier = ref.watch(bottomSheetStateProvider.notifier);
-    final controller = DefaultSheetController.of(context);
-
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (!didPop) {
-          final metrics = controller.value;
-          log('_ModalContent - onPopInvoked: metrics: $metrics');
-
-          if (!context.mounted) return;
-
-          if (!metrics.hasDimensions || metrics.pixels <= metrics.minPixels) {
-            final currentTab = _getCurrentTab(state.matchedLocation);
-            log('_ModalContent - onPopInvoked: closing sheet for $currentTab');
-            bottomSheetNotifier.closeCurrentSheet(currentTab);
-            await popRoute();
-          }
-        }
-      },
-      child: child,
-    );
-  }
-
-  TabItem _getCurrentTab(String location) {
-    if (location.startsWith(FeedRoute().location)) return TabItem.feed;
-    if (location.startsWith(ChatRoute().location)) return TabItem.chat;
-    if (location.startsWith(DappsRoute().location)) return TabItem.dapps;
-    if (location.startsWith(WalletRoute().location)) return TabItem.wallet;
-    return TabItem.main;
-  }
 }

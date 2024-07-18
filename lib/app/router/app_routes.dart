@@ -188,7 +188,7 @@ class FeedMainModalRoute extends BaseRouteData {
   FeedMainModalRoute()
       : super(
           child: const FeedMainModalPage(),
-          type: IceRouteType.modalSheet,
+          type: IceRouteType.mainModalSheet,
         );
 }
 
@@ -197,7 +197,7 @@ class ChatMainModalRoute extends BaseRouteData {
   ChatMainModalRoute()
       : super(
           child: const ChatMainModalPage(),
-          type: IceRouteType.modalSheet,
+          type: IceRouteType.mainModalSheet,
         );
 }
 
@@ -206,7 +206,7 @@ class DappsMainModalRoute extends BaseRouteData {
   DappsMainModalRoute()
       : super(
           child: const DappsMainModalPage(),
-          type: IceRouteType.modalSheet,
+          type: IceRouteType.mainModalSheet,
         );
 }
 
@@ -215,7 +215,7 @@ class WalletMainModalRoute extends BaseRouteData {
   WalletMainModalRoute()
       : super(
           child: const WalletMainModalPage(),
-          type: IceRouteType.modalSheet,
+          type: IceRouteType.mainModalSheet,
         );
 }
 
