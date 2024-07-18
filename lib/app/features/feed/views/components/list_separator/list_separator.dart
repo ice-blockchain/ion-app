@@ -13,9 +13,11 @@ class FeedListSeparator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
+    return ColoredBox(
       color: context.theme.appColors.primaryBackground,
+      child: ConstrainedBox(
+        constraints: BoxConstraints.tight(Size.fromHeight(height)),
+      ),
     );
   }
 }

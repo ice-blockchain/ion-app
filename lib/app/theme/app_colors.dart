@@ -24,6 +24,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.purple,
     required this.raspberry,
     required this.darkBlue,
+    required this.lightBlue,
     required this.quaternaryText,
   });
 
@@ -50,6 +51,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       purple: templateColors.purple,
       raspberry: templateColors.raspberry,
       darkBlue: templateColors.darkBlue,
+      lightBlue: templateColors.lightBlue,
       quaternaryText: templateColors.quaternaryText,
     );
   }
@@ -75,6 +77,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color purple;
   final Color raspberry;
   final Color darkBlue;
+  final Color lightBlue;
   final Color quaternaryText;
 
   @override
@@ -100,6 +103,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? purple,
     Color? raspberry,
     Color? darkBlue,
+    Color? lightBlue,
     Color? quaternaryText,
   }) {
     return AppColorsExtension(
@@ -126,6 +130,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       purple: purple ?? this.purple,
       raspberry: raspberry ?? this.raspberry,
       darkBlue: darkBlue ?? this.darkBlue,
+      lightBlue: lightBlue ?? this.lightBlue,
       quaternaryText: quaternaryText ?? this.quaternaryText,
     );
   }
@@ -166,6 +171,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       purple: Color.lerp(purple, other.purple, t)!,
       raspberry: Color.lerp(raspberry, other.raspberry, t)!,
       darkBlue: Color.lerp(darkBlue, other.darkBlue, t)!,
+      lightBlue: Color.lerp(lightBlue, other.lightBlue, t)!,
       quaternaryText: Color.lerp(quaternaryText, other.quaternaryText, t)!,
     );
   }
