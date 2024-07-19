@@ -4,15 +4,23 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/components/network_item.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/network_list/network_item.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
+enum NetworkListViewType {
+  send,
+  receive,
+}
+
 class NetworkListView extends IcePage {
-  const NetworkListView({super.key});
+  const NetworkListView({this.type = NetworkListViewType.send, super.key});
+
+  final NetworkListViewType? type;
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
@@ -44,11 +52,17 @@ class NetworkListView extends IcePage {
                 child: NetworkItem(
                   networkType: networkTypeValues[index],
                   onTap: () {
-                    ref
-                        .read(sendCoinsFormControllerProvider.notifier)
-                        .selectNetwork(networkTypeValues[index]);
-
-                    CoinsSendFormRoute().push<void>(context);
+                    if (type == NetworkListViewType.send) {
+                      ref
+                          .read(sendCoinsFormControllerProvider.notifier)
+                          .selectNetwork(networkTypeValues[index]);
+                      CoinsSendFormRoute().push<void>(context);
+                    } else {
+                      ref
+                          .read(receiveCoinsFormControllerProvider.notifier)
+                          .selectNetwork(networkTypeValues[index]);
+                      ShareAddressRoute().push<void>(context);
+                    }
                   },
                 ),
               );

@@ -6,6 +6,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coin_item.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
@@ -23,7 +24,7 @@ class CoinsListView extends HookConsumerWidget {
     super.key,
   });
 
-  final void Function(CoinData) onCoinItemTap;
+  final void Function(CoinData coin) onCoinItemTap;
   final CoinsListViewType type;
 
   @override
@@ -87,6 +88,9 @@ class CoinsListView extends HookConsumerWidget {
                   child: CoinItem(
                     coinData: coins[index],
                     onTap: () {
+                      ref
+                          .read(receiveCoinsFormControllerProvider.notifier)
+                          .selectCoin(coins[index]);
                       onCoinItemTap(coins[index]);
                     },
                   ),

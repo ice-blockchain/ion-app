@@ -8,8 +8,13 @@ class WalletRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting')],
     ),
-    ...coinSendRoutes,
-    ...coinReceiveRoutes,
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<ContactRoute>(path: 'one-contact'),
+        ...coinSendRoutes,
+        ...coinReceiveRoutes,
+      ],
+    ),
     ...walletManagementRoutes,
     ...nftSendRoutes,
     TypedShellRoute<ModalShellRouteData>(
@@ -41,18 +46,13 @@ class WalletRoutes {
         ),
       ],
     ),
-    TypedShellRoute<ModalShellRouteData>(
-      routes: [
-        TypedGoRoute<ContactRoute>(path: 'one-contact'),
-      ],
-    ),
   ];
 
   static const coinSendRoutes = <TypedRoute<RouteData>>[
-    TypedShellRoute<ModalShellRouteData>(
+    TypedGoRoute<CoinSendRoute>(
+      path: 'coin-send',
       routes: [
-        TypedGoRoute<CoinSendRoute>(path: 'coin-send'),
-        TypedGoRoute<NetworkSelectRoute>(path: 'network-select'),
+        TypedGoRoute<NetworkSelectSendRoute>(path: 'network-select'),
         TypedGoRoute<CoinsSendFormRoute>(
           path: 'coin-send-form',
           routes: [
@@ -67,20 +67,20 @@ class WalletRoutes {
     ),
   ];
 
-  static const nftSendRoutes = <TypedRoute<RouteData>>[
-    TypedShellRoute<ModalShellRouteData>(
+  static const coinReceiveRoutes = <TypedRoute<RouteData>>[
+    TypedGoRoute<ReceiveCoinRoute>(
+      path: 'receive-coin',
       routes: [
-        TypedGoRoute<NftDetailsRoute>(path: 'nft-details'),
+        TypedGoRoute<NetworkSelectReceiveRoute>(path: 'network-select-receive'),
+        TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
       ],
     ),
   ];
 
-  static const coinReceiveRoutes = <TypedRoute<RouteData>>[
+  static const nftSendRoutes = <TypedRoute<RouteData>>[
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<ReceiveCoinRoute>(path: 'receive-coin'),
-        TypedGoRoute<NetworkSelectReceiveRoute>(path: 'network-select-receive'),
-        TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
+        TypedGoRoute<NftDetailsRoute>(path: 'nft-details'),
       ],
     ),
   ];
@@ -138,32 +138,32 @@ class ScanWalletRoute extends BaseRouteData {
         );
 }
 
-class NetworkSelectRoute extends BaseRouteData {
-  NetworkSelectRoute()
+class NetworkSelectReceiveRoute extends BaseRouteData {
+  NetworkSelectReceiveRoute({this.$extra})
       : super(
-          child: const NetworkListView(),
+          child: NetworkListView(type: $extra),
           type: IceRouteType.bottomSheet,
         );
+
+  final NetworkListViewType? $extra;
 }
 
-class NetworkSelectReceiveRoute extends BaseRouteData {
-  NetworkSelectReceiveRoute({required this.$extra})
+class NetworkSelectSendRoute extends BaseRouteData {
+  NetworkSelectSendRoute({this.$extra})
       : super(
-          child: NetworkListReceiveView(payload: $extra),
+          child: NetworkListView(type: $extra),
           type: IceRouteType.bottomSheet,
         );
 
-  final CoinData $extra;
+  final NetworkListViewType? $extra;
 }
 
 class ShareAddressRoute extends BaseRouteData {
-  ShareAddressRoute({required this.$extra})
+  ShareAddressRoute()
       : super(
-          child: ShareAddressView(payload: $extra),
+          child: const ShareAddressView(),
           type: IceRouteType.bottomSheet,
         );
-
-  final Map<String, dynamic> $extra;
 }
 
 class CoinsSendFormRoute extends BaseRouteData {
@@ -297,6 +297,16 @@ class ShareTypeRoute extends BaseRouteData {
 
 class ContactRoute extends BaseRouteData {
   ContactRoute({required this.$extra})
+      : super(
+          child: ContactPage(contactData: $extra),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final ContactData $extra;
+}
+
+class ContactReceiveRoute extends BaseRouteData {
+  ContactReceiveRoute({required this.$extra})
       : super(
           child: ContactPage(contactData: $extra),
           type: IceRouteType.bottomSheet,

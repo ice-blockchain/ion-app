@@ -8,10 +8,7 @@ part 'wallets_data_provider.g.dart';
 class WalletsDataNotifier extends _$WalletsDataNotifier {
   @override
   Map<String, WalletData> build() {
-    final wallets = <String, WalletData>{};
-    for (final walletData in mockedWalletDataArray) {
-      wallets.putIfAbsent(walletData.id, () => walletData);
-    }
+    final wallets = {for (final item in mockedWalletDataArray) item.id: item};
 
     return Map<String, WalletData>.unmodifiable(wallets);
   }
