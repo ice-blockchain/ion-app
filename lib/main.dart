@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ice/app/features/core/views/components/content_scaler.dart';
+import 'package:ice/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ice/app/router/providers/go_router_provider.dart';
 import 'package:ice/app/services/logger/config.dart';
 import 'package:ice/app/services/riverpod/riverpod_logger.dart';
@@ -31,17 +32,19 @@ class IceApp extends HookConsumerWidget {
     final goRouter = ref.watch(goRouterProvider);
 
     return ContentScaler(
-      child: MaterialApp.router(
-        localizationsDelegates: I18n.localizationsDelegates,
-        supportedLocales: I18n.supportedLocales,
-        theme: template.whenOrNull(
-          data: (Template data) => buildLightTheme(data.theme),
+      child: SheetScope(
+        child: MaterialApp.router(
+          localizationsDelegates: I18n.localizationsDelegates,
+          supportedLocales: I18n.supportedLocales,
+          theme: template.whenOrNull(
+            data: (Template data) => buildLightTheme(data.theme),
+          ),
+          darkTheme: template.whenOrNull(
+            data: (Template data) => buildDarkTheme(data.theme),
+          ),
+          themeMode: appThemeMode,
+          routerConfig: goRouter,
         ),
-        darkTheme: template.whenOrNull(
-          data: (Template data) => buildDarkTheme(data.theme),
-        ),
-        themeMode: appThemeMode,
-        routerConfig: goRouter,
       ),
     );
   }

@@ -7,6 +7,7 @@ import 'package:ice/app/features/feed/views/pages/feed_main_modal/components/fee
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/components/feed_modal_separator.dart';
 import 'package:ice/app/features/wallet/model/feed_type.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class FeedMainModalPage extends IcePage {
   const FeedMainModalPage({super.key});
@@ -15,7 +16,7 @@ class FeedMainModalPage extends IcePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+    return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: ScreenSideOffset.small(
         child: SingleChildScrollView(

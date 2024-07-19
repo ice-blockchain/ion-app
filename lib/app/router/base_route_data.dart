@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ice/app/router/components/sheet_content/main_modal_content.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum IceRouteType {
   single,
   bottomSheet,
   slideFromLeft,
+  mainModalSheet,
 }
 
 abstract class BaseRouteData extends GoRouteData {
@@ -21,15 +23,28 @@ abstract class BaseRouteData extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return switch (type) {
       IceRouteType.single => CupertinoPage<void>(child: child),
-      IceRouteType.bottomSheet =>
-        ScrollableNavigationSheetPage<void>(child: child),
+      IceRouteType.bottomSheet => ScrollableNavigationSheetPage<void>(
+          child: child,
+        ),
       IceRouteType.slideFromLeft =>
         SlideFromLeftTransitionPage(child: child, state: state),
+      IceRouteType.mainModalSheet => ModalSheetPage<void>(
+          swipeDismissible: true,
+          key: state.pageKey,
+          // DraggableSheet does not work with scrollable widgets.
+          // If you want to use a scrollable widget as its content,
+          // use ScrollableSheet instead.
+          // See example in smooth_sheets package.
+          child: DraggableSheet(
+            controller: DefaultSheetController.of(context),
+            child: MainModalContent(
+              state: state,
+              child: child,
+            ),
+          ),
+        ),
     };
   }
-
-  @override
-  Widget build(BuildContext context, GoRouterState state);
 }
 
 class SlideFromLeftTransitionPage extends CustomTransitionPage<void> {

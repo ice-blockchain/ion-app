@@ -19,7 +19,8 @@ class PostBody extends HookConsumerWidget {
     final postMedia = usePostMedia(postData);
 
     //TODO::temp impl
-    final postText = postData.content.fold<StringBuffer>(StringBuffer(), (result, match) {
+    final postText =
+        postData.content.fold<StringBuffer>(StringBuffer(), (result, match) {
       if (match.matcherType != UrlMatcher) {
         result.write(match.text);
       }

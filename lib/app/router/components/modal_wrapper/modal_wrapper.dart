@@ -14,11 +14,9 @@ class ModalWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       bottom: false,
-      child: PopScope(
-        child: NavigationSheet(
-          transitionObserver: transitionObserver,
-          child: child,
-        ),
+      child: NavigationSheet(
+        transitionObserver: transitionObserver,
+        child: child,
       ),
     );
   }

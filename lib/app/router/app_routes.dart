@@ -6,6 +6,7 @@ import 'package:ice/app/features/auth/views/pages/get_started/get_started.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/intro_page.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
+import 'package:ice/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
@@ -13,6 +14,7 @@ import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapp_details/dapp_details.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
+import 'package:ice/app/features/dapps/views/pages/dapps_main_modal/dapps_main_modal_page.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
@@ -43,6 +45,7 @@ import 'package:ice/app/features/wallet/views/pages/contact_modal_page/contact_m
 import 'package:ice/app/features/wallet/views/pages/manage_coins/manage_coins_page.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sorting_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_scan/wallet_scan_modal_page.dart';
 import 'package:ice/app/features/wallets/pages/create_new_wallet_modal/create_new_wallet_modal.dart';
@@ -69,15 +72,32 @@ final transitionObserver = NavigationSheetTransitionObserver();
       routes: [
         TypedGoRoute<FeedRoute>(
           path: '/feed',
-          routes: [TypedGoRoute<PostDetailsRoute>(path: 'post')],
+          routes: [
+            TypedGoRoute<PostDetailsRoute>(path: 'post'),
+            TypedGoRoute<FeedMainModalRoute>(path: 'feed-main-modal'),
+          ],
         ),
       ],
     ),
     TypedStatefulShellBranch(
-      routes: [TypedGoRoute<ChatRoute>(path: '/chat')],
+      routes: [
+        TypedGoRoute<ChatRoute>(
+          path: '/chat',
+          routes: [
+            TypedGoRoute<ChatMainModalRoute>(path: 'chat-main-modal'),
+          ],
+        ),
+      ],
     ),
     TypedStatefulShellBranch(
-      routes: [TypedGoRoute<DappsRoute>(path: '/dapps')],
+      routes: [
+        TypedGoRoute<DappsRoute>(
+          path: '/dapps',
+          routes: [
+            TypedGoRoute<DappsMainModalRoute>(path: 'dapps-main-modal'),
+          ],
+        ),
+      ],
     ),
     TypedStatefulShellBranch(
       routes: [
@@ -85,6 +105,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
           path: '/wallet',
           routes: [
             ...WalletRoutes.routes,
+            TypedGoRoute<WalletMainModalRoute>(path: 'wallet-main-modal'),
           ],
         ),
       ],
@@ -164,15 +185,36 @@ class IntroRoute extends BaseRouteData {
   IntroRoute() : super(child: const IntroPage());
 }
 
-@TypedGoRoute<FeedMainModal>(path: '/feed-modal')
-class FeedMainModal extends BaseRouteData {
-  FeedMainModal()
+class FeedMainModalRoute extends BaseRouteData {
+  FeedMainModalRoute()
       : super(
           child: const FeedMainModalPage(),
-          type: IceRouteType.bottomSheet,
+          type: IceRouteType.mainModalSheet,
         );
+}
 
-  static final $parentNavigatorKey = rootNavigatorKey;
+class ChatMainModalRoute extends BaseRouteData {
+  ChatMainModalRoute()
+      : super(
+          child: const ChatMainModalPage(),
+          type: IceRouteType.mainModalSheet,
+        );
+}
+
+class DappsMainModalRoute extends BaseRouteData {
+  DappsMainModalRoute()
+      : super(
+          child: const DappsMainModalPage(),
+          type: IceRouteType.mainModalSheet,
+        );
+}
+
+class WalletMainModalRoute extends BaseRouteData {
+  WalletMainModalRoute()
+      : super(
+          child: const WalletMainModalPage(),
+          type: IceRouteType.mainModalSheet,
+        );
 }
 
 @TypedGoRoute<DAppsRoute>(
