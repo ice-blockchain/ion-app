@@ -1,4 +1,4 @@
-import 'package:ice/app/router/main_tab_navigation.dart';
+import 'package:ice/app/router/main_tabs/components/tab_item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'bottom_sheet_state_provider.g.dart';

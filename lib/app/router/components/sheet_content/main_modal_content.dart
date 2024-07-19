@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/main_tab_navigation.dart';
-import 'package:ice/app/router/providers/bottom_sheet_state_provider.dart';
+import 'package:ice/app/router/main_tabs/components/components.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class MainModalContent extends ConsumerWidget {
