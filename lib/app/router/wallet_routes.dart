@@ -52,7 +52,7 @@ class WalletRoutes {
     TypedGoRoute<CoinSendRoute>(
       path: 'coin-send',
       routes: [
-        TypedGoRoute<NetworkSelectRoute>(path: 'network-select'),
+        TypedGoRoute<NetworkSelectSendRoute>(path: 'network-select'),
         TypedGoRoute<CoinsSendFormRoute>(
           path: 'coin-send-form',
           routes: [
@@ -138,20 +138,24 @@ class ScanWalletRoute extends BaseRouteData {
         );
 }
 
-class NetworkSelectRoute extends BaseRouteData {
-  NetworkSelectRoute()
+class NetworkSelectReceiveRoute extends BaseRouteData {
+  NetworkSelectReceiveRoute({this.$extra})
       : super(
-          child: const NetworkListView(),
+          child: NetworkListView(type: $extra),
           type: IceRouteType.bottomSheet,
         );
+
+  final NetworkListViewType? $extra;
 }
 
-class NetworkSelectReceiveRoute extends BaseRouteData {
-  NetworkSelectReceiveRoute()
+class NetworkSelectSendRoute extends BaseRouteData {
+  NetworkSelectSendRoute({this.$extra})
       : super(
-          child: const NetworkListReceiveView(),
+          child: NetworkListView(type: $extra),
           type: IceRouteType.bottomSheet,
         );
+
+  final NetworkListViewType? $extra;
 }
 
 class ShareAddressRoute extends BaseRouteData {

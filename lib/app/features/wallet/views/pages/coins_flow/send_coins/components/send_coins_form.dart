@@ -11,6 +11,7 @@ import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/components/network_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/arrival_time/arrival_time.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/coin_button.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
@@ -70,7 +71,8 @@ class SendCoinsForm extends IcePage {
                     NetworkButton(
                       networkType: formController.selectedNetwork,
                       onTap: () {
-                        NetworkSelectRoute().push<void>(context);
+                        NetworkSelectSendRoute($extra: NetworkListViewType.send)
+                            .push<void>(context);
                       },
                     ),
                     SizedBox(height: 12.0.s),
