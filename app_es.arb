@@ -179,6 +179,8 @@
     "send_nft_token_standard",
     "send_nft_token_contract_address",
     "send_nft_title",
-    "post_page_title"
+    "post_page_title",
+    "post_show_replies",
+    "post_hide_replies"
   ]
 }

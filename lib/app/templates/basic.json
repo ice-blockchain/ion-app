@@ -23,6 +23,7 @@
         "purple": "#7D40FF",
         "raspberry": "#EA3665",
         "darkBlue": "#1D46EB",
+        "lightBlue": "#1B9CF0",
         "quaternaryText": "#727689"
       },
       "dark": {
@@ -47,6 +48,7 @@
         "purple": "#7D40FF",
         "raspberry": "#EA3665",
         "darkBlue": "#1D46EB",
+        "lightBlue": "#1B9CF0",
         "quaternaryText": "#727689"
       }
     },
