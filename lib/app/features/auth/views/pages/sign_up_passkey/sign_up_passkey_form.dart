@@ -36,7 +36,7 @@ class SignUpPasskeyForm extends HookConsumerWidget {
               icons: [
                 IconButton(
                   icon: Assets.images.icons.iconBlockInformation.icon(
-                    size: 16.0.s,
+                    size: 20.0.s,
                   ),
                   onPressed: () {
                     showSimpleBottomSheet<void>(

@@ -13,12 +13,13 @@ import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class LoginForm extends HookConsumerWidget {
-  const LoginForm({super.key});
+class SignUpPasswordForm extends HookConsumerWidget {
+  const SignUpPasswordForm({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final identityNameController = useTextEditingController();
+    final passwordController = useTextEditingController();
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final formKey = useRef(GlobalKey<FormState>());
     final authState = ref.watch(authProvider);
@@ -54,6 +55,21 @@ class LoginForm extends HookConsumerWidget {
               return null;
             },
             textInputAction: TextInputAction.done,
+            scrollPadding: EdgeInsets.all(120.0.s),
+          ),
+          SizedBox(height: 16.0.s),
+          TextInput(
+            prefixIcon: TextInputIcons(
+              hasRightDivider: true,
+              icons: [Assets.images.icons.iconPass.icon()],
+            ),
+            labelText: context.i18n.common_password,
+            controller: passwordController,
+            validator: (String? value) {
+              if (Validators.isEmpty(value)) return '';
+              return null;
+            },
+            textInputAction: TextInputAction.next,
             scrollPadding: EdgeInsets.all(120.0.s),
           ),
           SizedBox(height: 16.0.s),

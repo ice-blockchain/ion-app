@@ -13,12 +13,12 @@ import 'package:ice/app/features/auth/views/components/auth_header/auth_header.d
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
 import 'package:ice/app/features/auth/views/components/sign_up_list_item/sign_up_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey_form.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/features/auth/views/pages/sign_up_password/sign_up_password_form.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SignUpPasskeyPage extends IcePage {
-  const SignUpPasskeyPage({super.key});
+class SignUpPasswordPage extends IcePage {
+  const SignUpPasswordPage({super.key});
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
@@ -30,47 +30,40 @@ class SignUpPasskeyPage extends IcePage {
             child: Column(
               children: [
                 AuthHeader(
-                  title: context.i18n.sign_up_passkey_title,
+                  title: context.i18n.sign_up_password_title,
+                  description: context.i18n.sign_up_password_description,
                   icon: AuthHeaderIcon(
-                    icon:
-                        Assets.images.icons.iconLoginPasskey.icon(size: 36.0.s),
+                    icon: Assets.images.icons.iconLoginPassword
+                        .icon(size: 36.0.s),
                   ),
                 ),
                 ScreenSideOffset.large(
                   child: Column(
                     children: [
-                      SizedBox(height: 14.0.s),
+                      SizedBox(height: 32.0.s),
                       SignUpListItem(
-                        title: context.i18n.sign_up_passkey_advantage_1_title,
+                        title:
+                            context.i18n.sign_up_password_disadvantage_1_title,
                         subtitle: context
-                            .i18n.sign_up_passkey_advantage_1_description,
-                        icon: Assets.images.icons.iconLoginFingerprint.icon(),
+                            .i18n.sign_up_password_disadvantage_1_description,
+                        icon: Assets.images.icons.iconLoginHack.icon(),
                       ),
                       SignUpListItem(
-                        title: context.i18n.sign_up_passkey_advantage_2_title,
+                        title:
+                            context.i18n.sign_up_password_disadvantage_2_title,
                         subtitle: context
-                            .i18n.sign_up_passkey_advantage_2_description,
-                        icon: Assets.images.icons.iconLoginDevice.icon(),
+                            .i18n.sign_up_password_disadvantage_2_description,
+                        icon: Assets.images.icons.iconLoginReused.icon(),
                       ),
                       SignUpListItem(
-                        title: context.i18n.sign_up_passkey_advantage_3_title,
+                        title:
+                            context.i18n.sign_up_password_disadvantage_3_title,
                         subtitle: context
-                            .i18n.sign_up_passkey_advantage_3_description,
-                        icon: Assets.images.icons.iconLoginSafeacc.icon(),
+                            .i18n.sign_up_password_disadvantage_3_description,
+                        icon: Assets.images.icons.iconLoginManage.icon(),
                       ),
                       SizedBox(height: 18.0.s),
-                      const SignUpPasskeyForm(),
-                      SizedBox(height: 12.0.s),
-                      Button(
-                        type: ButtonType.outlined,
-                        onPressed: () {
-                          SignUpPasswordRoute().push<void>(context);
-                        },
-                        label: Text(context.i18n.sign_up_passkey_use_password),
-                        mainAxisSize: MainAxisSize.max,
-                        borderColor: Colors.transparent,
-                        tintColor: context.theme.appColors.primaryAccent,
-                      ),
+                      const SignUpPasswordForm(),
                     ],
                   ),
                 ),
