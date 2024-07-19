@@ -4,21 +4,30 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class QuotePostActionBar extends StatelessWidget {
-  const QuotePostActionBar({super.key});
+  const QuotePostActionBar({
+    super.key,
+    this.addPadding = true,
+    this.showShadow = true,
+  });
+
+  final bool addPadding;
+  final bool showShadow;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 40.0.s,
-      padding: EdgeInsets.symmetric(horizontal: 16.0.s),
+      padding: addPadding ? EdgeInsets.symmetric(horizontal: 16.0.s) : null,
       decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: context.theme.appColors.strokeElements.withOpacity(0.5),
-            offset: Offset(0.0.s, -1.0.s),
-            blurRadius: 5.0.s,
-          ),
-        ],
+        boxShadow: showShadow
+            ? [
+                BoxShadow(
+                  color: context.theme.appColors.strokeElements.withOpacity(0.5),
+                  offset: Offset(0.0.s, -1.0.s),
+                  blurRadius: 5.0.s,
+                ),
+              ]
+            : null,
         color: context.theme.appColors.secondaryBackground,
       ),
       child: Row(

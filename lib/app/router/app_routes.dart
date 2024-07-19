@@ -23,6 +23,7 @@ import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_moda
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/quote_post_modal_page.dart';
+import 'package:ice/app/features/feed/views/pages/reply_expanded_page/reply_expanded_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_options_modal/share_options_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_type_modal_page/share_type_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/send_nft/views/pages/nft_details/nft_details_page.dart';
@@ -76,7 +77,16 @@ final transitionObserver = NavigationSheetTransitionObserver();
         TypedGoRoute<FeedRoute>(
           path: '/feed',
           routes: [
-            TypedGoRoute<PostDetailsRoute>(path: 'post'),
+            TypedGoRoute<PostDetailsRoute>(
+              path: 'post',
+              routes: [
+                TypedShellRoute<ModalShellRouteData>(
+                  routes: [
+                    TypedGoRoute<ReplyExpandedRoute>(path: 'reply-modal'),
+                  ],
+                ),
+              ],
+            ),
             TypedGoRoute<FeedMainModalRoute>(path: 'main-modal'),
           ],
         ),
@@ -279,6 +289,19 @@ class PostDetailsRoute extends BaseRouteData {
   PostDetailsRoute({required this.$extra})
       : super(
           child: PostDetailsPage(
+            postData: $extra,
+          ),
+        );
+
+  final PostData $extra;
+}
+
+class ReplyExpandedRoute extends BaseRouteData {
+  ReplyExpandedRoute({
+    required this.$extra,
+  }) : super(
+          type: IceRouteType.bottomSheet,
+          child: ReplyExpandedPage(
             postData: $extra,
           ),
         );

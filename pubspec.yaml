@@ -12,6 +12,7 @@ dependencies:
   cached_network_image: ^3.3.1
   carousel_slider: ^4.2.1
   cupertino_icons: ^1.0.6
+  dotted_border: ^2.1.0
   email_validator: ^2.1.16
   flutter:
     sdk: flutter

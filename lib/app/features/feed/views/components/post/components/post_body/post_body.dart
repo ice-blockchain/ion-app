@@ -26,6 +26,7 @@ class PostBody extends HookConsumerWidget {
       return result;
     });
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (postMedia.isNotEmpty) PostMedia(media: postMedia),
         Text(
