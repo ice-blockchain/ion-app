@@ -55,7 +55,7 @@ import 'package:ice/app/features/wallets/pages/manage_wallets_modal/manage_walle
 import 'package:ice/app/features/wallets/pages/wallets_modal/wallets_modal.dart';
 import 'package:ice/app/router/base_route_data.dart';
 import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
-import 'package:ice/app/router/main_tab_navigation.dart';
+import 'package:ice/app/router/main_tabs/main_tab_navigation.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'app_routes.g.dart';
