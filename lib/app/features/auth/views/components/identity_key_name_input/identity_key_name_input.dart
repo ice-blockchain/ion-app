@@ -12,11 +12,14 @@ class IdentityKeyNameInput extends StatelessWidget {
     this.textInputAction = TextInputAction.done,
     super.key,
     this.controller,
+    this.scrollPadding,
   });
 
   final TextEditingController? controller;
 
   final TextInputAction textInputAction;
+
+  final EdgeInsets? scrollPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,7 @@ class IdentityKeyNameInput extends StatelessWidget {
         return null;
       },
       textInputAction: textInputAction,
-      scrollPadding: EdgeInsets.all(120.0.s),
+      scrollPadding: scrollPadding ?? EdgeInsets.only(bottom: 100.0.s),
     );
   }
 }

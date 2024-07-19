@@ -9,15 +9,20 @@ class SignUpPasswordCheckbox extends HookWidget {
   const SignUpPasswordCheckbox({
     required this.onToggle,
     required this.selected,
+    required this.highlighted,
     super.key,
   });
 
   final bool selected;
 
+  final bool highlighted;
+
   final VoidCallback onToggle;
 
   @override
   Widget build(BuildContext context) {
+    final color = highlighted ? context.theme.appColors.attentionRed : null;
+
     final checkboxTextSpan = useMemoized(
       () => replaceString(
         context.i18n.sign_up_password_acknowledge_checkbox,
@@ -37,8 +42,10 @@ class SignUpPasswordCheckbox extends HookWidget {
         IconButton(
           onPressed: onToggle,
           icon: selected
-              ? Assets.images.icons.iconCheckboxOn.icon(size: 20.0.s)
-              : Assets.images.icons.iconCheckboxOff.icon(size: 20.0.s),
+              ? Assets.images.icons.iconCheckboxOn
+                  .icon(size: 20.0.s, color: color)
+              : Assets.images.icons.iconCheckboxOff
+                  .icon(size: 20.0.s, color: color),
         ),
         Flexible(
           child: Text.rich(

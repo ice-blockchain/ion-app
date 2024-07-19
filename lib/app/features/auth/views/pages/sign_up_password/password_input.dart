@@ -24,7 +24,7 @@ class PasswordInput extends StatelessWidget {
         return null;
       },
       textInputAction: TextInputAction.done,
-      scrollPadding: EdgeInsets.all(120.0.s),
+      scrollPadding: EdgeInsets.only(bottom: 200.0.s),
     );
   }
 }
