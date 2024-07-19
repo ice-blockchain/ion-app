@@ -34,14 +34,12 @@ class SignUpPasswordCheckbox extends HookWidget {
 
     return Row(
       children: [
-        InkResponse(
-          onTap: onToggle,
-          splashFactory: InkRipple.splashFactory,
-          child: selected
+        IconButton(
+          onPressed: onToggle,
+          icon: selected
               ? Assets.images.icons.iconCheckboxOn.icon(size: 20.0.s)
               : Assets.images.icons.iconCheckboxOff.icon(size: 20.0.s),
         ),
-        SizedBox(width: 8.0.s),
         Flexible(
           child: Text.rich(
             checkboxTextSpan,

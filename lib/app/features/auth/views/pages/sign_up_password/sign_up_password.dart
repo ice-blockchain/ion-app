@@ -10,9 +10,11 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
+import 'package:ice/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ice/app/features/auth/views/components/sign_up_list_item/sign_up_list_item.dart';
+import 'package:ice/app/features/auth/views/pages/sign_up_password/password_input.dart';
+import 'package:ice/app/features/auth/views/pages/sign_up_password/sign_up_password_button.dart';
 import 'package:ice/app/features/auth/views/pages/sign_up_password/sign_up_password_checkbox.dart';
-import 'package:ice/app/features/auth/views/pages/sign_up_password/sign_up_password_form.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -21,6 +23,9 @@ class SignUpPasswordPage extends IcePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
+    final identityKeyNameController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final formKey = useRef(GlobalKey<FormState>());
     final checkboxSelected = useState(false);
 
     return SheetContent(
@@ -39,40 +44,53 @@ class SignUpPasswordPage extends IcePage {
                   ),
                 ),
                 ScreenSideOffset.large(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 32.0.s),
-                      SignUpListItem(
-                        title:
-                            context.i18n.sign_up_password_disadvantage_1_title,
-                        subtitle: context
-                            .i18n.sign_up_password_disadvantage_1_description,
-                        icon: Assets.images.icons.iconLoginHack.icon(),
-                      ),
-                      SignUpListItem(
-                        title:
-                            context.i18n.sign_up_password_disadvantage_2_title,
-                        subtitle: context
-                            .i18n.sign_up_password_disadvantage_2_description,
-                        icon: Assets.images.icons.iconLoginReused.icon(),
-                      ),
-                      SignUpListItem(
-                        title:
-                            context.i18n.sign_up_password_disadvantage_3_title,
-                        subtitle: context
-                            .i18n.sign_up_password_disadvantage_3_description,
-                        icon: Assets.images.icons.iconLoginManage.icon(),
-                      ),
-                      SizedBox(height: 18.0.s),
-                      const SignUpPasswordForm(),
-                      SizedBox(height: 17.0.s),
-                      SignUpPasswordCheckbox(
-                        selected: checkboxSelected.value,
-                        onToggle: () {
-                          checkboxSelected.value = !checkboxSelected.value;
-                        },
-                      ),
-                    ],
+                  child: Form(
+                    key: formKey.value,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 32.0.s),
+                        SignUpListItem(
+                          title: context
+                              .i18n.sign_up_password_disadvantage_1_title,
+                          subtitle: context
+                              .i18n.sign_up_password_disadvantage_1_description,
+                          icon: Assets.images.icons.iconLoginHack.icon(),
+                        ),
+                        SignUpListItem(
+                          title: context
+                              .i18n.sign_up_password_disadvantage_2_title,
+                          subtitle: context
+                              .i18n.sign_up_password_disadvantage_2_description,
+                          icon: Assets.images.icons.iconLoginReused.icon(),
+                        ),
+                        SignUpListItem(
+                          title: context
+                              .i18n.sign_up_password_disadvantage_3_title,
+                          subtitle: context
+                              .i18n.sign_up_password_disadvantage_3_description,
+                          icon: Assets.images.icons.iconLoginManage.icon(),
+                        ),
+                        SizedBox(height: 18.0.s),
+                        IdentityKeyNameInput(
+                          controller: identityKeyNameController,
+                          textInputAction: TextInputAction.next,
+                        ),
+                        SizedBox(height: 16.0.s),
+                        PasswordInput(controller: passwordController),
+                        SizedBox(height: 17.0.s),
+                        SignUpPasswordCheckbox(
+                          selected: checkboxSelected.value,
+                          onToggle: () {
+                            checkboxSelected.value = !checkboxSelected.value;
+                          },
+                        ),
+                        SignUpPasswordButton(
+                          formKey: formKey.value,
+                          identityKeyNameController: identityKeyNameController,
+                          passwordController: passwordController,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 ScreenBottomOffset(),
