@@ -23,9 +23,8 @@ abstract class BaseRouteData extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return switch (type) {
       IceRouteType.single => CupertinoPage<void>(child: child),
-      IceRouteType.bottomSheet => ScrollableNavigationSheetPage<void>(
-          child: child,
-        ),
+      IceRouteType.bottomSheet =>
+        FadeTransitionSheetPage(child: child, state: state),
       IceRouteType.slideFromLeft =>
         SlideFromLeftTransitionPage(child: child, state: state),
       IceRouteType.mainModalSheet => ModalSheetPage<void>(
@@ -45,6 +44,31 @@ abstract class BaseRouteData extends GoRouteData {
         ),
     };
   }
+}
+
+class FadeTransitionSheetPage extends ScrollableNavigationSheetPage<void> {
+  FadeTransitionSheetPage({
+    required super.child,
+    required GoRouterState state,
+  }) : super(
+          key: state.pageKey,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final fadeInTween = TweenSequence<double>([
+              TweenSequenceItem(tween: ConstantTween(0), weight: 1),
+              TweenSequenceItem(
+                tween: Tween<double>(begin: 0, end: 1).chain(
+                  CurveTween(curve: Curves.easeIn),
+                ),
+                weight: 1,
+              ),
+            ]);
+
+            return FadeTransition(
+              opacity: animation.drive(fadeInTween),
+              child: child,
+            );
+          },
+        );
 }
 
 class SlideFromLeftTransitionPage extends CustomTransitionPage<void> {
