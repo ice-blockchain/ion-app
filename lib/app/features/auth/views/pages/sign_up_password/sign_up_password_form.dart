@@ -27,7 +27,10 @@ class SignUpPasswordForm extends HookConsumerWidget {
       key: formKey.value,
       child: Column(
         children: [
-          IdentityKeyNameInput(controller: identityKeyNameController),
+          IdentityKeyNameInput(
+            controller: identityKeyNameController,
+            textInputAction: TextInputAction.next,
+          ),
           SizedBox(height: 16.0.s),
           TextInput(
             prefixIcon: TextInputIcons(
@@ -40,7 +43,7 @@ class SignUpPasswordForm extends HookConsumerWidget {
               if (Validators.isEmpty(value)) return '';
               return null;
             },
-            textInputAction: TextInputAction.next,
+            textInputAction: TextInputAction.done,
             scrollPadding: EdgeInsets.all(120.0.s),
           ),
           SizedBox(height: 16.0.s),

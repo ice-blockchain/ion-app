@@ -8,9 +8,15 @@ import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class IdentityKeyNameInput extends StatelessWidget {
-  const IdentityKeyNameInput({super.key, this.controller});
+  const IdentityKeyNameInput({
+    this.textInputAction = TextInputAction.done,
+    super.key,
+    this.controller,
+  });
 
   final TextEditingController? controller;
+
+  final TextInputAction textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +47,7 @@ class IdentityKeyNameInput extends StatelessWidget {
         if (Validators.isEmpty(value)) return '';
         return null;
       },
-      textInputAction: TextInputAction.done,
+      textInputAction: textInputAction,
       scrollPadding: EdgeInsets.all(120.0.s),
     );
   }
