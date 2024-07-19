@@ -14,6 +14,7 @@ class ReceiveCoinModalPage extends IcePage {
 
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
+    ref.watch(receiveCoinsFormControllerProvider);
     return SheetContent(
       body: CoinsListView(
         onCoinItemTap: (CoinData coin) {

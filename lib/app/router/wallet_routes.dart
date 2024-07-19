@@ -8,8 +8,13 @@ class WalletRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting')],
     ),
-    ...coinSendRoutes,
-    ...coinReceiveRoutes,
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<ContactRoute>(path: 'one-contact'),
+        ...coinSendRoutes,
+        ...coinReceiveRoutes,
+      ],
+    ),
     ...walletManagementRoutes,
     ...nftSendRoutes,
     TypedShellRoute<ModalShellRouteData>(
@@ -44,10 +49,9 @@ class WalletRoutes {
   ];
 
   static const coinSendRoutes = <TypedRoute<RouteData>>[
-    TypedShellRoute<ModalShellRouteData>(
+    TypedGoRoute<CoinSendRoute>(
+      path: 'coin-send',
       routes: [
-        TypedGoRoute<ContactRoute>(path: 'one-contact'),
-        TypedGoRoute<CoinSendRoute>(path: 'coin-send'),
         TypedGoRoute<NetworkSelectRoute>(path: 'network-select'),
         TypedGoRoute<CoinsSendFormRoute>(
           path: 'coin-send-form',
@@ -59,7 +63,14 @@ class WalletRoutes {
           path: 'coin-send-form-confirmation',
         ),
         TypedGoRoute<TransactionResultRoute>(path: 'transaction-result'),
-        TypedGoRoute<ReceiveCoinRoute>(path: 'receive-coin'),
+      ],
+    ),
+  ];
+
+  static const coinReceiveRoutes = <TypedRoute<RouteData>>[
+    TypedGoRoute<ReceiveCoinRoute>(
+      path: 'receive-coin',
+      routes: [
         TypedGoRoute<NetworkSelectReceiveRoute>(path: 'network-select-receive'),
         TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
       ],
@@ -72,12 +83,6 @@ class WalletRoutes {
         TypedGoRoute<NftDetailsRoute>(path: 'nft-details'),
       ],
     ),
-  ];
-
-  static const coinReceiveRoutes = <TypedRoute<RouteData>>[
-    TypedGoRoute<ReceiveCoinRoute>(path: 'receive-coin'),
-    TypedGoRoute<NetworkSelectReceiveRoute>(path: 'network-select-receive'),
-    TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
   ];
 
   static const walletManagementRoutes = <TypedRoute<RouteData>>[
