@@ -23,10 +23,7 @@ class MainModalContent extends ConsumerWidget {
 
           if (!metrics.hasDimensions || metrics.pixels <= metrics.minPixels) {
             final currentTab = _getCurrentTab(state.matchedLocation);
-            ref
-                .read(bottomSheetStateProvider.notifier)
-                .closeCurrentSheet(currentTab);
-            context.pop();
+            context.go('/${currentTab.name}');
           }
         }
       },

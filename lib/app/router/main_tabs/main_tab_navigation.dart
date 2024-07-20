@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/main_tabs/components/components.dart';
 
 class MainTabNavigation extends HookConsumerWidget {
@@ -44,21 +43,33 @@ class MainTabNavigation extends HookConsumerWidget {
   void _onTabSelected(BuildContext context, WidgetRef ref, int index) {
     final tabItem = TabItem.values[index];
     if (tabItem == TabItem.main) {
-      _handleMainButtonTap(context, ref);
+      _handleMainButtonTap(context);
     } else {
       _navigateToTab(context, ref, tabItem);
     }
   }
 
   void _navigateToTab(BuildContext context, WidgetRef ref, TabItem tabItem) {
-    final bottomSheetNotifier = ref.read(bottomSheetStateProvider.notifier);
-    final currentTab = _getCurrentTab();
+    final currentLocation = GoRouterState.of(context).matchedLocation;
+    final isCurrentTab = _getCurrentTab() == tabItem;
+    final isMainModalOpen = currentLocation.endsWith('/main-modal');
 
-    if (bottomSheetNotifier.isSheetOpen(currentTab)) {
-      context.pop();
-      bottomSheetNotifier.closeCurrentSheet(currentTab);
+    if (isCurrentTab) {
+      if (isMainModalOpen) {
+        context.go('/${tabItem.name}');
+      } else {
+        context.go('/${tabItem.name}/main-modal');
+      }
+    } else {
+      if (isMainModalOpen) {
+        context.go('/${tabItem.name}');
+      } else {
+        _goToBranch(tabItem);
+      }
     }
+  }
 
+  void _goToBranch(TabItem tabItem) {
     final adjustedIndex = tabItem.navigationIndex;
     navigationShell.goBranch(
       adjustedIndex,
@@ -66,31 +77,15 @@ class MainTabNavigation extends HookConsumerWidget {
     );
   }
 
-  void _handleMainButtonTap(BuildContext context, WidgetRef ref) {
+  void _handleMainButtonTap(BuildContext context) {
     final currentTab = _getCurrentTab();
-    final bottomSheetNotifier = ref.read(bottomSheetStateProvider.notifier);
+    final currentLocation = GoRouterState.of(context).matchedLocation;
+    final isMainModalOpen = currentLocation.endsWith('/main-modal');
 
-    if (bottomSheetNotifier.isSheetOpen(currentTab)) {
-      context.pop();
-      bottomSheetNotifier.closeCurrentSheet(currentTab);
+    if (isMainModalOpen) {
+      context.go('/${currentTab.name}');
     } else {
-      bottomSheetNotifier.setSheetState(currentTab, isOpen: true);
-      _openMainModalForCurrentTab(context, currentTab);
-    }
-  }
-
-  void _openMainModalForCurrentTab(BuildContext context, TabItem currentTab) {
-    switch (currentTab) {
-      case TabItem.feed:
-        FeedMainModalRoute().go(context);
-      case TabItem.chat:
-        ChatMainModalRoute().go(context);
-      case TabItem.dapps:
-        DappsMainModalRoute().go(context);
-      case TabItem.wallet:
-        WalletMainModalRoute().go(context);
-      case TabItem.main:
-        break;
+      context.go('/${currentTab.name}/main-modal');
     }
   }
 

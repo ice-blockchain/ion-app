@@ -16,8 +16,8 @@ class MainTabButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomSheetState = ref.watch(bottomSheetStateProvider);
-    final isModalOpen = bottomSheetState[currentTab()] ?? false;
+    final currentLocation = GoRouterState.of(context).matchedLocation;
+    final isModalOpen = currentLocation.endsWith('/main-modal');
 
     final icon = isModalOpen
         ? Assets.images.logo.logoButtonClose
@@ -29,4 +29,20 @@ class MainTabButton extends ConsumerWidget {
       child: icon.image(fit: BoxFit.contain),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context, WidgetRef ref) {
+  //   final bottomSheetState = ref.watch(bottomSheetStateProvider);
+  //   final isModalOpen = bottomSheetState[currentTab()] ?? false;
+
+  //   final icon = isModalOpen
+  //       ? Assets.images.logo.logoButtonClose
+  //       : Assets.images.logo.logoButton;
+
+  //   return SizedBox(
+  //     width: 50,
+  //     height: 50,
+  //     child: icon.image(fit: BoxFit.contain),
+  //   );
+  // }
 }

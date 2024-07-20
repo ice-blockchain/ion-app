@@ -42,6 +42,11 @@ GoRouter goRouter(GoRouterRef ref) {
         };
       }
 
+      final currentLocation = state.matchedLocation;
+      if (currentLocation.endsWith('/main-modal')) {
+        return null;
+      }
+
       return switch (authState) {
         Authenticated()
             when state.matchedLocation.startsWith(IntroRoute().location) =>
