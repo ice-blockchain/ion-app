@@ -64,10 +64,10 @@ class LoginForm extends HookConsumerWidget {
                 : Assets.images.icons.iconButtonNext.icon(
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
-            onPressed: () {
+            onPressed: () async {
               if (formKey.value.currentState!.validate()) {
                 hideKeyboardAndCallOnce(
-                  callback: () async => ref.read(authProvider.notifier).signIn(
+                  callback: () => ref.read(authProvider.notifier).signIn(
                         keyName: identityNameController.text,
                       ),
                 );
