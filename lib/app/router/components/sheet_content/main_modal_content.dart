@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/main_tabs/components/components.dart';
+import 'package:ice/app/router/utils/route_utils.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
-class MainModalContent extends ConsumerWidget {
+class MainModalContent extends StatelessWidget {
   const MainModalContent({required this.child, required this.state, super.key});
 
   final Widget child;
   final GoRouterState state;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final controller = DefaultSheetController.of(context);
 
     return PopScope(
@@ -22,20 +20,12 @@ class MainModalContent extends ConsumerWidget {
           final metrics = controller.value;
 
           if (!metrics.hasDimensions || metrics.pixels <= metrics.minPixels) {
-            final currentTab = _getCurrentTab(state.matchedLocation);
-            context.go('/${currentTab.name}');
+            final currentTab = getCurrentTab(state.matchedLocation);
+            context.go(getBaseRouteLocation(currentTab));
           }
         }
       },
       child: child,
     );
-  }
-
-  TabItem _getCurrentTab(String location) {
-    if (location.startsWith(FeedRoute().location)) return TabItem.feed;
-    if (location.startsWith(ChatRoute().location)) return TabItem.chat;
-    if (location.startsWith(DappsRoute().location)) return TabItem.dapps;
-    if (location.startsWith(WalletRoute().location)) return TabItem.wallet;
-    return TabItem.main;
   }
 }

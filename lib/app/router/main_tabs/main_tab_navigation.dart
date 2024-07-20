@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/router/main_tabs/components/components.dart';
+import 'package:ice/app/router/utils/route_utils.dart';
 
-class MainTabNavigation extends HookConsumerWidget {
+class MainTabNavigation extends StatelessWidget {
   const MainTabNavigation({
     required this.navigationShell,
     super.key,
@@ -23,13 +23,13 @@ class MainTabNavigation extends HookConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _adjustBottomNavIndex(navigationShell.currentIndex),
-        onTap: (index) => _onTabSelected(context, ref, index),
-        items: _navBarItems(ref),
+        onTap: (index) => _onTabSelected(context, index),
+        items: _navBarItems(),
         type: BottomNavigationBarType.fixed,
         backgroundColor: context.theme.appColors.secondaryBackground,
         selectedItemColor: context.theme.appColors.primaryAccent,
@@ -40,39 +40,34 @@ class MainTabNavigation extends HookConsumerWidget {
     );
   }
 
-  void _onTabSelected(BuildContext context, WidgetRef ref, int index) {
+  void _onTabSelected(BuildContext context, int index) {
     final tabItem = TabItem.values[index];
-    if (tabItem == TabItem.main) {
-      _handleMainButtonTap(context);
-    } else {
-      _navigateToTab(context, ref, tabItem);
-    }
+    tabItem == TabItem.main
+        ? _handleMainButtonTap(context)
+        : _navigateToTab(context, tabItem);
   }
 
-  void _navigateToTab(BuildContext context, WidgetRef ref, TabItem tabItem) {
+  void _navigateToTab(BuildContext context, TabItem tabItem) {
     final currentLocation = GoRouterState.of(context).matchedLocation;
     final isCurrentTab = _getCurrentTab() == tabItem;
-    final isMainModalOpen = currentLocation.endsWith('/main-modal');
+    final isModalOpen = isMainModalOpen(currentLocation);
 
     if (isCurrentTab) {
-      if (isMainModalOpen) {
-        context.go('/${tabItem.name}');
-      } else {
-        context.go('/${tabItem.name}/main-modal');
-      }
+      final targetLocation = isModalOpen
+          ? getBaseRouteLocation(tabItem)
+          : getMainModalLocation(tabItem);
+      context.go(targetLocation);
     } else {
-      if (isMainModalOpen) {
-        context.go('/${tabItem.name}');
-      } else {
-        _goToBranch(tabItem);
+      if (isModalOpen) {
+        context.go(getBaseRouteLocation(tabItem));
       }
+      _goToBranch(tabItem);
     }
   }
 
   void _goToBranch(TabItem tabItem) {
-    final adjustedIndex = tabItem.navigationIndex;
     navigationShell.goBranch(
-      adjustedIndex,
+      tabItem.navigationIndex,
       initialLocation: true,
     );
   }
@@ -80,31 +75,27 @@ class MainTabNavigation extends HookConsumerWidget {
   void _handleMainButtonTap(BuildContext context) {
     final currentTab = _getCurrentTab();
     final currentLocation = GoRouterState.of(context).matchedLocation;
-    final isMainModalOpen = currentLocation.endsWith('/main-modal');
+    final isModalOpen = isMainModalOpen(currentLocation);
 
-    if (isMainModalOpen) {
-      context.go('/${currentTab.name}');
-    } else {
-      context.go('/${currentTab.name}/main-modal');
-    }
+    final targetLocation = isModalOpen
+        ? getBaseRouteLocation(currentTab)
+        : getMainModalLocation(currentTab);
+
+    context.go(targetLocation);
   }
 
-  List<BottomNavigationBarItem> _navBarItems(WidgetRef ref) {
+  List<BottomNavigationBarItem> _navBarItems() {
     return TabItem.values.map((tabItem) {
-      if (tabItem == TabItem.main) {
-        return BottomNavigationBarItem(
-          icon: MainTabButton(
-            navigationShell: navigationShell,
-            currentTab: _getCurrentTab,
-          ),
-          label: '',
-        );
-      }
       return BottomNavigationBarItem(
-        icon: TabIcon(
-          icon: tabItem.icon!,
-          isSelected: _getCurrentTab() == tabItem,
-        ),
+        icon: tabItem == TabItem.main
+            ? MainTabButton(
+                navigationShell: navigationShell,
+                currentTab: _getCurrentTab,
+              )
+            : TabIcon(
+                icon: tabItem.icon!,
+                isSelected: _getCurrentTab() == tabItem,
+              ),
         label: '',
       );
     }).toList();
