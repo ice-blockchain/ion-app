@@ -14,17 +14,17 @@ class MainTabNavigation extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
   final GoRouterState state;
 
-  TabItem _getCurrentTab() =>
-      TabItem.fromNavigationIndex(navigationShell.currentIndex);
-
   @override
   Widget build(BuildContext context) {
+    final currentTab =
+        TabItem.fromNavigationIndex(navigationShell.currentIndex);
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: navigationShell.currentIndex,
-        onTap: (index) => _onTabSelected(context, index),
-        items: _navBarItems(),
+        onTap: (index) => _onTabSelected(context, index, currentTab),
+        items: _navBarItems(currentTab),
         type: BottomNavigationBarType.fixed,
         backgroundColor: context.theme.appColors.secondaryBackground,
         selectedItemColor: context.theme.appColors.primaryAccent,
@@ -35,48 +35,38 @@ class MainTabNavigation extends StatelessWidget {
     );
   }
 
-  void _onTabSelected(BuildContext context, int index) {
+  void _onTabSelected(BuildContext context, int index, TabItem currentTab) {
     final tabItem = TabItem.values[index];
-    tabItem == TabItem.main
-        ? _handleMainButtonTap(context)
-        : _navigateToTab(context, tabItem);
-  }
-
-  void _handleMainButtonTap(BuildContext context) {
-    final currentTab = _getCurrentTab();
-    context.go(
-      state.isMainModalOpen
-          ? currentTab.baseRouteLocation
-          : currentTab.mainModalLocation,
-    );
-  }
-
-  void _navigateToTab(BuildContext context, TabItem tabItem) {
-    final isCurrentTab = _getCurrentTab() == tabItem;
-
-    if (state.isMainModalOpen) {
-      context.go(tabItem.baseRouteLocation);
+    if (tabItem == TabItem.main) {
+      _handleMainButtonTap(context, currentTab);
+    } else if (currentTab != tabItem) {
+      _navigateToTab(context, tabItem);
     }
+  }
 
-    if (!isCurrentTab) {
-      navigationShell.goBranch(
-        tabItem.navigationIndex,
-        initialLocation: true,
+  void _handleMainButtonTap(BuildContext context, TabItem currentTab) =>
+      context.go(
+        state.isMainModalOpen
+            ? currentTab.baseRouteLocation
+            : currentTab.mainModalLocation,
       );
-    }
-  }
 
-  List<BottomNavigationBarItem> _navBarItems() {
+  void _navigateToTab(BuildContext context, TabItem tabItem) =>
+      state.isMainModalOpen
+          ? context.go(tabItem.baseRouteLocation)
+          : navigationShell.goBranch(
+              tabItem.navigationIndex,
+              initialLocation: true,
+            );
+
+  List<BottomNavigationBarItem> _navBarItems(TabItem currentTab) {
     return TabItem.values.map((tabItem) {
       return BottomNavigationBarItem(
         icon: tabItem == TabItem.main
-            ? MainTabButton(
-                navigationShell: navigationShell,
-                currentTab: _getCurrentTab,
-              )
+            ? const MainTabButton()
             : TabIcon(
                 icon: tabItem.icon!,
-                isSelected: _getCurrentTab() == tabItem,
+                isSelected: currentTab == tabItem,
               ),
         label: '',
       );
