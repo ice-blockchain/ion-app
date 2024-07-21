@@ -27,14 +27,6 @@ enum TabItem {
     );
   }
 
-  static TabItem fromLocation(String location) {
-    if (location.startsWith(FeedRoute().location)) return TabItem.feed;
-    if (location.startsWith(ChatRoute().location)) return TabItem.chat;
-    if (location.startsWith(DappsRoute().location)) return TabItem.dapps;
-    if (location.startsWith(WalletRoute().location)) return TabItem.wallet;
-    return TabItem.main;
-  }
-
   String get baseRouteLocation => switch (this) {
         TabItem.feed => FeedRoute().location,
         TabItem.chat => ChatRoute().location,
@@ -50,7 +42,4 @@ enum TabItem {
         TabItem.wallet => WalletMainModalRoute().location,
         TabItem.main => '/',
       };
-
-  static bool isMainModalOpen(String location) =>
-      location.endsWith('/main-modal');
 }

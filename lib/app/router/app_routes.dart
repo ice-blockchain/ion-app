@@ -124,6 +124,7 @@ class AppShellRouteData extends StatefulShellRouteData {
   ) {
     return MainTabNavigation(
       navigationShell: navigationShell,
+      state: state,
     );
   }
 }

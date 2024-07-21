@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/router/main_tabs/components/components.dart';
+import 'package:ice/app/router/utils/go_router_state_extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class MainTabButton extends StatelessWidget {
@@ -15,10 +16,9 @@ class MainTabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentLocation = GoRouterState.of(context).matchedLocation;
-    final isModalOpen = TabItem.isMainModalOpen(currentLocation);
+    final state = GoRouterState.of(context);
 
-    final icon = isModalOpen
+    final icon = state.isMainModalOpen
         ? Assets.images.logo.logoButtonClose
         : Assets.images.logo.logoButton;
 
