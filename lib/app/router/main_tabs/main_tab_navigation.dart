@@ -41,20 +41,23 @@ class MainTabNavigation extends StatelessWidget {
 
   void _handleMainButtonTap(BuildContext context) {
     final currentTab = _getCurrentTab();
-    final currentLocation = GoRouterState.of(context).matchedLocation;
-    final isModalOpen = TabItem.isMainModalOpen(currentLocation);
 
     context.go(
-      isModalOpen ? currentTab.baseRouteLocation : currentTab.mainModalLocation,
+      isModalOpen(context)
+          ? currentTab.baseRouteLocation
+          : currentTab.mainModalLocation,
     );
   }
 
-  void _navigateToTab(BuildContext context, TabItem tabItem) {
+  bool isModalOpen(BuildContext context) {
     final currentLocation = GoRouterState.of(context).matchedLocation;
-    final isCurrentTab = _getCurrentTab() == tabItem;
-    final isModalOpen = TabItem.isMainModalOpen(currentLocation);
+    return TabItem.isMainModalOpen(currentLocation);
+  }
 
-    if (isModalOpen) {
+  void _navigateToTab(BuildContext context, TabItem tabItem) {
+    final isCurrentTab = _getCurrentTab() == tabItem;
+
+    if (isModalOpen(context)) {
       context.go(tabItem.baseRouteLocation);
     }
 
