@@ -19,7 +19,7 @@ class MainModalContent extends StatelessWidget {
         if (!didPop) {
           final metrics = controller.value;
 
-          if (!metrics.hasDimensions || metrics.pixels <= metrics.minPixels) {
+          if (metrics.hasDimensions) {
             final currentTab = getCurrentTab(state.matchedLocation);
             context.go(getBaseRouteLocation(currentTab));
           }

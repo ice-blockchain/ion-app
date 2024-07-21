@@ -18,8 +18,8 @@ class MainTabNavigation extends StatelessWidget {
   };
 
   TabItem _getCurrentTab() {
-    final adjustedIndex = navigationShell.currentIndex;
-    return _navigationIndexToTab[adjustedIndex] ?? TabItem.main;
+    final currentIndex = navigationShell.currentIndex;
+    return _navigationIndexToTab[currentIndex] ?? TabItem.main;
   }
 
   @override
@@ -27,7 +27,7 @@ class MainTabNavigation extends StatelessWidget {
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _adjustBottomNavIndex(navigationShell.currentIndex),
+        currentIndex: navigationShell.currentIndex,
         onTap: (index) => _onTabSelected(context, index),
         items: _navBarItems(),
         type: BottomNavigationBarType.fixed,
@@ -47,41 +47,33 @@ class MainTabNavigation extends StatelessWidget {
         : _navigateToTab(context, tabItem);
   }
 
-  void _navigateToTab(BuildContext context, TabItem tabItem) {
-    final currentLocation = GoRouterState.of(context).matchedLocation;
-    final isCurrentTab = _getCurrentTab() == tabItem;
-    final isModalOpen = isMainModalOpen(currentLocation);
-
-    if (isCurrentTab) {
-      final targetLocation = isModalOpen
-          ? getBaseRouteLocation(tabItem)
-          : getMainModalLocation(tabItem);
-      context.go(targetLocation);
-    } else {
-      if (isModalOpen) {
-        context.go(getBaseRouteLocation(tabItem));
-      }
-      _goToBranch(tabItem);
-    }
-  }
-
-  void _goToBranch(TabItem tabItem) {
-    navigationShell.goBranch(
-      tabItem.navigationIndex,
-      initialLocation: true,
-    );
-  }
-
   void _handleMainButtonTap(BuildContext context) {
     final currentTab = _getCurrentTab();
     final currentLocation = GoRouterState.of(context).matchedLocation;
     final isModalOpen = isMainModalOpen(currentLocation);
 
-    final targetLocation = isModalOpen
-        ? getBaseRouteLocation(currentTab)
-        : getMainModalLocation(currentTab);
+    context.go(
+      isModalOpen
+          ? getBaseRouteLocation(currentTab)
+          : getMainModalLocation(currentTab),
+    );
+  }
 
-    context.go(targetLocation);
+  void _navigateToTab(BuildContext context, TabItem tabItem) {
+    final currentLocation = GoRouterState.of(context).matchedLocation;
+    final isCurrentTab = _getCurrentTab() == tabItem;
+    final isModalOpen = isMainModalOpen(currentLocation);
+
+    if (isModalOpen) {
+      context.go(getBaseRouteLocation(tabItem));
+    }
+
+    if (!isCurrentTab) {
+      navigationShell.goBranch(
+        tabItem.navigationIndex,
+        initialLocation: true,
+      );
+    }
   }
 
   List<BottomNavigationBarItem> _navBarItems() {
@@ -100,7 +92,4 @@ class MainTabNavigation extends StatelessWidget {
       );
     }).toList();
   }
-
-  int _adjustBottomNavIndex(int index) =>
-      index >= TabItem.main.index ? index + 1 : index;
 }
