@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/router/main_tabs/components/components.dart';
-import 'package:ice/app/router/utils/route_utils.dart';
 
 class MainTabNavigation extends StatelessWidget {
   const MainTabNavigation({
@@ -12,15 +11,8 @@ class MainTabNavigation extends StatelessWidget {
 
   final StatefulNavigationShell navigationShell;
 
-  static final Map<int, TabItem> _navigationIndexToTab = {
-    for (var tab in TabItem.values)
-      if (tab != TabItem.main) tab.navigationIndex: tab,
-  };
-
-  TabItem _getCurrentTab() {
-    final currentIndex = navigationShell.currentIndex;
-    return _navigationIndexToTab[currentIndex] ?? TabItem.main;
-  }
+  TabItem _getCurrentTab() =>
+      TabItem.fromNavigationIndex(navigationShell.currentIndex);
 
   @override
   Widget build(BuildContext context) {
@@ -50,22 +42,20 @@ class MainTabNavigation extends StatelessWidget {
   void _handleMainButtonTap(BuildContext context) {
     final currentTab = _getCurrentTab();
     final currentLocation = GoRouterState.of(context).matchedLocation;
-    final isModalOpen = isMainModalOpen(currentLocation);
+    final isModalOpen = TabItem.isMainModalOpen(currentLocation);
 
     context.go(
-      isModalOpen
-          ? getBaseRouteLocation(currentTab)
-          : getMainModalLocation(currentTab),
+      isModalOpen ? currentTab.baseRouteLocation : currentTab.mainModalLocation,
     );
   }
 
   void _navigateToTab(BuildContext context, TabItem tabItem) {
     final currentLocation = GoRouterState.of(context).matchedLocation;
     final isCurrentTab = _getCurrentTab() == tabItem;
-    final isModalOpen = isMainModalOpen(currentLocation);
+    final isModalOpen = TabItem.isMainModalOpen(currentLocation);
 
     if (isModalOpen) {
-      context.go(getBaseRouteLocation(tabItem));
+      context.go(tabItem.baseRouteLocation);
     }
 
     if (!isCurrentTab) {
