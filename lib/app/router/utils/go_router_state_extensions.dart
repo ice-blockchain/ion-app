@@ -6,12 +6,12 @@ extension GoRouterStateExtension on GoRouterState {
   bool get isMainModalOpen => matchedLocation.endsWith('/main-modal');
 
   TabItem get currentTab {
-    if (matchedLocation.startsWith(FeedRoute().location)) return TabItem.feed;
-    if (matchedLocation.startsWith(ChatRoute().location)) return TabItem.chat;
-    if (matchedLocation.startsWith(DappsRoute().location)) return TabItem.dapps;
-    if (matchedLocation.startsWith(WalletRoute().location)) {
-      return TabItem.wallet;
-    }
-    return TabItem.main;
+    return switch (matchedLocation) {
+      final path when path.startsWith(FeedRoute().location) => TabItem.feed,
+      final path when path.startsWith(ChatRoute().location) => TabItem.chat,
+      final path when path.startsWith(DappsRoute().location) => TabItem.dapps,
+      final path when path.startsWith(WalletRoute().location) => TabItem.wallet,
+      _ => TabItem.main,
+    };
   }
 }
