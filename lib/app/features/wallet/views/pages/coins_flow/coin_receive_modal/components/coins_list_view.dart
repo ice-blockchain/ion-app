@@ -59,7 +59,7 @@ class CoinsListView extends HookConsumerWidget {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
-              title: title,
+              title: Text(title),
               showBackButton: false,
               actions: const [
                 NavigationCloseButton(),

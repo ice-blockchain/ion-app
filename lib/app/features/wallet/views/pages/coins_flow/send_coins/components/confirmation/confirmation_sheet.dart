@@ -33,7 +33,7 @@ class ConfirmationSheet extends ConsumerWidget {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0.s),
               child: NavigationAppBar.screen(
-                title: locale.wallet_send_coins,
+                title: Text(locale.wallet_send_coins),
                 actions: const [
                   NavigationCloseButton(),
                 ],

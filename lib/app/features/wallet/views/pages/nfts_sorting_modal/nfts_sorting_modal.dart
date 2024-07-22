@@ -24,7 +24,7 @@ class NftsSortingModal extends StatelessWidget {
           children: [
             NavigationAppBar.modal(
               showBackButton: false,
-              title: context.i18n.wallet_sorting_title,
+              title: Text(context.i18n.wallet_sorting_title),
               actions: const [NavigationCloseButton()],
             ),
             SizedBox(

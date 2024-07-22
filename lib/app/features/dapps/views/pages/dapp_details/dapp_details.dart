@@ -25,7 +25,7 @@ class DAppDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: NavigationAppBar.screen(
-        title: item.title,
+        title: Text(item.title),
         showBackButton: false,
         actions: [
           IconButton(

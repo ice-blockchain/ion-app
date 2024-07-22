@@ -20,7 +20,7 @@ class PostDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: NavigationAppBar.screen(
-        title: context.i18n.post_page_title,
+        title: Text(context.i18n.post_page_title),
         actions: [
           IconButton(
             icon: Assets.images.icons.iconBookmarks.icon(

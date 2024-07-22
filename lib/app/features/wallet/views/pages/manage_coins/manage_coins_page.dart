@@ -38,7 +38,7 @@ class ManageCoinsPage extends HookConsumerWidget {
         children: [
           NavigationAppBar.modal(
             showBackButton: false,
-            title: context.i18n.wallet_manage_coins,
+            title: Text(context.i18n.wallet_manage_coins),
             actions: const [NavigationDoneButton()],
           ),
           Expanded(

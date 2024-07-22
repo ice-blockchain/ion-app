@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/fade_on_scroll.dart';
 import 'package:ice/app/features/auth/views/pages/restore_menu/restore_menu_item.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_back_button.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -28,25 +26,16 @@ class RestoreMenuPage extends HookWidget {
           controller: scrollController,
           slivers: [
             SliverAppBar(
-              pinned: true,
+              flexibleSpace: NavigationAppBar.modal(
+                title: FadeOnScroll(
+                  zeroOpacityOffset: 120.0.s,
+                  fullOpacityOffset: 140.0.s,
+                  scrollController: scrollController,
+                  child: Text(context.i18n.restore_identity_title),
+                ),
+              ),
               automaticallyImplyLeading: false,
-              backgroundColor: context.theme.appColors.onPrimaryAccent,
-              surfaceTintColor: context.theme.appColors.onPrimaryAccent,
-              shadowColor: Colors.transparent,
-              elevation: 0,
-              leading: NavigationBackButton(
-                context.pop,
-                hideKeyboardOnBack: true,
-              ),
-              title: FadeOnScroll(
-                zeroOpacityOffset: 120.0.s,
-                fullOpacityOffset: 140.0.s,
-                scrollController: scrollController,
-                child: Text(context.i18n.restore_identity_title),
-              ),
-              toolbarHeight: 60.0.s,
-              titleTextStyle: context.theme.appTextThemes.subtitle
-                  .copyWith(color: context.theme.appColors.primaryText),
+              pinned: true,
             ),
             SliverFillRemaining(
               hasScrollBody: false,

@@ -29,7 +29,7 @@ class CreateNewWalletModal extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             NavigationAppBar.modal(
-              title: context.i18n.wallet_create_new,
+              title: Text(context.i18n.wallet_create_new),
               actions: const [NavigationCloseButton()],
             ),
             ScreenSideOffset.small(
