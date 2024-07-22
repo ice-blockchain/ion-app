@@ -12,12 +12,9 @@ class ModalWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      child: NavigationSheet(
-        transitionObserver: transitionObserver,
-        child: child,
-      ),
+    return NavigationSheet(
+      transitionObserver: transitionObserver,
+      child: child,
     );
   }
 }

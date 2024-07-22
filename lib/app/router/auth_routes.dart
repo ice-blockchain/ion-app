@@ -5,6 +5,8 @@ class AuthRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<GetStartedRoute>(path: 'get-started'),
+        TypedGoRoute<SignUpPasskeyRoute>(path: 'sign-up-passkey'),
+        TypedGoRoute<SignUpPasswordRoute>(path: 'sign-up-password'),
         TypedGoRoute<SelectLanguagesRoute>(path: 'select-languages'),
         TypedGoRoute<FillProfileRoute>(path: 'fill-profile'),
         TypedGoRoute<DiscoverCreatorsRoute>(path: 'discover-creators'),
@@ -18,6 +20,22 @@ class GetStartedRoute extends BaseRouteData {
   GetStartedRoute()
       : super(
           child: const GetStartedPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class SignUpPasskeyRoute extends BaseRouteData {
+  SignUpPasskeyRoute()
+      : super(
+          child: const SignUpPasskeyPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class SignUpPasswordRoute extends BaseRouteData {
+  SignUpPasswordRoute()
+      : super(
+          child: const SignUpPasswordPage(),
           type: IceRouteType.bottomSheet,
         );
 }

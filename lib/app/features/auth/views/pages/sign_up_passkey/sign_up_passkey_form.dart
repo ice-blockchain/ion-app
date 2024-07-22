@@ -7,10 +7,9 @@ import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
-import 'package:ice/generated/assets.gen.dart';
 
-class LoginForm extends HookConsumerWidget {
-  const LoginForm({super.key});
+class SignUpPasskeyForm extends HookConsumerWidget {
+  const SignUpPasskeyForm({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,9 +28,7 @@ class LoginForm extends HookConsumerWidget {
             disabled: authState is AuthenticationLoading,
             trailingIcon: authState is AuthenticationLoading
                 ? const ButtonLoadingIndicator()
-                : Assets.images.icons.iconButtonNext.icon(
-                    color: context.theme.appColors.onPrimaryAccent,
-                  ),
+                : const SizedBox.shrink(),
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
                 hideKeyboardAndCallOnce(
@@ -41,7 +38,7 @@ class LoginForm extends HookConsumerWidget {
                 );
               }
             },
-            label: Text(context.i18n.button_continue),
+            label: Text(context.i18n.sign_up_passkey_button),
             mainAxisSize: MainAxisSize.max,
           ),
         ],

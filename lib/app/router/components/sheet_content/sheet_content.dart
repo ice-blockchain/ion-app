@@ -24,6 +24,7 @@ class SheetContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SheetContentScaffold(
       backgroundColor: Colors.transparent,
+      primary: true,
       extendBody: true,
       bottomBar: const SizedBox.shrink(),
       appBar: SheetDragHandle(topPadding: topPadding),

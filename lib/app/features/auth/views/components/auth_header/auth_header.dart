@@ -12,7 +12,7 @@ class AuthHeader extends StatelessWidget {
     this.showBackButton = true,
     double? iconOffset,
     double? descriptionSidePadding,
-  })  : iconOffset = iconOffset ?? 19.0.s,
+  })  : iconOffset = iconOffset ?? 20.0.s,
         descriptionSidePadding = descriptionSidePadding ?? 0.0.s;
 
   final String? title;
@@ -30,7 +30,7 @@ class AuthHeader extends StatelessWidget {
           showBackButton: showBackButton,
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 40.0.s),
+          padding: EdgeInsets.symmetric(horizontal: 28.0.s),
           child: Column(
             children: [
               if (icon != null)
