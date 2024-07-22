@@ -6,31 +6,40 @@ import 'package:ice/app/router/utils/go_router_state_extensions.dart';
 
 class MainTabNavigation extends StatelessWidget {
   const MainTabNavigation({
-    required this.navigationShell,
+    required this.shell,
     required this.state,
     super.key,
   });
 
-  final StatefulNavigationShell navigationShell;
+  final StatefulNavigationShell shell;
   final GoRouterState state;
 
   @override
   Widget build(BuildContext context) {
-    final currentTab =
-        TabItem.fromNavigationIndex(navigationShell.currentIndex);
+    final currentTab = TabItem.fromNavigationIndex(shell.currentIndex);
 
     return Scaffold(
-      body: navigationShell,
+      body: shell,
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navigationShell.currentIndex,
-        onTap: (index) => _onTabSelected(context, index, currentTab),
-        items: _navBarItems(currentTab),
         type: BottomNavigationBarType.fixed,
         backgroundColor: context.theme.appColors.secondaryBackground,
         selectedItemColor: context.theme.appColors.primaryAccent,
         unselectedItemColor: context.theme.appColors.tertararyText,
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        currentIndex: shell.currentIndex,
+        onTap: (index) => _onTabSelected(context, index, currentTab),
+        items: TabItem.values.map((tabItem) {
+          return BottomNavigationBarItem(
+            icon: tabItem == TabItem.main
+                ? const MainTabButton()
+                : TabIcon(
+                    icon: tabItem.icon,
+                    isSelected: currentTab == tabItem,
+                  ),
+            label: '',
+          );
+        }).toList(),
       ),
     );
   }
@@ -54,22 +63,8 @@ class MainTabNavigation extends StatelessWidget {
   void _navigateToTab(BuildContext context, TabItem tabItem) =>
       state.isMainModalOpen
           ? context.go(tabItem.baseRouteLocation)
-          : navigationShell.goBranch(
+          : shell.goBranch(
               tabItem.navigationIndex,
               initialLocation: true,
             );
-
-  List<BottomNavigationBarItem> _navBarItems(TabItem currentTab) {
-    return TabItem.values.map((tabItem) {
-      return BottomNavigationBarItem(
-        icon: tabItem == TabItem.main
-            ? const MainTabButton()
-            : TabIcon(
-                icon: tabItem.icon!,
-                isSelected: currentTab == tabItem,
-              ),
-        label: '',
-      );
-    }).toList();
-  }
 }

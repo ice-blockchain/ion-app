@@ -123,7 +123,7 @@ class AppShellRouteData extends StatefulShellRouteData {
     StatefulNavigationShell navigationShell,
   ) {
     return MainTabNavigation(
-      navigationShell: navigationShell,
+      shell: navigationShell,
       state: state,
     );
   }
