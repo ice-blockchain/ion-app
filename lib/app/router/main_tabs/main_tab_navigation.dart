@@ -1,120 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/main_tabs/components/components.dart';
 
-class MainTabNavigation extends HookConsumerWidget {
+class MainTabNavigation extends StatelessWidget {
   const MainTabNavigation({
-    required this.navigationShell,
+    required this.shell,
+    required this.state,
     super.key,
   });
 
-  final StatefulNavigationShell navigationShell;
-
-  static final Map<int, TabItem> _navigationIndexToTab = {
-    for (var tab in TabItem.values)
-      if (tab != TabItem.main) tab.navigationIndex: tab,
-  };
-
-  TabItem _getCurrentTab() {
-    final adjustedIndex = navigationShell.currentIndex;
-    return _navigationIndexToTab[adjustedIndex] ?? TabItem.main;
-  }
+  final StatefulNavigationShell shell;
+  final GoRouterState state;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final currentTab = TabItem.fromNavigationIndex(shell.currentIndex);
+
     return Scaffold(
-      body: navigationShell,
+      body: shell,
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _adjustBottomNavIndex(navigationShell.currentIndex),
-        onTap: (index) => _onTabSelected(context, ref, index),
-        items: _navBarItems(ref),
         type: BottomNavigationBarType.fixed,
         backgroundColor: context.theme.appColors.secondaryBackground,
         selectedItemColor: context.theme.appColors.primaryAccent,
         unselectedItemColor: context.theme.appColors.tertararyText,
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        currentIndex: shell.currentIndex,
+        onTap: (index) => _onTabSelected(context, index, currentTab),
+        items: TabItem.values.map((tabItem) {
+          return BottomNavigationBarItem(
+            icon: tabItem == TabItem.main
+                ? const MainTabButton()
+                : TabIcon(
+                    icon: tabItem.icon,
+                    isSelected: currentTab == tabItem,
+                  ),
+            label: '',
+          );
+        }).toList(),
       ),
     );
   }
 
-  void _onTabSelected(BuildContext context, WidgetRef ref, int index) {
+  void _onTabSelected(BuildContext context, int index, TabItem currentTab) {
     final tabItem = TabItem.values[index];
     if (tabItem == TabItem.main) {
-      _handleMainButtonTap(context, ref);
-    } else {
-      _navigateToTab(context, ref, tabItem);
+      _handleMainButtonTap(context, currentTab);
+    } else if (currentTab != tabItem) {
+      _navigateToTab(context, tabItem);
     }
   }
 
-  void _navigateToTab(BuildContext context, WidgetRef ref, TabItem tabItem) {
-    final bottomSheetNotifier = ref.read(bottomSheetStateProvider.notifier);
-    final currentTab = _getCurrentTab();
-
-    if (bottomSheetNotifier.isSheetOpen(currentTab)) {
-      context.pop();
-      bottomSheetNotifier.closeCurrentSheet(currentTab);
-    }
-
-    final adjustedIndex = tabItem.navigationIndex;
-    navigationShell.goBranch(
-      adjustedIndex,
-      initialLocation: true,
-    );
-  }
-
-  void _handleMainButtonTap(BuildContext context, WidgetRef ref) {
-    final currentTab = _getCurrentTab();
-    final bottomSheetNotifier = ref.read(bottomSheetStateProvider.notifier);
-
-    if (bottomSheetNotifier.isSheetOpen(currentTab)) {
-      context.pop();
-      bottomSheetNotifier.closeCurrentSheet(currentTab);
-    } else {
-      bottomSheetNotifier.setSheetState(currentTab, isOpen: true);
-      _openMainModalForCurrentTab(context, currentTab);
-    }
-  }
-
-  void _openMainModalForCurrentTab(BuildContext context, TabItem currentTab) {
-    switch (currentTab) {
-      case TabItem.feed:
-        FeedMainModalRoute().go(context);
-      case TabItem.chat:
-        ChatMainModalRoute().go(context);
-      case TabItem.dapps:
-        DappsMainModalRoute().go(context);
-      case TabItem.wallet:
-        WalletMainModalRoute().go(context);
-      case TabItem.main:
-        break;
-    }
-  }
-
-  List<BottomNavigationBarItem> _navBarItems(WidgetRef ref) {
-    return TabItem.values.map((tabItem) {
-      if (tabItem == TabItem.main) {
-        return BottomNavigationBarItem(
-          icon: MainTabButton(
-            navigationShell: navigationShell,
-            currentTab: _getCurrentTab,
-          ),
-          label: '',
-        );
-      }
-      return BottomNavigationBarItem(
-        icon: TabIcon(
-          icon: tabItem.icon!,
-          isSelected: _getCurrentTab() == tabItem,
-        ),
-        label: '',
+  void _handleMainButtonTap(BuildContext context, TabItem currentTab) =>
+      context.go(
+        state.isMainModalOpen
+            ? currentTab.baseRouteLocation
+            : currentTab.mainModalLocation,
       );
-    }).toList();
-  }
 
-  int _adjustBottomNavIndex(int index) =>
-      index >= TabItem.main.index ? index + 1 : index;
+  void _navigateToTab(BuildContext context, TabItem tabItem) =>
+      state.isMainModalOpen
+          ? context.go(tabItem.baseRouteLocation)
+          : shell.goBranch(
+              tabItem.navigationIndex,
+              initialLocation: true,
+            );
 }

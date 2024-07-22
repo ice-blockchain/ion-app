@@ -73,7 +73,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
           path: '/feed',
           routes: [
             TypedGoRoute<PostDetailsRoute>(path: 'post'),
-            TypedGoRoute<FeedMainModalRoute>(path: 'feed-main-modal'),
+            TypedGoRoute<FeedMainModalRoute>(path: 'main-modal'),
           ],
         ),
       ],
@@ -83,7 +83,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
         TypedGoRoute<ChatRoute>(
           path: '/chat',
           routes: [
-            TypedGoRoute<ChatMainModalRoute>(path: 'chat-main-modal'),
+            TypedGoRoute<ChatMainModalRoute>(path: 'main-modal'),
           ],
         ),
       ],
@@ -93,7 +93,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
         TypedGoRoute<DappsRoute>(
           path: '/dapps',
           routes: [
-            TypedGoRoute<DappsMainModalRoute>(path: 'dapps-main-modal'),
+            TypedGoRoute<DappsMainModalRoute>(path: 'main-modal'),
           ],
         ),
       ],
@@ -104,7 +104,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
           path: '/wallet',
           routes: [
             ...WalletRoutes.routes,
-            TypedGoRoute<WalletMainModalRoute>(path: 'wallet-main-modal'),
+            TypedGoRoute<WalletMainModalRoute>(path: 'main-modal'),
           ],
         ),
       ],
@@ -123,7 +123,8 @@ class AppShellRouteData extends StatefulShellRouteData {
     StatefulNavigationShell navigationShell,
   ) {
     return MainTabNavigation(
-      navigationShell: navigationShell,
+      shell: navigationShell,
+      state: state,
     );
   }
 }
