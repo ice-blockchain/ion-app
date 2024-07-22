@@ -3,11 +3,13 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/card/rounded_card.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/read_more_text/read_more_text.dart';
+import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_name/nft_name.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_picture/nft_picture.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -70,23 +72,24 @@ class NftDetailsPage extends StatelessWidget {
                     title: Text(context.i18n.send_nft_token_contract_address),
                     value: payload.contractAddress,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 12.0.s, bottom: 16.0.s),
-                    child: Button(
-                      mainAxisSize: MainAxisSize.max,
-                      minimumSize: Size(56.0.s, 56.0.s),
-                      leadingIcon: Assets.images.icons.iconButtonSend
-                          .icon(color: context.theme.appColors.onPrimaryAccent),
-                      label: Text(
-                        context.i18n.feed_send,
-                      ),
-                      onPressed: () {},
+                  SizedBox(height: 12.0.s),
+                  Button(
+                    mainAxisSize: MainAxisSize.max,
+                    minimumSize: Size(56.0.s, 56.0.s),
+                    leadingIcon: Assets.images.icons.iconButtonSend
+                        .icon(color: context.theme.appColors.onPrimaryAccent),
+                    label: Text(
+                      context.i18n.feed_send,
                     ),
+                    onPressed: () {
+                      NftSendFormRoute($extra: payload).push<void>(context);
+                    },
                   ),
                 ],
               ),
             ),
           ),
+          ScreenBottomOffset(),
         ],
       ),
     );
