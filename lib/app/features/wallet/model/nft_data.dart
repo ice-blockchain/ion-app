@@ -16,5 +16,6 @@ class NftData with _$NftData {
     required String tokenStandard,
     required String contractAddress,
     required int rank,
+    required String asset,
   }) = _NftData;
 }

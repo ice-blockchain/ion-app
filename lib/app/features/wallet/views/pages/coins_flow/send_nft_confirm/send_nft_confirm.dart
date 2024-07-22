@@ -37,11 +37,18 @@ class SendNftConfirmPage extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(height: 16.0.s),
-                  ListItem.text(
+                  ListItem.textWithIcon(
                     title: Text(locale.wallet_send_to),
-                    value: formData.address,
+                    secondary: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        formData.address,
+                        textAlign: TextAlign.right,
+                        style: context.theme.appTextThemes.caption3.copyWith(),
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 16.0.s),
+                  SizedBox(height: 12.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_title),
                     value: formData.wallet.name,
@@ -50,15 +57,19 @@ class SendNftConfirmPage extends ConsumerWidget {
                       width: ScreenSideOffset.defaultSmallMargin,
                       height: ScreenSideOffset.defaultSmallMargin,
                     ),
-                    secondary: Text(
-                      '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
-                      textAlign: TextAlign.right,
-                      style: context.theme.appTextThemes.caption3.copyWith(),
+                    secondary: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
+                        textAlign: TextAlign.right,
+                        style: context.theme.appTextThemes.caption3.copyWith(),
+                      ),
                     ),
                   ),
+                  SizedBox(height: 12.0.s),
                   ListItem.text(
                     title: Text(context.i18n.send_nft_confirm_asset),
-                    value: payload.collectionName.toString(),
+                    value: payload.asset,
                   ),
                   SizedBox(height: 12.0.s),
                   ListItem.textWithIcon(
