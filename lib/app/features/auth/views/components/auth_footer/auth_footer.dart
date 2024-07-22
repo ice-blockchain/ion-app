@@ -22,7 +22,11 @@ enum FooterLink {
   }
 
   VoidCallback get onPressed {
-    return switch (this) { FooterLink.terms => () {}, FooterLink.privacy => () {}, _ => () {} };
+    return switch (this) {
+      FooterLink.terms => () {},
+      FooterLink.privacy => () {},
+      _ => () {},
+    };
   }
 
   String label(BuildContext context) {
