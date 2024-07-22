@@ -3,9 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/slider/app_slider.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_name/nft_name.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_picture/nft_picture.dart';
@@ -21,7 +21,7 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SendNftForm extends IcePage {
+class SendNftForm extends HookConsumerWidget {
   const SendNftForm({required this.payload, super.key});
 
   final NftData payload;
@@ -29,7 +29,7 @@ class SendNftForm extends IcePage {
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final selectedContact = useState<ContactData?>(null);
     final colors = context.theme.appColors;
     final locale = context.i18n;
@@ -62,14 +62,12 @@ class SendNftForm extends IcePage {
                       rank: payload.rank,
                       price: payload.price,
                       networkSymbol: payload.currency,
-                      networkSymbolIcon:
-                          Assets.images.wallet.walletEth.icon(size: 16.0.s),
+                      networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 16.0.s),
                     ContactInputSwitcher(
                       selectedContact: selectedContact.value,
-                      onContactSelected: (ContactData? contact) =>
-                          selectedContact.value = contact,
+                      onContactSelected: (ContactData? contact) => selectedContact.value = contact,
                     ),
                     SizedBox(height: 17.0.s),
                     const ArrivalTime(),
@@ -105,6 +103,7 @@ class SendNftForm extends IcePage {
                   ],
                 ),
               ),
+              ScreenBottomOffset(),
             ],
           ),
         ),
