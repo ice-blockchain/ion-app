@@ -17,8 +17,7 @@ ValueNotifier<FeedControlsState> useFeedControlsState(
       }
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        pageScrollController.position.isScrollingNotifier
-            .addListener(isScrollingNotifierListener);
+        pageScrollController.position.isScrollingNotifier.addListener(isScrollingNotifierListener);
       });
       return () {
         pageScrollController.position.isScrollingNotifier

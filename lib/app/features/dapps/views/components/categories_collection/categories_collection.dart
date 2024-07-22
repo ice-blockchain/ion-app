@@ -22,8 +22,7 @@ enum DAppsCategory {
   Widget get icon {
     return switch (this) {
       DAppsCategory.defi => Assets.images.categories.categoriesDefi,
-      DAppsCategory.marketplaces =>
-        Assets.images.categories.categoriesMarketplace,
+      DAppsCategory.marketplaces => Assets.images.categories.categoriesMarketplace,
       DAppsCategory.nft => Assets.images.categories.categoriesNft,
       DAppsCategory.games => Assets.images.categories.categoriesGames,
       DAppsCategory.social => Assets.images.categories.categoriesSocial,
@@ -61,8 +60,7 @@ class CategoriesCollection extends StatelessWidget {
         height: itemHeight,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
-          separatorBuilder: (BuildContext context, int index) =>
-              SizedBox(width: 15.0.s),
+          separatorBuilder: (BuildContext context, int index) => SizedBox(width: 15.0.s),
           padding: EdgeInsets.symmetric(
             horizontal: ScreenSideOffset.defaultSmallMargin,
           ),

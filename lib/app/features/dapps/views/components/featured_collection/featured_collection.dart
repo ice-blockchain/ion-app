@@ -18,8 +18,7 @@ class FeaturedCollection extends StatelessWidget {
       height: 160.0.s,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        separatorBuilder: (BuildContext context, int index) =>
-            SizedBox(width: 12.0.s),
+        separatorBuilder: (BuildContext context, int index) => SizedBox(width: 12.0.s),
         padding: EdgeInsets.symmetric(
           horizontal: ScreenSideOffset.defaultSmallMargin,
         ),
@@ -64,20 +63,16 @@ class FeaturedCollection extends StatelessWidget {
                             ShadowText(
                               child: Text(
                                 items[index].title,
-                                style:
-                                    context.theme.appTextThemes.body.copyWith(
-                                  color: context
-                                      .theme.appColors.secondaryBackground,
+                                style: context.theme.appTextThemes.body.copyWith(
+                                  color: context.theme.appColors.secondaryBackground,
                                 ),
                               ),
                             ),
                             ShadowText(
                               child: Text(
                                 items[index].description ?? '',
-                                style: context.theme.appTextThemes.caption3
-                                    .copyWith(
-                                  color: context
-                                      .theme.appColors.secondaryBackground,
+                                style: context.theme.appTextThemes.caption3.copyWith(
+                                  color: context.theme.appColors.secondaryBackground,
                                 ),
                               ),
                             ),

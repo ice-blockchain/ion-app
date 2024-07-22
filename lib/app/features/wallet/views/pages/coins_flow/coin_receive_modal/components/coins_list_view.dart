@@ -30,8 +30,7 @@ class CoinsListView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coins = useFilteredWalletCoins(ref);
-    final searchValue =
-        walletAssetSearchValueSelector(ref, WalletTabType.coins);
+    final searchValue = walletAssetSearchValueSelector(ref, WalletTabType.coins);
     final walletId = walletIdSelector(ref);
 
     useOnInit<void>(

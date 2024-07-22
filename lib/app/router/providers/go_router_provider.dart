@@ -43,18 +43,15 @@ GoRouter goRouter(GoRouterRef ref) {
       }
 
       return switch (authState) {
-        Authenticated()
-            when state.matchedLocation.startsWith(IntroRoute().location) =>
+        Authenticated() when state.matchedLocation.startsWith(IntroRoute().location) =>
           FeedRoute().location,
-        UnAuthenticated()
-            when !state.matchedLocation.startsWith(IntroRoute().location) =>
+        UnAuthenticated() when !state.matchedLocation.startsWith(IntroRoute().location) =>
           IntroRoute().location,
         _ => null
       };
     },
     routes: $appRoutes,
-    errorBuilder: (context, state) =>
-        ErrorRoute($extra: state.error).build(context, state),
+    errorBuilder: (context, state) => ErrorRoute($extra: state.error).build(context, state),
     initialLocation: SplashRoute().location,
     debugLogDiagnostics: LoggerConfig.routerLogsEnabled,
     navigatorKey: rootNavigatorKey,

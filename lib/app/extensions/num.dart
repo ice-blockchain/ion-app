@@ -24,9 +24,7 @@ extension DoubleNullableExtension on double? {
             ? noNullVal.toInt().toString()
             : toString()
         : noNullVal.toStringAsFixed(
-            noNullVal.truncateToDouble() == noNullVal
-                ? 0
-                : roundToDecimalsCount,
+            noNullVal.truncateToDouble() == noNullVal ? 0 : roundToDecimalsCount,
           );
   }
 }

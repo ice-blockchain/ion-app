@@ -24,12 +24,9 @@ enum FeedCategory {
   Widget getIcon(BuildContext context) {
     final color = context.theme.appColors.secondaryBackground;
     return switch (this) {
-      FeedCategory.feed =>
-        Assets.images.icons.iconProfileFeed.icon(color: color),
-      FeedCategory.videos =>
-        Assets.images.icons.iconVideosTrading.icon(color: color),
-      FeedCategory.articles =>
-        Assets.images.icons.iconFeedStories.icon(color: color),
+      FeedCategory.feed => Assets.images.icons.iconProfileFeed.icon(color: color),
+      FeedCategory.videos => Assets.images.icons.iconVideosTrading.icon(color: color),
+      FeedCategory.articles => Assets.images.icons.iconFeedStories.icon(color: color),
     };
   }
 }

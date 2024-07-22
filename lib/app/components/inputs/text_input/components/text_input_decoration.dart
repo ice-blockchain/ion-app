@@ -25,8 +25,7 @@ class TextInputDecoration extends InputDecoration {
             ),
           ),
           disabledBorder: TextInputBorder(
-            borderSide:
-                BorderSide(color: context.theme.appColors.primaryBackground),
+            borderSide: BorderSide(color: context.theme.appColors.primaryBackground),
           ),
           focusedBorder: TextInputBorder(
             borderSide: BorderSide(
@@ -54,8 +53,7 @@ class TextInputDecoration extends InputDecoration {
             color: context.theme.appColors.primaryText,
           ),
           errorStyle: const TextStyle(fontSize: 0),
-          floatingLabelStyle:
-              WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
+          floatingLabelStyle: WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
             return context.theme.appTextThemes.subtitle2.copyWith(
               color: states.contains(WidgetState.error)
                   ? context.theme.appColors.attentionRed

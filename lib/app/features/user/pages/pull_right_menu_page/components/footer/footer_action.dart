@@ -23,8 +23,8 @@ class FooterAction extends StatelessWidget {
       ),
       label: Text(
         label,
-        style: context.theme.appTextThemes.body
-            .copyWith(color: context.theme.appColors.primaryText),
+        style:
+            context.theme.appTextThemes.body.copyWith(color: context.theme.appColors.primaryText),
       ),
       icon: Padding(
         padding: EdgeInsets.only(right: 12.0.s),

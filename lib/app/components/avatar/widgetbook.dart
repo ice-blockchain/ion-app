@@ -14,8 +14,7 @@ Widget regularButtonUseCase(BuildContext context) {
       children: [
         Avatar(
           size: 24.0.s,
-          imageUrl:
-              'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+          imageUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
         ),
       ],
     ),

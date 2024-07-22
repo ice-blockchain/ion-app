@@ -32,8 +32,7 @@ class EditWalletModal extends IcePage {
   ) {
     final walletName = useState(payload.name);
     final controller = useTextEditingController(text: walletName.value);
-    final isNameChanged =
-        walletName.value != (payload.name) && walletName.value.isNotEmpty;
+    final isNameChanged = walletName.value != (payload.name) && walletName.value.isNotEmpty;
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -67,9 +66,7 @@ class EditWalletModal extends IcePage {
               child: isNameChanged
                   ? Button(
                       onPressed: () {
-                        ref
-                                .read(walletsDataNotifierProvider.notifier)
-                                .walletData =
+                        ref.read(walletsDataNotifierProvider.notifier).walletData =
                             payload.copyWith(name: walletName.value);
                         context.pop();
                       },

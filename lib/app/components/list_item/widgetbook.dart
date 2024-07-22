@@ -70,15 +70,13 @@ Widget userListItemUseCase(BuildContext context) {
           ListItem.user(
             title: const Text('Alina Proxima'),
             subtitle: const Text('@alinaproxima'),
-            profilePicture:
-                'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+            profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
             verifiedBadge: true,
           ),
           ListItem.user(
             title: const Text('Alina Proxima'),
             subtitle: const Text('@alinaproxima'),
-            profilePicture:
-                'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+            profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
             verifiedBadge: true,
             iceBadge: true,
             trailing: IconButton(
@@ -89,8 +87,7 @@ Widget userListItemUseCase(BuildContext context) {
           ListItem.user(
             title: const Text('Alina Proxima'),
             subtitle: const Text('@alinaproxima'),
-            profilePicture:
-                'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+            profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
             verifiedBadge: true,
             iceBadge: true,
             trailing: IconButton(
@@ -102,8 +99,7 @@ Widget userListItemUseCase(BuildContext context) {
           ListItem.user(
             title: const Text('Alina Proxima'),
             subtitle: const Text('@alinaproxima'),
-            profilePicture:
-                'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+            profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
             verifiedBadge: true,
             iceBadge: true,
             timeago: DateTime(2024, 2, 27, 11),

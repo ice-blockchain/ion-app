@@ -117,11 +117,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       tertararyBackground: tertararyBackground ?? this.tertararyBackground,
       backgroundSheet: backgroundSheet ?? this.backgroundSheet,
       onPrimaryAccent: onPrimaryAccent ?? this.onPrimaryAccent,
-      onTertararyBackground:
-          onTertararyBackground ?? this.onTertararyBackground,
+      onTertararyBackground: onTertararyBackground ?? this.onTertararyBackground,
       onTerararyFill: onTerararyFill ?? this.onTerararyFill,
-      onSecondaryBackground:
-          onSecondaryBackground ?? this.onSecondaryBackground,
+      onSecondaryBackground: onSecondaryBackground ?? this.onSecondaryBackground,
       strokeElements: strokeElements ?? this.strokeElements,
       sheetLine: sheetLine ?? this.sheetLine,
       attentionRed: attentionRed ?? this.attentionRed,
@@ -150,19 +148,14 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       secondaryText: Color.lerp(secondaryText, other.secondaryText, t)!,
       tertararyText: Color.lerp(tertararyText, other.tertararyText, t)!,
       sharkText: Color.lerp(sharkText, other.sharkText, t)!,
-      primaryBackground:
-          Color.lerp(primaryBackground, other.primaryBackground, t)!,
-      secondaryBackground:
-          Color.lerp(secondaryBackground, other.secondaryBackground, t)!,
-      tertararyBackground:
-          Color.lerp(tertararyBackground, other.tertararyBackground, t)!,
+      primaryBackground: Color.lerp(primaryBackground, other.primaryBackground, t)!,
+      secondaryBackground: Color.lerp(secondaryBackground, other.secondaryBackground, t)!,
+      tertararyBackground: Color.lerp(tertararyBackground, other.tertararyBackground, t)!,
       backgroundSheet: Color.lerp(backgroundSheet, other.backgroundSheet, t)!,
       onPrimaryAccent: Color.lerp(onPrimaryAccent, other.onPrimaryAccent, t)!,
-      onTertararyBackground:
-          Color.lerp(onTertararyBackground, other.onTertararyBackground, t)!,
+      onTertararyBackground: Color.lerp(onTertararyBackground, other.onTertararyBackground, t)!,
       onTerararyFill: Color.lerp(onTerararyFill, other.onTerararyFill, t)!,
-      onSecondaryBackground:
-          Color.lerp(onSecondaryBackground, other.onSecondaryBackground, t)!,
+      onSecondaryBackground: Color.lerp(onSecondaryBackground, other.onSecondaryBackground, t)!,
       strokeElements: Color.lerp(strokeElements, other.strokeElements, t)!,
       sheetLine: Color.lerp(sheetLine, other.sheetLine, t)!,
       attentionRed: Color.lerp(attentionRed, other.attentionRed, t)!,

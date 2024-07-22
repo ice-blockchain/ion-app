@@ -6,8 +6,7 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 bool walletTabSearchVisibleSelector(WidgetRef ref, WalletTabType tabType) {
   return ref.watch(
     walletPageNotifierProvider.select(
-      (WalletPageProviderData data) =>
-          data.tabSearchVisibleMap[tabType] ?? false,
+      (WalletPageProviderData data) => data.tabSearchVisibleMap[tabType] ?? false,
     ),
   );
 }

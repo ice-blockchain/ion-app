@@ -19,8 +19,7 @@ Widget feedPostUseCase(BuildContext context) {
             id: 'test_article_id',
             title: context.knobs.string(
               label: 'Title',
-              initialValue:
-                  'The volume of the BNB Chain network increased in May 65%',
+              initialValue: 'The volume of the BNB Chain network increased in May 65%',
             ),
             publishedAt: context.knobs.dateTime(
               label: 'Published at',
@@ -28,8 +27,7 @@ Widget feedPostUseCase(BuildContext context) {
               start: DateTime(1970, 1, 1, 1),
               end: DateTime.now(),
             ),
-            imageUrl:
-                'https://ice.io/wp-content/uploads/2023/03/Pre-Release-600x403.png',
+            imageUrl: 'https://ice.io/wp-content/uploads/2023/03/Pre-Release-600x403.png',
             minutesToRead: context.knobs.int.input(
               label: 'Minutes to read',
               initialValue: 7,
@@ -43,8 +41,7 @@ Widget feedPostUseCase(BuildContext context) {
                 label: 'Username',
                 initialValue: 'alinaproxima',
               ),
-              imageUrl:
-                  'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+              imageUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
               isVerified: true,
             ),
           ),

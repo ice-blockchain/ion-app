@@ -60,8 +60,7 @@ class GridItem extends HookWidget {
                         child: IconTheme(
                           data: IconThemeData(
                             size: 16.0.s,
-                            color:
-                                context.theme.appColors.onTertararyBackground,
+                            color: context.theme.appColors.onTertararyBackground,
                           ),
                           child: Assets.images.icons.iconBadgeVerify.image(
                             width: 16.0.s,
@@ -84,8 +83,7 @@ class GridItem extends HookWidget {
                         size: 12.0.s,
                         color: context.theme.appColors.onTertararyBackground,
                       ),
-                      child: Assets.images.icons.iconButtonIceStroke
-                          .icon(size: 12.0.s),
+                      child: Assets.images.icons.iconButtonIceStroke.icon(size: 12.0.s),
                     ),
                     if (item.value != null)
                       Padding(

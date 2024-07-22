@@ -27,8 +27,7 @@ class PostReplies extends HookWidget {
       Post(postData: postData, canShowReplies: false),
       Post(postData: postData, canShowReplies: false),
     ];
-    final replies =
-        expandReplies.value ? originalReplies : originalReplies.take(1);
+    final replies = expandReplies.value ? originalReplies : originalReplies.take(1);
 
     if (replies.isEmpty) {
       return const SizedBox.shrink();

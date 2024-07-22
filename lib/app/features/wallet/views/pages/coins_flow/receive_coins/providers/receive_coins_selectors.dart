@@ -12,6 +12,5 @@ String receiveAddressSelector(WidgetRef ref) => ref.watch(
     );
 
 NetworkType receiveNetworkSelector(WidgetRef ref) => ref.watch(
-      receiveCoinsFormControllerProvider
-          .select((state) => state.selectedNetwork),
+      receiveCoinsFormControllerProvider.select((state) => state.selectedNetwork),
     );

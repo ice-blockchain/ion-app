@@ -24,8 +24,7 @@ class TrendingVideoListItem extends HookConsumerWidget {
     return GestureDetector(
       onTap: () {
         ref.read(trendingVideosOverlayNotifierProvider.notifier).overlay =
-            ref.read(trendingVideosOverlayNotifierProvider) ==
-                    TrendingVideosOverlay.horizontal
+            ref.read(trendingVideosOverlayNotifierProvider) == TrendingVideosOverlay.horizontal
                 ? TrendingVideosOverlay.vertical
                 : TrendingVideosOverlay.horizontal;
       },

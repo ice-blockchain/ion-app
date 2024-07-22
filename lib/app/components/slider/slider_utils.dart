@@ -27,8 +27,7 @@ class SliderUtils {
     required double minValue,
     required double maxValue,
   }) {
-    final newValue =
-        (localPosition.dx / sliderWidth) * (maxValue - minValue) + minValue;
+    final newValue = (localPosition.dx / sliderWidth) * (maxValue - minValue) + minValue;
     return newValue.clamp(minValue, maxValue);
   }
 
@@ -52,8 +51,7 @@ class SliderUtils {
     required double leftOffset,
     required double rightOffset,
   }) {
-    final offset = ((value - minValue) / (maxValue - minValue) * sliderWidth) -
-        (thumbSize / 2);
+    final offset = ((value - minValue) / (maxValue - minValue) * sliderWidth) - (thumbSize / 2);
     return offset.clamp(leftOffset, sliderWidth - thumbSize - rightOffset);
   }
 
@@ -86,8 +84,7 @@ class SliderUtils {
     required double minValue,
     required double maxValue,
   }) {
-    final newValue =
-        currentValue + (deltaDx / sliderWidth) * (maxValue - minValue);
+    final newValue = currentValue + (deltaDx / sliderWidth) * (maxValue - minValue);
     return newValue.clamp(minValue, maxValue);
   }
 
@@ -101,8 +98,7 @@ class SliderUtils {
     required List<double> stops,
     required double resistance,
   }) {
-    final closestStopIndex =
-        stops.indexWhere((double stop) => stop >= currentValue);
+    final closestStopIndex = stops.indexWhere((double stop) => stop >= currentValue);
 
     if (closestStopIndex == -1) {
       return stops.last;
@@ -127,8 +123,7 @@ class SliderUtils {
     required double currentValue,
     required List<double> stops,
   }) {
-    final closestStopIndex =
-        stops.indexWhere((double stop) => stop >= currentValue);
+    final closestStopIndex = stops.indexWhere((double stop) => stop >= currentValue);
 
     if (closestStopIndex == -1) {
       return stops.last;

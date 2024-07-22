@@ -31,16 +31,14 @@ class ShareOptionsMenu extends StatelessWidget {
                 SizedBox(width: 12.0.s),
                 ShareOptionsMenuItem(
                   buttonType: ButtonType.dropdown,
-                  icon: Assets.images.icons.iconBlockCopy1
-                      .icon(color: Colors.black),
+                  icon: Assets.images.icons.iconBlockCopy1.icon(color: Colors.black),
                   label: context.i18n.feed_copy_link,
                   onPressed: () {},
                 ),
                 SizedBox(width: 12.0.s),
                 ShareOptionsMenuItem(
                   buttonType: ButtonType.dropdown,
-                  icon: Assets.images.icons.iconBookmarks
-                      .icon(color: Colors.black),
+                  icon: Assets.images.icons.iconBookmarks.icon(color: Colors.black),
                   label: context.i18n.feed_bookmark,
                   onPressed: () {},
                 ),

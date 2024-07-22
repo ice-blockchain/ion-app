@@ -26,8 +26,7 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
     state = AsyncData<List<ManageCoinData>>(
       List<ManageCoinData>.unmodifiable(
         mockedManageCoinsDataArray.where(
-          (ManageCoinData data) =>
-              data.coinData.name.toLowerCase().contains(lSearchValue),
+          (ManageCoinData data) => data.coinData.name.toLowerCase().contains(lSearchValue),
         ),
       ),
     );

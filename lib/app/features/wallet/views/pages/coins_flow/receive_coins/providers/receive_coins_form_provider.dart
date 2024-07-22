@@ -19,6 +19,5 @@ class ReceiveCoinsFormController extends _$ReceiveCoinsFormController {
 
   void selectCoin(CoinData coin) => state = state.copyWith(selectedCoin: coin);
 
-  void selectNetwork(NetworkType network) =>
-      state = state.copyWith(selectedNetwork: network);
+  void selectNetwork(NetworkType network) => state = state.copyWith(selectedNetwork: network);
 }

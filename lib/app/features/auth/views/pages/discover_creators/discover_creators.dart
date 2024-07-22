@@ -23,8 +23,7 @@ class DiscoverCreators extends IcePage {
   Widget buildPage(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
 
-    final hasNotificationsPermission =
-        hasPermissionSelector(ref, PermissionType.Notifications);
+    final hasNotificationsPermission = hasPermissionSelector(ref, PermissionType.Notifications);
 
     final followedCreators = useState<Set<User>>(<User>{});
 
@@ -56,8 +55,7 @@ class DiscoverCreators extends IcePage {
                       creator: creator,
                       followed: followed,
                       onPressed: () {
-                        final newFollowedCreators =
-                            Set<User>.from(followedCreators.value);
+                        final newFollowedCreators = Set<User>.from(followedCreators.value);
                         if (followed) {
                           newFollowedCreators.remove(creator);
                         } else {
@@ -71,10 +69,7 @@ class DiscoverCreators extends IcePage {
                 // TODO add ScreenBottomOffset.sliver factory for this case
                 SliverPadding(
                   padding: EdgeInsets.only(
-                    bottom: 16.0.s +
-                        (mayContinue
-                            ? 0
-                            : MediaQuery.paddingOf(context).bottom),
+                    bottom: 16.0.s + (mayContinue ? 0 : MediaQuery.paddingOf(context).bottom),
                   ),
                 ),
               ],
@@ -89,9 +84,8 @@ class DiscoverCreators extends IcePage {
                 ),
                 child: Button(
                   disabled: authState is AuthenticationLoading,
-                  trailingIcon: authState is AuthenticationLoading
-                      ? const ButtonLoadingIndicator()
-                      : null,
+                  trailingIcon:
+                      authState is AuthenticationLoading ? const ButtonLoadingIndicator() : null,
                   label: Text(context.i18n.button_continue),
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {

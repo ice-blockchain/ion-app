@@ -23,10 +23,8 @@ abstract class BaseRouteData extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return switch (type) {
       IceRouteType.single => CupertinoPage<void>(child: child),
-      IceRouteType.bottomSheet =>
-        FadeTransitionSheetPage(child: child, state: state),
-      IceRouteType.slideFromLeft =>
-        SlideFromLeftTransitionPage(child: child, state: state),
+      IceRouteType.bottomSheet => FadeTransitionSheetPage(child: child, state: state),
+      IceRouteType.slideFromLeft => SlideFromLeftTransitionPage(child: child, state: state),
       IceRouteType.mainModalSheet => ModalSheetPage<void>(
           swipeDismissible: true,
           key: state.pageKey,

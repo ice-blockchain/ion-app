@@ -26,9 +26,7 @@ class ExpandRepliesButton extends StatelessWidget {
           ),
           SizedBox(width: 14.0.s),
           Text(
-            isExpanded.value
-                ? context.i18n.post_hide_replies
-                : context.i18n.post_show_replies,
+            isExpanded.value ? context.i18n.post_hide_replies : context.i18n.post_show_replies,
             style: textStyles.caption.copyWith(color: colors.primaryAccent),
           ),
         ],

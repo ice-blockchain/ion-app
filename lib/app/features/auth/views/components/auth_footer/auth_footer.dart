@@ -25,7 +25,7 @@ enum FooterLink {
     return switch (this) {
       FooterLink.terms => () {},
       FooterLink.privacy => () {},
-      _ => () {}
+      _ => () {},
     };
   }
 

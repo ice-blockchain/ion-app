@@ -4,7 +4,6 @@ import 'package:ice/app/features/wallet/views/pages/manage_coins/model/manage_co
 
 List<ManageCoinData> mockedManageCoinsDataArray = mockedCoinsDataArray
     .map(
-      (CoinData coinData) =>
-          ManageCoinData(coinData: coinData, isSelected: true),
+      (CoinData coinData) => ManageCoinData(coinData: coinData, isSelected: true),
     )
     .toList();

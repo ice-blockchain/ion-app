@@ -199,8 +199,7 @@ class TransactionResultRoute extends BaseRouteData {
 }
 
 class CoinsDetailsRoute extends BaseRouteData {
-  CoinsDetailsRoute({required this.$extra})
-      : super(child: CoinDetailsPage(payload: $extra));
+  CoinsDetailsRoute({required this.$extra}) : super(child: CoinDetailsPage(payload: $extra));
 
   final CoinData $extra;
 }

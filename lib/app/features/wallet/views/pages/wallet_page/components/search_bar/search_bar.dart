@@ -20,8 +20,7 @@ class WalletSearchBar extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final assetType = tabType.walletAssetType;
     final defaultValue = walletAssetSearchValueSelector(ref, tabType);
-    final isLoading =
-        walletAssetIsLoadingSelector(ref: ref, assetType: assetType);
+    final isLoading = walletAssetIsLoadingSelector(ref: ref, assetType: assetType);
     final isVisible = walletTabSearchVisibleSelector(ref, tabType);
 
     if (isVisible == false) {

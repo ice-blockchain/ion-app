@@ -30,10 +30,8 @@ MenuThemeData buildMenuTheme(
           ),
         ),
       ),
-      backgroundColor:
-          WidgetStatePropertyAll<Color>(colors.secondaryBackground),
-      surfaceTintColor:
-          WidgetStatePropertyAll<Color>(colors.secondaryBackground),
+      backgroundColor: WidgetStatePropertyAll<Color>(colors.secondaryBackground),
+      surfaceTintColor: WidgetStatePropertyAll<Color>(colors.secondaryBackground),
     ),
   );
 }

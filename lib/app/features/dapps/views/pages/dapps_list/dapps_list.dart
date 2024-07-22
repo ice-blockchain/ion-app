@@ -50,16 +50,14 @@ class DAppsList extends IcePage {
                   children: [
                     if (payload.isSearchVisible ?? false)
                       SearchInput(
-                        onTextChanged: (String value) =>
-                            searchText.value = value,
+                        onTextChanged: (String value) => searchText.value = value,
                       ),
                     Expanded(
                       child: Container(
                         child: items.isEmpty
                             ? EmptyList(
                                 asset: Assets.images.misc.dappsEmpty,
-                                title:
-                                    context.i18n.dapps_favourites_empty_title,
+                                title: context.i18n.dapps_favourites_empty_title,
                               )
                             : ListView.builder(
                                 padding: EdgeInsets.symmetric(
@@ -69,8 +67,7 @@ class DAppsList extends IcePage {
                                 itemBuilder: (BuildContext context, int index) {
                                   final app = filteredApps[index];
                                   return Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 5.5.s),
+                                    padding: EdgeInsets.symmetric(vertical: 5.5.s),
                                     child: GridItem(
                                       item: app,
                                       showIsFavourite: true,

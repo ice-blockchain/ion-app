@@ -7,10 +7,8 @@ import 'package:ice/app/features/wallet/model/transaction_type.dart';
 int generateRandomTimestamp() {
   final now = DateTime.now();
   final random = Random();
-  final daysAgo =
-      random.nextInt(3); // 0 for today, 1 for yesterday, 2 for the day before
-  final targetDay =
-      DateTime(now.year, now.month, now.day).subtract(Duration(days: daysAgo));
+  final daysAgo = random.nextInt(3); // 0 for today, 1 for yesterday, 2 for the day before
+  final targetDay = DateTime(now.year, now.month, now.day).subtract(Duration(days: daysAgo));
 
   final randomHour = random.nextInt(24);
   final randomMinute = random.nextInt(60);

@@ -83,8 +83,7 @@ class SearchInput extends HookWidget {
                 suffixIcon: loading
                     ? Padding(
                         padding: EdgeInsets.all(12.0.s),
-                        child: Assets.images.icons.iconFieldIceloader
-                            .icon(size: 20.0.s),
+                        child: Assets.images.icons.iconFieldIceloader.icon(size: 20.0.s),
                       )
                     : showClear.value
                         ? SearchClearButton(

@@ -58,8 +58,7 @@ class CreateNewWalletModal extends IcePage {
             ScreenSideOffset.small(
               child: Button(
                 onPressed: () {
-                  ref.read(walletsDataNotifierProvider.notifier).walletData =
-                      WalletData(
+                  ref.read(walletsDataNotifierProvider.notifier).walletData = WalletData(
                     id: DateTime.now().toString(),
                     name: walletName.value,
                     icon: mockWalletIconUrl,

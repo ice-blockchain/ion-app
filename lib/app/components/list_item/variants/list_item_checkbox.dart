@@ -31,9 +31,7 @@ class _ListItemWithCheckbox extends ListItem {
 
   @override
   Color _getBackgroundColor(BuildContext context) {
-    return value
-        ? context.theme.appColors.primaryAccent
-        : super._getBackgroundColor(context);
+    return value ? context.theme.appColors.primaryAccent : super._getBackgroundColor(context);
   }
 
   @override

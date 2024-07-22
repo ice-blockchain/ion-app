@@ -17,8 +17,7 @@ class PostHeader extends StatelessWidget {
       child: ListItem.user(
         title: const Text('Arnold Grey'),
         subtitle: const Text('@arnoldgrey'),
-        profilePicture:
-            'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+        profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
         trailing: trailing,
         constraints: BoxConstraints(minHeight: 55.0.s),
         iceBadge: true,

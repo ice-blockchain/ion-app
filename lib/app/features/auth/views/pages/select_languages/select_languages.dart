@@ -62,14 +62,12 @@ class SelectLanguages extends IcePage {
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     final language = filteredLanguages[index];
-                    final isSelected =
-                        selectedLanguages.value.contains(language);
+                    final isSelected = selectedLanguages.value.contains(language);
                     return LanguageListItem(
                       language: language,
                       isSelected: isSelected,
                       onTap: () {
-                        final newSelectedLanguages =
-                            Set<Language>.from(selectedLanguages.value);
+                        final newSelectedLanguages = Set<Language>.from(selectedLanguages.value);
                         if (isSelected) {
                           newSelectedLanguages.remove(language);
                         } else {
@@ -82,10 +80,7 @@ class SelectLanguages extends IcePage {
                 ),
                 SliverPadding(
                   padding: EdgeInsets.only(
-                    bottom: 16.0.s +
-                        (mayContinue
-                            ? 0
-                            : MediaQuery.paddingOf(context).bottom),
+                    bottom: 16.0.s + (mayContinue ? 0 : MediaQuery.paddingOf(context).bottom),
                   ),
                 ),
               ],
@@ -103,8 +98,7 @@ class SelectLanguages extends IcePage {
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
                     hideKeyboardAndCallOnce(
-                      callback: () =>
-                          DiscoverCreatorsRoute().push<void>(context),
+                      callback: () => DiscoverCreatorsRoute().push<void>(context),
                     );
                   },
                 ),

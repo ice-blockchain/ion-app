@@ -36,8 +36,7 @@ class ContactsList extends HookConsumerWidget {
             itemBuilder: (BuildContext context, int index) {
               final contactData = contactsDataArray[index];
               return ContactsListItem(
-                onTap: () =>
-                    ContactRoute($extra: contactData).push<void>(context),
+                onTap: () => ContactRoute($extra: contactData).push<void>(context),
                 imageUrl: contactData.icon,
                 label: contactData.nickname != null
                     ? prefixUsername(

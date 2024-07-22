@@ -20,8 +20,7 @@ class AppsCollection extends StatelessWidget {
     final itemList = items ?? <DAppItem>[];
 
     return SizedBox(
-      height: itemHeight * itemsPerColumn +
-          offsetBetweenItems * (itemsPerColumn - 1),
+      height: itemHeight * itemsPerColumn + offsetBetweenItems * (itemsPerColumn - 1),
       child: GridView.count(
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,

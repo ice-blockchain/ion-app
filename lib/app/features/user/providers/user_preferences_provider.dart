@@ -9,15 +9,13 @@ part 'user_preferences_provider.g.dart';
 @Riverpod(keepAlive: true)
 class UserPreferencesNotifier extends _$UserPreferencesNotifier {
   static String isBalanceVisibleKey = 'UserPreferences:isBalanceVisible';
-  static String isZeroValueAssetsVisibleKey =
-      'UserPreferences:isZeroValueAssetsVisible';
+  static String isZeroValueAssetsVisibleKey = 'UserPreferences:isZeroValueAssetsVisible';
   static String nftLayoutTypeKey = 'UserPreferences:nftLayoutType';
   static String nftSortingTypeKey = 'UserPreferences:nftSortingType';
 
   @override
   UserPreferences build() {
-    final isBalanceVisible =
-        LocalStorage.getBool(isBalanceVisibleKey, defaultValue: true);
+    final isBalanceVisible = LocalStorage.getBool(isBalanceVisibleKey, defaultValue: true);
     final isZeroValueAssetsVisible =
         LocalStorage.getBool(isZeroValueAssetsVisibleKey, defaultValue: true);
     final nftLayoutType = LocalStorage.getEnum<NftLayoutType>(

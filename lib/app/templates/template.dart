@@ -36,8 +36,7 @@ class TemplateColors with _$TemplateColors {
     Color quaternaryText,
   ) = _TemplateColors;
 
-  factory TemplateColors.fromJson(Map<String, dynamic> json) =>
-      _$TemplateColorsFromJson(json);
+  factory TemplateColors.fromJson(Map<String, dynamic> json) => _$TemplateColorsFromJson(json);
 
   factory TemplateColors.empty() => const TemplateColors(
         Colors.transparent,
@@ -84,8 +83,7 @@ class TemplateColorsLightDark with _$TemplateColorsLightDark {
 
 @freezed
 class TemplateAppBarTheme with _$TemplateAppBarTheme {
-  const factory TemplateAppBarTheme(double toolbarHeight) =
-      _TemplateAppBarTheme;
+  const factory TemplateAppBarTheme(double toolbarHeight) = _TemplateAppBarTheme;
 
   factory TemplateAppBarTheme.fromJson(Map<String, dynamic> json) =>
       _$TemplateAppBarThemeFromJson(json);
@@ -237,8 +235,7 @@ class TemplateTheme with _$TemplateTheme {
     TemplateIconTheme icon,
   ) = _TemplateTheme;
 
-  factory TemplateTheme.fromJson(Map<String, dynamic> json) =>
-      _$TemplateThemeFromJson(json);
+  factory TemplateTheme.fromJson(Map<String, dynamic> json) => _$TemplateThemeFromJson(json);
 
   factory TemplateTheme.empty() => TemplateTheme(
         TemplateColorsLightDark.empty(),
@@ -258,8 +255,7 @@ class Template with _$Template {
     TemplateConfig config,
   ) = _Template;
 
-  factory Template.fromJson(Map<String, dynamic> json) =>
-      _$TemplateFromJson(json);
+  factory Template.fromJson(Map<String, dynamic> json) => _$TemplateFromJson(json);
 }
 
 @freezed
@@ -268,8 +264,7 @@ class TemplateConfig with _$TemplateConfig {
     Map<String, TemplateConfigPage>? pages,
   }) = _TemplateConfig;
 
-  factory TemplateConfig.fromJson(Map<String, dynamic> json) =>
-      _$TemplateConfigFromJson(json);
+  factory TemplateConfig.fromJson(Map<String, dynamic> json) => _$TemplateConfigFromJson(json);
 }
 
 abstract class TemplateConfigElement {
@@ -277,9 +272,7 @@ abstract class TemplateConfigElement {
 }
 
 @freezed
-class TemplateConfigPage
-    with _$TemplateConfigPage
-    implements TemplateConfigElement {
+class TemplateConfigPage with _$TemplateConfigPage implements TemplateConfigElement {
   const factory TemplateConfigPage({
     bool? hidden,
     Map<String, TemplateConfigComponent>? components,
@@ -290,9 +283,7 @@ class TemplateConfigPage
 }
 
 @freezed
-class TemplateConfigComponent
-    with _$TemplateConfigComponent
-    implements TemplateConfigElement {
+class TemplateConfigComponent with _$TemplateConfigComponent implements TemplateConfigElement {
   const factory TemplateConfigComponent({
     bool? hidden,
     int? variant,

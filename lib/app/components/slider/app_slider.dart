@@ -69,8 +69,7 @@ class AppSlider extends HookWidget {
             sliderWidth,
             sliderValue,
           ),
-          onPanEnd: (DragEndDetails details) =>
-              _handlePanEnd(sliderValue, stops),
+          onPanEnd: (DragEndDetails details) => _handlePanEnd(sliderValue, stops),
           child: SizedBox(
             width: sliderWidth,
             height: sliderHeight.s,

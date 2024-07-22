@@ -18,8 +18,7 @@ class SendCoinModalPage extends IcePage {
       body: CoinsListView(
         onCoinItemTap: (CoinData coin) {
           ref.read(sendCoinsFormControllerProvider.notifier).selectCoin(coin);
-          NetworkSelectSendRoute($extra: NetworkListViewType.send)
-              .push<void>(context);
+          NetworkSelectSendRoute($extra: NetworkListViewType.send).push<void>(context);
         },
       ),
     );

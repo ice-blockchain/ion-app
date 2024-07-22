@@ -29,8 +29,7 @@ class WalletPage extends IcePage {
   @override
   Widget buildPage(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-    final hasContactsPermission =
-        hasPermissionSelector(ref, PermissionType.Contacts);
+    final hasContactsPermission = hasPermissionSelector(ref, PermissionType.Contacts);
 
     useOnInit<void>(() {
       if (hasContactsPermission ?? false) {
@@ -77,10 +76,7 @@ class WalletPage extends IcePage {
             const NftsTabHeader()
           else
             const CoinsTabHeader(),
-          if (activeTab.value == WalletTabType.coins)
-            const CoinsTab()
-          else
-            const NftsTab(),
+          if (activeTab.value == WalletTabType.coins) const CoinsTab() else const NftsTab(),
           if (activeTab.value == WalletTabType.coins)
             const CoinsTabFooter()
           else

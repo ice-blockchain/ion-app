@@ -7,6 +7,5 @@ extension AppThemeExtension on ThemeData {
   AppColorsExtension get appColors => extension<AppColorsExtension>()!;
 
   /// Usage example: Theme.of(context).appTextThemes;
-  AppTextThemesExtension get appTextThemes =>
-      extension<AppTextThemesExtension>()!;
+  AppTextThemesExtension get appTextThemes => extension<AppTextThemesExtension>()!;
 }

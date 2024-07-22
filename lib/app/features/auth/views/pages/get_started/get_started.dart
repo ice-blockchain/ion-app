@@ -33,8 +33,7 @@ class GetStartedPage extends IcePage {
                   title: context.i18n.get_started_title,
                   description: context.i18n.get_started_description,
                   icon: AuthHeaderIcon(
-                    icon:
-                        Assets.images.icons.iconLoginIcelogo.icon(size: 36.0.s),
+                    icon: Assets.images.icons.iconLoginIcelogo.icon(size: 36.0.s),
                   ),
                   showBackButton: false,
                 ),
@@ -53,8 +52,7 @@ class GetStartedPage extends IcePage {
                       SizedBox(height: 14.0.s),
                       Button(
                         type: ButtonType.outlined,
-                        leadingIcon:
-                            Assets.images.icons.iconLoginCreateacc.icon(
+                        leadingIcon: Assets.images.icons.iconLoginCreateacc.icon(
                           color: context.theme.appColors.secondaryText,
                         ),
                         onPressed: () {

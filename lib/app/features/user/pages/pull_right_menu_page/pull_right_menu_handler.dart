@@ -14,8 +14,7 @@ class PullRightMenuHandler extends StatelessWidget {
     return GestureDetector(
       onHorizontalDragEnd: (DragEndDetails details) {
         if (details.velocity.pixelsPerSecond.dx > 100 &&
-            details.velocity.pixelsPerSecond.dx >
-                details.velocity.pixelsPerSecond.dy) {
+            details.velocity.pixelsPerSecond.dx > details.velocity.pixelsPerSecond.dy) {
           PullRightMenuRoute().push<void>(context);
         }
       },

@@ -37,8 +37,7 @@ class TextParser {
 
       patterns.add('(?<$groupName>$pattern)');
       _matcherGroupNames.add(groupName);
-      _matcherGroupRanges
-          .add(List.generate(groupCount, (i) => i + groupIndexStart));
+      _matcherGroupRanges.add(List.generate(groupCount, (i) => i + groupIndexStart));
 
       groupIndexStart += groupCount + 1;
     }
@@ -68,8 +67,8 @@ class TextParser {
 
       final substring = text.substring(match.start, match.end);
 
-      final matcherIndex = _matcherGroupNames
-          .indexWhere((name) => match.namedGroup(name) == substring);
+      final matcherIndex =
+          _matcherGroupNames.indexWhere((name) => match.namedGroup(name) == substring);
 
       if (matcherIndex > -1) {
         result.add(

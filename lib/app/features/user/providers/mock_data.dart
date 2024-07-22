@@ -6,8 +6,7 @@ const List<UserData> mockedUserAccounts = <UserData>[
     nickname: 'sammyathowards',
     name: 'Samantha Howard',
     whoInvitedNickname: 'landmark',
-    profilePicture:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+    profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
     following: 280,
     followers: 406,
     isVerified: true,
@@ -17,8 +16,7 @@ const List<UserData> mockedUserAccounts = <UserData>[
     nickname: 'tamilashotten',
     name: 'Tamila Shotten',
     whoInvitedNickname: 'landmark',
-    profilePicture:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-15.png',
+    profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-15.png',
     following: 280,
     followers: 406,
     isVerified: false,
@@ -28,8 +26,7 @@ const List<UserData> mockedUserAccounts = <UserData>[
     nickname: 'jennymaytofishybee',
     name: 'Jennifer Mary Fishbourne',
     whoInvitedNickname: 'landmark',
-    profilePicture:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
+    profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
     following: 280,
     followers: 406,
     isVerified: true,
