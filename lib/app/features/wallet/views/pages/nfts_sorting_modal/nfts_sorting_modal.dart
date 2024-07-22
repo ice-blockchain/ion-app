@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -10,11 +8,11 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class NftsSortingModal extends IcePage {
+class NftsSortingModal extends StatelessWidget {
   const NftsSortingModal({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Padding(

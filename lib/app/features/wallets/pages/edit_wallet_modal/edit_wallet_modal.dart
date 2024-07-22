@@ -7,7 +7,6 @@ import 'package:ice/app/components/inputs/text_input/components/text_input_clear
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -20,16 +19,13 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class EditWalletModal extends IcePage {
+class EditWalletModal extends HookConsumerWidget {
   const EditWalletModal({required this.payload, super.key});
 
   final WalletData payload;
 
   @override
-  Widget buildPage(
-    BuildContext context,
-    WidgetRef ref,
-  ) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final walletName = useState(payload.name);
     final controller = useTextEditingController(text: walletName.value);
     final isNameChanged = walletName.value != (payload.name) && walletName.value.isNotEmpty;

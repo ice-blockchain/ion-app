@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_scan/components/qr_scanner_bottom_sheet.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class WalletScanModalPage extends IcePage {
+class WalletScanModalPage extends StatelessWidget {
   const WalletScanModalPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return const SheetContent(
       body: QRScannerBottomSheet(),
     );

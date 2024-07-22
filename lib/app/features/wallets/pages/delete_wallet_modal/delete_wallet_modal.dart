@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -13,7 +12,7 @@ import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class DeleteWalletModal extends IcePage {
+class DeleteWalletModal extends HookConsumerWidget {
   const DeleteWalletModal({required this.payload, super.key});
 
   final WalletData payload;
@@ -21,10 +20,7 @@ class DeleteWalletModal extends IcePage {
   static double get buttonsSize => 56.0.s;
 
   @override
-  Widget buildPage(
-    BuildContext context,
-    WidgetRef ref,
-  ) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final buttonMinimalSize = Size(buttonsSize, buttonsSize);
 
     return ScreenSideOffset.small(

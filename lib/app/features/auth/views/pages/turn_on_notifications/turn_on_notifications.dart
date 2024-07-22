@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
@@ -13,7 +12,7 @@ import 'package:ice/app/features/auth/views/pages/turn_on_notifications/notifica
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class TurnOnNotifications extends IcePage {
+class TurnOnNotifications extends ConsumerWidget {
   const TurnOnNotifications({super.key});
 
   void handleSignIn(WidgetRef ref) {
@@ -21,7 +20,7 @@ class TurnOnNotifications extends IcePage {
   }
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
       body: Column(
         children: [

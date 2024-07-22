@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
@@ -17,11 +16,11 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_done_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class ManageCoinsPage extends IcePage {
+class ManageCoinsPage extends HookConsumerWidget {
   const ManageCoinsPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
 
     final manageCoinsData = manageCoinsDataSelector(ref);

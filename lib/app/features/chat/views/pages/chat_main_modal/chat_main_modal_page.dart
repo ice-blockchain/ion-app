@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/num.dart';
 
-class ChatMainModalPage extends IcePage {
+class ChatMainModalPage extends StatelessWidget {
   const ChatMainModalPage({super.key});
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: ScreenSideOffset.small(
         child: SingleChildScrollView(

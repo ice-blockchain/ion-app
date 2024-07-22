@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/components/info_card.dart';
@@ -12,16 +10,13 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ShareAddressView extends IcePage {
+class ShareAddressView extends StatelessWidget {
   const ShareAddressView({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(
-    BuildContext context,
-    WidgetRef ref,
-  ) {
+  Widget build(BuildContext context) {
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,

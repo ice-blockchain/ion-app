@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
 
-class SplashPage extends IcePage {
+class SplashPage extends HookConsumerWidget {
   const SplashPage({super.key});
 
   static const Color backgroundColor = Color(0xFF0166FF);
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final animationController = useAnimationController();
 
     _setSystemChrome();

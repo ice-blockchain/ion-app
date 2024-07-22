@@ -4,7 +4,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
@@ -19,13 +18,13 @@ import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SignUpPasswordPage extends IcePage {
+class SignUpPasswordPage extends HookConsumerWidget {
   const SignUpPasswordPage({super.key});
 
   static double get _footerHeight => 92.0.s;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final identityKeyNameController = useTextEditingController();
     final passwordController = useTextEditingController();
