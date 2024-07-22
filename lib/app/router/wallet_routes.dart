@@ -48,6 +48,16 @@ class WalletRoutes {
     ),
   ];
 
+  static const nftSendRoutes = <TypedRoute<RouteData>>[
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<NftDetailsRoute>(path: 'nft-details'),
+        TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting'),
+        TypedGoRoute<NftSendFormRoute>(path: 'nft-send'),
+      ],
+    ),
+  ];
+
   static const coinSendRoutes = <TypedRoute<RouteData>>[
     TypedGoRoute<CoinSendRoute>(
       path: 'coin-send',
@@ -73,14 +83,6 @@ class WalletRoutes {
       routes: [
         TypedGoRoute<NetworkSelectReceiveRoute>(path: 'network-select-receive'),
         TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
-      ],
-    ),
-  ];
-
-  static const nftSendRoutes = <TypedRoute<RouteData>>[
-    TypedShellRoute<ModalShellRouteData>(
-      routes: [
-        TypedGoRoute<NftDetailsRoute>(path: 'nft-details'),
       ],
     ),
   ];
@@ -164,6 +166,15 @@ class ShareAddressRoute extends BaseRouteData {
           child: const ShareAddressView(),
           type: IceRouteType.bottomSheet,
         );
+}
+
+class NftSendFormRoute extends BaseRouteData {
+  NftSendFormRoute({required this.$extra})
+      : super(
+          child: SendNftForm(payload: $extra),
+          type: IceRouteType.bottomSheet,
+        );
+  final NftData $extra;
 }
 
 class CoinsSendFormRoute extends BaseRouteData {
