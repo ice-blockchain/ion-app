@@ -65,7 +65,9 @@ class GetStartedPage extends StatelessWidget {
                         leadingIcon: Assets.images.icons.iconRestorekey.icon(
                           color: context.theme.appColors.secondaryText,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          RestoreMenuRoute().push<void>(context);
+                        },
                         label: Text(context.i18n.get_started_restore_button),
                         mainAxisSize: MainAxisSize.max,
                         borderColor: Colors.transparent,
