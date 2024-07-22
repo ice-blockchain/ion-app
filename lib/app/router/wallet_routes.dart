@@ -54,6 +54,7 @@ class WalletRoutes {
         TypedGoRoute<NftDetailsRoute>(path: 'nft-details'),
         TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting'),
         TypedGoRoute<NftSendFormRoute>(path: 'nft-send'),
+        TypedGoRoute<SendNftConfirmRoute>(path: 'nft-confirm'),
       ],
     ),
   ];
@@ -329,6 +330,15 @@ class NftDetailsRoute extends BaseRouteData {
   NftDetailsRoute({required this.$extra})
       : super(
           child: NftDetailsPage(payload: $extra),
+          type: IceRouteType.bottomSheet,
+        );
+  final NftData $extra;
+}
+
+class SendNftConfirmRoute extends BaseRouteData {
+  SendNftConfirmRoute({required this.$extra})
+      : super(
+          child: SendNftConfirmPage(payload: $extra),
           type: IceRouteType.bottomSheet,
         );
   final NftData $extra;
