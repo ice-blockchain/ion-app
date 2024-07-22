@@ -20,12 +20,9 @@ class EmptyState extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final searchValue = walletAssetSearchValueSelector(ref, tabType);
     final toShowNoResults = searchValue.isNotEmpty == true;
-    final asset = toShowNoResults
-        ? Assets.images.misc.emptySearch
-        : tabType.emptyListAsset;
-    final title = toShowNoResults
-        ? context.i18n.core_empty_search
-        : tabType.getEmptyListTitle(context);
+    final asset = toShowNoResults ? Assets.images.misc.emptySearch : tabType.emptyListAsset;
+    final title =
+        toShowNoResults ? context.i18n.core_empty_search : tabType.getEmptyListTitle(context);
 
     return SliverFillRemaining(
       hasScrollBody: false,

@@ -24,9 +24,7 @@ class NftHeaderLayoutAction extends HookConsumerWidget {
       children: [
         TextButton(
           onPressed: () {
-            ref
-                .read(userPreferencesNotifierProvider.notifier)
-                .setNftLayoutType(NftLayoutType.grid);
+            ref.read(userPreferencesNotifierProvider.notifier).setNftLayoutType(NftLayoutType.grid);
           },
           child: Padding(
             padding: EdgeInsets.only(
@@ -36,9 +34,7 @@ class NftHeaderLayoutAction extends HookConsumerWidget {
               bottom: UiConstants.hitSlop,
             ),
             child: NftLayoutType.grid.iconAsset.icon(
-              color: NftLayoutType.grid == nftLayoutType
-                  ? activeColor
-                  : inactiveColor,
+              color: NftLayoutType.grid == nftLayoutType ? activeColor : inactiveColor,
               size: 20.0.s,
             ),
           ),
@@ -57,9 +53,7 @@ class NftHeaderLayoutAction extends HookConsumerWidget {
               bottom: UiConstants.hitSlop,
             ),
             child: NftLayoutType.list.iconAsset.icon(
-              color: NftLayoutType.list == nftLayoutType
-                  ? activeColor
-                  : inactiveColor,
+              color: NftLayoutType.list == nftLayoutType ? activeColor : inactiveColor,
               size: 20.0.s,
             ),
           ),

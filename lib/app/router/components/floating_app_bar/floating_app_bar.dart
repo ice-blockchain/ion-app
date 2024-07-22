@@ -31,15 +31,13 @@ class FloatingAppBar extends StatelessWidget {
       pinned: true,
       automaticallyImplyLeading: false,
       expandedHeight: height + topOffset + bottomOffset,
-      shadowColor:
-          context.theme.appColors.onTertararyBackground.withOpacity(0.05),
+      shadowColor: context.theme.appColors.onTertararyBackground.withOpacity(0.05),
       toolbarHeight: 0,
       backgroundColor: context.theme.appColors.onPrimaryAccent,
       surfaceTintColor: context.theme.appColors.onPrimaryAccent,
       flexibleSpace: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final opacity = 1 -
-              ((totalHeight - constraints.maxHeight) / fadeOffset).clamp(0, 1);
+          final opacity = 1 - ((totalHeight - constraints.maxHeight) / fadeOffset).clamp(0, 1);
           return Align(
             alignment: Alignment.bottomCenter,
             child: Opacity(

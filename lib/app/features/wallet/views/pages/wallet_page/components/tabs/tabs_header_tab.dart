@@ -17,9 +17,7 @@ class WalletTabsHeaderTab extends StatelessWidget {
   final VoidCallback onTap;
 
   Color _getColor(BuildContext context) {
-    return isActive
-        ? context.theme.appColors.primaryText
-        : context.theme.appColors.tertararyText;
+    return isActive ? context.theme.appColors.primaryText : context.theme.appColors.tertararyText;
   }
 
   @override

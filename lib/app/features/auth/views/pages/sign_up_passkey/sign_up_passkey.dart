@@ -32,8 +32,7 @@ class SignUpPasskeyPage extends IcePage {
                 AuthHeader(
                   title: context.i18n.sign_up_passkey_title,
                   icon: AuthHeaderIcon(
-                    icon:
-                        Assets.images.icons.iconLoginPasskey.icon(size: 36.0.s),
+                    icon: Assets.images.icons.iconLoginPasskey.icon(size: 36.0.s),
                   ),
                 ),
                 ScreenSideOffset.large(
@@ -42,20 +41,17 @@ class SignUpPasskeyPage extends IcePage {
                       SizedBox(height: 14.0.s),
                       SignUpListItem(
                         title: context.i18n.sign_up_passkey_advantage_1_title,
-                        subtitle: context
-                            .i18n.sign_up_passkey_advantage_1_description,
+                        subtitle: context.i18n.sign_up_passkey_advantage_1_description,
                         icon: Assets.images.icons.iconLoginFingerprint.icon(),
                       ),
                       SignUpListItem(
                         title: context.i18n.sign_up_passkey_advantage_2_title,
-                        subtitle: context
-                            .i18n.sign_up_passkey_advantage_2_description,
+                        subtitle: context.i18n.sign_up_passkey_advantage_2_description,
                         icon: Assets.images.icons.iconLoginDevice.icon(),
                       ),
                       SignUpListItem(
                         title: context.i18n.sign_up_passkey_advantage_3_title,
-                        subtitle: context
-                            .i18n.sign_up_passkey_advantage_3_description,
+                        subtitle: context.i18n.sign_up_passkey_advantage_3_description,
                         icon: Assets.images.icons.iconLoginSafeacc.icon(),
                       ),
                       SizedBox(height: 18.0.s),

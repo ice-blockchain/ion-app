@@ -29,9 +29,7 @@ class ManageCoinsPage extends IcePage {
 
     useOnInit<void>(
       () {
-        ref
-            .read(manageCoinsNotifierProvider.notifier)
-            .fetch(searchValue: searchText.value);
+        ref.read(manageCoinsNotifierProvider.notifier).fetch(searchValue: searchText.value);
       },
       <Object?>[searchText.value],
     );
@@ -57,8 +55,7 @@ class ManageCoinsPage extends IcePage {
                   ),
                 ),
                 if (manageCoinsData.isEmpty && !isLoading) const EmptyState(),
-                if (manageCoinsData.isEmpty && isLoading)
-                  const ListItemsLoadingState(),
+                if (manageCoinsData.isEmpty && isLoading) const ListItemsLoadingState(),
                 if (manageCoinsData.isNotEmpty)
                   SliverPadding(
                     padding: EdgeInsets.only(

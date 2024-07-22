@@ -22,8 +22,7 @@ class PostActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final effectiveIcon = isActive ? activeIcon : icon;
-    final effectiveColor =
-        isActive ? activeColor : context.theme.appColors.onTertararyBackground;
+    final effectiveColor = isActive ? activeColor : context.theme.appColors.onTertararyBackground;
 
     return Row(
       children: [

@@ -9,9 +9,7 @@ abstract class TextMatcher {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TextMatcher &&
-          runtimeType == other.runtimeType &&
-          pattern == other.pattern;
+      other is TextMatcher && runtimeType == other.runtimeType && pattern == other.pattern;
 
   @override
   int get hashCode => Object.hash(runtimeType, pattern);

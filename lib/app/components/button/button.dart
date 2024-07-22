@@ -123,8 +123,7 @@ class Button extends StatelessWidget {
         OutlinedButton.styleFrom(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(
-            borderRadius:
-                borderRadius ?? BorderRadius.all(Radius.circular(16.0.s)),
+            borderRadius: borderRadius ?? BorderRadius.all(Radius.circular(16.0.s)),
           ),
           minimumSize: minimumSize ?? Size(56.0.s, 56.0.s),
           padding: EdgeInsets.symmetric(horizontal: 16.0.s),
@@ -138,8 +137,7 @@ class Button extends StatelessWidget {
         data: IconThemeData(color: _getIconTintColor(context, type)),
         child: DefaultTextStyle(
           overflow: TextOverflow.ellipsis,
-          style: context.theme.appTextThemes.body
-              .copyWith(color: _getLabelColor(context, type)),
+          style: context.theme.appTextThemes.body.copyWith(color: _getLabelColor(context, type)),
           child: Row(
             mainAxisSize: mainAxisSize,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -170,8 +168,7 @@ class Button extends StatelessWidget {
           ButtonType.secondary => context.theme.appColors.tertararyBackground,
           ButtonType.outlined => Colors.transparent,
           ButtonType.disabled => context.theme.appColors.sheetLine,
-          ButtonType.menuInactive =>
-            context.theme.appColors.tertararyBackground,
+          ButtonType.menuInactive => context.theme.appColors.tertararyBackground,
           ButtonType.menuActive => context.theme.appColors.secondaryBackground,
           ButtonType.dropdown => context.theme.appColors.tertararyBackground,
         };

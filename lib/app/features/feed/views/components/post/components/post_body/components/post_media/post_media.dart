@@ -18,9 +18,7 @@ class PostMedia extends HookConsumerWidget {
   final List<PostMediaData> media;
 
   static List<PostMediaData> _filterKnownMedia(List<PostMediaData> media) {
-    return media
-        .where((mediaItem) => mediaItem.mediaType != MediaType.unknown)
-        .toList();
+    return media.where((mediaItem) => mediaItem.mediaType != MediaType.unknown).toList();
   }
 
   /// Calculates the aspect ratio for a list of media items.
@@ -35,17 +33,14 @@ class PostMedia extends HookConsumerWidget {
       if (aspectRatio == null) {
         horizontalRatios.add(PostConstants.maxHorizontalMediaAspectRatio);
       } else if (aspectRatio >= 1) {
-        horizontalRatios
-            .add(min(PostConstants.maxHorizontalMediaAspectRatio, aspectRatio));
+        horizontalRatios.add(min(PostConstants.maxHorizontalMediaAspectRatio, aspectRatio));
       } else if (aspectRatio < 1) {
-        verticalRatios
-            .add(max(PostConstants.minVerticalMediaAspectRatio, aspectRatio));
+        verticalRatios.add(max(PostConstants.minVerticalMediaAspectRatio, aspectRatio));
       }
     }
 
-    final ratios = horizontalRatios.length > verticalRatios.length
-        ? horizontalRatios
-        : verticalRatios;
+    final ratios =
+        horizontalRatios.length > verticalRatios.length ? horizontalRatios : verticalRatios;
 
     return ratios.reduce((a, b) => a + b) / ratios.length;
   }

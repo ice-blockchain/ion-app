@@ -78,22 +78,18 @@ class SendCoinsForm extends IcePage {
                     SizedBox(height: 12.0.s),
                     ContactInputSwitcher(
                       selectedContact: selectedContact.value,
-                      onContactSelected: (ContactData? contact) =>
-                          selectedContact.value = contact,
+                      onContactSelected: (ContactData? contact) => selectedContact.value = contact,
                     ),
                     SizedBox(height: 12.0.s),
                     TextInput(
                       controller: amountController,
                       labelText: locale.wallet_usdt_amount,
                       onChanged: (value) {
-                        ref
-                            .read(sendCoinsFormControllerProvider.notifier)
-                            .updateAmount(value);
+                        ref.read(sendCoinsFormControllerProvider.notifier).updateAmount(value);
                       },
                       suffixIcon: TextInputTextButton(
                         onPressed: () {
-                          final maxAmount =
-                              formController.wallet.balance.toString();
+                          final maxAmount = formController.wallet.balance.toString();
                           amountController.text = maxAmount;
                           ref
                               .read(sendCoinsFormControllerProvider.notifier)

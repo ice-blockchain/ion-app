@@ -24,9 +24,7 @@ class SortingButton extends HookConsumerWidget {
           color: context.theme.appColors.primaryAccent,
         ),
         onPressed: () {
-          ref
-              .read(userPreferencesNotifierProvider.notifier)
-              .setNftSortingType(sortingType);
+          ref.read(userPreferencesNotifierProvider.notifier).setNftSortingType(sortingType);
         },
         label: Text(sortingType.getTitle(context)),
         mainAxisSize: MainAxisSize.max,

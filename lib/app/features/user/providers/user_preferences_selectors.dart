@@ -15,8 +15,7 @@ bool isBalanceVisibleSelector(WidgetRef ref) {
 bool isZeroValueAssetsVisibleSelector(WidgetRef ref) {
   return ref.watch(
     userPreferencesNotifierProvider.select(
-      (UserPreferences userPreferences) =>
-          userPreferences.isZeroValueAssetsVisible,
+      (UserPreferences userPreferences) => userPreferences.isZeroValueAssetsVisible,
     ),
   );
 }

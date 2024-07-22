@@ -8,10 +8,8 @@ part 'template_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<Template> appTemplate(AppTemplateRef ref) async {
-  final jsonString =
-      await rootBundle.loadString('lib/app/templates/basic.json');
-  final data =
-      Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
+  final jsonString = await rootBundle.loadString('lib/app/templates/basic.json');
+  final data = Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
   return data;
 }
 

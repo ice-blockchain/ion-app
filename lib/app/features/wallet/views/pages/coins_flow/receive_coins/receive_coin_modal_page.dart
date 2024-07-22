@@ -19,11 +19,8 @@ class ReceiveCoinModalPage extends IcePage {
     return SheetContent(
       body: CoinsListView(
         onCoinItemTap: (CoinData coin) {
-          ref
-              .read(receiveCoinsFormControllerProvider.notifier)
-              .selectCoin(coin);
-          NetworkSelectReceiveRoute($extra: NetworkListViewType.receive)
-              .push<void>(context);
+          ref.read(receiveCoinsFormControllerProvider.notifier).selectCoin(coin);
+          NetworkSelectReceiveRoute($extra: NetworkListViewType.receive).push<void>(context);
         },
         type: CoinsListViewType.receive,
       ),

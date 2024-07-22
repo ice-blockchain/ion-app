@@ -19,8 +19,7 @@ class CopiedTooltip extends HookConsumerWidget {
     final tooltipKey = GlobalKey();
 
     useOnInit<void>(() {
-      final renderBox =
-          tooltipKey.currentContext?.findRenderObject() as RenderBox?;
+      final renderBox = tooltipKey.currentContext?.findRenderObject() as RenderBox?;
       if (renderBox != null) {
         onLayout(renderBox.size);
       }

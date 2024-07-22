@@ -26,8 +26,7 @@ class NftsNotifier extends _$NftsNotifier {
     state = AsyncData<List<NftData>>(
       List<NftData>.unmodifiable(
         mockedNftsDataArray.where(
-          (NftData data) =>
-              data.collectionName.toLowerCase().contains(lSearchValue),
+          (NftData data) => data.collectionName.toLowerCase().contains(lSearchValue),
         ),
       ),
     );

@@ -75,8 +75,8 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     final Widget titleWidget = Text(
       title,
       textAlign: TextAlign.center,
-      style: context.theme.appTextThemes.subtitle
-          .copyWith(color: context.theme.appColors.primaryText),
+      style:
+          context.theme.appTextThemes.subtitle.copyWith(color: context.theme.appColors.primaryText),
     );
     final Widget appBarContent = NavigationToolbar(
       leading: showBackButton

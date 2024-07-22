@@ -64,10 +64,7 @@ class TextInputBorder extends InputBorder {
   Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
     return Path()
       ..addRRect(
-        borderRadius
-            .resolve(textDirection)
-            .toRRect(rect)
-            .deflate(borderSide.width),
+        borderRadius.resolve(textDirection).toRRect(rect).deflate(borderSide.width),
       );
   }
 

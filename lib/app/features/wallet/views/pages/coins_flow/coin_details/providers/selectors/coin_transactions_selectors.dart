@@ -5,8 +5,7 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/prov
 List<CoinTransactionData> coinTransactionsSelector(WidgetRef ref) {
   return ref.watch(
     coinTransactionsNotifierProvider.select(
-      (AsyncValue<List<CoinTransactionData>> data) =>
-          data.value ?? <CoinTransactionData>[],
+      (AsyncValue<List<CoinTransactionData>> data) => data.value ?? <CoinTransactionData>[],
     ),
   );
 }

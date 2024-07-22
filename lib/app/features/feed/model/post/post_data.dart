@@ -20,8 +20,7 @@ class PostData {
     required String rawContent,
   }) : content = TextParser(matchers: [const UrlMatcher()]).parse(rawContent);
 
-  factory PostData.fromEventMessage(EventMessage eventMessage) =
-      _PostDataFromEvent;
+  factory PostData.fromEventMessage(EventMessage eventMessage) = _PostDataFromEvent;
 
   final String id;
 
@@ -37,8 +36,7 @@ class PostData {
         if (match.matcherType == UrlMatcher) {
           final mediaType = MediaType.fromUrl(match.text);
           if (mediaType != MediaType.unknown) {
-            result[match.text] =
-                PostMediaData(url: match.text, mediaType: mediaType);
+            result[match.text] = PostMediaData(url: match.text, mediaType: mediaType);
           }
         }
         return result;
@@ -48,6 +46,5 @@ class PostData {
   }
 
   @override
-  String toString() =>
-      'PostData(id: $id, content: $content, metadata: $metadata)';
+  String toString() => 'PostData(id: $id, content: $content, metadata: $metadata)';
 }

@@ -12,6 +12,5 @@ String formatDoubleCompact(num value) {
 }
 
 String formatToCurrency(double value, [String? symbol]) {
-  return NumberFormat.currency(symbol: symbol ?? r'$', decimalDigits: 2)
-      .format(value);
+  return NumberFormat.currency(symbol: symbol ?? r'$', decimalDigits: 2).format(value);
 }

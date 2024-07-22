@@ -5,8 +5,7 @@ import 'package:ice/app/features/wallet/views/pages/manage_coins/providers/manag
 List<ManageCoinData> manageCoinsDataSelector(WidgetRef ref) {
   return ref.watch(
     manageCoinsNotifierProvider.select(
-      (AsyncValue<List<ManageCoinData>> data) =>
-          data.value ?? <ManageCoinData>[],
+      (AsyncValue<List<ManageCoinData>> data) => data.value ?? <ManageCoinData>[],
     ),
   );
 }

@@ -15,8 +15,7 @@ Map<String, List<CoinTransactionData>> useTransactionsByDate(
     () {
       final transactions = List<CoinTransactionData>.from(coinTransactions)
         ..sort(
-          (CoinTransactionData a, CoinTransactionData b) =>
-              b.timestamp.compareTo(a.timestamp),
+          (CoinTransactionData a, CoinTransactionData b) => b.timestamp.compareTo(a.timestamp),
         );
       final result = <String, List<CoinTransactionData>>{};
       for (final transaction in transactions) {

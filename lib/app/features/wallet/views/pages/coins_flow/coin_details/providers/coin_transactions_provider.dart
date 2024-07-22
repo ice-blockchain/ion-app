@@ -19,8 +19,7 @@ class CoinTransactionsNotifier extends _$CoinTransactionsNotifier {
     required String coinId,
     required NetworkType networkType,
   }) async {
-    state =
-        const AsyncLoading<List<CoinTransactionData>>().copyWithPrevious(state);
+    state = const AsyncLoading<List<CoinTransactionData>>().copyWithPrevious(state);
 
     // to emulate loading state
     await Future<void>.delayed(const Duration(seconds: 1));

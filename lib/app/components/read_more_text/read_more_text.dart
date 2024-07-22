@@ -36,12 +36,10 @@ class ReadMoreText extends HookWidget {
     );
 
     final link = TextSpan(
-      text: showMore.value
-          ? context.i18n.common_show_more
-          : context.i18n.common_show_less,
+      text: showMore.value ? context.i18n.common_show_more : context.i18n.common_show_less,
       recognizer: gestureRecognizer,
-      style: context.theme.appTextThemes.body2
-          .copyWith(color: context.theme.appColors.primaryAccent),
+      style:
+          context.theme.appTextThemes.body2.copyWith(color: context.theme.appColors.primaryAccent),
     );
 
     final delimiter = TextSpan(
@@ -94,9 +92,7 @@ class ReadMoreText extends HookWidget {
           final readMoreSize = linkSize.width + delimiterSize.width;
           final pos = textPainter.getPositionForOffset(
             Offset(
-              textDirection == TextDirection.rtl
-                  ? readMoreSize
-                  : textSize.width - readMoreSize,
+              textDirection == TextDirection.rtl ? readMoreSize : textSize.width - readMoreSize,
               textSize.height,
             ),
           );
@@ -115,8 +111,7 @@ class ReadMoreText extends HookWidget {
 
         if (textPainter.didExceedMaxLines) {
           textData = showMore.value
-              ? this.text.substring(0, endIndex) +
-                  (linkLongerThanLine ? lineSeparator : '')
+              ? this.text.substring(0, endIndex) + (linkLongerThanLine ? lineSeparator : '')
               : this.text;
           textSpan = TextSpan(
             text: textData,

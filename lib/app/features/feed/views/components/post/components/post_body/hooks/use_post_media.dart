@@ -8,8 +8,7 @@ List<PostMediaData> usePostMedia(
   return postData.content.fold<List<PostMediaData>>(
     [],
     (result, match) {
-      if (match.matcherType == UrlMatcher &&
-          postData.metadata.media.containsKey(match.text)) {
+      if (match.matcherType == UrlMatcher && postData.metadata.media.containsKey(match.text)) {
         result.add(postData.metadata.media[match.text]!);
       }
       return result;

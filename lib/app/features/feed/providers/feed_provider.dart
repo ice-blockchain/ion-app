@@ -15,8 +15,7 @@ class FeedNotifier extends _$FeedNotifier {
 
   Future<void> fetchPosts() async {
     state = const AsyncLoading<List<PostData>>().copyWithPrevious(state);
-    final relay =
-        await ref.read(relaysProvider.notifier).getOrCreate(mainRelay);
+    final relay = await ref.read(relaysProvider.notifier).getOrCreate(mainRelay);
     final requestMessage = RequestMessage()
       ..addFilter(const RequestFilter(kinds: <int>[1], limit: 20));
     final events = await requestEvents(requestMessage, relay);

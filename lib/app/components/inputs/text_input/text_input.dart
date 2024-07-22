@@ -31,8 +31,8 @@ class TextInput extends HookWidget {
     EdgeInsets? scrollPadding,
     EdgeInsetsGeometry? contentPadding,
   })  : scrollPadding = scrollPadding ?? EdgeInsets.all(20.0.s),
-        contentPadding = contentPadding ??
-            EdgeInsets.symmetric(vertical: 13.0.s, horizontal: 16.0.s);
+        contentPadding =
+            contentPadding ?? EdgeInsets.symmetric(vertical: 13.0.s, horizontal: 16.0.s);
 
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;

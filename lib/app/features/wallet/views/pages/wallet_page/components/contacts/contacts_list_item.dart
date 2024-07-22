@@ -56,8 +56,7 @@ class ContactsListItem extends StatelessWidget {
                     bottom: -4.0.s,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(iceLogoBorderRadius),
+                        borderRadius: BorderRadius.circular(iceLogoBorderRadius),
                         border: Border.all(
                           color: context.theme.appColors.secondaryBackground,
                           width: 2.0.s,
@@ -65,8 +64,7 @@ class ContactsListItem extends StatelessWidget {
                       ),
                       position: DecorationPosition.foreground,
                       child: ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(iceLogoBorderRadius),
+                        borderRadius: BorderRadius.circular(iceLogoBorderRadius),
                         child: Assets.images.icons.iconBadgeIcelogo.icon(
                           size: iceLogoSize,
                         ),

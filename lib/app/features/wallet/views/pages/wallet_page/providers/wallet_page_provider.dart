@@ -20,13 +20,12 @@ class WalletPageNotifier extends _$WalletPageNotifier {
     required bool isSearchVisible,
   }) {
     state = state.copyWith(
-      tabSearchVisibleMap:
-          Map<WalletTabType, bool>.from(state.tabSearchVisibleMap)
-            ..update(
-              tabType,
-              (_) => isSearchVisible,
-              ifAbsent: () => isSearchVisible,
-            ),
+      tabSearchVisibleMap: Map<WalletTabType, bool>.from(state.tabSearchVisibleMap)
+        ..update(
+          tabType,
+          (_) => isSearchVisible,
+          ifAbsent: () => isSearchVisible,
+        ),
     );
   }
 
@@ -36,13 +35,12 @@ class WalletPageNotifier extends _$WalletPageNotifier {
     required WidgetRef ref,
   }) {
     state = state.copyWith(
-      assetSearchValues:
-          Map<WalletTabType, String>.from(state.assetSearchValues)
-            ..update(
-              tabType,
-              (_) => searchValue,
-              ifAbsent: () => searchValue,
-            ),
+      assetSearchValues: Map<WalletTabType, String>.from(state.assetSearchValues)
+        ..update(
+          tabType,
+          (_) => searchValue,
+          ifAbsent: () => searchValue,
+        ),
     );
   }
 }

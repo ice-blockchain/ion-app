@@ -23,9 +23,7 @@ String toPastDateDisplayValue(int timestamp, BuildContext context) {
   final today = DateTime(now.year, now.month, now.day);
   final yesterday = today.subtract(const Duration(days: 1));
 
-  if (date.year == today.year &&
-      date.month == today.month &&
-      date.day == today.day) {
+  if (date.year == today.year && date.month == today.month && date.day == today.day) {
     return context.i18n.date_today;
   } else if (date.year == yesterday.year &&
       date.month == yesterday.month &&

@@ -46,8 +46,7 @@ class SignUpPasswordPage extends IcePage {
                       title: context.i18n.sign_up_password_title,
                       description: context.i18n.sign_up_password_description,
                       icon: AuthHeaderIcon(
-                        icon: Assets.images.icons.iconLoginPassword
-                            .icon(size: 36.0.s),
+                        icon: Assets.images.icons.iconLoginPassword.icon(size: 36.0.s),
                       ),
                     ),
                     ScreenSideOffset.large(
@@ -57,24 +56,18 @@ class SignUpPasswordPage extends IcePage {
                           children: [
                             SizedBox(height: 32.0.s),
                             SignUpListItem(
-                              title: context
-                                  .i18n.sign_up_password_disadvantage_1_title,
-                              subtitle: context.i18n
-                                  .sign_up_password_disadvantage_1_description,
+                              title: context.i18n.sign_up_password_disadvantage_1_title,
+                              subtitle: context.i18n.sign_up_password_disadvantage_1_description,
                               icon: Assets.images.icons.iconLoginHack.icon(),
                             ),
                             SignUpListItem(
-                              title: context
-                                  .i18n.sign_up_password_disadvantage_2_title,
-                              subtitle: context.i18n
-                                  .sign_up_password_disadvantage_2_description,
+                              title: context.i18n.sign_up_password_disadvantage_2_title,
+                              subtitle: context.i18n.sign_up_password_disadvantage_2_description,
                               icon: Assets.images.icons.iconLoginReused.icon(),
                             ),
                             SignUpListItem(
-                              title: context
-                                  .i18n.sign_up_password_disadvantage_3_title,
-                              subtitle: context.i18n
-                                  .sign_up_password_disadvantage_3_description,
+                              title: context.i18n.sign_up_password_disadvantage_3_title,
+                              subtitle: context.i18n.sign_up_password_disadvantage_3_description,
                               icon: Assets.images.icons.iconLoginManage.icon(),
                             ),
                             SizedBox(height: 18.0.s),
@@ -91,8 +84,7 @@ class SignUpPasswordPage extends IcePage {
                               highlighted: checkboxHighlighted.value,
                               onToggle: () {
                                 checkboxHighlighted.value = false;
-                                checkboxSelected.value =
-                                    !checkboxSelected.value;
+                                checkboxSelected.value = !checkboxSelected.value;
                               },
                             ),
                           ],
@@ -113,9 +105,9 @@ class SignUpPasswordPage extends IcePage {
                 if (checkboxSelected.value) {
                   if (valid) {
                     hideKeyboardAndCallOnce(
-                      callback: () => ref.read(authProvider.notifier).signIn(
-                            keyName: identityKeyNameController.text,
-                          ),
+                      callback: () => ref
+                          .read(authProvider.notifier)
+                          .signIn(keyName: identityKeyNameController.text),
                     );
                   }
                 } else {

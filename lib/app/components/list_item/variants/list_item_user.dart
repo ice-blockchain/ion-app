@@ -42,20 +42,17 @@ class _ListItemUser extends ListItem {
               if (iceBadge)
                 Padding(
                   padding: EdgeInsets.only(left: 4.0.s),
-                  child: Assets.images.icons.iconBadgeIcelogo
-                      .icon(size: badgeSize),
+                  child: Assets.images.icons.iconBadgeIcelogo.icon(size: badgeSize),
                 ),
               if (verifiedBadge)
                 Padding(
                   padding: EdgeInsets.only(left: 4.0.s),
-                  child:
-                      Assets.images.icons.iconBadgeVerify.icon(size: badgeSize),
+                  child: Assets.images.icons.iconBadgeVerify.icon(size: badgeSize),
                 ),
             ],
           ),
           subtitle: Row(
-            crossAxisAlignment: CrossAxisAlignment
-                .start, // Aligns the Column to the top of the Row
+            crossAxisAlignment: CrossAxisAlignment.start, // Aligns the Column to the top of the Row
             children: [
               Flexible(child: subtitle),
               if (timeago != null) _TimeAgo(date: timeago),

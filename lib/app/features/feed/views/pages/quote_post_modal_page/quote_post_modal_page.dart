@@ -28,8 +28,7 @@ class QuotePostModalPage extends IcePage {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding:
-                    EdgeInsets.symmetric(vertical: 16.0.s, horizontal: 16.0.s),
+                padding: EdgeInsets.symmetric(vertical: 16.0.s, horizontal: 16.0.s),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

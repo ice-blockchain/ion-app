@@ -15,8 +15,7 @@ class ProfileInfo extends HookWidget {
     final bottomOverflow = useState<double>(30.0.s);
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        final renderBox =
-            detailsKey.currentContext?.findRenderObject() as RenderBox?;
+        final renderBox = detailsKey.currentContext?.findRenderObject() as RenderBox?;
         if (renderBox != null) {
           bottomOverflow.value = renderBox.size.height / 3;
         }

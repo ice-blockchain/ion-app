@@ -19,8 +19,7 @@ class TrendingVideos extends HookConsumerWidget {
     final loading = useState(true);
     useEffect(
       () {
-        final timer =
-            Timer(const Duration(seconds: 3), () => loading.value = false);
+        final timer = Timer(const Duration(seconds: 3), () => loading.value = false);
         return timer.cancel;
       },
       <Object?>[],

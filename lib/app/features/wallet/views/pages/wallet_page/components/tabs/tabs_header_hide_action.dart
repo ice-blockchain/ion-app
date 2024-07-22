@@ -25,9 +25,7 @@ class WalletTabsHeaderHideAction extends HookConsumerWidget {
         : Assets.images.icons.iconBlockCheckboxOnblue;
     return TextButton(
       onPressed: () {
-        ref
-            .watch(userPreferencesNotifierProvider.notifier)
-            .switchZeroValueAssetsVisibility();
+        ref.watch(userPreferencesNotifierProvider.notifier).switchZeroValueAssetsVisibility();
       },
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),
@@ -47,8 +45,7 @@ class WalletTabsHeaderHideAction extends HookConsumerWidget {
             ),
             Text(
               context.i18n.wallet_hide,
-              style: context.theme.appTextThemes.caption
-                  .copyWith(color: actionColor),
+              style: context.theme.appTextThemes.caption.copyWith(color: actionColor),
             ),
           ],
         ),

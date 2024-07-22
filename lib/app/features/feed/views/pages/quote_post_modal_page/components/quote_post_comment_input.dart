@@ -14,8 +14,7 @@ class QuotePostCommentInput extends StatelessWidget {
           padding: EdgeInsets.only(top: 6.0.s),
           child: Avatar(
             size: 30.0.s,
-            imageUrl:
-                'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+            imageUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
           ),
         ),
         SizedBox(width: 10.0.s),

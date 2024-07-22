@@ -47,8 +47,7 @@ class FillProfile extends IcePage {
                     title: context.i18n.fill_profile_title,
                     description: context.i18n.fill_profile_description,
                     icon: AuthHeaderIcon(
-                      icon: Assets.images.icons.iconLoginIcelogo
-                          .icon(size: 36.0.s),
+                      icon: Assets.images.icons.iconLoginIcelogo.icon(size: 36.0.s),
                     ),
                   ),
                   ScreenSideOffset.large(
@@ -114,8 +113,7 @@ class FillProfile extends IcePage {
                               Assets.images.icons.iconFieldInviter.icon(),
                             ],
                           ),
-                          labelText:
-                              context.i18n.fill_profile_input_who_invited,
+                          labelText: context.i18n.fill_profile_input_who_invited,
                           controller: inviterController,
                           validator: (String? value) {
                             if (Validators.isEmpty(value)) return '';
@@ -132,8 +130,7 @@ class FillProfile extends IcePage {
                           trailingIcon: loading.value
                               ? const ButtonLoadingIndicator()
                               : Assets.images.icons.iconProfileSave.icon(
-                                  color:
-                                      context.theme.appColors.onPrimaryAccent,
+                                  color: context.theme.appColors.onPrimaryAccent,
                                 ),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
@@ -144,8 +141,7 @@ class FillProfile extends IcePage {
                               );
                               loading.value = false;
                               hideKeyboardAndCallOnce(
-                                callback: () =>
-                                    SelectLanguagesRoute().push<void>(context),
+                                callback: () => SelectLanguagesRoute().push<void>(context),
                               );
                             }
                           },

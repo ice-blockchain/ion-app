@@ -38,8 +38,7 @@ class ShareTypePage extends IcePage {
                 Expanded(
                   child: Button.compact(
                     type: ButtonType.secondary,
-                    backgroundColor:
-                        context.theme.appColors.tertararyBackground,
+                    backgroundColor: context.theme.appColors.tertararyBackground,
                     onPressed: () {},
                     leadingIcon: Assets.images.icons.iconFeedRepost.icon(),
                     label: Text(
@@ -60,8 +59,7 @@ class ShareTypePage extends IcePage {
                 Expanded(
                   child: Button.compact(
                     type: ButtonType.secondary,
-                    backgroundColor:
-                        context.theme.appColors.tertararyBackground,
+                    backgroundColor: context.theme.appColors.tertararyBackground,
                     onPressed: () {
                       QuotePostModalRoute($extra: payload).push<void>(context);
                     },

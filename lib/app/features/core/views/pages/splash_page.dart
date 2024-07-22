@@ -29,8 +29,7 @@ class SplashPage extends IcePage {
             animationController
               ..duration = composition.duration
               ..forward().whenComplete(
-                () =>
-                    ref.read(splashProvider.notifier).animationCompleted = true,
+                () => ref.read(splashProvider.notifier).animationCompleted = true,
               );
           },
         ),

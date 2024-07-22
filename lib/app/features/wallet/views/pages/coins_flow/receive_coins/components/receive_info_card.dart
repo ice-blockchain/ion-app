@@ -49,17 +49,14 @@ class ReceiveInfoCard extends HookConsumerWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20.0.s),
                   child: QrImageView(
-                    backgroundColor:
-                        context.theme.appColors.secondaryBackground,
+                    backgroundColor: context.theme.appColors.secondaryBackground,
                     errorCorrectionLevel: QrErrorCorrectLevel.H,
                     dataModuleStyle: QrDataModuleStyle(
                       dataModuleShape: QrDataModuleShape.circle,
                       color: context.theme.appColors.primaryText,
                     ),
-                    embeddedImageStyle:
-                        QrEmbeddedImageStyle(size: Size(40.0.s, 40.0.s)),
-                    embeddedImage:
-                        AssetImage(Assets.images.qrCode.centerQr.path),
+                    embeddedImageStyle: QrEmbeddedImageStyle(size: Size(40.0.s, 40.0.s)),
+                    embeddedImage: AssetImage(Assets.images.qrCode.centerQr.path),
                     data: walletAddress,
                     size: 150.0.s,
                   ),
@@ -87,9 +84,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
                     });
                   },
                   label: Text(
-                    isCopied.value
-                        ? context.i18n.wallet_copied
-                        : context.i18n.wallet_copy,
+                    isCopied.value ? context.i18n.wallet_copied : context.i18n.wallet_copy,
                     style: context.theme.appTextThemes.body.copyWith(
                       color: context.theme.appColors.primaryText,
                     ),

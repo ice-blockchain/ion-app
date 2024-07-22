@@ -53,10 +53,8 @@ Widget regularTextInputUseCase(BuildContext context) {
                 maxLines: 2,
                 minLines: 2,
                 labelText: 'Multiline',
-                initialValue:
-                    '0x93956a5688078e8f25df21ec0f24fd9fd7baf09545645645745',
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 5.0.s, horizontal: 16.0.s),
+                initialValue: '0x93956a5688078e8f25df21ec0f24fd9fd7baf09545645645745',
+                contentPadding: EdgeInsets.symmetric(vertical: 5.0.s, horizontal: 16.0.s),
               ),
               TextInput(
                 labelText: 'Basic text input with prefix icon',

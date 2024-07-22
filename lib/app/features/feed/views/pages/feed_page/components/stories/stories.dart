@@ -26,9 +26,7 @@ class Stories extends HookConsumerWidget {
         bottom: 16.0.s,
         top: 3.0.s,
       ),
-      child: loading.value
-          ? const StoryListSkeleton()
-          : const StoryList(stories: stories),
+      child: loading.value ? const StoryListSkeleton() : const StoryList(stories: stories),
     );
   }
 }

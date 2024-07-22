@@ -65,8 +65,7 @@ class ContactPage extends IcePage {
                 label: Text(
                   context.i18n.wallet_invite_friends,
                 ),
-                onPressed: () =>
-                    shareContent('Share', subject: 'Look what I found!'),
+                onPressed: () => shareContent('Share', subject: 'Look what I found!'),
               ),
             ),
           ScreenBottomOffset(),

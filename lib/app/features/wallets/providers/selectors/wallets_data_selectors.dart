@@ -16,8 +16,7 @@ String walletIdSelector(WidgetRef ref) {
   return ref.watch(
     walletsDataNotifierProvider.select(
       (Map<String, WalletData> walletsData) {
-        if (selectedWalletId != null &&
-            walletsData.containsKey(selectedWalletId)) {
+        if (selectedWalletId != null && walletsData.containsKey(selectedWalletId)) {
           return selectedWalletId;
         }
         final idsList = walletsData.keys.toList();
@@ -41,8 +40,7 @@ double walletBalanceSelector({
 }) {
   return ref.watch(
     walletsDataNotifierProvider.select(
-      (Map<String, WalletData> walletsData) =>
-          walletsData[walletId]?.balance ?? 0.0,
+      (Map<String, WalletData> walletsData) => walletsData[walletId]?.balance ?? 0.0,
     ),
   );
 }
@@ -53,8 +51,7 @@ String walletNameSelector({
 }) {
   return ref.watch(
     walletsDataNotifierProvider.select(
-      (Map<String, WalletData> walletsData) =>
-          walletsData[walletId]?.name ?? '',
+      (Map<String, WalletData> walletsData) => walletsData[walletId]?.name ?? '',
     ),
   );
 }
@@ -65,8 +62,7 @@ String walletIconSelector({
 }) {
   return ref.watch(
     walletsDataNotifierProvider.select(
-      (Map<String, WalletData> walletsData) =>
-          walletsData[walletId]?.icon ?? '',
+      (Map<String, WalletData> walletsData) => walletsData[walletId]?.icon ?? '',
     ),
   );
 }

@@ -40,8 +40,7 @@ class FeedCategoriesDropdown extends HookConsumerWidget {
         for (final FeedCategory category in FeedCategory.values)
           MenuItemButton(
             onPressed: () {
-              ref.read(feedCategoryNotifierProvider.notifier).category =
-                  category;
+              ref.read(feedCategoryNotifierProvider.notifier).category = category;
             },
             child: Row(
               children: [

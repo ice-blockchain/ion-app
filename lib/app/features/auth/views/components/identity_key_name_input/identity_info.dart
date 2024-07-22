@@ -51,8 +51,7 @@ class IdentityInfo extends StatelessWidget {
                     const TextSpan(text: ' '),
                     WidgetSpan(
                       alignment: PlaceholderAlignment.middle,
-                      child: Assets.images.icons.iconLoginIdentity
-                          .icon(size: 20.0.s),
+                      child: Assets.images.icons.iconLoginIdentity.icon(size: 20.0.s),
                     ),
                     const TextSpan(text: ' '),
                     TextSpan(

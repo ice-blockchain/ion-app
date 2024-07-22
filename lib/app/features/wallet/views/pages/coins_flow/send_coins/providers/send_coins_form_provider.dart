@@ -29,17 +29,14 @@ class SendCoinsFormController extends _$SendCoinsFormController {
 
   void selectCoin(CoinData coin) => state = state.copyWith(selectedCoin: coin);
 
-  void selectNetwork(NetworkType network) =>
-      state = state.copyWith(selectedNetwork: network);
+  void selectNetwork(NetworkType network) => state = state.copyWith(selectedNetwork: network);
 
-  void updateAddress(String address) =>
-      state = state.copyWith(address: address);
+  void updateAddress(String address) => state = state.copyWith(address: address);
 
   void updateAmount(String amount) {
     final value = double.tryParse(amount) ?? 0.0;
     state = state.copyWith(usdtAmount: value);
   }
 
-  void updateArrivalTime(int arrivalTime) =>
-      state = state.copyWith(arrivalTime: arrivalTime);
+  void updateArrivalTime(int arrivalTime) => state = state.copyWith(arrivalTime: arrivalTime);
 }

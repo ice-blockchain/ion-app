@@ -49,8 +49,7 @@ class NftDetailsPage extends IcePage {
                     rank: payload.rank,
                     price: payload.price,
                     networkSymbol: payload.currency,
-                    networkSymbolIcon:
-                        Assets.images.wallet.walletEth.icon(size: 16.0.s),
+                    networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                   ),
                   SizedBox(height: 12.0.s),
                   RoundedCard(

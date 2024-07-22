@@ -23,9 +23,8 @@ class Balance extends HookConsumerWidget {
     final walletId = walletIdSelector(ref);
     final walletBalance = walletBalanceSelector(ref: ref, walletId: walletId);
     final isBalanceVisible = isBalanceVisibleSelector(ref);
-    final iconAsset = isBalanceVisible
-        ? Assets.images.icons.iconBlockEyeOn
-        : Assets.images.icons.iconBlockEyeOff;
+    final iconAsset =
+        isBalanceVisible ? Assets.images.icons.iconBlockEyeOn : Assets.images.icons.iconBlockEyeOff;
     final hitSlop = 5.0.s;
     return ScreenSideOffset.small(
       child: Column(
@@ -51,9 +50,7 @@ class Balance extends HookConsumerWidget {
                     ),
                   ),
                   onPressed: () {
-                    ref
-                        .watch(userPreferencesNotifierProvider.notifier)
-                        .switchBalanceVisibility();
+                    ref.watch(userPreferencesNotifierProvider.notifier).switchBalanceVisibility();
                   },
                 ),
               ],

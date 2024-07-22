@@ -14,8 +14,7 @@ class ContentScaler extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       builder: (BuildContext context, Widget? widget) => MediaQuery(
-        data: MediaQuery.of(context)
-            .copyWith(textScaler: TextScaler.linear(1.0.sp)),
+        data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1.0.sp)),
         child: child,
       ),
     );

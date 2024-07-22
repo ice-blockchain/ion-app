@@ -22,8 +22,7 @@ class Notifications extends StatelessWidget {
       children: [
         NotificationListItem(
           iceVerified: true,
-          image: Assets.images.notifications.avatar1
-              .icon(size: iconSide, fit: BoxFit.contain),
+          image: Assets.images.notifications.avatar1.icon(size: iconSide, fit: BoxFit.contain),
           title: context.i18n.turn_notifications_sent_title,
           description: context.i18n.turn_notifications_sent_description,
           time: context.i18n.turn_notifications_sent_time,

@@ -80,9 +80,7 @@ class DeleteWalletModal extends IcePage {
                     context.i18n.button_delete,
                   ),
                   onPressed: () {
-                    ref
-                        .read(walletsDataNotifierProvider.notifier)
-                        .deleteWallet(payload.id);
+                    ref.read(walletsDataNotifierProvider.notifier).deleteWallet(payload.id);
                     context.pop();
                   },
                   minimumSize: buttonMinimalSize,

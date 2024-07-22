@@ -37,9 +37,7 @@ class CreatorListItem extends StatelessWidget {
           type: followed ? ButtonType.primary : ButtonType.outlined,
           tintColor: followed ? null : context.theme.appColors.primaryAccent,
           label: Text(
-            followed
-                ? context.i18n.button_following
-                : context.i18n.button_follow,
+            followed ? context.i18n.button_following : context.i18n.button_follow,
             style: context.theme.appTextThemes.caption.copyWith(
               color: followed
                   ? context.theme.appColors.secondaryBackground

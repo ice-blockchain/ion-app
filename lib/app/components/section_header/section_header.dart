@@ -43,8 +43,7 @@ class SectionHeader extends StatelessWidget {
             if (onPress != null)
               Padding(
                 padding: EdgeInsets.only(
-                  right: ScreenSideOffset.defaultSmallMargin -
-                      SectionHeaderButton.hitSlop,
+                  right: ScreenSideOffset.defaultSmallMargin - SectionHeaderButton.hitSlop,
                 ),
                 child: SectionHeaderButton(onPress!),
               ),

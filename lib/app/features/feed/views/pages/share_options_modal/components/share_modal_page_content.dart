@@ -13,16 +13,14 @@ class ShareModalPageContent extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Mock selection state for 10 items using useState hook
-    final isSelectedList =
-        useState<List<bool>>(List.generate(10, (index) => false));
+    final isSelectedList = useState<List<bool>>(List.generate(10, (index) => false));
 
     void toggleSelection(int index) {
       isSelectedList.value[index] = !isSelectedList.value[index];
       isSelectedList.value = List.from(isSelectedList.value);
     }
 
-    final hasSelectedUsers =
-        isSelectedList.value.any((isSelected) => isSelected);
+    final hasSelectedUsers = isSelectedList.value.any((isSelected) => isSelected);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -45,8 +43,7 @@ class ShareModalPageContent extends HookConsumerWidget {
                     subtitle: const Text('@arnoldgrey'),
                     profilePicture:
                         'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-                    trailing:
-                        _getCheckbox(context, isSelectedList.value[index]),
+                    trailing: _getCheckbox(context, isSelectedList.value[index]),
                     verifiedBadge: true,
                   ),
                 ),

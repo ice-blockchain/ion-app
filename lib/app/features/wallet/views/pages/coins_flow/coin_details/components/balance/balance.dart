@@ -25,8 +25,7 @@ class Balance extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final text =
-        '${formatToCurrency(coinData.amount, '')} ${coinData.abbreviation}';
+    final text = '${formatToCurrency(coinData.amount, '')} ${coinData.abbreviation}';
 
     return ScreenSideOffset.small(
       child: Column(
