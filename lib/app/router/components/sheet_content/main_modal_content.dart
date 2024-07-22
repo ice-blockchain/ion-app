@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/router/utils/go_router_state_extensions.dart';
+import 'package:ice/app/extensions/go_router_state.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class MainModalContent extends StatelessWidget {

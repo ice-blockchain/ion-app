@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/router/main_tabs/components/components.dart';
-import 'package:ice/app/router/utils/go_router_state_extensions.dart';
 
 class MainTabNavigation extends StatelessWidget {
   const MainTabNavigation({
