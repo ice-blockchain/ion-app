@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -14,7 +12,7 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class CoinReceiveModal extends IcePage {
+class CoinReceiveModal extends StatelessWidget {
   const CoinReceiveModal({required this.payload, super.key});
 
   final CoinReceiveModalData payload;
@@ -27,10 +25,7 @@ class CoinReceiveModal extends IcePage {
   }
 
   @override
-  Widget buildPage(
-    BuildContext context,
-    WidgetRef ref,
-  ) {
+  Widget build(BuildContext context) {
     final networkType = _getNetworkType(payload);
 
     return SheetContent(

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/card/rounded_card.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/read_more_text/read_more_text.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_name/nft_name.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_picture/nft_picture.dart';
@@ -15,19 +13,13 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class NftDetailsPage extends IcePage {
-  const NftDetailsPage({
-    required this.payload,
-    super.key,
-  });
+class NftDetailsPage extends StatelessWidget {
+  const NftDetailsPage({required this.payload, super.key});
 
   final NftData payload;
 
   @override
-  Widget buildPage(
-    BuildContext context,
-    WidgetRef ref,
-  ) {
+  Widget build(BuildContext context) {
     return SheetContent(
       body: Column(
         children: [

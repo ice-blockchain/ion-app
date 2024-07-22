@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/template/ice_page.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/network_list/network_item.dart';
@@ -17,7 +16,7 @@ enum NetworkListViewType {
   receive,
 }
 
-class NetworkListView extends IcePage {
+class NetworkListView extends HookConsumerWidget {
   const NetworkListView({this.type = NetworkListViewType.send, super.key});
 
   final NetworkListViewType? type;
@@ -25,7 +24,7 @@ class NetworkListView extends IcePage {
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget buildPage(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
