@@ -20,12 +20,9 @@ class SendNftFormController extends _$SendNftFormController {
 
   void selectCoin(NftData nft) => state = state.copyWith(selectedNft: nft);
 
-  void selectNetwork(NetworkType network) =>
-      state = state.copyWith(selectedNetwork: network);
+  void selectNetwork(NetworkType network) => state = state.copyWith(selectedNetwork: network);
 
-  void updateAddress(String address) =>
-      state = state.copyWith(address: address);
+  void updateAddress(String address) => state = state.copyWith(address: address);
 
-  void updateArrivalTime(int arrivalTime) =>
-      state = state.copyWith(arrivalTime: arrivalTime);
+  void updateArrivalTime(int arrivalTime) => state = state.copyWith(arrivalTime: arrivalTime);
 }
