@@ -9,7 +9,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_back_button.dart';
 
 class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const NavigationAppBar._({
+  const NavigationAppBar({
     required this.useScreenTopOffset,
     this.title,
     this.showBackButton = true,
@@ -26,7 +26,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     List<Widget>? actions,
     Key? key,
   }) =>
-      NavigationAppBar._(
+      NavigationAppBar(
         title: title,
         showBackButton: showBackButton,
         onBackPress: onBackPress,
@@ -43,7 +43,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     bool hideKeyboardOnBack = true,
     Key? key,
   }) =>
-      NavigationAppBar._(
+      NavigationAppBar(
         title: title,
         showBackButton: showBackButton,
         onBackPress: onBackPress,

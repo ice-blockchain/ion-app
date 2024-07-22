@@ -35,6 +35,7 @@ class RestoreMenuPage extends HookWidget {
                 ),
               ),
               automaticallyImplyLeading: false,
+              toolbarHeight: NavigationAppBar.modalHeaderHeight,
               pinned: true,
             ),
             SliverFillRemaining(
