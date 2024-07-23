@@ -88,7 +88,7 @@ class GetStartedPage extends HookWidget {
                             mainAxisSize: MainAxisSize.max,
                             borderColor: Colors.transparent,
                           ),
-                          SizedBox(height: 27.0.s),
+                          SizedBox(height: 16.0.s),
                         ],
                       ),
                     ),
