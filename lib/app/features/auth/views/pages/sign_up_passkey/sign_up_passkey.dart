@@ -11,6 +11,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_app_bar.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_scrolled_body.dart';
 import 'package:ice/app/features/auth/views/components/sign_up_list_item/sign_up_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey_form.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
@@ -29,7 +30,7 @@ class SignUpPasskeyPage extends HookWidget {
       body: KeyboardDismissOnTap(
         child: SizedBox(
           height: double.infinity,
-          child: CustomScrollView(
+          child: AuthScrolledBody(
             controller: scrollController,
             slivers: [
               AuthFadeInAppBar(

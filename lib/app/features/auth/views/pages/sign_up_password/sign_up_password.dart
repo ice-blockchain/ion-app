@@ -9,6 +9,7 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_app_bar.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_scrolled_body.dart';
 import 'package:ice/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ice/app/features/auth/views/components/sign_up_list_item/sign_up_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/sign_up_password/password_input.dart';
@@ -40,7 +41,7 @@ class SignUpPasswordPage extends HookConsumerWidget {
           KeyboardDismissOnTap(
             child: SizedBox(
               height: double.infinity,
-              child: CustomScrollView(
+              child: AuthScrolledBody(
                 controller: scrollController,
                 slivers: [
                   AuthFadeInAppBar(

@@ -12,6 +12,7 @@ import 'package:ice/app/features/auth/views/components/auth_footer/auth_footer.d
 import 'package:ice/app/features/auth/views/components/auth_header/auth_app_bar.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_scrolled_body.dart';
 import 'package:ice/app/features/auth/views/pages/get_started/login_form.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -24,12 +25,13 @@ class GetStartedPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final scrollController = useScrollController();
+
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return SheetContent(
       body: KeyboardDismissOnTap(
         child: SizedBox(
           height: double.infinity,
-          child: CustomScrollView(
+          child: AuthScrolledBody(
             controller: scrollController,
             slivers: [
               AuthFadeInAppBar(

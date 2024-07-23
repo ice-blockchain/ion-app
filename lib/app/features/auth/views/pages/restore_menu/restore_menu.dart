@@ -5,11 +5,11 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_footer/auth_footer.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_app_bar.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/fade_on_scroll.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_scrolled_body.dart';
 import 'package:ice/app/features/auth/views/pages/restore_menu/restore_menu_item.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -22,21 +22,12 @@ class RestoreMenuPage extends HookWidget {
     return SheetContent(
       body: SizedBox(
         height: double.infinity,
-        child: CustomScrollView(
+        child: AuthScrolledBody(
           controller: scrollController,
           slivers: [
-            SliverAppBar(
-              flexibleSpace: NavigationAppBar.modal(
-                title: FadeOnScroll(
-                  zeroOpacityOffset: 120.0.s,
-                  fullOpacityOffset: 140.0.s,
-                  scrollController: scrollController,
-                  child: Text(context.i18n.restore_identity_title),
-                ),
-              ),
-              automaticallyImplyLeading: false,
-              toolbarHeight: NavigationAppBar.modalHeaderHeight,
-              pinned: true,
+            AuthFadeInAppBar(
+              title: context.i18n.restore_identity_title,
+              scrollController: scrollController,
             ),
             SliverFillRemaining(
               hasScrollBody: false,
