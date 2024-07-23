@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/position_controller.dart';
+import 'package:ice/app/features/auth/views/components/auth_scrolled_body/position_controller.dart';
 
 class FadeOnScroll extends HookWidget {
   const FadeOnScroll({

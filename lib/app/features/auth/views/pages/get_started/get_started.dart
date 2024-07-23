@@ -9,9 +9,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_footer/auth_footer.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_scrolled_body.dart';
+import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ice/app/features/auth/views/pages/get_started/login_form.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -26,75 +24,59 @@ class GetStartedPage extends HookWidget {
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return SheetContent(
       body: KeyboardDismissOnTap(
-        child: SizedBox(
-          height: double.infinity,
-          child: AuthScrollContainer(
-            showBackButton: false,
-            title: context.i18n.get_started_title,
-            slivers: [
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AuthHeader(
-                      title: context.i18n.get_started_title,
-                      description: context.i18n.get_started_description,
-                      icon: AuthHeaderIcon(
-                        icon: Assets.images.icons.iconLoginIcelogo.icon(size: 36.0.s),
-                      ),
+        child: AuthScrollContainer(
+          showBackButton: false,
+          title: context.i18n.get_started_title,
+          description: context.i18n.get_started_description,
+          icon: Assets.images.icons.iconLoginIcelogo.icon(size: 36.0.s),
+          children: [
+            ScreenSideOffset.large(
+              child: Column(
+                children: [
+                  SizedBox(height: 56.0.s),
+                  const LoginForm(),
+                  SizedBox(height: 14.0.s),
+                  Text(
+                    context.i18n.get_started_method_divider,
+                    style: context.theme.appTextThemes.caption.copyWith(
+                      color: context.theme.appColors.tertararyText,
                     ),
-                    ScreenSideOffset.large(
-                      child: Column(
-                        children: [
-                          SizedBox(height: 56.0.s),
-                          const LoginForm(),
-                          SizedBox(height: 14.0.s),
-                          Text(
-                            context.i18n.get_started_method_divider,
-                            style: context.theme.appTextThemes.caption.copyWith(
-                              color: context.theme.appColors.tertararyText,
-                            ),
-                          ),
-                          SizedBox(height: 14.0.s),
-                          Button(
-                            type: ButtonType.outlined,
-                            leadingIcon: Assets.images.icons.iconLoginCreateacc.icon(
-                              color: context.theme.appColors.secondaryText,
-                            ),
-                            onPressed: () {
-                              hideKeyboardAndCallOnce(
-                                callback: () => SignUpPasskeyRoute().push<void>(context),
-                              );
-                            },
-                            label: Text(context.i18n.button_register),
-                            mainAxisSize: MainAxisSize.max,
-                          ),
-                          SizedBox(height: 16.0.s),
-                          Button(
-                            type: ButtonType.outlined,
-                            leadingIcon: Assets.images.icons.iconRestorekey.icon(
-                              color: context.theme.appColors.secondaryText,
-                            ),
-                            onPressed: () {
-                              hideKeyboardAndCallOnce(
-                                callback: () => RestoreMenuRoute().push<void>(context),
-                              );
-                            },
-                            label: Text(context.i18n.get_started_restore_button),
-                            mainAxisSize: MainAxisSize.max,
-                            borderColor: Colors.transparent,
-                          ),
-                          SizedBox(height: 16.0.s),
-                        ],
-                      ),
+                  ),
+                  SizedBox(height: 14.0.s),
+                  Button(
+                    type: ButtonType.outlined,
+                    leadingIcon: Assets.images.icons.iconLoginCreateacc.icon(
+                      color: context.theme.appColors.secondaryText,
                     ),
-                    ScreenBottomOffset(child: const AuthFooter())
-                  ],
-                ),
+                    onPressed: () {
+                      hideKeyboardAndCallOnce(
+                        callback: () => SignUpPasskeyRoute().push<void>(context),
+                      );
+                    },
+                    label: Text(context.i18n.button_register),
+                    mainAxisSize: MainAxisSize.max,
+                  ),
+                  SizedBox(height: 16.0.s),
+                  Button(
+                    type: ButtonType.outlined,
+                    leadingIcon: Assets.images.icons.iconRestorekey.icon(
+                      color: context.theme.appColors.secondaryText,
+                    ),
+                    onPressed: () {
+                      hideKeyboardAndCallOnce(
+                        callback: () => RestoreMenuRoute().push<void>(context),
+                      );
+                    },
+                    label: Text(context.i18n.get_started_restore_button),
+                    mainAxisSize: MainAxisSize.max,
+                    borderColor: Colors.transparent,
+                  ),
+                  SizedBox(height: 16.0.s),
+                ],
               ),
-            ],
-          ),
+            ),
+            ScreenBottomOffset(child: const AuthFooter())
+          ],
         ),
       ),
     );

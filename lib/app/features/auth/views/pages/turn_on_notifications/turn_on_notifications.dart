@@ -6,7 +6,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
+import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/descriptions.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/notifications.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';

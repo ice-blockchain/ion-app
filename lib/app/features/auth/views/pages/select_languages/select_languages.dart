@@ -5,7 +5,7 @@ import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
+import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/language_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';

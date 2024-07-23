@@ -8,9 +8,7 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_scrolled_body.dart';
+import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ice/app/features/auth/views/components/sign_up_list_item/sign_up_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey_form.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
@@ -26,63 +24,49 @@ class SignUpPasskeyPage extends HookWidget {
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return SheetContent(
       body: KeyboardDismissOnTap(
-        child: SizedBox(
-          height: double.infinity,
-          child: AuthScrollContainer(
-            title: context.i18n.sign_up_passkey_title,
-            slivers: [
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    AuthHeader(
-                      title: context.i18n.sign_up_passkey_title,
-                      icon: AuthHeaderIcon(
-                        icon: Assets.images.icons.iconLoginPasskey.icon(size: 36.0.s),
-                      ),
-                    ),
-                    ScreenSideOffset.large(
-                      child: Column(
-                        children: [
-                          SizedBox(height: 14.0.s),
-                          SignUpListItem(
-                            title: context.i18n.sign_up_passkey_advantage_1_title,
-                            subtitle: context.i18n.sign_up_passkey_advantage_1_description,
-                            icon: Assets.images.icons.iconLoginFingerprint.icon(),
-                          ),
-                          SignUpListItem(
-                            title: context.i18n.sign_up_passkey_advantage_2_title,
-                            subtitle: context.i18n.sign_up_passkey_advantage_2_description,
-                            icon: Assets.images.icons.iconLoginDevice.icon(),
-                          ),
-                          SignUpListItem(
-                            title: context.i18n.sign_up_passkey_advantage_3_title,
-                            subtitle: context.i18n.sign_up_passkey_advantage_3_description,
-                            icon: Assets.images.icons.iconLoginSafeacc.icon(),
-                          ),
-                          SizedBox(height: 18.0.s),
-                          const SignUpPasskeyForm(),
-                          SizedBox(height: 12.0.s),
-                          Button(
-                            type: ButtonType.outlined,
-                            onPressed: () {
-                              hideKeyboardAndCallOnce(
-                                callback: () => SignUpPasswordRoute().push<void>(context),
-                              );
-                            },
-                            label: Text(context.i18n.sign_up_passkey_use_password),
-                            mainAxisSize: MainAxisSize.max,
-                            borderColor: Colors.transparent,
-                            tintColor: context.theme.appColors.primaryAccent,
-                          ),
-                          ScreenBottomOffset(),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+        child: AuthScrollContainer(
+          title: context.i18n.sign_up_passkey_title,
+          icon: Assets.images.icons.iconLoginPasskey.icon(size: 36.0.s),
+          children: [
+            ScreenSideOffset.large(
+              child: Column(
+                children: [
+                  SizedBox(height: 14.0.s),
+                  SignUpListItem(
+                    title: context.i18n.sign_up_passkey_advantage_1_title,
+                    subtitle: context.i18n.sign_up_passkey_advantage_1_description,
+                    icon: Assets.images.icons.iconLoginFingerprint.icon(),
+                  ),
+                  SignUpListItem(
+                    title: context.i18n.sign_up_passkey_advantage_2_title,
+                    subtitle: context.i18n.sign_up_passkey_advantage_2_description,
+                    icon: Assets.images.icons.iconLoginDevice.icon(),
+                  ),
+                  SignUpListItem(
+                    title: context.i18n.sign_up_passkey_advantage_3_title,
+                    subtitle: context.i18n.sign_up_passkey_advantage_3_description,
+                    icon: Assets.images.icons.iconLoginSafeacc.icon(),
+                  ),
+                  SizedBox(height: 18.0.s),
+                  const SignUpPasskeyForm(),
+                  SizedBox(height: 12.0.s),
+                  Button(
+                    type: ButtonType.outlined,
+                    onPressed: () {
+                      hideKeyboardAndCallOnce(
+                        callback: () => SignUpPasswordRoute().push<void>(context),
+                      );
+                    },
+                    label: Text(context.i18n.sign_up_passkey_use_password),
+                    mainAxisSize: MainAxisSize.max,
+                    borderColor: Colors.transparent,
+                    tintColor: context.theme.appColors.primaryAccent,
+                  ),
+                  ScreenBottomOffset(),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
