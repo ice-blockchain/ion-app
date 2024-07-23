@@ -37,7 +37,7 @@ class AuthScrollContainer extends HookWidget {
           positionController.setPosition(notification.metrics.pixels);
           return false;
         }
-        // When scroll is changed by a user
+        // When the scroll is changed by a user
         else if (notification is ScrollNotification) {
           positionController.setPosition(notification.metrics.pixels);
           return false;
