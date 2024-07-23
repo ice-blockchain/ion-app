@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/card/rounded_card.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -8,90 +9,86 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/fade_on_scroll.dart';
+import 'package:ice/app/features/auth/views/pages/restore_menu/restore_menu_item.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_back_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class RestoreMenuPage extends StatelessWidget {
+class RestoreMenuPage extends HookWidget {
   const RestoreMenuPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final scrollController = useScrollController();
     return SheetContent(
       body: SizedBox(
         height: double.infinity,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              AuthHeader(
-                title: context.i18n.restore_identity_title,
-                description: context.i18n.restore_identity_type_description,
-                icon: AuthHeaderIcon(
-                  icon: Assets.images.icons.iconLoginRestorekey.icon(size: 36.0.s),
-                ),
-                showBackButton: false,
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              automaticallyImplyLeading: false,
+              backgroundColor: context.theme.appColors.onPrimaryAccent,
+              surfaceTintColor: context.theme.appColors.onPrimaryAccent,
+              shadowColor: Colors.transparent,
+              elevation: 0,
+              leading: NavigationBackButton(
+                context.pop,
+                hideKeyboardOnBack: true,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 38.0.s),
-                child: Column(
-                  children: [
-                    RoundedCard(
-                      padding: EdgeInsets.all(16.0.s),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Assets.images.identity.walletLoginCloud.icon(size: 48.0.s),
-                          SizedBox(height: 8.0.s),
-                          Text(
-                            context.i18n.restore_identity_type_icloud_title,
-                            textAlign: TextAlign.center,
-                            style: context.theme.appTextThemes.body.copyWith(
-                              color: context.theme.appColors.primaryText,
-                            ),
-                          ),
-                          SizedBox(height: 4.0.s),
-                          Text(
-                            context.i18n.restore_identity_type_icloud_description,
-                            textAlign: TextAlign.center,
-                            style: context.theme.appTextThemes.caption3.copyWith(
-                              color: context.theme.appColors.secondaryText,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 16.0.s),
-                    RoundedCard(
-                      padding: EdgeInsets.all(16.0.s),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Assets.images.identity.walletLoginRecovery.icon(size: 48.0.s),
-                          SizedBox(height: 8.0.s),
-                          Text(
-                            context.i18n.restore_identity_type_credentials_title,
-                            textAlign: TextAlign.center,
-                            style: context.theme.appTextThemes.body.copyWith(
-                              color: context.theme.appColors.primaryText,
-                            ),
-                          ),
-                          SizedBox(height: 4.0.s),
-                          Text(
-                            context.i18n.restore_identity_type_credentials_description,
-                            textAlign: TextAlign.center,
-                            style: context.theme.appTextThemes.caption3.copyWith(
-                              color: context.theme.appColors.secondaryText,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              title: FadeOnScroll(
+                zeroOpacityOffset: 120.0.s,
+                fullOpacityOffset: 140.0.s,
+                scrollController: scrollController,
+                child: Text(context.i18n.restore_identity_title),
               ),
-              const AuthFooter(),
-              ScreenBottomOffset(),
-            ],
-          ),
+              toolbarHeight: 60.0.s,
+              titleTextStyle: context.theme.appTextThemes.subtitle
+                  .copyWith(color: context.theme.appColors.primaryText),
+            ),
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AuthHeader(
+                    title: context.i18n.restore_identity_title,
+                    description: context.i18n.restore_identity_type_description,
+                    icon: AuthHeaderIcon(
+                      icon: Assets.images.icons.iconLoginRestorekey.icon(size: 36.0.s),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 38.0.s),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 12.0.s),
+                        RestoreMenuItem(
+                          icon: Assets.images.identity.walletLoginCloud.icon(size: 48.0.s),
+                          title: context.i18n.restore_identity_type_icloud_title,
+                          description: context.i18n.restore_identity_type_icloud_description,
+                          onPressed: () {},
+                        ),
+                        SizedBox(height: 16.0.s),
+                        RestoreMenuItem(
+                          icon: Assets.images.identity.walletLoginRecovery.icon(size: 48.0.s),
+                          title: context.i18n.restore_identity_type_credentials_title,
+                          description: context.i18n.restore_identity_type_credentials_description,
+                          onPressed: () {},
+                        ),
+                        SizedBox(height: 12.0.s),
+                      ],
+                    ),
+                  ),
+                  ScreenBottomOffset(
+                    child: const AuthFooter(),
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );

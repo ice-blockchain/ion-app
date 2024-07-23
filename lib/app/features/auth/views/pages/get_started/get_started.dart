@@ -33,7 +33,6 @@ class GetStartedPage extends StatelessWidget {
                   icon: AuthHeaderIcon(
                     icon: Assets.images.icons.iconLoginIcelogo.icon(size: 36.0.s),
                   ),
-                  showBackButton: false,
                 ),
                 ScreenSideOffset.large(
                   child: Column(
