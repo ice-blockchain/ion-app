@@ -13,6 +13,7 @@ import 'package:ice/app/features/auth/views/components/auth_header/auth_app_bar.
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
 import 'package:ice/app/features/auth/views/pages/get_started/login_form.dart';
+import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -23,6 +24,7 @@ class GetStartedPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final scrollController = useScrollController();
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return SheetContent(
       body: KeyboardDismissOnTap(
         child: SizedBox(
@@ -66,7 +68,8 @@ class GetStartedPage extends HookWidget {
                               color: context.theme.appColors.secondaryText,
                             ),
                             onPressed: () {
-                              SignUpPasskeyRoute().push<void>(context);
+                              hideKeyboardAndCallOnce(
+                                  callback: () => SignUpPasskeyRoute().push<void>(context));
                             },
                             label: Text(context.i18n.button_register),
                             mainAxisSize: MainAxisSize.max,
@@ -78,7 +81,8 @@ class GetStartedPage extends HookWidget {
                               color: context.theme.appColors.secondaryText,
                             ),
                             onPressed: () {
-                              RestoreMenuRoute().push<void>(context);
+                              hideKeyboardAndCallOnce(
+                                  callback: () => RestoreMenuRoute().push<void>(context));
                             },
                             label: Text(context.i18n.get_started_restore_button),
                             mainAxisSize: MainAxisSize.max,
