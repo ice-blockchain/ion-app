@@ -49,15 +49,16 @@ class CoinDetailsPage extends HookConsumerWidget {
     );
     return Scaffold(
       appBar: NavigationAppBar.screen(
-          title: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          payload.iconUrl.icon(),
-          SizedBox(width: 6.0.s),
-          Text(payload.name),
-        ],
-      )),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            payload.iconUrl.icon(),
+            SizedBox(width: 6.0.s),
+            Text(payload.name),
+          ],
+        ),
+      ),
       body: CustomScrollView(
         controller: scrollController,
         slivers: [
