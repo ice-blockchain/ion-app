@@ -8,7 +8,6 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_app_bar.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_scrolled_body.dart';
@@ -24,19 +23,14 @@ class SignUpPasskeyPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scrollController = useScrollController();
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return SheetContent(
       body: KeyboardDismissOnTap(
         child: SizedBox(
           height: double.infinity,
-          child: AuthScrolledBody(
-            controller: scrollController,
+          child: AuthScrollContainer(
+            title: context.i18n.sign_up_passkey_title,
             slivers: [
-              AuthFadeInAppBar(
-                title: context.i18n.sign_up_passkey_title,
-                scrollController: scrollController,
-              ),
               SliverToBoxAdapter(
                 child: Column(
                   children: [

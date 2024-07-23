@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/position_controller.dart';
 
 class FadeOnScroll extends HookWidget {
   const FadeOnScroll({
     super.key,
     required this.child,
-    required this.scrollController,
+    required this.positionController,
     this.zeroOpacityOffset = 0,
     this.fullOpacityOffset = 100,
   }) : assert(zeroOpacityOffset >= 0 && fullOpacityOffset >= 0,
@@ -17,9 +18,10 @@ class FadeOnScroll extends HookWidget {
 
   final double fullOpacityOffset;
 
-  final ScrollController scrollController;
+  final PositionController positionController;
 
   double _calculateOpacity(double offset) {
+    print(offset);
     // fade in
     if (zeroOpacityOffset < fullOpacityOffset) {
       if (offset < zeroOpacityOffset) {
@@ -45,12 +47,12 @@ class FadeOnScroll extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final opacity = useState<double>(_calculateOpacity(scrollController.offset));
+    final opacity = useState<double>(_calculateOpacity(positionController.position));
 
     useEffect(() {
-      void setOpacity() => opacity.value = _calculateOpacity(scrollController.offset);
-      scrollController.addListener(setOpacity);
-      return () => scrollController.removeListener(setOpacity);
+      void setOpacity() => opacity.value = _calculateOpacity(positionController.position);
+      positionController.addListener(setOpacity);
+      return () => positionController.removeListener(setOpacity);
     }, []);
 
     return Opacity(

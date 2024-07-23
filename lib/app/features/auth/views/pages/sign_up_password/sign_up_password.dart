@@ -6,7 +6,6 @@ import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_app_bar.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_scrolled_body.dart';
@@ -30,7 +29,6 @@ class SignUpPasswordPage extends HookConsumerWidget {
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final identityKeyNameController = useTextEditingController();
     final passwordController = useTextEditingController();
-    final scrollController = useScrollController();
     final formKey = useRef(GlobalKey<FormState>());
     final checkboxSelected = useState(false);
     final checkboxHighlighted = useState(false);
@@ -41,13 +39,9 @@ class SignUpPasswordPage extends HookConsumerWidget {
           KeyboardDismissOnTap(
             child: SizedBox(
               height: double.infinity,
-              child: AuthScrolledBody(
-                controller: scrollController,
+              child: AuthScrollContainer(
+                title: context.i18n.sign_up_password_title,
                 slivers: [
-                  AuthFadeInAppBar(
-                    title: context.i18n.sign_up_password_title,
-                    scrollController: scrollController,
-                  ),
                   SliverToBoxAdapter(
                     child: Column(
                       children: [

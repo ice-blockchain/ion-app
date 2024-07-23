@@ -9,7 +9,6 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/views/components/auth_footer/auth_footer.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_app_bar.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_scrolled_body.dart';
@@ -24,21 +23,15 @@ class GetStartedPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scrollController = useScrollController();
-
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return SheetContent(
       body: KeyboardDismissOnTap(
         child: SizedBox(
           height: double.infinity,
-          child: AuthScrolledBody(
-            controller: scrollController,
+          child: AuthScrollContainer(
+            showBackButton: false,
+            title: context.i18n.get_started_title,
             slivers: [
-              AuthFadeInAppBar(
-                showBackButton: false,
-                title: context.i18n.get_started_title,
-                scrollController: scrollController,
-              ),
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Column(
