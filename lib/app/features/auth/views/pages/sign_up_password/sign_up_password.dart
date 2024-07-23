@@ -6,6 +6,7 @@ import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/auth/views/components/auth_header/auth_app_bar.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_header/auth_header_icon.dart';
 import 'package:ice/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
@@ -28,6 +29,7 @@ class SignUpPasswordPage extends HookConsumerWidget {
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final identityKeyNameController = useTextEditingController();
     final passwordController = useTextEditingController();
+    final scrollController = useScrollController();
     final formKey = useRef(GlobalKey<FormState>());
     final checkboxSelected = useState(false);
     final checkboxHighlighted = useState(false);
@@ -38,61 +40,73 @@ class SignUpPasswordPage extends HookConsumerWidget {
           KeyboardDismissOnTap(
             child: SizedBox(
               height: double.infinity,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    AuthHeader(
-                      title: context.i18n.sign_up_password_title,
-                      description: context.i18n.sign_up_password_description,
-                      icon: AuthHeaderIcon(
-                        icon: Assets.images.icons.iconLoginPassword.icon(size: 36.0.s),
-                      ),
-                    ),
-                    ScreenSideOffset.large(
-                      child: Form(
-                        key: formKey.value,
-                        child: Column(
-                          children: [
-                            SizedBox(height: 32.0.s),
-                            SignUpListItem(
-                              title: context.i18n.sign_up_password_disadvantage_1_title,
-                              subtitle: context.i18n.sign_up_password_disadvantage_1_description,
-                              icon: Assets.images.icons.iconLoginHack.icon(),
-                            ),
-                            SignUpListItem(
-                              title: context.i18n.sign_up_password_disadvantage_2_title,
-                              subtitle: context.i18n.sign_up_password_disadvantage_2_description,
-                              icon: Assets.images.icons.iconLoginReused.icon(),
-                            ),
-                            SignUpListItem(
-                              title: context.i18n.sign_up_password_disadvantage_3_title,
-                              subtitle: context.i18n.sign_up_password_disadvantage_3_description,
-                              icon: Assets.images.icons.iconLoginManage.icon(),
-                            ),
-                            SizedBox(height: 18.0.s),
-                            IdentityKeyNameInput(
-                              controller: identityKeyNameController,
-                              textInputAction: TextInputAction.next,
-                              scrollPadding: EdgeInsets.only(bottom: 250.0.s),
-                            ),
-                            SizedBox(height: 16.0.s),
-                            PasswordInput(controller: passwordController),
-                            SizedBox(height: 17.0.s),
-                            SignUpPasswordCheckbox(
-                              selected: checkboxSelected.value,
-                              highlighted: checkboxHighlighted.value,
-                              onToggle: () {
-                                checkboxHighlighted.value = false;
-                                checkboxSelected.value = !checkboxSelected.value;
-                              },
-                            ),
-                          ],
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  AuthFadeInAppBar(
+                    title: context.i18n.sign_up_password_title,
+                    scrollController: scrollController,
+                  ),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        AuthHeader(
+                          title: context.i18n.sign_up_password_title,
+                          description: context.i18n.sign_up_password_description,
+                          icon: AuthHeaderIcon(
+                            icon: Assets.images.icons.iconLoginPassword.icon(size: 36.0.s),
+                          ),
                         ),
-                      ),
+                        ScreenSideOffset.large(
+                          child: Form(
+                            key: formKey.value,
+                            child: Column(
+                              children: [
+                                SizedBox(height: 32.0.s),
+                                SignUpListItem(
+                                  title: context.i18n.sign_up_password_disadvantage_1_title,
+                                  subtitle:
+                                      context.i18n.sign_up_password_disadvantage_1_description,
+                                  icon: Assets.images.icons.iconLoginHack.icon(),
+                                ),
+                                SignUpListItem(
+                                  title: context.i18n.sign_up_password_disadvantage_2_title,
+                                  subtitle:
+                                      context.i18n.sign_up_password_disadvantage_2_description,
+                                  icon: Assets.images.icons.iconLoginReused.icon(),
+                                ),
+                                SignUpListItem(
+                                  title: context.i18n.sign_up_password_disadvantage_3_title,
+                                  subtitle:
+                                      context.i18n.sign_up_password_disadvantage_3_description,
+                                  icon: Assets.images.icons.iconLoginManage.icon(),
+                                ),
+                                SizedBox(height: 18.0.s),
+                                IdentityKeyNameInput(
+                                  controller: identityKeyNameController,
+                                  textInputAction: TextInputAction.next,
+                                  scrollPadding: EdgeInsets.only(bottom: 250.0.s),
+                                ),
+                                SizedBox(height: 16.0.s),
+                                PasswordInput(controller: passwordController),
+                                SizedBox(height: 17.0.s),
+                                SignUpPasswordCheckbox(
+                                  selected: checkboxSelected.value,
+                                  highlighted: checkboxHighlighted.value,
+                                  onToggle: () {
+                                    checkboxHighlighted.value = false;
+                                    checkboxSelected.value = !checkboxSelected.value;
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ScreenBottomOffset(margin: _footerHeight),
+                      ],
                     ),
-                    ScreenBottomOffset(margin: _footerHeight),
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           ),

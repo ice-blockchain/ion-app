@@ -69,7 +69,8 @@ class GetStartedPage extends HookWidget {
                             ),
                             onPressed: () {
                               hideKeyboardAndCallOnce(
-                                  callback: () => SignUpPasskeyRoute().push<void>(context));
+                                callback: () => SignUpPasskeyRoute().push<void>(context),
+                              );
                             },
                             label: Text(context.i18n.button_register),
                             mainAxisSize: MainAxisSize.max,
@@ -82,7 +83,8 @@ class GetStartedPage extends HookWidget {
                             ),
                             onPressed: () {
                               hideKeyboardAndCallOnce(
-                                  callback: () => RestoreMenuRoute().push<void>(context));
+                                callback: () => RestoreMenuRoute().push<void>(context),
+                              );
                             },
                             label: Text(context.i18n.get_started_restore_button),
                             mainAxisSize: MainAxisSize.max,
