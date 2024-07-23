@@ -19,6 +19,8 @@ IconButtonThemeData buildIconButtonTheme(
         templateTheme.iconButton.width.s,
       ),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      splashFactory: NoSplash.splashFactory,
+      overlayColor: WidgetStateProperty.all(Colors.transparent),
     ),
   );
 }

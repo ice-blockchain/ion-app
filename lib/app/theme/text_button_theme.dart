@@ -6,6 +6,8 @@ TextButtonThemeData buildTextButtonTheme() {
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       minimumSize: Size.zero,
       padding: EdgeInsets.zero,
+      splashFactory: NoSplash.splashFactory,
+      overlayColor: Colors.transparent,
     ),
   );
 }
