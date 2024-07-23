@@ -63,14 +63,12 @@ class SendNftForm extends HookConsumerWidget {
                       rank: payload.rank,
                       price: payload.price,
                       networkSymbol: payload.currency,
-                      networkSymbolIcon:
-                          Assets.images.wallet.walletEth.icon(size: 16.0.s),
+                      networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 16.0.s),
                     ContactInputSwitcher(
                       selectedContact: selectedContact.value,
-                      onContactSelected: (ContactData? contact) =>
-                          selectedContact.value = contact,
+                      onContactSelected: (ContactData? contact) => selectedContact.value = contact,
                     ),
                     SizedBox(height: 17.0.s),
                     const ArrivalTime(),
@@ -99,8 +97,7 @@ class SendNftForm extends HookConsumerWidget {
                         child: Assets.images.icons.iconButtonNext.icon(),
                       ),
                       onPressed: () {
-                        SendNftConfirmRoute($extra: payload)
-                            .push<void>(context);
+                        SendNftConfirmRoute($extra: payload).push<void>(context);
                       },
                     ),
                     SizedBox(height: 16.0.s),
