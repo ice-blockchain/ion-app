@@ -48,6 +48,7 @@ class RestoreCredsPage extends HookWidget {
                   key: formKey.value,
                   child: Column(
                     children: [
+                      SizedBox(height: 16.0.s),
                       IdentityKeyNameInput(
                         controller: identityKeyNameController,
                         textInputAction: TextInputAction.next,
@@ -73,7 +74,8 @@ class RestoreCredsPage extends HookWidget {
                         },
                         label: Text(context.i18n.button_restore),
                         mainAxisSize: MainAxisSize.max,
-                      )
+                      ),
+                      SizedBox(height: 16.0.s),
                     ],
                   ),
                 ),
