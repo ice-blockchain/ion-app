@@ -55,8 +55,7 @@ class WalletRoutes {
         TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting'),
         TypedGoRoute<NftSendFormRoute>(path: 'nft-send'),
         TypedGoRoute<SendNftConfirmRoute>(path: 'nft-confirm'),
-        TypedGoRoute<NftTransactionDetailsRoute>(
-            path: 'nft-transaction-details'),
+        TypedGoRoute<NftTransactionDetailsRoute>(path: 'nft-transaction-details'),
       ],
     ),
   ];
@@ -76,8 +75,7 @@ class WalletRoutes {
           path: 'coin-send-form-confirmation',
         ),
         TypedGoRoute<TransactionResultRoute>(path: 'transaction-result'),
-        TypedGoRoute<CoinTransactionDetailsRoute>(
-            path: 'coin-transaction-details'),
+        TypedGoRoute<CoinTransactionDetailsRoute>(path: 'coin-transaction-details'),
       ],
     ),
     TypedGoRoute<TransactionResultRoute>(path: 'transaction-result'),
@@ -215,8 +213,7 @@ class TransactionResultRoute extends BaseRouteData {
 }
 
 class CoinsDetailsRoute extends BaseRouteData {
-  CoinsDetailsRoute({required this.$extra})
-      : super(child: CoinDetailsPage(payload: $extra));
+  CoinsDetailsRoute({required this.$extra}) : super(child: CoinDetailsPage(payload: $extra));
 
   final CoinData $extra;
 }
