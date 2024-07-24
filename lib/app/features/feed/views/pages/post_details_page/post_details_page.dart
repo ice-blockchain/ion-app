@@ -5,6 +5,7 @@ import 'package:ice/app/features/feed/views/components/list_separator/list_separ
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_details_footer.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/components/post_list/components/post_list.dart';
+import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/reply_input_field.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -31,21 +32,30 @@ class PostDetailsPage extends StatelessWidget {
           ),
         ],
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Post(
-              postData: postData,
-              footer: PostDetailsFooter(
-                postData: postData,
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Flexible(
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Post(
+                    postData: postData,
+                    footer: PostDetailsFooter(
+                      postData: postData,
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(child: FeedListSeparator()),
+                PostList(
+                  posts: List.generate(10, (_) => postData),
+                  separator: FeedListSeparator(height: 1.0.s),
+                ),
+              ],
             ),
           ),
-          SliverToBoxAdapter(child: FeedListSeparator()),
-          PostList(
-            posts: List.generate(10, (_) => postData),
-            separator: FeedListSeparator(height: 1.5.s),
-          ),
+          FeedListSeparator(height: 1.0.s),
+          ReplyInputField(postData: postData),
         ],
       ),
     );
