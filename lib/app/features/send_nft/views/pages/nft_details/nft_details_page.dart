@@ -23,74 +23,77 @@ class NftDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SheetContent(
-      body: Column(
-        children: [
-          NavigationAppBar.modal(
-            title: Text(context.i18n.send_nft_navigation_title),
-            showBackButton: false,
-            actions: const [NavigationCloseButton()],
-          ),
-          ScreenSideOffset.small(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(top: 10.0.s),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  NftPicture(imageUrl: payload.iconUrl),
-                  SizedBox(height: 15.0.s),
-                  NftName(
-                    name: payload.collectionName,
-                    rank: payload.rank,
-                    price: payload.price,
-                    networkSymbol: payload.currency,
-                    networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
-                  ),
-                  SizedBox(height: 12.0.s),
-                  RoundedCard(
-                    child: ReadMoreText(
-                      payload.description,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            NavigationAppBar.modal(
+              title: Text(context.i18n.send_nft_navigation_title),
+              showBackButton: false,
+              actions: const [NavigationCloseButton()],
+            ),
+            ScreenSideOffset.small(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(top: 10.0.s),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    NftPicture(imageUrl: payload.iconUrl),
+                    SizedBox(height: 15.0.s),
+                    NftName(
+                      name: payload.collectionName,
+                      rank: payload.rank,
+                      price: payload.price,
+                      networkSymbol: payload.currency,
+                      networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
-                  ),
-                  SizedBox(height: 12.0.s),
-                  ListItem.text(
-                    title: Text(context.i18n.send_nft_token_id),
-                    value: payload.identifier.toString(),
-                  ),
-                  SizedBox(height: 12.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(context.i18n.send_nft_token_network),
-                    value: payload.network,
-                    icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
-                  ),
-                  SizedBox(height: 12.0.s),
-                  ListItem.text(
-                    title: Text(context.i18n.send_nft_token_standard),
-                    value: payload.tokenStandard,
-                  ),
-                  SizedBox(height: 12.0.s),
-                  ListItem.text(
-                    title: Text(context.i18n.send_nft_token_contract_address),
-                    value: payload.contractAddress,
-                  ),
-                  SizedBox(height: 12.0.s),
-                  Button(
-                    mainAxisSize: MainAxisSize.max,
-                    minimumSize: Size(56.0.s, 56.0.s),
-                    leadingIcon: Assets.images.icons.iconButtonSend
-                        .icon(color: context.theme.appColors.onPrimaryAccent),
-                    label: Text(
-                      context.i18n.feed_send,
+                    SizedBox(height: 12.0.s),
+                    RoundedCard(
+                      child: ReadMoreText(
+                        payload.description,
+                      ),
                     ),
-                    onPressed: () {
-                      NftSendFormRoute($extra: payload).push<void>(context);
-                    },
-                  ),
-                ],
+                    SizedBox(height: 12.0.s),
+                    ListItem.text(
+                      title: Text(context.i18n.send_nft_token_id),
+                      value: payload.identifier.toString(),
+                    ),
+                    SizedBox(height: 12.0.s),
+                    ListItem.textWithIcon(
+                      title: Text(context.i18n.send_nft_token_network),
+                      value: payload.network,
+                      icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
+                    ),
+                    SizedBox(height: 12.0.s),
+                    ListItem.text(
+                      title: Text(context.i18n.send_nft_token_standard),
+                      value: payload.tokenStandard,
+                    ),
+                    SizedBox(height: 12.0.s),
+                    ListItem.text(
+                      title: Text(context.i18n.send_nft_token_contract_address),
+                      value: payload.contractAddress,
+                    ),
+                    SizedBox(height: 12.0.s),
+                    Button(
+                      mainAxisSize: MainAxisSize.max,
+                      minimumSize: Size(56.0.s, 56.0.s),
+                      leadingIcon: Assets.images.icons.iconButtonSend
+                          .icon(color: context.theme.appColors.onPrimaryAccent),
+                      label: Text(
+                        context.i18n.feed_send,
+                      ),
+                      onPressed: () {
+                        NftSendFormRoute($extra: payload).push<void>(context);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          ScreenBottomOffset(),
-        ],
+            ScreenBottomOffset(),
+          ],
+        ),
       ),
     );
   }

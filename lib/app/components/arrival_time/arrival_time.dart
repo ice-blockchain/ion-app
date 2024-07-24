@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/arrival_time/arrival_time_indicator.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/arrival_time/arrival_time_indicator.dart';
 
 class ArrivalTime extends StatelessWidget {
   const ArrivalTime({super.key});

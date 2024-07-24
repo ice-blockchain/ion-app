@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/arrival_time/arrival_time.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/network_fee/network_fee.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/slider/app_slider.dart';
@@ -12,9 +14,7 @@ import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/arrival_time/arrival_time.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/network_fee.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/providers/send_nft_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -47,7 +47,7 @@ class SendNftForm extends HookConsumerWidget {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0.s),
                 child: NavigationAppBar.screen(
-                  title: locale.send_nft_title,
+                  title: Text(locale.send_nft_title),
                   actions: const <Widget>[
                     NavigationCloseButton(),
                   ],
@@ -63,12 +63,14 @@ class SendNftForm extends HookConsumerWidget {
                       rank: payload.rank,
                       price: payload.price,
                       networkSymbol: payload.currency,
-                      networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
+                      networkSymbolIcon:
+                          Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 16.0.s),
                     ContactInputSwitcher(
                       selectedContact: selectedContact.value,
-                      onContactSelected: (ContactData? contact) => selectedContact.value = contact,
+                      onContactSelected: (ContactData? contact) =>
+                          selectedContact.value = contact,
                     ),
                     SizedBox(height: 17.0.s),
                     const ArrivalTime(),
@@ -97,7 +99,8 @@ class SendNftForm extends HookConsumerWidget {
                         child: Assets.images.icons.iconButtonNext.icon(),
                       ),
                       onPressed: () {
-                        SendNftConfirmRoute($extra: payload).push<void>(context);
+                        SendNftConfirmRoute($extra: payload)
+                            .push<void>(context);
                       },
                     ),
                     SizedBox(height: 16.0.s),

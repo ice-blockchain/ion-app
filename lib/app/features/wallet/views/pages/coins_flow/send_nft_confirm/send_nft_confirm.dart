@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
+import 'package:ice/app/components/nft_item/nft_item.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
@@ -24,9 +25,10 @@ class SendNftConfirmPage extends ConsumerWidget {
 
     return SheetContent(
       body: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
-            title: context.i18n.send_nft_navigation_title,
+            title: Text(context.i18n.send_nft_navigation_title),
             showBackButton: false,
             actions: const [NavigationCloseButton()],
           ),
@@ -34,8 +36,8 @@ class SendNftConfirmPage extends ConsumerWidget {
             child: SingleChildScrollView(
               padding: EdgeInsets.only(top: 10.0.s),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
+                  NftItem(nftData: payload),
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_send_to),
@@ -78,14 +80,21 @@ class SendNftConfirmPage extends ConsumerWidget {
                     icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                   ),
                   SizedBox(height: 12.0.s),
-                  ListItem.text(
-                    title: Text(context.i18n.send_nft_confirm_arrival_time),
-                    value: '8 min',
+                  ListItem.textWithIcon(
+                    title: Text(locale.wallet_arrival_time),
+                    value: '${formData.arrivalTime} '
+                        '${locale.wallet_arrival_time_minutes}',
+                    icon: Assets.images.icons.iconBlockTime.icon(
+                      size: 16.0.s,
+                    ),
                   ),
                   SizedBox(height: 12.0.s),
-                  ListItem.text(
-                    title: Text(context.i18n.send_nft_confirm_network_fee),
-                    value: '0.001',
+                  ListItem.textWithIcon(
+                    title: Text(locale.wallet_network_fee),
+                    value: '1.00 USDT',
+                    icon: Assets.images.icons.iconBlockCoins.icon(
+                      size: 16.0.s,
+                    ),
                   ),
                   SizedBox(height: 12.0.s),
                   Button(
