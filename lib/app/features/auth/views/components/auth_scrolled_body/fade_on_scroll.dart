@@ -20,27 +20,11 @@ class FadeOnScroll extends HookWidget {
   final ValueNotifier<double> positionNotifier;
 
   double _calculateOpacity(double offset) {
-    // fade in
-    if (zeroOpacityOffset < fullOpacityOffset) {
-      if (offset < zeroOpacityOffset) {
-        return 0;
-      } else if (offset > fullOpacityOffset) {
-        return 1;
-      } else {
-        return (offset - zeroOpacityOffset) / (fullOpacityOffset - zeroOpacityOffset);
-      }
-    }
-    // fade out
-    else if (zeroOpacityOffset > fullOpacityOffset) {
-      if (offset > zeroOpacityOffset) {
-        return 0;
-      } else if (offset < fullOpacityOffset) {
-        return 1;
-      } else {
-        return 1 - (offset - fullOpacityOffset) / (zeroOpacityOffset - fullOpacityOffset);
-      }
-    }
-    return 1;
+    final fadeIn = zeroOpacityOffset < fullOpacityOffset;
+    final start = fadeIn ? zeroOpacityOffset : fullOpacityOffset;
+    final end = fadeIn ? fullOpacityOffset : zeroOpacityOffset;
+    final diff = (offset - start) / (end - start);
+    return (fadeIn ? diff : (1 - diff)).clamp(0, 1);
   }
 
   @override
