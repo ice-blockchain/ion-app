@@ -7,6 +7,7 @@ enum IceRouteType {
   single,
   bottomSheet,
   slideFromLeft,
+  slideFromRight,
   mainModalSheet,
 }
 
@@ -15,6 +16,7 @@ abstract class BaseRouteData extends GoRouteData {
     required this.child,
     this.type = IceRouteType.single,
   });
+
   final IceRouteType type;
 
   final Widget child;
@@ -25,6 +27,7 @@ abstract class BaseRouteData extends GoRouteData {
       IceRouteType.single => CupertinoPage<void>(child: child),
       IceRouteType.bottomSheet => FadeTransitionSheetPage(child: child, state: state),
       IceRouteType.slideFromLeft => SlideFromLeftTransitionPage(child: child, state: state),
+      IceRouteType.slideFromRight => CupertinoPage(child: child),
       IceRouteType.mainModalSheet => ModalSheetPage<void>(
           swipeDismissible: true,
           key: state.pageKey,
@@ -85,6 +88,18 @@ class SlideFromLeftTransitionPage extends CustomTransitionPage<void> {
               position: offsetAnimation,
               child: child,
             );
+          },
+        );
+}
+
+class SlideFromRightTransitionPage extends CustomTransitionPage<void> {
+  SlideFromRightTransitionPage({
+    required super.child,
+    required GoRouterState state,
+  }) : super(
+          key: state.pageKey,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return child;
           },
         );
 }
