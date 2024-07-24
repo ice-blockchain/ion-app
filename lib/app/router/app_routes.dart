@@ -25,7 +25,7 @@ import 'package:ice/app/features/feed/views/pages/post_details_page/post_details
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/quote_post_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_options_modal/share_options_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_type_modal_page/share_type_modal_page.dart';
-import 'package:ice/app/features/send_nft/views/pages/nft_details/nft_details_page.dart';
+import 'package:ice/app/features/wallet/views/pages/send_nft/views/pages/nft_details/nft_details_page.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/switch_account_page.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
