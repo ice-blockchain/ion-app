@@ -42,19 +42,19 @@ class SendNftForm extends HookConsumerWidget {
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
+            children: [
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0.s),
                 child: NavigationAppBar.screen(
                   title: Text(locale.send_nft_title),
-                  actions: const <Widget>[
+                  actions: const [
                     NavigationCloseButton(),
                   ],
                 ),
               ),
               ScreenSideOffset.small(
                 child: Column(
-                  children: <Widget>[
+                  children: [
                     NftPicture(imageUrl: selectedNft.iconUrl),
                     SizedBox(height: 16.0.s),
                     NftName(

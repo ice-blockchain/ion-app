@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -9,7 +8,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class NftItem extends HookConsumerWidget {
+class NftItem extends StatelessWidget {
   const NftItem({
     required this.nftData,
     super.key,
@@ -21,7 +20,7 @@ class NftItem extends HookConsumerWidget {
   static double get imageHeight => 54.0.s;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return ListItem(
       title: Text(nftData.collectionName),
       subtitle: Row(
