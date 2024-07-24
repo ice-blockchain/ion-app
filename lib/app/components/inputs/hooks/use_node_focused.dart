@@ -12,7 +12,7 @@ ValueNotifier<bool> useNodeFocused(FocusNode focusNode) {
       focusNode.addListener(onFocusChange);
       return () => focusNode.removeListener(onFocusChange);
     },
-    <Object?>[focusNode],
+    [focusNode],
   );
   return focused;
 }

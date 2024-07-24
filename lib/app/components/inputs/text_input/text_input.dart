@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ice/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ice/app/components/inputs/hooks/use_text_changed.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_decoration.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/string.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/extensions/extensions.dart';
 
 class TextInput extends HookWidget {
   TextInput({
@@ -63,17 +61,26 @@ class TextInput extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final focusNode = useFocusNode();
     final error = useState<String?>(null);
+    final hasValue = useState(initialValue.isNotEmpty);
+    final hasFocus = useNodeFocused(focusNode);
+
+    void onChangedHandler(String text) {
+      hasValue.value = text.isNotEmpty;
+      onChanged?.call(text);
+    }
 
     useTextChanged(
       controller: controller,
-      onTextChanged: onChanged,
+      onTextChanged: onChangedHandler,
     );
 
     return TextFormField(
       scrollPadding: scrollPadding,
       controller: controller,
-      onChanged: controller == null ? onChanged : null,
+      focusNode: focusNode,
+      onChanged: controller == null ? onChangedHandler : null,
       initialValue: initialValue,
       maxLines: maxLines,
       minLines: minLines,
@@ -101,7 +108,7 @@ class TextInput extends HookWidget {
         context: context,
         verified: verified,
         prefix: prefix,
-        prefixIcon: prefixIcon,
+        prefixIcon: !hasFocus.value && !hasValue.value ? prefixIcon : null,
         suffixIcon: suffixIcon,
         errorText: errorText ?? error.value,
         contentPadding: contentPadding,
