@@ -81,7 +81,7 @@ class ListItem extends StatelessWidget {
 
   factory ListItem.textWithIcon({
     required Widget title,
-    required String value,
+    String? value,
     Widget? icon,
     Widget? secondary,
     Key? key,

@@ -65,19 +65,19 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
 
 const List<NftData> mockedNftsDataArray = <NftData>[
   NftData(
-    collectionName: 'WZRD',
-    identifier: 67,
-    price: 2.11,
-    iconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-10.png',
-    currency: 'ETH',
-    currencyIconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
-    description:
-        'Explore the mysteries of the universe with WZRD! This hand-drawn, one-of-a-kind digital artwork features a whimsical feline adorned with interstellar patterns and vibrant colors. Perfect for space enthusiasts and cat lovers alike, this NFT brings a touch of the cosmos to your collection. Own a piece of digital space art today!',
-    network: 'Ethereum',
-    tokenStandard: 'ERC-1123',
-    contractAddress: '0x4559...4jd83g',
-    rank: 1,
-  ),
+      collectionName: 'WZRD',
+      identifier: 67,
+      price: 2.11,
+      iconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-10.png',
+      currency: 'ETH',
+      currencyIconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+      description:
+          'Explore the mysteries of the universe with WZRD! This hand-drawn, one-of-a-kind digital artwork features a whimsical feline adorned with interstellar patterns and vibrant colors. Perfect for space enthusiasts and cat lovers alike, this NFT brings a touch of the cosmos to your collection. Own a piece of digital space art today!',
+      network: 'Ethereum',
+      tokenStandard: 'ERC-1123',
+      contractAddress: '0x4559...4jd83g',
+      rank: 1,
+      asset: 'Freddie’s Crew #9'),
   NftData(
     collectionName: 'Moonrunners Specialty',
     identifier: 4,
@@ -91,6 +91,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     tokenStandard: 'ERC-1123',
     contractAddress: '0x4559...4jd83g',
     rank: 2,
+    asset: 'Freddie’s Crew #9',
   ),
   NftData(
     collectionName: 'Crazy Monkey',
@@ -105,6 +106,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     tokenStandard: 'ERC-1123',
     contractAddress: '0x4559...4jd83g',
     rank: 3,
+    asset: 'Freddie’s Crew #9',
   ),
   NftData(
     collectionName: 'Metaverse Melody',
@@ -119,6 +121,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     tokenStandard: 'ERC-1123',
     contractAddress: '0x4559...4jd83g',
     rank: 4,
+    asset: 'Freddie’s Crew #9',
   ),
   NftData(
     collectionName: 'Ethereal Butterfly',
@@ -133,6 +136,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     tokenStandard: 'ERC-1123',
     contractAddress: '0x4559...4jd83g',
     rank: 5,
+    asset: 'Freddie’s Crew #9',
   ),
   NftData(
     collectionName: 'Pixel Samurai',
@@ -147,5 +151,6 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     tokenStandard: 'ERC-1123',
     contractAddress: '0x4559...4jd83g',
     rank: 6,
+    asset: 'Freddie’s Crew #9',
   ),
 ];

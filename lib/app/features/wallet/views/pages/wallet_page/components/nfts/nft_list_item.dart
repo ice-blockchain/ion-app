@@ -22,9 +22,9 @@ class NftListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListItem(
       title: Text(nftData.collectionName),
+      onTap: onTap,
       subtitle: Text('#${nftData.identifier}'),
       backgroundColor: context.theme.appColors.tertararyBackground,
-      onTap: onTap,
       leading: Avatar(
         size: 36.0.s,
         imageUrl: nftData.iconUrl,
