@@ -50,7 +50,16 @@ class FadeTransitionSheetPage extends ScrollableNavigationSheetPage<void> {
     required GoRouterState state,
   }) : super(
           key: state.pageKey,
+          minExtent: Extent.pixels(0),
+          initialExtent: Extent.proportional(1),
           physics: BouncingSheetPhysics(
+            parent: SnappingSheetPhysics(
+              snappingBehavior: SnapToNearest(
+                snapTo: [
+                  Extent.proportional(1),
+                ],
+              ),
+            ),
             behavior: DirectionAwareBouncingBehavior(
               upward: Extent.pixels(0),
             ),
