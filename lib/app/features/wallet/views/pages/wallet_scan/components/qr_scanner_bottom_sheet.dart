@@ -16,55 +16,52 @@ class QRScannerBottomSheet extends HookConsumerWidget {
 
     final result = useState<Barcode?>(null);
 
-    return FractionallySizedBox(
-      heightFactor: 0.95,
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0.s),
-            child: NavigationAppBar.screen(
-              title: Text(context.i18n.wallet_scan),
-            ),
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0.s),
+          child: NavigationAppBar.screen(
+            title: Text(context.i18n.wallet_scan),
           ),
-          Expanded(
-            child: Stack(
-              children: [
-                QRView(
-                  onQRViewCreated: (QRViewController controller) {
-                    controller.scannedDataStream
-                        .listen((Barcode scanData) => result.value = scanData);
-                  },
-                  overlay: QrScannerOverlayShape(
-                    borderColor: context.theme.appColors.primaryAccent,
-                    borderRadius: 10.0.s,
-                    borderLength: 30.0.s,
-                    borderWidth: 6.0.s,
-                    cutOutSize: 238.0.s,
-                    overlayColor: context.theme.appColors.backgroundSheet,
-                  ),
-                  key: qrKey,
+        ),
+        Expanded(
+          child: Stack(
+            children: [
+              QRView(
+                onQRViewCreated: (QRViewController controller) {
+                  controller.scannedDataStream
+                      .listen((Barcode scanData) => result.value = scanData);
+                },
+                overlay: QrScannerOverlayShape(
+                  borderColor: context.theme.appColors.primaryAccent,
+                  borderRadius: 10.0.s,
+                  borderLength: 30.0.s,
+                  borderWidth: 6.0.s,
+                  cutOutSize: 238.0.s,
+                  overlayColor: context.theme.appColors.backgroundSheet,
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 80.0.s),
-                    child: SizedBox(
-                      width: 200.0.s,
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        context.i18n.wallet_scan_hint,
-                        style: context.theme.appTextThemes.body.copyWith(
-                          color: context.theme.appColors.onPrimaryAccent,
-                        ),
+                key: qrKey,
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 80.0.s),
+                  child: SizedBox(
+                    width: 200.0.s,
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      context.i18n.wallet_scan_hint,
+                      style: context.theme.appTextThemes.body.copyWith(
+                        color: context.theme.appColors.onPrimaryAccent,
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
