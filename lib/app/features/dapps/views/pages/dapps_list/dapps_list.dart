@@ -33,7 +33,7 @@ class DAppsList extends HookConsumerWidget {
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
-        title: payload.title,
+        title: Text(payload.title),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,

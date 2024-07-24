@@ -18,12 +18,12 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           NavigationAppBar.screen(
-            title: 'Some title',
+            title: Text('Some title'),
           ),
           NavigationAppBar.screen(
-            title: 'Some title',
+            title: Text('Some title'),
             showBackButton: false,
-            actions: <Widget>[
+            actions: [
               IconButton(
                 icon: Assets.images.icons.iconSheetClose.icon(
                   size: NavigationAppBar.actionButtonSide,
@@ -34,7 +34,7 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
             ],
           ),
           NavigationAppBar.screen(
-            title: 'Some title',
+            title: Text('Some title'),
             actions: [
               IconButton(
                 icon: Assets.images.icons.iconChannelAdmin.icon(
@@ -46,7 +46,7 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
             ],
           ),
           NavigationAppBar.screen(
-            title: 'Some title',
+            title: Text('Some title'),
             actions: [
               IconButton(
                 icon: Assets.images.icons.iconChannelAdmin.icon(
@@ -65,7 +65,7 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
             ],
           ),
           NavigationAppBar.screen(
-            title: 'Some very very long title',
+            title: Text('Some very very long title'),
             actions: [
               IconButton(
                 icon: Assets.images.icons.iconMorePopup.icon(

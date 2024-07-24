@@ -38,7 +38,7 @@ class CoinReceiveModal extends StatelessWidget {
           children: [
             NavigationAppBar.modal(
               showBackButton: false,
-              title: context.i18n.wallet_receive,
+              title: Text(context.i18n.wallet_receive),
               actions: const [NavigationCloseButton()],
             ),
             ScreenSideOffset.small(

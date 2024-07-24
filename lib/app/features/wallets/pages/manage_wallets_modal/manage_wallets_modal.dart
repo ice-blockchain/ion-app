@@ -23,7 +23,7 @@ class ManageWalletsModal extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             NavigationAppBar.modal(
-              title: context.i18n.wallet_manage_wallets,
+              title: Text(context.i18n.wallet_manage_wallets),
               actions: const [NavigationCloseButton()],
             ),
             SizedBox(

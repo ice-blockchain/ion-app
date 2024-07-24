@@ -9,44 +9,41 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_back_button.dart';
 
 class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const NavigationAppBar._({
+  const NavigationAppBar({
     required this.useScreenTopOffset,
-    this.title = '',
+    this.title,
     this.showBackButton = true,
     this.hideKeyboardOnBack = false,
     this.onBackPress,
     this.actions,
-    this.titleIcon,
     super.key,
   });
 
   factory NavigationAppBar.screen({
-    String title = '',
+    Widget? title,
     bool showBackButton = true,
     VoidCallback? onBackPress,
     List<Widget>? actions,
-    Widget? titleIcon,
     Key? key,
   }) =>
-      NavigationAppBar._(
+      NavigationAppBar(
         title: title,
         showBackButton: showBackButton,
         onBackPress: onBackPress,
         actions: actions,
-        titleIcon: titleIcon,
         useScreenTopOffset: true,
         key: key,
       );
 
   factory NavigationAppBar.modal({
-    String title = '',
+    Widget? title,
     bool showBackButton = true,
     VoidCallback? onBackPress,
     List<Widget>? actions,
     bool hideKeyboardOnBack = true,
     Key? key,
   }) =>
-      NavigationAppBar._(
+      NavigationAppBar(
         title: title,
         showBackButton: showBackButton,
         onBackPress: onBackPress,
@@ -62,8 +59,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   static double get actionButtonSide => 24.0.s;
 
-  final String title;
-  final Widget? titleIcon;
+  final Widget? title;
   final bool showBackButton;
   final bool hideKeyboardOnBack;
   final VoidCallback? onBackPress;
@@ -72,12 +68,13 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget titleWidget = Text(
-      title,
-      textAlign: TextAlign.center,
-      style:
-          context.theme.appTextThemes.subtitle.copyWith(color: context.theme.appColors.primaryText),
-    );
+    final Widget? titleWidget = title != null
+        ? DefaultTextStyle(
+            textAlign: TextAlign.center,
+            style: context.theme.appTextThemes.subtitle
+                .copyWith(color: context.theme.appColors.primaryText),
+            child: title!)
+        : null;
     final Widget appBarContent = NavigationToolbar(
       leading: showBackButton
           ? NavigationBackButton(
@@ -85,19 +82,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
               hideKeyboardOnBack: hideKeyboardOnBack,
             )
           : null,
-      middle: titleIcon != null
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                titleIcon!,
-                SizedBox(
-                  width: 6.0.s,
-                ),
-                titleWidget,
-              ],
-            )
-          : titleWidget,
+      middle: titleWidget,
       trailing: actions != null && actions!.isNotEmpty
           ? Row(mainAxisSize: MainAxisSize.min, children: actions!)
           : null,

@@ -11,7 +11,7 @@ import 'package:ice/app/features/wallet/views/pages/manage_coins/components/mana
 import 'package:ice/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/providers/selectors/manage_coins_selectors.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
-import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
+import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_done_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -38,13 +38,13 @@ class ManageCoinsPage extends HookConsumerWidget {
         children: [
           NavigationAppBar.modal(
             showBackButton: false,
-            title: context.i18n.wallet_manage_coins,
+            title: Text(context.i18n.wallet_manage_coins),
             actions: const [NavigationDoneButton()],
           ),
           Expanded(
             child: CustomScrollView(
               slivers: [
-                FloatingAppBar(
+                CollapsingAppBar(
                   height: SearchInput.height,
                   child: ScreenSideOffset.small(
                     child: SearchInput(

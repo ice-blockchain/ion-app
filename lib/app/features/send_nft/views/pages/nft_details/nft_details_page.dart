@@ -24,7 +24,7 @@ class NftDetailsPage extends StatelessWidget {
       body: Column(
         children: [
           NavigationAppBar.modal(
-            title: context.i18n.send_nft_navigation_title,
+            title: Text(context.i18n.send_nft_navigation_title),
             showBackButton: false,
             actions: const [NavigationCloseButton()],
           ),

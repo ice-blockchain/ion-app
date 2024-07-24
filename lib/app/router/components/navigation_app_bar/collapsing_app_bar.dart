@@ -4,8 +4,8 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
-class FloatingAppBar extends StatelessWidget {
-  FloatingAppBar({
+class CollapsingAppBar extends StatelessWidget {
+  CollapsingAppBar({
     required this.child,
     required this.height,
     super.key,

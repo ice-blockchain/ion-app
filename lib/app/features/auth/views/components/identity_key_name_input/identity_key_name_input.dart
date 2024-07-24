@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/identity_key_name_input/identity_info.dart';
+import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class IdentityKeyNameInput extends StatelessWidget {
+class IdentityKeyNameInput extends HookWidget {
   const IdentityKeyNameInput({
     this.textInputAction = TextInputAction.done,
     super.key,
@@ -23,6 +25,7 @@ class IdentityKeyNameInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
@@ -35,11 +38,13 @@ class IdentityKeyNameInput extends StatelessWidget {
               size: 20.0.s,
             ),
             onPressed: () {
-              showSimpleBottomSheet<void>(
-                context: context,
-                child: const IdentityInfo(),
-                useRootNavigator: false,
-              );
+              hideKeyboardAndCallOnce(callback: () {
+                showSimpleBottomSheet<void>(
+                  context: context,
+                  child: const IdentityInfo(),
+                  useRootNavigator: false,
+                );
+              });
             },
           ),
         ],

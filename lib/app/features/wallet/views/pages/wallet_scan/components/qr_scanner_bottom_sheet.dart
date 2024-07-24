@@ -23,7 +23,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
-              title: context.i18n.wallet_scan,
+              title: Text(context.i18n.wallet_scan),
             ),
           ),
           Expanded(

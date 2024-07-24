@@ -23,7 +23,7 @@ class ShareOptionsPage extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
               showBackButton: false,
-              title: context.i18n.feed_share_via,
+              title: Text(context.i18n.feed_share_via),
               actions: const [
                 NavigationCloseButton(),
               ],

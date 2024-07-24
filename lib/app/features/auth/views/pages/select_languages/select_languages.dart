@@ -5,12 +5,12 @@ import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/auth/views/components/auth_header/auth_header.dart';
+import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/language_list_item.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
+import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class SelectLanguages extends HookWidget {
@@ -44,7 +44,7 @@ class SelectLanguages extends HookWidget {
           Expanded(
             child: CustomScrollView(
               slivers: [
-                FloatingAppBar(
+                CollapsingAppBar(
                   topOffset: 16.0.s,
                   height: SearchInput.height,
                   child: ScreenSideOffset.small(

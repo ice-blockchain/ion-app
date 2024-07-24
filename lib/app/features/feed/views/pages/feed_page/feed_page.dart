@@ -10,7 +10,7 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_cont
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_handler.dart';
-import 'package:ice/app/router/components/floating_app_bar/floating_app_bar.dart';
+import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 
 class FeedPage extends HookConsumerWidget {
   const FeedPage({super.key});
@@ -25,7 +25,7 @@ class FeedPage extends HookConsumerWidget {
         body: CustomScrollView(
           controller: scrollController,
           slivers: [
-            FloatingAppBar(
+            CollapsingAppBar(
               height: FeedControls.height,
               child: FeedControls(
                 pageScrollController: scrollController,

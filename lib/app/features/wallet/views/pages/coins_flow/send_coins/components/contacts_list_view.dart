@@ -22,7 +22,7 @@ class ContactsListView extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
-              title: context.i18n.wallet_send_coins,
+              title: Text(context.i18n.wallet_send_coins),
               showBackButton: false,
               actions: const [
                 NavigationCloseButton(),

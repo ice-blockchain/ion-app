@@ -23,7 +23,10 @@ class LoginForm extends HookConsumerWidget {
       key: formKey.value,
       child: Column(
         children: [
-          IdentityKeyNameInput(controller: identityKeyNameController),
+          IdentityKeyNameInput(
+            controller: identityKeyNameController,
+            scrollPadding: EdgeInsets.only(bottom: 190.0.s),
+          ),
           SizedBox(height: 16.0.s),
           Button(
             disabled: authState is AuthenticationLoading,
@@ -35,9 +38,9 @@ class LoginForm extends HookConsumerWidget {
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
                 hideKeyboardAndCallOnce(
-                  callback: () => ref.read(authProvider.notifier).signIn(
-                        keyName: identityKeyNameController.text,
-                      ),
+                  callback: () => ref
+                      .read(authProvider.notifier)
+                      .signIn(keyName: identityKeyNameController.text),
                 );
               }
             },

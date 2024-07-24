@@ -67,6 +67,7 @@ Widget userListItemUseCase(BuildContext context) {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
+          AppBar(),
           ListItem.user(
             title: const Text('Alina Proxima'),
             subtitle: const Text('@alinaproxima'),

@@ -24,7 +24,7 @@ class ShareTypePage extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
               showBackButton: false,
-              title: context.i18n.feed_repost_type,
+              title: Text(context.i18n.feed_repost_type),
               actions: const [
                 NavigationCloseButton(),
               ],

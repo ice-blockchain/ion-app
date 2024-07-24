@@ -22,7 +22,7 @@ class FeedMainModalPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               NavigationAppBar.screen(
-                title: context.i18n.feed_modal_title,
+                title: Text(context.i18n.feed_modal_title),
                 showBackButton: false,
               ),
               const FeedModalSeparator(),

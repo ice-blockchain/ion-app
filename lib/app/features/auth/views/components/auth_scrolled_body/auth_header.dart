@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class AuthHeader extends StatelessWidget {
   AuthHeader({
@@ -9,7 +8,6 @@ class AuthHeader extends StatelessWidget {
     this.title,
     this.description,
     this.icon,
-    this.showBackButton = true,
     double? iconOffset,
     double? descriptionSidePadding,
   })  : iconOffset = iconOffset ?? 20.0.s,
@@ -20,15 +18,12 @@ class AuthHeader extends StatelessWidget {
   final Widget? icon;
   final double iconOffset;
   final double descriptionSidePadding;
-  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        NavigationAppBar.modal(
-          showBackButton: showBackButton,
-        ),
+        SizedBox(height: 5.0.s),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 28.0.s),
           child: Column(
