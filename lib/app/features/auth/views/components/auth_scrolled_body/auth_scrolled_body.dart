@@ -4,7 +4,6 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/fade_on_scroll.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/position_controller.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class AuthScrollContainer extends HookWidget {
@@ -29,17 +28,17 @@ class AuthScrollContainer extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final positionController = useMemoized(() => PositionController());
+    final positionNotifier = useMemoized(() => ValueNotifier(0.0));
     return NotificationListener(
       onNotification: (notification) {
         // When the scroll is changed due to keyboard open / close
         if (notification is ScrollMetricsNotification) {
-          positionController.setPosition(notification.metrics.pixels);
+          positionNotifier.value = notification.metrics.pixels;
           return false;
         }
         // When the scroll is changed by a user
         else if (notification is ScrollNotification) {
-          positionController.setPosition(notification.metrics.pixels);
+          positionNotifier.value = notification.metrics.pixels;
           return false;
         }
         return false;
@@ -56,7 +55,7 @@ class AuthScrollContainer extends HookWidget {
                     ? FadeOnScroll(
                         zeroOpacityOffset: 120.0.s,
                         fullOpacityOffset: 140.0.s,
-                        positionController: positionController,
+                        positionNotifier: positionNotifier,
                         child: Text(title!),
                       )
                     : null,
