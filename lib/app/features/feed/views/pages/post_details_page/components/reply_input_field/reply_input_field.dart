@@ -74,11 +74,8 @@ class ReplyInputField extends HookWidget {
               ),
             ),
           ),
-          if (isFocused.value) ...[
-            SizedBox(height: 12.0.s),
-            const PostRepliesActionBar(),
-          ] else
-            SizedBox(height: 12.0.s),
+          SizedBox(height: 12.0.s),
+          if (isFocused.value) const PostRepliesActionBar(),
         ],
       ),
     );
