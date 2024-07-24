@@ -19,16 +19,20 @@ class ExpandedReplyInputField extends StatelessWidget {
         ),
         SizedBox(width: 10.0.s),
         Flexible(
-          child: TextField(
-            maxLines: null,
-            cursorColor: colors.primaryAccent,
-            cursorHeight: 22.0.s,
-            style: textStyles.body2,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: context.i18n.post_reply_hint,
-              hintStyle: textStyles.caption.copyWith(color: colors.quaternaryText),
-              contentPadding: const EdgeInsets.only(bottom: 16),
+          child: Padding(
+            padding: EdgeInsets.only(top: 4.0.s),
+            child: TextField(
+              maxLines: null,
+              minLines: 4,
+              cursorColor: colors.primaryAccent,
+              cursorHeight: 22.0.s,
+              style: textStyles.body2,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: context.i18n.post_reply_hint,
+                hintStyle: textStyles.caption.copyWith(color: colors.quaternaryText),
+                contentPadding: const EdgeInsets.only(bottom: 16),
+              ),
             ),
           ),
         ),

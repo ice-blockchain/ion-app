@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/utils/username.dart';
 
 class ReplyingTo extends StatelessWidget {
   const ReplyingTo({
@@ -20,7 +21,7 @@ class ReplyingTo extends StatelessWidget {
         style: textStyles.caption.copyWith(color: colors.sheetLine),
         children: [
           TextSpan(
-            text: ' @$name',
+            text: ' ${prefixUsername(username: name, context: context)}',
             style: textStyles.caption.copyWith(
               color: colors.primaryAccent,
             ),

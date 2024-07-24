@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/components/reply_author_header.dart';
-import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/quote_post_action_bar.dart';
+import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -27,11 +27,11 @@ class ReplyInputField extends HookWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        vertical: 12.0.s,
         horizontal: 16.0.s,
       ),
       child: Column(
         children: [
+          SizedBox(height: 12.0.s),
           if (isFocused.value)
             Padding(
               padding: EdgeInsets.only(bottom: 12.0.s),
@@ -76,11 +76,9 @@ class ReplyInputField extends HookWidget {
           ),
           if (isFocused.value) ...[
             SizedBox(height: 12.0.s),
-            const QuotePostActionBar(
-              showShadow: false,
-              addPadding: false,
-            ),
-          ],
+            const PostRepliesActionBar(),
+          ] else
+            SizedBox(height: 12.0.s),
         ],
       ),
     );

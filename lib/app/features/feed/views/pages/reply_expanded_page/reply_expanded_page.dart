@@ -5,6 +5,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
+import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/replying_to.dart';
 import 'package:ice/app/features/feed/views/pages/reply_expanded_page/components/expanded_reply_input_field.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -21,6 +22,7 @@ class ReplyExpandedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SheetContent(
+      bottomPadding: 0,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -34,10 +36,10 @@ class ReplyExpandedPage extends StatelessWidget {
                 _PostBody(postData: postData),
                 SizedBox(height: 12.0.s),
                 ExpandedReplyInputField(),
+                PostRepliesActionBar(),
               ],
             ),
           ),
-          SizedBox(height: 60.0.s),
         ],
       ),
     );
@@ -106,7 +108,7 @@ class _DialogTitle extends StatelessWidget {
           IconButton(
             icon: Assets.images.icons.iconFeedScale.icon(
               color: context.theme.appColors.quaternaryText,
-              size: 20.0.s,
+              size: 18.0.s,
             ),
             onPressed: () {},
           ),

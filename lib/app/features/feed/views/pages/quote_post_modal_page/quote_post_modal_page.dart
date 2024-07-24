@@ -4,7 +4,7 @@ import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
-import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/quote_post_action_bar.dart';
+import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/quote_post_comment_input.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -85,11 +85,11 @@ class QuotePostModalPage extends StatelessWidget {
               ),
             ],
           ),
-          const Positioned(
+          Positioned(
             left: 0,
             right: 0,
             bottom: 0,
-            child: QuotePostActionBar(),
+            child: PostRepliesActionBar.withShadow(),
           ),
         ],
       ),
