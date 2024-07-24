@@ -60,7 +60,7 @@ class NetworkListView extends HookConsumerWidget {
                       ref
                           .read(receiveCoinsFormControllerProvider.notifier)
                           .selectNetwork(networkTypeValues[index]);
-                      ShareAddressRoute().push<void>(context);
+                      ShareAddressRoute().go(context);
                     }
                   },
                 ),
