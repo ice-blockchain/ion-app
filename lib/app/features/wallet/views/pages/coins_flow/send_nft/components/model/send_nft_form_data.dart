@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
+import 'package:ice/app/features/wallet/model/wallet_data.dart';
 
 part 'send_nft_form_data.freezed.dart';
 
@@ -9,6 +10,7 @@ class SendNftFormData with _$SendNftFormData {
   const factory SendNftFormData({
     required NftData selectedNft,
     required NetworkType selectedNetwork,
+    required WalletData wallet,
     required String address,
     required int arrivalTime,
   }) = _SendNftFormData;

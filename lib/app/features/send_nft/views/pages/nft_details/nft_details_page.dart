@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/card/rounded_card.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
@@ -8,20 +9,22 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_name/nft_name.dart';
 import 'package:ice/app/features/send_nft/views/pages/nft_details/components/nft_picture/nft_picture.dart';
-import 'package:ice/app/features/wallet/model/nft_data.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/providers/send_nft_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class NftDetailsPage extends StatelessWidget {
-  const NftDetailsPage({required this.payload, super.key});
-
-  final NftData payload;
+class NftDetailsPage extends ConsumerWidget {
+  const NftDetailsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(sendNftFormControllerProvider);
+
+    final payload = ref.watch(sendNftFormControllerProvider).selectedNft;
+
     return SheetContent(
       body: SingleChildScrollView(
         child: Column(
@@ -84,7 +87,7 @@ class NftDetailsPage extends StatelessWidget {
                         context.i18n.feed_send,
                       ),
                       onPressed: () {
-                        NftSendFormRoute($extra: payload).push<void>(context);
+                        NftSendFormRoute().push<void>(context);
                       },
                     ),
                   ],

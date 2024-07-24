@@ -170,12 +170,11 @@ class ShareAddressRoute extends BaseRouteData {
 }
 
 class NftSendFormRoute extends BaseRouteData {
-  NftSendFormRoute({required this.$extra})
+  NftSendFormRoute()
       : super(
-          child: SendNftForm(payload: $extra),
+          child: SendNftForm(),
           type: IceRouteType.bottomSheet,
         );
-  final NftData $extra;
 }
 
 class CoinsSendFormRoute extends BaseRouteData {
@@ -327,19 +326,17 @@ class ContactReceiveRoute extends BaseRouteData {
 }
 
 class NftDetailsRoute extends BaseRouteData {
-  NftDetailsRoute({required this.$extra})
+  NftDetailsRoute()
       : super(
-          child: NftDetailsPage(payload: $extra),
+          child: NftDetailsPage(),
           type: IceRouteType.bottomSheet,
         );
-  final NftData $extra;
 }
 
 class SendNftConfirmRoute extends BaseRouteData {
-  SendNftConfirmRoute({required this.$extra})
+  SendNftConfirmRoute()
       : super(
-          child: SendNftConfirmPage(payload: $extra),
+          child: SendNftConfirmPage(),
           type: IceRouteType.bottomSheet,
         );
-  final NftData $extra;
 }

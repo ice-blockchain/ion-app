@@ -6,23 +6,19 @@ import 'package:ice/app/components/nft_item/nft_item.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/model/nft_data.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_form_provider.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/providers/send_nft_form_provider.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SendNftConfirmPage extends ConsumerWidget {
-  const SendNftConfirmPage({required this.payload, super.key});
-
-  final NftData payload;
+  const SendNftConfirmPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
-    final formData = ref.watch(sendCoinsFormControllerProvider);
-
+    final formData = ref.watch(sendNftFormControllerProvider);
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -37,7 +33,7 @@ class SendNftConfirmPage extends ConsumerWidget {
               padding: EdgeInsets.only(top: 10.0.s),
               child: Column(
                 children: [
-                  NftItem(nftData: payload),
+                  NftItem(nftData: formData.selectedNft),
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_send_to),
@@ -71,12 +67,12 @@ class SendNftConfirmPage extends ConsumerWidget {
                   SizedBox(height: 12.0.s),
                   ListItem.text(
                     title: Text(context.i18n.send_nft_confirm_asset),
-                    value: payload.asset,
+                    value: formData.selectedNft.asset,
                   ),
                   SizedBox(height: 12.0.s),
                   ListItem.textWithIcon(
                     title: Text(context.i18n.send_nft_confirm_network),
-                    value: payload.network,
+                    value: formData.selectedNft.network,
                     icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                   ),
                   SizedBox(height: 12.0.s),

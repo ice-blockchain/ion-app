@@ -23,15 +23,15 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SendNftForm extends HookConsumerWidget {
-  const SendNftForm({required this.payload, super.key});
-
-  final NftData payload;
+  const SendNftForm({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedContact = useState<ContactData?>(null);
+    final NftData payload = ref.watch(sendNftFormControllerProvider).selectedNft;
+
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
@@ -97,7 +97,7 @@ class SendNftForm extends HookConsumerWidget {
                         child: Assets.images.icons.iconButtonNext.icon(),
                       ),
                       onPressed: () {
-                        SendNftConfirmRoute($extra: payload).push<void>(context);
+                        SendNftConfirmRoute().push<void>(context);
                       },
                     ),
                     SizedBox(height: 16.0.s),

@@ -6,6 +6,7 @@ import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
 import 'package:ice/app/features/wallet/providers/nfts_provider.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/providers/send_nft_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nft_grid_item.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nft_list_item.dart';
@@ -83,7 +84,8 @@ class NftsTab extends HookConsumerWidget {
           child: NftListItem(
             nftData: nfts[index],
             onTap: () {
-              NftDetailsRoute($extra: nfts[index]).push<void>(context);
+              ref.read(sendNftFormControllerProvider.notifier).selectNft(nfts[index]);
+              NftDetailsRoute().push<void>(context);
             },
           ),
         );
