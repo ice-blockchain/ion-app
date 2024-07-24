@@ -6,7 +6,7 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
-class WalletSearchBar extends HookConsumerWidget {
+class WalletSearchBar extends ConsumerWidget {
   const WalletSearchBar({
     required this.tabType,
     super.key,

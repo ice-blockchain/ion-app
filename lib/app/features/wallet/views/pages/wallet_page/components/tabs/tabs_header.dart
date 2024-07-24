@@ -12,7 +12,7 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class WalletTabsHeader extends HookConsumerWidget {
+class WalletTabsHeader extends ConsumerWidget {
   const WalletTabsHeader({
     required this.activeTab,
     required this.onTabSwitch,

@@ -9,7 +9,7 @@ import 'package:ice/app/features/user/providers/user_preferences_selectors.dart'
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class NftHeaderSortAction extends HookConsumerWidget {
+class NftHeaderSortAction extends ConsumerWidget {
   const NftHeaderSortAction({
     super.key,
   });

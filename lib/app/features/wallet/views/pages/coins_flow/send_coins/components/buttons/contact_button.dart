@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ContactButton extends HookConsumerWidget {
+class ContactButton extends ConsumerWidget {
   const ContactButton({
     required this.contact,
     required this.onContactTap,

@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/feed/providers/bookmarks_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class BookmarkButton extends HookConsumerWidget {
+class BookmarkButton extends ConsumerWidget {
   const BookmarkButton({required this.id, super.key});
 
   final String id;

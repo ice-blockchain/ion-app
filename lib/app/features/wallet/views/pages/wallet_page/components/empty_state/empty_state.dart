@@ -8,7 +8,7 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class EmptyState extends HookConsumerWidget {
+class EmptyState extends ConsumerWidget {
   const EmptyState({
     required this.tabType,
     super.key,

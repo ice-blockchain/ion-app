@@ -16,7 +16,7 @@ enum NetworkListViewType {
   receive,
 }
 
-class NetworkListView extends HookConsumerWidget {
+class NetworkListView extends ConsumerWidget {
   const NetworkListView({this.type = NetworkListViewType.send, super.key});
 
   final NetworkListViewType? type;

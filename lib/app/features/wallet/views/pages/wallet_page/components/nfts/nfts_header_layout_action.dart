@@ -9,7 +9,7 @@ import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 
-class NftHeaderLayoutAction extends HookConsumerWidget {
+class NftHeaderLayoutAction extends ConsumerWidget {
   const NftHeaderLayoutAction({
     super.key,
   });

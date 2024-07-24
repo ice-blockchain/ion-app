@@ -22,7 +22,7 @@ void main() async {
   );
 }
 
-class IceApp extends HookConsumerWidget {
+class IceApp extends ConsumerWidget {
   const IceApp({super.key});
 
   @override

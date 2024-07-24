@@ -11,7 +11,7 @@ class ProfileInfo extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final detailsKey = GlobalKey();
+    final detailsKey = useMemoized(() => GlobalKey());
     final bottomOverflow = useState<double>(30.0.s);
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {

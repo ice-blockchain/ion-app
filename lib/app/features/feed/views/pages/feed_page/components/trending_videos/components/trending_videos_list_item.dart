@@ -9,7 +9,7 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_menu_button.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/mock.dart';
 
-class TrendingVideoListItem extends HookConsumerWidget {
+class TrendingVideoListItem extends ConsumerWidget {
   const TrendingVideoListItem({
     required this.video,
     required this.itemSize,

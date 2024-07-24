@@ -8,7 +8,7 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/components/conta
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/username.dart';
 
-class ContactsList extends HookConsumerWidget {
+class ContactsList extends ConsumerWidget {
   const ContactsList({super.key});
 
   @override

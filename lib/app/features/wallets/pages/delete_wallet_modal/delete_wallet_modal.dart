@@ -12,7 +12,7 @@ import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class DeleteWalletModal extends HookConsumerWidget {
+class DeleteWalletModal extends ConsumerWidget {
   const DeleteWalletModal({required this.payload, super.key});
 
   final WalletData payload;

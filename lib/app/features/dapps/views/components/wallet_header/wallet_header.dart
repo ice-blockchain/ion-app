@@ -9,7 +9,7 @@ import 'package:ice/app/features/components/wallet_switcher/wallet_switcher.dart
 import 'package:ice/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class WalletHeader extends HookConsumerWidget {
+class WalletHeader extends ConsumerWidget {
   const WalletHeader({super.key});
 
   static double get height => 40.0.s;

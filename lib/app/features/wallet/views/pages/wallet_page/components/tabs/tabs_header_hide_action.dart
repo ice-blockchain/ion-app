@@ -9,7 +9,7 @@ import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class WalletTabsHeaderHideAction extends HookConsumerWidget {
+class WalletTabsHeaderHideAction extends ConsumerWidget {
   const WalletTabsHeaderHideAction({
     super.key,
   });

@@ -9,7 +9,7 @@ import 'package:ice/app/features/user/providers/user_preferences_selectors.dart'
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/utils/num.dart';
 
-class CoinItem extends HookConsumerWidget {
+class CoinItem extends ConsumerWidget {
   const CoinItem({
     required this.coinData,
     required this.onTap,

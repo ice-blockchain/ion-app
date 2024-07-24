@@ -110,7 +110,7 @@ class TextInputWithClear extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useTextEditingController();
+    final controller = useTextEditingController.fromValue(TextEditingValue.empty);
     return TextInput(
       controller: controller,
       labelText: 'With clear button',

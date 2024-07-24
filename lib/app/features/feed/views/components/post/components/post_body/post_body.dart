@@ -6,7 +6,7 @@ import 'package:ice/app/features/feed/views/components/post/components/post_body
 import 'package:ice/app/features/feed/views/components/post/components/post_body/hooks/use_post_media.dart';
 import 'package:ice/app/services/text_parser/matchers/url_matcher.dart';
 
-class PostBody extends HookConsumerWidget {
+class PostBody extends ConsumerWidget {
   const PostBody({
     required this.postData,
     super.key,

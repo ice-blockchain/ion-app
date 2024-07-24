@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 
-abstract class IceComponent extends HookConsumerWidget {
+abstract class IceComponent extends ConsumerWidget {
   const IceComponent({super.key});
 
   String get name;

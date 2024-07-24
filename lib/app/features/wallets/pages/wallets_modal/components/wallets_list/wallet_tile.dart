@@ -12,7 +12,7 @@ import 'package:ice/app/features/wallets/providers/selectors/wallets_data_select
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class WalletTile extends HookConsumerWidget {
+class WalletTile extends ConsumerWidget {
   const WalletTile({
     required this.walletData,
     super.key,
