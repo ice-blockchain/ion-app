@@ -17,6 +17,6 @@ void useTextChanged({
       }
       return null;
     },
-    <Object?>[onTextChanged, controller],
+    [onTextChanged, controller],
   );
 }

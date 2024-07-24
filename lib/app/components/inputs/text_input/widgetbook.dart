@@ -114,6 +114,12 @@ class TextInputWithClear extends HookWidget {
     return TextInput(
       controller: controller,
       labelText: 'With clear button',
+      prefixIcon: TextInputIcons(
+        icons: [
+          Assets.images.icons.iconBadgeCompany.icon(),
+        ],
+        hasRightDivider: true,
+      ),
       suffixIcon: TextInputIcons(
         icons: [
           TextInputClearButton(
