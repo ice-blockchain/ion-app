@@ -13,7 +13,6 @@ import 'package:ice/app/features/wallet/views/pages/send_nft/views/pages/nft_det
 import 'package:ice/app/features/wallet/views/pages/send_nft/views/pages/nft_details/components/nft_picture/nft_picture.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
-import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/providers/send_nft_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -30,12 +29,12 @@ class SendNftForm extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedContact = useState<ContactData?>(null);
-    final NftData payload = ref.watch(sendNftFormControllerProvider).selectedNft;
 
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
     final formController = ref.watch(sendNftFormControllerProvider);
+    final selectedNft = formController.selectedNft;
 
     return SheetContent(
       backgroundColor: colors.secondaryBackground,
@@ -56,13 +55,13 @@ class SendNftForm extends HookConsumerWidget {
               ScreenSideOffset.small(
                 child: Column(
                   children: <Widget>[
-                    NftPicture(imageUrl: payload.iconUrl),
+                    NftPicture(imageUrl: selectedNft.iconUrl),
                     SizedBox(height: 16.0.s),
                     NftName(
-                      name: payload.collectionName,
-                      rank: payload.rank,
-                      price: payload.price,
-                      networkSymbol: payload.currency,
+                      name: selectedNft.collectionName,
+                      rank: selectedNft.rank,
+                      price: selectedNft.price,
+                      networkSymbol: selectedNft.currency,
                       networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 16.0.s),

@@ -21,9 +21,8 @@ class NftDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(sendNftFormControllerProvider);
-
-    final payload = ref.watch(sendNftFormControllerProvider).selectedNft;
+    final payload = ref.watch(sendNftFormControllerProvider);
+    final selectedNft = payload.selectedNft;
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -41,41 +40,41 @@ class NftDetailsPage extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    NftPicture(imageUrl: payload.iconUrl),
+                    NftPicture(imageUrl: selectedNft.iconUrl),
                     SizedBox(height: 15.0.s),
                     NftName(
-                      name: payload.collectionName,
-                      rank: payload.rank,
-                      price: payload.price,
-                      networkSymbol: payload.currency,
+                      name: selectedNft.collectionName,
+                      rank: selectedNft.rank,
+                      price: selectedNft.price,
+                      networkSymbol: selectedNft.currency,
                       networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
                     RoundedCard(
                       child: ReadMoreText(
-                        payload.description,
+                        selectedNft.description,
                       ),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.text(
                       title: Text(context.i18n.send_nft_token_id),
-                      value: payload.identifier.toString(),
+                      value: selectedNft.identifier.toString(),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_token_network),
-                      value: payload.network,
+                      value: selectedNft.network,
                       icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.text(
                       title: Text(context.i18n.send_nft_token_standard),
-                      value: payload.tokenStandard,
+                      value: selectedNft.tokenStandard,
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.text(
                       title: Text(context.i18n.send_nft_token_contract_address),
-                      value: payload.contractAddress,
+                      value: selectedNft.contractAddress,
                     ),
                     SizedBox(height: 12.0.s),
                     Button(
