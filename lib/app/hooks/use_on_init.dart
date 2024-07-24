@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 void useOnInit<T>(
   void Function() callback, [
-  List<Object?> keys = const <Object?>[],
+  List<Object?> keys = const [],
 ]) {
   useEffect(
     () {

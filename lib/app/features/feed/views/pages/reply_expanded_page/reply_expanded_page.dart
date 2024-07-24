@@ -8,6 +8,7 @@ import 'package:ice/app/features/feed/views/components/post/components/post_head
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/replying_to.dart';
 import 'package:ice/app/features/feed/views/pages/reply_expanded_page/components/expanded_reply_input_field.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -26,7 +27,6 @@ class ReplyExpandedPage extends StatelessWidget {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: 16.0.s),
           _DialogTitle(),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0.s),
@@ -89,31 +89,27 @@ class _DialogTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0.s),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            onPressed: context.pop,
-            icon: Assets.images.icons.iconSheetClose.icon(
-              color: context.theme.appColors.quaternaryText,
-              size: 24.0.s,
-            ),
-          ),
-          Text(
-            context.i18n.post_reply,
-            style: context.theme.appTextThemes.subtitle,
-          ),
-          IconButton(
-            icon: Assets.images.icons.iconFeedScale.icon(
-              color: context.theme.appColors.quaternaryText,
-              size: 18.0.s,
-            ),
-            onPressed: () {},
-          ),
-        ],
+    return NavigationAppBar.modal(
+      title: Text(
+        context.i18n.post_reply,
+        style: context.theme.appTextThemes.subtitle,
       ),
+      leading: IconButton(
+        onPressed: context.pop,
+        icon: Assets.images.icons.iconSheetClose.icon(
+          color: context.theme.appColors.quaternaryText,
+          size: 24.0.s,
+        ),
+      ),
+      actions: [
+        IconButton(
+          onPressed: context.pop,
+          icon: Assets.images.icons.iconFeedScale.icon(
+            color: context.theme.appColors.quaternaryText,
+            size: 18.0.s,
+          ),
+        ),
+      ],
     );
   }
 }
