@@ -12,7 +12,7 @@ class WalletsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletsData = ref.watch(walletsDataProvider);
+    final walletsData = ref.watch(walletsDataSelectorProvider);
     return Padding(
       padding: EdgeInsets.only(top: 6.0.s),
       child: Column(
