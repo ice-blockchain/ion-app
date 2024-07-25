@@ -15,7 +15,6 @@ class IdentityKeyNameInput extends HookWidget {
     super.key,
     this.controller,
     this.scrollPadding,
-    this.onChanged,
     this.notShowInfoIcon = false,
   });
 
@@ -24,7 +23,6 @@ class IdentityKeyNameInput extends HookWidget {
   final TextInputAction textInputAction;
 
   final EdgeInsets? scrollPadding;
-  final ValueChanged<String>? onChanged;
   final bool notShowInfoIcon;
 
   @override
@@ -63,7 +61,6 @@ class IdentityKeyNameInput extends HookWidget {
       },
       textInputAction: textInputAction,
       scrollPadding: scrollPadding ?? EdgeInsets.only(bottom: 100.0.s),
-      onChanged: onChanged,
     );
   }
 }

@@ -6,10 +6,9 @@ import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class RecoveryCodeInput extends StatelessWidget {
-  const RecoveryCodeInput({required this.controller, super.key, this.onChanged});
+  const RecoveryCodeInput({required this.controller, super.key});
 
   final TextEditingController controller;
-  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,6 @@ class RecoveryCodeInput extends StatelessWidget {
       },
       textInputAction: TextInputAction.next,
       scrollPadding: EdgeInsets.only(bottom: 200.0.s),
-      onChanged: onChanged,
     );
   }
 }

@@ -19,21 +19,10 @@ class RestoreCredsPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasValidationErrors = useState(false);
     final formKey = useRef(GlobalKey<FormState>());
     final identityKeyNameController = useTextEditingController();
     final recoveryCodeController = useTextEditingController();
     final recoveryKeyIdController = useTextEditingController();
-
-    void validate() {
-      hasValidationErrors.value = !formKey.value.currentState!.validate();
-    }
-
-    void onChanged(String value) {
-      if (hasValidationErrors.value && value.isNotEmpty) {
-        validate();
-      }
-    }
 
     return SheetContent(
       body: AuthScrollContainer(
@@ -53,24 +42,20 @@ class RestoreCredsPage extends HookWidget {
                         controller: identityKeyNameController,
                         textInputAction: TextInputAction.next,
                         scrollPadding: EdgeInsets.only(bottom: 250.0.s),
-                        onChanged: onChanged,
                         notShowInfoIcon: true,
                       ),
                       SizedBox(height: 16.0.s),
                       RecoveryCodeInput(
                         controller: recoveryCodeController,
-                        onChanged: onChanged,
                       ),
                       SizedBox(height: 16.0.s),
                       RecoveryKeyIdInput(
                         controller: recoveryKeyIdController,
-                        onChanged: onChanged,
                       ),
                       SizedBox(height: 20.0.s),
                       Button(
                         onPressed: () {
-                          validate();
-                          if (!hasValidationErrors.value) {}
+                          if (!formKey.value.currentState!.validate()) {}
                         },
                         label: Text(context.i18n.button_restore),
                         mainAxisSize: MainAxisSize.max,
