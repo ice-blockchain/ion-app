@@ -22,7 +22,7 @@ class WalletTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedWalletId = walletIdSelector(ref);
+    final selectedWalletId = ref.watch(walletIdProvider);
     final isSelected = walletData.id == selectedWalletId;
 
     return Padding(

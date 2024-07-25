@@ -15,9 +15,8 @@ class WalletSwitcher extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletId = walletIdSelector(ref);
-    final walletName = walletNameSelector(ref: ref, walletId: walletId);
-    final walletIcon = walletIconSelector(ref: ref, walletId: walletId);
+    final walletName = ref.watch(walletNameProvider);
+    final walletIcon = ref.watch(walletIconProvider);
 
     return Button.dropdown(
       onPressed: () {

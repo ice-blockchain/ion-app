@@ -22,7 +22,7 @@ class CoinsTab extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final coins = useFilteredWalletCoins(ref);
     final searchValue = walletAssetSearchValueSelector(ref, tabType);
-    final walletId = walletIdSelector(ref);
+    final walletId = ref.watch(walletIdProvider);
 
     useOnInit<void>(
       () {

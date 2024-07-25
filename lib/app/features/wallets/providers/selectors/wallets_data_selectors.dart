@@ -1,18 +1,13 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/selected_wallet_id_provider.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-String? selectedWalletIdSelector(WidgetRef ref) {
-  return ref.watch(
-    selectedWalletIdNotifierProvider.select(
-      (String? selectedWalletId) => selectedWalletId,
-    ),
-  );
-}
+part 'wallets_data_selectors.g.dart';
 
-String walletIdSelector(WidgetRef ref) {
-  final selectedWalletId = selectedWalletIdSelector(ref);
+@riverpod
+String walletId(WalletIdRef ref) {
+  final selectedWalletId = ref.watch(selectedWalletIdNotifierProvider);
   return ref.watch(
     walletsDataNotifierProvider.select(
       (Map<String, WalletData> walletsData) {
@@ -26,7 +21,8 @@ String walletIdSelector(WidgetRef ref) {
   );
 }
 
-List<WalletData> walletsDataSelector(WidgetRef ref) {
+@riverpod
+List<WalletData> walletsData(WalletsDataRef ref) {
   return ref.watch(
     walletsDataNotifierProvider.select(
       (Map<String, WalletData> walletsData) => walletsData.values.toList(),
@@ -34,10 +30,9 @@ List<WalletData> walletsDataSelector(WidgetRef ref) {
   );
 }
 
-double walletBalanceSelector({
-  required String walletId,
-  required WidgetRef ref,
-}) {
+@riverpod
+double walletBalance(WalletBalanceRef ref) {
+  final walletId = ref.watch(walletIdProvider);
   return ref.watch(
     walletsDataNotifierProvider.select(
       (Map<String, WalletData> walletsData) => walletsData[walletId]?.balance ?? 0.0,
@@ -45,10 +40,9 @@ double walletBalanceSelector({
   );
 }
 
-String walletNameSelector({
-  required String walletId,
-  required WidgetRef ref,
-}) {
+@riverpod
+String walletName(WalletNameRef ref) {
+  final walletId = ref.watch(walletIdProvider);
   return ref.watch(
     walletsDataNotifierProvider.select(
       (Map<String, WalletData> walletsData) => walletsData[walletId]?.name ?? '',
@@ -56,10 +50,9 @@ String walletNameSelector({
   );
 }
 
-String walletIconSelector({
-  required String walletId,
-  required WidgetRef ref,
-}) {
+@riverpod
+String walletIcon(WalletIconRef ref) {
+  final walletId = ref.watch(walletIdProvider);
   return ref.watch(
     walletsDataNotifierProvider.select(
       (Map<String, WalletData> walletsData) => walletsData[walletId]?.icon ?? '',
