@@ -8,9 +8,10 @@ part 'wallets_data_selectors.g.dart';
 @riverpod
 String walletIdSelector(WalletIdSelectorRef ref) {
   final selectedWalletId = ref.watch(selectedWalletIdNotifierProvider);
+
   return ref.watch(
     walletsDataNotifierProvider.select(
-      (Map<String, WalletData> walletsData) {
+      (walletsData) {
         if (selectedWalletId != null && walletsData.containsKey(selectedWalletId)) {
           return selectedWalletId;
         }
@@ -25,7 +26,7 @@ String walletIdSelector(WalletIdSelectorRef ref) {
 List<WalletData> walletsDataSelector(WalletsDataSelectorRef ref) {
   return ref.watch(
     walletsDataNotifierProvider.select(
-      (Map<String, WalletData> walletsData) => walletsData.values.toList(),
+      (walletsData) => walletsData.values.toList(),
     ),
   );
 }
@@ -35,7 +36,7 @@ double walletBalanceSelector(WalletBalanceSelectorRef ref) {
   final walletId = ref.watch(walletIdSelectorProvider);
   return ref.watch(
     walletsDataNotifierProvider.select(
-      (Map<String, WalletData> walletsData) => walletsData[walletId]?.balance ?? 0.0,
+      (walletsData) => walletsData[walletId]?.balance ?? 0.0,
     ),
   );
 }
@@ -45,7 +46,7 @@ String walletNameSelector(WalletNameSelectorRef ref) {
   final walletId = ref.watch(walletIdSelectorProvider);
   return ref.watch(
     walletsDataNotifierProvider.select(
-      (Map<String, WalletData> walletsData) => walletsData[walletId]?.name ?? '',
+      (walletsData) => walletsData[walletId]?.name ?? '',
     ),
   );
 }
@@ -55,7 +56,7 @@ String walletIconSelector(WalletIconSelectorRef ref) {
   final walletId = ref.watch(walletIdSelectorProvider);
   return ref.watch(
     walletsDataNotifierProvider.select(
-      (Map<String, WalletData> walletsData) => walletsData[walletId]?.icon ?? '',
+      (walletsData) => walletsData[walletId]?.icon ?? '',
     ),
   );
 }
