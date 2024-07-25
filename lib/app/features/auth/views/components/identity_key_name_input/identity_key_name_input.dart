@@ -15,6 +15,7 @@ class IdentityKeyNameInput extends HookWidget {
     super.key,
     this.controller,
     this.scrollPadding,
+    this.notShowInfoIcon = false,
   });
 
   final TextEditingController? controller;
@@ -22,6 +23,7 @@ class IdentityKeyNameInput extends HookWidget {
   final TextInputAction textInputAction;
 
   final EdgeInsets? scrollPadding;
+  final bool notShowInfoIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -31,24 +33,26 @@ class IdentityKeyNameInput extends HookWidget {
         hasRightDivider: true,
         icons: [Assets.images.icons.iconIdentitykey.icon()],
       ),
-      suffixIcon: TextInputIcons(
-        icons: [
-          IconButton(
-            icon: Assets.images.icons.iconBlockInformation.icon(
-              size: 20.0.s,
+      suffixIcon: notShowInfoIcon
+          ? null
+          : TextInputIcons(
+              icons: [
+                IconButton(
+                  icon: Assets.images.icons.iconBlockInformation.icon(
+                    size: 20.0.s,
+                  ),
+                  onPressed: () {
+                    hideKeyboardAndCallOnce(callback: () {
+                      showSimpleBottomSheet<void>(
+                        context: context,
+                        child: const IdentityInfo(),
+                        useRootNavigator: false,
+                      );
+                    });
+                  },
+                ),
+              ],
             ),
-            onPressed: () {
-              hideKeyboardAndCallOnce(callback: () {
-                showSimpleBottomSheet<void>(
-                  context: context,
-                  child: const IdentityInfo(),
-                  useRootNavigator: false,
-                );
-              });
-            },
-          ),
-        ],
-      ),
       labelText: context.i18n.common_identity_key_name,
       controller: controller,
       validator: (String? value) {

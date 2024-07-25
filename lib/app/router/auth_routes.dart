@@ -8,6 +8,7 @@ class AuthRoutes {
         TypedGoRoute<SignUpPasskeyRoute>(path: 'sign-up-passkey'),
         TypedGoRoute<SignUpPasswordRoute>(path: 'sign-up-password'),
         TypedGoRoute<RestoreMenuRoute>(path: 'restore-menu'),
+        TypedGoRoute<RestoreCredsRoute>(path: 'restore-creds'),
         TypedGoRoute<SelectLanguagesRoute>(path: 'select-languages'),
         TypedGoRoute<FillProfileRoute>(path: 'fill-profile'),
         TypedGoRoute<DiscoverCreatorsRoute>(path: 'discover-creators'),
@@ -45,6 +46,14 @@ class RestoreMenuRoute extends BaseRouteData {
   RestoreMenuRoute()
       : super(
           child: const RestoreMenuPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class RestoreCredsRoute extends BaseRouteData {
+  RestoreCredsRoute()
+      : super(
+          child: const RestoreCredsPage(),
           type: IceRouteType.bottomSheet,
         );
 }
