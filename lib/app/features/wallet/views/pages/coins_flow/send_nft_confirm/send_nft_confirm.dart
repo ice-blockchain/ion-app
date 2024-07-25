@@ -7,6 +7,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/components/nft_item/nft_item.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/providers/send_nft_form_provider.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -99,7 +100,9 @@ class SendNftConfirmPage extends ConsumerWidget {
                     label: Text(
                       context.i18n.button_confirm,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      NftTransactionDetailsRoute().push<void>(context);
+                    },
                   ),
                 ],
               ),

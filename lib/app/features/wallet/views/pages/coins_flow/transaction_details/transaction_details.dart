@@ -4,6 +4,7 @@ import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/wallet/components/timeline/timeline.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/providers/send_nft_form_provider.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -31,6 +32,14 @@ class TransactionDetailsPage extends ConsumerWidget {
               padding: EdgeInsets.only(top: 10.0.s),
               child: Column(
                 children: [
+                  SizedBox(height: 16.0.s),
+                  Timeline(
+                    items: [
+                      TimelineItemData(title: 'Pending', isDone: true),
+                      TimelineItemData(title: 'In the process of execution', isDone: true),
+                      TimelineItemData(title: 'Transaction successful', isDone: false),
+                    ],
+                  ),
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_send_to),
