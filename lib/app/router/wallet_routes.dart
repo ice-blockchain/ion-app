@@ -73,9 +73,9 @@ class WalletRoutes {
         TypedGoRoute<CoinsSendFormConfirmationRoute>(
           path: 'coin-send-form-confirmation',
         ),
-        TypedGoRoute<TransactionResultRoute>(path: 'transaction-result'),
       ],
     ),
+    TypedGoRoute<TransactionResultRoute>(path: 'transaction-result'),
   ];
 
   static const coinReceiveRoutes = <TypedRoute<RouteData>>[
@@ -83,9 +83,9 @@ class WalletRoutes {
       path: 'receive-coin',
       routes: [
         TypedGoRoute<NetworkSelectReceiveRoute>(path: 'network-select-receive'),
-        TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
       ],
     ),
+    TypedGoRoute<ShareAddressRoute>(path: 'share-address'),
   ];
 
   static const walletManagementRoutes = <TypedRoute<RouteData>>[

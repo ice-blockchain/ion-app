@@ -7,6 +7,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/contacts_mock_data.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class ContactsListView extends StatelessWidget {
   const ContactsListView({super.key});
@@ -15,9 +16,9 @@ class ContactsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final contacts = mockedContactDataArray;
 
-    return FractionallySizedBox(
-      heightFactor: 0.79,
-      child: Column(
+    return SheetContent(
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
@@ -37,30 +38,29 @@ class ContactsListView extends StatelessWidget {
           SizedBox(
             height: 12.0.s,
           ),
-          Expanded(
-            child: ListView.separated(
-              itemCount: contacts.length,
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(
-                  height: 12.0.s,
-                );
-              },
-              itemBuilder: (BuildContext context, int index) {
-                final contact = contacts[index];
+          ListView.separated(
+            shrinkWrap: true,
+            itemCount: contacts.length,
+            separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(
+                height: 12.0.s,
+              );
+            },
+            itemBuilder: (BuildContext context, int index) {
+              final contact = contacts[index];
 
-                return ScreenSideOffset.small(
-                  child: ListItem.user(
-                    title: Text(contact.name),
-                    subtitle: Text(contact.nickname!),
-                    profilePicture: contact.icon,
-                    verifiedBadge: contact.isVerified!,
-                    iceBadge: contact.hasIceAccount,
-                    timeago: contact.lastSeen,
-                    onTap: () => context.pop(contact),
-                  ),
-                );
-              },
-            ),
+              return ScreenSideOffset.small(
+                child: ListItem.user(
+                  title: Text(contact.name),
+                  subtitle: Text(contact.nickname!),
+                  profilePicture: contact.icon,
+                  verifiedBadge: contact.isVerified!,
+                  iceBadge: contact.hasIceAccount,
+                  timeago: contact.lastSeen,
+                  onTap: () => context.pop(contact),
+                ),
+              );
+            },
           ),
         ],
       ),

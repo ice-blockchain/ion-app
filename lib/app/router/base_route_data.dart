@@ -51,6 +51,7 @@ class FadeTransitionSheetPage extends ScrollableNavigationSheetPage<void> {
   }) : super(
           key: state.pageKey,
           minExtent: Extent.pixels(0),
+          maxExtent: Extent.proportional(1),
           initialExtent: Extent.proportional(1),
           physics: BouncingSheetPhysics(
             parent: SnappingSheetPhysics(

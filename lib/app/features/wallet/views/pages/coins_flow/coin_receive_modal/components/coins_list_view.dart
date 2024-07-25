@@ -52,53 +52,48 @@ class CoinsListView extends HookConsumerWidget {
         ? context.i18n.wallet_receive_coins
         : context.i18n.wallet_send_coins;
 
-    return FractionallySizedBox(
-      heightFactor: 0.79,
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0.s),
-            child: NavigationAppBar.screen(
-              title: Text(title),
-              showBackButton: false,
-              actions: const [
-                NavigationCloseButton(),
-              ],
-            ),
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0.s),
+          child: NavigationAppBar.screen(
+            title: Text(title),
+            showBackButton: false,
+            actions: const [
+              NavigationCloseButton(),
+            ],
           ),
-          ScreenSideOffset.small(
-            child: SearchInput(
-              onTextChanged: (String value) {},
-            ),
+        ),
+        ScreenSideOffset.small(
+          child: SearchInput(
+            onTextChanged: (String value) {},
           ),
-          SizedBox(
-            height: 12.0.s,
+        ),
+        SizedBox(
+          height: 12.0.s,
+        ),
+        Expanded(
+          child: ListView.separated(
+            itemCount: coins.length,
+            separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(
+                height: 12.0.s,
+              );
+            },
+            itemBuilder: (BuildContext context, int index) {
+              return ScreenSideOffset.small(
+                child: CoinItem(
+                  coinData: coins[index],
+                  onTap: () {
+                    ref.read(receiveCoinsFormControllerProvider.notifier).selectCoin(coins[index]);
+                    onCoinItemTap(coins[index]);
+                  },
+                ),
+              );
+            },
           ),
-          Expanded(
-            child: ListView.separated(
-              itemCount: coins.length,
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(
-                  height: 12.0.s,
-                );
-              },
-              itemBuilder: (BuildContext context, int index) {
-                return ScreenSideOffset.small(
-                  child: CoinItem(
-                    coinData: coins[index],
-                    onTap: () {
-                      ref
-                          .read(receiveCoinsFormControllerProvider.notifier)
-                          .selectCoin(coins[index]);
-                      onCoinItemTap(coins[index]);
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
