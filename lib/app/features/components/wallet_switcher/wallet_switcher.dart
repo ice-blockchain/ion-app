@@ -8,7 +8,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
 import 'package:ice/app/router/app_routes.dart';
 
-class WalletSwitcher extends HookConsumerWidget {
+class WalletSwitcher extends ConsumerWidget {
   const WalletSwitcher({
     super.key,
   });

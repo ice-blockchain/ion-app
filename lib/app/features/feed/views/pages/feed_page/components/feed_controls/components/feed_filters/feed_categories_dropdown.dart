@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
 import 'package:ice/app/features/feed/providers/feed_category_provider.dart';
 
-class FeedCategoriesDropdown extends HookConsumerWidget {
+class FeedCategoriesDropdown extends ConsumerWidget {
   const FeedCategoriesDropdown({super.key});
 
   @override

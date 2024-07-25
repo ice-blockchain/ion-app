@@ -5,7 +5,7 @@ import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/pages/wallets_modal/components/wallets_list/wallet_tile.dart';
 import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
 
-class WalletsList extends HookConsumerWidget {
+class WalletsList extends ConsumerWidget {
   const WalletsList({
     super.key,
   });

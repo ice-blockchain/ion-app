@@ -12,7 +12,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qrKey = useRef(GlobalKey(debugLabel: 'QR')).value;
+    final qrKey = useMemoized(() => GlobalKey(debugLabel: 'QR'));
 
     final result = useState<Barcode?>(null);
 

@@ -18,7 +18,7 @@ dependencies:
     sdk: flutter
   flutter_animate: ^4.5.0
   flutter_dotenv: ^5.1.0
-  flutter_hooks: ^0.20.1
+  flutter_hooks: ^0.20.5
   flutter_keyboard_visibility: ^6.0.0
   flutter_localizations:
     sdk: flutter
@@ -53,6 +53,7 @@ dev_dependencies:
   custom_lint: ^0.6.4
   flutter_gen: ^5.3.1
   flutter_gen_runner: ^5.3.1
+  flutter_hooks_lint: ^1.2.0
   flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter

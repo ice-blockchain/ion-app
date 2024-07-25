@@ -5,7 +5,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class EmptyState extends HookConsumerWidget {
+class EmptyState extends ConsumerWidget {
   const EmptyState({
     super.key,
   });

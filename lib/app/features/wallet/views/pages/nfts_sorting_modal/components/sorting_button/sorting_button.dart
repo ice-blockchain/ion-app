@@ -8,7 +8,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/model/nft_sorting_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
 
-class SortingButton extends HookConsumerWidget {
+class SortingButton extends ConsumerWidget {
   const SortingButton({
     required this.sortingType,
     super.key,

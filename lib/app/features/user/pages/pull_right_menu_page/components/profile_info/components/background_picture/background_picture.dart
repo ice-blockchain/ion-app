@@ -5,7 +5,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/utils/image.dart';
 
-class BackgroundPicture extends HookConsumerWidget {
+class BackgroundPicture extends ConsumerWidget {
   const BackgroundPicture({
     super.key,
   });

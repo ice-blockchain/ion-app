@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/painters/triangle_painter.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -16,7 +17,7 @@ class CopiedTooltip extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tooltipKey = GlobalKey();
+    final tooltipKey = useMemoized(() => GlobalKey());
 
     useOnInit<void>(() {
       final renderBox = tooltipKey.currentContext?.findRenderObject() as RenderBox?;

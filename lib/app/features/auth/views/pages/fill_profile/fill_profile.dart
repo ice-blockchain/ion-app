@@ -22,10 +22,10 @@ import 'package:ice/generated/assets.gen.dart';
 class FillProfile extends HookWidget {
   const FillProfile({super.key});
 
-  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
+    final _formKey = useMemoized(() => GlobalKey<FormState>());
+
     final nameController = useTextEditingController();
     final nicknameController = useTextEditingController();
     final inviterController = useTextEditingController();

@@ -10,7 +10,7 @@ import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/utils/username.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ProfileDetails extends HookConsumerWidget {
+class ProfileDetails extends ConsumerWidget {
   const ProfileDetails({
     super.key,
   });

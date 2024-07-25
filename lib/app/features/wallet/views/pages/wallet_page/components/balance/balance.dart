@@ -13,7 +13,7 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class Balance extends HookConsumerWidget {
+class Balance extends ConsumerWidget {
   const Balance({
     super.key,
   });

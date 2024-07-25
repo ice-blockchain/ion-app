@@ -4,7 +4,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_selectors.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ArrivalTimeIndicator extends HookConsumerWidget {
+class ArrivalTimeIndicator extends ConsumerWidget {
   const ArrivalTimeIndicator({super.key});
 
   @override

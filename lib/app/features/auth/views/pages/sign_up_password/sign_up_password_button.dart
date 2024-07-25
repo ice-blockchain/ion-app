@@ -6,7 +6,7 @@ import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SignUpPasswordButton extends HookConsumerWidget {
+class SignUpPasswordButton extends ConsumerWidget {
   const SignUpPasswordButton({
     required this.onPressed,
     super.key,

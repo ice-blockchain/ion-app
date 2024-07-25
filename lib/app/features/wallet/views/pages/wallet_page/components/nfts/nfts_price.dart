@@ -8,7 +8,7 @@ import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
 
-class NftPrice extends HookConsumerWidget {
+class NftPrice extends ConsumerWidget {
   const NftPrice({
     required this.layoutType,
     required this.nftData,
