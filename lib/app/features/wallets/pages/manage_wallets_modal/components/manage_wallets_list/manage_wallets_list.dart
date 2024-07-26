@@ -11,12 +11,12 @@ class ManageWalletsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletData = ref.watch(walletsListProvider);
+    final walletsData = ref.watch(walletsListProvider);
 
     return Padding(
       padding: EdgeInsets.only(top: 6.0.s),
       child: Column(
-        children: walletData
+        children: walletsData
             .map(
               (walletData) => ManageWalletTile(
                 walletData: walletData,
