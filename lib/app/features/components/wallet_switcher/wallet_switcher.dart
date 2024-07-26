@@ -5,7 +5,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
+import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 
 class WalletSwitcher extends ConsumerWidget {
@@ -15,9 +15,7 @@ class WalletSwitcher extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletId = walletIdSelector(ref);
-    final walletName = walletNameSelector(ref: ref, walletId: walletId);
-    final walletIcon = walletIconSelector(ref: ref, walletId: walletId);
+    final walletData = ref.watch(currentWalletDataProvider);
 
     return Button.dropdown(
       onPressed: () {
@@ -25,14 +23,14 @@ class WalletSwitcher extends ConsumerWidget {
       },
       leadingIcon: Avatar(
         size: 28.0.s,
-        imageUrl: walletIcon,
+        imageUrl: walletData.icon,
         borderRadius: BorderRadius.circular(10.0.s),
       ),
       leadingButtonOffset: 11.0.s,
       trailingIconOffset: 0.0.s,
       backgroundColor: context.theme.appColors.tertararyBackground,
       label: Text(
-        walletName,
+        walletData.name,
         style: context.theme.appTextThemes.subtitle2.copyWith(
           color: context.theme.appColors.primaryText,
         ),

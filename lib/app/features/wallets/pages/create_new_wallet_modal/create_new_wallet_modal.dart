@@ -54,12 +54,15 @@ class CreateNewWalletModal extends HookConsumerWidget {
             ScreenSideOffset.small(
               child: Button(
                 onPressed: () {
-                  ref.read(walletsDataNotifierProvider.notifier).walletData = WalletData(
-                    id: DateTime.now().toString(),
-                    name: walletName.value,
-                    icon: mockWalletIconUrl,
-                    balance: 0,
-                  );
+                  ref.read(walletsDataNotifierProvider.notifier).updateWallet(
+                        WalletData(
+                          id: DateTime.now().toString(),
+                          name: walletName.value,
+                          icon: mockWalletIconUrl,
+                          balance: 0,
+                        ),
+                      );
+
                   context.pop();
                 },
                 label: Text(context.i18n.wallet_create),

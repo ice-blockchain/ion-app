@@ -8,7 +8,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
-import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
+import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -20,8 +20,8 @@ class Balance extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletId = walletIdSelector(ref);
-    final walletBalance = walletBalanceSelector(ref: ref, walletId: walletId);
+    final walletBalance = ref.watch(currentWalletDataProvider).balance;
+
     final isBalanceVisible = isBalanceVisibleSelector(ref);
     final iconAsset =
         isBalanceVisible ? Assets.images.icons.iconBlockEyeOn : Assets.images.icons.iconBlockEyeOff;

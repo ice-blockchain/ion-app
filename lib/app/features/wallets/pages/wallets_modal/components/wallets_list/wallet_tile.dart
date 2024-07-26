@@ -8,7 +8,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/selected_wallet_id_provider.dart';
-import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
+import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -22,7 +22,7 @@ class WalletTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedWalletId = walletIdSelector(ref);
+    final selectedWalletId = ref.watch(currentWalletIdProvider);
     final isSelected = walletData.id == selectedWalletId;
 
     return Padding(

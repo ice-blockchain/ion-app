@@ -12,7 +12,7 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nft_list_item.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
-import 'package:ice/app/features/wallets/providers/selectors/wallets_data_selectors.dart';
+import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/app_routes.dart';
 
@@ -29,7 +29,7 @@ class NftsTab extends HookConsumerWidget {
     final nftLayoutType = nftLayoutTypeSelector(ref);
 
     final searchValue = walletAssetSearchValueSelector(ref, tabType);
-    final walletId = walletIdSelector(ref);
+    final walletId = ref.watch(currentWalletIdProvider);
 
     useOnInit<void>(
       () {
