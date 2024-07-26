@@ -35,7 +35,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                   SizedBox(height: 16.0.s),
                   Timeline(
                     items: [
-                      TimelineItemData(title: 'Pending', isDone: true),
+                      TimelineItemData(title: 'Pending', isDone: true, date: DateTime.now()),
                       TimelineItemData(title: 'In the process of execution', isDone: true),
                       TimelineItemData(title: 'Transaction successful', isDone: false),
                     ],
