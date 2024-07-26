@@ -62,8 +62,10 @@ class EditWalletModal extends HookConsumerWidget {
               child: isNameChanged
                   ? Button(
                       onPressed: () {
-                        ref.read(walletsDataNotifierProvider.notifier).walletData =
-                            payload.copyWith(name: walletName.value);
+                        ref
+                            .read(walletsDataNotifierProvider.notifier)
+                            .updateWallet(payload.copyWith(name: walletName.value));
+
                         context.pop();
                       },
                       label: Text(context.i18n.button_save),
