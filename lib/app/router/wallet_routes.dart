@@ -78,7 +78,6 @@ class WalletRoutes {
         TypedGoRoute<CoinTransactionDetailsRoute>(path: 'coin-transaction-details'),
       ],
     ),
-    TypedGoRoute<TransactionResultRoute>(path: 'transaction-result'),
   ];
 
   static const coinReceiveRoutes = <TypedRoute<RouteData>>[
