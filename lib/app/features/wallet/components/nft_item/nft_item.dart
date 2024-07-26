@@ -11,10 +11,12 @@ import 'package:ice/generated/assets.gen.dart';
 class NftItem extends StatelessWidget {
   const NftItem({
     required this.nftData,
+    this.backgroundColor,
     super.key,
   });
 
   final NftData nftData;
+  final Color? backgroundColor;
 
   static double get imageWidth => 54.0.s;
   static double get imageHeight => 54.0.s;
@@ -47,7 +49,7 @@ class NftItem extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: context.theme.appColors.tertararyBackground,
+      backgroundColor: backgroundColor ?? context.theme.appColors.tertararyBackground,
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(16.0.s),
         child: CachedNetworkImage(
