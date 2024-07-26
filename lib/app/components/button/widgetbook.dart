@@ -261,7 +261,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
           leadingIcon: ButtonIconFrame(
             icon: Assets.images.icons.iconBadgeIcelogo.icon(size: 26.0.s),
           ),
-          leadingButtonOffset: 4.0.s,
+          leadingIconOffset: 4.0.s,
           backgroundColor: context.theme.appColors.tertararyBackground,
           label: Text(
             'ice.wallet',

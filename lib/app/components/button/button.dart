@@ -93,8 +93,10 @@ class Button extends StatelessWidget {
     ButtonStyle style,
     Color? borderColor,
     Color? backgroundColor,
-    double? leadingButtonOffset,
+    double? leadingIconOffset,
     double? trailingIconOffset,
+    bool? useDefaultBorderRadius,
+    bool? useDefaultPaddings,
     bool disabled,
     bool opened,
   }) = _ButtonDropdown;
@@ -236,10 +238,12 @@ class ButtonIconFrame extends StatelessWidget {
     required this.icon,
     super.key,
     this.color,
+    this.border,
   });
 
   final Color? color;
   final Widget icon;
+  final BorderSide? border;
 
   @override
   Widget build(BuildContext context) {
@@ -250,6 +254,7 @@ class ButtonIconFrame extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(9.0.s),
+        border: border != null ? Border.fromBorderSide(border!) : null,
       ),
       child: icon,
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ice/app/features/auth/data/models/twofa_type.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
 import 'package:ice/app/features/auth/views/pages/get_started/get_started.dart';
@@ -10,6 +11,8 @@ import 'package:ice/app/features/auth/views/pages/select_languages/select_langua
 import 'package:ice/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey.dart';
 import 'package:ice/app/features/auth/views/pages/sign_up_password/sign_up_password.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
+import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_codes.dart';
+import 'package:ice/app/features/auth/views/pages/twofa_options/twofa_options.dart';
 import 'package:ice/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
@@ -27,7 +30,6 @@ import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/quote_po
 import 'package:ice/app/features/feed/views/pages/reply_expanded_page/reply_expanded_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_options_modal/share_options_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_type_modal_page/share_type_modal_page.dart';
-import 'package:ice/app/features/wallet/views/pages/send_nft/views/pages/nft_details/nft_details_page.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ice/app/features/user/pages/switch_account_page/switch_account_page.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
@@ -50,6 +52,7 @@ import 'package:ice/app/features/wallet/views/pages/contact_modal_page/contact_m
 import 'package:ice/app/features/wallet/views/pages/manage_coins/manage_coins_page.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sorting_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
+import 'package:ice/app/features/wallet/views/pages/send_nft/views/pages/nft_details/nft_details_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_scan/wallet_scan_modal_page.dart';

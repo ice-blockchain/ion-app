@@ -26,7 +26,7 @@ class WalletSwitcher extends ConsumerWidget {
         imageUrl: walletData.icon,
         borderRadius: BorderRadius.circular(10.0.s),
       ),
-      leadingButtonOffset: 11.0.s,
+      leadingIconOffset: 11.0.s,
       trailingIconOffset: 0.0.s,
       backgroundColor: context.theme.appColors.tertararyBackground,
       label: Text(

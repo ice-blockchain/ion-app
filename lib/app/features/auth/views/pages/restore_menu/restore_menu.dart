@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
@@ -42,7 +44,8 @@ class RestoreMenuPage extends HookWidget {
                   description: context.i18n.restore_identity_type_credentials_description,
                   onPressed: () {
                     hideKeyboardAndCallOnce(
-                      callback: () => RestoreCredsRoute().push<void>(context),
+                      callback: () =>
+                          TwoFaOptionsRoute($extra: Random().nextInt(3) + 1).push<void>(context),
                     );
                   },
                 ),
