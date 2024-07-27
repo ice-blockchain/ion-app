@@ -28,7 +28,8 @@ class CoinDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletId = ref.watch(currentWalletIdProvider);
+    final walletId = ref.watch(walletRepositoryProvider).currentWalletId;
+
     final scrollController = useScrollController();
     final coinId = payload.abbreviation;
     final coinTransactionsMap = useTransactionsByDate(context, ref);

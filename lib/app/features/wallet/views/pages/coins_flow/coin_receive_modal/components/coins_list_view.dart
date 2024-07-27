@@ -31,7 +31,7 @@ class CoinsListView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final coins = useFilteredWalletCoins(ref);
     final searchValue = walletAssetSearchValueSelector(ref, WalletTabType.coins);
-    final walletId = ref.watch(currentWalletIdProvider);
+    final walletId = ref.watch(walletRepositoryProvider).currentWalletId;
 
     useOnInit<void>(
       () {
