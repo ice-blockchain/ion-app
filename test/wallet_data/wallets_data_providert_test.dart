@@ -18,63 +18,77 @@ final testWallets = [
 ];
 
 void main() {
-  late MockWalletRepository mockRepository;
-  late MockLocalStorage mockLocalStorage;
   late ProviderContainer container;
 
-  setUp(() {
-    mockRepository = MockWalletRepository();
-    mockLocalStorage = MockLocalStorage();
-  });
-
   group('SelectedWalletIdNotifier', () {
+    late MockLocalStorage mockLocalStorage;
+
     setUp(() {
+      mockLocalStorage = MockLocalStorage();
       when(() => mockLocalStorage.getString(any())).thenReturn(defaultWalletId);
       when(() => mockLocalStorage.setString(any(), any())).thenAnswer((_) async => true);
+    });
 
+    test('build returns correct initial value', () {
       container = createContainer(
         overrides: [
           localStorageProvider.overrideWithValue(mockLocalStorage),
         ],
       );
-    });
 
-    test('build returns correct initial value', () async {
       final selectedWalletId = container.read(selectedWalletIdNotifierProvider);
       expect(selectedWalletId, equals(defaultWalletId));
     });
 
-    test('updateWalletId updates the state', () async {
+    test('updateWalletId updates the state', () {
+      container = createContainer(
+        overrides: [
+          localStorageProvider.overrideWithValue(mockLocalStorage),
+        ],
+      );
+
       final notifier = container.read(selectedWalletIdNotifierProvider.notifier);
       notifier.updateWalletId('2');
 
       expect(container.read(selectedWalletIdNotifierProvider), equals('2'));
-
       verify(() => mockLocalStorage.setString(any(), '2')).called(1);
     });
   });
 
-  group('currentWallet', () {
+  group('currentWalletProvider', () {
+    late MockWalletRepository mockRepository;
+    late MockLocalStorage mockLocalStorage;
+
     setUp(() {
+      mockRepository = MockWalletRepository();
+      mockLocalStorage = MockLocalStorage();
+
       when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(testWallets));
       when(() => mockRepository.wallets).thenReturn(testWallets);
       when(() => mockLocalStorage.getString(any())).thenReturn(defaultWalletId);
       when(() => mockLocalStorage.setString(any(), any())).thenAnswer((_) async => true);
+    });
 
+    test('returns correct wallet', () {
       container = createContainer(
         overrides: [
           walletsRepositoryProvider.overrideWithValue(mockRepository),
           localStorageProvider.overrideWithValue(mockLocalStorage),
         ],
       );
-    });
 
-    test('returns correct wallet', () async {
       final currentWallet = container.read(currentWalletProvider);
       expect(currentWallet, equals(testWallets[0]));
     });
 
     test('updates when selected wallet id changes', () async {
+      container = createContainer(
+        overrides: [
+          walletsRepositoryProvider.overrideWithValue(mockRepository),
+          localStorageProvider.overrideWithValue(mockLocalStorage),
+        ],
+      );
+
       final listener = Listener<WalletData>();
       container.listen(currentWalletProvider, listener, fireImmediately: true);
 
@@ -106,24 +120,33 @@ void main() {
     });
   });
 
-  group('wallets', () {
+  group('walletsProvider', () {
+    late MockWalletRepository mockRepository;
+
     setUp(() {
+      mockRepository = MockWalletRepository();
       when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(testWallets));
       when(() => mockRepository.wallets).thenReturn(testWallets);
+    });
 
+    test('initial state is correct', () {
       container = createContainer(
         overrides: [
           walletsRepositoryProvider.overrideWithValue(mockRepository),
         ],
       );
-    });
 
-    test('initial state is correct', () async {
       final wallets = container.read(walletsProvider);
       expect(wallets, equals(testWallets));
     });
 
     test('updates when repository stream emits', () async {
+      container = createContainer(
+        overrides: [
+          walletsRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+
       final listener = Listener<List<WalletData>>();
       container.listen(walletsProvider, listener, fireImmediately: true);
 
@@ -135,7 +158,7 @@ void main() {
       when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(updatedWallets));
 
       // Simulate repository update
-      container.refresh(walletsRepositoryProvider);
+      container.invalidate(walletsRepositoryProvider);
       await pumpEventQueue();
 
       verifyInOrder([
