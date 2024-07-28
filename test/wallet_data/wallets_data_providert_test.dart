@@ -25,21 +25,20 @@ void main() {
   setUp(() {
     mockRepository = MockWalletRepository();
     mockLocalStorage = MockLocalStorage();
-
-    when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(testWallets));
-    when(() => mockRepository.wallets).thenReturn(testWallets);
-    when(() => mockLocalStorage.getString(any())).thenReturn(defaultWalletId);
-    when(() => mockLocalStorage.setString(any(), any())).thenAnswer((_) async => true);
-
-    container = createContainer(
-      overrides: [
-        walletsRepositoryProvider.overrideWithValue(mockRepository),
-        localStorageProvider.overrideWithValue(mockLocalStorage),
-      ],
-    );
   });
 
   group('SelectedWalletIdNotifier', () {
+    setUp(() {
+      when(() => mockLocalStorage.getString(any())).thenReturn(defaultWalletId);
+      when(() => mockLocalStorage.setString(any(), any())).thenAnswer((_) async => true);
+
+      container = createContainer(
+        overrides: [
+          localStorageProvider.overrideWithValue(mockLocalStorage),
+        ],
+      );
+    });
+
     test('build returns correct initial value', () async {
       final selectedWalletId = container.read(selectedWalletIdNotifierProvider);
       expect(selectedWalletId, equals(defaultWalletId));
@@ -49,15 +48,27 @@ void main() {
       final notifier = container.read(selectedWalletIdNotifierProvider.notifier);
       notifier.updateWalletId('2');
 
-      // Проверяем, что значение обновилось
       expect(container.read(selectedWalletIdNotifierProvider), equals('2'));
 
-      // Проверяем, что значение было сохранено в localStorage
       verify(() => mockLocalStorage.setString(any(), '2')).called(1);
     });
   });
 
   group('currentWallet', () {
+    setUp(() {
+      when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(testWallets));
+      when(() => mockRepository.wallets).thenReturn(testWallets);
+      when(() => mockLocalStorage.getString(any())).thenReturn(defaultWalletId);
+      when(() => mockLocalStorage.setString(any(), any())).thenAnswer((_) async => true);
+
+      container = createContainer(
+        overrides: [
+          walletsRepositoryProvider.overrideWithValue(mockRepository),
+          localStorageProvider.overrideWithValue(mockLocalStorage),
+        ],
+      );
+    });
+
     test('returns correct wallet', () async {
       final currentWallet = container.read(currentWalletProvider);
       expect(currentWallet, equals(testWallets[0]));
@@ -75,9 +86,38 @@ void main() {
         () => listener(testWallets[0], testWallets[1]),
       ]);
     });
+
+    test('returns first wallet when currentWalletId is not found', () async {
+      when(() => mockLocalStorage.getString(any())).thenReturn(nonExistentWalletId);
+
+      container = createContainer(
+        overrides: [
+          walletsRepositoryProvider.overrideWithValue(mockRepository),
+          localStorageProvider.overrideWithValue(mockLocalStorage),
+        ],
+      );
+
+      final listener = Listener<WalletData>();
+      container.listen(currentWalletProvider, listener, fireImmediately: true);
+
+      await pumpEventQueue();
+
+      verify(() => listener(null, testWallets[0])).called(1);
+    });
   });
 
   group('wallets', () {
+    setUp(() {
+      when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(testWallets));
+      when(() => mockRepository.wallets).thenReturn(testWallets);
+
+      container = createContainer(
+        overrides: [
+          walletsRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+      );
+    });
+
     test('initial state is correct', () async {
       final wallets = container.read(walletsProvider);
       expect(wallets, equals(testWallets));
@@ -89,7 +129,8 @@ void main() {
 
       final updatedWallets = [
         WalletData(id: '1', name: 'Updated Wallet', icon: '', balance: 100),
-        ...testWallets.sublist(1),
+        WalletData(id: '2', name: 'Airdrop wallet', icon: '', balance: 0),
+        WalletData(id: '3', name: 'For transfers', icon: '', balance: 0),
       ];
       when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(updatedWallets));
 
