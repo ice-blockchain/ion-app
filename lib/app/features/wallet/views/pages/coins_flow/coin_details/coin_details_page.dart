@@ -28,7 +28,7 @@ class CoinDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletId = ref.watch(walletRepositoryProvider).currentWalletId;
+    final walletId = ref.watch(selectedWalletIdNotifierProvider);
 
     final scrollController = useScrollController();
     final coinId = payload.abbreviation;

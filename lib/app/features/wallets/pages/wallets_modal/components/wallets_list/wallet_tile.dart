@@ -21,7 +21,7 @@ class WalletTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedWalletId = ref.watch(walletRepositoryProvider).currentWalletId;
+    final selectedWalletId = ref.watch(selectedWalletIdNotifierProvider);
     final isSelected = walletData.id == selectedWalletId;
 
     return Padding(
@@ -30,7 +30,7 @@ class WalletTile extends ConsumerWidget {
         isSelected: isSelected,
         onTap: () {
           if (!isSelected) {
-            ref.read(walletsRepositoryNotifierProvider.notifier).setCurrentWalletId(walletData.id);
+            ref.read(selectedWalletIdNotifierProvider.notifier).updateWalletId(walletData.id);
           }
         },
         leading: Avatar(

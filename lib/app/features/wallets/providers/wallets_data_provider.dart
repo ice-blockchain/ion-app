@@ -1,44 +1,38 @@
+import 'dart:async';
+
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
-import 'package:ice/app/features/wallets/domain/wallets_repository.dart';
+import 'package:ice/app/features/wallets/data/wallets_repository.dart';
+import 'package:ice/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ice/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallets_data_provider.g.dart';
 
 @riverpod
-class WalletsRepositoryNotifier extends _$WalletsRepositoryNotifier {
+class SelectedWalletIdNotifier extends _$SelectedWalletIdNotifier {
+  static String selectedWalletIdKey = 'UserPreferences:selectedWalletId';
+
   @override
-  List<WalletData> build() => ref.watch(walletRepositoryProvider).wallets;
+  String build() {
+    final localStorage = ref.watch(localStorageProvider);
+    final walletsRepository = ref.watch(walletsRepositoryProvider);
 
-  void updateWallet(WalletData newWallet) {
-    final repository = ref.read(walletRepositoryProvider);
-    repository.updateWallet(newWallet);
-    state = [...repository.wallets];
+    return localStorage.getString(selectedWalletIdKey) ?? walletsRepository.wallets.first.id;
   }
 
-  void deleteWallet(String id) {
-    final repository = ref.read(walletRepositoryProvider);
-    repository.deleteWallet(id);
-    state = [...repository.wallets];
-  }
+  void updateWalletId(String id) {
+    final localStorage = ref.read(localStorageProvider);
+    unawaited(localStorage.setString(selectedWalletIdKey, id));
 
-  void addWallet(WalletData newWallet) {
-    final repository = ref.read(walletRepositoryProvider);
-    repository.addWallet(newWallet);
-    state = [...repository.wallets];
-  }
-
-  void setCurrentWalletId(String id) {
-    final repository = ref.read(walletRepositoryProvider);
-    repository.currentWalletId = id;
-    state = [...repository.wallets];
+    state = id;
   }
 }
 
 @riverpod
 WalletData currentWallet(CurrentWalletRef ref) {
-  final wallets = ref.watch(walletsRepositoryNotifierProvider);
-  final currentWalletId = ref.watch(walletRepositoryProvider).currentWalletId;
+  final wallets = ref.watch(walletsRepositoryProvider).wallets;
+  final currentWalletId = ref.watch(selectedWalletIdNotifierProvider);
+
   return wallets.firstWhere(
     (wallet) => wallet.id == currentWalletId,
     orElse: () => wallets.first,
@@ -46,5 +40,25 @@ WalletData currentWallet(CurrentWalletRef ref) {
 }
 
 @riverpod
-WalletsRepository walletRepository(WalletRepositoryRef ref) =>
-    WalletsRepository(ref.watch(localStorageProvider));
+List<WalletData> wallets(WalletsRef ref) {
+  final repository = ref.watch(walletsRepositoryProvider);
+  final stream = repository.walletsStream;
+
+  List<WalletData> updatedWallets = repository.wallets;
+
+  stream.listen((wallets) {
+    updatedWallets = wallets;
+    ref.state = updatedWallets;
+  });
+
+  return updatedWallets;
+}
+
+@Riverpod(keepAlive: true)
+WalletsRepository walletsRepository(WalletsRepositoryRef ref) {
+  final walletRepository = WalletsRepository(mockedWalletDataArray);
+
+  ref.onDispose(() => walletRepository.close());
+
+  return walletRepository;
+}
