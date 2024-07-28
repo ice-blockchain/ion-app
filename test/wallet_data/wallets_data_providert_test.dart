@@ -1,7 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
+import 'package:ice/app/services/storage/local_storage.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:riverpod/riverpod.dart';
 
 import '../mocks.dart';
 import '../test_utils.dart';
@@ -14,41 +16,39 @@ final testWallets = [
 
 void main() {
   late MockWalletRepository mockRepository;
+  late MockLocalStorage mockLocalStorage;
 
   setUp(() {
     mockRepository = MockWalletRepository();
+    mockLocalStorage = MockLocalStorage();
   });
 
-  group('WalletsRepositoryNotifier Tests', () {
-    test('initial state is correct', () {
-      final container = createContainer(
-        overrides: [
-          walletRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
+  ProviderContainer createTestContainer() {
+    return createContainer(
+      overrides: [
+        walletsRepositoryProvider.overrideWithValue(mockRepository),
+        localStorageProvider.overrideWithValue(mockLocalStorage),
+      ],
+    );
+  }
 
+  group('WalletsProvider Tests', () {
+    test('initial state is correct', () async {
+      when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(testWallets));
       when(() => mockRepository.wallets).thenReturn(testWallets);
+      when(() => mockLocalStorage.getString(any())).thenReturn('1');
 
-      final walletData = container.read(walletsRepositoryNotifierProvider);
+      final container = createTestContainer();
 
-      expect(walletData.length, 3);
-      expect(walletData[0].name, 'ice.wallet');
-      expect(walletData[1].name, 'Airdrop wallet');
-      expect(walletData[2].name, 'For transfers');
+      final listener = Listener<List<WalletData>>();
+      container.listen(walletsProvider, listener, fireImmediately: true);
+
+      await Future<void>.delayed(Duration.zero); // ждем завершения всех асинхронных операций
+
+      verify(() => listener(null, testWallets)).called(1);
     });
 
-    test('updateWallet() updates correctly', () {
-      final container = createContainer(
-        overrides: [
-          walletRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-
-      final initialWallets = [testWallets.first];
-      when(() => mockRepository.wallets).thenReturn(initialWallets);
-
-      final walletsRepositoryNotifier = container.read(walletsRepositoryNotifierProvider.notifier);
-
+    test('updateWallet() updates correctly', () async {
       final newWalletData = WalletData(
         id: '1',
         name: 'Updated Wallet',
@@ -56,56 +56,55 @@ void main() {
         balance: 1000.0,
       );
 
-      when(() => mockRepository.updateWallet(newWalletData)).thenAnswer((_) {
-        initialWallets[0] = newWalletData;
-      });
+      final updatedWallets = [
+        newWalletData,
+        ...testWallets.sublist(1),
+      ];
 
-      when(() => mockRepository.wallets).thenReturn([newWalletData]);
+      when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(updatedWallets));
+      when(() => mockRepository.wallets).thenReturn(testWallets);
+      when(() => mockLocalStorage.getString(any())).thenReturn('1');
 
-      walletsRepositoryNotifier.updateWallet(newWalletData);
+      final container = createTestContainer();
 
-      final walletData = container.read(walletsRepositoryNotifierProvider);
+      final listener = Listener<List<WalletData>>();
+      container.listen(walletsProvider, listener, fireImmediately: true);
 
-      expect(walletData.first.name, 'Updated Wallet');
-      expect(walletData.first.balance, 1000.0);
+      await Future<void>.delayed(Duration.zero); // ждем завершения всех асинхронных операций
+
+      container.read(walletsRepositoryProvider).updateWallet(newWalletData);
+
+      await Future<void>.delayed(
+          Duration.zero); // ждем завершения всех асинхронных операций после обновления
+
+      verify(() => listener(null, testWallets)).called(1);
+      verify(() => listener(testWallets, updatedWallets)).called(1);
     });
 
-    test('deleteWallet() removes wallet correctly', () {
-      final container = createContainer(
-        overrides: [
-          walletRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
+    test('deleteWallet() removes wallet correctly', () async {
+      final updatedWallets = List.of(testWallets.sublist(0, 2));
 
-      final initialWallets = List.of(testWallets.sublist(0, 2));
-      when(() => mockRepository.wallets).thenReturn(initialWallets);
+      when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(updatedWallets));
+      when(() => mockRepository.wallets).thenReturn(testWallets);
+      when(() => mockLocalStorage.getString(any())).thenReturn('1');
 
-      final walletsRepositoryNotifier = container.read(walletsRepositoryNotifierProvider.notifier);
+      final container = createTestContainer();
 
-      when(() => mockRepository.deleteWallet('2')).thenAnswer((_) {
-        initialWallets.removeWhere((wallet) => wallet.id == '2');
-      });
+      final listener = Listener<List<WalletData>>();
+      container.listen(walletsProvider, listener, fireImmediately: true);
 
-      walletsRepositoryNotifier.deleteWallet('2');
+      await Future<void>.delayed(Duration.zero); // ждем завершения всех асинхронных операций
 
-      final walletData = container.read(walletsRepositoryNotifierProvider);
+      container.read(walletsRepositoryProvider).deleteWallet('3');
 
-      expect(walletData.length, 1);
-      expect(walletData.first.id, '1');
+      await Future<void>.delayed(
+          Duration.zero); // ждем завершения всех асинхронных операций после удаления
+
+      verify(() => listener(null, testWallets)).called(1);
+      verify(() => listener(testWallets, updatedWallets)).called(1);
     });
 
-    test('addWallet() adds new wallet correctly', () {
-      final container = createContainer(
-        overrides: [
-          walletRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-
-      final initialWallets = List.of([testWallets.first]);
-      when(() => mockRepository.wallets).thenReturn(initialWallets);
-
-      final walletRepositoryNotifier = container.read(walletsRepositoryNotifierProvider.notifier);
-
+    test('addWallet() adds new wallet correctly', () async {
       final newWallet = WalletData(
         id: '4',
         name: 'New Wallet',
@@ -113,73 +112,84 @@ void main() {
         balance: 0.0,
       );
 
-      when(() => mockRepository.addWallet(newWallet)).thenAnswer((_) {
-        initialWallets.add(newWallet);
-      });
+      final updatedWallets = [
+        ...testWallets,
+        newWallet,
+      ];
 
-      walletRepositoryNotifier.addWallet(newWallet);
-
-      final walletData = container.read(walletsRepositoryNotifierProvider);
-
-      expect(walletData.length, 2);
-      expect(walletData[1].id, '4');
-      expect(walletData[1].name, 'New Wallet');
-    });
-
-    test('setCurrentWalletId() updates current wallet', () {
-      final container = createContainer(
-        overrides: [
-          walletRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-
+      when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(updatedWallets));
       when(() => mockRepository.wallets).thenReturn(testWallets);
-      when(() => mockRepository.currentWalletId).thenReturn('1');
+      when(() => mockLocalStorage.getString(any())).thenReturn('1');
 
-      final walletsRepositoryNotifier = container.read(walletsRepositoryNotifierProvider.notifier);
+      final container = createTestContainer();
 
-      walletsRepositoryNotifier.setCurrentWalletId('2');
+      final listener = Listener<List<WalletData>>();
+      container.listen(walletsProvider, listener, fireImmediately: true);
 
-      when(() => mockRepository.currentWalletId).thenReturn('2');
+      await Future<void>.delayed(Duration.zero); // ждем завершения всех асинхронных операций
 
-      final currentWallet = container.read(currentWalletProvider);
+      container.read(walletsRepositoryProvider).addWallet(newWallet);
 
-      expect(currentWallet.id, '2');
-      expect(currentWallet.name, 'Airdrop wallet');
+      await Future<void>.delayed(
+          Duration.zero); // ждем завершения всех асинхронных операций после добавления
+
+      verify(() => listener(null, testWallets)).called(1);
+      verify(() => listener(testWallets, updatedWallets)).called(1);
     });
   });
 
   group('CurrentWallet Provider Tests', () {
-    test('currentWalletProvider returns correct data', () {
-      final container = createContainer(
-        overrides: [
-          walletRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-
-      when(() => mockRepository.currentWalletId).thenReturn('1');
+    test('currentWalletProvider returns correct data', () async {
+      when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(testWallets));
       when(() => mockRepository.wallets).thenReturn(testWallets);
+      when(() => mockLocalStorage.getString(any())).thenReturn('1');
 
-      final currentWallet = container.read(currentWalletProvider);
+      final container = createTestContainer();
 
-      expect(currentWallet.id, '1');
-      expect(currentWallet.name, 'ice.wallet');
+      final listener = Listener<WalletData>();
+      container.listen(currentWalletProvider, listener, fireImmediately: true);
+
+      await Future<void>.delayed(Duration.zero); // ждем завершения всех асинхронных операций
+
+      verify(() => listener(null, testWallets[0])).called(1);
     });
 
-    test('currentWalletProvider returns first wallet when currentWalletId is not found', () {
-      final container = createContainer(
-        overrides: [
-          walletRepositoryProvider.overrideWithValue(mockRepository),
-        ],
-      );
-
-      when(() => mockRepository.currentWalletId).thenReturn('5'); // non-existent ID
+    test('setCurrentWalletId() updates current wallet', () async {
+      when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(testWallets));
       when(() => mockRepository.wallets).thenReturn(testWallets);
+      when(() => mockLocalStorage.getString(any())).thenReturn('1');
+      when(() => mockLocalStorage.setString(any(), any())).thenAnswer((_) async => true);
 
-      final currentWallet = container.read(currentWalletProvider);
+      final container = createTestContainer();
 
-      expect(currentWallet.id, '1');
-      expect(currentWallet.name, 'ice.wallet');
+      final listener = Listener<WalletData>();
+      container.listen(currentWalletProvider, listener, fireImmediately: true);
+
+      await Future<void>.delayed(Duration.zero); // ждем завершения всех асинхронных операций
+
+      container.read(selectedWalletIdNotifierProvider.notifier).updateWalletId('2');
+
+      await Future<void>.delayed(
+          Duration.zero); // ждем завершения всех асинхронных операций после обновления
+
+      verify(() => listener(null, testWallets[0])).called(1);
+      verify(() => listener(testWallets[0], testWallets[1])).called(1);
+    });
+
+    test('currentWalletProvider returns first wallet when currentWalletId is not found', () async {
+      when(() => mockRepository.walletsStream).thenAnswer((_) => Stream.value(testWallets));
+      when(() => mockRepository.wallets).thenReturn(testWallets);
+      when(() => mockLocalStorage.getString(any())).thenReturn('5'); // non-existent ID
+      when(() => mockLocalStorage.setString(any(), any())).thenAnswer((_) async => true);
+
+      final container = createTestContainer();
+
+      final listener = Listener<WalletData>();
+      container.listen(currentWalletProvider, listener, fireImmediately: true);
+
+      await Future<void>.delayed(Duration.zero); // ждем завершения всех асинхронных операций
+
+      verify(() => listener(null, testWallets[0])).called(1);
     });
   });
 }
