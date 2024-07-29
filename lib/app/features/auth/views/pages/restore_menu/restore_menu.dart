@@ -42,7 +42,7 @@ class RestoreMenuPage extends HookWidget {
                   description: context.i18n.restore_identity_type_credentials_description,
                   onPressed: () {
                     hideKeyboardAndCallOnce(
-                      callback: () => RestoreCredsRoute().push<void>(context),
+                      callback: () => TwoFaOptionsRoute().push<void>(context),
                     );
                   },
                 ),
