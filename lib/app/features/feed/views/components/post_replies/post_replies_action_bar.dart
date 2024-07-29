@@ -60,7 +60,7 @@ class PostRepliesActionBar extends StatelessWidget {
           Button(
             minimumSize: Size(48.0.s, 28.0.s),
             borderRadius: BorderRadius.circular(100.0.s),
-            onPressed: onSendPressed == null ? () {} : onSendPressed!,
+            onPressed: onSendPressed ?? () {},
             leadingIcon: Padding(
               padding: EdgeInsets.symmetric(vertical: 4.0.s),
               child: Assets.images.icons.iconFeedSendbutton.icon(size: 20.0.s),
