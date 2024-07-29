@@ -25,29 +25,6 @@ class TwoFaOptionsPage extends HookWidget {
     final selectedValues = {for (int i = 0; i < optionsNumber; i++) i: useState<TwoFaType?>(null)};
     final availableOptions = useState<Set<TwoFaType>>(TwoFaType.values.toSet());
 
-    List<Widget> _buildTwoFaOptionSelector() {
-      final inputs = <Widget>[];
-      for (int i = 0; i < optionsNumber; i++) {
-        inputs.add(
-          TwoFaOptionSelector(
-            availableOptions: selectedValues[i]?.value != null
-                ? {selectedValues[i]!.value!, ...availableOptions.value}
-                : availableOptions.value,
-            optionIndex: i + 1,
-            onSaved: (value) {
-              if (selectedValues[i]?.value != null) {
-                availableOptions.value = {...availableOptions.value, selectedValues[i]!.value!};
-              }
-              selectedValues[i]?.value = value;
-              availableOptions.value = {...availableOptions.value}..remove(value);
-            },
-          ),
-        );
-        inputs.add(SizedBox(height: 16.0.s));
-      }
-      return inputs;
-    }
-
     return SheetContent(
       body: AuthScrollContainer(
         title: context.i18n.two_fa_title,
@@ -62,7 +39,27 @@ class TwoFaOptionsPage extends HookWidget {
                   child: Column(
                     children: [
                       SizedBox(height: 16.0.s),
-                      ..._buildTwoFaOptionSelector(),
+                      ...List.generate(optionsNumber, (i) {
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 16.0.s),
+                          child: TwoFaOptionSelector(
+                            availableOptions: selectedValues[i]?.value != null
+                                ? {selectedValues[i]!.value!, ...availableOptions.value}
+                                : availableOptions.value,
+                            optionIndex: i + 1,
+                            onSaved: (value) {
+                              if (selectedValues[i]?.value != null) {
+                                availableOptions.value = {
+                                  ...availableOptions.value,
+                                  selectedValues[i]!.value!
+                                };
+                              }
+                              selectedValues[i]?.value = value;
+                              availableOptions.value = {...availableOptions.value}..remove(value);
+                            },
+                          ),
+                        );
+                      }),
                       Button(
                         onPressed: () {
                           if (formKey.value.currentState!.validate()) {

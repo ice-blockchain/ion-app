@@ -19,10 +19,11 @@ class TwoFaOptionSelector extends HookWidget {
   final int optionIndex;
   final FormFieldSetter<TwoFaType?> onSaved;
 
+  static double get height => 58.0.s;
+
   @override
   Widget build(BuildContext context) {
     final isOpened = useState(false);
-    final height = 58.0.s;
     final iconBorderSize = Border.fromBorderSide(
       BorderSide(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
     );

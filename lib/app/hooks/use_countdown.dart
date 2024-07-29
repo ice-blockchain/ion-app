@@ -9,6 +9,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
   void startCountdown() {
     countdown.value = initialCount;
+    timer?.cancel();
     timer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
