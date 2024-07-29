@@ -12,15 +12,11 @@ class WalletsRepository {
   List<WalletData> get wallets => List.unmodifiable(_walletsStore.value);
 
   void updateWallet(WalletData newWallet) {
-    final wallets = [..._walletsStore.value];
-    final index = wallets.indexWhere((wallet) => wallet.id == newWallet.id);
+    final index = _walletsStore.value.indexWhere((wallet) => wallet.id == newWallet.id);
     if (index != -1) {
-      wallets[index] = wallets[index].copyWith(
-        name: newWallet.name,
-        icon: newWallet.icon,
-        balance: newWallet.balance,
-      );
-      _walletsStore.value = wallets;
+      final updatedWallets = [..._walletsStore.value];
+      updatedWallets[index] = newWallet;
+      _walletsStore.value = updatedWallets;
     }
   }
 
@@ -31,10 +27,8 @@ class WalletsRepository {
   }
 
   void addWallet(WalletData newWallet) {
-    final wallets = [..._walletsStore.value];
-    if (!wallets.any((wallet) => wallet.id == newWallet.id)) {
-      wallets.add(newWallet);
-      _walletsStore.value = wallets;
+    if (!_walletsStore.value.any((wallet) => wallet.id == newWallet.id)) {
+      _walletsStore.value = [..._walletsStore.value, newWallet];
     }
   }
 
