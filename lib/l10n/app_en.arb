@@ -214,6 +214,7 @@
   "post_reply_hint": "Write your reply",
   "post_replying_to": "Replying to",
   "post_reply": "Reply",
+  "post_reply_sent": "Your reply was sent",
   "send_nft_confirm_asset": "Asset",
   "send_nft_confirm_network": "Network",
   "send_nft_confirm_arrival_time": "Arrival time",
