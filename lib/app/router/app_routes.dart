@@ -293,11 +293,11 @@ class PostDetailsRoute extends BaseRouteData {
   PostDetailsRoute({required this.$extra})
       : super(
           child: PostDetailsPage(
-            postData: $extra,
+            postId: $extra,
           ),
         );
 
-  final PostData $extra;
+  final String $extra;
 }
 
 class ReplyExpandedRoute extends BaseRouteData {
@@ -306,9 +306,9 @@ class ReplyExpandedRoute extends BaseRouteData {
   }) : super(
           type: IceRouteType.bottomSheet,
           child: ReplyExpandedPage(
-            postData: $extra,
+            postId: $extra,
           ),
         );
 
-  final PostData $extra;
+  final String $extra;
 }
