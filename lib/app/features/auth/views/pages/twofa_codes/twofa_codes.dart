@@ -28,18 +28,6 @@ class TwoFaCodesPage extends HookWidget {
       for (final type in twoFaTypes) type: useTextEditingController(),
     };
 
-    List<Widget> _buildTwoFaInputs() {
-      final inputs = <Widget>[];
-      for (final TwoFaType twoFaType in twoFaTypes) {
-        inputs.add(TwoFaCodeInput(
-          controller: controllers[twoFaType]!,
-          twoFaType: twoFaType,
-        ));
-        inputs.add(SizedBox(height: 16.0.s));
-      }
-      return inputs;
-    }
-
     return SheetContent(
       body: AuthScrollContainer(
         title: context.i18n.two_fa_title,
@@ -54,7 +42,15 @@ class TwoFaCodesPage extends HookWidget {
                   child: Column(
                     children: [
                       SizedBox(height: 16.0.s),
-                      ..._buildTwoFaInputs(),
+                      ...twoFaTypes.map((twoFaType) {
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 16.0.s),
+                          child: TwoFaCodeInput(
+                            controller: controllers[twoFaType]!,
+                            twoFaType: twoFaType,
+                          ),
+                        );
+                      }).toList(),
                       Button(
                         onPressed: () {
                           if (!formKey.value.currentState!.validate()) {}

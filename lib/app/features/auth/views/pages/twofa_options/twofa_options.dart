@@ -28,19 +28,21 @@ class TwoFaOptionsPage extends HookWidget {
     List<Widget> _buildTwoFaOptionSelector() {
       final inputs = <Widget>[];
       for (int i = 0; i < optionsNumber; i++) {
-        inputs.add(TwoFaOptionSelector(
-          availableOptions: selectedValues[i]?.value != null
-              ? {selectedValues[i]!.value!, ...availableOptions.value}
-              : availableOptions.value,
-          optionIndex: i + 1,
-          onSaved: (value) {
-            if (selectedValues[i]?.value != null) {
-              availableOptions.value = {...availableOptions.value, selectedValues[i]!.value!};
-            }
-            selectedValues[i]?.value = value;
-            availableOptions.value = {...availableOptions.value}..remove(value);
-          },
-        ));
+        inputs.add(
+          TwoFaOptionSelector(
+            availableOptions: selectedValues[i]?.value != null
+                ? {selectedValues[i]!.value!, ...availableOptions.value}
+                : availableOptions.value,
+            optionIndex: i + 1,
+            onSaved: (value) {
+              if (selectedValues[i]?.value != null) {
+                availableOptions.value = {...availableOptions.value, selectedValues[i]!.value!};
+              }
+              selectedValues[i]?.value = value;
+              availableOptions.value = {...availableOptions.value}..remove(value);
+            },
+          ),
+        );
         inputs.add(SizedBox(height: 16.0.s));
       }
       return inputs;
@@ -65,8 +67,7 @@ class TwoFaOptionsPage extends HookWidget {
                         onPressed: () {
                           if (formKey.value.currentState!.validate()) {
                             final Set<TwoFaType> extra = selectedValues.values
-                                .map((ValueNotifier<TwoFaType?> selectedValue) =>
-                                    selectedValue.value)
+                                .map((selectedValue) => selectedValue.value)
                                 .where((TwoFaType? value) => value != null)
                                 .cast<TwoFaType>()
                                 .toSet();

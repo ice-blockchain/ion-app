@@ -243,7 +243,7 @@ class ButtonIconFrame extends StatelessWidget {
 
   final Color? color;
   final Widget icon;
-  final BorderSide? border;
+  final Border? border;
 
   @override
   Widget build(BuildContext context) {
@@ -254,7 +254,7 @@ class ButtonIconFrame extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(9.0.s),
-        border: border != null ? Border.fromBorderSide(border!) : null,
+        border: border,
       ),
       child: icon,
     );

@@ -19,6 +19,7 @@ class RestoreMenuPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final count = useState(Random().nextInt(3) + 1);
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return SheetContent(
       body: AuthScrollContainer(
@@ -44,8 +45,7 @@ class RestoreMenuPage extends HookWidget {
                   description: context.i18n.restore_identity_type_credentials_description,
                   onPressed: () {
                     hideKeyboardAndCallOnce(
-                      callback: () =>
-                          TwoFaOptionsRoute($extra: Random().nextInt(3) + 1).push<void>(context),
+                      callback: () => TwoFaOptionsRoute($extra: count.value).push<void>(context),
                     );
                   },
                 ),

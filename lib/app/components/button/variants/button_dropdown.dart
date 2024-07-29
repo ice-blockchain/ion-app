@@ -13,13 +13,13 @@ class _ButtonDropdown extends Button {
     double? trailingIconOffset,
     bool opened = false,
     ButtonStyle style = const ButtonStyle(),
-    bool? useDefaultBorderRadius,
+    bool? useDefaultBorderRadius = false,
     bool? useDefaultPaddings,
   }) : super(
           type: ButtonType.dropdown,
           style: style.merge(
             OutlinedButton.styleFrom(
-              shape: useDefaultBorderRadius != null
+              shape: useDefaultBorderRadius == false
                   ? null
                   : RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0.s)),

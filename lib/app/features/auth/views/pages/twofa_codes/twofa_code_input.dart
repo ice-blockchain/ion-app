@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
@@ -7,6 +5,7 @@ import 'package:ice/app/components/inputs/text_input/components/text_input_text_
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/twofa_type.dart';
+import 'package:ice/app/hooks/use_countdown.dart';
 import 'package:ice/app/utils/validators.dart';
 
 class TwoFaCodeInput extends HookWidget {
@@ -18,25 +17,9 @@ class TwoFaCodeInput extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isSent = useState(false);
-    final countdown = useState(0);
-    Timer? timer;
-
-    void startCountdown() {
-      countdown.value = 60;
-      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (countdown.value > 0) {
-          countdown.value--;
-        } else {
-          timer.cancel();
-        }
-      });
-    }
-
-    useEffect(() {
-      return () {
-        timer?.cancel();
-      };
-    }, []);
+    final countdownState = useCountdown(60);
+    final countdown = countdownState.countdown;
+    final startCountdown = countdownState.startCountdown;
 
     return TextInput(
       prefixIcon: TextInputIcons(
