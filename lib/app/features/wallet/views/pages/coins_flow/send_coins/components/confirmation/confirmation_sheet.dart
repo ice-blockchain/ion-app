@@ -43,24 +43,26 @@ class ConfirmationSheet extends ConsumerWidget {
               child: Column(
                 children: [
                   SizedBox(height: 16.0.s),
-                  TransactionAmountSummary(
-                    usdtAmount: formData.usdtAmount,
-                    usdAmount: formData.usdtAmount * 0.999,
-                    icon: mockedCoinsDataArray[3].iconUrl.icon(),
-                  ),
+                  if (formData.usdtAmount != null)
+                    TransactionAmountSummary(
+                      usdtAmount: formData.usdtAmount!,
+                      usdAmount: formData.usdtAmount! * 0.999,
+                      icon: mockedCoinsDataArray[3].iconUrl.icon(),
+                    ),
                   SizedBox(height: 16.0.s),
                   ListItem.text(
                     title: Text(locale.wallet_send_to),
                     value: formData.address,
                   ),
                   SizedBox(height: 16.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_asset),
-                    value: formData.selectedCoin.name,
-                    icon: formData.selectedCoin.iconUrl.icon(
-                      size: ScreenSideOffset.defaultSmallMargin,
+                  if (formData.selectedCoin != null)
+                    ListItem.textWithIcon(
+                      title: Text(locale.wallet_asset),
+                      value: formData.selectedCoin!.name,
+                      icon: formData.selectedCoin!.iconUrl.icon(
+                        size: ScreenSideOffset.defaultSmallMargin,
+                      ),
                     ),
-                  ),
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_title),

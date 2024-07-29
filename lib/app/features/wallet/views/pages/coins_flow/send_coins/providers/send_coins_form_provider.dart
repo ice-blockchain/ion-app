@@ -1,6 +1,6 @@
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
-import 'package:ice/app/features/wallet/model/send_coins_data.dart';
+import 'package:ice/app/features/wallet/model/crypto_asset_data.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
 import 'package:ice/app/features/wallets/providers/selected_wallet_id_provider.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
@@ -11,13 +11,13 @@ part 'send_coins_form_provider.g.dart';
 @riverpod
 class SendCoinsFormController extends _$SendCoinsFormController {
   @override
-  SendCoinsData build() {
+  CryptoAssetData build() {
     final walletId = ref.watch(selectedWalletIdNotifierProvider);
     final walletsData = ref.watch(walletsDataNotifierProvider);
 
     final wallet = walletsData[walletId]!;
 
-    return SendCoinsData(
+    return CryptoAssetData(
       selectedCoin: mockedCoinsDataArray[0],
       selectedNetwork: NetworkType.eth,
       wallet: wallet,

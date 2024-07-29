@@ -20,6 +20,8 @@ class SendNftConfirmPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
     final formData = ref.watch(sendNftFormControllerProvider);
+    final selectedNft = formData.selectedNft;
+
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -29,85 +31,86 @@ class SendNftConfirmPage extends ConsumerWidget {
             showBackButton: false,
             actions: const [NavigationCloseButton()],
           ),
-          ScreenSideOffset.small(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(top: 10.0.s),
-              child: Column(
-                children: [
-                  NftItem(nftData: formData.selectedNft),
-                  SizedBox(height: 16.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_send_to),
-                    secondary: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        formData.address,
-                        textAlign: TextAlign.right,
-                        style: context.theme.appTextThemes.caption3.copyWith(),
+          if (selectedNft != null)
+            ScreenSideOffset.small(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(top: 10.0.s),
+                child: Column(
+                  children: [
+                    NftItem(nftData: selectedNft),
+                    SizedBox(height: 16.0.s),
+                    ListItem.textWithIcon(
+                      title: Text(locale.wallet_send_to),
+                      secondary: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          formData.address,
+                          textAlign: TextAlign.right,
+                          style: context.theme.appTextThemes.caption3.copyWith(),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 12.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_title),
-                    value: formData.wallet.name,
-                    icon: Image.network(
-                      formData.wallet.icon,
-                      width: ScreenSideOffset.defaultSmallMargin,
-                      height: ScreenSideOffset.defaultSmallMargin,
-                    ),
-                    secondary: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
-                        textAlign: TextAlign.right,
-                        style: context.theme.appTextThemes.caption3.copyWith(),
+                    SizedBox(height: 12.0.s),
+                    ListItem.textWithIcon(
+                      title: Text(locale.wallet_title),
+                      value: formData.wallet.name,
+                      icon: Image.network(
+                        formData.wallet.icon,
+                        width: ScreenSideOffset.defaultSmallMargin,
+                        height: ScreenSideOffset.defaultSmallMargin,
+                      ),
+                      secondary: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
+                          textAlign: TextAlign.right,
+                          style: context.theme.appTextThemes.caption3.copyWith(),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 12.0.s),
-                  ListItem.text(
-                    title: Text(context.i18n.send_nft_confirm_asset),
-                    value: formData.selectedNft.asset,
-                  ),
-                  SizedBox(height: 12.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(context.i18n.send_nft_confirm_network),
-                    value: formData.selectedNft.network,
-                    icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
-                  ),
-                  SizedBox(height: 12.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_arrival_time),
-                    value: '${formData.arrivalTime} '
-                        '${locale.wallet_arrival_time_minutes}',
-                    icon: Assets.images.icons.iconBlockTime.icon(
-                      size: 16.0.s,
+                    SizedBox(height: 12.0.s),
+                    ListItem.text(
+                      title: Text(context.i18n.send_nft_confirm_asset),
+                      value: selectedNft.asset,
                     ),
-                  ),
-                  SizedBox(height: 12.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_network_fee),
-                    value: '1.00 USDT',
-                    icon: Assets.images.icons.iconBlockCoins.icon(
-                      size: 16.0.s,
+                    SizedBox(height: 12.0.s),
+                    ListItem.textWithIcon(
+                      title: Text(context.i18n.send_nft_confirm_network),
+                      value: selectedNft.network,
+                      icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
-                  ),
-                  SizedBox(height: 12.0.s),
-                  Button(
-                    mainAxisSize: MainAxisSize.max,
-                    minimumSize: Size(56.0.s, 56.0.s),
-                    label: Text(
-                      context.i18n.button_confirm,
+                    SizedBox(height: 12.0.s),
+                    ListItem.textWithIcon(
+                      title: Text(locale.wallet_arrival_time),
+                      value: '${formData.arrivalTime} '
+                          '${locale.wallet_arrival_time_minutes}',
+                      icon: Assets.images.icons.iconBlockTime.icon(
+                        size: 16.0.s,
+                      ),
                     ),
-                    onPressed: () {
-                      NftTransactionDetailsRoute().push<void>(context);
-                    },
-                  ),
-                ],
+                    SizedBox(height: 12.0.s),
+                    ListItem.textWithIcon(
+                      title: Text(locale.wallet_network_fee),
+                      value: '1.00 USDT',
+                      icon: Assets.images.icons.iconBlockCoins.icon(
+                        size: 16.0.s,
+                      ),
+                    ),
+                    SizedBox(height: 12.0.s),
+                    Button(
+                      mainAxisSize: MainAxisSize.max,
+                      minimumSize: Size(56.0.s, 56.0.s),
+                      label: Text(
+                        context.i18n.button_confirm,
+                      ),
+                      onPressed: () {
+                        NftTransactionDetailsRoute().push<void>(context);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
           ScreenBottomOffset(),
         ],
       ),

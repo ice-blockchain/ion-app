@@ -52,57 +52,59 @@ class SendNftForm extends HookConsumerWidget {
                   ],
                 ),
               ),
-              ScreenSideOffset.small(
-                child: Column(
-                  children: [
-                    NftPicture(imageUrl: selectedNft.iconUrl),
-                    SizedBox(height: 16.0.s),
-                    NftName(
-                      name: selectedNft.collectionName,
-                      rank: selectedNft.rank,
-                      price: selectedNft.price,
-                      networkSymbol: selectedNft.currency,
-                      networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
-                    ),
-                    SizedBox(height: 16.0.s),
-                    ContactInputSwitcher(
-                      selectedContact: selectedContact.value,
-                      onContactSelected: (ContactData? contact) => selectedContact.value = contact,
-                    ),
-                    SizedBox(height: 17.0.s),
-                    const ArrivalTime(),
-                    SizedBox(height: 12.0.s),
-                    AppSlider(
-                      initialValue: formController.arrivalTime.toDouble(),
-                      onChanged: (double value) {
-                        ref
-                            .read(sendNftFormControllerProvider.notifier)
-                            .updateArrivalTime(value.toInt());
-                      },
-                    ),
-                    SizedBox(height: 8.0.s),
-                    const NetworkFee(),
-                    SizedBox(height: 45.0.s),
-                    Button(
-                      label: Text(
-                        locale.button_continue,
+              if (selectedNft != null)
+                ScreenSideOffset.small(
+                  child: Column(
+                    children: [
+                      NftPicture(imageUrl: selectedNft.iconUrl),
+                      SizedBox(height: 16.0.s),
+                      NftName(
+                        name: selectedNft.collectionName,
+                        rank: selectedNft.rank,
+                        price: selectedNft.price,
+                        networkSymbol: selectedNft.currency,
+                        networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                       ),
-                      mainAxisSize: MainAxisSize.max,
-                      trailingIcon: ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          colors.primaryBackground,
-                          BlendMode.srcIn,
+                      SizedBox(height: 16.0.s),
+                      ContactInputSwitcher(
+                        selectedContact: selectedContact.value,
+                        onContactSelected: (ContactData? contact) =>
+                            selectedContact.value = contact,
+                      ),
+                      SizedBox(height: 17.0.s),
+                      const ArrivalTime(),
+                      SizedBox(height: 12.0.s),
+                      AppSlider(
+                        initialValue: formController.arrivalTime.toDouble(),
+                        onChanged: (double value) {
+                          ref
+                              .read(sendNftFormControllerProvider.notifier)
+                              .updateArrivalTime(value.toInt());
+                        },
+                      ),
+                      SizedBox(height: 8.0.s),
+                      const NetworkFee(),
+                      SizedBox(height: 45.0.s),
+                      Button(
+                        label: Text(
+                          locale.button_continue,
                         ),
-                        child: Assets.images.icons.iconButtonNext.icon(),
+                        mainAxisSize: MainAxisSize.max,
+                        trailingIcon: ColorFiltered(
+                          colorFilter: ColorFilter.mode(
+                            colors.primaryBackground,
+                            BlendMode.srcIn,
+                          ),
+                          child: Assets.images.icons.iconButtonNext.icon(),
+                        ),
+                        onPressed: () {
+                          SendNftConfirmRoute().push<void>(context);
+                        },
                       ),
-                      onPressed: () {
-                        SendNftConfirmRoute().push<void>(context);
-                      },
-                    ),
-                    SizedBox(height: 16.0.s),
-                  ],
+                      SizedBox(height: 16.0.s),
+                    ],
+                  ),
                 ),
-              ),
               ScreenBottomOffset(),
             ],
           ),

@@ -6,6 +6,9 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/components/nft_item/nft_item.dart';
 import 'package:ice/app/features/wallet/components/timeline/timeline.dart';
+import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/providers/send_nft_form_provider.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -18,7 +21,19 @@ class TransactionDetailsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
-    final formData = ref.watch(sendNftFormControllerProvider);
+    final nftFormData = ref.watch(sendNftFormControllerProvider);
+    final coinFormData = ref.watch(sendCoinsFormControllerProvider);
+    final selectedNft = nftFormData.selectedNft;
+    final selectedCoin = coinFormData.selectedCoin;
+
+    final address = selectedNft != null ? nftFormData.address : coinFormData.address;
+    final wallet = selectedNft != null ? nftFormData.wallet : coinFormData.wallet;
+    final asset =
+        selectedNft != null ? nftFormData.selectedNft!.asset : coinFormData.selectedCoin!.asset;
+    final network =
+        selectedNft != null ? nftFormData.selectedNft!.network : coinFormData.selectedCoin!.network;
+    final arrivalTime = selectedNft != null ? nftFormData.arrivalTime : coinFormData.arrivalTime;
+
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -33,15 +48,22 @@ class TransactionDetailsPage extends ConsumerWidget {
               padding: EdgeInsets.only(top: 10.0.s),
               child: Column(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 52.0.s,
+                  if (selectedNft != null)
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 52.0.s,
+                      ),
+                      child: NftItem(
+                        nftData: selectedNft,
+                        backgroundColor: Colors.transparent,
+                      ),
                     ),
-                    child: NftItem(
-                      nftData: formData.selectedNft,
-                      backgroundColor: Colors.transparent,
+                  if (selectedCoin != null && coinFormData.usdtAmount != null)
+                    TransactionAmountSummary(
+                      usdtAmount: coinFormData.usdtAmount!,
+                      usdAmount: coinFormData.usdtAmount! * 0.999,
+                      icon: mockedCoinsDataArray[3].iconUrl.icon(),
                     ),
-                  ),
                   SizedBox(height: 12.0.s),
                   Timeline(
                     items: [
@@ -56,7 +78,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                     secondary: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        formData.address,
+                        address,
                         textAlign: TextAlign.right,
                         style: context.theme.appTextThemes.caption3.copyWith(),
                       ),
@@ -65,9 +87,9 @@ class TransactionDetailsPage extends ConsumerWidget {
                   SizedBox(height: 12.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_title),
-                    value: formData.wallet.name,
+                    value: wallet.name,
                     icon: Image.network(
-                      formData.wallet.icon,
+                      wallet.icon,
                       width: ScreenSideOffset.defaultSmallMargin,
                       height: ScreenSideOffset.defaultSmallMargin,
                     ),
@@ -83,18 +105,18 @@ class TransactionDetailsPage extends ConsumerWidget {
                   SizedBox(height: 12.0.s),
                   ListItem.text(
                     title: Text(context.i18n.send_nft_confirm_asset),
-                    value: formData.selectedNft.asset,
+                    value: asset,
                   ),
                   SizedBox(height: 12.0.s),
                   ListItem.textWithIcon(
                     title: Text(context.i18n.send_nft_confirm_network),
-                    value: formData.selectedNft.network,
+                    value: network,
                     icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                   ),
                   SizedBox(height: 12.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_arrival_time),
-                    value: '${formData.arrivalTime} '
+                    value: '${arrivalTime} '
                         '${locale.wallet_arrival_time_minutes}',
                     icon: Assets.images.icons.iconBlockTime.icon(
                       size: 16.0.s,

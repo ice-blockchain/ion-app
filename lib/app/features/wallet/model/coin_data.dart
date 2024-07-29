@@ -11,5 +11,7 @@ class CoinData with _$CoinData {
     required double amount,
     required double balance,
     required AssetGenImage iconUrl,
+    required String asset,
+    required String network,
   }) = _CoinData;
 }

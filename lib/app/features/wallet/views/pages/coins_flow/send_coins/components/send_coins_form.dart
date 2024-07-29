@@ -60,12 +60,13 @@ class SendCoinsForm extends HookConsumerWidget {
               ScreenSideOffset.small(
                 child: Column(
                   children: [
-                    CoinButton(
-                      coinData: formController.selectedCoin,
-                      onTap: () {
-                        CoinSendRoute().push<void>(context);
-                      },
-                    ),
+                    if (formController.selectedCoin != null)
+                      CoinButton(
+                        coinData: formController.selectedCoin!,
+                        onTap: () {
+                          CoinSendRoute().push<void>(context);
+                        },
+                      ),
                     SizedBox(height: 12.0.s),
                     NetworkButton(
                       networkType: formController.selectedNetwork,
