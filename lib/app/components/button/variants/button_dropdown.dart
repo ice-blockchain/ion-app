@@ -14,7 +14,7 @@ class _ButtonDropdown extends Button {
     bool opened = false,
     ButtonStyle style = const ButtonStyle(),
     bool? useDefaultBorderRadius = false,
-    bool? useDefaultPaddings,
+    bool? useDefaultPaddings = false,
   }) : super(
           type: ButtonType.dropdown,
           style: style.merge(
@@ -25,7 +25,7 @@ class _ButtonDropdown extends Button {
                       borderRadius: BorderRadius.all(Radius.circular(12.0.s)),
                     ),
               minimumSize: Size.square(40.0.s),
-              padding: useDefaultPaddings != null
+              padding: useDefaultPaddings == false
                   ? null
                   : leadingIcon != null
                       ? EdgeInsets.only(
