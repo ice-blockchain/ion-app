@@ -1,32 +1,10 @@
-import 'dart:async';
-
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
-import 'package:ice/app/features/wallets/data/wallets_repository.dart';
+import 'package:ice/app/features/wallets/repository/wallets_repository.dart';
 import 'package:ice/app/features/wallets/providers/mock_data/mock_data.dart';
-import 'package:ice/app/services/storage/local_storage.dart';
+import 'package:ice/app/features/wallets/providers/selected_wallet_id_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallets_data_provider.g.dart';
-
-@riverpod
-class SelectedWalletIdNotifier extends _$SelectedWalletIdNotifier {
-  static String selectedWalletIdKey = 'UserPreferences:selectedWalletId';
-
-  @override
-  String build() {
-    final localStorage = ref.watch(localStorageProvider);
-    final walletsRepository = ref.watch(walletsRepositoryProvider);
-
-    return localStorage.getString(selectedWalletIdKey) ?? walletsRepository.wallets.first.id;
-  }
-
-  void updateWalletId(String id) {
-    final localStorage = ref.read(localStorageProvider);
-    unawaited(localStorage.setString(selectedWalletIdKey, id));
-
-    state = id;
-  }
-}
 
 @riverpod
 WalletData currentWallet(CurrentWalletRef ref) {

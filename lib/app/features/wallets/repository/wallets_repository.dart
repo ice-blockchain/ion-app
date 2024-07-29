@@ -1,5 +1,5 @@
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
-import 'package:ice/app/features/wallets/data/in_memory_store.dart';
+import 'package:ice/app/utils/in_memory_store.dart';
 
 class WalletsRepository {
   final InMemoryStore<List<WalletData>> _walletsStore;

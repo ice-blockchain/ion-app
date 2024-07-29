@@ -10,7 +10,7 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/pro
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coin_item.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
-import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
+import 'package:ice/app/features/wallets/providers/selected_wallet_id_provider.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';

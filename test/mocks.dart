@@ -1,4 +1,4 @@
-import 'package:ice/app/features/wallets/data/wallets_repository.dart';
+import 'package:ice/app/features/wallets/repository/wallets_repository.dart';
 import 'package:ice/app/services/storage/local_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';

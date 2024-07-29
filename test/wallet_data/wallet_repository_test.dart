@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
-import 'package:ice/app/features/wallets/data/wallets_repository.dart';
 import 'package:ice/app/features/wallets/providers/mock_data/mock_data.dart';
+import 'package:ice/app/features/wallets/repository/wallets_repository.dart';
 
 void main() {
   late WalletsRepository repository;
