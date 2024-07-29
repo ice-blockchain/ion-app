@@ -11,8 +11,8 @@ import 'package:ice/app/features/auth/views/pages/select_languages/select_langua
 import 'package:ice/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey.dart';
 import 'package:ice/app/features/auth/views/pages/sign_up_password/sign_up_password.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
-import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_codes.dart';
-import 'package:ice/app/features/auth/views/pages/twofa_options/twofa_options.dart';
+import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_codes_page.dart';
+import 'package:ice/app/features/auth/views/pages/twofa_options/twofa_options_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';

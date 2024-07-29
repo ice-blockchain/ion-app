@@ -95,8 +95,8 @@ class Button extends StatelessWidget {
     Color? backgroundColor,
     double? leadingIconOffset,
     double? trailingIconOffset,
-    bool? useDefaultBorderRadius,
-    bool? useDefaultPaddings,
+    bool useDefaultBorderRadius,
+    bool useDefaultPaddings,
     bool disabled,
     bool opened,
   }) = _ButtonDropdown;

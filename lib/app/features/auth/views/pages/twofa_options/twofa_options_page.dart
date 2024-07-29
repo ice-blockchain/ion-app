@@ -9,20 +9,22 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/data/models/twofa_type.dart';
 import 'package:ice/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
+import 'package:ice/app/features/auth/views/pages/twofa_options/mock_data/mock.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_options/twofa_option_selector.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class TwoFaOptionsPage extends HookWidget {
-  const TwoFaOptionsPage({required this.optionsNumber, super.key});
-
-  final int optionsNumber;
+  const TwoFaOptionsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final optionsNumber = useState(get2FAOptionsNumber());
     final formKey = useRef(GlobalKey<FormState>());
-    final selectedValues = {for (int i = 0; i < optionsNumber; i++) i: useState<TwoFaType?>(null)};
+    final selectedValues = {
+      for (int i = 0; i < optionsNumber.value; i++) i: useState<TwoFaType?>(null)
+    };
     final availableOptions = useState<Set<TwoFaType>>(TwoFaType.values.toSet());
 
     return SheetContent(
@@ -39,7 +41,7 @@ class TwoFaOptionsPage extends HookWidget {
                   child: Column(
                     children: [
                       SizedBox(height: 16.0.s),
-                      ...List.generate(optionsNumber, (i) {
+                      ...List.generate(optionsNumber.value, (i) {
                         return Padding(
                           padding: EdgeInsets.only(bottom: 16.0.s),
                           child: TwoFaOptionSelector(

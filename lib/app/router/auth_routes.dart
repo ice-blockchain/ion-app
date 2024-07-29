@@ -70,12 +70,11 @@ class TwoFaCodesRoute extends BaseRouteData {
 }
 
 class TwoFaOptionsRoute extends BaseRouteData {
-  TwoFaOptionsRoute({required this.$extra})
+  TwoFaOptionsRoute()
       : super(
-          child: TwoFaOptionsPage(optionsNumber: $extra),
+          child: TwoFaOptionsPage(),
           type: IceRouteType.bottomSheet,
         );
-  final int $extra;
 }
 
 class SelectLanguagesRoute extends BaseRouteData {
