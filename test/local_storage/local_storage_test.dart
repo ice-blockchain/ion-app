@@ -25,7 +25,7 @@ void main() {
     test('setBool() calls SharedPreferences.setBool', () async {
       when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async => true);
 
-      await localStorage.setBool(key: testKey, value: testBoolValue);
+      localStorage.setBool(key: testKey, value: testBoolValue);
 
       verify(() => mockPrefs.setBool(testKey, testBoolValue)).called(1);
     });
@@ -45,7 +45,7 @@ void main() {
     test('setDouble() calls SharedPreferences.setDouble', () async {
       when(() => mockPrefs.setDouble(any(), any())).thenAnswer((_) async => true);
 
-      await localStorage.setDouble(testKey, testDoubleValue);
+      localStorage.setDouble(testKey, testDoubleValue);
 
       verify(() => mockPrefs.setDouble(testKey, testDoubleValue)).called(1);
     });
@@ -65,7 +65,7 @@ void main() {
     test('setString() calls SharedPreferences.setString', () async {
       when(() => mockPrefs.setString(any(), any())).thenAnswer((_) async => true);
 
-      await localStorage.setString(testKey, testStringValue);
+      localStorage.setString(testKey, testStringValue);
 
       verify(() => mockPrefs.setString(testKey, testStringValue)).called(1);
     });
@@ -79,7 +79,7 @@ void main() {
     test('setEnum() calls SharedPreferences.setString with correct value', () async {
       when(() => mockPrefs.setString(any(), any())).thenAnswer((_) async => true);
 
-      await localStorage.setEnum(testKey, testEnumValue);
+      localStorage.setEnum(testKey, testEnumValue);
 
       verify(() => mockPrefs.setString(testKey, testEnumValue.name)).called(1);
     });

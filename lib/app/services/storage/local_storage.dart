@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ice/app/extensions/enum.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,32 +22,32 @@ class LocalStorage {
 
   const LocalStorage(this._prefs);
 
-  Future<bool> setBool({required String key, required bool value}) {
-    return _prefs.setBool(key, value);
+  void setBool({required String key, required bool value}) {
+    return unawaited(_prefs.setBool(key, value));
   }
 
   bool getBool(String key, {bool defaultValue = false}) {
     return _prefs.getBool(key) ?? defaultValue;
   }
 
-  Future<bool> setDouble(String key, double value) {
-    return _prefs.setDouble(key, value);
+  void setDouble(String key, double value) {
+    return unawaited(_prefs.setDouble(key, value));
   }
 
   double getDouble(String key, {double defaultValue = 0.0}) {
     return _prefs.getDouble(key) ?? defaultValue;
   }
 
-  Future<bool> setString(String key, String value) {
-    return _prefs.setString(key, value);
+  void setString(String key, String value) {
+    return unawaited(_prefs.setString(key, value));
   }
 
   String? getString(String key) {
     return _prefs.getString(key);
   }
 
-  Future<bool> setEnum<T extends Enum>(String key, T value) {
-    return _prefs.setString(key, value.toShortString());
+  void setEnum<T extends Enum>(String key, T value) {
+    return unawaited(_prefs.setString(key, value.toShortString()));
   }
 
   // Get an enum value
