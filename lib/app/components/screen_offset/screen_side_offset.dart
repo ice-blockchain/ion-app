@@ -47,9 +47,8 @@ class ScreenSideOffset extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: replace with Padding
-    return Container(
-      margin: only != null
+    return Padding(
+      padding: only != null
           ? only == ScreenOffsetSide.left
               ? EdgeInsets.only(left: margin)
               : EdgeInsets.only(right: margin)
