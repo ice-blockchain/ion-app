@@ -28,8 +28,7 @@ class TimelineItem extends StatelessWidget {
       children: [
         Column(
           children: [
-            Container(
-              alignment: Alignment.center,
+            Center(
               child: Image.asset(
                 data.isDone
                     ? Assets.images.icons.iconStepsCheckActive.path
