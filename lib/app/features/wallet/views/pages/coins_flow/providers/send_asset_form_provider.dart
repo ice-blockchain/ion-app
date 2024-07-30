@@ -2,7 +2,6 @@ import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/model/crypto_asset_data.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
-import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/selected_wallet_id_provider.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -33,11 +32,11 @@ class SendAssetFormController extends _$SendAssetFormController {
     );
   }
 
-  void selectNft(NftData nft) => state = state.copyWith(selectedNft: nft);
+  void setNft(NftData nft) => state = state.copyWith(selectedNft: nft);
 
-  void selectCoin(CoinData coin) => state = state.copyWith(selectedCoin: coin);
+  void setCoin(CoinData coin) => state = state.copyWith(selectedCoin: coin);
 
-  void selectNetwork(NetworkType network) => state = state.copyWith(selectedNetwork: network);
+  void setNetwork(NetworkType network) => state = state.copyWith(selectedNetwork: network);
 
   void updateAddress(String address) => state = state.copyWith(address: address);
 
@@ -47,14 +46,6 @@ class SendAssetFormController extends _$SendAssetFormController {
   }
 
   void updateArrivalTime(int arrivalTime) => state = state.copyWith(arrivalTime: arrivalTime);
-
-  String getAddress() {
-    return state.address;
-  }
-
-  WalletData getWallet() {
-    return state.wallet;
-  }
 
   String getAsset() {
     return switch (_cryptoType) {
@@ -71,8 +62,6 @@ class SendAssetFormController extends _$SendAssetFormController {
       CryptoAssetType.coin || CryptoAssetType.nft => '',
     };
   }
-
-  int getArrivalTime() => state.arrivalTime;
 
   double getUsdtAmount() => state.usdtAmount ?? 0.0;
 }

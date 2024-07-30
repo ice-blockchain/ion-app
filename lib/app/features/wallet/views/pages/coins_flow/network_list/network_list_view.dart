@@ -54,12 +54,12 @@ class NetworkListView extends ConsumerWidget {
                     if (type == NetworkListViewType.send) {
                       ref
                           .read(sendAssetFormControllerProvider().notifier)
-                          .selectNetwork(networkTypeValues[index]);
+                          .setNetwork(networkTypeValues[index]);
                       CoinsSendFormRoute().push<void>(context);
                     } else {
                       ref
                           .read(receiveCoinsFormControllerProvider.notifier)
-                          .selectNetwork(networkTypeValues[index]);
+                          .setNetwork(networkTypeValues[index]);
                       ShareAddressRoute().go(context);
                     }
                   },

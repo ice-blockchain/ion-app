@@ -71,7 +71,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                     secondary: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        controller.getAddress(),
+                        formData.address,
                         textAlign: TextAlign.right,
                         style: context.theme.appTextThemes.caption3.copyWith(),
                       ),
@@ -109,7 +109,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                   SizedBox(height: 12.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_arrival_time),
-                    value: '${controller.getArrivalTime()} '
+                    value: '${formData.arrivalTime} '
                         '${locale.wallet_arrival_time_minutes}',
                     icon: Assets.images.icons.iconBlockTime.icon(
                       size: 16.0.s,

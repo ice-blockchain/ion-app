@@ -12,8 +12,7 @@ class ArrivalTimeIndicator extends ConsumerWidget {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
-    final controller = ref.watch(sendAssetFormControllerProvider().notifier);
-    final arrivalTime = controller.getArrivalTime();
+    final formData = ref.watch(sendAssetFormControllerProvider());
 
     return Row(
       children: [
@@ -40,7 +39,7 @@ class ArrivalTimeIndicator extends ConsumerWidget {
               ),
               SizedBox(width: 5.0.s),
               Text(
-                '$arrivalTime ${locale.wallet_arrival_time_minutes}',
+                '${formData.arrivalTime} ${locale.wallet_arrival_time_minutes}',
                 style: textTheme.body2.copyWith(
                   color: colors.primaryAccent,
                 ),

@@ -91,7 +91,7 @@ class NftDetailsPage extends ConsumerWidget {
                         ref
                             .read(
                                 sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier)
-                            .selectNft(nft);
+                            .setNft(nft);
                         NftSendFormRoute().push<void>(context);
                       },
                     ),
