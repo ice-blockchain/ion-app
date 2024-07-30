@@ -4,8 +4,8 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/network_list/network_item.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -53,13 +53,13 @@ class NetworkListView extends ConsumerWidget {
                   onTap: () {
                     if (type == NetworkListViewType.send) {
                       ref
-                          .read(sendCoinsFormControllerProvider.notifier)
-                          .selectNetwork(networkTypeValues[index]);
+                          .read(sendAssetFormControllerProvider().notifier)
+                          .setNetwork(networkTypeValues[index]);
                       CoinsSendFormRoute().push<void>(context);
                     } else {
                       ref
                           .read(receiveCoinsFormControllerProvider.notifier)
-                          .selectNetwork(networkTypeValues[index]);
+                          .setNetwork(networkTypeValues[index]);
                       ShareAddressRoute().go(context);
                     }
                   },

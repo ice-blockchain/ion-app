@@ -13,10 +13,10 @@ import 'package:ice/app/features/wallet/components/network_fee/network_fee.dart'
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/network_list/network_list_view.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/coin_button.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -36,7 +36,7 @@ class SendCoinsForm extends HookConsumerWidget {
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
 
-    final formController = ref.watch(sendCoinsFormControllerProvider);
+    final formController = ref.watch(sendAssetFormControllerProvider());
 
     final amountController = useTextEditingController(
       text: formController.usdtAmount.toString(),
@@ -60,12 +60,13 @@ class SendCoinsForm extends HookConsumerWidget {
               ScreenSideOffset.small(
                 child: Column(
                   children: [
-                    CoinButton(
-                      coinData: formController.selectedCoin,
-                      onTap: () {
-                        CoinSendRoute().push<void>(context);
-                      },
-                    ),
+                    if (formController.selectedCoin != null)
+                      CoinButton(
+                        coinData: formController.selectedCoin!,
+                        onTap: () {
+                          CoinSendRoute().push<void>(context);
+                        },
+                      ),
                     SizedBox(height: 12.0.s),
                     NetworkButton(
                       networkType: formController.selectedNetwork,
@@ -84,14 +85,14 @@ class SendCoinsForm extends HookConsumerWidget {
                       controller: amountController,
                       labelText: locale.wallet_usdt_amount,
                       onChanged: (value) {
-                        ref.read(sendCoinsFormControllerProvider.notifier).updateAmount(value);
+                        ref.read(sendAssetFormControllerProvider().notifier).updateAmount(value);
                       },
                       suffixIcon: TextInputTextButton(
                         onPressed: () {
                           final maxAmount = formController.wallet.balance.toString();
                           amountController.text = maxAmount;
                           ref
-                              .read(sendCoinsFormControllerProvider.notifier)
+                              .read(sendAssetFormControllerProvider().notifier)
                               .updateAmount(maxAmount);
                         },
                         label: locale.wallet_max,
@@ -114,7 +115,7 @@ class SendCoinsForm extends HookConsumerWidget {
                       initialValue: formController.arrivalTime.toDouble(),
                       onChanged: (double value) {
                         ref
-                            .read(sendCoinsFormControllerProvider.notifier)
+                            .read(sendAssetFormControllerProvider().notifier)
                             .updateArrivalTime(value.toInt());
                       },
                     ),

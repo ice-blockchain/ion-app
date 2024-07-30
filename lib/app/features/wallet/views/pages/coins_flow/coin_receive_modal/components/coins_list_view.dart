@@ -85,7 +85,7 @@ class CoinsListView extends HookConsumerWidget {
                 child: CoinItem(
                   coinData: coins[index],
                   onTap: () {
-                    ref.read(receiveCoinsFormControllerProvider.notifier).selectCoin(coins[index]);
+                    ref.read(receiveCoinsFormControllerProvider.notifier).setCoin(coins[index]);
                     onCoinItemTap(coins[index]);
                   },
                 ),

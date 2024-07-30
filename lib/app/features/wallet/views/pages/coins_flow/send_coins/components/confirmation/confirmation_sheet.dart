@@ -6,8 +6,8 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -23,7 +23,7 @@ class ConfirmationSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
 
-    final formData = ref.watch(sendCoinsFormControllerProvider);
+    final formData = ref.watch(sendAssetFormControllerProvider());
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -43,24 +43,26 @@ class ConfirmationSheet extends ConsumerWidget {
               child: Column(
                 children: [
                   SizedBox(height: 16.0.s),
-                  TransactionAmountSummary(
-                    usdtAmount: formData.usdtAmount,
-                    usdAmount: formData.usdtAmount * 0.999,
-                    icon: mockedCoinsDataArray[3].iconUrl.icon(),
-                  ),
+                  if (formData.usdtAmount != null)
+                    TransactionAmountSummary(
+                      usdtAmount: formData.usdtAmount!,
+                      usdAmount: formData.usdtAmount! * 0.999,
+                      icon: mockedCoinsDataArray[3].iconUrl.icon(),
+                    ),
                   SizedBox(height: 16.0.s),
                   ListItem.text(
                     title: Text(locale.wallet_send_to),
                     value: formData.address,
                   ),
                   SizedBox(height: 16.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_asset),
-                    value: formData.selectedCoin.name,
-                    icon: formData.selectedCoin.iconUrl.icon(
-                      size: ScreenSideOffset.defaultSmallMargin,
+                  if (formData.selectedCoin != null)
+                    ListItem.textWithIcon(
+                      title: Text(locale.wallet_asset),
+                      value: formData.selectedCoin!.name,
+                      icon: formData.selectedCoin!.iconUrl.icon(
+                        size: ScreenSideOffset.defaultSmallMargin,
+                      ),
                     ),
-                  ),
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_title),

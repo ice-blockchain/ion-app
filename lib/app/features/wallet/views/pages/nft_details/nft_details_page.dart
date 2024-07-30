@@ -7,9 +7,10 @@ import 'package:ice/app/components/read_more_text/read_more_text.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/views/pages/send_nft/views/pages/nft_details/components/nft_name/nft_name.dart';
-import 'package:ice/app/features/wallet/views/pages/send_nft/views/pages/nft_details/components/nft_picture/nft_picture.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/providers/send_nft_form_provider.dart';
+import 'package:ice/app/features/wallet/model/nft_data.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
+import 'package:ice/app/features/wallet/views/pages/nft_details/components/nft_name/nft_name.dart';
+import 'package:ice/app/features/wallet/views/pages/nft_details/components/nft_picture/nft_picture.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -17,12 +18,13 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NftDetailsPage extends ConsumerWidget {
-  const NftDetailsPage({super.key});
+  const NftDetailsPage({super.key, required this.nft});
+
+  final NftData nft;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final payload = ref.watch(sendNftFormControllerProvider);
-    final selectedNft = payload.selectedNft;
+    ref.watch(SendAssetFormControllerProvider(type: CryptoAssetType.nft));
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -40,41 +42,41 @@ class NftDetailsPage extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    NftPicture(imageUrl: selectedNft.iconUrl),
+                    NftPicture(imageUrl: nft.iconUrl),
                     SizedBox(height: 15.0.s),
                     NftName(
-                      name: selectedNft.collectionName,
-                      rank: selectedNft.rank,
-                      price: selectedNft.price,
-                      networkSymbol: selectedNft.currency,
+                      name: nft.collectionName,
+                      rank: nft.rank,
+                      price: nft.price,
+                      networkSymbol: nft.currency,
                       networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
                     RoundedCard(
                       child: ReadMoreText(
-                        selectedNft.description,
+                        nft.description,
                       ),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.text(
                       title: Text(context.i18n.send_nft_token_id),
-                      value: selectedNft.identifier.toString(),
+                      value: nft.identifier.toString(),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_token_network),
-                      value: selectedNft.network,
+                      value: nft.network,
                       icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.text(
                       title: Text(context.i18n.send_nft_token_standard),
-                      value: selectedNft.tokenStandard,
+                      value: nft.tokenStandard,
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.text(
                       title: Text(context.i18n.send_nft_token_contract_address),
-                      value: selectedNft.contractAddress,
+                      value: nft.contractAddress,
                     ),
                     SizedBox(height: 12.0.s),
                     Button(
@@ -86,6 +88,10 @@ class NftDetailsPage extends ConsumerWidget {
                         context.i18n.feed_send,
                       ),
                       onPressed: () {
+                        ref
+                            .read(
+                                sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier)
+                            .setNft(nft);
                         NftSendFormRoute().push<void>(context);
                       },
                     ),

@@ -11,6 +11,8 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
     amount: 0.5,
     balance: 14589.42,
     iconUrl: Assets.images.wallet.walletBtc,
+    asset: 'TetherUS USDT',
+    network: 'Ethereum',
   ),
   CoinData(
     abbreviation: 'ICE',
@@ -18,6 +20,8 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
     amount: 10000,
     balance: 9500,
     iconUrl: Assets.images.wallet.walletIce,
+    asset: 'TetherUS USDT',
+    network: 'Ethereum',
   ),
   CoinData(
     abbreviation: 'ETH',
@@ -25,6 +29,8 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
     amount: 1.17,
     balance: 2010.35,
     iconUrl: Assets.images.wallet.walletEth,
+    asset: 'TetherUS USDT',
+    network: 'Ethereum',
   ),
   CoinData(
     abbreviation: 'USDT',
@@ -32,6 +38,8 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
     amount: 100,
     balance: 99.99,
     iconUrl: Assets.images.wallet.walletTether,
+    asset: 'TetherUS USDT',
+    network: 'Ethereum',
   ),
   CoinData(
     abbreviation: 'USDC',
@@ -39,6 +47,8 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
     amount: 100,
     balance: 99.99,
     iconUrl: Assets.images.wallet.walletUsdc,
+    asset: 'TetherUS USDT',
+    network: 'Ethereum',
   ),
   CoinData(
     abbreviation: 'Polygon',
@@ -46,6 +56,8 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
     amount: 1000,
     balance: 694.60,
     iconUrl: Assets.images.wallet.walletMatic,
+    asset: 'TetherUS USDT',
+    network: 'Ethereum',
   ),
   CoinData(
     abbreviation: 'XRP',
@@ -53,6 +65,8 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
     amount: 0,
     balance: 0,
     iconUrl: Assets.images.wallet.walletXrp,
+    asset: 'TetherUS USDT',
+    network: 'Ethereum',
   ),
   CoinData(
     abbreviation: 'LTC',
@@ -60,24 +74,27 @@ List<CoinData> mockedCoinsDataArray = <CoinData>[
     amount: 350,
     balance: 589.42,
     iconUrl: Assets.images.wallet.walletLtc,
+    asset: 'TetherUS USDT',
+    network: 'Ethereum',
   ),
 ];
 
 const List<NftData> mockedNftsDataArray = <NftData>[
   NftData(
-      collectionName: 'WZRD',
-      identifier: 67,
-      price: 2.11,
-      iconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-10.png',
-      currency: 'ETH',
-      currencyIconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
-      description:
-          'Explore the mysteries of the universe with WZRD! This hand-drawn, one-of-a-kind digital artwork features a whimsical feline adorned with interstellar patterns and vibrant colors. Perfect for space enthusiasts and cat lovers alike, this NFT brings a touch of the cosmos to your collection. Own a piece of digital space art today!',
-      network: 'Ethereum',
-      tokenStandard: 'ERC-1123',
-      contractAddress: '0x4559...4jd83g',
-      rank: 1,
-      asset: 'Freddie’s Crew #9'),
+    collectionName: 'WZRD',
+    identifier: 67,
+    price: 2.11,
+    iconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-10.png',
+    currency: 'ETH',
+    currencyIconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+    description:
+        'Explore the mysteries of the universe with WZRD! This hand-drawn, one-of-a-kind digital artwork features a whimsical feline adorned with interstellar patterns and vibrant colors. Perfect for space enthusiasts and cat lovers alike, this NFT brings a touch of the cosmos to your collection. Own a piece of digital space art today!',
+    network: 'Ethereum',
+    tokenStandard: 'ERC-1123',
+    contractAddress: '0x4559...4jd83g',
+    rank: 1,
+    asset: 'Freddie’s Crew #9',
+  ),
   NftData(
     collectionName: 'Moonrunners Specialty',
     identifier: 4,

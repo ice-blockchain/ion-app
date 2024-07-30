@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/providers/send_coins_selectors.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class ArrivalTimeIndicator extends ConsumerWidget {
@@ -12,8 +12,7 @@ class ArrivalTimeIndicator extends ConsumerWidget {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
-
-    final arrivalTime = arrivalTimeSelector(ref);
+    final formData = ref.watch(sendAssetFormControllerProvider());
 
     return Row(
       children: [
@@ -40,7 +39,7 @@ class ArrivalTimeIndicator extends ConsumerWidget {
               ),
               SizedBox(width: 5.0.s),
               Text(
-                '$arrivalTime ${locale.wallet_arrival_time_minutes}',
+                '${formData.arrivalTime} ${locale.wallet_arrival_time_minutes}',
                 style: textTheme.body2.copyWith(
                   color: colors.primaryAccent,
                 ),

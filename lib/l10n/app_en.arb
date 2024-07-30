@@ -226,5 +226,6 @@
   "send_nft_confirm_asset": "Asset",
   "send_nft_confirm_network": "Network",
   "send_nft_confirm_arrival_time": "Arrival time",
-  "send_nft_confirm_network_fee": "Network fee"
+  "send_nft_confirm_network_fee": "Network fee",
+  "transaction_details_title": "Transaction details"
 }
