@@ -49,7 +49,6 @@ class TimelineItem extends StatelessWidget {
         SizedBox(width: 8.0.s),
         Expanded(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: Text(
