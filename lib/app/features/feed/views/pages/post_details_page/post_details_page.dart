@@ -13,6 +13,7 @@ import 'package:ice/app/features/feed/views/pages/post_details_page/components/p
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/reply_input_field.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_sent_notification/reply_sent_notification.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ice/app/extensions/async_value_listener.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class PostDetailsPage extends HookConsumerWidget {
@@ -31,7 +32,8 @@ class PostDetailsPage extends HookConsumerWidget {
       return PostNotFound();
     }
 
-    final showReplySentNotification = _listenReplySentNotification(ref);
+    final showReplySentNotification = useState(false);
+    _listenReplySentNotification(ref, showReplySentNotification);
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
@@ -87,22 +89,17 @@ class PostDetailsPage extends HookConsumerWidget {
     );
   }
 
-  ValueNotifier<bool> _listenReplySentNotification(WidgetRef ref) {
-    final showReplySentNotification = useState(false);
-
-    ref.listen(
+  void _listenReplySentNotification(
+    WidgetRef ref,
+    ValueNotifier<bool> showReplySentNotification,
+  ) {
+    ref.listenAsyncValue(
       sendReplyRequestNotifierProvider,
-      (previous, next) async {
-        if (previous == null || !previous.isLoading || next.hasError || next.valueOrNull != true) {
-          return;
-        }
-
+      onSuccess: (response) async {
         showReplySentNotification.value = true;
         await Future<void>.delayed(Duration(seconds: 2));
         showReplySentNotification.value = false;
       },
     );
-
-    return showReplySentNotification;
   }
 }
