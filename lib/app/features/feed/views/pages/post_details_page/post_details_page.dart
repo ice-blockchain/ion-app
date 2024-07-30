@@ -13,7 +13,7 @@ import 'package:ice/app/features/feed/views/pages/post_details_page/components/p
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/reply_input_field.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_sent_notification/reply_sent_notification.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/services/async_response/async_response.dart';
+import 'package:ice/app/extensions/async_value_listener.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class PostDetailsPage extends HookConsumerWidget {
@@ -93,7 +93,7 @@ class PostDetailsPage extends HookConsumerWidget {
     WidgetRef ref,
     ValueNotifier<bool> showReplySentNotification,
   ) {
-    ref.listenAsyncResponse(
+    ref.listenAsyncValue(
       sendReplyRequestNotifierProvider,
       onSuccess: (response) async {
         showReplySentNotification.value = true;
