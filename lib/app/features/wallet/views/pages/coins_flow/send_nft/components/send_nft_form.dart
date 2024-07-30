@@ -11,8 +11,8 @@ import 'package:ice/app/features/wallet/components/arrival_time/arrival_time.dar
 import 'package:ice/app/features/wallet/components/network_fee/network_fee.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/providers/send_nft_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/nft_details/components/nft_name/nft_name.dart';
 import 'package:ice/app/features/wallet/views/pages/nft_details/components/nft_picture/nft_picture.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -33,7 +33,7 @@ class SendNftForm extends HookConsumerWidget {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
-    final formController = ref.watch(sendNftFormControllerProvider);
+    final formController = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
     final selectedNft = formController.selectedNft;
 
     return SheetContent(
@@ -78,7 +78,8 @@ class SendNftForm extends HookConsumerWidget {
                         initialValue: formController.arrivalTime.toDouble(),
                         onChanged: (double value) {
                           ref
-                              .read(sendNftFormControllerProvider.notifier)
+                              .read(sendAssetFormControllerProvider(type: CryptoAssetType.nft)
+                                  .notifier)
                               .updateArrivalTime(value.toInt());
                         },
                       ),

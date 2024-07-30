@@ -6,7 +6,7 @@ import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/components/nft_item/nft_item.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/providers/send_nft_form_provider.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -19,7 +19,7 @@ class SendNftConfirmPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
-    final formData = ref.watch(sendNftFormControllerProvider);
+    final formData = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
     final selectedNft = formData.selectedNft;
 
     return SheetContent(
@@ -104,7 +104,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                         context.i18n.button_confirm,
                       ),
                       onPressed: () {
-                        NftTransactionDetailsRoute().push<void>(context);
+                        NftTransactionDetailsRoute($extra: CryptoAssetType.nft).push<void>(context);
                       },
                     ),
                   ],

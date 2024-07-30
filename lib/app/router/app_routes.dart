@@ -34,11 +34,13 @@ import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu
 import 'package:ice/app/features/user/pages/switch_account_page/switch_account_page.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
+import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/coin_details_page.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/coin_receive_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/network_list/network_list_view.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/components/share_address_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/receive_coin_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/confirmation_sheet.dart';
@@ -54,7 +56,6 @@ import 'package:ice/app/features/wallet/views/pages/manage_coins/manage_coins_pa
 import 'package:ice/app/features/wallet/views/pages/nft_details/nft_details_page.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sorting_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
-import 'package:ice/app/features/wallet/views/pages/send_nft/views/pages/nft_details/nft_details_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_scan/wallet_scan_modal_page.dart';
