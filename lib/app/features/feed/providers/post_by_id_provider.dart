@@ -7,7 +7,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'post_by_id_provider.g.dart';
 
 @riverpod
-PostData? postById(PostByIdRef ref, {
+PostData? postById(
+  PostByIdRef ref, {
   required String id,
 }) {
   return PostData.fromEventMessage(

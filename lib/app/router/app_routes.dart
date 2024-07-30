@@ -48,9 +48,9 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/compon
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contacts_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/send_coins_form.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/send_coin_modal_page.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft/components/send_nft_form.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_nft_confirm/send_nft_confirm.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/transaction_details/transaction_details.dart';
+import 'package:ice/app/features/wallet/views/pages/components/send_nft_form.dart';
+import 'package:ice/app/features/wallet/views/pages/send_nft_confirm/send_nft_confirm.dart';
+import 'package:ice/app/features/wallet/views/pages/transaction_details/transaction_details.dart';
 import 'package:ice/app/features/wallet/views/pages/contact_modal_page/contact_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/manage_coins_page.dart';
 import 'package:ice/app/features/wallet/views/pages/nft_details/nft_details_page.dart';
