@@ -9,8 +9,11 @@ class PostRepliesActionBar extends StatelessWidget {
   const PostRepliesActionBar({
     this.padding,
     this.shadowBuilder,
+    this.onSendPressed,
     super.key,
   });
+
+  final VoidCallback? onSendPressed;
 
   factory PostRepliesActionBar.withShadow({EdgeInsets? padding}) => PostRepliesActionBar(
         padding: padding ?? EdgeInsets.symmetric(horizontal: 16.0.s),
@@ -57,7 +60,7 @@ class PostRepliesActionBar extends StatelessWidget {
           Button(
             minimumSize: Size(48.0.s, 28.0.s),
             borderRadius: BorderRadius.circular(100.0.s),
-            onPressed: () {},
+            onPressed: onSendPressed ?? () {},
             leadingIcon: Padding(
               padding: EdgeInsets.symmetric(vertical: 4.0.s),
               child: Assets.images.icons.iconFeedSendbutton.icon(size: 20.0.s),
