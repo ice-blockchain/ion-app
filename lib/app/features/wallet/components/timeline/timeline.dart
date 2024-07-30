@@ -5,7 +5,10 @@ import 'package:ice/app/features/wallet/components/timeline/timeline_item.dart';
 class Timeline extends StatelessWidget {
   final List<TimelineItemData> items;
 
-  const Timeline({Key? key, required this.items}) : super(key: key);
+  const Timeline({
+    super.key,
+    required this.items,
+  });
 
   @override
   Widget build(BuildContext context) {

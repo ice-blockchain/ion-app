@@ -28,17 +28,15 @@ class TimelineItem extends StatelessWidget {
       children: [
         Column(
           children: [
-            Stack(
+            Container(
               alignment: Alignment.center,
-              children: [
-                Image.asset(
-                  data.isDone
-                      ? Assets.images.icons.iconStepsCheckActive.path
-                      : Assets.images.icons.iconStepsCheckInactive.path,
-                  width: 16.0.s,
-                  height: 16.0.s,
-                ),
-              ],
+              child: Image.asset(
+                data.isDone
+                    ? Assets.images.icons.iconStepsCheckActive.path
+                    : Assets.images.icons.iconStepsCheckInactive.path,
+                width: 16.0.s,
+                height: 16.0.s,
+              ),
             ),
             if (!isLast)
               TimelineSeparator(
@@ -48,7 +46,7 @@ class TimelineItem extends StatelessWidget {
               ),
           ],
         ),
-        SizedBox(width: 8),
+        SizedBox(width: 8.0.s),
         Expanded(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
