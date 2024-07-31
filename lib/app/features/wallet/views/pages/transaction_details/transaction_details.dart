@@ -9,6 +9,7 @@ import 'package:ice/app/features/wallet/components/timeline/timeline.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
+import 'package:ice/app/features/wallet/views/pages/transaction_details/transaction_details_actions.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -123,7 +124,12 @@ class TransactionDetailsPage extends ConsumerWidget {
                       size: 16.0.s,
                     ),
                   ),
-                  SizedBox(height: 12.0.s),
+                  SizedBox(height: 15.0.s),
+                  TransactionDetailsActions(
+                    onViewOnExplorer: () {},
+                    onShare: () {},
+                  ),
+                  SizedBox(height: 8.0.s),
                 ],
               ),
             ),
