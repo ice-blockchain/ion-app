@@ -34,7 +34,7 @@ class NftItem extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(right: 5.0.s),
-                child: Assets.images.wallet.walletEth.icon(size: 16.0.s),
+                child: Assets.images.wallet.walletEth.icon(size: 12.0.s),
               ),
               Padding(
                 padding: EdgeInsets.only(right: 4.0.s),
