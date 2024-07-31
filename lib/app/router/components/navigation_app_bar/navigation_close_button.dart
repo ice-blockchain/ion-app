@@ -7,7 +7,12 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NavigationCloseButton extends StatelessWidget {
-  const NavigationCloseButton({super.key});
+  const NavigationCloseButton({
+    super.key,
+    this.onPressed,
+  });
+
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,7 @@ class NavigationCloseButton extends StatelessWidget {
           color: context.theme.appColors.tertararyText,
         ),
       ),
-      onPressed: () => context.pop(),
+      onPressed: onPressed ?? () => context.pop(),
     );
   }
 }

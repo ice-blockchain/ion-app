@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -20,28 +21,16 @@ class IdentityInfo extends StatelessWidget {
         NavigationAppBar.modal(
           showBackButton: false,
           title: Text(context.i18n.identity_key_name_title),
-          actions: const [NavigationCloseButton()],
+          actions: [NavigationCloseButton()],
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0.s),
           child: Column(
             children: [
-              Assets.images.identity.actionWalletIdkey.icon(size: 80.0.s),
-              SizedBox(height: 10.0.s),
-              Text(
-                context.i18n.common_identity_key_name,
-                textAlign: TextAlign.center,
-                style: context.theme.appTextThemes.title.copyWith(
-                  color: context.theme.appColors.primaryText,
-                ),
-              ),
-              SizedBox(height: 8.0.s),
-              Text(
-                context.i18n.identity_key_name_description,
-                textAlign: TextAlign.center,
-                style: context.theme.appTextThemes.body2.copyWith(
-                  color: context.theme.appColors.secondaryText,
-                ),
+              InfoCard(
+                iconAsset: Assets.images.identity.actionWalletIdkey,
+                title: context.i18n.common_identity_key_name,
+                description: context.i18n.identity_key_name_description,
               ),
               SizedBox(height: 12.0.s),
               Text.rich(

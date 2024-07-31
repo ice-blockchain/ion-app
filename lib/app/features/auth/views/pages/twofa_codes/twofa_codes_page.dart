@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/button/button.dart';
@@ -10,7 +12,11 @@ import 'package:ice/app/features/auth/data/models/twofa_type.dart';
 import 'package:ice/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
+import 'package:ice/app/features/auth/views/pages/twofa_try_again/twofa_try_again_page.dart';
+import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class TwoFaCodesPage extends HookWidget {
@@ -23,6 +29,7 @@ class TwoFaCodesPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final formKey = useRef(GlobalKey<FormState>());
     final controllers = {
       for (final type in twoFaTypes) type: useTextEditingController(),
@@ -53,7 +60,18 @@ class TwoFaCodesPage extends HookWidget {
                       }).toList(),
                       Button(
                         onPressed: () {
-                          if (!formKey.value.currentState!.validate()) {}
+                          if (formKey.value.currentState!.validate()) {
+                            hideKeyboardAndCallOnce(callback: () {
+                              if (Random().nextBool() == true) {
+                                TwoFaSuccessRoute().push<void>(context);
+                              } else {
+                                showSimpleBottomSheet<void>(
+                                  context: context,
+                                  child: const TwoFaTryAgainPage(),
+                                );
+                              }
+                            });
+                          }
                         },
                         label: Text(context.i18n.button_confirm),
                         mainAxisSize: MainAxisSize.max,
