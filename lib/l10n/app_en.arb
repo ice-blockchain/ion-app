@@ -161,6 +161,7 @@
   "sorting_price_desc": "Price: high to low",
   "wallet_sorting_title": "Sorting the list",
   "contacts_title": "Contacts",
+  "contacts_select_title": "Select contact",
   "contacts_allow_pop_up_title": "Ice is better with friends",
   "contacts_allow_pop_up_desc": "Sync your contacts, see who is already on Ice, and send and receive Ice payments from any of your contacts.",
   "contacts_allow_pop_up_action": "Allow contacts access",

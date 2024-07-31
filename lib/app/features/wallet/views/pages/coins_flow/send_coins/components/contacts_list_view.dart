@@ -10,7 +10,9 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class ContactsListView extends StatelessWidget {
-  const ContactsListView({super.key});
+  const ContactsListView({super.key, required this.appBarTitle});
+
+  final String appBarTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class ContactsListView extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
-              title: Text(context.i18n.wallet_send_coins),
+              title: Text(appBarTitle),
               showBackButton: false,
               actions: const [
                 NavigationCloseButton(),

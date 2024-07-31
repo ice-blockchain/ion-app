@@ -68,7 +68,7 @@ class WalletRoutes {
         TypedGoRoute<CoinsSendFormRoute>(
           path: 'coin-send-form',
           routes: [
-            TypedGoRoute<ContactsSelectRoute>(path: 'contacts-select'),
+            TypedGoRoute<ContactsSelectRoute>(path: 'contacts-select/:title'),
           ],
         ),
         TypedGoRoute<CoinsSendFormConfirmationRoute>(
@@ -188,11 +188,13 @@ class CoinsSendFormRoute extends BaseRouteData {
 }
 
 class ContactsSelectRoute extends BaseRouteData {
-  ContactsSelectRoute()
+  ContactsSelectRoute({required this.title})
       : super(
-          child: const ContactsListView(),
+          child: ContactsListView(appBarTitle: title),
           type: IceRouteType.bottomSheet,
         );
+
+  final String title;
 }
 
 class CoinsSendFormConfirmationRoute extends BaseRouteData {
