@@ -13,6 +13,7 @@ import 'package:ice/app/features/auth/views/pages/sign_up_password/sign_up_passw
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_codes_page.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_options/twofa_options_page.dart';
+import 'package:ice/app/features/auth/views/pages/twofa_success/twofa_success_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';

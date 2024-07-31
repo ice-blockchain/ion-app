@@ -47,9 +47,7 @@ class SendNftForm extends HookConsumerWidget {
                 padding: EdgeInsets.symmetric(vertical: 8.0.s),
                 child: NavigationAppBar.screen(
                   title: Text(locale.send_nft_title),
-                  actions: const [
-                    NavigationCloseButton(),
-                  ],
+                  actions: [NavigationCloseButton()],
                 ),
               ),
               if (selectedNft != null)

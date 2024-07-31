@@ -25,9 +25,7 @@ class ShareAddressView extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
               title: Text(context.i18n.wallet_share_address),
-              actions: const [
-                NavigationCloseButton(),
-              ],
+              actions: [NavigationCloseButton()],
             ),
           ),
           Padding(

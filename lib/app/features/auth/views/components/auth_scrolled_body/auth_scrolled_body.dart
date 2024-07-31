@@ -14,6 +14,7 @@ class AuthScrollContainer extends HookWidget {
     this.icon,
     this.children = const [],
     this.showBackButton = true,
+    this.actions,
   });
 
   final List<Widget> children;
@@ -25,6 +26,8 @@ class AuthScrollContainer extends HookWidget {
   final Widget? icon;
 
   final bool showBackButton;
+
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +54,7 @@ class AuthScrollContainer extends HookWidget {
               primary: false,
               flexibleSpace: NavigationAppBar.modal(
                 showBackButton: showBackButton,
+                actions: actions,
                 title: title != null
                     ? FadeOnScroll(
                         zeroOpacityOffset: 120.0.s,

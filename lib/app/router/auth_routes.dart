@@ -11,6 +11,7 @@ class AuthRoutes {
         TypedGoRoute<RestoreCredsRoute>(path: 'restore-creds'),
         TypedGoRoute<TwoFaCodesRoute>(path: 'twofa-codes'),
         TypedGoRoute<TwoFaOptionsRoute>(path: 'twofa-options'),
+        TypedGoRoute<TwoFaSuccessRoute>(path: 'twofa-success'),
         TypedGoRoute<SelectLanguagesRoute>(path: 'select-languages'),
         TypedGoRoute<FillProfileRoute>(path: 'fill-profile'),
         TypedGoRoute<DiscoverCreatorsRoute>(path: 'discover-creators'),
@@ -73,6 +74,14 @@ class TwoFaOptionsRoute extends BaseRouteData {
   TwoFaOptionsRoute()
       : super(
           child: TwoFaOptionsPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class TwoFaSuccessRoute extends BaseRouteData {
+  TwoFaSuccessRoute()
+      : super(
+          child: TwoFaSuccessPage(),
           type: IceRouteType.bottomSheet,
         );
 }

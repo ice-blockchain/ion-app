@@ -59,9 +59,7 @@ class CoinsListView extends HookConsumerWidget {
           child: NavigationAppBar.screen(
             title: Text(title),
             showBackButton: false,
-            actions: const [
-              NavigationCloseButton(),
-            ],
+            actions: [NavigationCloseButton()],
           ),
         ),
         ScreenSideOffset.small(

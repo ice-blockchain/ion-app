@@ -34,7 +34,7 @@ class NftDetailsPage extends ConsumerWidget {
             NavigationAppBar.modal(
               title: Text(context.i18n.send_nft_navigation_title),
               showBackButton: false,
-              actions: const [NavigationCloseButton()],
+              actions: [NavigationCloseButton()],
             ),
             ScreenSideOffset.small(
               child: SingleChildScrollView(

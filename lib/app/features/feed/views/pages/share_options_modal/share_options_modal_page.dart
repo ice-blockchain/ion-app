@@ -24,9 +24,7 @@ class ShareOptionsPage extends StatelessWidget {
             child: NavigationAppBar.screen(
               showBackButton: false,
               title: Text(context.i18n.feed_share_via),
-              actions: const [
-                NavigationCloseButton(),
-              ],
+              actions: [NavigationCloseButton()],
             ),
           ),
           ScreenSideOffset.small(
