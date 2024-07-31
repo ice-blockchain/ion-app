@@ -66,7 +66,7 @@ class ContactPage extends StatelessWidget {
                 onPressed: () => shareContent('Share', subject: 'Look what I found!'),
               ),
             ),
-          ScreenBottomOffset(),
+          ScreenBottomOffset(margin: 32.0.s),
         ],
       ),
     );

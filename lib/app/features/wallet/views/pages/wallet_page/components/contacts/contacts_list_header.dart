@@ -5,12 +5,11 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/model/contact_data.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contacts_list_view.dart';
 import 'package:ice/app/router/app_routes.dart';
 
 class ContactListHeader extends StatelessWidget {
-  const ContactListHeader({
-    super.key,
-  });
+  const ContactListHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +30,10 @@ class ContactListHeader extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () {
-              ContactsSelectRoute(
-                title: context.i18n.contacts_title,
-              ).push<ContactData>(context);
-            },
+            onPressed: () => ContactsListRoute(
+              title: context.i18n.contacts_title,
+              action: ContactRouteAction.navigate,
+            ).push<ContactData>(context),
             child: Padding(
               padding: EdgeInsets.all(UiConstants.hitSlop),
               child: Text(
