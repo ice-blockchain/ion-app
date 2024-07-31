@@ -30,7 +30,7 @@ class CreateNewWalletModal extends HookConsumerWidget {
           children: [
             NavigationAppBar.modal(
               title: Text(context.i18n.wallet_create_new),
-              actions: [NavigationCloseButton()],
+              actions: const [NavigationCloseButton()],
             ),
             ScreenSideOffset.small(
               child: Padding(

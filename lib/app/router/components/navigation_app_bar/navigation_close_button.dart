@@ -7,7 +7,7 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NavigationCloseButton extends StatelessWidget {
-  NavigationCloseButton({
+  const NavigationCloseButton({
     super.key,
     this.onPressed,
   });

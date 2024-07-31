@@ -25,7 +25,9 @@ class ShareTypePage extends StatelessWidget {
             child: NavigationAppBar.screen(
               showBackButton: false,
               title: Text(context.i18n.feed_repost_type),
-              actions: [NavigationCloseButton()],
+              actions: const [
+                NavigationCloseButton(),
+              ],
             ),
           ),
           ScreenSideOffset.small(

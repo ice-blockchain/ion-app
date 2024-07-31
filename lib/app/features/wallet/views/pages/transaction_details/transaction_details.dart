@@ -34,7 +34,7 @@ class TransactionDetailsPage extends ConsumerWidget {
           NavigationAppBar.modal(
             title: Text(context.i18n.transaction_details_title),
             showBackButton: false,
-            actions: [NavigationCloseButton()],
+            actions: const [NavigationCloseButton()],
           ),
           ScreenSideOffset.small(
             child: SingleChildScrollView(

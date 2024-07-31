@@ -29,7 +29,7 @@ class SendNftConfirmPage extends ConsumerWidget {
           NavigationAppBar.modal(
             title: Text(context.i18n.send_nft_navigation_title),
             showBackButton: false,
-            actions: [NavigationCloseButton()],
+            actions: const [NavigationCloseButton()],
           ),
           if (selectedNft != null)
             ScreenSideOffset.small(

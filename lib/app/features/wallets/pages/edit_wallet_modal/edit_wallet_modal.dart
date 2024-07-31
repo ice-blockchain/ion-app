@@ -37,7 +37,7 @@ class EditWalletModal extends HookConsumerWidget {
           children: [
             NavigationAppBar.modal(
               title: Text(context.i18n.wallet_edit),
-              actions: [NavigationCloseButton()],
+              actions: const [NavigationCloseButton()],
             ),
             ScreenSideOffset.small(
               child: Padding(

@@ -25,7 +25,9 @@ class ContactsListView extends StatelessWidget {
             child: NavigationAppBar.screen(
               title: Text(context.i18n.wallet_send_coins),
               showBackButton: false,
-              actions: [NavigationCloseButton()],
+              actions: const [
+                NavigationCloseButton(),
+              ],
             ),
           ),
           ScreenSideOffset.small(

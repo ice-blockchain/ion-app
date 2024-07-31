@@ -52,7 +52,9 @@ class SendCoinsForm extends HookConsumerWidget {
                 padding: EdgeInsets.symmetric(vertical: 8.0.s),
                 child: NavigationAppBar.screen(
                   title: Text(locale.wallet_send_coins),
-                  actions: [NavigationCloseButton()],
+                  actions: const [
+                    NavigationCloseButton(),
+                  ],
                 ),
               ),
               ScreenSideOffset.small(

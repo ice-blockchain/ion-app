@@ -33,7 +33,9 @@ class NetworkListView extends ConsumerWidget {
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
               title: Text(context.i18n.wallet_choose_network),
-              actions: [NavigationCloseButton()],
+              actions: const [
+                NavigationCloseButton(),
+              ],
             ),
           ),
           ListView.separated(

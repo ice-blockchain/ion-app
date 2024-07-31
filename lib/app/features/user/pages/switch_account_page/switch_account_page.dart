@@ -19,7 +19,9 @@ class SwitchAccountPage extends StatelessWidget {
             NavigationAppBar.modal(
               showBackButton: false,
               title: Text(context.i18n.profile_switch_user_header),
-              actions: [NavigationCloseButton()],
+              actions: const [
+                NavigationCloseButton(),
+              ],
             ),
             ScreenSideOffset.small(child: const AccountsList()),
             ScreenSideOffset.small(child: const ActionsList()),
