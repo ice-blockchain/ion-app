@@ -10,7 +10,12 @@ import 'package:ice/app/features/feed/model/feed_filter.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_categories_dropdown.dart';
 
 class FeedFilters extends HookWidget {
-  const FeedFilters({super.key});
+  const FeedFilters({
+    required this.onFilterSelected,
+    super.key,
+  });
+
+  final VoidCallback onFilterSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +34,7 @@ class FeedFilters extends HookWidget {
                 (FeedFilter filter) => Button.menu(
                   onPressed: () {
                     selectedFilter.value = filter;
+                    onFilterSelected();
                   },
                   label: Text(
                     filter.getLabel(context),
