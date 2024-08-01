@@ -23,7 +23,6 @@ class TransactionResultSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(sendAssetFormControllerProvider(type: type).notifier);
     final formData = ref.watch(sendAssetFormControllerProvider(type: type));
-    final isNft = type == CryptoAssetType.nft;
 
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
@@ -48,7 +47,7 @@ class TransactionResultSheet extends ConsumerWidget {
               ),
             ),
             SizedBox(height: 36.0.s),
-            if (isNft && formData.selectedNft != null)
+            if (type == CryptoAssetType.nft)
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 52.0.s,
@@ -58,7 +57,7 @@ class TransactionResultSheet extends ConsumerWidget {
                   backgroundColor: Colors.transparent,
                 ),
               ),
-            if (!isNft && formData.selectedCoin != null)
+            if (type == CryptoAssetType.coin)
               TransactionAmountSummary(
                 usdtAmount: controller.getUsdtAmount(),
                 usdAmount: controller.getUsdtAmount() * 0.999,

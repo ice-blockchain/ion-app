@@ -26,7 +26,6 @@ class TransactionDetailsPage extends ConsumerWidget {
 
     final controller = ref.watch(sendAssetFormControllerProvider(type: type).notifier);
     final formData = ref.watch(sendAssetFormControllerProvider(type: type));
-    final isNft = type == CryptoAssetType.nft;
 
     return SheetContent(
       body: Column(
@@ -42,7 +41,7 @@ class TransactionDetailsPage extends ConsumerWidget {
               padding: EdgeInsets.only(top: 10.0.s),
               child: Column(
                 children: [
-                  if (isNft && formData.selectedNft != null)
+                  if (type == CryptoAssetType.nft)
                     Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: 52.0.s,
@@ -52,7 +51,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                         backgroundColor: Colors.transparent,
                       ),
                     ),
-                  if (!isNft && formData.selectedCoin != null)
+                  if (type == CryptoAssetType.coin)
                     TransactionAmountSummary(
                       usdtAmount: controller.getUsdtAmount(),
                       usdAmount: controller.getUsdtAmount() * 0.999,
