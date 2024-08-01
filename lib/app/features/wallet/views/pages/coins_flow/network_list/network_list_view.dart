@@ -60,7 +60,7 @@ class NetworkListView extends ConsumerWidget {
                       ref
                           .read(receiveCoinsFormControllerProvider.notifier)
                           .setNetwork(networkTypeValues[index]);
-                      ShareAddressRoute().go(context);
+                      ShareAddressRoute().push<void>(context);
                     }
                   },
                 ),
