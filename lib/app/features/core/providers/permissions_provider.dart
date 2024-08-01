@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,18 +21,22 @@ class Permissions extends _$Permissions {
 
   Future<void> checkAllPermissions() async {
     final permissions = <PermissionType, PermissionStatus>{};
-    final contactsPermissionStatus = await Permission.contacts.status;
-    final notificationsPermissionStatus = await Permission.notification.status;
-    permissions
-      ..putIfAbsent(
-        PermissionType.Notifications,
-        () => notificationsPermissionStatus,
-      )
-      ..putIfAbsent(
-        PermissionType.Contacts,
-        () => contactsPermissionStatus,
-      );
-    state = Map<PermissionType, PermissionStatus>.unmodifiable(permissions);
+    try {
+      final contactsPermissionStatus = await Permission.contacts.status;
+      final notificationsPermissionStatus = await Permission.notification.status;
+      permissions
+        ..putIfAbsent(
+          PermissionType.Notifications,
+          () => notificationsPermissionStatus,
+        )
+        ..putIfAbsent(
+          PermissionType.Contacts,
+          () => contactsPermissionStatus,
+        );
+    } on MissingPluginException {
+    } finally {
+      state = Map<PermissionType, PermissionStatus>.unmodifiable(permissions);
+    }
   }
 
   Future<PermissionStatus> requestPermission(
