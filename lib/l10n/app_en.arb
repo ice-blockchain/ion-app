@@ -235,5 +235,9 @@
   "send_nft_confirm_arrival_time": "Arrival time",
   "send_nft_confirm_network_fee": "Network fee",
   "transaction_details_title": "Transaction details",
-  "transaction_details_view_on_explorer": "View on explorer"
+  "transaction_details_view_on_explorer": "View on explorer",
+  "post_menu_not_interested": "Not interested",
+  "post_menu_follow_nickname": "Follow @{nickname}",
+  "post_menu_block_nickname": "Block @{nickname}",
+  "post_menu_report_post": "Report post"
 }
