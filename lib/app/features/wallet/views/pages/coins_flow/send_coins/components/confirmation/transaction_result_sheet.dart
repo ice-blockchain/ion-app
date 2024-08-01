@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/wallet/components/nft_item/nft_item.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
@@ -12,18 +13,21 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class TransactionResultSheet extends ConsumerWidget {
-  const TransactionResultSheet({super.key});
+  const TransactionResultSheet({super.key, required this.type});
+
+  final CryptoAssetType type;
 
   static const networkTypeValues = NetworkType.values;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(sendAssetFormControllerProvider(type: type).notifier);
+    final formData = ref.watch(sendAssetFormControllerProvider(type: type));
+
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
     final icons = Assets.images.icons;
-
-    final formData = ref.watch(sendAssetFormControllerProvider());
 
     return SheetContent(
       body: ScreenSideOffset.small(
@@ -43,10 +47,20 @@ class TransactionResultSheet extends ConsumerWidget {
               ),
             ),
             SizedBox(height: 36.0.s),
-            if (formData.usdtAmount != null)
+            if (type == CryptoAssetType.nft)
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 52.0.s,
+                ),
+                child: NftItem(
+                  nftData: formData.selectedNft!,
+                  backgroundColor: Colors.transparent,
+                ),
+              ),
+            if (type == CryptoAssetType.coin)
               TransactionAmountSummary(
-                usdtAmount: formData.usdtAmount!,
-                usdAmount: formData.usdtAmount! * 0.999,
+                usdtAmount: controller.getUsdtAmount(),
+                usdAmount: controller.getUsdtAmount() * 0.999,
                 icon: mockedCoinsDataArray[3].iconUrl.icon(),
               ),
             SizedBox(height: 31.0.s),
@@ -55,7 +69,7 @@ class TransactionResultSheet extends ConsumerWidget {
               leadingIcon: icons.iconButtonDetails.icon(),
               mainAxisSize: MainAxisSize.max,
               onPressed: () {
-                CoinTransactionDetailsRoute($extra: CryptoAssetType.coin).push<void>(context);
+                CoinTransactionDetailsRoute($extra: type).push<void>(context);
               },
             ),
             SizedBox(height: 12.0.s),

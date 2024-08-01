@@ -104,7 +104,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                         context.i18n.button_confirm,
                       ),
                       onPressed: () {
-                        NftTransactionDetailsRoute($extra: CryptoAssetType.nft).push<void>(context);
+                        CoinTransactionResultRoute($extra: CryptoAssetType.nft).go(context);
                       },
                     ),
                   ],
