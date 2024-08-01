@@ -26,7 +26,7 @@ ValueNotifier<FeedControlsState> useFeedControlsState(
         pageScrollController.removeListener(updateStateOnScroll);
       };
     },
-    <Object?>[pageScrollController],
+    [],
   );
 
   return state;
