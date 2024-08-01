@@ -5,12 +5,25 @@ import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/contacts_mock_data.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
+enum ContactRouteAction {
+  navigate,
+  pop,
+}
+
 class ContactsListView extends StatelessWidget {
-  const ContactsListView({super.key});
+  const ContactsListView({
+    super.key,
+    required this.appBarTitle,
+    required this.action,
+  });
+
+  final String appBarTitle;
+  final ContactRouteAction action;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +36,7 @@ class ContactsListView extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0.s),
             child: NavigationAppBar.screen(
-              title: Text(context.i18n.wallet_send_coins),
+              title: Text(appBarTitle),
               showBackButton: false,
               actions: const [
                 NavigationCloseButton(),
@@ -57,7 +70,9 @@ class ContactsListView extends StatelessWidget {
                   verifiedBadge: contact.isVerified!,
                   iceBadge: contact.hasIceAccount,
                   timeago: contact.lastSeen,
-                  onTap: () => context.pop(contact),
+                  onTap: () => action == ContactRouteAction.pop
+                      ? context.pop(contact)
+                      : ContactRoute($extra: contact).push<void>(context),
                 ),
               );
             },
