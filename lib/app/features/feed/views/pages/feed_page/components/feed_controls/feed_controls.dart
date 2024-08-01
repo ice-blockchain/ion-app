@@ -27,7 +27,7 @@ class FeedControls extends HookWidget {
               state.value = FeedControlsState.filters;
             },
           ),
-        FeedControlsState.filters => FeedFilters(),
+        FeedControlsState.filters => const FeedFilters(),
       },
     );
   }
