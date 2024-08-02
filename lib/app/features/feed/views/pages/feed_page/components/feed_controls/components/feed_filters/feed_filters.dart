@@ -27,9 +27,7 @@ class FeedFilters extends HookWidget {
               const FeedCategoriesDropdown(),
               ...FeedFilter.values.map(
                 (FeedFilter filter) => Button.menu(
-                  onPressed: () {
-                    selectedFilter.value = filter;
-                  },
+                  onPressed: () => selectedFilter.value = filter,
                   label: Text(
                     filter.getLabel(context),
                     style: selectedFilter.value == filter

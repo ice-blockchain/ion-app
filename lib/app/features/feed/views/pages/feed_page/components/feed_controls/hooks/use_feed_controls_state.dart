@@ -7,24 +7,26 @@ ValueNotifier<FeedControlsState> useFeedControlsState(
   ScrollController pageScrollController,
 ) {
   final state = useState(FeedControlsState.initial);
+  final previousOffset = useRef<double>(0);
+
+  void updateStateOnScroll() {
+    final currentOffset = pageScrollController.offset;
+    if (currentOffset < previousOffset.value) {
+      state.value = FeedControlsState.initial;
+    }
+    previousOffset.value = currentOffset;
+  }
 
   useEffect(
     () {
-      void isScrollingNotifierListener() {
-        if (pageScrollController.position.isScrollingNotifier.value) {
-          state.value = FeedControlsState.initial;
-        }
-      }
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        pageScrollController.position.isScrollingNotifier.addListener(isScrollingNotifierListener);
+        pageScrollController.addListener(updateStateOnScroll);
       });
       return () {
-        pageScrollController.position.isScrollingNotifier
-            .removeListener(isScrollingNotifierListener);
+        pageScrollController.removeListener(updateStateOnScroll);
       };
     },
-    <Object?>[pageScrollController],
+    [],
   );
 
   return state;
