@@ -5,19 +5,19 @@ const String mockWalletIconUrl =
 
 List<WalletData> mockedWalletDataArray = <WalletData>[
   const WalletData(
-    id: '1',
+    id: '0',
     name: 'ice.wallet',
     icon: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
     balance: 36594.33,
   ),
   const WalletData(
-    id: '2',
+    id: '1',
     name: 'Airdrop wallet',
     icon: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-15.png',
     balance: 48,
   ),
   const WalletData(
-    id: '3',
+    id: '2',
     name: 'For transfers',
     icon: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
     balance: 279.99,

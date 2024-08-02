@@ -11,7 +11,6 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -20,15 +19,17 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class EditWalletModal extends HookConsumerWidget {
-  const EditWalletModal({required this.payload, super.key});
+  const EditWalletModal({required this.walletId, super.key});
 
-  final WalletData payload;
+  final String walletId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletName = useState(payload.name);
+    final walletData = ref.watch(walletByIdProvider(id: walletId));
+
+    final walletName = useState(walletData.name);
     final controller = useTextEditingController(text: walletName.value);
-    final isNameChanged = walletName.value != (payload.name) && walletName.value.isNotEmpty;
+    final isNameChanged = walletName.value != (walletData.name) && walletName.value.isNotEmpty;
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -64,7 +65,7 @@ class EditWalletModal extends HookConsumerWidget {
                       onPressed: () {
                         ref
                             .read(walletsDataNotifierProvider.notifier)
-                            .updateWallet(payload.copyWith(name: walletName.value));
+                            .updateWallet(walletData.copyWith(name: walletName.value));
 
                         context.pop();
                       },
@@ -73,7 +74,7 @@ class EditWalletModal extends HookConsumerWidget {
                     )
                   : Button(
                       onPressed: () {
-                        DeleteWalletRoute($extra: payload).replace(context);
+                        DeleteWalletRoute(walletId: walletId).replace(context);
                       },
                       leadingIcon: Assets.images.icons.iconBlockDelete
                           .icon(color: context.theme.appColors.onPrimaryAccent),

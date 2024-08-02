@@ -280,23 +280,23 @@ class CreateWalletRoute extends BaseRouteData {
 }
 
 class EditWalletRoute extends BaseRouteData {
-  EditWalletRoute({required this.$extra})
+  EditWalletRoute({required this.walletId})
       : super(
-          child: EditWalletModal(payload: $extra),
+          child: EditWalletModal(walletId: walletId),
           type: IceRouteType.bottomSheet,
         );
 
-  final WalletData $extra;
+  final String walletId;
 }
 
 class DeleteWalletRoute extends BaseRouteData {
-  DeleteWalletRoute({required this.$extra})
+  DeleteWalletRoute({required this.walletId})
       : super(
-          child: DeleteWalletModal(payload: $extra),
+          child: DeleteWalletModal(walletId: walletId),
           type: IceRouteType.bottomSheet,
         );
 
-  final WalletData $extra;
+  final String walletId;
 }
 
 class QuotePostModalRoute extends BaseRouteData {

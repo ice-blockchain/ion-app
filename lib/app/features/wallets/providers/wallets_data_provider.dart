@@ -19,6 +19,16 @@ String currentWalletId(CurrentWalletIdRef ref) {
 }
 
 @riverpod
+WalletData walletById(WalletByIdRef ref, {required String id}) {
+  final wallets = ref.watch(walletsListProvider);
+
+  return wallets.firstWhere(
+    (WalletData wallet) => wallet.id == id,
+    orElse: () => ref.watch(currentWalletDataProvider),
+  );
+}
+
+@riverpod
 WalletData currentWalletData(CurrentWalletDataRef ref) {
   final currentWalletId = ref.watch(currentWalletIdProvider);
   final walletsData = ref.watch(walletsDataNotifierProvider);

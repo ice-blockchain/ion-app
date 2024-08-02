@@ -19,7 +19,7 @@ class ManageWalletsList extends ConsumerWidget {
         children: walletsData
             .map(
               (walletData) => ManageWalletTile(
-                walletData: walletData,
+                walletId: walletData.id,
               ),
             )
             .toList(),
