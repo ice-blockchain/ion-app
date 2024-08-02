@@ -19,7 +19,7 @@ class ReceiveCoinModalPage extends ConsumerWidget {
       body: CoinsListView(
         onCoinItemTap: (CoinData coin) {
           ref.read(receiveCoinsFormControllerProvider.notifier).setCoin(coin);
-          NetworkSelectReceiveRoute($extra: NetworkListViewType.receive).push<void>(context);
+          NetworkSelectReceiveRoute(viewType: NetworkListViewType.receive).push<void>(context);
         },
         type: CoinsListViewType.receive,
       ),

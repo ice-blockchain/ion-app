@@ -69,7 +69,7 @@ class TransactionResultSheet extends ConsumerWidget {
               leadingIcon: icons.iconButtonDetails.icon(),
               mainAxisSize: MainAxisSize.max,
               onPressed: () {
-                CoinTransactionDetailsRoute($extra: type).push<void>(context);
+                CoinTransactionDetailsRoute(cryptoAssetType: type).push<void>(context);
               },
             ),
             SizedBox(height: 12.0.s),

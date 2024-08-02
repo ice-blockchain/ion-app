@@ -71,7 +71,7 @@ class SendCoinsForm extends HookConsumerWidget {
                     NetworkButton(
                       networkType: formController.selectedNetwork,
                       onTap: () {
-                        NetworkSelectSendRoute($extra: NetworkListViewType.send)
+                        NetworkSelectSendRoute(viewType: NetworkListViewType.send)
                             .push<void>(context);
                       },
                     ),

@@ -146,23 +146,23 @@ class ScanWalletRoute extends BaseRouteData {
 }
 
 class NetworkSelectReceiveRoute extends BaseRouteData {
-  NetworkSelectReceiveRoute({this.$extra})
+  NetworkSelectReceiveRoute({required this.viewType})
       : super(
-          child: NetworkListView(type: $extra),
+          child: NetworkListView(type: viewType),
           type: IceRouteType.bottomSheet,
         );
 
-  final NetworkListViewType? $extra;
+  final NetworkListViewType viewType;
 }
 
 class NetworkSelectSendRoute extends BaseRouteData {
-  NetworkSelectSendRoute({this.$extra})
+  NetworkSelectSendRoute({required this.viewType})
       : super(
-          child: NetworkListView(type: $extra),
+          child: NetworkListView(type: viewType),
           type: IceRouteType.bottomSheet,
         );
 
-  final NetworkListViewType? $extra;
+  final NetworkListViewType viewType;
 }
 
 class ShareAddressRoute extends BaseRouteData {
@@ -212,13 +212,13 @@ class CoinsSendFormConfirmationRoute extends BaseRouteData {
 }
 
 class CoinTransactionResultRoute extends BaseRouteData {
-  CoinTransactionResultRoute({required this.$extra})
+  CoinTransactionResultRoute({required this.cryptoAssetType})
       : super(
-          child: TransactionResultSheet(type: $extra),
+          child: TransactionResultSheet(type: cryptoAssetType),
           type: IceRouteType.bottomSheet,
         );
 
-  final CryptoAssetType $extra;
+  final CryptoAssetType cryptoAssetType;
 }
 
 class NftTransactionResultRoute extends BaseRouteData {
@@ -356,22 +356,22 @@ class SendNftConfirmRoute extends BaseRouteData {
 }
 
 class NftTransactionDetailsRoute extends BaseRouteData {
-  NftTransactionDetailsRoute({required this.$extra})
+  NftTransactionDetailsRoute({required this.cryptoAssetType})
       : super(
-          child: TransactionDetailsPage(type: $extra),
+          child: TransactionDetailsPage(type: cryptoAssetType),
           type: IceRouteType.bottomSheet,
         );
 
-  final CryptoAssetType $extra;
+  final CryptoAssetType cryptoAssetType;
 }
 
 class CoinTransactionDetailsRoute extends BaseRouteData {
-  CoinTransactionDetailsRoute({required this.$extra})
+  CoinTransactionDetailsRoute({required this.cryptoAssetType})
       : super(
-          child: TransactionDetailsPage(type: $extra),
+          child: TransactionDetailsPage(type: cryptoAssetType),
           type: IceRouteType.bottomSheet,
         );
-  final CryptoAssetType $extra;
+  final CryptoAssetType cryptoAssetType;
 }
 
 class WebViewBrowserRoute extends BaseRouteData {
