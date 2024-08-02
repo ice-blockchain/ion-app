@@ -10,7 +10,7 @@ class WalletRoutes {
     ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<ContactRoute>(path: 'one-contact'),
+        TypedGoRoute<ContactRoute>(path: 'one-contact/:contactId'),
         ...coinSendRoutes,
         ...coinReceiveRoutes,
         TypedGoRoute<WebViewBrowserRoute>(path: 'web-view-browser/:url'),
@@ -328,13 +328,13 @@ class ShareTypeRoute extends BaseRouteData {
 }
 
 class ContactRoute extends BaseRouteData {
-  ContactRoute({required this.$extra})
+  ContactRoute({required this.contactId})
       : super(
-          child: ContactPage(contactData: $extra),
+          child: ContactPage(contactId: contactId),
           type: IceRouteType.bottomSheet,
         );
 
-  final ContactData $extra;
+  final String contactId;
 }
 
 class NftDetailsRoute extends BaseRouteData {

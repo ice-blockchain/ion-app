@@ -9,7 +9,6 @@ import 'package:ice/app/components/slider/app_slider.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/components/arrival_time/arrival_time.dart';
 import 'package:ice/app/features/wallet/components/network_fee/network_fee.dart';
-import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
@@ -28,7 +27,7 @@ class SendNftForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedContact = useState<ContactData?>(null);
+    final selectedContactId = useState<String?>(null);
 
     final colors = context.theme.appColors;
     final locale = context.i18n;
@@ -67,9 +66,8 @@ class SendNftForm extends HookConsumerWidget {
                       ),
                       SizedBox(height: 16.0.s),
                       ContactInputSwitcher(
-                        selectedContact: selectedContact.value,
-                        onContactSelected: (ContactData? contact) =>
-                            selectedContact.value = contact,
+                        selectedContactId: selectedContactId.value,
+                        onContactSelected: (String? id) => selectedContactId.value = id,
                       ),
                       SizedBox(height: 17.0.s),
                       const ArrivalTime(),

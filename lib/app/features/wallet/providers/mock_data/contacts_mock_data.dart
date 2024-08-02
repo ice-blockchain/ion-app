@@ -6,7 +6,7 @@ String getIconUrl(String name) {
 
 final List<ContactData> mockedContactDataArray = <ContactData>[
   ContactData(
-    id: '1',
+    id: '0',
     name: 'Samantha Howard',
     nickname: 'sammyathowards',
     icon: getIconUrl('sammyathowards'),
@@ -15,7 +15,7 @@ final List<ContactData> mockedContactDataArray = <ContactData>[
     lastSeen: DateTime.now().subtract(Duration.zero),
   ),
   ContactData(
-    id: '2',
+    id: '1',
     name: 'Tamila Shotten',
     nickname: 'tamilashotten',
     icon: getIconUrl('tamilashotten'),
@@ -24,7 +24,7 @@ final List<ContactData> mockedContactDataArray = <ContactData>[
     lastSeen: DateTime.now().subtract(Duration.zero),
   ),
   ContactData(
-    id: '3',
+    id: '2',
     name: 'Jennifer Mary Fishbourne',
     nickname: 'jennymaytofishybee',
     icon: getIconUrl('jennymaytofishybee'),
@@ -33,7 +33,7 @@ final List<ContactData> mockedContactDataArray = <ContactData>[
     lastSeen: DateTime.now().subtract(const Duration(minutes: 23)),
   ),
   ContactData(
-    id: '4',
+    id: '3',
     name: 'Curtis Washington',
     nickname: 'curtiswashington',
     icon: getIconUrl('curtiswashington'),
@@ -42,7 +42,7 @@ final List<ContactData> mockedContactDataArray = <ContactData>[
     lastSeen: DateTime.now().subtract(const Duration(hours: 2)),
   ),
   ContactData(
-    id: '5',
+    id: '4',
     name: 'Miky Hash',
     nickname: 'mikki',
     phoneNumber: '+40 750 741 021',
@@ -52,7 +52,7 @@ final List<ContactData> mockedContactDataArray = <ContactData>[
     lastSeen: DateTime.parse('2023-05-23'),
   ),
   ContactData(
-    id: '6',
+    id: '5',
     name: 'Curtis Washington',
     nickname: 'curtiswashington',
     icon: getIconUrl('curtiswashington'),
@@ -61,7 +61,7 @@ final List<ContactData> mockedContactDataArray = <ContactData>[
     lastSeen: DateTime.now().subtract(const Duration(days: 1)),
   ),
   ContactData(
-    id: '7',
+    id: '6',
     name: 'Cristian Lower',
     nickname: 'cristianlower',
     icon: getIconUrl('cristianlower'),
@@ -70,7 +70,7 @@ final List<ContactData> mockedContactDataArray = <ContactData>[
     lastSeen: DateTime.now().subtract(const Duration(days: 7)),
   ),
   ContactData(
-    id: '8',
+    id: '7',
     name: 'Alicia Wernet',
     nickname: 'aliciawernet',
     icon: getIconUrl('aliciawernet'),
@@ -79,7 +79,7 @@ final List<ContactData> mockedContactDataArray = <ContactData>[
     lastSeen: DateTime.now().subtract(const Duration(days: 14)),
   ),
   ContactData(
-    id: '9',
+    id: '8',
     name: 'Tamila Shotten',
     nickname: 'tamilashotten',
     icon: getIconUrl('tamilashotten'),
@@ -88,7 +88,7 @@ final List<ContactData> mockedContactDataArray = <ContactData>[
     lastSeen: DateTime.now().subtract(const Duration(days: 30)),
   ),
   ContactData(
-    id: '10',
+    id: '9',
     name: 'Michael Smith',
     nickname: 'michaelsmith',
     icon: getIconUrl('michaelsmith'),
