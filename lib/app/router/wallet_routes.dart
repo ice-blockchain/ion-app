@@ -13,7 +13,7 @@ class WalletRoutes {
         TypedGoRoute<ContactRoute>(path: 'one-contact'),
         ...coinSendRoutes,
         ...coinReceiveRoutes,
-        TypedGoRoute<WebViewBrowserRoute>(path: 'web-view-browser'),
+        TypedGoRoute<WebViewBrowserRoute>(path: 'web-view-browser/:url'),
       ],
     ),
     ...walletManagementRoutes,
@@ -375,11 +375,10 @@ class CoinTransactionDetailsRoute extends BaseRouteData {
 }
 
 class WebViewBrowserRoute extends BaseRouteData {
-  WebViewBrowserRoute({required this.$extra})
+  WebViewBrowserRoute({required this.url})
       : super(
-          child: WebViewBrowser(url: $extra),
+          child: WebViewBrowser(url: url),
           type: IceRouteType.bottomSheet,
         );
-
-  final String $extra;
+  final String url;
 }

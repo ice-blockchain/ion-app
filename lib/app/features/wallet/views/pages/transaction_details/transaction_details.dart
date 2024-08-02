@@ -128,7 +128,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                   TransactionDetailsActions(
                     onViewOnExplorer: () {
                       WebViewBrowserRoute(
-                              $extra:
+                              url:
                                   'https://etherscan.io/address/0x1f9090aae28b8a3dceadf281b0f12828e676c326')
                           .push<void>(context);
                     },
