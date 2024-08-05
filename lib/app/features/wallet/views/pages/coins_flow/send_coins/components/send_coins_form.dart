@@ -76,7 +76,7 @@ class SendCoinsForm extends HookConsumerWidget {
                     ),
                     SizedBox(height: 12.0.s),
                     ContactInputSwitcher(
-                      selectedContactId: selectedContactId.value,
+                      contactId: selectedContactId.value,
                       onContactSelected: (String? contactId) => selectedContactId.value = contactId,
                     ),
                     SizedBox(height: 12.0.s),

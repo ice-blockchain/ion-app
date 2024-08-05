@@ -8,18 +8,18 @@ import 'package:ice/app/router/app_routes.dart';
 
 class ContactInputSwitcher extends ConsumerWidget {
   const ContactInputSwitcher({
-    required this.selectedContactId,
+    required this.contactId,
     required this.onContactSelected,
     super.key,
   });
 
-  final String? selectedContactId;
+  final String? contactId;
   final void Function(String?) onContactSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (selectedContactId != null) {
-      final contact = ref.watch(contactByIdProvider(id: selectedContactId!));
+    if (contactId != null) {
+      final contact = ref.watch(contactByIdProvider(id: contactId!));
 
       return ContactButton(
         contact: contact,
