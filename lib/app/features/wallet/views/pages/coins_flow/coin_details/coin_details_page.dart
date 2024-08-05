@@ -7,6 +7,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ice/app/features/wallet/model/coin_transaction_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
+import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header.dart';
@@ -15,7 +16,6 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/comp
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/providers/coin_transactions_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/providers/hooks/use_transactions_by_date.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/providers/selectors/coin_transactions_selectors.dart';
-import 'package:ice/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
@@ -28,7 +28,7 @@ class CoinDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinData = ref.watch(coinByAbbreviationProvider(abbreviation: coinId));
+    final coinData = ref.watch(coinByIdProvider(coinId: coinId));
     final walletId = ref.watch(currentWalletIdProvider);
     final scrollController = useScrollController();
     final coinTransactionsMap = useTransactionsByDate(context, ref);
