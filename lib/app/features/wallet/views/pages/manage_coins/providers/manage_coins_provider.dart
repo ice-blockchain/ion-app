@@ -1,8 +1,20 @@
+import 'package:ice/app/features/wallet/model/coin_data.dart';
+import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/model/manage_coin_data.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/providers/mock_data/manage_coins_mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'manage_coins_provider.g.dart';
+
+@riverpod
+List<CoinData> coinsData(CoinsDataRef ref) => mockedCoinsDataArray;
+
+@riverpod
+CoinData coinByAbbreviation(CoinByAbbreviationRef ref, {required String abbreviation}) {
+  final coins = ref.watch(coinsDataProvider);
+
+  return coins.firstWhere((CoinData coin) => coin.abbreviation == abbreviation);
+}
 
 @riverpod
 class ManageCoinsNotifier extends _$ManageCoinsNotifier {

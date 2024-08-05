@@ -53,7 +53,7 @@ class CoinsTab extends HookConsumerWidget {
           child: CoinItem(
             coinData: coins[index],
             onTap: () {
-              CoinsDetailsRoute($extra: coins[index]).go(context);
+              CoinsDetailsRoute(coinAbbreviation: coins[index].abbreviation).go(context);
             },
           ),
         );

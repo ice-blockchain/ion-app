@@ -21,7 +21,7 @@ class ManageWalletTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletData = ref.watch(walletByIdProvider(id: walletId));
+    final walletData = ref.watch(walletsDataNotifierProvider.notifier).walletById(walletId);
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),

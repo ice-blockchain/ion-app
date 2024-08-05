@@ -232,9 +232,12 @@ class NftTransactionResultRoute extends BaseRouteData {
 }
 
 class CoinsDetailsRoute extends BaseRouteData {
-  CoinsDetailsRoute({required this.$extra}) : super(child: CoinDetailsPage(payload: $extra));
+  CoinsDetailsRoute({required this.coinAbbreviation})
+      : super(
+          child: CoinDetailsPage(coinId: coinAbbreviation),
+        );
 
-  final CoinData $extra;
+  final String coinAbbreviation;
 }
 
 class CoinReceiveRoute extends BaseRouteData {

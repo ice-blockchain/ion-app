@@ -10,22 +10,11 @@ String currentWalletId(CurrentWalletIdRef ref) {
   final selectedWalletId = ref.watch(selectedWalletIdNotifierProvider);
   final walletsData = ref.watch(walletsDataNotifierProvider);
 
-  if (selectedWalletId != null && walletsData.containsKey(selectedWalletId)) {
-    return selectedWalletId;
+  if (walletsData.any((wallet) => wallet.id == selectedWalletId)) {
+    return selectedWalletId!;
   }
 
-  final idsList = walletsData.keys.toList();
-  return idsList.isEmpty ? '' : idsList[0];
-}
-
-@riverpod
-WalletData walletById(WalletByIdRef ref, {required String id}) {
-  final wallets = ref.watch(walletsListProvider);
-
-  return wallets.firstWhere(
-    (WalletData wallet) => wallet.id == id,
-    orElse: () => ref.watch(currentWalletDataProvider),
-  );
+  return walletsData.isNotEmpty ? walletsData.first.id : '';
 }
 
 @riverpod
@@ -33,37 +22,41 @@ WalletData currentWalletData(CurrentWalletDataRef ref) {
   final currentWalletId = ref.watch(currentWalletIdProvider);
   final walletsData = ref.watch(walletsDataNotifierProvider);
 
-  return walletsData[currentWalletId] ?? walletsData.values.first;
+  return walletsData.firstWhere((wallet) => wallet.id == currentWalletId);
 }
 
-@riverpod
-List<WalletData> walletsList(WalletsListRef ref) {
-  return ref.watch(walletsDataNotifierProvider).values.toList();
-}
-
-@riverpod
+@Riverpod(keepAlive: true)
 class WalletsDataNotifier extends _$WalletsDataNotifier {
   @override
-  Map<String, WalletData> build() {
-    return {for (final item in mockedWalletDataArray) item.id: item};
+  List<WalletData> build() {
+    return List.from(mockedWalletDataArray);
   }
 
-  void updateWallet(WalletData newData) {
-    final newState = Map<String, WalletData>.from(state)
-      ..update(
-        newData.id,
-        (WalletData value) => value.copyWith(
-          id: newData.id,
-          name: newData.name,
-          icon: newData.icon,
-          balance: newData.balance,
-        ),
-        ifAbsent: () => newData,
-      );
-    state = newState;
+  void addWallet(WalletData newData) {
+    if (state.any((wallet) => wallet.id == newData.id)) {
+      throw Exception('Wallet with id ${newData.id} already exists');
+    }
+
+    state = [...state, newData];
+  }
+
+  void updateWallet(WalletData updatedData) {
+    final walletExists = state.any((wallet) => wallet.id == updatedData.id);
+
+    if (!walletExists) {
+      throw Exception('Wallet with id ${updatedData.id} does not exist');
+    }
+
+    state = state.map((wallet) {
+      return wallet.id == updatedData.id ? updatedData : wallet;
+    }).toList();
   }
 
   void deleteWallet(String walletId) {
-    state = Map<String, WalletData>.from(state)..remove(walletId);
+    state = state.where((wallet) => wallet.id != walletId).toList();
+  }
+
+  WalletData walletById(String id) {
+    return state.firstWhere((wallet) => wallet.id == id);
   }
 }
