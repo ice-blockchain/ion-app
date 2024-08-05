@@ -72,8 +72,8 @@ class ContactsListView extends ConsumerWidget {
                   iceBadge: contact.hasIceAccount,
                   timeago: contact.lastSeen,
                   onTap: () => action == ContactRouteAction.pop
-                      ? context.pop(index.toString())
-                      : ContactRoute(contactId: index.toString()).push<void>(context),
+                      ? context.pop(contact.id)
+                      : ContactRoute(contactId: contact.id).push<void>(context),
                 ),
               );
             },

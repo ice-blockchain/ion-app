@@ -36,7 +36,7 @@ class ContactsList extends ConsumerWidget {
             itemBuilder: (BuildContext context, int index) {
               final contactData = contactsDataArray[index];
               return ContactsListItem(
-                onTap: () => ContactRoute(contactId: index.toString()).push<void>(context),
+                onTap: () => ContactRoute(contactId: contactData.id).push<void>(context),
                 imageUrl: contactData.icon,
                 label: contactData.nickname != null
                     ? prefixUsername(
