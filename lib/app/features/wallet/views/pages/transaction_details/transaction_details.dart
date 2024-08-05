@@ -10,6 +10,7 @@ import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_d
 import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ice/app/features/wallet/views/pages/transaction_details/transaction_details_actions.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -125,7 +126,12 @@ class TransactionDetailsPage extends ConsumerWidget {
                   ),
                   SizedBox(height: 15.0.s),
                   TransactionDetailsActions(
-                    onViewOnExplorer: () {},
+                    onViewOnExplorer: () {
+                      WebViewBrowserRoute(
+                              url:
+                                  'https://etherscan.io/address/0x1f9090aae28b8a3dceadf281b0f12828e676c326')
+                          .push<void>(context);
+                    },
                     onShare: () {},
                   ),
                   SizedBox(height: 8.0.s),
