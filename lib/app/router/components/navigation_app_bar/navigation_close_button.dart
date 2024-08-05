@@ -8,11 +8,9 @@ class NavigationCloseButton extends StatelessWidget {
   const NavigationCloseButton({
     super.key,
     this.onPressed,
-    this.shouldDismissToRoot = false,
   });
 
   final VoidCallback? onPressed;
-  final bool? shouldDismissToRoot;
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +23,8 @@ class NavigationCloseButton extends StatelessWidget {
       ),
       onPressed: onPressed ??
           () {
-            if (shouldDismissToRoot == true) {
-              final state = GoRouterState.of(context);
-              context.go(state.currentTab.baseRouteLocation);
-            } else {
-              context.pop();
-            }
+            final state = GoRouterState.of(context);
+            context.go(state.currentTab.baseRouteLocation);
           },
     );
   }
