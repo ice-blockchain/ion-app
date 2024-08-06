@@ -1,43 +1,57 @@
+import 'dart:async';
+
 import 'package:ice/app/extensions/enum.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+part 'local_storage.g.dart';
+
+@Riverpod(keepAlive: true)
+Future<SharedPreferences> sharedPreferences(SharedPreferencesRef ref) =>
+    SharedPreferences.getInstance();
+
+@Riverpod(keepAlive: true)
+LocalStorage localStorage(LocalStorageRef ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+
+  return LocalStorage(prefs.requireValue);
+}
+
 class LocalStorage {
-  static late SharedPreferences _prefs;
+  final SharedPreferences _prefs;
 
-  static Future<void> initialize() async {
-    _prefs = await SharedPreferences.getInstance();
+  const LocalStorage(this._prefs);
+
+  void setBool({required String key, required bool value}) {
+    return unawaited(_prefs.setBool(key, value));
   }
 
-  static Future<bool> setBool({required String key, required bool value}) {
-    return _prefs.setBool(key, value);
-  }
-
-  static bool getBool(String key, {bool defaultValue = false}) {
+  bool getBool(String key, {bool defaultValue = false}) {
     return _prefs.getBool(key) ?? defaultValue;
   }
 
-  static Future<bool> setDouble(String key, double value) {
-    return _prefs.setDouble(key, value);
+  void setDouble(String key, double value) {
+    return unawaited(_prefs.setDouble(key, value));
   }
 
-  static double getDouble(String key, {double defaultValue = 0.0}) {
+  double getDouble(String key, {double defaultValue = 0.0}) {
     return _prefs.getDouble(key) ?? defaultValue;
   }
 
-  static Future<bool> setString(String key, String value) {
-    return _prefs.setString(key, value);
+  void setString(String key, String value) {
+    return unawaited(_prefs.setString(key, value));
   }
 
-  static String? getString(String key) {
+  String? getString(String key) {
     return _prefs.getString(key);
   }
 
-  static Future<bool> setEnum<T extends Enum>(String key, T value) {
-    return _prefs.setString(key, value.toShortString());
+  void setEnum<T extends Enum>(String key, T value) {
+    return unawaited(_prefs.setString(key, value.toShortString()));
   }
 
   // Get an enum value
-  static T getEnum<T extends Enum>(
+  T getEnum<T extends Enum>(
     String key,
     List<T> enumValues, {
     required T defaultValue,

@@ -16,8 +16,9 @@ Future<void> initApp(InitAppRef ref) async {
   await Future.wait(<Future<void>>[
     ref.read(appTemplateProvider.future),
     ref.read(authProvider.notifier).rehydrate(),
-    LocalStorage.initialize(),
   ]);
+
+  await ref.watch(sharedPreferencesProvider.future);
   ref.watch(relaysProvider.notifier);
   await ref.read(permissionsProvider.notifier).checkAllPermissions();
 }

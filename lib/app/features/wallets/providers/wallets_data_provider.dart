@@ -1,6 +1,7 @@
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ice/app/features/wallets/providers/selected_wallet_id_provider.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallets_data_provider.g.dart';
@@ -63,3 +64,7 @@ class WalletsDataNotifier extends _$WalletsDataNotifier {
     state = state.where((wallet) => wallet.id != walletId).toList();
   }
 }
+
+class MockWalletsDataNotifier extends _$WalletsDataNotifier
+    with Mock
+    implements WalletsDataNotifier {}

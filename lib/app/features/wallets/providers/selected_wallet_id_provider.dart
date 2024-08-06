@@ -1,5 +1,6 @@
 import 'package:ice/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ice/app/services/storage/local_storage.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_wallet_id_provider.g.dart';
@@ -10,11 +11,16 @@ class SelectedWalletIdNotifier extends _$SelectedWalletIdNotifier {
 
   @override
   String? build() {
-    return LocalStorage.getString(selectedWalletIdKey) ?? mockedWalletDataArray[0].id;
+    return ref.watch(localStorageProvider).getString(selectedWalletIdKey) ??
+        mockedWalletDataArray[0].id;
   }
 
   set selectedWalletId(String selectedWalletId) {
     state = selectedWalletId;
-    LocalStorage.setString(selectedWalletIdKey, selectedWalletId);
+    ref.watch(localStorageProvider).setString(selectedWalletIdKey, selectedWalletId);
   }
 }
+
+class MockSelectedWalletIdNotifier extends _$SelectedWalletIdNotifier
+    with Mock
+    implements SelectedWalletIdNotifier {}

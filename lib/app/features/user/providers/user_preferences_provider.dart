@@ -15,15 +15,16 @@ class UserPreferencesNotifier extends _$UserPreferencesNotifier {
 
   @override
   UserPreferences build() {
-    final isBalanceVisible = LocalStorage.getBool(isBalanceVisibleKey, defaultValue: true);
+    final localStorage = ref.watch(localStorageProvider);
+    final isBalanceVisible = localStorage.getBool(isBalanceVisibleKey, defaultValue: true);
     final isZeroValueAssetsVisible =
-        LocalStorage.getBool(isZeroValueAssetsVisibleKey, defaultValue: true);
-    final nftLayoutType = LocalStorage.getEnum<NftLayoutType>(
+        localStorage.getBool(isZeroValueAssetsVisibleKey, defaultValue: true);
+    final nftLayoutType = localStorage.getEnum<NftLayoutType>(
       nftLayoutTypeKey,
       NftLayoutType.values,
       defaultValue: NftLayoutType.list,
     );
-    final nftSortingType = LocalStorage.getEnum<NftSortingType>(
+    final nftSortingType = localStorage.getEnum<NftSortingType>(
       nftSortingTypeKey,
       NftSortingType.values,
       defaultValue: NftSortingType.desc,
@@ -38,38 +39,42 @@ class UserPreferencesNotifier extends _$UserPreferencesNotifier {
   }
 
   void switchBalanceVisibility() {
+    final localStorage = ref.read(localStorageProvider);
     state = state.copyWith(isBalanceVisible: !state.isBalanceVisible);
-    LocalStorage.setBool(
+    localStorage.setBool(
       key: isBalanceVisibleKey,
       value: state.isBalanceVisible,
     );
   }
 
   void switchZeroValueAssetsVisibility() {
+    final localStorage = ref.read(localStorageProvider);
     state = state.copyWith(
       isZeroValueAssetsVisible: !state.isZeroValueAssetsVisible,
     );
-    LocalStorage.setBool(
+    localStorage.setBool(
       key: isZeroValueAssetsVisibleKey,
       value: state.isZeroValueAssetsVisible,
     );
   }
 
   void setNftLayoutType(NftLayoutType newNftLayoutType) {
+    final localStorage = ref.read(localStorageProvider);
     state = state.copyWith(
       nftLayoutType: newNftLayoutType,
     );
-    LocalStorage.setEnum<NftLayoutType>(
+    localStorage.setEnum<NftLayoutType>(
       nftLayoutTypeKey,
       newNftLayoutType,
     );
   }
 
   void setNftSortingType(NftSortingType newNftSortingType) {
+    final localStorage = ref.read(localStorageProvider);
     state = state.copyWith(
       nftSortingType: newNftSortingType,
     );
-    LocalStorage.setEnum<NftSortingType>(
+    localStorage.setEnum<NftSortingType>(
       nftSortingTypeKey,
       newNftSortingType,
     );
