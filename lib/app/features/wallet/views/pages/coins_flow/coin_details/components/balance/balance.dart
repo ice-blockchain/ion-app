@@ -74,7 +74,7 @@ class Balance extends ConsumerWidget {
               },
               onSend: () {
                 ref.read(sendAssetFormControllerProvider().notifier).setCoin(coinData);
-                NetworkSelectSendRoute($extra: NetworkListViewType.send).push<void>(context);
+                NetworkSelectSendRoute(viewType: NetworkListViewType.send).push<void>(context);
               },
             ),
           ),
