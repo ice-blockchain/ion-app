@@ -25,6 +25,13 @@ WalletData currentWalletData(CurrentWalletDataRef ref) {
   return walletsData.firstWhere((wallet) => wallet.id == currentWalletId);
 }
 
+@riverpod
+WalletData walletById(WalletByIdRef ref, {required String id}) {
+  final wallets = ref.read(walletsDataNotifierProvider);
+
+  return wallets.firstWhere((wallet) => wallet.id == id);
+}
+
 @Riverpod(keepAlive: true)
 class WalletsDataNotifier extends _$WalletsDataNotifier {
   @override
@@ -54,9 +61,5 @@ class WalletsDataNotifier extends _$WalletsDataNotifier {
 
   void deleteWallet(String walletId) {
     state = state.where((wallet) => wallet.id != walletId).toList();
-  }
-
-  WalletData walletById(String id) {
-    return state.firstWhere((wallet) => wallet.id == id);
   }
 }

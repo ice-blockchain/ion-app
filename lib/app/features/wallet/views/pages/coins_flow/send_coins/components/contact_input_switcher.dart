@@ -14,24 +14,24 @@ class ContactInputSwitcher extends ConsumerWidget {
   });
 
   final String? contactId;
-  final void Function(String?) onContactSelected;
+  final ValueChanged<String?> onContactSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (contactId != null) {
-      final contact = ref.watch(contactByIdProvider(id: contactId!));
-
-      return ContactButton(
-        contact: contact,
-        onContactTap: () => selectContact(context),
-        onClearContact: () => onContactSelected(null),
-      );
-    } else {
+    if (contactId == null) {
       return AddressInputField(
         onOpenContactList: () => selectContact(context),
         onScanPressed: () {},
       );
     }
+
+    final contact = ref.watch(contactByIdProvider(id: contactId!));
+
+    return ContactButton(
+      contact: contact,
+      onContactTap: () => selectContact(context),
+      onClearContact: () => onContactSelected(null),
+    );
   }
 
   Future<void> selectContact(BuildContext context) async {

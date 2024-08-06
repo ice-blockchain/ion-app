@@ -25,7 +25,7 @@ class EditWalletModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletData = ref.watch(walletsDataNotifierProvider.notifier).walletById(walletId);
+    final walletData = ref.watch(walletByIdProvider(id: walletId));
 
     final walletName = useState(walletData.name);
     final controller = useTextEditingController(text: walletName.value);
