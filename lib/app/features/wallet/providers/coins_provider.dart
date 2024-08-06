@@ -4,6 +4,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_provider.g.dart';
 
+@riverpod
+List<CoinData> coinsData(CoinsDataRef ref) => mockedCoinsDataArray;
+
+@riverpod
+CoinData coinById(CoinByIdRef ref, {required String coinId}) {
+  final coins = ref.watch(coinsDataProvider);
+
+  return coins.firstWhere((CoinData coin) => coin.abbreviation == coinId);
+}
+
 @Riverpod(keepAlive: true)
 class CoinsNotifier extends _$CoinsNotifier {
   @override

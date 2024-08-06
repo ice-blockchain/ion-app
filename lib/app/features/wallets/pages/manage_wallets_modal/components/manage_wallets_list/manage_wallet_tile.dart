@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/model/wallet_data.dart';
+import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ManageWalletTile extends StatelessWidget {
+class ManageWalletTile extends ConsumerWidget {
   const ManageWalletTile({
-    required this.walletData,
+    required this.walletId,
     super.key,
   });
 
-  final WalletData walletData;
+  final String walletId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final walletData = ref.watch(walletByIdProvider(id: walletId));
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ListItem(
         onTap: () {
-          EditWalletRoute($extra: walletData).push<void>(context);
+          EditWalletRoute(walletId: walletId).push<void>(context);
         },
         leading: Avatar(
           size: 36.0.s,

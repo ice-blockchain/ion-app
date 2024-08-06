@@ -8,8 +8,8 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/post_reply/reply_data_notifier.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
-import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/components/reply_author_header.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
+import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/components/reply_author_header.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -76,7 +76,7 @@ class ReplyInputField extends HookConsumerWidget {
                     if (isFocused.value)
                       GestureDetector(
                         onTap: () async {
-                          await ReplyExpandedRoute($extra: postData.id).push<void>(context);
+                          await ReplyExpandedRoute(postId: postData.id).push<void>(context);
                           textController.text = ref.read(replyDataNotifierProvider).text;
                         },
                         child: Assets.images.icons.iconReplysearchScale.icon(size: 20.0.s),

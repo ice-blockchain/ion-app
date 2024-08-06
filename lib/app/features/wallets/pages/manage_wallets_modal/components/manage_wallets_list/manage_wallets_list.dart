@@ -11,7 +11,7 @@ class ManageWalletsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletsData = ref.watch(walletsListProvider);
+    final walletsData = ref.watch(walletsDataNotifierProvider);
 
     return Padding(
       padding: EdgeInsets.only(top: 6.0.s),
@@ -19,7 +19,7 @@ class ManageWalletsList extends ConsumerWidget {
         children: walletsData
             .map(
               (walletData) => ManageWalletTile(
-                walletData: walletData,
+                walletId: walletData.id,
               ),
             )
             .toList(),

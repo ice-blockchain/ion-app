@@ -17,7 +17,7 @@ class SendCoinModalPage extends ConsumerWidget {
       body: CoinsListView(
         onCoinItemTap: (CoinData coin) {
           ref.read(sendAssetFormControllerProvider().notifier).setCoin(coin);
-          NetworkSelectSendRoute($extra: NetworkListViewType.send).push<void>(context);
+          NetworkSelectSendRoute(viewType: NetworkListViewType.send).push<void>(context);
         },
       ),
     );

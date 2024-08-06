@@ -10,7 +10,6 @@ import 'package:ice/app/components/slider/app_slider.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/components/arrival_time/arrival_time.dart';
 import 'package:ice/app/features/wallet/components/network_fee/network_fee.dart';
-import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/network_list/network_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
@@ -30,7 +29,7 @@ class SendCoinsForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedContact = useState<ContactData?>(null);
+    final selectedContactId = useState<String?>(null);
 
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
@@ -71,14 +70,14 @@ class SendCoinsForm extends HookConsumerWidget {
                     NetworkButton(
                       networkType: formController.selectedNetwork,
                       onTap: () {
-                        NetworkSelectSendRoute($extra: NetworkListViewType.send)
+                        NetworkSelectSendRoute(viewType: NetworkListViewType.send)
                             .push<void>(context);
                       },
                     ),
                     SizedBox(height: 12.0.s),
                     ContactInputSwitcher(
-                      selectedContact: selectedContact.value,
-                      onContactSelected: (ContactData? contact) => selectedContact.value = contact,
+                      contactId: selectedContactId.value,
+                      onContactSelected: (contactId) => selectedContactId.value = contactId,
                     ),
                     SizedBox(height: 12.0.s),
                     TextInput(

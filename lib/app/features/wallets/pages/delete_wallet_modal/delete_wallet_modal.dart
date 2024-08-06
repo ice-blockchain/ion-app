@@ -8,15 +8,14 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/model/wallet_data.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class DeleteWalletModal extends ConsumerWidget {
-  const DeleteWalletModal({required this.payload, super.key});
+  const DeleteWalletModal({required this.walletId, super.key});
 
-  final WalletData payload;
+  final String walletId;
 
   static double get buttonsSize => 56.0.s;
 
@@ -78,7 +77,7 @@ class DeleteWalletModal extends ConsumerWidget {
                       context.i18n.button_delete,
                     ),
                     onPressed: () {
-                      ref.read(walletsDataNotifierProvider.notifier).deleteWallet(payload.id);
+                      ref.read(walletsDataNotifierProvider.notifier).deleteWallet(walletId);
                       context.pop();
                     },
                     minimumSize: buttonMinimalSize,

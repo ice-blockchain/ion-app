@@ -5,9 +5,9 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
-import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/model/coin_transaction_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
+import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header.dart';
@@ -22,15 +22,15 @@ import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class CoinDetailsPage extends HookConsumerWidget {
-  const CoinDetailsPage({required this.payload, super.key});
+  const CoinDetailsPage({required this.coinId, super.key});
 
-  final CoinData payload;
+  final String coinId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final coinData = ref.watch(coinByIdProvider(coinId: coinId));
     final walletId = ref.watch(currentWalletIdProvider);
     final scrollController = useScrollController();
-    final coinId = payload.abbreviation;
     final coinTransactionsMap = useTransactionsByDate(context, ref);
     final isLoading = coinTransactionsIsLoadingSelector(ref);
     final activeNetworkType = useState<NetworkType>(NetworkType.all);
@@ -53,9 +53,9 @@ class CoinDetailsPage extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            payload.iconUrl.icon(),
+            coinData.iconUrl.icon(),
             SizedBox(width: 6.0.s),
-            Text(payload.name),
+            Text(coinData.name),
           ],
         ),
       ),
@@ -67,7 +67,7 @@ class CoinDetailsPage extends HookConsumerWidget {
               children: [
                 const Delimiter(),
                 Balance(
-                  coinData: payload,
+                  coinData: coinData,
                   networkType: activeNetworkType.value,
                 ),
                 const Delimiter(),
@@ -105,7 +105,7 @@ class CoinDetailsPage extends HookConsumerWidget {
                   return ScreenSideOffset.small(
                     child: TransactionListItem(
                       transactionData: transactions[index],
-                      coinData: payload,
+                      coinData: coinData,
                     ),
                   );
                 },

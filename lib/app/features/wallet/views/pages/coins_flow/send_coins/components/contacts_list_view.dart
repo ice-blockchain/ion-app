@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/providers/mock_data/contacts_mock_data.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/providers/contacts_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -15,7 +16,7 @@ enum ContactRouteAction {
   pop,
 }
 
-class ContactsListView extends StatelessWidget {
+class ContactsListView extends ConsumerWidget {
   const ContactsListView({
     super.key,
     required this.appBarTitle,
@@ -26,8 +27,8 @@ class ContactsListView extends StatelessWidget {
   final ContactRouteAction action;
 
   @override
-  Widget build(BuildContext context) {
-    final contacts = mockedContactDataArray;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final contacts = ref.watch(contactsProvider);
 
     return SheetContent(
       body: Column(
@@ -71,8 +72,8 @@ class ContactsListView extends StatelessWidget {
                   iceBadge: contact.hasIceAccount,
                   timeago: contact.lastSeen,
                   onTap: () => action == ContactRouteAction.pop
-                      ? context.pop(contact)
-                      : ContactRoute($extra: contact).push<void>(context),
+                      ? context.pop(contact.id)
+                      : ContactRoute(contactId: contact.id).push<void>(context),
                 ),
               );
             },

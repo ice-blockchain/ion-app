@@ -1,8 +1,7 @@
 import 'package:ice/app/features/wallet/model/coin_data.dart';
-import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/model/crypto_asset_data.dart';
+import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
-import 'package:ice/app/features/wallets/providers/selected_wallet_id_provider.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,9 +15,7 @@ class SendAssetFormController extends _$SendAssetFormController {
 
   @override
   CryptoAssetData build({CryptoAssetType type = CryptoAssetType.coin}) {
-    final walletId = ref.watch(selectedWalletIdNotifierProvider);
-    final walletsData = ref.watch(walletsDataNotifierProvider);
-    final wallet = walletsData[walletId]!;
+    final wallet = ref.watch(currentWalletDataProvider);
     _cryptoType = type;
 
     return CryptoAssetData(
