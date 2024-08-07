@@ -10,11 +10,12 @@ class SelectedWalletIdNotifier extends _$SelectedWalletIdNotifier {
 
   @override
   String? build() {
-    return LocalStorage.getString(selectedWalletIdKey) ?? mockedWalletDataArray[0].id;
+    return ref.watch(localStorageProvider).getString(selectedWalletIdKey) ??
+        mockedWalletDataArray.first.id;
   }
 
   set selectedWalletId(String selectedWalletId) {
     state = selectedWalletId;
-    LocalStorage.setString(selectedWalletIdKey, selectedWalletId);
+    ref.read(localStorageProvider).setString(selectedWalletIdKey, selectedWalletId);
   }
 }
