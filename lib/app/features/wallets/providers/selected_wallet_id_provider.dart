@@ -17,7 +17,7 @@ class SelectedWalletIdNotifier extends _$SelectedWalletIdNotifier {
 
   set selectedWalletId(String selectedWalletId) {
     state = selectedWalletId;
-    ref.watch(localStorageProvider).setString(selectedWalletIdKey, selectedWalletId);
+    ref.read(localStorageProvider).setString(selectedWalletIdKey, selectedWalletId);
   }
 }
 
