@@ -23,118 +23,83 @@ void main() {
     },
   );
 
-  group(
-    'SelectedWalletIdNotifier Tests',
-    () {
-      test(
-        'build returns value from localStorage if it exists',
-        () {
-          when(
-            () => mockLocalStorage.getString(
-              SelectedWalletIdNotifier.selectedWalletIdKey,
-            ),
-          ).thenReturn('testWalletId');
+  group('SelectedWalletIdNotifier Tests', () {
+    test('build returns value from localStorage if it exists', () {
+      when(
+        () => mockLocalStorage.getString(
+          SelectedWalletIdNotifier.selectedWalletIdKey,
+        ),
+      ).thenReturn('testWalletId');
 
-          final result = container.read(selectedWalletIdNotifierProvider);
+      final result = container.read(selectedWalletIdNotifierProvider);
 
-          expect(result, 'testWalletId');
+      expect(result, 'testWalletId');
 
-          verify(
-            () => mockLocalStorage.getString(
-              SelectedWalletIdNotifier.selectedWalletIdKey,
-            ),
-          ).called(1);
-        },
+      verify(
+        () => mockLocalStorage.getString(SelectedWalletIdNotifier.selectedWalletIdKey),
+      ).called(1);
+    });
+
+    test('build() returns first mocked wallet id if localStorage is empty', () {
+      when(
+        () => mockLocalStorage.getString(SelectedWalletIdNotifier.selectedWalletIdKey),
+      ).thenReturn(null);
+
+      final result = container.read(selectedWalletIdNotifierProvider);
+
+      expect(result, mockedWalletDataArray[0].id);
+
+      verify(
+        () => mockLocalStorage.getString(SelectedWalletIdNotifier.selectedWalletIdKey),
+      ).called(1);
+    });
+
+    test('selectedWalletId setter updates state and localStorage', () {
+      final notifier = container.read(selectedWalletIdNotifierProvider.notifier);
+
+      when(
+        () => mockLocalStorage.setString(any(), any()),
+      ).thenReturn(null);
+
+      notifier.selectedWalletId = 'newWalletId';
+
+      expect(
+        container.read(selectedWalletIdNotifierProvider),
+        'newWalletId',
       );
 
-      test(
-        'build() returns first mocked wallet id if localStorage is empty',
-        () {
-          when(
-            () => mockLocalStorage.getString(
-              SelectedWalletIdNotifier.selectedWalletIdKey,
-            ),
-          ).thenReturn(null);
+      verify(() => mockLocalStorage.setString(
+          SelectedWalletIdNotifier.selectedWalletIdKey, 'newWalletId')).called(1);
+    });
 
-          final result = container.read(selectedWalletIdNotifierProvider);
+    test('notifier reacts to changes in localStorage', () {
+      final listener = Listener<String?>();
 
-          expect(
-            result,
-            mockedWalletDataArray[0].id,
-          );
-
-          verify(
-            () => mockLocalStorage.getString(
-              SelectedWalletIdNotifier.selectedWalletIdKey,
-            ),
-          ).called(1);
-        },
+      when(
+        () => mockLocalStorage.getString(SelectedWalletIdNotifier.selectedWalletIdKey),
+      ).thenReturn(
+        mockedWalletDataArray.first.id,
       );
 
-      test(
-        'selectedWalletId setter updates state and localStorage',
-        () {
-          final notifier = container.read(selectedWalletIdNotifierProvider.notifier);
-
-          when(
-            () => mockLocalStorage.setString(
-              any(),
-              any(),
-            ),
-          ).thenReturn(null);
-
-          notifier.selectedWalletId = 'newWalletId';
-
-          expect(
-            container.read(selectedWalletIdNotifierProvider),
-            'newWalletId',
-          );
-
-          verify(
-            () => mockLocalStorage.setString(
-              SelectedWalletIdNotifier.selectedWalletIdKey,
-              'newWalletId',
-            ),
-          ).called(1);
-        },
+      container.listen<String?>(
+        selectedWalletIdNotifierProvider,
+        listener,
+        fireImmediately: true,
       );
 
-      test(
-        'notifier reacts to changes in localStorage',
-        () {
-          final listener = Listener<String?>();
+      verify(
+        () => listener(null, mockedWalletDataArray.first.id),
+      ).called(1);
 
-          when(
-            () => mockLocalStorage.getString(
-              SelectedWalletIdNotifier.selectedWalletIdKey,
-            ),
-          ).thenReturn(
-            mockedWalletDataArray.first.id,
-          );
+      when(
+        () => mockLocalStorage.getString(SelectedWalletIdNotifier.selectedWalletIdKey),
+      ).thenReturn('updatedWalletId');
 
-          container.listen<String?>(
-            selectedWalletIdNotifierProvider,
-            listener,
-            fireImmediately: true,
-          );
+      container.refresh(selectedWalletIdNotifierProvider);
 
-          verify(
-            () => listener(null, mockedWalletDataArray.first.id),
-          ).called(1);
-
-          when(
-            () => mockLocalStorage.getString(
-              SelectedWalletIdNotifier.selectedWalletIdKey,
-            ),
-          ).thenReturn('updatedWalletId');
-
-          container.refresh(selectedWalletIdNotifierProvider);
-
-          verify(
-            () => listener(mockedWalletDataArray.first.id, 'updatedWalletId'),
-          ).called(1);
-        },
-      );
-    },
-  );
+      verify(
+        () => listener(mockedWalletDataArray.first.id, 'updatedWalletId'),
+      ).called(1);
+    });
+  });
 }

@@ -1,6 +1,5 @@
 import 'package:ice/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ice/app/services/storage/local_storage.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_wallet_id_provider.g.dart';
@@ -20,7 +19,3 @@ class SelectedWalletIdNotifier extends _$SelectedWalletIdNotifier {
     ref.read(localStorageProvider).setString(selectedWalletIdKey, selectedWalletId);
   }
 }
-
-class MockSelectedWalletIdNotifier extends _$SelectedWalletIdNotifier
-    with Mock
-    implements SelectedWalletIdNotifier {}

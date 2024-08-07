@@ -4,288 +4,240 @@ import 'package:ice/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ice/app/features/wallets/providers/selected_wallet_id_provider.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 
+import '../mocks.dart';
 import '../test_utils.dart';
 
 void main() {
-  group(
-    'CurrentWalletIdProvider',
-    () {
-      test(
-        'returns the selected wallet id when it exists in the data',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
-              selectedWalletIdNotifierProvider.overrideWith(MockSelectedWalletIdNotifier.new),
-            ],
-          );
-
-          final mockNotifier = container.read(selectedWalletIdNotifierProvider.notifier);
-          mockNotifier.selectedWalletId = '1';
-
-          final currentWalletId = container.read(currentWalletIdProvider);
-
-          expect(currentWalletId, equals('1'));
-        },
+  group('CurrentWalletIdProvider', () {
+    test('returns the selected wallet id when it exists in the data', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
+          selectedWalletIdNotifierProvider.overrideWith(MockSelectedWalletIdNotifier.new),
+        ],
       );
 
-      test(
-        'returns the first wallet id when selected id does not exist',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
-              selectedWalletIdNotifierProvider.overrideWith(MockSelectedWalletIdNotifier.new),
-            ],
-          );
+      final mockNotifier = container.read(selectedWalletIdNotifierProvider.notifier);
+      mockNotifier.selectedWalletId = '1';
 
-          final mockNotifier = container.read(selectedWalletIdNotifierProvider.notifier);
+      final currentWalletId = container.read(currentWalletIdProvider);
 
-          mockNotifier.selectedWalletId = 'non_existing_id';
+      expect(currentWalletId, equals('1'));
+    });
 
-          final currentWalletId = container.read(currentWalletIdProvider);
-
-          expect(currentWalletId, equals(mockedWalletDataArray.first.id));
-        },
+    test('returns the first wallet id when selected id does not exist', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
+          selectedWalletIdNotifierProvider.overrideWith(MockSelectedWalletIdNotifier.new),
+        ],
       );
 
-      test(
-        'returns an empty string when there are no wallets',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(MockWalletsDataNotifier.new),
-              selectedWalletIdNotifierProvider.overrideWith(MockSelectedWalletIdNotifier.new),
-            ],
-          );
+      final mockNotifier = container.read(selectedWalletIdNotifierProvider.notifier);
 
-          final mockWalletsNotifier = container.read(walletsDataNotifierProvider.notifier);
-          final mockSelectedWalletNotifier =
-              container.read(selectedWalletIdNotifierProvider.notifier);
+      mockNotifier.selectedWalletId = 'non_existing_id';
 
-          mockWalletsNotifier.state = [];
-          mockSelectedWalletNotifier.selectedWalletId = 'non_existing_id';
+      final currentWalletId = container.read(currentWalletIdProvider);
 
-          final currentWalletId = container.read(currentWalletIdProvider);
+      expect(currentWalletId, equals(mockedWalletDataArray.first.id));
+    });
 
-          expect(currentWalletId, equals(''));
-        },
-      );
-    },
-  );
-
-  group(
-    'currentWalletDataProvider',
-    () {
-      test(
-        'returns the correct wallet data for the current wallet id',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(MockWalletsDataNotifier.new),
-              currentWalletIdProvider.overrideWithValue('1'),
-            ],
-          );
-
-          final mockWalletsNotifier = container.read(walletsDataNotifierProvider.notifier);
-
-          mockWalletsNotifier.state = mockedWalletDataArray;
-
-          final currentWalletData = container.read(currentWalletDataProvider);
-
-          expect(currentWalletData.id, equals('1'));
-          expect(currentWalletData.name, equals('ice.wallet'));
-          expect(currentWalletData.balance, equals(36594.33));
-        },
+    test('returns an empty string when there are no wallets', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(MockWalletsDataNotifier.new),
+          selectedWalletIdNotifierProvider.overrideWith(MockSelectedWalletIdNotifier.new),
+        ],
       );
 
-      test(
-        'throws StateError when the current wallet id does not exist',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(MockWalletsDataNotifier.new),
-              currentWalletIdProvider.overrideWithValue('non_existing_id'),
-            ],
-          );
+      final mockWalletsNotifier = container.read(walletsDataNotifierProvider.notifier);
+      final mockSelectedWalletNotifier = container.read(selectedWalletIdNotifierProvider.notifier);
 
-          final mockWalletsNotifier = container.read(walletsDataNotifierProvider.notifier);
+      mockWalletsNotifier.state = [];
+      mockSelectedWalletNotifier.selectedWalletId = 'non_existing_id';
 
-          mockWalletsNotifier.state = mockedWalletDataArray;
+      final currentWalletId = container.read(currentWalletIdProvider);
 
-          expect(() => container.read(currentWalletDataProvider), throwsStateError);
-        },
-      );
-    },
-  );
+      expect(currentWalletId, equals(''));
+    });
+  });
 
-  group(
-    'walletByIdProvider',
-    () {
-      test('returns correct wallet data for given id', () {
-        final container = createContainer(
-          overrides: [
-            walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
-          ],
-        );
-
-        final walletData = container.read(walletByIdProvider(id: '1'));
-
-        expect(walletData, isA<WalletData>());
-        expect(walletData.id, '1');
-      });
-
-      test(
-        'throws when wallet with given id does not exist',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
-            ],
-          );
-
-          expect(() => container.read(walletByIdProvider(id: 'non-existent')), throwsStateError);
-        },
-      );
-    },
-  );
-
-  group(
-    'WalletsDataNotifier',
-    () {
-      test(
-        'initial state is mockedWalletDataArray',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
-            ],
-          );
-          final state = container.read(walletsDataNotifierProvider);
-
-          expect(state, equals(mockedWalletDataArray));
-        },
+  group('currentWalletDataProvider', () {
+    test('returns the correct wallet data for the current wallet id', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(MockWalletsDataNotifier.new),
+          currentWalletIdProvider.overrideWithValue('1'),
+        ],
       );
 
-      test(
-        'addWallet() adds a new wallet',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
-            ],
-          );
-          final notifier = container.read(walletsDataNotifierProvider.notifier);
+      final mockWalletsNotifier = container.read(walletsDataNotifierProvider.notifier);
 
-          final newWallet = WalletData(
-            id: '4',
-            name: 'New Wallet',
-            icon: 'icon',
-            balance: 100,
-          );
+      mockWalletsNotifier.state = mockedWalletDataArray;
 
-          notifier.addWallet(newWallet);
+      final currentWalletData = container.read(currentWalletDataProvider);
 
-          expect(notifier.state, contains(newWallet));
-        },
+      expect(currentWalletData.id, equals('1'));
+      expect(currentWalletData.name, equals('ice.wallet'));
+      expect(currentWalletData.balance, equals(36594.33));
+    });
+
+    test('throws StateError when the current wallet id does not exist', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(MockWalletsDataNotifier.new),
+          currentWalletIdProvider.overrideWithValue('non_existing_id'),
+        ],
       );
 
-      test(
-        'updateWallet() updates an existing wallet',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
-            ],
-          );
-          final notifier = container.read(walletsDataNotifierProvider.notifier);
+      final mockWalletsNotifier = container.read(walletsDataNotifierProvider.notifier);
 
-          final updatedWallet = WalletData(
-            id: '1',
-            name: 'Updated Wallet',
-            icon: 'new_icon',
-            balance: 200,
-          );
+      mockWalletsNotifier.state = mockedWalletDataArray;
 
-          notifier.updateWallet(updatedWallet);
+      expect(() => container.read(currentWalletDataProvider), throwsStateError);
+    });
+  });
 
-          expect(
-            notifier.state.firstWhere((wallet) => wallet.id == '1'),
-            equals(updatedWallet),
-          );
-        },
+  group('walletByIdProvider', () {
+    test('returns correct wallet data for given id', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
+        ],
       );
 
-      test(
-        'deleteWallet() removes a wallet',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
-            ],
-          );
-          final notifier = container.read(walletsDataNotifierProvider.notifier);
+      final walletData = container.read(walletByIdProvider(id: '1'));
 
-          notifier.deleteWallet('1');
+      expect(walletData, isA<WalletData>());
+      expect(walletData.id, '1');
+    });
 
-          expect(notifier.state.any((wallet) => wallet.id == '1'), isFalse);
-        },
+    test('throws when wallet with given id does not exist', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
+        ],
       );
 
-      test(
-        'addWallet() throws exception when wallet with same id already exists',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
-            ],
-          );
-          final notifier = container.read(walletsDataNotifierProvider.notifier);
+      expect(() => container.read(walletByIdProvider(id: 'non-existent')), throwsStateError);
+    });
+  });
 
-          final existingWallet = mockedWalletDataArray.first;
+  group('WalletsDataNotifier', () {
+    test('initial state is mockedWalletDataArray', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
+        ],
+      );
+      final state = container.read(walletsDataNotifierProvider);
 
-          expect(
-            () => notifier.addWallet(existingWallet),
-            throwsA(
-              isA<Exception>().having(
-                (e) => e.toString(),
-                'message',
-                contains('Wallet with id ${existingWallet.id} already exists'),
-              ),
-            ),
-          );
-        },
+      expect(state, equals(mockedWalletDataArray));
+    });
+
+    test('addWallet() adds a new wallet', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
+        ],
+      );
+      final notifier = container.read(walletsDataNotifierProvider.notifier);
+
+      final newWallet = WalletData(
+        id: '4',
+        name: 'New Wallet',
+        icon: 'icon',
+        balance: 100,
       );
 
-      test(
-        'updateWallet() throws exception when wallet does not exist',
-        () {
-          final container = createContainer(
-            overrides: [
-              walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
-            ],
-          );
-          final notifier = container.read(walletsDataNotifierProvider.notifier);
+      notifier.addWallet(newWallet);
 
-          final nonExistentWallet = WalletData(
-            id: 'non-existent',
-            name: 'Non-existent Wallet',
-            icon: 'icon',
-            balance: 0,
-          );
+      expect(notifier.state, contains(newWallet));
+    });
 
-          expect(
-            () => notifier.updateWallet(nonExistentWallet),
-            throwsA(
-              isA<Exception>().having(
-                (e) => e.toString(),
-                'message',
-                contains('Wallet with id ${nonExistentWallet.id} does not exist'),
-              ),
-            ),
-          );
-        },
+    test('updateWallet() updates an existing wallet', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
+        ],
       );
-    },
-  );
+      final notifier = container.read(walletsDataNotifierProvider.notifier);
+
+      final updatedWallet = WalletData(
+        id: '1',
+        name: 'Updated Wallet',
+        icon: 'new_icon',
+        balance: 200,
+      );
+
+      notifier.updateWallet(updatedWallet);
+
+      expect(
+        notifier.state.firstWhere((wallet) => wallet.id == '1'),
+        equals(updatedWallet),
+      );
+    });
+
+    test('deleteWallet() removes a wallet', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
+        ],
+      );
+      final notifier = container.read(walletsDataNotifierProvider.notifier);
+
+      notifier.deleteWallet('1');
+
+      expect(notifier.state.any((wallet) => wallet.id == '1'), isFalse);
+    });
+
+    test('addWallet() throws exception when wallet with same id already exists', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
+        ],
+      );
+      final notifier = container.read(walletsDataNotifierProvider.notifier);
+
+      final existingWallet = mockedWalletDataArray.first;
+
+      expect(
+        () => notifier.addWallet(existingWallet),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Wallet with id ${existingWallet.id} already exists'),
+          ),
+        ),
+      );
+    });
+
+    test('updateWallet() throws exception when wallet does not exist', () {
+      final container = createContainer(
+        overrides: [
+          walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
+        ],
+      );
+      final notifier = container.read(walletsDataNotifierProvider.notifier);
+
+      final nonExistentWallet = WalletData(
+        id: 'non-existent',
+        name: 'Non-existent Wallet',
+        icon: 'icon',
+        balance: 0,
+      );
+
+      expect(
+        () => notifier.updateWallet(nonExistentWallet),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Wallet with id ${nonExistentWallet.id} does not exist'),
+          ),
+        ),
+      );
+    });
+  });
 }
