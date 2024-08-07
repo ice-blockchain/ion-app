@@ -10,7 +10,7 @@ environment:
 
 dependencies:
   cached_network_image: ^3.3.1
-  carousel_slider: ^4.2.1
+  carousel_slider_plus: ^6.0.0+1
   cupertino_icons: ^1.0.6
   dotted_border: ^2.1.0
   email_validator: ^2.1.16
@@ -111,11 +111,3 @@ flutter_gen:
 
   integrations:
     lottie: true
-
-# Added dependency override for 'meta' to version 1.14.0 to resolve a conflict between
-# 'riverpod_generator' and 'flutter_localizations'.
-# 'riverpod_generator' requires 'analyzer' version 6.5.0, which in turn requires 'meta' version 1.14.0.
-# However, 'flutter_localizations' depends on 'meta' version 1.12.0.
-# This override ensures compatibility between these dependencies.
-dependency_overrides:
-  meta: 1.14.0

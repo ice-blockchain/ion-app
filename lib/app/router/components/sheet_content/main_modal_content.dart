@@ -15,7 +15,7 @@ class MainModalContent extends StatelessWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           final metrics = controller.value;
 
