@@ -29,6 +29,7 @@ class IdentityKeyNameInput extends HookWidget {
   Widget build(BuildContext context) {
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return TextInput(
+      keyboardType: TextInputType.emailAddress,
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
         icons: [Assets.images.icons.iconIdentitykey.icon()],

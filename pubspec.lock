@@ -246,6 +246,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  corbado_frontend_api_client:
+    dependency: transitive
+    description:
+      name: corbado_frontend_api_client
+      sha256: "7040edd0b73ef023ab3fb82da9d284d1f53ba31037d7c227747b527d168855a3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   cross_file:
     dependency: transitive
     description:
@@ -326,6 +334,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  dio:
+    dependency: transitive
+    description:
+      name: dio
+      sha256: e17f6b3097b8c51b72c74c9f071a605c47bcc8893839bd66732457a5ebe73714
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.5.0+1"
+  dio_web_adapter:
+    dependency: transitive
+    description:
+      name: dio_web_adapter
+      sha256: "36c5b2d79eb17cdae41e974b7a8284fec631651d2a6f39a8a2ff22327e90aeac"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   dotted_border:
     dependency: "direct main"
     description:
@@ -882,14 +906,21 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  ion_identity_client:
+    dependency: "direct main"
+    description:
+      path: "packages/ion_identity_client"
+      relative: true
+    source: path
+    version: "0.0.1"
   js:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: js
-      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
+      sha256: c1b2e9b5ea78c45e1a0788d29606ba27dc5f71f019f32ca5140f61ef071838cf
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.7"
+    version: "0.7.1"
   json_annotation:
     dependency: "direct main"
     description:
@@ -1027,6 +1058,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  openapi_generator_annotations:
+    dependency: transitive
+    description:
+      name: openapi_generator_annotations
+      sha256: "86d924de3037a4a82e8a8d3b60c4120eced3df9e6b52a7d17cdec12ff4299ac5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.2"
   package_config:
     dependency: transitive
     description:
@@ -1035,6 +1074,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  passkeys:
+    dependency: transitive
+    description:
+      name: passkeys
+      sha256: f7858feeb9fcaa3b206e8eb0ee6da4bf6ad90c9a35a30f7df0cd1cb78227a96f
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.9"
+  passkeys_android:
+    dependency: transitive
+    description:
+      name: passkeys_android
+      sha256: "9dc0b84dad03329ff2f3be18bedecf1b8de9309c8e9cda6ef821dc88556a126d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.4"
+  passkeys_ios:
+    dependency: transitive
+    description:
+      name: passkeys_ios
+      sha256: "411b10c3cd159c9601426d47b2dc5aa4dd1e34ef69deefaac01ff81712ea6064"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
+  passkeys_platform_interface:
+    dependency: transitive
+    description:
+      name: passkeys_platform_interface
+      sha256: a1f1f5c637049f68350cf43323df9689be2e86fe5822a6e098362e7f6168351e
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
+  passkeys_web:
+    dependency: transitive
+    description:
+      name: passkeys_web
+      sha256: "04b306c484f1a7d30720785563c160b46cf9232a708ce65286863f91dd78b19d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   path:
     dependency: transitive
     description:
@@ -1195,6 +1274,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
+  pretty_dio_logger:
+    dependency: transitive
+    description:
+      name: pretty_dio_logger
+      sha256: "36f2101299786d567869493e2f5731de61ce130faa14679473b26905a92b6407"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   pub_semver:
     dependency: transitive
     description:
@@ -1552,6 +1639,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+  ua_client_hints:
+    dependency: transitive
+    description:
+      name: ua_client_hints
+      sha256: ee3da4e4b6ed211fe54deaa19832dd25613f11fc2951912d4e62a093da03fbbb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.1"
   url_launcher:
     dependency: "direct main"
     description:
@@ -1580,10 +1675,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_linux
-      sha256: ab360eb661f8879369acac07b6bb3ff09d9471155357da8443fd5d3cf7363811
+      sha256: e2b9622b4007f97f504cd64c0128309dfb978ae66adbe944125ed9e1750f06af
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.1"
+    version: "3.2.0"
   url_launcher_macos:
     dependency: transitive
     description:
