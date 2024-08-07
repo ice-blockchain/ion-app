@@ -54,7 +54,12 @@ class WalletRoutes {
       routes: [
         TypedGoRoute<NftDetailsRoute>(path: 'nft-details'),
         TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting'),
-        TypedGoRoute<NftSendFormRoute>(path: 'nft-send'),
+        TypedGoRoute<NftSendFormRoute>(
+          path: 'nft-send',
+          routes: [
+            TypedGoRoute<NftContactsListRoute>(path: 'nft-contacts-list'),
+          ],
+        ),
         TypedGoRoute<SendNftConfirmRoute>(path: 'nft-confirm'),
         TypedGoRoute<NftTransactionResultRoute>(path: 'nft-transaction-result'),
         TypedGoRoute<NftTransactionDetailsRoute>(path: 'nft-transaction-details'),
@@ -191,6 +196,20 @@ class CoinsSendFormRoute extends BaseRouteData {
 
 class ContactsListRoute extends BaseRouteData {
   ContactsListRoute({required this.title, this.action = ContactRouteAction.pop})
+      : super(
+          child: ContactsListView(
+            appBarTitle: title,
+            action: action,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String title;
+  final ContactRouteAction action;
+}
+
+class NftContactsListRoute extends BaseRouteData {
+  NftContactsListRoute({required this.title, this.action = ContactRouteAction.pop})
       : super(
           child: ContactsListView(
             appBarTitle: title,

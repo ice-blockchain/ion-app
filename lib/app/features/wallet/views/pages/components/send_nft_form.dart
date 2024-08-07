@@ -67,7 +67,16 @@ class SendNftForm extends HookConsumerWidget {
                       SizedBox(height: 16.0.s),
                       ContactInputSwitcher(
                         contactId: selectedContactId.value,
-                        onContactSelected: (id) => selectedContactId.value = id,
+                        onClear: (contactId) => selectedContactId.value = contactId,
+                        onContactPressed: () async {
+                          final contactId = await NftContactsListRoute(
+                            title: context.i18n.contacts_select_title,
+                          ).push<String>(context);
+
+                          if (!context.mounted) return;
+
+                          selectedContactId.value = contactId;
+                        },
                       ),
                       SizedBox(height: 17.0.s),
                       const ArrivalTime(),
