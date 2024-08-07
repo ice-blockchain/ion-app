@@ -109,7 +109,7 @@ void main() {
               SelectedWalletIdNotifier.selectedWalletIdKey,
             ),
           ).thenReturn(
-            mockedWalletDataArray[0].id,
+            mockedWalletDataArray.first.id,
           );
 
           container.listen<String?>(
@@ -119,7 +119,7 @@ void main() {
           );
 
           verify(
-            () => listener(null, mockedWalletDataArray[0].id),
+            () => listener(null, mockedWalletDataArray.first.id),
           ).called(1);
 
           when(
@@ -131,7 +131,7 @@ void main() {
           container.refresh(selectedWalletIdNotifierProvider);
 
           verify(
-            () => listener(mockedWalletDataArray[0].id, 'updatedWalletId'),
+            () => listener(mockedWalletDataArray.first.id, 'updatedWalletId'),
           ).called(1);
         },
       );
