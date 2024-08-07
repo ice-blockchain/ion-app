@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:ion_identity_client/src/signer/dtos/authenticator_selection_criteria.dart';
 import 'package:ion_identity_client/src/signer/dtos/public_key_credential_descriptor.dart';
 import 'package:ion_identity_client/src/signer/dtos/public_key_credential_parameters.dart';
