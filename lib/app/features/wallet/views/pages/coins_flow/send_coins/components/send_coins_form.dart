@@ -16,26 +16,27 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_as
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/coin_button.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/providers/contacts_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SendCoinsForm extends HookConsumerWidget {
+class SendCoinsForm extends ConsumerWidget {
   const SendCoinsForm({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedContactId = useState<String?>(null);
-
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
 
     final formController = ref.watch(sendAssetFormControllerProvider());
+    final notifier = ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.coin).notifier);
+    final selectedContact = formController.selectedContact;
 
     final amountController = useTextEditingController(
       text: formController.usdtAmount.toString(),
@@ -76,8 +77,10 @@ class SendCoinsForm extends HookConsumerWidget {
                     ),
                     SizedBox(height: 12.0.s),
                     ContactInputSwitcher(
-                      contactId: selectedContactId.value,
-                      onClear: (contactId) => selectedContactId.value = contactId,
+                      contactId: selectedContact?.id,
+                      onClear: (contactId) => {
+                        notifier.setContact(null),
+                      },
                       onContactPressed: () async {
                         final contactId = await ContactsListRoute(
                           title: context.i18n.contacts_select_title,
@@ -85,7 +88,10 @@ class SendCoinsForm extends HookConsumerWidget {
 
                         if (!context.mounted) return;
 
-                        selectedContactId.value = contactId;
+                        if (contactId != null) {
+                          final contact = ref.read(contactByIdProvider(id: contactId));
+                          notifier.setContact(contact);
+                        }
                       },
                     ),
                     SizedBox(height: 12.0.s),
