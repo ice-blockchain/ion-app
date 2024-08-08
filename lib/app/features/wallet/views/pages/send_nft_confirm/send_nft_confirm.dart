@@ -40,7 +40,10 @@ class SendNftConfirmPage extends ConsumerWidget {
                   children: [
                     NftItem(nftData: selectedNft),
                     SizedBox(height: 16.0.s),
-                    SendToRecipient(address: formData.address),
+                    SendToRecipient(
+                      address: formData.address,
+                      contact: formData.selectedContact,
+                    ),
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_title),
