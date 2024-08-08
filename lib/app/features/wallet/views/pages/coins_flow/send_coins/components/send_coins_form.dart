@@ -23,7 +23,7 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SendCoinsForm extends ConsumerWidget {
+class SendCoinsForm extends HookConsumerWidget {
   const SendCoinsForm({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
@@ -34,7 +34,7 @@ class SendCoinsForm extends ConsumerWidget {
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
 
-    final formController = ref.watch(sendAssetFormControllerProvider());
+    final formController = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.coin));
     final notifier = ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.coin).notifier);
     final selectedContact = formController.selectedContact;
 
