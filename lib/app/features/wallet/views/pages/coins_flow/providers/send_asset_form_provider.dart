@@ -1,4 +1,5 @@
 import 'package:ice/app/features/wallet/model/coin_data.dart';
+import 'package:ice/app/features/wallet/model/contact_data.dart';
 import 'package:ice/app/features/wallet/model/crypto_asset_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
@@ -26,6 +27,7 @@ class SendAssetFormController extends _$SendAssetFormController {
       address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
       usdtAmount: 350,
       arrivalTime: 15,
+      selectedContact: null,
     );
   }
 
@@ -33,9 +35,9 @@ class SendAssetFormController extends _$SendAssetFormController {
 
   void setCoin(CoinData coin) => state = state.copyWith(selectedCoin: coin);
 
-  void setNetwork(NetworkType network) => state = state.copyWith(selectedNetwork: network);
+  void setContact(ContactData? contact) => state = state.copyWith(selectedContact: contact);
 
-  void updateAddress(String address) => state = state.copyWith(address: address);
+  void setNetwork(NetworkType network) => state = state.copyWith(selectedNetwork: network);
 
   void updateAmount(String amount) {
     final value = double.tryParse(amount) ?? 0.0;
