@@ -5,6 +5,7 @@ import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/components/nft_item/nft_item.dart';
+import 'package:ice/app/features/wallet/components/send_to_recipient/send_to_recipient.dart';
 import 'package:ice/app/features/wallet/components/timeline/timeline.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
@@ -67,16 +68,9 @@ class TransactionDetailsPage extends ConsumerWidget {
                     ],
                   ),
                   SizedBox(height: 16.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_send_to),
-                    secondary: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        formData.address,
-                        textAlign: TextAlign.right,
-                        style: context.theme.appTextThemes.caption3.copyWith(),
-                      ),
-                    ),
+                  SendToRecipient(
+                    address: formData.address,
+                    contact: formData.selectedContact,
                   ),
                   SizedBox(height: 12.0.s),
                   ListItem.textWithIcon(
