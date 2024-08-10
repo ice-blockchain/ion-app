@@ -47,6 +47,9 @@ class WalletRoutes {
         ),
       ],
     ),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [TypedGoRoute<ProtectAccountRoute>(path: 'protect-account')],
+    ),
   ];
 
   static const nftSendRoutes = <TypedRoute<RouteData>>[
@@ -103,6 +106,14 @@ class WalletRoutes {
       ],
     ),
   ];
+}
+
+class ProtectAccountRoute extends BaseRouteData {
+  ProtectAccountRoute()
+      : super(
+          child: const SecureAccountModal(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class AllowAccessRoute extends BaseRouteData {
