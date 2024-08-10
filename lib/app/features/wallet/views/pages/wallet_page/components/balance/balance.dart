@@ -53,6 +53,14 @@ class Balance extends ConsumerWidget {
                     ref.watch(userPreferencesNotifierProvider.notifier).switchBalanceVisibility();
                   },
                 ),
+                Expanded(
+                  child: TextButton(
+                    child: Text('Secure account'),
+                    onPressed: () {
+                      ProtectAccountRoute().push<void>(context);
+                    },
+                  ),
+                ),
               ],
             ),
           ),
