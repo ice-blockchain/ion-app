@@ -16,14 +16,20 @@ class SecureAccountOptionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.i18n;
+
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
             showBackButton: false,
-            title: Text('Security'),
-            actions: [NavigationCloseButton()],
+            title: Text(locale.protect_account_header_security),
+            actions: [
+              NavigationCloseButton(
+                onPressed: () => FeedRoute().go(context),
+              ),
+            ],
           ),
           SizedBox(height: 40.0.s),
           ScreenSideOffset.small(
@@ -33,16 +39,15 @@ class SecureAccountOptionsPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 24.0.s),
                   child: InfoCard(
                     iconAsset: Assets.images.identity.actionWalletIdkey,
-                    title: 'Secure your account',
-                    description:
-                        'To secure your account, back it up and enable at least one 2FA option',
+                    title: locale.protect_account_title_secure_account,
+                    description: locale.protect_account_description_secure_account_2fa,
                   ),
                 ),
                 SizedBox(height: 32.0.s),
                 Column(
                   children: [
                     ListItem(
-                      title: Text('Backup'),
+                      title: Text(locale.two_fa_option_backup),
                       backgroundColor: context.theme.appColors.tertararyBackground,
                       leading: Button.icon(
                         backgroundColor: context.theme.appColors.secondaryBackground,
@@ -60,7 +65,7 @@ class SecureAccountOptionsPage extends StatelessWidget {
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem(
-                      title: Text('Email'),
+                      title: Text(locale.two_fa_option_email),
                       backgroundColor: context.theme.appColors.tertararyBackground,
                       leading: Button.icon(
                         backgroundColor: context.theme.appColors.secondaryBackground,
@@ -80,7 +85,7 @@ class SecureAccountOptionsPage extends StatelessWidget {
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem(
-                      title: Text('Authenticator'),
+                      title: Text(locale.two_fa_option_authenticator),
                       backgroundColor: context.theme.appColors.tertararyBackground,
                       leading: Button.icon(
                         backgroundColor: context.theme.appColors.secondaryBackground,
@@ -100,7 +105,7 @@ class SecureAccountOptionsPage extends StatelessWidget {
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem(
-                      title: Text('Phone'),
+                      title: Text(locale.two_fa_option_phone),
                       backgroundColor: context.theme.appColors.tertararyBackground,
                       leading: Button.icon(
                         backgroundColor: context.theme.appColors.secondaryBackground,

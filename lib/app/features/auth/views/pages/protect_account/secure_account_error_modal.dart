@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
@@ -14,16 +15,18 @@ class SecureAccountErrorModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.i18n;
+
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
             showBackButton: false,
-            title: Text('Security'),
+            title: Text(locale.protect_account_header_security),
             actions: [
               NavigationCloseButton(
-                onPressed: () => FeedMainModalRoute().replace(context),
+                onPressed: () => FeedRoute().go(context),
               ),
             ],
           ),
@@ -34,15 +37,14 @@ class SecureAccountErrorModal extends StatelessWidget {
               children: [
                 InfoCard(
                   iconAsset: Assets.images.icons.actionWalletAutherror,
-                  title: 'Authenticator not available',
-                  description:
-                      'To set up an Authenticator app, please first link an email address or phone number to your account',
+                  title: locale.two_fa_failure_authenticator_title,
+                  description: locale.two_fa_failure_authenticator_description,
                 ),
                 SizedBox(height: 32.0.s),
                 Button(
                   mainAxisSize: MainAxisSize.max,
-                  label: Text('Back'),
-                  onPressed: () {},
+                  label: Text(locale.button_back),
+                  onPressed: () => context.pop(),
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],

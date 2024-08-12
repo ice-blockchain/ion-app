@@ -138,6 +138,7 @@ class AppShellRouteData extends StatefulShellRouteData {
     StatefulNavigationShell navigationShell,
   ) {
     return MainTabNavigation(
+      key: state.pageKey,
       shell: navigationShell,
       state: state,
     );

@@ -14,14 +14,20 @@ class SecureAccountModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.i18n;
+
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
             showBackButton: false,
-            title: Text('Security'),
-            actions: [NavigationCloseButton()],
+            title: Text(locale.protect_account_header_security),
+            actions: [
+              NavigationCloseButton(
+                onPressed: () => FeedRoute().go(context),
+              ),
+            ],
           ),
           SizedBox(height: 32.0.s),
           Padding(
@@ -30,9 +36,8 @@ class SecureAccountModal extends StatelessWidget {
               children: [
                 InfoCard(
                   iconAsset: Assets.images.identity.actionWalletIdkey,
-                  title: 'Secure your account',
-                  description:
-                      'Securing your account ensures you never lose access to your data and funds',
+                  title: locale.protect_account_title_secure_account,
+                  description: locale.protect_account_description_secure_account,
                 ),
                 SizedBox(height: 32.0.s),
                 Button(
@@ -40,7 +45,7 @@ class SecureAccountModal extends StatelessWidget {
                   leadingIcon: Assets.images.icons.iconWalletProtectVar1.icon(
                     color: Colors.transparent,
                   ),
-                  label: Text('Protect account'),
+                  label: Text(locale.protect_account_button),
                   onPressed: () {
                     SecureAccountOptionsRoute().push<void>(context);
                   },
