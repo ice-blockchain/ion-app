@@ -20,7 +20,3 @@ linter:
     comment_references: false
     avoid_setters_without_getters: false
     max_line_length: 100
-
-custom_lint:
-  rules:
-    - hooks_unuse_widget: false

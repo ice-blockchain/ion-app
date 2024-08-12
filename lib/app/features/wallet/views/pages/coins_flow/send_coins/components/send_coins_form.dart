@@ -38,8 +38,10 @@ class SendCoinsForm extends HookConsumerWidget {
     final notifier = ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.coin).notifier);
     final selectedContact = formController.selectedContact;
 
-    final amountController = useTextEditingController(
-      text: formController.usdtAmount.toString(),
+    final amountController = useTextEditingController.fromValue(
+      TextEditingValue(
+        text: formController.usdtAmount.toString(),
+      ),
     );
 
     return SheetContent(
