@@ -7,20 +7,20 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/components/conta
 class ContactInputSwitcher extends ConsumerWidget {
   const ContactInputSwitcher({
     required this.contactId,
-    required this.onClearContact,
-    required this.onClear,
+    required this.onContactTap,
+    required this.onClearTap,
     super.key,
   });
 
   final String? contactId;
-  final VoidCallback onClearContact;
-  final ValueChanged<String?> onClear;
+  final VoidCallback onContactTap;
+  final ValueChanged<String?> onClearTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (contactId == null) {
       return AddressInputField(
-        onOpenContactList: onClearContact,
+        onOpenContactList: onContactTap,
         onScanPressed: () {},
       );
     }
@@ -29,8 +29,8 @@ class ContactInputSwitcher extends ConsumerWidget {
 
     return ContactButton(
       contact: contact,
-      onContactTap: onClearContact,
-      onClearContact: () => onClear(null),
+      onContactTap: onContactTap,
+      onClearTap: () => onClearTap(null),
     );
   }
 }

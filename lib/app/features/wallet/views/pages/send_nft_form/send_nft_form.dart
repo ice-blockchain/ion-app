@@ -67,10 +67,10 @@ class SendNftForm extends ConsumerWidget {
                       SizedBox(height: 16.0.s),
                       ContactInputSwitcher(
                         contactId: selectedContact?.id,
-                        onClear: (contactId) => {
+                        onClearTap: (contactId) => {
                           notifier.setContact(null),
                         },
-                        onClearContact: () async {
+                        onContactTap: () async {
                           final contactId = await NftContactsListRoute(
                             title: context.i18n.contacts_select_title,
                           ).push<String>(context);

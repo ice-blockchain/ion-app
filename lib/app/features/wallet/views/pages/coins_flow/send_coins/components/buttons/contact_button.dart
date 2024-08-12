@@ -10,13 +10,13 @@ class ContactButton extends ConsumerWidget {
   const ContactButton({
     required this.contact,
     required this.onContactTap,
-    required this.onClearContact,
+    required this.onClearTap,
     super.key,
   });
 
   final ContactData contact;
   final VoidCallback onContactTap;
-  final VoidCallback onClearContact;
+  final VoidCallback onClearTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +42,7 @@ class ContactButton extends ConsumerWidget {
         iceBadge: contact.hasIceAccount,
         timeago: contact.lastSeen,
         trailing: IconButton(
-          onPressed: onClearContact,
+          onPressed: onClearTap,
           icon: Assets.images.icons.iconSheetClose.icon(
             size: 16.0.s,
             color: colors.primaryText,
