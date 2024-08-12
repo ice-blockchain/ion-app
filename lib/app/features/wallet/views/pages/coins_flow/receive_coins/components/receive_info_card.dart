@@ -48,8 +48,8 @@ class ReceiveInfoCard extends HookConsumerWidget {
                 Text('(${networkType.getDisplayName(context)})'),
                 SizedBox(height: 8.0.s),
                 SizedBox(
-                  width: 150.0,
-                  height: 150.0,
+                  width: 150.0.s,
+                  height: 150.0.s,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20.0.s),
                     child: QrImageView(
