@@ -86,6 +86,8 @@ class SendCoinsForm extends HookConsumerWidget {
                           title: context.i18n.contacts_select_title,
                         ).push<String>(context);
 
+                        // Ensure that the widget is still mounted before proceeding.
+                        // The widget may have been removed from the widget tree during the async operation.
                         if (!context.mounted) return;
 
                         if (contactId != null) {
