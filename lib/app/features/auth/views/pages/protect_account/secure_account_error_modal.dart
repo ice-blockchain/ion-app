@@ -23,10 +23,10 @@ class SecureAccountErrorModal extends StatelessWidget {
         children: [
           NavigationAppBar.modal(
             showBackButton: false,
-            title: Text(locale.protect_account_header_security),
+            title: Text('Security'),
             actions: [
               NavigationCloseButton(
-                onPressed: () => WalletRoute().go(context),
+                onPressed: () => FeedMainModalRoute().replace(context),
               ),
             ],
           ),
@@ -37,14 +37,15 @@ class SecureAccountErrorModal extends StatelessWidget {
               children: [
                 InfoCard(
                   iconAsset: Assets.images.icons.actionWalletAutherror,
-                  title: locale.two_fa_failure_authenticator_title,
-                  description: locale.two_fa_failure_authenticator_description,
+                  title: 'Authenticator not available',
+                  description:
+                      'To set up an Authenticator app, please first link an email address or phone number to your account',
                 ),
                 SizedBox(height: 32.0.s),
                 Button(
                   mainAxisSize: MainAxisSize.max,
-                  label: Text(locale.button_back),
-                  onPressed: () => context.pop(),
+                  label: Text('Back'),
+                  onPressed: () {},
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],

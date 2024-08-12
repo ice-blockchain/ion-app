@@ -57,7 +57,7 @@ class Balance extends ConsumerWidget {
                   child: TextButton(
                     child: Text('Secure account'),
                     onPressed: () {
-                      ProtectAccountRoute().push<void>(context);
+                      SecureAccountModalRoute().push<void>(context);
                     },
                   ),
                 ),
