@@ -78,10 +78,8 @@ class SendCoinsForm extends HookConsumerWidget {
                     SizedBox(height: 12.0.s),
                     ContactInputSwitcher(
                       contactId: selectedContact?.id,
-                      onClear: (contactId) => {
-                        notifier.setContact(null),
-                      },
-                      onContactPressed: () async {
+                      onClear: (contactId) => notifier.setContact(null),
+                      onClearContact: () async {
                         final contactId = await ContactsListRoute(
                           title: context.i18n.contacts_select_title,
                         ).push<String>(context);

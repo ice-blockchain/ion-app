@@ -61,10 +61,7 @@ class CoinReceiveModal extends StatelessWidget {
               onTap: () {},
             ),
           ),
-          SizedBox(
-            height: 20.0.s,
-          ),
-          ScreenBottomOffset(),
+          ScreenBottomOffset(margin: 20.0.s),
         ],
       ),
     );

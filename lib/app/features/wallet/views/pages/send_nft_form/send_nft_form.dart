@@ -70,7 +70,7 @@ class SendNftForm extends ConsumerWidget {
                         onClear: (contactId) => {
                           notifier.setContact(null),
                         },
-                        onContactPressed: () async {
+                        onClearContact: () async {
                           final contactId = await NftContactsListRoute(
                             title: context.i18n.contacts_select_title,
                           ).push<String>(context);
