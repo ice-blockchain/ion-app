@@ -116,7 +116,7 @@ class WalletRoutes {
 class ProtectAccountRoute extends BaseRouteData {
   ProtectAccountRoute()
       : super(
-          child: const SecureAccountModal(),
+          child: const ErrorAccountSecurityWidget(),
           type: IceRouteType.bottomSheet,
         );
 }
