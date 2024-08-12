@@ -23,9 +23,7 @@ void main() async {
 }
 
 class IceApp extends ConsumerWidget {
-  const IceApp({
-    super.key,
-  });
+  const IceApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
