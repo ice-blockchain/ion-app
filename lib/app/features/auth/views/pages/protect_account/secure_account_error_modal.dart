@@ -3,13 +3,14 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ErrorAccountSecurityWidget extends StatelessWidget {
-  const ErrorAccountSecurityWidget({super.key});
+class SecureAccountErrorModal extends StatelessWidget {
+  const SecureAccountErrorModal({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +20,14 @@ class ErrorAccountSecurityWidget extends StatelessWidget {
         children: [
           NavigationAppBar.modal(
             showBackButton: false,
-            title: Text(
-              'Security',
-            ),
-            actions: [NavigationCloseButton()],
+            title: Text('Security'),
+            actions: [
+              NavigationCloseButton(
+                onPressed: () => FeedMainModalRoute().replace(context),
+              ),
+            ],
           ),
+          SizedBox(height: 32.0.s),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.0.s),
             child: Column(
@@ -34,19 +38,13 @@ class ErrorAccountSecurityWidget extends StatelessWidget {
                   description:
                       'To set up an Authenticator app, please first link an email address or phone number to your account',
                 ),
-                SizedBox(height: 12.0.s),
-                SizedBox(
-                  height: 30.0.s,
-                ),
+                SizedBox(height: 32.0.s),
                 Button(
                   mainAxisSize: MainAxisSize.max,
-                  label: Text(
-                    'Back',
-                  ),
+                  label: Text('Back'),
                   onPressed: () {},
                 ),
-                ScreenBottomOffset(),
-                ScreenBottomOffset(),
+                ScreenBottomOffset(margin: 36.0.s),
               ],
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -19,11 +20,10 @@ class SecureAccountModal extends StatelessWidget {
         children: [
           NavigationAppBar.modal(
             showBackButton: false,
-            title: Text(
-              'Security',
-            ),
+            title: Text('Security'),
             actions: [NavigationCloseButton()],
           ),
+          SizedBox(height: 32.0.s),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.0.s),
             child: Column(
@@ -34,22 +34,18 @@ class SecureAccountModal extends StatelessWidget {
                   description:
                       'Securing your account ensures you never lose access to your data and funds',
                 ),
-                SizedBox(height: 12.0.s),
-                SizedBox(
-                  height: 30.0.s,
-                ),
+                SizedBox(height: 32.0.s),
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   leadingIcon: Assets.images.icons.iconWalletProtectVar1.icon(
                     color: Colors.transparent,
                   ),
-                  label: Text(
-                    'Protect account',
-                  ),
-                  onPressed: () {},
+                  label: Text('Protect account'),
+                  onPressed: () {
+                    SecureAccountOptionsRoute().push<void>(context);
+                  },
                 ),
-                ScreenBottomOffset(),
-                ScreenBottomOffset(),
+                ScreenBottomOffset(margin: 36.0.s),
               ],
             ),
           ),
