@@ -6,7 +6,7 @@ import 'package:ice/app/features/auth/views/pages/discover_creators/discover_cre
 import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
 import 'package:ice/app/features/auth/views/pages/get_started/get_started.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/intro_page.dart';
-import 'package:ice/app/features/auth/views/pages/protect_account/secure_account_modal.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/error_authenticator_not_available.dart';
 import 'package:ice/app/features/auth/views/pages/restore_creds/restore_creds.dart';
 import 'package:ice/app/features/auth/views/pages/restore_menu/restore_menu.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
