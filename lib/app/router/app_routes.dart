@@ -146,9 +146,9 @@ class AppShellRouteData extends StatefulShellRouteData {
 
 @TypedShellRoute<ModalShellRouteData>(
   routes: [
-    TypedGoRoute<SecureAccountModalRoute>(path: 'secure-account-modal'),
-    TypedGoRoute<SecureAccountOptionsRoute>(path: 'secure-account-options'),
-    TypedGoRoute<SecureAccountErrorRoute>(path: 'secure-account-error'),
+    TypedGoRoute<SecureAccountModalRoute>(path: '/secure-account-modal'),
+    TypedGoRoute<SecureAccountOptionsRoute>(path: '/secure-account-options'),
+    TypedGoRoute<SecureAccountErrorRoute>(path: '/secure-account-error'),
   ],
 )
 class ModalShellRouteData extends ShellRouteData {
