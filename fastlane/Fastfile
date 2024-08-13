@@ -67,6 +67,7 @@ platform :ios do
             when "testflight"
                 pilot(
                     app_identifier: APP_ID,
+                    team_id: APPLE_DEVELOPMENT_TEAM,
                     ipa: "./build/ios/Runner.ipa",
                     skip_waiting_for_build_processing: true,
                     api_key_path: "./fastlane/keys/appstore-connect-key.json",
