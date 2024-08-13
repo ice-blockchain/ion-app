@@ -56,7 +56,7 @@ class Balance extends ConsumerWidget {
               ],
             ),
           ),
-          // TODO: temporary added GestureDetector to show modal until we have a decision 
+          // TODO: temporary added GestureDetector to show modal until we have a decision
           // on when to show the modal page for secure account
           GestureDetector(
             onDoubleTap: () => SecureAccountModalRoute().push<void>(context),
