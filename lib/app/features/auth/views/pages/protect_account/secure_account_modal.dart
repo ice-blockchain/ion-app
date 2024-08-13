@@ -42,7 +42,7 @@ class SecureAccountModal extends StatelessWidget {
                 SizedBox(height: 32.0.s),
                 Button(
                   mainAxisSize: MainAxisSize.max,
-                  leadingIcon: Assets.images.icons.iconWalletProtectVar1.icon(
+                  leadingIcon: Assets.images.icons.iconWalletProtectAccount.icon(
                     color: Colors.transparent,
                   ),
                   label: Text(locale.protect_account_button),

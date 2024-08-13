@@ -56,7 +56,7 @@ class SecureAccountOptionsPage extends StatelessWidget {
                         type: ButtonType.menuInactive,
                         size: 36.0.s,
                         onPressed: () {},
-                        icon: Assets.images.icons.iconHeaderCopy.icon(
+                        icon: Assets.images.icons.iconProtectwalletIcloud.icon(
                           color: context.theme.appColors.primaryAccent,
                         ),
                       ),
