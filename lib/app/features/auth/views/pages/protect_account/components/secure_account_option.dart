@@ -11,12 +11,12 @@ class SecureAccountOption extends StatelessWidget {
   final Widget? trailing;
 
   const SecureAccountOption({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.onTap,
     this.trailing,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
