@@ -27,7 +27,7 @@ class SecureAccountOptionsPage extends StatelessWidget {
             title: Text(locale.protect_account_header_security),
             actions: [
               NavigationCloseButton(
-                onPressed: () => FeedRoute().go(context),
+                onPressed: () => WalletRoute().go(context),
               ),
             ],
           ),
