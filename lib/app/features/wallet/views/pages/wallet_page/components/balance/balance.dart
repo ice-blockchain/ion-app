@@ -53,21 +53,18 @@ class Balance extends ConsumerWidget {
                     ref.watch(userPreferencesNotifierProvider.notifier).switchBalanceVisibility();
                   },
                 ),
-                Expanded(
-                  child: TextButton(
-                    child: Text('Secure account'),
-                    onPressed: () {
-                      SecureAccountModalRoute().push<void>(context);
-                    },
-                  ),
-                ),
               ],
             ),
           ),
-          Text(
-            isBalanceVisible ? formatToCurrency(walletBalance) : '********',
-            style: context.theme.appTextThemes.headline1
-                .copyWith(color: context.theme.appColors.primaryText),
+          // TODO: temporary added GestureDetector to show modal until we have a decision 
+          // on when to show the modal page for secure account
+          GestureDetector(
+            onDoubleTap: () => SecureAccountModalRoute().push<void>(context),
+            child: Text(
+              isBalanceVisible ? formatToCurrency(walletBalance) : '********',
+              style: context.theme.appTextThemes.headline1
+                  .copyWith(color: context.theme.appColors.primaryText),
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(

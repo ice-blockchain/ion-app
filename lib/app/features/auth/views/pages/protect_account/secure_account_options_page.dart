@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/card/info_card.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/components/secure_account_option.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -44,84 +43,41 @@ class SecureAccountOptionsPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 32.0.s),
-                Column(
-                  children: [
-                    ListItem(
-                      title: Text(locale.two_fa_option_backup),
-                      backgroundColor: context.theme.appColors.tertararyBackground,
-                      leading: Button.icon(
-                        backgroundColor: context.theme.appColors.secondaryBackground,
-                        borderColor: context.theme.appColors.onTerararyFill,
-                        borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
-                        type: ButtonType.menuInactive,
-                        size: 36.0.s,
-                        onPressed: () {},
-                        icon: Assets.images.icons.iconProtectwalletIcloud.icon(
-                          color: context.theme.appColors.primaryAccent,
-                        ),
-                      ),
-                      trailing: Assets.images.icons.iconArrowRight.icon(),
-                      onTap: () {},
-                    ),
-                    SizedBox(height: 12.0.s),
-                    ListItem(
-                      title: Text(locale.two_fa_option_email),
-                      backgroundColor: context.theme.appColors.tertararyBackground,
-                      leading: Button.icon(
-                        backgroundColor: context.theme.appColors.secondaryBackground,
-                        borderColor: context.theme.appColors.onTerararyFill,
-                        borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
-                        type: ButtonType.menuInactive,
-                        size: 36.0.s,
-                        onPressed: () {},
-                        icon: Assets.images.icons.iconFieldEmail.icon(
-                          color: context.theme.appColors.primaryAccent,
-                        ),
-                      ),
-                      trailing: Assets.images.icons.iconDappCheck.icon(
-                        color: context.theme.appColors.success,
-                      ),
-                      onTap: () {},
-                    ),
-                    SizedBox(height: 12.0.s),
-                    ListItem(
-                      title: Text(locale.two_fa_option_authenticator),
-                      backgroundColor: context.theme.appColors.tertararyBackground,
-                      leading: Button.icon(
-                        backgroundColor: context.theme.appColors.secondaryBackground,
-                        borderColor: context.theme.appColors.onTerararyFill,
-                        borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
-                        type: ButtonType.menuInactive,
-                        size: 36.0.s,
-                        onPressed: () {},
-                        icon: Assets.images.icons.iconLoginAuthcode.icon(
-                          color: context.theme.appColors.primaryAccent,
-                        ),
-                      ),
-                      trailing: Assets.images.icons.iconArrowRight.icon(),
-                      onTap: () {
-                        SecureAccountErrorRoute().push<void>(context);
-                      },
-                    ),
-                    SizedBox(height: 12.0.s),
-                    ListItem(
-                      title: Text(locale.two_fa_option_phone),
-                      backgroundColor: context.theme.appColors.tertararyBackground,
-                      leading: Button.icon(
-                        backgroundColor: context.theme.appColors.secondaryBackground,
-                        borderColor: context.theme.appColors.onTerararyFill,
-                        borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
-                        type: ButtonType.menuInactive,
-                        size: 36.0.s,
-                        onPressed: () {},
-                        icon: Assets.images.icons.iconFieldPhone.icon(
-                          color: context.theme.appColors.primaryAccent,
-                        ),
-                      ),
-                      trailing: Assets.images.icons.iconArrowRight.icon(),
-                      onTap: () {},
-                    ),
-                  ],
+                SecureAccountOption(
+                  title: locale.two_fa_option_backup,
+                  icon: Assets.images.icons.iconProtectwalletIcloud.icon(
+                    color: context.theme.appColors.primaryAccent,
+                  ),
+                  onTap: () {},
+                ),
+                SizedBox(height: 12.0.s),
+                SecureAccountOption(
+                  title: locale.two_fa_option_email,
+                  icon: Assets.images.icons.iconFieldEmail.icon(
+                    color: context.theme.appColors.primaryAccent,
+                  ),
+                  onTap: () {},
+                  trailing: Assets.images.icons.iconDappCheck.icon(
+                    color: context.theme.appColors.success,
+                  ),
+                ),
+                SizedBox(height: 12.0.s),
+                SecureAccountOption(
+                  title: locale.two_fa_option_authenticator,
+                  icon: Assets.images.icons.iconLoginAuthcode.icon(
+                    color: context.theme.appColors.primaryAccent,
+                  ),
+                  onTap: () {
+                    SecureAccountErrorRoute().push<void>(context);
+                  },
+                ),
+                SizedBox(height: 12.0.s),
+                SecureAccountOption(
+                  title: locale.two_fa_option_phone,
+                  icon: Assets.images.icons.iconFieldPhone.icon(
+                    color: context.theme.appColors.primaryAccent,
+                  ),
+                  onTap: () {},
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],
