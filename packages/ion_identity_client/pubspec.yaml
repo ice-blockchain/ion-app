@@ -9,6 +9,7 @@ dependencies:
   dio: 5.5.0+1
   flutter:
     sdk: flutter
+  flutter_secure_storage: ^9.2.2
   passkeys: ^2.0.9
   pretty_dio_logger: ^1.4.0
 
@@ -18,3 +19,6 @@ dev_dependencies:
   very_good_analysis: ^6.0.0
 
 flutter:
+
+dependency_overrides:
+  js: ^0.7.1
