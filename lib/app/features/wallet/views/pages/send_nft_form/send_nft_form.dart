@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
@@ -14,26 +13,27 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_as
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
 import 'package:ice/app/features/wallet/views/pages/nft_details/components/nft_name/nft_name.dart';
 import 'package:ice/app/features/wallet/views/pages/nft_details/components/nft_picture/nft_picture.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/providers/contacts_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SendNftForm extends HookConsumerWidget {
+class SendNftForm extends ConsumerWidget {
   const SendNftForm({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedContactId = useState<String?>(null);
-
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
     final formController = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
+    final notifier = ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier);
     final selectedNft = formController.selectedNft;
+    final selectedContact = formController.selectedContact;
 
     return SheetContent(
       backgroundColor: colors.secondaryBackground,
@@ -66,8 +66,20 @@ class SendNftForm extends HookConsumerWidget {
                       ),
                       SizedBox(height: 16.0.s),
                       ContactInputSwitcher(
-                        contactId: selectedContactId.value,
-                        onContactSelected: (id) => selectedContactId.value = id,
+                        contactId: selectedContact?.id,
+                        onClearTap: (contactId) => {
+                          notifier.setContact(null),
+                        },
+                        onContactTap: () async {
+                          final contactId = await NftContactsListRoute(
+                            title: context.i18n.contacts_select_title,
+                          ).push<String>(context);
+
+                          if (contactId != null) {
+                            final contact = ref.read(contactByIdProvider(id: contactId));
+                            notifier.setContact(contact);
+                          }
+                        },
                       ),
                       SizedBox(height: 17.0.s),
                       const ArrivalTime(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
+import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -29,43 +30,39 @@ class CoinReceiveModal extends StatelessWidget {
     final networkType = _getNetworkType(payload);
 
     return SheetContent(
-      body: Padding(
-        padding: EdgeInsets.only(
-          bottom: 16.0.s,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            NavigationAppBar.modal(
-              showBackButton: false,
-              title: Text(context.i18n.wallet_receive),
-              actions: const [NavigationCloseButton()],
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          NavigationAppBar.modal(
+            showBackButton: false,
+            title: Text(context.i18n.wallet_receive),
+            actions: const [NavigationCloseButton()],
+          ),
+          ScreenSideOffset.small(
+            child: CoinAddressTile(
+              coinData: payload.coinData,
             ),
-            ScreenSideOffset.small(
-              child: CoinAddressTile(
-                coinData: payload.coinData,
-              ),
-            ),
-            SizedBox(
-              height: 15.0.s,
-            ),
-            ScreenSideOffset.small(
-              child: ListItem(
-                title: Text(context.i18n.wallet_network),
-                subtitle: Text(networkType.getDisplayName(context)),
-                switchTitleStyles: true,
-                leading: networkType.iconAsset.icon(size: 36.0.s),
-                trailing: Text(
-                  context.i18n.wallet_change,
-                  style: context.theme.appTextThemes.caption.copyWith(
-                    color: context.theme.appColors.primaryAccent,
-                  ),
+          ),
+          SizedBox(
+            height: 15.0.s,
+          ),
+          ScreenSideOffset.small(
+            child: ListItem(
+              title: Text(context.i18n.wallet_network),
+              subtitle: Text(networkType.getDisplayName(context)),
+              switchTitleStyles: true,
+              leading: networkType.iconAsset.icon(size: 36.0.s),
+              trailing: Text(
+                context.i18n.wallet_change,
+                style: context.theme.appTextThemes.caption.copyWith(
+                  color: context.theme.appColors.primaryAccent,
                 ),
-                onTap: () {},
               ),
+              onTap: () {},
             ),
-          ],
-        ),
+          ),
+          ScreenBottomOffset(margin: 20.0.s),
+        ],
       ),
     );
   }

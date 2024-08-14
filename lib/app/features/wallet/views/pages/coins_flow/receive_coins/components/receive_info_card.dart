@@ -34,6 +34,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(height: 20.0.s),
                 coinData.iconUrl.icon(size: 46.0.s),
@@ -46,19 +47,23 @@ class ReceiveInfoCard extends HookConsumerWidget {
                 ),
                 Text('(${networkType.getDisplayName(context)})'),
                 SizedBox(height: 8.0.s),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0.s),
-                  child: QrImageView(
-                    backgroundColor: context.theme.appColors.secondaryBackground,
-                    errorCorrectionLevel: QrErrorCorrectLevel.H,
-                    dataModuleStyle: QrDataModuleStyle(
-                      dataModuleShape: QrDataModuleShape.circle,
-                      color: context.theme.appColors.primaryText,
+                SizedBox(
+                  width: 150.0.s,
+                  height: 150.0.s,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0.s),
+                    child: QrImageView(
+                      backgroundColor: context.theme.appColors.secondaryBackground,
+                      errorCorrectionLevel: QrErrorCorrectLevel.H,
+                      dataModuleStyle: QrDataModuleStyle(
+                        dataModuleShape: QrDataModuleShape.circle,
+                        color: context.theme.appColors.primaryText,
+                      ),
+                      embeddedImageStyle: QrEmbeddedImageStyle(size: Size(40.0.s, 40.0.s)),
+                      embeddedImage: AssetImage(Assets.images.qrCode.centerQr.path),
+                      data: walletAddress,
+                      size: 150.0.s,
                     ),
-                    embeddedImageStyle: QrEmbeddedImageStyle(size: Size(40.0.s, 40.0.s)),
-                    embeddedImage: AssetImage(Assets.images.qrCode.centerQr.path),
-                    data: walletAddress,
-                    size: 150.0.s,
                   ),
                 ),
                 SizedBox(height: 8.0.s),

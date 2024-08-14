@@ -39,8 +39,12 @@ class ContactsListView extends ConsumerWidget {
             child: NavigationAppBar.screen(
               title: Text(appBarTitle),
               showBackButton: false,
-              actions: const [
-                NavigationCloseButton(),
+              actions: [
+                NavigationCloseButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                ),
               ],
             ),
           ),
