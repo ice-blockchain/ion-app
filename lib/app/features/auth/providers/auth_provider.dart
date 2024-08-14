@@ -22,7 +22,7 @@ class Auth extends _$Auth {
     );
   }
 
-  Future<void> signIn({required String keyName}) async {
+  Future<void> signUp({required String keyName}) async {
     try {
       state = const AuthenticationLoading();
 
@@ -39,6 +39,33 @@ class Auth extends _$Auth {
       state = Authenticated(
         authToken: AuthToken(
           access: result.authentication.token,
+          refresh: 'refresh',
+        ),
+      );
+    } catch (error) {
+      state = AuthenticationFailure(message: error.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> signIn({required String keyName}) async {
+    try {
+      state = const AuthenticationLoading();
+
+      final config = IonClientConfig(
+        appId: 'ap-dhesg-ct1r8-lu8a7rrodm4an8u',
+        orgId: 'or-625fn-dfjva-8b993vdrf414bkd8',
+        origin: 'https://dfns.blockchain.ice.vip',
+      );
+
+      final ionClient = IonApiClient.createDefault(config: config);
+
+      await ionClient.auth.loginUser(username: keyName);
+      await ionClient.wallets.listWallets();
+
+      state = Authenticated(
+        authToken: AuthToken(
+          access: 'access',
           refresh: 'refresh',
         ),
       );

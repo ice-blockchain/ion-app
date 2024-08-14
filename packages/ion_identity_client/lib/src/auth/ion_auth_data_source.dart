@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
+import 'package:ion_identity_client/src/auth/dtos/login_request.dart';
+import 'package:ion_identity_client/src/auth/dtos/login_response.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
-import 'package:ion_identity_client/src/ion_service_locator.dart';
+import 'package:ion_identity_client/src/utils/ion_service_locator.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:ion_identity_client/src/utils/types.dart';
 
@@ -14,7 +16,7 @@ class IonAuthDataSource {
   factory IonAuthDataSource.createDefault({
     required IonClientConfig config,
   }) {
-    final dio = IonServiceLocator.createDio(config: config);
+    final dio = IonServiceLocator.getDio(config: config);
 
     return IonAuthDataSource._(
       config: config,
@@ -61,5 +63,18 @@ class IonAuthDataSource {
     );
 
     return RegistrationCompleteResponse.fromJson(response.data ?? {});
+  }
+
+  Future<LoginResponse> login({
+    required String username,
+  }) async {
+    final requestData = LoginRequest(username: username);
+
+    final response = await dio.post<JsonObject>(
+      loginInitPath,
+      data: requestData.toJson(),
+    );
+
+    return LoginResponse.fromJson(response.data ?? {});
   }
 }
