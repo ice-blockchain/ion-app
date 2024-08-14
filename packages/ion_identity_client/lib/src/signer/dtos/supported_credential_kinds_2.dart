@@ -18,4 +18,8 @@ class SupportedCredentialKinds2 {
   final String kind;
   final String factor;
   final bool requiresSecondFactor;
+
+  @override
+  String toString() =>
+      'SupportedCredentialKinds2(kind: $kind, factor: $factor, requiresSecondFactor: $requiresSecondFactor)';
 }

@@ -26,4 +26,7 @@ class User {
       'orgId': orgId,
     };
   }
+
+  @override
+  String toString() => 'User(id: $id, username: $username, orgId: $orgId)';
 }

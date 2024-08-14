@@ -13,4 +13,7 @@ class PublicKeyCredentialDescriptor {
 
   final String type;
   final String id;
+
+  @override
+  String toString() => 'PublicKeyCredentialDescriptor(type: $type, id: $id)';
 }

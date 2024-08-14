@@ -15,4 +15,7 @@ class RegisterInitRequest {
       'username': username,
     };
   }
+
+  @override
+  String toString() => 'RegisterInitRequest(appId: $appId, username: $username)';
 }

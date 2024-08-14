@@ -21,4 +21,8 @@ class Fido2Attestation {
         'credentialInfo': credentialInfo.toJson(),
         'credentialKind': credentialKind,
       };
+
+  @override
+  String toString() =>
+      'Fido2Attestation(credentialInfo: $credentialInfo, credentialKind: $credentialKind)';
 }

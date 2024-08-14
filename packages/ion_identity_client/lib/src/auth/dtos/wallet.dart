@@ -22,4 +22,7 @@ class Wallet {
       'network': network,
     };
   }
+
+  @override
+  String toString() => 'Wallet(id: $id, network: $network)';
 }

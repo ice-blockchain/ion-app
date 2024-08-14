@@ -38,4 +38,9 @@ class UserActionChallenge {
   final RelyingParty rp;
   final List<SupportedCredentialKinds2> supportedCredentialKinds;
   final AllowCredentials allowCredentials;
+
+  @override
+  String toString() {
+    return 'UserActionChallenge(attestation: $attestation, userVerification: $userVerification, externalAuthenticationUrl: $externalAuthenticationUrl, challenge: $challenge, challengeIdentifier: $challengeIdentifier, rp: $rp, supportedCredentialKinds: $supportedCredentialKinds, allowCredentials: $allowCredentials)';
+  }
 }

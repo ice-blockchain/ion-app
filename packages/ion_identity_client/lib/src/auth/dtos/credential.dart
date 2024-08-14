@@ -18,4 +18,7 @@ class Credential {
   final String uuid;
   final String kind;
   final String name;
+
+  @override
+  String toString() => 'Credential(uuid: $uuid, kind: $kind, name: $name)';
 }

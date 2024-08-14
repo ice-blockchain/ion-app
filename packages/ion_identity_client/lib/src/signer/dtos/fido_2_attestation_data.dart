@@ -24,4 +24,8 @@ class Fido2AttestationData {
         'clientData': clientData,
         'credId': credId,
       };
+
+  @override
+  String toString() =>
+      'Fido2AttestationData(attestationData: $attestationData, clientData: $clientData, credId: $credId)';
 }

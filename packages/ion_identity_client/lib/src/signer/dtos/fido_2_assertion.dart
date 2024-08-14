@@ -21,4 +21,7 @@ class Fido2Assertion {
         'kind': kind,
         'credentialAssertion': credentialAssertion.toJson(),
       };
+
+  @override
+  String toString() => 'Fido2Assertion(kind: $kind, credentialAssertion: $credentialAssertion)';
 }

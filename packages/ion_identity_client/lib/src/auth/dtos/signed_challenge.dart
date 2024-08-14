@@ -19,4 +19,7 @@ class SignedChallenge {
       'firstFactorCredential': firstFactorCredential.toJson(),
     };
   }
+
+  @override
+  String toString() => 'SignedChallenge(firstFactorCredential: $firstFactorCredential)';
 }

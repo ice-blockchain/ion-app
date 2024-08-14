@@ -15,4 +15,8 @@ class SupportedCredentialKinds {
 
   final List<String> firstFactor;
   final List<String> secondFactor;
+
+  @override
+  String toString() =>
+      'SupportedCredentialKinds(firstFactor: $firstFactor, secondFactor: $secondFactor)';
 }

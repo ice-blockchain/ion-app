@@ -27,4 +27,8 @@ class RegisterCompleteRequest {
       'temporaryAuthenticationToken': temporaryAuthenticationToken,
     };
   }
+
+  @override
+  String toString() =>
+      'RegisterCompleteRequest(appId: $appId, signedChallenge: $signedChallenge, temporaryAuthenticationToken: $temporaryAuthenticationToken)';
 }

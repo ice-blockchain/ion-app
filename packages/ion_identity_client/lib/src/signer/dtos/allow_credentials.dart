@@ -20,4 +20,7 @@ class AllowCredentials {
 
   final List<PublicKeyCredentialDescriptor> webauthn;
   final List<PublicKeyCredentialDescriptor> key;
+
+  @override
+  String toString() => 'AllowCredentials(webauthn: $webauthn, key: $key)';
 }

@@ -12,4 +12,7 @@ class Authentication {
   }
 
   final String token;
+
+  @override
+  String toString() => 'Authentication(token: $token)';
 }

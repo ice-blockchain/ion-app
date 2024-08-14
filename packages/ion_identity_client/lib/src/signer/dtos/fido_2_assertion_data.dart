@@ -32,4 +32,9 @@ class Fido2AssertionData {
         'authenticatorData': authenticatorData,
         'userHandle': userHandle,
       };
+
+  @override
+  String toString() {
+    return 'Fido2AssertionData(clientData: $clientData, credId: $credId, signature: $signature, authenticatorData: $authenticatorData, userHandle: $userHandle)';
+  }
 }

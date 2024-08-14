@@ -29,4 +29,9 @@ class RegistrationCompleteResponse {
   final User user;
   final Authentication authentication;
   final List<Wallet> wallets;
+
+  @override
+  String toString() {
+    return 'RegistrationCompleteResponse(credential: $credential, user: $user, authentication: $authentication, wallets: $wallets)';
+  }
 }

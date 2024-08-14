@@ -21,4 +21,9 @@ class AuthenticatorSelectionCriteria {
   final String residentKey;
   final bool requireResidentKey;
   final String userVerification;
+
+  @override
+  String toString() {
+    return 'AuthenticatorSelectionCriteria(authenticatorAttachment: $authenticatorAttachment, residentKey: $residentKey, requireResidentKey: $requireResidentKey, userVerification: $userVerification)';
+  }
 }

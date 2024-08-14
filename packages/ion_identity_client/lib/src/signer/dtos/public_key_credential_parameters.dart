@@ -15,4 +15,7 @@ class PublicKeyCredentialParameters {
 
   final String type;
   final int alg;
+
+  @override
+  String toString() => 'PublicKeyCredentialParameters(type: $type, alg: $alg)';
 }

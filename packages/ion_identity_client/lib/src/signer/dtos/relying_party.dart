@@ -12,4 +12,7 @@ class RelyingParty {
 
   final String id;
   final String name;
+
+  @override
+  String toString() => 'RelyingParty(id: $id, name: $name)';
 }

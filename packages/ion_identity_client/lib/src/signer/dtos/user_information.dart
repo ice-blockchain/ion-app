@@ -12,4 +12,7 @@ class UserInformation {
   final String id;
   final String displayName;
   final String name;
+
+  @override
+  String toString() => 'UserInformation(id: $id, displayName: $displayName, name: $name)';
 }
