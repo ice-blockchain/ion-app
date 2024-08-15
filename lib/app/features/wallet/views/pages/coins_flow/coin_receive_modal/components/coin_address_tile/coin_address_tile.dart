@@ -60,7 +60,7 @@ class CoinAddressTile extends HookConsumerWidget {
                   SizedBox(
                     width: 6.0.s,
                   ),
-                  Assets.images.icons.iconBlockInformation.icon(size: 14.0.s),
+                  Assets.images.icons.iconBlockInformation.icon(size: 20.0.s),
                 ],
               ),
               SizedBox(
