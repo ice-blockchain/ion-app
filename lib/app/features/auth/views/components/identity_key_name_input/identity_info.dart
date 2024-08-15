@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/constants/links.dart';
@@ -23,7 +24,7 @@ class IdentityInfo extends StatelessWidget {
         NavigationAppBar.modal(
           showBackButton: false,
           title: Text(context.i18n.identity_key_name_title),
-          actions: [NavigationCloseButton()],
+          actions: [NavigationCloseButton(onPressed: () => context.pop())],
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0.s),
