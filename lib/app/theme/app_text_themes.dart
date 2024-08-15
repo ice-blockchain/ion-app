@@ -111,6 +111,7 @@ class TemplateTextStyle extends TextStyle {
       fontWeight: theme.fontWeight,
       height: theme.height,
       fontFamily: 'NotoSans',
+      letterSpacing: 0,
     );
   }
 }
