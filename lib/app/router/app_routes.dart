@@ -9,6 +9,8 @@ import 'package:ice/app/features/auth/views/pages/get_started/get_started.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/intro_page.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/backup_options_page.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/backup_recovery_keys_modal.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/backup/errors/recovery_keys_error_alert.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/backup/errors/screenshot_security_alert.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/recovery_keys_input_page.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/recovery_keys_save_page.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/recovery_keys_success_page.dart';

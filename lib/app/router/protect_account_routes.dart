@@ -10,6 +10,8 @@ class ProtectAccountRoutes {
     TypedGoRoute<RecoveryKeysSaveRoute>(path: '/recovery-keys-save'),
     TypedGoRoute<RecoveryKeysInputRoute>(path: '/recovery-keys-input'),
     TypedGoRoute<RecoveryKeysSuccessRoute>(path: '/recovery-keys-success'),
+    TypedGoRoute<ScreenshotSecurityAlertRoute>(path: '/screenshot-security-alert'),
+    TypedGoRoute<RecoveryKeysErrorAlertRoute>(path: '/recovery-keys-error-alert'),
   ];
 }
 
@@ -73,6 +75,22 @@ class RecoveryKeysSuccessRoute extends BaseRouteData {
   RecoveryKeysSuccessRoute()
       : super(
           child: const RecoveryKeysSuccessPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ScreenshotSecurityAlertRoute extends BaseRouteData {
+  ScreenshotSecurityAlertRoute()
+      : super(
+          child: const ScreenshotSecurityAlert(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class RecoveryKeysErrorAlertRoute extends BaseRouteData {
+  RecoveryKeysErrorAlertRoute()
+      : super(
+          child: const RecoveryKeysErrorAlert(),
           type: IceRouteType.bottomSheet,
         );
 }
