@@ -1,4 +1,4 @@
-import 'package:ion_identity_client/src/utils/types.dart';
+import 'package:ion_identity_client/src/core/types/types.dart';
 
 class SupportedCredentialKinds2 {
   SupportedCredentialKinds2(

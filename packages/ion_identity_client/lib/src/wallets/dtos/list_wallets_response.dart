@@ -1,5 +1,5 @@
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
-import 'package:ion_identity_client/src/utils/types.dart';
+import 'package:ion_identity_client/src/core/types/types.dart';
 
 class ListWalletsResponse {
   ListWalletsResponse({

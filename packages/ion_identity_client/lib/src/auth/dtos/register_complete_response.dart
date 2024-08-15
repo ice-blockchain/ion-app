@@ -2,7 +2,7 @@ import 'package:ion_identity_client/src/auth/dtos/authentication.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential.dart';
 import 'package:ion_identity_client/src/auth/dtos/user.dart';
 import 'package:ion_identity_client/src/auth/dtos/wallet.dart';
-import 'package:ion_identity_client/src/utils/types.dart';
+import 'package:ion_identity_client/src/core/types/types.dart';
 
 class RegistrationCompleteResponse {
   RegistrationCompleteResponse({

@@ -1,4 +1,4 @@
-import 'package:ion_identity_client/src/utils/types.dart';
+import 'package:ion_identity_client/src/core/types/types.dart';
 
 class RelyingParty {
   RelyingParty(this.id, this.name);

@@ -5,7 +5,7 @@ import 'package:ion_identity_client/src/signer/dtos/public_key_credential_parame
 import 'package:ion_identity_client/src/signer/dtos/relying_party.dart';
 import 'package:ion_identity_client/src/signer/dtos/supported_credential_kinds.dart';
 import 'package:ion_identity_client/src/signer/dtos/user_information.dart';
-import 'package:ion_identity_client/src/utils/types.dart';
+import 'package:ion_identity_client/src/core/types/types.dart';
 
 class UserRegistrationChallenge {
   UserRegistrationChallenge(

@@ -1,6 +1,8 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/auth/ion_auth_data_source.dart';
 import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
+import 'package:ion_identity_client/src/core/network/network.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/utils/ion_service_locator.dart';
@@ -32,30 +34,34 @@ class IonAuth {
   final PasskeysSigner signer;
   final TokenStorage tokenStorage;
 
-  Future<RegistrationCompleteResponse> registerUser({
+  Future<Either<NetworkFailure, RegistrationCompleteResponse>> registerUser({
     required String username,
   }) async {
-    final initResponse = await dataSource.registerInit(
-      username: username,
-    );
-
-    final attestation = await signer.register(initResponse);
-
-    final registerResponse = await dataSource.registerComplete(
-      attestation: attestation,
-      temporaryAuthenticationToken: initResponse.temporaryAuthenticationToken,
-    );
-
-    tokenStorage.setToken(registerResponse.authentication.token);
-
-    return registerResponse;
+    return dataSource
+        .registerInit(username: username)
+        .flatMap(
+          (userRegistrationChallenge) => TaskEither.tryCatch(
+            () => signer.register(userRegistrationChallenge),
+            NetworkFailure.new,
+          ).flatMap(
+            (attestation) => dataSource.registerComplete(
+              attestation: attestation,
+              temporaryAuthenticationToken: userRegistrationChallenge.temporaryAuthenticationToken,
+            ),
+          ),
+        )
+        .run();
   }
 
   Future<void> loginUser({
     required String username,
   }) async {
-    final response = await dataSource.login(username: username);
-
-    tokenStorage.setToken(response.token);
+    final response = await dataSource.login(username: username).run();
+    response.fold(
+      (l) {},
+      (r) {
+        tokenStorage.setToken(r.token);
+      },
+    );
   }
 }

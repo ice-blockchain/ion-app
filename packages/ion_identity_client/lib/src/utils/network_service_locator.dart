@@ -2,14 +2,23 @@ import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/utils/auth_interceptor.dart';
 import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
+import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-class NetworkServiceLocator {
-  static Dio? _dioInstance;
-  static TokenStorage? _tokenStorageInstance;
-  static AuthInterceptor? _authInterceptor;
+class NetworkServiceLocator with _Dio, _Interceptors, _TokenStorage, _NetworkClient {
+  factory NetworkServiceLocator() {
+    return _instance;
+  }
 
-  static Dio getDio({
+  NetworkServiceLocator._internal();
+
+  static final NetworkServiceLocator _instance = NetworkServiceLocator._internal();
+}
+
+mixin _Dio {
+  Dio? _dioInstance;
+
+  Dio getDio({
     required IonClientConfig config,
   }) {
     if (_dioInstance != null) {
@@ -24,44 +33,71 @@ class NetworkServiceLocator {
     );
     final dio = Dio(dioOptions);
 
-    dio.interceptors.addAll(getInterceptors());
+    dio.interceptors.addAll(NetworkServiceLocator().getInterceptors());
 
     _dioInstance = dio;
 
     return dio;
   }
+}
 
-  static Iterable<Interceptor> getInterceptors() {
-    final interceptors = <Interceptor>[];
+mixin _Interceptors {
+  AuthInterceptor? _authInterceptor;
 
-    final authInterceptor = getAuthInterceptor();
-    interceptors.add(authInterceptor);
-
-    final loggerInterceptor = PrettyDioLogger(
-      requestBody: true,
-      requestHeader: true,
-    );
-    interceptors.add(loggerInterceptor);
+  Iterable<Interceptor> getInterceptors() {
+    final interceptors = <Interceptor>[
+      getAuthInterceptor(),
+      getLoggerInterceptor(),
+    ];
 
     return interceptors;
   }
 
-  static AuthInterceptor getAuthInterceptor() {
+  Interceptor getAuthInterceptor() {
     if (_authInterceptor != null) {
       return _authInterceptor!;
     }
 
-    final tokenStorage = getTokenStorage();
+    final tokenStorage = NetworkServiceLocator().getTokenStorage();
     _authInterceptor = AuthInterceptor(tokenStorage: tokenStorage);
     return _authInterceptor!;
   }
 
-  static TokenStorage getTokenStorage() {
+  Interceptor getLoggerInterceptor() {
+    return PrettyDioLogger(
+      requestBody: true,
+      requestHeader: true,
+    );
+  }
+}
+
+mixin _TokenStorage {
+  TokenStorage? _tokenStorageInstance;
+
+  TokenStorage getTokenStorage() {
     if (_tokenStorageInstance != null) {
       return _tokenStorageInstance!;
     }
 
     _tokenStorageInstance = TokenStorage();
     return _tokenStorageInstance!;
+  }
+}
+
+mixin _NetworkClient {
+  NetworkClient? _networkClient;
+
+  NetworkClient getNetworkClient({
+    required IonClientConfig config,
+  }) {
+    if (_networkClient != null) {
+      return _networkClient!;
+    }
+
+    final dio = NetworkServiceLocator().getDio(config: config);
+
+    _networkClient = NetworkClient(dio: dio);
+
+    return _networkClient!;
   }
 }

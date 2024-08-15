@@ -32,6 +32,6 @@ class IonWallets {
   final TokenStorage tokenStorage;
 
   Future<void> listWallets() async {
-    final response = await dataSource.listWallets(authToken: tokenStorage.getToken() ?? 'token');
+    await dataSource.listWallets(authToken: tokenStorage.getToken() ?? 'token').run();
   }
 }

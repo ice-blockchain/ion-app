@@ -1,26 +1,25 @@
-import 'package:dio/dio.dart';
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/auth/dtos/login_request.dart';
 import 'package:ion_identity_client/src/auth/dtos/login_response.dart';
+import 'package:ion_identity_client/src/core/network/network.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
-import 'package:ion_identity_client/src/utils/ion_service_locator.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
-import 'package:ion_identity_client/src/utils/types.dart';
+import 'package:ion_identity_client/src/utils/ion_service_locator.dart';
 
 class IonAuthDataSource {
   IonAuthDataSource._({
     required this.config,
-    required this.dio,
+    required this.networkClient,
   });
 
   factory IonAuthDataSource.createDefault({
     required IonClientConfig config,
   }) {
-    final dio = IonServiceLocator.getDio(config: config);
+    final networkClient = IonServiceLocator.getNetworkClient(config: config);
 
     return IonAuthDataSource._(
       config: config,
-      dio: dio,
+      networkClient: networkClient,
     );
   }
 
@@ -29,52 +28,49 @@ class IonAuthDataSource {
   static const registerCompletePath = '/register/complete';
 
   final IonClientConfig config;
-  final Dio dio;
+  final NetworkClient networkClient;
 
-  Future<UserRegistrationChallenge> registerInit({
+  TaskEither<NetworkFailure, UserRegistrationChallenge> registerInit({
     required String username,
-  }) async {
+  }) {
     final requestData = RegisterInitRequest(
       appId: config.appId,
       username: username,
     );
 
-    final response = await dio.post<JsonObject>(
+    return networkClient.post(
       registerInitPath,
       data: requestData.toJson(),
+      decoder: (response) => UserRegistrationChallenge.fromJson(response.data ?? {}),
     );
-
-    return UserRegistrationChallenge.fromJson(response.data ?? {});
   }
 
-  Future<RegistrationCompleteResponse> registerComplete({
+  TaskEither<NetworkFailure, RegistrationCompleteResponse> registerComplete({
     required Fido2Attestation attestation,
     required String temporaryAuthenticationToken,
-  }) async {
+  }) {
     final requestData = RegisterCompleteRequest(
       appId: config.appId,
       signedChallenge: SignedChallenge(firstFactorCredential: attestation),
       temporaryAuthenticationToken: temporaryAuthenticationToken,
     );
 
-    final response = await dio.post<JsonObject>(
+    return networkClient.post(
       registerCompletePath,
       data: requestData.toJson(),
+      decoder: (response) => RegistrationCompleteResponse.fromJson(response.data ?? {}),
     );
-
-    return RegistrationCompleteResponse.fromJson(response.data ?? {});
   }
 
-  Future<LoginResponse> login({
+  TaskEither<NetworkFailure, LoginResponse> login({
     required String username,
-  }) async {
+  }) {
     final requestData = LoginRequest(username: username);
 
-    final response = await dio.post<JsonObject>(
+    return networkClient.post(
       loginInitPath,
       data: requestData.toJson(),
+      decoder: (response) => LoginResponse.fromJson(response.data ?? {}),
     );
-
-    return LoginResponse.fromJson(response.data ?? {});
   }
 }

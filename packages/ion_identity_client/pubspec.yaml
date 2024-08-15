@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_secure_storage: ^9.2.2
+  fpdart: ^1.1.0
   passkeys: ^2.0.9
   pretty_dio_logger: ^1.4.0
 

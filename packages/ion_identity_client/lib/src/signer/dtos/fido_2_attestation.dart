@@ -1,5 +1,5 @@
 import 'package:ion_identity_client/src/signer/dtos/fido_2_attestation_data.dart';
-import 'package:ion_identity_client/src/utils/types.dart';
+import 'package:ion_identity_client/src/core/types/types.dart';
 
 class Fido2Attestation {
   Fido2Attestation(

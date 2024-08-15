@@ -1,6 +1,7 @@
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/data/models/auth_token.dart';
 import 'package:ice/app/features/core/providers/env_provider.dart';
+import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,19 +27,12 @@ class Auth extends _$Auth {
     try {
       state = const AuthenticationLoading();
 
-      final config = IonClientConfig(
-        appId: 'ap-dhesg-ct1r8-lu8a7rrodm4an8u',
-        orgId: 'or-625fn-dfjva-8b993vdrf414bkd8',
-        origin: 'https://dfns.blockchain.ice.vip',
-      );
-
-      final ionClient = IonApiClient.createDefault(config: config);
-
+      final ionClient = ref.read(ionApiClientProvider);
       final result = await ionClient.auth.registerUser(username: keyName);
 
       state = Authenticated(
         authToken: AuthToken(
-          access: result.authentication.token,
+          access: 'access',
           refresh: 'refresh',
         ),
       );
@@ -52,14 +46,7 @@ class Auth extends _$Auth {
     try {
       state = const AuthenticationLoading();
 
-      final config = IonClientConfig(
-        appId: 'ap-dhesg-ct1r8-lu8a7rrodm4an8u',
-        orgId: 'or-625fn-dfjva-8b993vdrf414bkd8',
-        origin: 'https://dfns.blockchain.ice.vip',
-      );
-
-      final ionClient = IonApiClient.createDefault(config: config);
-
+      final ionClient = ref.read(ionApiClientProvider);
       await ionClient.auth.loginUser(username: keyName);
       await ionClient.wallets.listWallets();
 
