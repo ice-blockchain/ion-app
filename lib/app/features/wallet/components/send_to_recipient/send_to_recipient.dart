@@ -19,7 +19,7 @@ class SendToRecipient extends StatelessWidget {
     final locale = context.i18n;
 
     if (contact != null) {
-      return RoundedCard(
+      return RoundedCard.filled(
         child: Column(
           children: [
             ListItem.user(
