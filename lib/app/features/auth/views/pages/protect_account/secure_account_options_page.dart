@@ -48,7 +48,7 @@ class SecureAccountOptionsPage extends StatelessWidget {
                   icon: Assets.images.icons.iconProtectwalletIcloud.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  onTap: () {},
+                  onTap: () => BackupOptionsRoute().push<void>(context),
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
@@ -67,9 +67,7 @@ class SecureAccountOptionsPage extends StatelessWidget {
                   icon: Assets.images.icons.iconLoginAuthcode.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  onTap: () {
-                    SecureAccountErrorRoute().push<void>(context);
-                  },
+                  onTap: () => SecureAccountErrorRoute().push<void>(context),
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(

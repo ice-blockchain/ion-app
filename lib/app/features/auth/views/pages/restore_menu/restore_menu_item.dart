@@ -23,7 +23,7 @@ class RestoreMenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
-      child: RoundedCard(
+      child: RoundedCard.filled(
         padding: EdgeInsets.all(16.0.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

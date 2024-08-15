@@ -43,12 +43,10 @@ class SecureAccountModal extends StatelessWidget {
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   leadingIcon: Assets.images.icons.iconWalletProtectAccount.icon(
-                    color: Colors.transparent,
+                    color: context.theme.appColors.onPrimaryAccent,
                   ),
                   label: Text(locale.protect_account_button),
-                  onPressed: () {
-                    SecureAccountOptionsRoute().push<void>(context);
-                  },
+                  onPressed: () => SecureAccountOptionsRoute().push<void>(context),
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],

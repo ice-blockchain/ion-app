@@ -7,11 +7,11 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
   type: RoundedCard,
 )
 Widget regularRoundedCardUseCase(BuildContext context) {
-  return const Center(
+  return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        RoundedCard(
+        RoundedCard.filled(
           child: Text('Simple Rounded Card'),
         ),
       ],

@@ -14,6 +14,7 @@
   "button_confirm": "Confirm",
   "button_restore": "Restore",
   "button_back": "Back",
+  "button_lets_start": "Let's start",
   "common_show_more": "Show more",
   "common_show_less": "Show less",
   "common_identity_key_name": "Identity key name",
@@ -251,5 +252,7 @@
   "protect_account_title_secure_account": "Secure your account",
   "protect_account_description_secure_account": "Securing your account ensures you never lose access to your data and funds",
   "protect_account_button": "Protect account",
-  "protect_account_description_secure_account_2fa": "To secure your account, back it up and enable at least one 2FA option"
+  "protect_account_description_secure_account_2fa": "To secure your account, back it up and enable at least one 2FA option",
+  "backup_title": "Select backup",
+  "backup_description": "Backups enable you to restore your data and wallet if something goes wrong"
 }
