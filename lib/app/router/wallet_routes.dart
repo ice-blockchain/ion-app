@@ -151,23 +151,19 @@ class ScanWalletRoute extends BaseRouteData {
 }
 
 class NetworkSelectReceiveRoute extends BaseRouteData {
-  NetworkSelectReceiveRoute({required this.viewType})
+  NetworkSelectReceiveRoute()
       : super(
-          child: NetworkListView(type: viewType),
+          child: NetworkListView(type: NetworkListViewType.receive),
           type: IceRouteType.bottomSheet,
         );
-
-  final NetworkListViewType viewType;
 }
 
 class NetworkSelectSendRoute extends BaseRouteData {
-  NetworkSelectSendRoute({required this.viewType})
+  NetworkSelectSendRoute()
       : super(
-          child: NetworkListView(type: viewType),
+          child: NetworkListView(type: NetworkListViewType.send),
           type: IceRouteType.bottomSheet,
         );
-
-  final NetworkListViewType viewType;
 }
 
 class ShareAddressRoute extends BaseRouteData {
