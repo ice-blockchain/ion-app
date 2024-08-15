@@ -79,7 +79,8 @@ class AuthFooter extends HookWidget {
                 style: TextStyle(
                   color: context.theme.appColors.primaryAccent,
                 ),
-                recognizer: TapGestureRecognizer()..onTap = () {},
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => openUrlInAppBrowser(Links.identity),
               ),
             ],
           ),

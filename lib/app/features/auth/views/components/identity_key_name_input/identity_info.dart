@@ -2,12 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ice/app/constants/links.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ice/app/services/browser/browser.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class IdentityInfo extends StatelessWidget {
@@ -48,7 +50,8 @@ class IdentityInfo extends StatelessWidget {
                       style: context.theme.appTextThemes.caption.copyWith(
                         color: context.theme.appColors.primaryAccent,
                       ),
-                      recognizer: TapGestureRecognizer()..onTap = () {},
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => openUrlInAppBrowser(Links.identity),
                     ),
                   ],
                 ),
