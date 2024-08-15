@@ -10,7 +10,7 @@ class RecoveryKeysErrorAlert extends StatelessWidget {
     return SimpleModalSheet(
       title: 'Recovery keys error',
       description: 'You have entered incorrect data',
-      iconAsset: Assets.images.icons.actionWalletScreenshot,
+      iconAsset: Assets.images.identity.actionWalletKeyserror,
       buttonText: 'Try again',
       onPressed: () {},
     );
