@@ -38,7 +38,7 @@ class IntroPage extends HookWidget {
                 ScaleEffect(
                   duration: 500.ms,
                   curve: Curves.easeOutBack,
-                  delay: 10.seconds,
+                  delay: 4.5.seconds,
                 ),
               ],
               child: Button(
