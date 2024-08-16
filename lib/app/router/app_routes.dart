@@ -173,7 +173,8 @@ class ModalShellRouteData extends ShellRouteData {
       swipeDismissible: true,
       child: ModalWrapper(child: navigator),
       barrierColor: context.theme.appColors.backgroundSheet,
-      transitionDuration: Duration(milliseconds: 600),
+      transitionDuration: Duration(milliseconds: 300),
+      transitionCurve: Easing.standardDecelerate,
     );
   }
 }
