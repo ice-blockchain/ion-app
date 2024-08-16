@@ -24,8 +24,8 @@ class RecoveryKeysInputPage extends HookWidget {
 
     return SheetContent(
       body: AuthScrollContainer(
-        title: 'Recovery keys',
-        description: 'Please enter your recovery credentials below',
+        title: context.i18n.backup_option_with_recovery_keys_title,
+        description: context.i18n.restore_identity_creds_description,
         icon: Assets.images.icons.iconLoginRestorekey.icon(size: 36.0.s),
         children: [
           Column(
@@ -65,7 +65,7 @@ class RecoveryKeysInputPage extends HookWidget {
                     RecoveryKeysSuccessRoute().push<void>(context);
                   }
                 },
-                label: Text('Continue'),
+                label: Text(context.i18n.button_continue),
                 mainAxisSize: MainAxisSize.max,
               ),
             ),

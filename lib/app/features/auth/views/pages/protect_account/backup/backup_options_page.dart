@@ -38,7 +38,7 @@ class BackupOptionsPage extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        'Select backup',
+                        locale.backup_title,
                         textAlign: TextAlign.center,
                         style: context.theme.appTextThemes.headline2.copyWith(
                           color: context.theme.appColors.primaryText,
@@ -46,7 +46,7 @@ class BackupOptionsPage extends StatelessWidget {
                       ),
                       SizedBox(height: 8.0.s),
                       Text(
-                        'Backups enable you to restore your data and wallet if something goes wrong',
+                        locale.backup_description,
                         textAlign: TextAlign.center,
                         style: context.theme.appTextThemes.body2.copyWith(
                           color: context.theme.appColors.secondaryText,
@@ -57,8 +57,8 @@ class BackupOptionsPage extends StatelessWidget {
                 ),
                 SizedBox(height: 24.0.s),
                 BackupOption(
-                  title: 'Backup with Google Drive',
-                  subtitle: 'Safe and simple way to protect your account',
+                  title: locale.backup_option_with_google_drive_title,
+                  subtitle: locale.backup_option_with_google_drive_description,
                   icon: Assets.images.identity.walletLoginCloud.icon(
                     size: 48.0.s,
                   ),
@@ -67,8 +67,8 @@ class BackupOptionsPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16.0.s),
                 BackupOption(
-                  title: 'Recovery keys',
-                  subtitle: 'Write down and store your keys on paper for secure account recovery',
+                  title: locale.backup_option_with_recovery_keys_title,
+                  subtitle: locale.backup_option_with_recovery_keys_description,
                   icon: Assets.images.identity.walletLoginRecovery.icon(
                     size: 48.0.s,
                   ),

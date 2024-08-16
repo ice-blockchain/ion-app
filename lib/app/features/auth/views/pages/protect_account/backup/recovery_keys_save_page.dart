@@ -19,7 +19,7 @@ class RecoveryKeysSavePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final locale = context.i18n;
+    final locale = context.i18n;
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -35,8 +35,8 @@ class RecoveryKeysSavePage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(bottom: 16.0.s),
               child: AuthHeader(
-                title: 'Recovery keys',
-                description: 'Write down and store your keys on paper for secure account recovery',
+                title: locale.backup_option_with_recovery_keys_title,
+                description: locale.backup_option_with_recovery_keys_description,
                 icon: AuthHeaderIcon(
                   icon: Assets.images.icons.iconLoginRestorekey.icon(
                     size: 36.0.s,
@@ -49,19 +49,19 @@ class RecoveryKeysSavePage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   RecoveryKeyOption(
-                    title: 'Identity key name',
+                    title: locale.common_identity_key_name,
                     iconAsset: Assets.images.icons.iconIdentitykey,
                     subtitle: '838402-28385-432',
                   ),
                   SizedBox(height: 12.0.s),
                   RecoveryKeyOption(
-                    title: 'Recovery Key ID',
+                    title: locale.restore_identity_creds_recovery_key,
                     iconAsset: Assets.images.icons.iconChannelPrivate,
                     subtitle: '08402934823044809485',
                   ),
                   SizedBox(height: 12.0.s),
                   RecoveryKeyOption(
-                    title: 'Recovery code',
+                    title: locale.restore_identity_creds_recovery_code,
                     iconAsset: Assets.images.icons.iconCode4,
                     subtitle: '0405904949596000',
                   ),
@@ -82,7 +82,7 @@ class RecoveryKeysSavePage extends StatelessWidget {
                         color: context.theme.appColors.attentionRed,
                       ),
                       title: Text(
-                        'Avoid storing keys on any device to prevent losing access to funds in case of a hack',
+                        locale.error_avoid_storing_keys,
                         style: context.theme.appTextThemes.caption.copyWith(
                           color: context.theme.appColors.attentionRed,
                         ),
@@ -93,7 +93,7 @@ class RecoveryKeysSavePage extends StatelessWidget {
                   SizedBox(height: 20.0.s),
                   Button(
                     mainAxisSize: MainAxisSize.max,
-                    label: Text('Continue'),
+                    label: Text(locale.button_continue),
                     onPressed: () => RecoveryKeysInputRoute().push<void>(context),
                   ),
                 ],

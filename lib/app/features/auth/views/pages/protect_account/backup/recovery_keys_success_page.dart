@@ -17,6 +17,8 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.i18n;
+
     return SheetContent(
       body: AuthScrollContainer(
         showBackButton: false,
@@ -25,7 +27,7 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
             onPressed: () => WalletRoute().go(context),
           )
         ],
-        title: 'Recovery keys',
+        title: locale.backup_option_with_recovery_keys_title,
         icon: Assets.images.icons.iconLoginRestorekey.icon(size: 36.0.s),
         children: [
           Padding(
@@ -35,9 +37,8 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
                 SizedBox(height: 12.0.s),
                 InfoCard(
                   iconAsset: Assets.images.icons.actionWalletSecureaccsuccess,
-                  title: 'Successfully protected',
-                  description:
-                      'Your recovery keys have been securely backed up. Please keep them safe for future account recovery',
+                  title: locale.recovery_keys_successfully_protected_title,
+                  description: locale.recovery_keys_successfully_protected_description,
                 ),
                 SizedBox(height: 12.0.s),
               ],
@@ -48,7 +49,7 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
             child: ScreenSideOffset.large(
               child: Button(
                 onPressed: () => SecureAccountOptionsRoute().replace(context),
-                label: Text('Back to Security'),
+                label: Text(locale.button_back_to_security),
                 mainAxisSize: MainAxisSize.max,
               ),
             ),

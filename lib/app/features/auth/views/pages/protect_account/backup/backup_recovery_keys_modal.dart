@@ -23,14 +23,13 @@ class BackupRecoveryKeysModal extends StatelessWidget {
               children: [
                 InfoCard(
                   iconAsset: Assets.images.icons.actionWalletLock,
-                  title: 'Secure your recovery keys',
-                  description:
-                      'Please complete this process in a private place to ensure your account\'s safety',
+                  title: context.i18n.secure_your_recovery_keys_title,
+                  description: context.i18n.secure_your_recovery_keys_description,
                 ),
                 SizedBox(height: 20.0.s),
                 Button(
                   mainAxisSize: MainAxisSize.max,
-                  label: Text('Let\'s start'),
+                  label: Text(context.i18n.button_lets_start),
                   trailingIcon: Assets.images.icons.iconButtonNext.icon(
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
