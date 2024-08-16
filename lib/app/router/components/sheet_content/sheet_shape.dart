@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
 class SheetShape extends StatelessWidget {
@@ -7,12 +6,9 @@ class SheetShape extends StatelessWidget {
     required this.child,
     super.key,
     this.backgroundColor,
-    double? bottomPadding,
-  }) : bottomPadding = bottomPadding ?? ScreenBottomOffset.defaultMargin;
+  });
 
   final Widget child;
-
-  final double bottomPadding;
 
   final Color? backgroundColor;
 
@@ -27,10 +23,7 @@ class SheetShape extends StatelessWidget {
           topRight: Radius.circular(30.0.s),
         ),
       ),
-      child: Padding(
-        padding: EdgeInsets.only(bottom: bottomPadding),
-        child: child,
-      ),
+      child: child,
     );
   }
 }

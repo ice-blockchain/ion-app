@@ -13,10 +13,17 @@ class FeedModalSeparator extends StatelessWidget {
       width: separatorWidth,
       height: 0.5,
       decoration: const BoxDecoration(
-        gradient: RadialGradient(
-          center: Alignment.bottomCenter,
-          radius: 0,
-          colors: <Color>[Color(0xFFC2C2C2), Color(0x47D9D9D9)],
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFFF4F4F4),
+            Color(0xFFC2C2C2),
+            Color(0xFFF4F4F4),
+          ],
+          stops: [
+            0.0,
+            0.5,
+            1.0,
+          ],
         ),
       ),
     );

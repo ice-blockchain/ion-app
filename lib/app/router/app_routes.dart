@@ -166,6 +166,7 @@ class ModalShellRouteData extends ShellRouteData {
   ) {
     return ModalSheetPage(
       key: state.pageKey,
+      barrierColor: Color.fromRGBO(8, 21, 50, 0.7),
       swipeDismissible: true,
       child: ModalWrapper(child: navigator),
     );

@@ -27,6 +27,7 @@ abstract class BaseRouteData extends GoRouteData {
       IceRouteType.slideFromLeft => SlideFromLeftTransitionPage(child: child, state: state),
       IceRouteType.mainModalSheet => ModalSheetPage<void>(
           swipeDismissible: true,
+          barrierColor: Color.fromRGBO(8, 21, 50, 0.7),
           key: state.pageKey,
           // DraggableSheet does not work with scrollable widgets.
           // If you want to use a scrollable widget as its content,
