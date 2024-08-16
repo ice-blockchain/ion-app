@@ -168,11 +168,12 @@ class ModalShellRouteData extends ShellRouteData {
     Widget navigator,
   ) {
     return ModalSheetPage(
-      barrierColor: context.theme.appColors.backgroundSheet,
       key: state.pageKey,
       barrierColor: context.theme.appColors.backgroundSheet,
       swipeDismissible: true,
       child: ModalWrapper(child: navigator),
+      barrierColor: context.theme.appColors.backgroundSheet,
+      transitionDuration: Duration(milliseconds: 600),
     );
   }
 }
