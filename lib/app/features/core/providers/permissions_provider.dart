@@ -34,6 +34,7 @@ class Permissions extends _$Permissions {
           () => contactsPermissionStatus,
         );
     } on MissingPluginException {
+    } on UnimplementedError {
     } finally {
       state = Map<PermissionType, PermissionStatus>.unmodifiable(permissions);
     }

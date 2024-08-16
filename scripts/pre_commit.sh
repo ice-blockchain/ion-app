@@ -34,7 +34,7 @@ printf '%s\n' "${avar}"
 
 # Flutter Analyzer
 printf "\e[33;1m%s\e[0m\n" '=== Running Flutter analyzer ==='
-scripts/analyze.sh
+melos run analyze
 if [ $? -ne 0 ]; then
   printf "\e[31;1m%s\e[0m\n" '=== Flutter analyzer error ==='
   exit 1
@@ -44,7 +44,7 @@ printf '%s\n' "${avar}"
 
 # Run Tests
 printf "\e[33;1m%s\e[0m\n" '=== Run Tests ==='
-scripts/run_tests.sh
+melos run test
 if [ $? -ne 0 ]; then
   printf "\e[31;1m%s\e[0m\n" '=== Run Tests error ==='
   exit 1

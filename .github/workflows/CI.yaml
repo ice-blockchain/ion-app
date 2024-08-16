@@ -51,11 +51,16 @@ jobs:
           channel: "stable"
           cache: true
       - run: flutter --version
+      - name: Bootstrap
+        id: bootstrap
+        run: |
+          cd main-repo
+          ./scripts/bootstrap.sh
       - name: Install dependencies
         id: install-dependencies
         run: |
           cd main-repo
-          flutter pub get
+          melos run pub_get
       - name: Generate code
         id: generate-code
         run: |
@@ -66,9 +71,9 @@ jobs:
         id: analyze-code
         run: |
           cd main-repo
-          ./scripts/analyze.sh
+          melos run analyze
       - name: Run tests
         id: run-tests
         run: |
           cd main-repo
-          ./scripts/run_tests.sh
+          melos run test

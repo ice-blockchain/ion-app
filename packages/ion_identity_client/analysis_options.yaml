@@ -1,0 +1,11 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  errors:
+    avoid_dynamic_calls: ignore
+    avoid_positional_boolean_parameters: ignore
+    lines_longer_than_80_chars: ignore
+    public_member_api_docs: ignore
+    unnecessary_library_directive: ignore
+  plugins:
+    - custom_lint
