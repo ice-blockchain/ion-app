@@ -34,7 +34,7 @@ class SignUpPasskeyForm extends HookConsumerWidget {
                 hideKeyboardAndCallOnce(
                   callback: () => ref
                       .read(authProvider.notifier)
-                      .signIn(keyName: identityKeyNameController.text),
+                      .signUp(keyName: identityKeyNameController.text),
                 );
               }
             },

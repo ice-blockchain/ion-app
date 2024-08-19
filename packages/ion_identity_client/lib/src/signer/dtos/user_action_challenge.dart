@@ -1,7 +1,7 @@
+import 'package:ion_identity_client/src/core/types/types.dart';
 import 'package:ion_identity_client/src/signer/dtos/allow_credentials.dart';
 import 'package:ion_identity_client/src/signer/dtos/relying_party.dart';
 import 'package:ion_identity_client/src/signer/dtos/supported_credential_kinds_2.dart';
-import 'package:ion_identity_client/src/utils/types.dart';
 
 class UserActionChallenge {
   UserActionChallenge(

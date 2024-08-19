@@ -4,6 +4,7 @@ analyzer:
   errors:
     avoid_dynamic_calls: ignore
     avoid_positional_boolean_parameters: ignore
+    flutter_style_todos: ignore
     lines_longer_than_80_chars: ignore
     public_member_api_docs: ignore
     unnecessary_library_directive: ignore
