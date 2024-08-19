@@ -20,9 +20,11 @@ class MainTabNavigation extends StatelessWidget {
     return Scaffold(
       body: shell,
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [BoxShadow(color: Color.fromRGBO(29, 70, 235, 0.05), blurRadius: 10)],
-        ),
+        decoration: state.isMainModalOpen
+            ? null
+            : BoxDecoration(
+                boxShadow: [BoxShadow(color: Color.fromRGBO(29, 70, 235, 0.05), blurRadius: 10)],
+              ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           backgroundColor: context.theme.appColors.secondaryBackground,
