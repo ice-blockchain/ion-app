@@ -19,26 +19,35 @@ class MainTabNavigation extends StatelessWidget {
 
     return Scaffold(
       body: shell,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: context.theme.appColors.secondaryBackground,
-        selectedItemColor: context.theme.appColors.primaryAccent,
-        unselectedItemColor: context.theme.appColors.tertararyText,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        currentIndex: shell.currentIndex,
-        onTap: (index) => _onTabSelected(context, index, currentTab),
-        items: TabItem.values.map((tabItem) {
-          return BottomNavigationBarItem(
-            icon: tabItem == TabItem.main
-                ? const MainTabButton()
-                : TabIcon(
-                    icon: tabItem.icon,
-                    isSelected: currentTab == tabItem,
-                  ),
-            label: '',
-          );
-        }).toList(),
+      bottomNavigationBar: Container(
+        decoration: state.isMainModalOpen
+            ? null
+            : BoxDecoration(
+                boxShadow: [
+                  BoxShadow(color: context.theme.appColors.darkBlue.withAlpha(14), blurRadius: 10),
+                ],
+              ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: context.theme.appColors.secondaryBackground,
+          selectedItemColor: context.theme.appColors.primaryAccent,
+          unselectedItemColor: context.theme.appColors.tertararyText,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          currentIndex: shell.currentIndex,
+          onTap: (index) => _onTabSelected(context, index, currentTab),
+          items: TabItem.values.map((tabItem) {
+            return BottomNavigationBarItem(
+              icon: tabItem == TabItem.main
+                  ? const MainTabButton()
+                  : TabIcon(
+                      icon: tabItem.icon,
+                      isSelected: currentTab == tabItem,
+                    ),
+              label: '',
+            );
+          }).toList(),
+        ),
       ),
     );
   }

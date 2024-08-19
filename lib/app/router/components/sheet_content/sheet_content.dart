@@ -30,7 +30,6 @@ class SheetContent extends StatelessWidget {
       appBar: SheetDragHandle(topPadding: topPadding),
       body: SheetShape(
         backgroundColor: backgroundColor,
-        bottomPadding: bottomPadding,
         child: body,
       ),
     );

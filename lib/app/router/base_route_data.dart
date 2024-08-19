@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/router/components/sheet_content/main_modal_content.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/theme_data.dart';
 
 enum IceRouteType {
   single,
@@ -27,6 +29,7 @@ abstract class BaseRouteData extends GoRouteData {
       IceRouteType.slideFromLeft => SlideFromLeftTransitionPage(child: child, state: state),
       IceRouteType.mainModalSheet => ModalSheetPage<void>(
           swipeDismissible: true,
+          barrierColor: context.theme.appColors.backgroundSheet,
           key: state.pageKey,
           // DraggableSheet does not work with scrollable widgets.
           // If you want to use a scrollable widget as its content,
