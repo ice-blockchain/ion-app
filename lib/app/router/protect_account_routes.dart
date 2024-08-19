@@ -34,7 +34,7 @@ class SecureAccountOptionsRoute extends BaseRouteData {
 class SecureAccountErrorRoute extends BaseRouteData {
   SecureAccountErrorRoute()
       : super(
-          child: const SecureAccountErrorModal(),
+          child: const SecureAccountErrorAlert(),
           type: IceRouteType.bottomSheet,
         );
 }

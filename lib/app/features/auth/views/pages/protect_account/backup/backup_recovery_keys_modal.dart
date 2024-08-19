@@ -9,7 +9,7 @@ class BackupRecoveryKeysModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleModalSheet(
+    return SimpleModalSheet.info(
       title: context.i18n.secure_your_recovery_keys_title,
       description: context.i18n.secure_your_recovery_keys_description,
       iconAsset: Assets.images.icons.actionWalletLock,

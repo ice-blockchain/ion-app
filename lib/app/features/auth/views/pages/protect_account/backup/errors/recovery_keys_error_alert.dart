@@ -8,7 +8,7 @@ class RecoveryKeysErrorAlert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleModalSheet(
+    return SimpleModalSheet.alert(
       title: context.i18n.error_recovery_keys_title,
       description: context.i18n.error_recovery_keys_description,
       iconAsset: Assets.images.identity.actionWalletKeyserror,

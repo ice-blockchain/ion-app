@@ -29,7 +29,7 @@ class BackupOptionsPage extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 32.0.s),
+          SizedBox(height: 16.0.s),
           ScreenSideOffset.small(
             child: Column(
               children: [

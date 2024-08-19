@@ -8,7 +8,7 @@ class ScreenshotSecurityAlert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleModalSheet(
+    return SimpleModalSheet.alert(
       title: context.i18n.error_screenshots_arent_secure_title,
       description: context.i18n.error_screenshots_arent_secure_description,
       iconAsset: Assets.images.icons.actionWalletScreenshot,

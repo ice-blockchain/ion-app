@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
+enum OffsetType { large, small }
+
 class SimpleModalSheet extends StatelessWidget {
-  const SimpleModalSheet({
-    super.key,
+  const SimpleModalSheet._({
     required this.title,
     required this.description,
     required this.iconAsset,
-    required this.buttonText,
-    required this.onPressed,
+    this.buttonText,
+    this.onPressed,
     this.button,
+    required this.offsetType,
   }) : assert(
           (button != null) || (buttonText != null && onPressed != null),
           'Either button or both buttonText and onPressed must be provided',
@@ -26,6 +29,45 @@ class SimpleModalSheet extends StatelessWidget {
   final String? buttonText;
   final VoidCallback? onPressed;
   final Widget? button;
+  final OffsetType offsetType;
+
+  factory SimpleModalSheet.info({
+    required String title,
+    required String description,
+    required AssetGenImage iconAsset,
+    String? buttonText,
+    VoidCallback? onPressed,
+    Widget? button,
+  }) {
+    return SimpleModalSheet._(
+      title: title,
+      description: description,
+      iconAsset: iconAsset,
+      buttonText: buttonText,
+      onPressed: onPressed,
+      button: button,
+      offsetType: OffsetType.large,
+    );
+  }
+
+  factory SimpleModalSheet.alert({
+    required String title,
+    required String description,
+    required AssetGenImage iconAsset,
+    String? buttonText,
+    VoidCallback? onPressed,
+    Widget? button,
+  }) {
+    return SimpleModalSheet._(
+      title: title,
+      description: description,
+      iconAsset: iconAsset,
+      buttonText: buttonText,
+      onPressed: onPressed,
+      button: button,
+      offsetType: OffsetType.small,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,24 +78,30 @@ class SimpleModalSheet extends StatelessWidget {
           SizedBox(height: 20.0.s),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.0.s),
-            child: Column(
-              children: [
-                InfoCard(
-                  iconAsset: iconAsset,
-                  title: title,
-                  description: description,
-                ),
-                SizedBox(height: 20.0.s),
-                button ??
-                    Button(
-                      mainAxisSize: MainAxisSize.max,
-                      label: Text(buttonText!),
-                      onPressed: onPressed!,
-                    ),
-                ScreenBottomOffset(margin: 36.0.s),
-              ],
+            child: InfoCard(
+              iconAsset: iconAsset,
+              title: title,
+              description: description,
             ),
           ),
+          SizedBox(height: 20.0.s),
+          button ??
+              (offsetType == OffsetType.large
+                  ? ScreenSideOffset.large(
+                      child: Button(
+                        mainAxisSize: MainAxisSize.max,
+                        label: Text(buttonText!),
+                        onPressed: onPressed!,
+                      ),
+                    )
+                  : ScreenSideOffset.small(
+                      child: Button(
+                        mainAxisSize: MainAxisSize.max,
+                        label: Text(buttonText!),
+                        onPressed: onPressed!,
+                      ),
+                    )),
+          ScreenBottomOffset(margin: 36.0.s),
         ],
       ),
     );

@@ -20,34 +20,31 @@ class RecoveryKeyOption extends StatelessWidget {
     final textTheme = context.theme.appTextThemes;
 
     return RoundedCard.outlined(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 24.0.s),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                iconAsset.icon(
-                  size: 16.0.s,
+      padding: EdgeInsets.symmetric(vertical: 20.0.s),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              iconAsset.icon(
+                size: 16.0.s,
+                color: context.theme.appColors.onTertararyBackground,
+              ),
+              SizedBox(width: 6.0.s),
+              Text(
+                title,
+                style: textTheme.caption2.copyWith(
                   color: context.theme.appColors.onTertararyBackground,
                 ),
-                SizedBox(width: 6.0.s),
-                Text(
-                  title,
-                  style: textTheme.caption2.copyWith(
-                    color: context.theme.appColors.onTertararyBackground,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10.0.s),
-            Text(
-              subtitle,
-              style: textTheme.subtitle,
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.0.s),
+          Text(
+            subtitle,
+            style: textTheme.subtitle,
+          ),
+        ],
       ),
     );
   }

@@ -22,6 +22,10 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
     return SheetContent(
       body: AuthScrollContainer(
         showBackButton: false,
+        titleStyle: context.theme.appTextThemes.headline2,
+        descriptionStyle: context.theme.appTextThemes.body2.copyWith(
+          color: context.theme.appColors.secondaryText,
+        ),
         actions: [
           NavigationCloseButton(
             onPressed: () => WalletRoute().go(context),

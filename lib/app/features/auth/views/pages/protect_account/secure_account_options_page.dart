@@ -30,14 +30,14 @@ class SecureAccountOptionsPage extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 40.0.s),
+          SizedBox(height: 36.0.s),
           ScreenSideOffset.small(
             child: Column(
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.0.s),
                   child: InfoCard(
-                    iconAsset: Assets.images.identity.actionWalletIdkey,
+                    iconAsset: Assets.images.icons.actionWalletSecureaccount,
                     title: locale.protect_account_title_secure_account,
                     description: locale.protect_account_description_secure_account_2fa,
                   ),

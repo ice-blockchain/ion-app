@@ -19,7 +19,7 @@ class RecoveryKeysInputPage extends HookWidget {
   Widget build(BuildContext context) {
     final formKey = useRef(GlobalKey<FormState>());
     final controllers = {
-      for (var key in RecoveryKeys.values) key: useTextEditingController(),
+      for (final key in RecoveryKeys.values) key: useTextEditingController(),
     };
 
     return SheetContent(
@@ -27,6 +27,10 @@ class RecoveryKeysInputPage extends HookWidget {
         title: context.i18n.backup_option_with_recovery_keys_title,
         description: context.i18n.restore_identity_creds_description,
         icon: Assets.images.icons.iconLoginRestorekey.icon(size: 36.0.s),
+        titleStyle: context.theme.appTextThemes.headline2,
+        descriptionStyle: context.theme.appTextThemes.body2.copyWith(
+          color: context.theme.appColors.secondaryText,
+        ),
         children: [
           Column(
             children: [
