@@ -5,11 +5,10 @@ import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
-import 'package:ice/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
-import 'package:ice/app/features/auth/views/pages/restore_creds/recovery_code_input.dart';
-import 'package:ice/app/features/auth/views/pages/restore_creds/recovery_key_id_input.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/backup/components/recovery_key_input.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class RecoveryKeysInputPage extends HookWidget {
@@ -36,19 +35,35 @@ class RecoveryKeysInputPage extends HookWidget {
                   child: Column(
                     children: [
                       SizedBox(height: 16.0.s),
-                      IdentityKeyNameInput(
+                      RecoveryKeyInput(
                         controller: identityKeyNameController,
-                        textInputAction: TextInputAction.next,
-                        scrollPadding: EdgeInsets.only(bottom: 250.0.s),
-                        notShowInfoIcon: true,
+                        labelText: context.i18n.common_identity_key_name,
+                        prefixIcon: Assets.images.icons.iconIdentitykey.icon(),
+                        validator: (value) {
+                          if (Validators.isEmpty(value)) return '';
+                          return null;
+                        },
                       ),
                       SizedBox(height: 16.0.s),
-                      RecoveryCodeInput(
+                      RecoveryKeyInput(
                         controller: recoveryCodeController,
+                        labelText: context.i18n.restore_identity_creds_recovery_code,
+                        prefixIcon: Assets.images.icons.iconCode4.icon(),
+                        validator: (value) {
+                          if (Validators.isEmpty(value)) return '';
+                          return null;
+                        },
                       ),
                       SizedBox(height: 16.0.s),
-                      RecoveryKeyIdInput(
+                      RecoveryKeyInput(
                         controller: recoveryKeyIdController,
+                        labelText: context.i18n.restore_identity_creds_recovery_key,
+                        prefixIcon: Assets.images.icons.iconChannelPrivate.icon(),
+                        validator: (value) {
+                          if (Validators.isEmpty(value)) return '';
+                          return null;
+                        },
+                        textInputAction: TextInputAction.done,
                       ),
                     ],
                   ),
