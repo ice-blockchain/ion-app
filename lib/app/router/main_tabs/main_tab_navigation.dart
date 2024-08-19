@@ -23,7 +23,9 @@ class MainTabNavigation extends StatelessWidget {
         decoration: state.isMainModalOpen
             ? null
             : BoxDecoration(
-                boxShadow: [BoxShadow(color: Color.fromRGBO(29, 70, 235, 0.05), blurRadius: 10)],
+                boxShadow: [
+                  BoxShadow(color: context.theme.appColors.darkBlue.withAlpha(14), blurRadius: 10),
+                ],
               ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
