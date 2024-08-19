@@ -13,7 +13,7 @@ class Relays extends _$Relays {
   @override
   Map<String, NostrRelay> build() {
     ref.listen(authProvider, (AuthState? previous, AuthState next) {
-      if (next is UnAuthenticated) {
+      if (next is Unauthenticated) {
         _closeAll();
       }
     });

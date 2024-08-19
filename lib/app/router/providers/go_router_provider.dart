@@ -38,7 +38,7 @@ GoRouter goRouter(GoRouterRef ref) {
       if (isInitCompleted && isSplash && isAnimationCompleted) {
         return switch (authState) {
           Authenticated() => FeedRoute().location,
-          UnAuthenticated() => IntroRoute().location,
+          Unauthenticated() => IntroRoute().location,
           _ => null
         };
       }
@@ -46,7 +46,7 @@ GoRouter goRouter(GoRouterRef ref) {
       return switch (authState) {
         Authenticated() when state.matchedLocation.startsWith(IntroRoute().location) =>
           FeedRoute().location,
-        UnAuthenticated() when !state.matchedLocation.startsWith(IntroRoute().location) =>
+        Unauthenticated() when !state.matchedLocation.startsWith(IntroRoute().location) =>
           IntroRoute().location,
         _ => null
       };
