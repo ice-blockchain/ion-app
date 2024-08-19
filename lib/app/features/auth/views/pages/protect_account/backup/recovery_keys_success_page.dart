@@ -54,7 +54,6 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
               ),
             ),
           ),
-          // ScreenBottomOffset(margin: 36.0.s),
         ],
       ),
     );
