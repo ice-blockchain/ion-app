@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/data/models/auth_token.dart';
-import 'package:ice/app/features/core/providers/env_provider.dart';
 import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,9 +13,6 @@ class Auth extends _$Auth {
   }
 
   Future<void> rehydrate() async {
-    final foo = ref.read(envProvider.notifier).get(EnvVariable.FOO);
-    // ignore: avoid_print
-    print('Env is $foo');
     state = const Authenticated(
       authToken: AuthToken(access: 'access', refresh: 'refresh'),
     );
@@ -28,8 +23,7 @@ class Auth extends _$Auth {
       state = const AuthenticationLoading();
 
       final ionClient = ref.read(ionApiClientProvider);
-      final result = await ionClient.auth.registerUser(username: keyName);
-      debugPrint('registerUser result: $result');
+      await ionClient.auth.registerUser(username: keyName);
 
       state = Authenticated(
         authToken: AuthToken(

@@ -6,7 +6,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'env_provider.g.dart';
 
-enum EnvVariable { FOO }
+enum EnvVariable {
+  ION_APP_ID,
+  ION_ORG_ID,
+  ION_ORIGIN,
+}
 
 @Riverpod(keepAlive: true)
 class Env extends _$Env {
