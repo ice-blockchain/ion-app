@@ -70,6 +70,8 @@ import 'package:ice/app/router/base_route_data.dart';
 import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/router/main_tabs/main_tab_navigation.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/theme_data.dart';
 
 part 'app_routes.g.dart';
 part 'auth_routes.dart';
@@ -166,7 +168,7 @@ class ModalShellRouteData extends ShellRouteData {
   ) {
     return ModalSheetPage(
       key: state.pageKey,
-      barrierColor: Color.fromRGBO(8, 21, 50, 0.7),
+      barrierColor: context.theme.appColors.backgroundSheet,
       swipeDismissible: true,
       child: ModalWrapper(child: navigator),
     );
