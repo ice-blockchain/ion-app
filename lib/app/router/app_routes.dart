@@ -169,12 +169,13 @@ class ModalShellRouteData extends ShellRouteData {
   ) {
     return ModalSheetPage(
       key: state.pageKey,
-      barrierColor: context.theme.appColors.backgroundSheet,
-      swipeDismissible: true,
       child: ModalWrapper(child: navigator),
       barrierColor: context.theme.appColors.backgroundSheet,
       transitionDuration: Duration(milliseconds: 300),
       transitionCurve: Easing.standardDecelerate,
+      swipeDismissible: true,
+      minFlingVelocityToDismiss: 3.0,
+      minDragDistanceToDismiss: 300.0.s,
     );
   }
 }
