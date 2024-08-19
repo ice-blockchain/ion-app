@@ -5,24 +5,12 @@ import 'package:ion_identity_client/src/auth/types/register_user_types.dart';
 import 'package:ion_identity_client/src/core/network/network.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
-import 'package:ion_identity_client/src/utils/ion_service_locator.dart';
 
 class IonAuthDataSource {
-  IonAuthDataSource._({
+  IonAuthDataSource({
     required this.config,
     required this.networkClient,
   });
-
-  factory IonAuthDataSource.createDefault({
-    required IonClientConfig config,
-  }) {
-    final networkClient = IonServiceLocator.getNetworkClient(config: config);
-
-    return IonAuthDataSource._(
-      config: config,
-      networkClient: networkClient,
-    );
-  }
 
   static const loginInitPath = '/login';
   static const registerInitPath = '/register/init';

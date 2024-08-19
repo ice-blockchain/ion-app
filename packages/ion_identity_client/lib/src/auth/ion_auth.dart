@@ -6,38 +6,23 @@ import 'package:ion_identity_client/src/core/network/network.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
-import 'package:ion_identity_client/src/utils/ion_service_locator.dart';
 
 class IonAuth {
-  IonAuth._({
+  IonAuth({
+    required this.username,
     required this.config,
     required this.dataSource,
     required this.signer,
     required this.tokenStorage,
   });
 
-  factory IonAuth.createDefault({
-    required IonClientConfig config,
-    required PasskeysSigner signer,
-  }) {
-    return IonAuth._(
-      config: config,
-      signer: signer,
-      dataSource: IonAuthDataSource.createDefault(
-        config: config,
-      ),
-      tokenStorage: IonServiceLocator.getTokenStorage(),
-    );
-  }
-
+  final String username;
   final IonClientConfig config;
   final IonAuthDataSource dataSource;
   final PasskeysSigner signer;
   final TokenStorage tokenStorage;
 
-  Future<RegisterUserResult> registerUser({
-    required String username,
-  }) async {
+  Future<RegisterUserResult> registerUser() async {
     final result = await dataSource
         .registerInit(username: username)
         .flatMap(
@@ -55,13 +40,14 @@ class IonAuth {
 
     return result.fold(
       (l) => l,
-      (r) => RegisterUserSuccess(),
+      (r) {
+        tokenStorage.setToken(r.authentication.token);
+        return RegisterUserSuccess();
+      },
     );
   }
 
-  Future<void> loginUser({
-    required String username,
-  }) async {
+  Future<void> loginUser() async {
     final response = await dataSource.login(username: username).run();
     response.fold(
       (l) {},
