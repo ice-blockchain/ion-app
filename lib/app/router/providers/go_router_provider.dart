@@ -3,6 +3,7 @@ import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
+import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/router/app_router_listenable.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/services/logger/config.dart';
@@ -51,7 +52,7 @@ GoRouter goRouter(GoRouterRef ref) {
       };
     },
     routes: $appRoutes,
-    errorBuilder: (context, state) => ErrorRoute($extra: state.error).build(context, state),
+    errorBuilder: (context, state) => ErrorPage(error: state.error ?? Exception('Unknown error')),
     initialLocation: SplashRoute().location,
     debugLogDiagnostics: LoggerConfig.routerLogsEnabled,
     navigatorKey: rootNavigatorKey,
