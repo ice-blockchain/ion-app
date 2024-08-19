@@ -1,5 +1,5 @@
-import 'package:ion_identity_client/src/signer/dtos/public_key_credential_descriptor.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
+import 'package:ion_identity_client/src/signer/dtos/public_key_credential_descriptor.dart';
 
 class AllowCredentials {
   AllowCredentials(

@@ -3,7 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/src/core/network/network_failure.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
 
-typedef Decoder<T> = T Function(Response<JsonObject> response);
+typedef Decoder<T> = T Function(JsonObject response);
 
 class NetworkClient {
   NetworkClient({
@@ -46,25 +46,21 @@ class NetworkClient {
     required Future<Response<JsonObject>> Function() request,
     required Decoder<Result> decoder,
   }) {
-    return TaskEither.tryCatch(
-      () async {
-        final response = await request();
-
-        final failure = _handleError<Result>();
-        // TODO: how to handle failure that is not exception?
-        if (failure != null) {
-          throw Exception(failure.error);
-        }
-
-        final decodedResponse = decoder(response);
-
-        return decodedResponse;
-      },
-      NetworkFailure.new,
-    );
-  }
-
-  NetworkFailure? _handleError<T>() {
-    return null;
+    return TaskEither<NetworkFailure, dynamic>.tryCatch(
+      request,
+      RequestExecutionNetworkFailure.new,
+    )
+        .flatMap(
+          (response) => Either.tryCatch(
+            () => response.data as Map<String, dynamic>,
+            (_, __) => ResponseFormatNetworkFailure(response.data),
+          ).toTaskEither(),
+        )
+        .flatMap(
+          (r) => Either.tryCatch(
+            () => decoder(r),
+            (_, __) => DecodeNetworkFailure(r),
+          ).toTaskEither(),
+        );
   }
 }

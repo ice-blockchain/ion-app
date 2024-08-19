@@ -1,12 +1,24 @@
-final class NetworkFailure {
-  const NetworkFailure([
-    this.error,
-    this.stackTrace,
-  ]);
+import 'package:ion_identity_client/src/core/types/types.dart';
 
-  final Object? error;
-  final StackTrace? stackTrace;
+sealed class NetworkFailure {
+  const NetworkFailure();
+}
 
-  @override
-  String toString() => 'NetworFailure(error: $error, stackTrace: $stackTrace)';
+final class RequestExecutionNetworkFailure extends NetworkFailure {
+  RequestExecutionNetworkFailure(this.error, this.stackTrace);
+
+  final Object error;
+  final StackTrace stackTrace;
+}
+
+final class ResponseFormatNetworkFailure extends NetworkFailure {
+  const ResponseFormatNetworkFailure(this.response);
+
+  final dynamic response;
+}
+
+final class DecodeNetworkFailure extends NetworkFailure {
+  const DecodeNetworkFailure(this.map);
+
+  final JsonObject map;
 }

@@ -39,7 +39,7 @@ class IonWalletsDataSource {
     return networkClient.post(
       listWalletsPath,
       data: requestData.toJson(),
-      decoder: (response) => ListWalletsResponse.fromJson(response.data ?? {}),
+      decoder: ListWalletsResponse.fromJson,
     );
   }
 }

@@ -1,5 +1,3 @@
-import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
-import 'package:ion_identity_client/src/auth/ion_auth_data_source.dart';
 import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';

@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/data/models/auth_token.dart';
 import 'package:ice/app/features/core/providers/env_provider.dart';
 import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
-import 'package:ion_identity_client/ion_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_provider.g.dart';
@@ -29,6 +29,7 @@ class Auth extends _$Auth {
 
       final ionClient = ref.read(ionApiClientProvider);
       final result = await ionClient.auth.registerUser(username: keyName);
+      debugPrint('registerUser result: $result');
 
       state = Authenticated(
         authToken: AuthToken(

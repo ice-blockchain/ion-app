@@ -1,6 +1,7 @@
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/auth/dtos/login_request.dart';
 import 'package:ion_identity_client/src/auth/dtos/login_response.dart';
+import 'package:ion_identity_client/src/auth/types/register_user_types.dart';
 import 'package:ion_identity_client/src/core/network/network.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
@@ -30,7 +31,7 @@ class IonAuthDataSource {
   final IonClientConfig config;
   final NetworkClient networkClient;
 
-  TaskEither<NetworkFailure, UserRegistrationChallenge> registerInit({
+  TaskEither<RegisterUserFailure, UserRegistrationChallenge> registerInit({
     required String username,
   }) {
     final requestData = RegisterInitRequest(
@@ -38,14 +39,24 @@ class IonAuthDataSource {
       username: username,
     );
 
-    return networkClient.post(
+    return networkClient
+        .post(
       registerInitPath,
       data: requestData.toJson(),
-      decoder: (response) => UserRegistrationChallenge.fromJson(response.data ?? {}),
+      decoder: UserRegistrationChallenge.fromJson,
+    )
+        .mapLeft(
+      (l) {
+        // TODO: find a complete list of user registration failures
+        if (l is ResponseFormatNetworkFailure) {
+          return UserAlreadyExistsRegisterUserFailure();
+        }
+        return UnknownRegisterUserFailure();
+      },
     );
   }
 
-  TaskEither<NetworkFailure, RegistrationCompleteResponse> registerComplete({
+  TaskEither<RegisterUserFailure, RegistrationCompleteResponse> registerComplete({
     required Fido2Attestation attestation,
     required String temporaryAuthenticationToken,
   }) {
@@ -55,10 +66,20 @@ class IonAuthDataSource {
       temporaryAuthenticationToken: temporaryAuthenticationToken,
     );
 
-    return networkClient.post(
+    return networkClient
+        .post(
       registerCompletePath,
       data: requestData.toJson(),
-      decoder: (response) => RegistrationCompleteResponse.fromJson(response.data ?? {}),
+      decoder: RegistrationCompleteResponse.fromJson,
+    )
+        .mapLeft(
+      (l) {
+        // TODO: find a complete list of user registration failures
+        if (l is ResponseFormatNetworkFailure) {
+          return UserAlreadyExistsRegisterUserFailure();
+        }
+        return UnknownRegisterUserFailure();
+      },
     );
   }
 
@@ -70,7 +91,7 @@ class IonAuthDataSource {
     return networkClient.post(
       loginInitPath,
       data: requestData.toJson(),
-      decoder: (response) => LoginResponse.fromJson(response.data ?? {}),
+      decoder: LoginResponse.fromJson,
     );
   }
 }
