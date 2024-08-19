@@ -99,6 +99,7 @@ jobs:
       - uses: actions/cache@v3
         id: cache_all
         with:
+          path: /Users/runner/hostedtoolcache/flutter
           key: ${{ github.sha }}
       - name: Slack Notification
         if: ${{ success() == false}}
@@ -121,6 +122,7 @@ jobs:
       - uses: actions/cache@v3
         id: cache_all
         with:
+          path: /Users/runner/hostedtoolcache/flutter
           key: ${{ github.sha }}
       - name: Mask APP environment and keys in logs
         id: mask-secrets
@@ -199,6 +201,7 @@ jobs:
       - uses: actions/cache@v3
         id: cache_all
         with:
+          path: /Users/runner/hostedtoolcache/flutter
           key: ${{ github.sha }}
       - name: Mask APP environment and keys in logs
         id: mask-secrets
