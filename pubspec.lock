@@ -1628,7 +1628,7 @@ packages:
     description:
       path: package
       ref: "feature/modal-dismiss-params"
-      resolved-ref: "2d7e899362d848d99395da7465670ee8c5c2efc4"
+      resolved-ref: c370e7dd2d4eb5e943fff3e492b4801c22f957ec
       url: "https://github.com/ice-orion/smooth_sheets.git"
     source: git
     version: "0.9.3"
