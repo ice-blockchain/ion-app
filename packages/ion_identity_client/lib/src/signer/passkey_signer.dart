@@ -20,7 +20,9 @@ class PasskeysOptions {
 }
 
 class PasskeysSigner {
-  PasskeysSigner([this.options = const PasskeysOptions()]);
+  PasskeysSigner([
+    this.options = const PasskeysOptions(),
+  ]);
 
   PasskeysOptions options;
 

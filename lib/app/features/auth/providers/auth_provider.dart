@@ -20,8 +20,8 @@ class Auth extends _$Auth {
     try {
       state = const AuthenticationLoading();
 
-      final ionClient = ref.read(ionApiClientProvider);
-      await ionClient.auth.registerUser(username: keyName);
+      final ionClient = ref.read(ionApiClientProvider)(username: keyName);
+      await ionClient.auth.registerUser();
 
       state = Authenticated(
         authToken: AuthToken(
@@ -39,8 +39,8 @@ class Auth extends _$Auth {
     try {
       state = const AuthenticationLoading();
 
-      final ionClient = ref.read(ionApiClientProvider);
-      await ionClient.auth.loginUser(username: keyName);
+      final ionClient = ref.read(ionApiClientProvider)(username: keyName);
+      await ionClient.auth.loginUser();
       await ionClient.wallets.listWallets();
 
       state = Authenticated(
