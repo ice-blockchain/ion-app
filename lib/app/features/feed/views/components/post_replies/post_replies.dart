@@ -23,9 +23,9 @@ class PostReplies extends HookWidget {
     final expandReplies = useState(false);
 
     final originalReplies = <Widget>[
-      Post(postData: postData, canShowReplies: false),
-      Post(postData: postData, canShowReplies: false),
-      Post(postData: postData, canShowReplies: false),
+      Post(postData: postData),
+      Post(postData: postData),
+      Post(postData: postData),
     ];
     final replies = expandReplies.value ? originalReplies : originalReplies.take(1);
 
@@ -47,11 +47,7 @@ class PostReplies extends HookWidget {
           child: Padding(
             padding: EdgeInsets.only(left: borderWidth),
             child: Column(
-              children: replies
-                  .intersperse(
-                    FeedListSeparator(height: 1.5.s),
-                  )
-                  .toList(),
+              children: replies.intersperse(FeedListSeparator(height: 1.5.s)).toList(),
             ),
           ),
         ),

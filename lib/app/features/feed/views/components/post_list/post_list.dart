@@ -16,8 +16,6 @@ class Posts extends HookConsumerWidget {
       ref.read(feedPostsProvider.notifier).fetchPosts();
     });
 
-    print('posts $posts');
-
     if (posts.isEmpty) {
       return const PostListSkeleton();
     }

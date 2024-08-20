@@ -71,7 +71,6 @@ class QuotePostModalPage extends StatelessWidget {
                             child: Post(
                               footer: const SizedBox.shrink(),
                               postData: payload,
-                              canShowReplies: false,
                             ),
                           ),
                         ),
