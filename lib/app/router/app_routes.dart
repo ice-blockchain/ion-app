@@ -178,8 +178,7 @@ class ModalShellRouteData extends ShellRouteData {
       transitionDuration: Duration(milliseconds: 300),
       transitionCurve: Easing.standardDecelerate,
       swipeDismissible: true,
-      minFlingVelocityToDismiss: 3.0,
-      minDragDistanceToDismiss: 300.0.s,
+      swipeDismissConfig: SwipeDismissConfig(minFlingVelocity: 3.0, minDragDistance: 300.0.s),
     );
   }
 }
