@@ -13,25 +13,32 @@ class PullRightMenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: context.theme.appColors.secondaryBackground,
-      child: const Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                ProfileInfo(),
-                LinksList(),
-                Footer(),
-              ],
+      child: GestureDetector(
+        onHorizontalDragEnd: (DragEndDetails details) {
+          if (details.velocity.pixelsPerSecond.dx < -100) {
+            Navigator.of(context).pop();
+          }
+        },
+        child: const Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  ProfileInfo(),
+                  LinksList(),
+                  Footer(),
+                ],
+              ),
             ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Header(),
-          ),
-        ],
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Header(),
+            ),
+          ],
+        ),
       ),
     );
   }
