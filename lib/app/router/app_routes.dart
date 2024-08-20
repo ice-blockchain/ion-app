@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/webview/web_view_browser.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/twofa_type.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
 import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
@@ -70,8 +71,6 @@ import 'package:ice/app/router/base_route_data.dart';
 import 'package:ice/app/router/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ice/app/router/main_tabs/main_tab_navigation.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/theme_data.dart';
 
 part 'app_routes.g.dart';
 part 'auth_routes.dart';
@@ -168,9 +167,13 @@ class ModalShellRouteData extends ShellRouteData {
   ) {
     return ModalSheetPage(
       key: state.pageKey,
-      barrierColor: context.theme.appColors.backgroundSheet,
-      swipeDismissible: true,
       child: ModalWrapper(child: navigator),
+      barrierColor: context.theme.appColors.backgroundSheet,
+      transitionDuration: Duration(milliseconds: 300),
+      transitionCurve: Easing.standardDecelerate,
+      swipeDismissible: true,
+      minFlingVelocityToDismiss: 3.0,
+      minDragDistanceToDismiss: 300.0.s,
     );
   }
 }

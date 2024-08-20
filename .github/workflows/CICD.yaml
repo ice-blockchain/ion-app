@@ -70,6 +70,11 @@ jobs:
           channel: "stable"
           cache: true
       - run: flutter --version
+      - name: Bootstrap
+        id: bootstrap
+        run: |
+          cd main-repo
+          ./scripts/bootstrap.sh
       - name: Install dependencies
         id: install-dependencies
         run: |
@@ -145,11 +150,6 @@ jobs:
           channel: "stable"
           cache: true
       - run: flutter --version
-      - name: Install dependencies
-        id: install-dependencies
-        run: |
-          cd main-repo
-          flutter pub get
       - name: Detect context and set APP environment variables
         id: setup-env
         env:
@@ -236,16 +236,6 @@ jobs:
           channel: "stable"
           cache: true
       - run: flutter --version
-      - name: Bootstrap
-        id: bootstrap
-        run: |
-          cd main-repo
-          ./scripts/bootstrap.sh
-      - name: Install dependencies
-        id: install-dependencies
-        run: |
-          cd main-repo
-          melos run pub_get
       - name: Detect context and set APP environment variables
         id: setup-env
         env:

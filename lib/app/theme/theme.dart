@@ -3,6 +3,7 @@ import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/app_bar_theme.dart';
 import 'package:ice/app/theme/app_colors.dart';
 import 'package:ice/app/theme/app_text_themes.dart';
+import 'package:ice/app/theme/bottom_sheet_theme.dart';
 import 'package:ice/app/theme/elevated_button_theme.dart';
 import 'package:ice/app/theme/icon_button_theme.dart';
 import 'package:ice/app/theme/icon_theme.dart';
@@ -28,6 +29,7 @@ ThemeData buildLightTheme(TemplateTheme templateTheme) {
     iconTheme: buildIconTheme(templateTheme),
     textButtonTheme: buildTextButtonTheme(),
     scaffoldBackgroundColor: colors.secondaryBackground,
+    bottomSheetTheme: buildBottomSheetTheme(colors),
   );
 }
 
@@ -47,5 +49,6 @@ ThemeData buildDarkTheme(TemplateTheme templateTheme) {
     iconTheme: buildIconTheme(templateTheme),
     textButtonTheme: buildTextButtonTheme(),
     scaffoldBackgroundColor: colors.secondaryBackground,
+    bottomSheetTheme: buildBottomSheetTheme(colors),
   );
 }

@@ -16,8 +16,8 @@ class AuthenticationLoading extends AuthState with _$AuthenticationLoading {
 }
 
 @freezed
-class UnAuthenticated extends AuthState with _$UnAuthenticated {
-  const factory UnAuthenticated() = _UnAuthenticated;
+class Unauthenticated extends AuthState with _$Unauthenticated {
+  const factory Unauthenticated() = _Unauthenticated;
 }
 
 @freezed

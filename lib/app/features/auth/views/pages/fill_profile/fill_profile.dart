@@ -45,7 +45,7 @@ class FillProfile extends HookWidget {
                     title: context.i18n.fill_profile_title,
                     description: context.i18n.fill_profile_description,
                     icon: AuthHeaderIcon(
-                      icon: Assets.images.icons.iconLoginIcelogo.icon(size: 36.0.s),
+                      icon: Assets.images.icons.iconLoginIcelogo.icon(size: 44.0.s),
                     ),
                   ),
                   ScreenSideOffset.large(

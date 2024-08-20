@@ -36,12 +36,11 @@ class IdentityKeyNameInput extends HookWidget {
       ),
       suffixIcon: notShowInfoIcon
           ? null
-          : TextInputIcons(
-              icons: [
-                IconButton(
-                  icon: Assets.images.icons.iconBlockInformation.icon(
-                    size: 20.0.s,
-                  ),
+          : TextInputIcons(icons: [
+              SizedBox.square(
+                dimension: 40.0.s,
+                child: IconButton(
+                  icon: Assets.images.icons.iconBlockInformation.icon(),
                   onPressed: () {
                     hideKeyboardAndCallOnce(callback: () {
                       showSimpleBottomSheet<void>(
@@ -52,8 +51,8 @@ class IdentityKeyNameInput extends HookWidget {
                     });
                   },
                 ),
-              ],
-            ),
+              ),
+            ]),
       labelText: context.i18n.common_identity_key_name,
       controller: controller,
       validator: (String? value) {

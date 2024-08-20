@@ -28,7 +28,7 @@ class GetStartedPage extends HookWidget {
           showBackButton: false,
           title: context.i18n.get_started_title,
           description: context.i18n.get_started_description,
-          icon: Assets.images.icons.iconLoginIcelogo.icon(size: 36.0.s),
+          icon: Assets.images.icons.iconLoginIcelogo.icon(size: 44.0.s),
           children: [
             ScreenSideOffset.large(
               child: Column(

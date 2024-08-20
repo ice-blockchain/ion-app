@@ -13,9 +13,7 @@ class Auth extends _$Auth {
   }
 
   Future<void> rehydrate() async {
-    state = const Authenticated(
-      authToken: AuthToken(access: 'access', refresh: 'refresh'),
-    );
+    state = const Unauthenticated();
   }
 
   Future<void> signUp({required String keyName}) async {
@@ -61,7 +59,7 @@ class Auth extends _$Auth {
     try {
       state = const AuthenticationLoading();
       await Future<void>.delayed(const Duration(seconds: 2));
-      state = const UnAuthenticated();
+      state = const Unauthenticated();
     } catch (error) {
       state = AuthenticationFailure(message: error.toString());
       rethrow;

@@ -1626,11 +1626,12 @@ packages:
   smooth_sheets:
     dependency: "direct main"
     description:
-      name: smooth_sheets
-      sha256: c4688b923e0a6c808b7f4bbc122e07bbf7588a017ac2b9a7accdce6386eb3acd
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.2"
+      path: package
+      ref: "feature/modal-dismiss-params"
+      resolved-ref: "2d7e899362d848d99395da7465670ee8c5c2efc4"
+      url: "https://github.com/ice-orion/smooth_sheets.git"
+    source: git
+    version: "0.9.3"
   source_gen:
     dependency: transitive
     description:

@@ -1,11 +1,11 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/auth/views/components/identity_link/identity_link.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -21,7 +21,7 @@ class IdentityInfo extends StatelessWidget {
         NavigationAppBar.modal(
           showBackButton: false,
           title: Text(context.i18n.identity_key_name_title),
-          actions: [NavigationCloseButton()],
+          actions: [NavigationCloseButton(onPressed: () => context.pop())],
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0.s),
@@ -37,18 +37,10 @@ class IdentityInfo extends StatelessWidget {
                 TextSpan(
                   children: [
                     TextSpan(text: context.i18n.identity_key_name_usage),
-                    const TextSpan(text: ' '),
+                    WidgetSpan(child: SizedBox(width: 6.0.s)),
                     WidgetSpan(
                       alignment: PlaceholderAlignment.middle,
-                      child: Assets.images.icons.iconLoginIdentity.icon(size: 20.0.s),
-                    ),
-                    const TextSpan(text: ' '),
-                    TextSpan(
-                      text: context.i18n.auth_identity_io,
-                      style: context.theme.appTextThemes.caption.copyWith(
-                        color: context.theme.appColors.primaryAccent,
-                      ),
-                      recognizer: TapGestureRecognizer()..onTap = () {},
+                      child: IdentityLink(),
                     ),
                   ],
                 ),

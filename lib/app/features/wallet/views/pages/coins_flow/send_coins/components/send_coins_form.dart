@@ -11,7 +11,6 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/components/arrival_time/arrival_time.dart';
 import 'package:ice/app/features/wallet/components/network_fee/network_fee.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/network_list/network_list_view.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/coin_button.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
@@ -73,8 +72,7 @@ class SendCoinsForm extends HookConsumerWidget {
                     NetworkButton(
                       networkType: formController.selectedNetwork,
                       onTap: () {
-                        NetworkSelectSendRoute(viewType: NetworkListViewType.send)
-                            .push<void>(context);
+                        NetworkSelectSendRoute().push<void>(context);
                       },
                     ),
                     SizedBox(height: 12.0.s),
