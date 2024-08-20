@@ -23,7 +23,7 @@ class AccountsTile extends ConsumerWidget {
     final activeUser = ref.watch(userDataNotifierProvider);
     final isActiveUser = userData.id == activeUser.id;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0.s),
+      padding: EdgeInsets.only(top: 16.0.s),
       child: ListItem.user(
         isSelected: isActiveUser,
         onTap: () {
@@ -33,20 +33,19 @@ class AccountsTile extends ConsumerWidget {
         },
         title: Text(
           userData.name,
+          style: context.theme.appTextThemes.subtitle3,
         ),
         subtitle: Text(
           prefixUsername(
             username: userData.nickname,
             context: context,
           ),
+          style: context.theme.appTextThemes.caption,
         ),
         profilePicture: userData.profilePicture,
         verifiedBadge: userData.isVerified ?? false,
-        trailing: isActiveUser == true
-            ? Assets.images.icons.iconCheckboxOn
-                .icon(color: context.theme.appColors.onPrimaryAccent)
-            : null,
-        contentPadding: EdgeInsets.symmetric(horizontal: 12.0.s),
+        trailing: isActiveUser == true ? Assets.images.icons.iconBlockCheckboxOnWhite.icon() : null,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s),
         backgroundColor: context.theme.appColors.tertararyBackground,
         borderRadius: ListItem.defaultBorderRadius,
         constraints: ListItem.defaultConstraints,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
+import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/user/pages/switch_account_modal/components/accounts_list/accounts_list.dart';
 import 'package:ice/app/features/user/pages/switch_account_modal/components/action_button/action_button.dart';
@@ -20,37 +22,40 @@ class SwitchAccountModal extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final activeUser = ref.watch(userDataNotifierProvider);
     return SheetContent(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            NavigationAppBar.modal(
-              showBackButton: false,
-              title: Text(context.i18n.profile_switch_user_header),
-              actions: const [
-                NavigationCloseButton(),
-              ],
-            ),
-            ActionButton(
-              icon: Assets.images.icons.iconLoginCreateacc.icon(),
-              label: context.i18n.profile_create_new_account,
-              onTap: () {},
-            ),
-            ScreenSideOffset.small(child: const AccountsList()),
-            ActionButton(
-              icon: Assets.images.icons.iconMenuLogout.icon(),
-              label: context.i18n.profile_log_out(
-                prefixUsername(
-                  username: activeUser.nickname,
-                  context: context,
-                ),
+      body: ScreenSideOffset.small(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              NavigationAppBar.modal(
+                showBackButton: false,
+                title: Text(context.i18n.profile_switch_user_header),
+                actions: const [
+                  NavigationCloseButton(),
+                ],
               ),
-              onTap: () {
-                ref.read(authProvider.notifier).signOut();
-              },
-            ),
-            SizedBox(height: MediaQuery.paddingOf(context).bottom),
-          ],
+              ActionButton(
+                icon: Assets.images.icons.iconChannelType.icon(),
+                label: context.i18n.profile_create_new_account,
+                onTap: () {},
+              ),
+              const AccountsList(),
+              SizedBox(height: 16.0.s),
+              ActionButton(
+                icon: Assets.images.icons.iconMenuLogout.icon(size: 24.0.s),
+                label: context.i18n.profile_log_out(
+                  prefixUsername(
+                    username: activeUser.nickname,
+                    context: context,
+                  ),
+                ),
+                onTap: () {
+                  ref.read(authProvider.notifier).signOut();
+                },
+              ),
+              ScreenBottomOffset(margin: 32.0.s),
+            ],
+          ),
         ),
       ),
     );

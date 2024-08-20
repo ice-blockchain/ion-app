@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/list_item/list_item.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
+import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 class ActionButton extends StatelessWidget {
   const ActionButton({
@@ -16,15 +21,27 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0.s),
-      child: Button(
-        leadingIcon: icon,
+    return ListItem(
+      onTap: onTap,
+      leading: Button.icon(
+        backgroundColor: context.theme.appColors.onSecondaryBackground,
+        borderColor: context.theme.appColors.onTerararyFill,
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0.s),
+        ),
+        size: 36.0.s,
         onPressed: onTap,
-        label: Text(label),
-        mainAxisSize: MainAxisSize.max,
-        type: ButtonType.secondary,
+        icon: icon,
       ),
+      title: Text(label, style: context.theme.appTextThemes.body),
+      trailing: Assets.images.icons.iconArrowRight.icon(),
+      // contentPadding: EdgeInsets.only(
+      //   left: 12.0.s,
+      //   top: 12.0.s,
+      //   bottom: 12.0.s,
+      //   right: 12.0.s,
+      // ),
+      backgroundColor: context.theme.appColors.tertararyBackground,
     );
   }
 }
