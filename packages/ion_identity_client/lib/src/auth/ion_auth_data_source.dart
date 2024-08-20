@@ -1,7 +1,8 @@
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/auth/dtos/login_request.dart';
 import 'package:ion_identity_client/src/auth/dtos/login_response.dart';
-import 'package:ion_identity_client/src/auth/types/register_user_types.dart';
+import 'package:ion_identity_client/src/auth/types/login_user_result.dart';
+import 'package:ion_identity_client/src/auth/types/register_user_result.dart';
 import 'package:ion_identity_client/src/core/network/network.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
@@ -71,15 +72,21 @@ class IonAuthDataSource {
     );
   }
 
-  TaskEither<NetworkFailure, LoginResponse> login({
+  TaskEither<LoginUserFailure, LoginResponse> login({
     required String username,
   }) {
     final requestData = LoginRequest(username: username);
 
-    return networkClient.post(
+    return networkClient
+        .post(
       loginInitPath,
       data: requestData.toJson(),
       decoder: LoginResponse.fromJson,
+    )
+        .mapLeft(
+      (l) {
+        return UnknownLoginUserFailure();
+      },
     );
   }
 }

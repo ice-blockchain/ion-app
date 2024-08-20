@@ -4,6 +4,7 @@ import 'package:ion_identity_client/src/core/network/network_failure.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/wallets/dtos/list_wallets_request.dart';
 import 'package:ion_identity_client/src/wallets/dtos/list_wallets_response.dart';
+import 'package:ion_identity_client/src/wallets/types/list_wallets_result.dart';
 
 class IonWalletsDataSource {
   IonWalletsDataSource({
@@ -16,7 +17,7 @@ class IonWalletsDataSource {
   final IonClientConfig config;
   final NetworkClient networkClient;
 
-  TaskEither<NetworkFailure, ListWalletsResponse> listWallets({
+  TaskEither<ListWalletsFailure, ListWalletsResponse> listWallets({
     required String authToken,
   }) {
     final requestData = ListWalletsRequest(
@@ -24,10 +25,14 @@ class IonWalletsDataSource {
       authToken: authToken,
     );
 
-    return networkClient.post(
-      listWalletsPath,
-      data: requestData.toJson(),
-      decoder: ListWalletsResponse.fromJson,
-    );
+    return networkClient
+        .post(
+          listWalletsPath,
+          data: requestData.toJson(),
+          decoder: ListWalletsResponse.fromJson,
+        )
+        .mapLeft(
+          (l) => UnknownListWalletsFailure(),
+        );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/src/auth/ion_auth_data_source.dart';
-import 'package:ion_identity_client/src/auth/types/register_user_types.dart';
+import 'package:ion_identity_client/src/auth/types/login_user_result.dart';
+import 'package:ion_identity_client/src/auth/types/register_user_result.dart';
 import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
 import 'package:ion_identity_client/src/core/network/network.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
@@ -41,19 +42,32 @@ class IonAuth {
     return result.fold(
       (l) => l,
       (r) {
-        tokenStorage.setToken(r.authentication.token);
+        tokenStorage.setToken(
+          username: username,
+          newToken: r.authentication.token,
+        );
         return RegisterUserSuccess();
       },
     );
   }
 
-  Future<void> loginUser() async {
+  Future<LoginUserResult> loginUser() async {
     final response = await dataSource.login(username: username).run();
-    response.fold(
-      (l) {},
+
+    return response.fold(
+      (l) => l,
       (r) {
-        tokenStorage.setToken(r.token);
+        tokenStorage.setToken(
+          username: username,
+          newToken: r.token,
+        );
+        return LoginUserSuccess();
       },
     );
+  }
+
+  void logOut() {
+    // TODO: implement logout request
+    tokenStorage.removeToken(username: username);
   }
 }
