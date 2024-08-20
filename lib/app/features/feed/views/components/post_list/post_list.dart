@@ -10,16 +10,16 @@ class Posts extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final posts = ref.watch(feedCurrentCategoryPostsProvider);
+    final postIds = ref.watch(feedCurrentCategoryPostIdsProvider);
 
     useOnInit<void>(() {
       ref.read(feedPostsProvider.notifier).fetchPosts();
     });
 
-    if (posts.isEmpty) {
+    if (postIds.isEmpty) {
       return const PostListSkeleton();
     }
 
-    return PostList(posts: posts);
+    return PostList(postIds: postIds);
   }
 }

@@ -25,7 +25,7 @@ class ReplyExpandedPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(postByIdProvider(id: postId)).asData;
+    final postData = ref.watch(postByIdProvider(id: postId)).asData?.value;
 
     if (postData == null) {
       return SizedBox.shrink();
@@ -44,7 +44,7 @@ class ReplyExpandedPage extends ConsumerWidget {
                 child: Column(
                   children: [
                     const PostHeader(),
-                    _PostBody(postData: postData.value),
+                    _PostBody(postData: postData),
                     SizedBox(height: 12.0.s),
                     ExpandedReplyInputField(),
                     PostRepliesActionBar(

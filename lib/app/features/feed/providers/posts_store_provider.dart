@@ -7,7 +7,8 @@ part 'posts_store_provider.g.dart';
 
 typedef State = Map<String, PostData>;
 
-@riverpod
+//TODO??
+@Riverpod(keepAlive: true)
 class PostsStore extends _$PostsStore {
   @override
   State build() {
@@ -24,24 +25,18 @@ class PostsStore extends _$PostsStore {
 }
 
 @riverpod
-Future<PostData> postById(PostByIdRef ref, {required String id}) async {
+Future<PostData?> postById(PostByIdRef ref, {required String id}) async {
   final posts = ref.watch(postsStoreProvider);
-  if (posts.containsKey(id)) {
-    return posts[id]!;
-  }
-
-  await Future<void>.delayed(Duration(seconds: 2));
-  final post = generateFakePost();
-  ref.read(postsStoreProvider.notifier).storePost(post);
-  return post;
+  return posts[id];
 }
 
 PostData generateFakePost() {
   var random = Random.secure();
-  return PostData.fromRawContent(
+  final post = PostData.fromRawContent(
     id: random.nextInt(10000000).toString(),
     rawContent: _fakeFeedMessages.elementAt(random.nextInt(_fakeFeedMessages.length)),
   );
+  return post;
 }
 
 const _fakeFeedMessages = [

@@ -23,7 +23,7 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => PostDetailsRoute(postId: postData.id).go(context),
+      onTap: () => PostDetailsRoute(postId: postData.id).push<void>(context),
       child: ScreenSideOffset.small(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

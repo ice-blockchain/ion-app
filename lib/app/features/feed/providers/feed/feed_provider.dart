@@ -37,10 +37,7 @@ class FeedPosts extends _$FeedPosts {
 }
 
 @riverpod
-List<PostData> feedCurrentCategoryPosts(FeedCurrentCategoryPostsRef ref) {
+List<String> feedCurrentCategoryPostIds(FeedCurrentCategoryPostIdsRef ref) {
   final currentCategory = ref.watch(feedCurrentCategoryProvider);
-  final currentCategoryPostIds = ref.watch(feedPostsProvider)[currentCategory] ?? [];
-  final postsStore = ref.watch(postsStoreProvider);
-
-  return currentCategoryPostIds.map((id) => postsStore[id]!).toList();
+  return ref.watch(feedPostsProvider)[currentCategory] ?? [];
 }

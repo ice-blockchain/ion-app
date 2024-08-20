@@ -26,14 +26,20 @@ class PostDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(postByIdProvider(id: postId)).asData;
+    final postData = ref.watch(postByIdProvider(id: postId)).asData?.value;
+
+    final fakeReplies = useMemoized(() {
+      final posts = List.generate(10, (_) => generateFakePost());
+      Future(() => ref.read(postsStoreProvider.notifier).storePosts(posts));
+      return posts.map((p) => p.id).toList();
+    });
+
+    final showReplySentNotification = useState(false);
+    _listenReplySentNotification(ref, showReplySentNotification);
 
     if (postData == null) {
       return PostNotFound();
     }
-
-    final showReplySentNotification = useState(false);
-    _listenReplySentNotification(ref, showReplySentNotification);
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
@@ -67,22 +73,22 @@ class PostDetailsPage extends HookConsumerWidget {
                 ),
                 SliverToBoxAdapter(
                   child: Post(
-                    postData: postData.value,
+                    postData: postData,
                     footer: PostDetailsFooter(
-                      postData: postData.value,
+                      postData: postData,
                     ),
                   ),
                 ),
                 SliverToBoxAdapter(child: FeedListSeparator()),
                 PostList(
-                  posts: List.generate(10, (_) => generateFakePost()),
+                  postIds: fakeReplies,
                   separator: FeedListSeparator(height: 1.0.s),
                 ),
               ],
             ),
           ),
           FeedListSeparator(height: 1.0.s),
-          ReplyInputField(postData: postData.value),
+          ReplyInputField(postData: postData),
         ],
       ),
     );
