@@ -71,6 +71,16 @@ class SimpleModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final commonButton = Button(
+      mainAxisSize: MainAxisSize.max,
+      label: Text(buttonText!),
+      onPressed: onPressed!,
+    );
+
+    final offsetButton = offsetType == OffsetType.large
+        ? ScreenSideOffset.large(child: commonButton)
+        : ScreenSideOffset.small(child: commonButton);
+
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -85,22 +95,7 @@ class SimpleModalSheet extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20.0.s),
-          button ??
-              (offsetType == OffsetType.large
-                  ? ScreenSideOffset.large(
-                      child: Button(
-                        mainAxisSize: MainAxisSize.max,
-                        label: Text(buttonText!),
-                        onPressed: onPressed!,
-                      ),
-                    )
-                  : ScreenSideOffset.small(
-                      child: Button(
-                        mainAxisSize: MainAxisSize.max,
-                        label: Text(buttonText!),
-                        onPressed: onPressed!,
-                      ),
-                    )),
+          button ?? offsetButton,
           ScreenBottomOffset(margin: 36.0.s),
         ],
       ),
