@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/providers/post_by_id_provider.dart';
+import 'package:ice/app/features/feed/providers/posts_store_provider.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_details_footer.dart';
@@ -26,7 +26,7 @@ class PostDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(postByIdProvider(id: postId));
+    final postData = ref.watch(postByIdProvider(id: postId)).asData;
 
     if (postData == null) {
       return PostNotFound();
@@ -49,7 +49,6 @@ class PostDetailsPage extends HookConsumerWidget {
         ],
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Flexible(
             child: CustomScrollView(
@@ -68,22 +67,22 @@ class PostDetailsPage extends HookConsumerWidget {
                 ),
                 SliverToBoxAdapter(
                   child: Post(
-                    postData: postData,
+                    postData: postData.value,
                     footer: PostDetailsFooter(
-                      postData: postData,
+                      postData: postData.value,
                     ),
                   ),
                 ),
                 SliverToBoxAdapter(child: FeedListSeparator()),
                 PostList(
-                  posts: List.generate(10, (_) => postData),
+                  posts: List.generate(10, (_) => postData.value),
                   separator: FeedListSeparator(height: 1.0.s),
                 ),
               ],
             ),
           ),
           FeedListSeparator(height: 1.0.s),
-          ReplyInputField(postData: postData),
+          ReplyInputField(postData: postData.value),
         ],
       ),
     );
