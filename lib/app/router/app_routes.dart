@@ -44,7 +44,7 @@ import 'package:ice/app/features/feed/views/pages/reply_expanded_page/reply_expa
 import 'package:ice/app/features/feed/views/pages/share_options_modal/share_options_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/share_type_modal_page/share_type_modal_page.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
-import 'package:ice/app/features/user/pages/switch_account_page/switch_account_page.dart';
+import 'package:ice/app/features/user/pages/switch_account_modal/switch_account_modal.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/coin_details_page.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/coin_receive_modal.dart';
@@ -301,7 +301,7 @@ class PullRightMenuRoute extends BaseRouteData {
 class SwitchAccountRoute extends BaseRouteData {
   SwitchAccountRoute()
       : super(
-          child: const SwitchAccountPage(),
+          child: const SwitchAccountModal(),
           type: IceRouteType.bottomSheet,
         );
 }
