@@ -11,11 +11,13 @@ import 'package:ice/app/router/app_routes.dart';
 class Post extends StatelessWidget {
   const Post({
     required this.postData,
+    this.header,
     this.footer,
     super.key,
   });
 
   final PostData postData;
+  final Widget? header;
   final Widget? footer;
 
   @override
@@ -26,9 +28,7 @@ class Post extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const PostHeader(
-              trailing: PostMenu(),
-            ),
+            header ?? const PostHeader(trailing: PostMenu()),
             PostBody(postData: postData),
             SizedBox(height: 10.0.s),
             footer ?? PostFooter(postData: postData),

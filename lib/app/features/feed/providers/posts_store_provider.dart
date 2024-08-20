@@ -31,12 +31,12 @@ Future<PostData> postById(PostByIdRef ref, {required String id}) async {
   }
 
   await Future<void>.delayed(Duration(seconds: 2));
-  final post = _generateFakePost();
+  final post = generateFakePost();
   ref.read(postsStoreProvider.notifier).storePost(post);
   return post;
 }
 
-PostData _generateFakePost() {
+PostData generateFakePost() {
   var random = Random.secure();
   return PostData.fromRawContent(
     id: random.nextInt(10000000).toString(),

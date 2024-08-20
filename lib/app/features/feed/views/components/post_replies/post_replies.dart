@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
+import 'package:ice/app/features/feed/providers/posts_store_provider.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
+import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/components/expand_replies_button.dart';
 
@@ -22,11 +26,14 @@ class PostReplies extends HookWidget {
 
     final expandReplies = useState(false);
 
-    final originalReplies = <Widget>[
-      Post(postData: postData),
-      Post(postData: postData),
-      Post(postData: postData),
-    ];
+    final originalReplies = useMemoized<List<Widget>>(() {
+      var random = Random();
+      return List.generate(
+        random.nextInt(5),
+        (_) => Post(header: PostHeader(), postData: generateFakePost()),
+      );
+    });
+
     final replies = expandReplies.value ? originalReplies : originalReplies.take(1);
 
     if (replies.isEmpty) {
@@ -53,9 +60,10 @@ class PostReplies extends HookWidget {
         ),
         if (originalReplies.length > 1)
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0.s),
+            padding: EdgeInsets.only(top: 10.0.s),
             child: ExpandRepliesButton(isExpanded: expandReplies),
           ),
+        SizedBox(height: 10.0.s)
       ],
     );
   }
