@@ -8,22 +8,29 @@ class AuthHeader extends StatelessWidget {
     this.title,
     this.description,
     this.icon,
+    this.titleStyle,
+    this.descriptionStyle,
+    double? topOffset,
     double? iconOffset,
     double? descriptionSidePadding,
-  })  : iconOffset = iconOffset ?? 20.0.s,
+  })  : topOffset = topOffset ?? 5.0.s,
+        iconOffset = iconOffset ?? 20.0.s,
         descriptionSidePadding = descriptionSidePadding ?? 0.0.s;
 
   final String? title;
   final String? description;
   final Widget? icon;
+  final double topOffset;
   final double iconOffset;
   final double descriptionSidePadding;
+  final TextStyle? titleStyle;
+  final TextStyle? descriptionStyle;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 5.0.s),
+        SizedBox(height: topOffset),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 28.0.s),
           child: Column(
@@ -37,9 +44,10 @@ class AuthHeader extends StatelessWidget {
                 Text(
                   title!,
                   textAlign: TextAlign.center,
-                  style: context.theme.appTextThemes.headline1.copyWith(
-                    color: context.theme.appColors.primaryText,
-                  ),
+                  style: titleStyle ??
+                      context.theme.appTextThemes.headline1.copyWith(
+                        color: context.theme.appColors.primaryText,
+                      ),
                 ),
               if (description.isNotEmpty)
                 Padding(
@@ -51,9 +59,10 @@ class AuthHeader extends StatelessWidget {
                   child: Text(
                     description!,
                     textAlign: TextAlign.center,
-                    style: context.theme.appTextThemes.body2.copyWith(
-                      color: context.theme.appColors.tertararyText,
-                    ),
+                    style: descriptionStyle ??
+                        context.theme.appTextThemes.body2.copyWith(
+                          color: context.theme.appColors.tertararyText,
+                        ),
                   ),
                 ),
             ],

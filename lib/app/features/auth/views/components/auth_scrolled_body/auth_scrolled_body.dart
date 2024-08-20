@@ -15,6 +15,8 @@ class AuthScrollContainer extends HookWidget {
     this.children = const [],
     this.showBackButton = true,
     this.actions,
+    this.titleStyle,
+    this.descriptionStyle,
   });
 
   final List<Widget> children;
@@ -28,6 +30,9 @@ class AuthScrollContainer extends HookWidget {
   final bool showBackButton;
 
   final List<Widget>? actions;
+
+  final TextStyle? titleStyle;
+  final TextStyle? descriptionStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +79,8 @@ class AuthScrollContainer extends HookWidget {
                   AuthHeader(
                     title: title,
                     description: description,
+                    titleStyle: titleStyle != null ? titleStyle : null,
+                    descriptionStyle: descriptionStyle != null ? descriptionStyle : null,
                     icon: icon != null ? AuthHeaderIcon(icon: icon) : icon,
                   ),
                   ...children

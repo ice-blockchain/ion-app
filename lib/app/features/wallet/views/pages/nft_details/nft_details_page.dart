@@ -52,7 +52,7 @@ class NftDetailsPage extends ConsumerWidget {
                       networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
-                    RoundedCard(
+                    RoundedCard.filled(
                       child: ReadMoreText(
                         nft.description,
                       ),

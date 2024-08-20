@@ -29,13 +29,13 @@ class SecureAccountModal extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 32.0.s),
+          SizedBox(height: 16.0.s),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.0.s),
             child: Column(
               children: [
                 InfoCard(
-                  iconAsset: Assets.images.identity.actionWalletIdkey,
+                  iconAsset: Assets.images.icons.actionWalletSecureaccount,
                   title: locale.protect_account_title_secure_account,
                   description: locale.protect_account_description_secure_account,
                 ),
@@ -43,12 +43,10 @@ class SecureAccountModal extends StatelessWidget {
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   leadingIcon: Assets.images.icons.iconWalletProtectAccount.icon(
-                    color: Colors.transparent,
+                    color: context.theme.appColors.onPrimaryAccent,
                   ),
                   label: Text(locale.protect_account_button),
-                  onPressed: () {
-                    SecureAccountOptionsRoute().push<void>(context);
-                  },
+                  onPressed: () => SecureAccountOptionsRoute().push<void>(context),
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],

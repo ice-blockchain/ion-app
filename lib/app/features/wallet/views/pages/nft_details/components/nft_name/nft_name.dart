@@ -20,7 +20,7 @@ class NftName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RoundedCard(
+    return RoundedCard.filled(
       child: Column(
         children: [
           Row(

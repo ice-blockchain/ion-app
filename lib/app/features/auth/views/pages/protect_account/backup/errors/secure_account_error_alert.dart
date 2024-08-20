@@ -10,8 +10,8 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SecureAccountErrorModal extends StatelessWidget {
-  const SecureAccountErrorModal({super.key});
+class SecureAccountErrorAlert extends StatelessWidget {
+  const SecureAccountErrorAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class SecureAccountErrorModal extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 32.0.s),
+          SizedBox(height: 16.0.s),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.0.s),
             child: Column(
