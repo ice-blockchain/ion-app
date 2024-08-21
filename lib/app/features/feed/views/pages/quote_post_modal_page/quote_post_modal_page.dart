@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
+import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
 import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/quote_post_comment_input.dart';
@@ -69,6 +70,7 @@ class QuotePostModalPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(16.0.s),
                             ),
                             child: Post(
+                              header: PostHeader(),
                               footer: const SizedBox.shrink(),
                               postData: payload,
                             ),

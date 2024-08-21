@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
+import 'package:ice/app/router/app_routes.dart';
 
 class ReplyListItem extends ConsumerWidget {
   const ReplyListItem({required this.postId});
@@ -15,6 +16,9 @@ class ReplyListItem extends ConsumerWidget {
 
     if (post == null) return SizedBox.shrink();
 
-    return Post(header: PostHeader(), postData: post);
+    return GestureDetector(
+      onTap: () => PostDetailsRoute(postId: postId).push<void>(context),
+      child: Post(header: PostHeader(), postData: post),
+    );
   }
 }

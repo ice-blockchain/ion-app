@@ -5,6 +5,7 @@ import 'package:ice/app/features/feed/views/components/post/components/post_foot
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
+import 'package:ice/app/router/app_routes.dart';
 
 class PostListItem extends HookConsumerWidget {
   const PostListItem({required this.postId});
@@ -22,13 +23,16 @@ class PostListItem extends HookConsumerWidget {
 
     if (post == null) return SizedBox.shrink();
 
-    return Post(
-      postData: post,
-      footer: Column(
-        children: [
-          PostFooter(postData: post),
-          if (replyIds.length > 0) PostReplies(postIds: replyIds),
-        ],
+    return GestureDetector(
+      onTap: () => PostDetailsRoute(postId: postId).push<void>(context),
+      child: Post(
+        postData: post,
+        footer: Column(
+          children: [
+            PostFooter(postData: post),
+            if (replyIds.length > 0) PostReplies(postIds: replyIds),
+          ],
+        ),
       ),
     );
   }
