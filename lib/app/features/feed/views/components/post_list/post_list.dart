@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/feed/model/post/post_data.dart';
-import 'package:ice/app/features/feed/providers/feed_provider.dart';
+import 'package:ice/app/features/feed/providers/feed_current_category_provider.dart';
+import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/views/components/post_list/components/post_list.dart';
 import 'package:ice/app/features/feed/views/components/post_list/components/post_list_skeleton.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
@@ -11,15 +11,17 @@ class Posts extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final posts = ref.watch(feedNotifierProvider);
+    final category = ref.watch(feedCurrentCategoryProvider);
+    final postIds = ref.watch(categoryPostIdsProvider(category: category));
 
-    useOnInit<void>(() {
-      ref.read(feedNotifierProvider.notifier).fetchPosts();
-    });
+    useOnInit(() {
+      ref.read(postsProvider.notifier).fetchCategoryPosts(category: category);
+    }, [category]);
 
-    return posts.maybeWhen(
-      data: (List<PostData> data) => PostList(posts: data),
-      orElse: () => const PostListSkeleton(),
-    );
+    if (postIds.isEmpty) {
+      return const PostListSkeleton();
+    }
+
+    return PostList(postIds: postIds);
   }
 }

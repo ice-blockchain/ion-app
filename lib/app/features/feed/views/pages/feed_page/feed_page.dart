@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
-import 'package:ice/app/features/feed/providers/feed_category_provider.dart';
+import 'package:ice/app/features/feed/providers/feed_current_category_provider.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/components/post_list/post_list.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
@@ -18,7 +18,7 @@ class FeedPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-    final feedCategory = ref.watch(feedCategoryNotifierProvider);
+    final feedCategory = ref.watch(feedCurrentCategoryProvider);
 
     return PullRightMenuHandler(
       child: Scaffold(

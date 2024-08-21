@@ -6,38 +6,30 @@ import 'package:ice/app/features/feed/views/components/post/components/post_body
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_menu/post_menu.dart';
-import 'package:ice/app/features/feed/views/components/post_replies/post_replies.dart';
-import 'package:ice/app/router/app_routes.dart';
 
 class Post extends StatelessWidget {
   const Post({
     required this.postData,
-    this.canShowReplies = true,
+    this.header,
     this.footer,
     super.key,
   });
 
   final PostData postData;
-  final bool canShowReplies;
+  final Widget? header;
   final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => PostDetailsRoute(postId: postData.id).push<void>(context),
-      child: ScreenSideOffset.small(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const PostHeader(
-              trailing: PostMenu(),
-            ),
-            PostBody(postData: postData),
-            SizedBox(height: 10.0.s),
-            footer ?? PostFooter(postData: postData),
-            if (canShowReplies) PostReplies(postData: postData),
-          ],
-        ),
+    return ScreenSideOffset.small(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          header ?? const PostHeader(trailing: PostMenu()),
+          PostBody(postData: postData),
+          SizedBox(height: 10.0.s),
+          footer ?? PostFooter(postData: postData),
+        ],
       ),
     );
   }

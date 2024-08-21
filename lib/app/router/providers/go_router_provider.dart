@@ -20,27 +20,17 @@ GoRouter goRouter(GoRouterRef ref) {
     redirect: (context, state) {
       final authState = ref.read(authProvider);
       final initState = ref.read(initAppProvider);
-      final isAnimationCompleted = ref.read(splashProvider);
+      final isSplashAnimationCompleted = ref.read(splashProvider);
 
-      final isSplash = state.matchedLocation == SplashRoute().location;
       final isInitInProgress = initState.isLoading;
       final isInitError = initState.hasError;
-      final isInitCompleted = initState.hasValue;
 
       if (isInitError) {
         return ErrorRoute().location;
       }
 
-      if (isInitInProgress && !isSplash) {
+      if (isInitInProgress || !isSplashAnimationCompleted) {
         return SplashRoute().location;
-      }
-
-      if (isInitCompleted && isSplash && isAnimationCompleted) {
-        return switch (authState) {
-          Authenticated() => FeedRoute().location,
-          Unauthenticated() => IntroRoute().location,
-          _ => null
-        };
       }
 
       return switch (authState) {

@@ -15,7 +15,7 @@ class ExpandedReplyInputField extends HookConsumerWidget {
     final textStyles = context.theme.appTextThemes;
 
     final focusNode = useFocusNode();
-    useOnInit<void>(focusNode.requestFocus);
+    useOnInit(focusNode.requestFocus);
 
     final textController = useTextEditingController(
       text: ref.watch(replyDataNotifierProvider.select((data) => data.text)),
