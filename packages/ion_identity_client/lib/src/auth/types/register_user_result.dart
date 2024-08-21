@@ -4,6 +4,8 @@ final class RegisterUserSuccess extends RegisterUserResult {}
 
 sealed class RegisterUserFailure extends RegisterUserResult {}
 
+final class RegistrationCodeExpiredRegisterUserFailure extends RegisterUserFailure {}
+
 final class UserAlreadyExistsRegisterUserFailure extends RegisterUserFailure {}
 
 final class PasskeyValidationRegisterUserFailure extends RegisterUserFailure {}
