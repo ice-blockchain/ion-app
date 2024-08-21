@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/src/auth/ion_auth_data_source.dart';
-import 'package:ion_identity_client/src/auth/types/register_user_types.dart';
+import 'package:ion_identity_client/src/auth/types/login_user_result.dart';
+import 'package:ion_identity_client/src/auth/types/register_user_result.dart';
 import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
 import 'package:ion_identity_client/src/core/network/network.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
@@ -36,24 +37,41 @@ class IonAuth {
             ),
           ),
         )
+        .flatMap(
+          (r) => tokenStorage.setToken(
+            username: username,
+            newToken: r.authentication.token,
+            onError: UnknownRegisterUserFailure.new,
+          ),
+        )
         .run();
 
     return result.fold(
       (l) => l,
-      (r) {
-        tokenStorage.setToken(r.authentication.token);
-        return RegisterUserSuccess();
-      },
+      (r) => RegisterUserSuccess(),
     );
   }
 
-  Future<void> loginUser() async {
-    final response = await dataSource.login(username: username).run();
-    response.fold(
-      (l) {},
-      (r) {
-        tokenStorage.setToken(r.token);
-      },
+  Future<LoginUserResult> loginUser() async {
+    final response = await dataSource
+        .login(username: username)
+        .flatMap(
+          (r) => tokenStorage.setToken(
+            username: username,
+            newToken: r.token,
+            onError: UnknownLoginUserFailure.new,
+          ),
+        )
+        .run();
+
+    return response.fold(
+      (l) => l,
+      (r) => LoginUserSuccess(),
     );
+  }
+
+  void logOut() {
+    // TODO: implement logout request
+    tokenStorage.removeToken(username: username);
   }
 }

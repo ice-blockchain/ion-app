@@ -2,6 +2,7 @@ import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets_data_source.dart';
+import 'package:ion_identity_client/src/wallets/types/list_wallets_result.dart';
 
 class IonWallets {
   IonWallets({
@@ -18,7 +19,16 @@ class IonWallets {
   final PasskeysSigner signer;
   final TokenStorage tokenStorage;
 
-  Future<void> listWallets() async {
-    await dataSource.listWallets(authToken: tokenStorage.getToken() ?? 'token').run();
+  Future<ListWalletsResult> listWallets() async {
+    final response = await dataSource
+        .listWallets(authToken: tokenStorage.getToken(username: username)?.token ?? '')
+        .run();
+
+    return response.fold(
+      (l) => l,
+      (r) => ListWalletsSuccess(
+        wallets: r.items,
+      ),
+    );
   }
 }

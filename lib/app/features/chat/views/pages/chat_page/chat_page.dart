@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/auth/views/pages/ion_identity_client_test/ion_identity_client_test_page.dart';
 
 class ChatPage extends ConsumerWidget {
   const ChatPage({super.key});
@@ -28,6 +29,17 @@ class ChatPage extends ConsumerWidget {
                   ref.read(authProvider.notifier).signOut();
                 },
                 child: const Text('Logout'),
+              ),
+              const SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (context) => IonIdentityClientTestPage(),
+                    ),
+                  );
+                },
+                child: const Text('ion-identity-client'),
               ),
             ],
           ),
