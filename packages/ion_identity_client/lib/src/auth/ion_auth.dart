@@ -37,32 +37,36 @@ class IonAuth {
             ),
           ),
         )
+        .flatMap(
+          (r) => tokenStorage.setToken(
+            username: username,
+            newToken: r.authentication.token,
+            onError: UnknownRegisterUserFailure.new,
+          ),
+        )
         .run();
 
     return result.fold(
       (l) => l,
-      (r) {
-        tokenStorage.setToken(
-          username: username,
-          newToken: r.authentication.token,
-        );
-        return RegisterUserSuccess();
-      },
+      (r) => RegisterUserSuccess(),
     );
   }
 
   Future<LoginUserResult> loginUser() async {
-    final response = await dataSource.login(username: username).run();
+    final response = await dataSource
+        .login(username: username)
+        .flatMap(
+          (r) => tokenStorage.setToken(
+            username: username,
+            newToken: r.token,
+            onError: UnknownLoginUserFailure.new,
+          ),
+        )
+        .run();
 
     return response.fold(
       (l) => l,
-      (r) {
-        tokenStorage.setToken(
-          username: username,
-          newToken: r.token,
-        );
-        return LoginUserSuccess();
-      },
+      (r) => LoginUserSuccess(),
     );
   }
 

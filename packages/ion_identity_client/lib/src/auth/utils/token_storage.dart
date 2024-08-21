@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
 import 'package:ion_identity_client/src/core/types/user_token.dart';
 
@@ -39,15 +40,22 @@ class TokenStorage {
     );
   }
 
-  Future<void> setToken({
+  TaskEither<E, Unit> setToken<E>({
     required String username,
     required String? newToken,
-  }) async {
-    _userTokensCache[username] = newToken;
-    await _saveTokensToStorage();
+    required E Function(Object?, StackTrace?) onError,
+  }) {
+    return TaskEither<E, Unit>.tryCatch(
+      () async {
+        _userTokensCache[username] = newToken;
+        await _saveTokensToStorage();
 
-    final streamState = _tokensAsList();
-    _userTokensStreamController.add(streamState);
+        final streamState = _tokensAsList();
+        _userTokensStreamController.add(streamState);
+        return unit;
+      },
+      onError,
+    );
   }
 
   Future<void> removeToken({

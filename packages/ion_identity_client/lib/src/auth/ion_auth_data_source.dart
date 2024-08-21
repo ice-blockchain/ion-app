@@ -30,19 +30,17 @@ class IonAuthDataSource {
 
     return networkClient
         .post(
-      registerInitPath,
-      data: requestData.toJson(),
-      decoder: UserRegistrationChallenge.fromJson,
-    )
+          registerInitPath,
+          data: requestData.toJson(),
+          decoder: UserRegistrationChallenge.fromJson,
+        )
         .mapLeft(
-      (l) {
-        // TODO: find a complete list of user registration failures
-        if (l is ResponseFormatNetworkFailure) {
-          return UserAlreadyExistsRegisterUserFailure();
-        }
-        return UnknownRegisterUserFailure();
-      },
-    );
+          // TODO: find a complete list of user registration failures
+          (l) => switch (l) {
+            ResponseFormatNetworkFailure() => UserAlreadyExistsRegisterUserFailure(),
+            _ => UnknownRegisterUserFailure(),
+          },
+        );
   }
 
   TaskEither<RegisterUserFailure, RegistrationCompleteResponse> registerComplete({
@@ -57,19 +55,17 @@ class IonAuthDataSource {
 
     return networkClient
         .post(
-      registerCompletePath,
-      data: requestData.toJson(),
-      decoder: RegistrationCompleteResponse.fromJson,
-    )
+          registerCompletePath,
+          data: requestData.toJson(),
+          decoder: RegistrationCompleteResponse.fromJson,
+        )
         .mapLeft(
-      (l) {
-        // TODO: find a complete list of user registration failures
-        if (l is ResponseFormatNetworkFailure) {
-          return UserAlreadyExistsRegisterUserFailure();
-        }
-        return UnknownRegisterUserFailure();
-      },
-    );
+          // TODO: find a complete list of user registration failures
+          (l) => switch (l) {
+            ResponseFormatNetworkFailure() => UserAlreadyExistsRegisterUserFailure(),
+            _ => UnknownRegisterUserFailure(),
+          },
+        );
   }
 
   TaskEither<LoginUserFailure, LoginResponse> login({
@@ -79,14 +75,12 @@ class IonAuthDataSource {
 
     return networkClient
         .post(
-      loginInitPath,
-      data: requestData.toJson(),
-      decoder: LoginResponse.fromJson,
-    )
+          loginInitPath,
+          data: requestData.toJson(),
+          decoder: LoginResponse.fromJson,
+        )
         .mapLeft(
-      (l) {
-        return UnknownLoginUserFailure();
-      },
-    );
+          (l) => UnknownLoginUserFailure(),
+        );
   }
 }
