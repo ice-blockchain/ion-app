@@ -35,12 +35,6 @@ class ActionButton extends StatelessWidget {
       ),
       title: Text(label, style: context.theme.appTextThemes.body),
       trailing: Assets.images.icons.iconArrowRight.icon(),
-      // contentPadding: EdgeInsets.only(
-      //   left: 12.0.s,
-      //   top: 12.0.s,
-      //   bottom: 12.0.s,
-      //   right: 12.0.s,
-      // ),
       backgroundColor: context.theme.appColors.tertararyBackground,
     );
   }

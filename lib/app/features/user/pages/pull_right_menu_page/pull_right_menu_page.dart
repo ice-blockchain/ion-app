@@ -5,6 +5,7 @@ import 'package:ice/app/features/user/pages/pull_right_menu_page/components/foot
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/header/header.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/links_list/links_list.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_info/profile_info.dart';
+import 'package:go_router/go_router.dart';
 
 class PullRightMenuPage extends StatelessWidget {
   const PullRightMenuPage({super.key});
@@ -16,7 +17,7 @@ class PullRightMenuPage extends StatelessWidget {
       child: GestureDetector(
         onHorizontalDragEnd: (DragEndDetails details) {
           if (details.velocity.pixelsPerSecond.dx < -100) {
-            Navigator.of(context).pop();
+            context.pop();
           }
         },
         child: const Stack(
