@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
@@ -20,10 +21,16 @@ class Post extends StatelessWidget {
   final Widget? header;
   final Widget? footer;
 
+  void _openPostDetails(BuildContext context) {
+    if (!GoRouterState.of(context).pathParameters.containsValue(postData.id)) {
+      PostDetailsRoute(postId: postData.id).push<void>(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => PostDetailsRoute(postId: postData.id).push<void>(context),
+      onTap: () => _openPostDetails(context),
       child: ScreenSideOffset.small(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
