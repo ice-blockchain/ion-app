@@ -3,6 +3,7 @@ import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/model/authenticator_type.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/components/secure_account_option.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -67,7 +68,9 @@ class SecureAccountOptionsPage extends StatelessWidget {
                   icon: Assets.images.icons.iconLoginAuthcode.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  onTap: () => SecureAccountErrorRoute().push<void>(context),
+                  onTap: () => AuthenticatorSetupRoute(
+                    step: AuthenticatorSteps.options,
+                  ).push<void>(context),
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(

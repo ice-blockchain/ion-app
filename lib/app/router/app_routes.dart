@@ -7,6 +7,8 @@ import 'package:ice/app/features/auth/views/pages/discover_creators/discover_cre
 import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
 import 'package:ice/app/features/auth/views/pages/get_started/get_started.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/intro_page.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/authenticator_setup_page.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/model/authenticator_type.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/backup_options_page.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/backup_recovery_keys_modal.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/errors/recovery_keys_error_alert.dart';

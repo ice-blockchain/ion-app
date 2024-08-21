@@ -24,6 +24,19 @@ class ScreenSideOffset extends StatelessWidget {
     );
   }
 
+  factory ScreenSideOffset.medium({
+    required Widget child,
+    Key? key,
+    ScreenOffsetSide? only,
+  }) {
+    return ScreenSideOffset._(
+      key: key,
+      margin: defaultMediumMargin,
+      only: only,
+      child: child,
+    );
+  }
+
   factory ScreenSideOffset.small({
     required Widget child,
     Key? key,
@@ -38,7 +51,7 @@ class ScreenSideOffset extends StatelessWidget {
   }
 
   static double get defaultSmallMargin => 16.0.s;
-
+  static double get defaultMediumMargin => 28.0.s;
   static double get defaultLargeMargin => 44.0.s;
 
   final Widget child;
