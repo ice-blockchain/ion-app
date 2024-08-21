@@ -30,7 +30,7 @@ class NftsTab extends HookConsumerWidget {
     final searchValue = walletAssetSearchValueSelector(ref, tabType);
     final walletId = ref.watch(currentWalletIdProvider);
 
-    useOnInit<void>(
+    useOnInit(
       () {
         if (walletId.isNotEmpty) {
           ref

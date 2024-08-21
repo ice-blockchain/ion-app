@@ -30,7 +30,7 @@ class WalletPage extends HookConsumerWidget {
     final scrollController = useScrollController();
     final hasContactsPermission = hasPermissionSelector(ref, PermissionType.Contacts);
 
-    useOnInit<void>(() {
+    useOnInit(() {
       if (hasContactsPermission ?? false) {
         ref.read(contactsDataNotifierProvider.notifier).fetchContacts();
       } else {

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
-import 'package:ice/app/features/feed/providers/posts_store_provider.dart';
+import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
@@ -25,7 +25,7 @@ class ReplyExpandedPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(postByIdProvider(id: postId)).asData?.value;
+    final postData = ref.watch(postByIdProvider(postId: postId));
 
     if (postData == null) {
       return SizedBox.shrink();

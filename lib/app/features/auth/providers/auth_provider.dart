@@ -13,7 +13,8 @@ class Auth extends _$Auth {
   }
 
   Future<void> rehydrate() async {
-    state = const Unauthenticated();
+    //TODO::revert
+    state = Authenticated(authToken: AuthToken(access: 'access', refresh: 'refresh'));
   }
 
   Future<void> signUp({required String keyName}) async {

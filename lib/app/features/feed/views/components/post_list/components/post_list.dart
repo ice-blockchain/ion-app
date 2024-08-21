@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
-import 'package:ice/app/features/feed/providers/posts_store_provider.dart';
+import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies.dart';
+import 'package:ice/app/hooks/use_on_init.dart';
 
 class PostList extends StatelessWidget {
   const PostList({
@@ -26,14 +27,14 @@ class PostList extends StatelessWidget {
       },
       itemBuilder: (BuildContext context, int index) {
         final postId = postIds[index];
-        return PostBuilder(
+        return _PostBuilder(
           postId: postId,
-          builder: (context, postData) => Post(
+          builder: (context, postData, replyIds) => Post(
             postData: postData,
             footer: Column(
               children: [
                 PostFooter(postData: postData),
-                PostReplies(),
+                if (postIds.length > 0) PostReplies(postIds: replyIds),
               ],
             ),
           ),
@@ -43,22 +44,23 @@ class PostList extends StatelessWidget {
   }
 }
 
-class PostBuilder extends ConsumerWidget {
-  const PostBuilder({
-    super.key,
-    required this.postId,
-    required this.builder,
-  });
+class _PostBuilder extends HookConsumerWidget {
+  const _PostBuilder({required this.postId, required this.builder});
 
   final String postId;
 
-  final Widget Function(BuildContext context, PostData data) builder;
+  final Widget Function(BuildContext context, PostData data, List<String> replyIds) builder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(postByIdProvider(id: postId)).asData?.value;
-    print('>>> ${post?.id}');
+    final post = ref.watch(postByIdProvider(postId: postId));
+    final replyIds = ref.watch(postReplyIdsProvider(postId: postId));
+
+    useOnInit(() {
+      ref.read(postsProvider.notifier).fetchPostReplies(postId: postId);
+    });
+
     if (post == null) return SizedBox.shrink();
-    return builder(context, post);
+    return builder(context, post, replyIds);
   }
 }

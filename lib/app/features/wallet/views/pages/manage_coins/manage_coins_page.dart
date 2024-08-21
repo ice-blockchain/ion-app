@@ -26,7 +26,7 @@ class ManageCoinsPage extends HookConsumerWidget {
     final manageCoinsData = manageCoinsDataSelector(ref);
     final isLoading = manageCoinsIsLoadingSelector(ref);
 
-    useOnInit<void>(
+    useOnInit(
       () {
         ref.read(manageCoinsNotifierProvider.notifier).fetch(searchValue: searchText.value);
       },

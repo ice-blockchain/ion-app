@@ -35,7 +35,7 @@ class CoinDetailsPage extends HookConsumerWidget {
     final isLoading = coinTransactionsIsLoadingSelector(ref);
     final activeNetworkType = useState<NetworkType>(NetworkType.all);
 
-    useOnInit<void>(
+    useOnInit(
       () {
         if (walletId.isNotEmpty && coinId.isNotEmpty) {
           ref.read(coinTransactionsNotifierProvider.notifier).fetch(

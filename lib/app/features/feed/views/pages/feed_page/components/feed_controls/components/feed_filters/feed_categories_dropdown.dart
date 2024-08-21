@@ -4,7 +4,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/drop_down_menu/drop_down_menu.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
-import 'package:ice/app/features/feed/providers/feed/feed_current_category_provider.dart';
+import 'package:ice/app/features/feed/providers/feed_current_category_provider.dart';
 
 class FeedCategoriesDropdown extends ConsumerWidget {
   const FeedCategoriesDropdown({super.key});
