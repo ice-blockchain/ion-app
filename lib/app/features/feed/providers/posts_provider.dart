@@ -12,19 +12,19 @@ part 'posts_provider.freezed.dart';
 part 'posts_provider.g.dart';
 
 @Freezed(copyWith: true)
-class State with _$State {
-  const factory State({
+class PostsState with _$PostsState {
+  const factory PostsState({
     required Map<String, PostData> store,
     required Map<FeedCategory, List<String>> categoryPostIds,
     required Map<String, List<String>> postReplyIds,
-  }) = _State;
+  }) = _PostsState;
 }
 
 @riverpod
 class Posts extends _$Posts {
   @override
-  State build() {
-    return const State(store: {}, categoryPostIds: {}, postReplyIds: {});
+  PostsState build() {
+    return const PostsState(store: {}, categoryPostIds: {}, postReplyIds: {});
   }
 
   Future<void> fetchCategoryPosts({required FeedCategory category}) async {
