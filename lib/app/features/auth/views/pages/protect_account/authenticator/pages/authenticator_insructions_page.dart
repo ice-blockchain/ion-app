@@ -3,7 +3,7 @@ import 'package:ice/app/components/card/rounded_card.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/components/copy_key.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/components/copy_key_card.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class AuthenticatorInstructionsPage extends StatelessWidget {

@@ -13,7 +13,7 @@ class CopyKeyCard extends HookWidget {
     final locale = context.i18n;
     final textTheme = context.theme.appTextThemes;
 
-    final isCopied = useState<bool>(false);
+    final isCopied = useState(false);
 
     return RoundedCard.outlined(
       padding: EdgeInsets.symmetric(vertical: 40.0.s),
