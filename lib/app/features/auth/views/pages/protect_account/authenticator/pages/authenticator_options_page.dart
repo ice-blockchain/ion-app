@@ -13,20 +13,29 @@ class AuthenticatorOptionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: 16.0.s),
-      itemCount: AutethenticatorType.values.length,
-      itemBuilder: (context, index) {
-        final type = AutethenticatorType.values[index];
-        return Padding(
-          padding: EdgeInsets.only(bottom: 12.0.s),
-          child: SecureAccountOption(
-            title: type.getDisplayName(context),
-            icon: type.iconAsset.icon(),
-            onTap: () => onTap(type),
+    final authenticatorTypes = AutethenticatorType.values;
+
+    return Column(
+      children: [
+        SizedBox(height: 32.0.s),
+        Expanded(
+          child: ListView.builder(
+            itemCount: authenticatorTypes.length,
+            itemBuilder: (context, index) {
+              final type = authenticatorTypes[index];
+
+              return Padding(
+                padding: EdgeInsets.only(bottom: 12.0.s),
+                child: SecureAccountOption(
+                  title: type.getDisplayName(context),
+                  icon: type.iconAsset.icon(),
+                  onTap: () => onTap(type),
+                ),
+              );
+            },
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }

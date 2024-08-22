@@ -58,12 +58,7 @@ enum AutethenticatorType {
   micsrosoft,
   lastpass,
   authy,
-  userLockPush,
-  test1,
-  test2,
-  test3,
-  test4,
-  test5;
+  userLockPush;
 
   String getDisplayName(BuildContext context) {
     return switch (this) {
@@ -72,11 +67,6 @@ enum AutethenticatorType {
       AutethenticatorType.lastpass => 'LastPass Authenticator',
       AutethenticatorType.authy => 'Authy',
       AutethenticatorType.userLockPush => 'UserLock Push',
-      AutethenticatorType.test1 => 'Test 1',
-      AutethenticatorType.test2 => 'Test 2',
-      AutethenticatorType.test3 => 'Test 3',
-      AutethenticatorType.test4 => 'Test 4',
-      AutethenticatorType.test5 => 'Test 5',
     };
   }
 
@@ -87,11 +77,6 @@ enum AutethenticatorType {
       AutethenticatorType.lastpass => Assets.images.icons.icon2faLastpass,
       AutethenticatorType.authy => Assets.images.icons.icon2faAuthy,
       AutethenticatorType.userLockPush => Assets.images.icons.icon2faUserlock,
-      AutethenticatorType.test1 => Assets.images.icons.icon2faGoogleauth,
-      AutethenticatorType.test2 => Assets.images.icons.icon2famicrosoft,
-      AutethenticatorType.test3 => Assets.images.icons.icon2faLastpass,
-      AutethenticatorType.test4 => Assets.images.icons.icon2faAuthy,
-      AutethenticatorType.test5 => Assets.images.icons.icon2faUserlock,
     };
   }
 }
