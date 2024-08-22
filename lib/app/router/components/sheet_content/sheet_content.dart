@@ -31,6 +31,7 @@ class SheetContent extends StatelessWidget {
       body: SheetShape(
         backgroundColor: backgroundColor,
         child: body,
+        bottomPadding: bottomPadding,
       ),
     );
   }
