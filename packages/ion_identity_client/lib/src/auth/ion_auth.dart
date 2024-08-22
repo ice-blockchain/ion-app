@@ -8,7 +8,17 @@ import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 
+/// A class that handles user authentication processes, including user registration,
+/// login, and logout.
 class IonAuth {
+  /// Creates an instance of [IonAuth] with the provided [username], [config],
+  /// [dataSource], [signer], and [tokenStorage].
+  ///
+  /// - [username]: The username of the user being authenticated.
+  /// - [config]: The client configuration containing necessary identifiers.
+  /// - [dataSource]: The data source responsible for API interactions related to authentication.
+  /// - [signer]: The passkey signer used for handling cryptographic operations.
+  /// - [tokenStorage]: The token storage used to securely manage authentication tokens.
   IonAuth({
     required this.username,
     required this.config,
@@ -23,6 +33,11 @@ class IonAuth {
   final PasskeysSigner signer;
   final TokenStorage tokenStorage;
 
+  /// Registers a new user using the provided username and handles the necessary
+  /// cryptographic operations and API interactions.
+  ///
+  /// Returns a [RegisterUserResult], which can either be a [RegisterUserSuccess]
+  /// on success or a specific [RegisterUserFailure] type on failure.
   Future<RegisterUserResult> registerUser() async {
     final result = await dataSource
         .registerInit(username: username)
@@ -52,6 +67,11 @@ class IonAuth {
     );
   }
 
+  /// Logs in an existing user using the provided username, handling the necessary
+  /// API interactions and storing the authentication token securely.
+  ///
+  /// Returns a [LoginUserResult], which can either be a [LoginUserSuccess] on success
+  /// or a specific [LoginUserFailure] type on failure.
   Future<LoginUserResult> loginUser() async {
     final response = await dataSource
         .login(username: username)

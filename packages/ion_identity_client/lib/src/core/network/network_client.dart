@@ -5,13 +5,24 @@ import 'package:ion_identity_client/src/core/types/types.dart';
 
 typedef Decoder<T> = T Function(JsonObject response);
 
+/// A generic network client that wraps around Dio and provides methods for
+/// making GET and POST requests with automatic error handling and decoding
+/// of JSON responses into typed results.
 class NetworkClient {
+  /// Creates an instance of [NetworkClient] with the provided Dio instance.
+  /// This Dio instance is used to perform the actual network requests.
   NetworkClient({
     required this.dio,
   });
 
+  /// The Dio instance used to perform network requests.
   final Dio dio;
 
+  /// Sends a GET request to the specified [path] with optional [queryParams],
+  /// and decodes the JSON response into a [Result] using the provided [decoder].
+  ///
+  /// Returns a [TaskEither] that either contains a [NetworkFailure] or the
+  /// decoded [Result].
   TaskEither<NetworkFailure, Result> get<Result>(
     String path, {
     required Decoder<Result> decoder,
@@ -26,6 +37,12 @@ class NetworkClient {
     );
   }
 
+  /// Sends a POST request to the specified [path] with optional [queryParams]
+  /// and request [data], and decodes the JSON response into a [Result] using
+  /// the provided [decoder].
+  ///
+  /// Returns a [TaskEither] that either contains a [NetworkFailure] or the
+  /// decoded [Result].
   TaskEither<NetworkFailure, Result> post<Result>(
     String path, {
     required Decoder<Result> decoder,
@@ -42,6 +59,11 @@ class NetworkClient {
     );
   }
 
+  /// A private method that executes the provided [request] function, handles
+  /// potential errors, and decodes the JSON response using the provided [decoder].
+  ///
+  /// Returns a [TaskEither] that either contains a [NetworkFailure] or the
+  /// decoded [Result].
   TaskEither<NetworkFailure, Result> _makeRequest<Result>({
     required Future<Response<JsonObject>> Function() request,
     required Decoder<Result> decoder,

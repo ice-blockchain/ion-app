@@ -4,7 +4,12 @@ import 'package:ion_identity_client/src/ion_api_user_client.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 
+/// This class is an entry point for interacting with the API.Provids user-specific operations
+/// such as authentication and wallet management. This client supports multi-user
+/// scenarios, allowing different user sessions to be managed concurrently.
 class IonApiClient {
+  /// Creates an instance of [IonApiClient] with the given [config], [signer],
+  /// and [tokenStorage]. This constructor is private and used internally.
   IonApiClient._({
     required IonClientConfig config,
     required PasskeysSigner signer,
@@ -13,6 +18,7 @@ class IonApiClient {
         _signer = signer,
         _tokenStorage = tokenStorage;
 
+  /// Factory method to create a default instance of [IonApiClient] using the given [config].
   factory IonApiClient.createDefault({
     required IonClientConfig config,
   }) {
@@ -25,6 +31,8 @@ class IonApiClient {
     );
   }
 
+  /// Returns a user-specific API client for the given [username].
+  /// This allows the caller to perform actions on behalf of the specified user.
   IonApiUserClient call({
     required String username,
   }) {
@@ -39,6 +47,8 @@ class IonApiClient {
   final PasskeysSigner _signer;
   final TokenStorage _tokenStorage;
 
+  /// A stream of the usernames of currently authorized users. This stream updates
+  /// whenever the user tokens change, providing a real-time view of authenticated users.
   Stream<Iterable<String>> get authorizedUsers => _tokenStorage.userTokens.map(
         (list) => list.map(
           (e) => e.username,

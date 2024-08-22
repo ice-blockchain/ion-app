@@ -1,39 +1,66 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+The IonIdentityClient library is a Dart-based client that simplifies interaction with an API, providing convenient methods for user authentication, wallet management, etc.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **User Authentication**: Register and log in users
+- **Wallet Management**: Retrieve and manage wallets associated with authenticated users
+- **Real-time Updates**: Listen to changes in authenticated users through a built-in stream
+- **Multi-user Support**: Manage multiple user sessions within the same application
+- **Fluent API**: A clean and fluent API design, allowing method chaining and easy-to-read code
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+#### 1. Installation:
+Add the IonIdentityClient package to your pubspec.yaml:
+
+```yaml
+dependencies:
+  ion_identity_client: ^1.0.0
+```
+
+Then run:
+```bash
+dart pub get
+```
+
+#### 2. Configuration:
+Start by creating the client's config and the client:
+```dart
+final config = IonClientConfig(
+  appId: 'ap-abcde-...',
+  orgId: 'or-123fg-...',
+  origin: 'https://my.example.com',
+);
+
+final client = IonApiClient.createDefault(config: config);
+```
+
+You're ready to go!
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
+#### Register a User:
 ```dart
-const like = 'sample';
+final registerResult = await client(username: 'user@example.com').auth.registerUser();
+```
+
+#### Login a User:
+```dart
+final loginResult = await client(username: 'user@example.com').auth.loginUser();
+```
+
+#### List Wallets:
+```dart
+final listWalletsResult = await client(username: 'user@example.com').wallets.list();
+```
+
+#### Listen to Authenticated Users:
+```dart
+final usersSubscription = client.authorizedUsers.listen((List<String> authenticatedUsers) {
+  // Handle authenticated users
+});
 ```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+- **Error Handling**: `IonApiClient` returns result objects instead of throwing exceptions. Each operation provides success or failure results, allowing you to handle specific errors like user already exists or validation failures directly and more clearly in your code.
