@@ -1,4 +1,4 @@
-package io.ice.app.ion
+package io.ion.app
 
 import io.flutter.embedding.android.FlutterActivity
 
