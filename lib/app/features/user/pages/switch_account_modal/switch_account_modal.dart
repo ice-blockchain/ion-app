@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/user/pages/switch_account_modal/components/accounts_list/accounts_list.dart';
 import 'package:ice/app/features/user/pages/switch_account_modal/components/action_button/action_button.dart';
@@ -13,7 +12,7 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/utils/username.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
+import 'package:ice/app/extensions/extensions.dart';
 
 class SwitchAccountModal extends ConsumerWidget {
   const SwitchAccountModal({super.key});
@@ -30,8 +29,10 @@ class SwitchAccountModal extends ConsumerWidget {
               NavigationAppBar.modal(
                 showBackButton: false,
                 title: Text(context.i18n.profile_switch_user_header),
-                actions: const [
-                  NavigationCloseButton(),
+                actions: [
+                  NavigationCloseButton(
+                    onPressed: () => context.pop(),
+                  ),
                 ],
               ),
               ActionButton(
