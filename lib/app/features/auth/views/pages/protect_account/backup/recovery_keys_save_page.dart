@@ -83,7 +83,7 @@ class RecoveryKeysSavePage extends StatelessWidget {
                       color: context.theme.appColors.attentionRed,
                     ),
                     title: Text(
-                      locale.error_avoid_storing_keys,
+                      locale.warning_avoid_storing_keys,
                       style: context.theme.appTextThemes.caption.copyWith(
                         color: context.theme.appColors.attentionRed,
                       ),

@@ -12,6 +12,7 @@ class ProtectAccountRoutes {
     TypedGoRoute<RecoveryKeysSuccessRoute>(path: '/recovery-keys-success'),
     TypedGoRoute<ScreenshotSecurityAlertRoute>(path: '/screenshot-security-alert'),
     TypedGoRoute<RecoveryKeysErrorAlertRoute>(path: '/recovery-keys-error-alert'),
+    TypedGoRoute<AuthenticatorSetupRoute>(path: '/authenticator-setup/:step'),
   ];
 }
 
@@ -93,4 +94,14 @@ class RecoveryKeysErrorAlertRoute extends BaseRouteData {
           child: const RecoveryKeysErrorAlert(),
           type: IceRouteType.bottomSheet,
         );
+}
+
+class AuthenticatorSetupRoute extends BaseRouteData {
+  AuthenticatorSetupRoute({required this.step})
+      : super(
+          child: AuthenticatorSetupPage(step),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final AuthenticatorSteps step;
 }
