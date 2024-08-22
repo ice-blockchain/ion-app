@@ -91,10 +91,8 @@ class AuthenticatorSetupPage extends HookWidget {
       AuthenticatorSteps.success => null,
     };
 
-    if (nextStep == null) {
-      SecureAccountOptionsRoute().replace(context);
-    } else {
-      AuthenticatorSetupRoute(step: nextStep).push<void>(context);
-    }
+    nextStep == null
+        ? SecureAccountOptionsRoute().replace(context)
+        : AuthenticatorSetupRoute(step: nextStep).push<void>(context);
   }
 }
