@@ -4,6 +4,7 @@ import 'package:ice/app/components/inputs/text_input/components/text_input_icons
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class AuthenticatorCodeConfirmPage extends HookWidget {
@@ -19,9 +20,8 @@ class AuthenticatorCodeConfirmPage extends HookWidget {
     final controller = useTextEditingController();
     final formKey = useRef(GlobalKey<FormState>());
 
-    useEffect(() {
+    useOnInit(() {
       onFormKeySet(formKey.value);
-      return null;
     }, []);
 
     return Form(
