@@ -8,7 +8,7 @@ import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_no
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_details_footer.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
-import 'package:ice/app/features/feed/views/components/post_list/components/post_list.dart';
+import 'package:ice/app/features/feed/views/components/post_list/post_list.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/post_not_found/post_not_found.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/reply_input_field.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_sent_notification/reply_sent_notification.dart';
