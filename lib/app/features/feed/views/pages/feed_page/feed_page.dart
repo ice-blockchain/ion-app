@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ice/app/components/scroll_view/load_more_builder.dart';
+import 'package:ice/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
 import 'package:ice/app/features/feed/providers/feed_current_category_provider.dart';
+import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
-import 'package:ice/app/features/feed/views/components/post_list/post_list.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_handler.dart';
@@ -20,33 +24,61 @@ class FeedPage extends HookConsumerWidget {
     final scrollController = useScrollController();
     final feedCategory = ref.watch(feedCurrentCategoryProvider);
 
-    return PullRightMenuHandler(
-      child: Scaffold(
-        body: CustomScrollView(
-          controller: scrollController,
-          slivers: [
-            CollapsingAppBar(
-              height: FeedControls.height,
-              child: FeedControls(
-                pageScrollController: scrollController,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  const Stories(),
-                  FeedListSeparator(height: 16.0.s),
-                  if (feedCategory == FeedCategory.feed) ...[
-                    const TrendingVideos(),
-                    FeedListSeparator(),
-                  ],
-                ],
-              ),
-            ),
-            const Posts(),
+    final appBarSliver = CollapsingAppBar(
+      height: FeedControls.height,
+      child: FeedControls(pageScrollController: scrollController),
+    );
+
+    final slivers = [
+      SliverToBoxAdapter(
+        child: Column(
+          children: [
+            const Stories(),
+            FeedListSeparator(height: 16.0.s),
+            if (feedCategory == FeedCategory.feed) ...[
+              const TrendingVideos(),
+              FeedListSeparator(),
+            ],
           ],
         ),
       ),
+      const FeedPosts(),
+    ];
+
+    return PullRightMenuHandler(
+      child: Scaffold(
+        body: LoadMoreBuilder(
+          slivers: slivers,
+          hasMore: true,
+          onLoadMore: () => _onLoadMore(),
+          builder: (context, slivers) {
+            return PullToRefreshBuilder(
+              sliverAppBar: appBarSliver,
+              slivers: slivers,
+              onRefresh: () => _onRefresh(ref),
+              refreshIndicatorEdgeOffset: FeedControls.height +
+                  MediaQuery.paddingOf(context).top +
+                  ScreenTopOffset.defaultMargin,
+              builder: (context, slivers) {
+                return CustomScrollView(
+                  controller: scrollController,
+                  slivers: slivers,
+                );
+              },
+            );
+          },
+        ),
+      ),
     );
+  }
+
+  Future<void> _onRefresh(WidgetRef ref) async {
+    return ref
+        .read(postsProvider.notifier)
+        .fetchCategoryPosts(category: ref.read(feedCurrentCategoryProvider));
+  }
+
+  Future<void> _onLoadMore() async {
+    await Future<void>.delayed(Duration(seconds: 3));
   }
 }
