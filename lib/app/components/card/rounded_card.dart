@@ -7,14 +7,14 @@ class RoundedCard extends StatelessWidget {
     this.padding,
     this.borderColor,
     this.backgroundColor,
+    required this.isOutlined,
   });
-
-  static double get cellPadding => 12.0.s;
 
   final Widget child;
   final EdgeInsets? padding;
   final Color? borderColor;
   final Color? backgroundColor;
+  final bool isOutlined;
 
   factory RoundedCard.filled({
     required Widget child,
@@ -25,6 +25,7 @@ class RoundedCard extends StatelessWidget {
       child: child,
       padding: padding,
       backgroundColor: backgroundColor,
+      isOutlined: false,
     );
   }
 
@@ -39,20 +40,20 @@ class RoundedCard extends StatelessWidget {
       padding: padding ?? EdgeInsets.zero,
       borderColor: borderColor,
       backgroundColor: backgroundColor,
+      isOutlined: true,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final BorderRadius borderRadius = BorderRadius.circular(16.0.s);
-    final Color? color = borderColor ?? context.theme.appColors.onTerararyFill;
-
     return Container(
-      padding: padding ?? EdgeInsets.all(cellPadding),
+      padding: padding ?? EdgeInsets.all(12.0.s),
       decoration: BoxDecoration(
-        borderRadius: borderRadius,
+        borderRadius: BorderRadius.circular(16.0.s),
         color: backgroundColor ?? context.theme.appColors.tertararyBackground,
-        border: color != null ? Border.all(color: color) : null,
+        border: isOutlined
+            ? Border.all(color: borderColor ?? context.theme.appColors.onSecondaryBackground)
+            : null,
       ),
       child: child,
     );

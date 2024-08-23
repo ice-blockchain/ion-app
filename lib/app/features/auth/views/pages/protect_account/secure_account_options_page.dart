@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/model/authenticator_type.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/model/authenticator_steps.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/components/secure_account_option.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/providers/protect_account_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SecureAccountOptionsPage extends StatelessWidget {
+class SecureAccountOptionsPage extends ConsumerWidget {
   const SecureAccountOptionsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final protectAccountController = ref.watch(securityContorllerProvider);
     final locale = context.i18n;
 
     return SheetContent(
@@ -50,6 +53,7 @@ class SecureAccountOptionsPage extends StatelessWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () => BackupOptionsRoute().push<void>(context),
+                  isOptionEnabled: protectAccountController.isBackupEnabled,
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
@@ -58,9 +62,7 @@ class SecureAccountOptionsPage extends StatelessWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () {},
-                  trailing: Assets.images.icons.iconDappCheck.icon(
-                    color: context.theme.appColors.success,
-                  ),
+                  isOptionEnabled: protectAccountController.isEmailEnabled,
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
@@ -68,9 +70,13 @@ class SecureAccountOptionsPage extends StatelessWidget {
                   icon: Assets.images.icons.iconLoginAuthcode.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  onTap: () => AuthenticatorSetupRoute(
-                    step: AuthenticatorSteps.options,
-                  ).push<void>(context),
+                  isOptionEnabled: protectAccountController.isAuthenticatorEnabled,
+                  // onTap: () =>
+                  //     AuthenticatorSetupRoute(step: AuthenticatorSteps.options).push<void>(context),
+                  onTap: () => protectAccountController.isAuthenticatorEnabled
+                      ? AuthenticatorInitialDeleteRoute().push<void>(context)
+                      : AuthenticatorSetupRoute(step: AuthenticatorSetupSteps.options)
+                          .push<void>(context),
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
@@ -79,6 +85,7 @@ class SecureAccountOptionsPage extends StatelessWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () {},
+                  isOptionEnabled: protectAccountController.isPhoneEnabled,
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],

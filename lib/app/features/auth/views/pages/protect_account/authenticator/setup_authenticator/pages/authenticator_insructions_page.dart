@@ -24,7 +24,6 @@ class AuthenticatorInstructionsPage extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 10.0.s),
             child: ListItem(
               contentPadding: EdgeInsets.zero,
-              backgroundColor: context.theme.appColors.secondaryBackground,
               borderRadius: BorderRadius.all(
                 Radius.circular(16.0.s),
               ),

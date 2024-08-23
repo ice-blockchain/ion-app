@@ -13,6 +13,9 @@ class ProtectAccountRoutes {
     TypedGoRoute<ScreenshotSecurityAlertRoute>(path: '/screenshot-security-alert'),
     TypedGoRoute<RecoveryKeysErrorAlertRoute>(path: '/recovery-keys-error-alert'),
     TypedGoRoute<AuthenticatorSetupRoute>(path: '/authenticator-setup/:step'),
+    TypedGoRoute<AuthenticatorDeleteRoute>(path: '/authenticator-delete/:step'),
+    TypedGoRoute<AuthenticatorInitialDeleteRoute>(path: '/authenticator-initial-delete'),
+    TypedGoRoute<AuthenticatorDeleteSuccessRoute>(path: '/authenticator-delete-success'),
   ];
 }
 
@@ -103,5 +106,31 @@ class AuthenticatorSetupRoute extends BaseRouteData {
           type: IceRouteType.bottomSheet,
         );
 
-  final AuthenticatorSteps step;
+  final AuthenticatorSetupSteps step;
+}
+
+class AuthenticatorInitialDeleteRoute extends BaseRouteData {
+  AuthenticatorInitialDeleteRoute()
+      : super(
+          child: AuthenticatorInitialDeletePage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class AuthenticatorDeleteRoute extends BaseRouteData {
+  AuthenticatorDeleteRoute({required this.step})
+      : super(
+          child: AuthenticatorDeletePage(step),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final AuthenticatorDeleteSteps step;
+}
+
+class AuthenticatorDeleteSuccessRoute extends BaseRouteData {
+  AuthenticatorDeleteSuccessRoute()
+      : super(
+          child: AuthenticatorDeleteSuccessPage(),
+          type: IceRouteType.bottomSheet,
+        );
 }

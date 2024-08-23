@@ -8,14 +8,14 @@ class SecureAccountOption extends StatelessWidget {
   final String title;
   final Widget icon;
   final VoidCallback onTap;
-  final Widget? trailing;
+  final bool isOptionEnabled;
 
   const SecureAccountOption({
     super.key,
     required this.title,
     required this.icon,
     required this.onTap,
-    this.trailing,
+    required this.isOptionEnabled,
   });
 
   @override
@@ -34,7 +34,11 @@ class SecureAccountOption extends StatelessWidget {
         onPressed: () {},
         icon: icon,
       ),
-      trailing: trailing ?? Assets.images.icons.iconArrowRight.icon(),
+      trailing: isOptionEnabled
+          ? Assets.images.icons.iconDappCheck.icon(
+              color: context.theme.appColors.success,
+            )
+          : Assets.images.icons.iconArrowRight.icon(),
       onTap: onTap,
     );
   }
