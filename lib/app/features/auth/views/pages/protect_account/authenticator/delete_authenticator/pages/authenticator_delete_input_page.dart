@@ -7,8 +7,8 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/twofa_type.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/delete_authenticator/components/two_fa_input_list.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/providers/protect_account_provider.dart';
-import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_try_again/twofa_try_again_page.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -20,15 +20,12 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
     required this.twoFaTypes,
   });
 
-  final Set<TwoFaType> twoFaTypes;
+  final List<TwoFaType> twoFaTypes;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final formKey = useRef(GlobalKey<FormState>());
-    final controllers = {
-      for (final type in twoFaTypes) type: useTextEditingController(),
-    };
 
     return ScreenSideOffset.large(
       child: Form(
@@ -36,33 +33,13 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ...twoFaTypes.map((twoFaType) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 22.0.s),
-                child: TwoFaCodeInput(
-                  controller: controllers[twoFaType]!,
-                  twoFaType: twoFaType,
-                ),
-              );
-            }).toList(),
+            TwoFaCodeInputList(twoFaTypes: twoFaTypes),
             Button(
               mainAxisSize: MainAxisSize.max,
               label: Text(context.i18n.button_confirm),
               onPressed: () {
                 if (formKey.value.currentState!.validate()) {
-                  hideKeyboardAndCallOnce(
-                    callback: () {
-                      if (Random().nextBool() == true) {
-                        ref.read(securityContorllerProvider.notifier).toggleAuthenticator(false);
-                        AuthenticatorDeleteSuccessRoute().push<void>(context);
-                      } else {
-                        showSimpleBottomSheet<void>(
-                          context: context,
-                          child: const TwoFaTryAgainPage(),
-                        );
-                      }
-                    },
-                  );
+                  hideKeyboardAndCallOnce(callback: () => _onConfirm(ref, context));
                 }
               },
             )
@@ -70,5 +47,17 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  void _onConfirm(WidgetRef ref, BuildContext context) {
+    if (Random().nextBool() == true) {
+      ref.read(securityContorllerProvider.notifier).toggleAuthenticator(false);
+      AuthenticatorDeleteSuccessRoute().push<void>(context);
+    } else {
+      showSimpleBottomSheet<void>(
+        context: context,
+        child: const TwoFaTryAgainPage(),
+      );
+    }
   }
 }
