@@ -1,22 +1,34 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
-import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/auth/data/models/twofa_type.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/providers/protect_account_provider.dart';
+import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
+import 'package:ice/app/features/auth/views/pages/twofa_try_again/twofa_try_again_page.dart';
+import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 
 class AuthenticatorDeleteInputPage extends HookConsumerWidget {
-  const AuthenticatorDeleteInputPage({super.key});
+  const AuthenticatorDeleteInputPage({
+    super.key,
+    required this.twoFaTypes,
+  });
+
+  final Set<TwoFaType> twoFaTypes;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = useTextEditingController();
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final formKey = useRef(GlobalKey<FormState>());
+    final controllers = {
+      for (final type in twoFaTypes) type: useTextEditingController(),
+    };
 
     return ScreenSideOffset.large(
       child: Form(
@@ -24,24 +36,34 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextInput(
-              controller: controller,
-              labelText: context.i18n.two_fa_auth,
-              prefixIcon: TextInputIcons(
-                hasRightDivider: true,
-                icons: [Assets.images.icons.iconRecoveryCode.icon()],
-              ),
-              validator: (value) => value?.isEmpty == true ? '' : null,
-              textInputAction: TextInputAction.done,
-              scrollPadding: EdgeInsets.only(bottom: 200.0.s),
-            ),
-            SizedBox(height: 22.0.s),
+            ...twoFaTypes.map((twoFaType) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 22.0.s),
+                child: TwoFaCodeInput(
+                  controller: controllers[twoFaType]!,
+                  twoFaType: twoFaType,
+                ),
+              );
+            }).toList(),
             Button(
               mainAxisSize: MainAxisSize.max,
               label: Text(context.i18n.button_confirm),
               onPressed: () {
-                ref.read(securityContorllerProvider.notifier).toggleAuthenticator(false);
-                AuthenticatorDeleteSuccessRoute().push<void>(context);
+                if (formKey.value.currentState!.validate()) {
+                  hideKeyboardAndCallOnce(
+                    callback: () {
+                      if (Random().nextBool() == true) {
+                        ref.read(securityContorllerProvider.notifier).toggleAuthenticator(false);
+                        AuthenticatorDeleteSuccessRoute().push<void>(context);
+                      } else {
+                        showSimpleBottomSheet<void>(
+                          context: context,
+                          child: const TwoFaTryAgainPage(),
+                        );
+                      }
+                    },
+                  );
+                }
               },
             )
           ],

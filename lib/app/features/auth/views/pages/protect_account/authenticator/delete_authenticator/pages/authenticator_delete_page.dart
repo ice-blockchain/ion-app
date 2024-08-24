@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/card/rounded_card.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/progress_bar/app_progress_bar.dart';
@@ -8,6 +9,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/model/authenticator_steps.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/providers/selected_two_fa_types_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -16,14 +18,16 @@ import 'package:ice/generated/assets.gen.dart';
 
 import 'step_pages.dart';
 
-class AuthenticatorDeletePage extends StatelessWidget {
+class AuthenticatorDeletePage extends ConsumerWidget {
   const AuthenticatorDeletePage(this.step, {super.key});
 
   final AuthenticatorDeleteSteps step;
+  // final Set<TwoFaType>? twoFaTypes;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
+    final twoFaTypes = ref.watch(selectedTwoFaTypesProvider);
 
     return SheetContent(
       body: Column(
@@ -53,16 +57,16 @@ class AuthenticatorDeletePage extends StatelessWidget {
           Expanded(
             child: switch (step) {
               AuthenticatorDeleteSteps.select => AuthenticatorDeleteSelectOptionsPage(),
-              AuthenticatorDeleteSteps.input => AuthenticatorDeleteInputPage(),
+              AuthenticatorDeleteSteps.input => AuthenticatorDeleteInputPage(
+                  twoFaTypes: twoFaTypes,
+                ),
             },
           ),
-          SizedBox(height: 22.0.s),
           ScreenSideOffset.large(
             child: RoundedCard.outlined(
               padding: EdgeInsets.symmetric(horizontal: 10.0.s),
               child: ListItem(
                 contentPadding: EdgeInsets.zero,
-                // backgroundColor: context.theme.appColors.secondaryBackground,
                 borderRadius: BorderRadius.all(
                   Radius.circular(16.0.s),
                 ),
