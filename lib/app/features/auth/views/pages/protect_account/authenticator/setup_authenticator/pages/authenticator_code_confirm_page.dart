@@ -26,22 +26,19 @@ class AuthenticatorCodeConfirmPage extends HookWidget {
 
     return Form(
       key: formKey.value,
-      child: ScreenSideOffset.large(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextInput(
-              controller: controller,
-              labelText: context.i18n.two_fa_auth,
-              prefixIcon: TextInputIcons(
-                hasRightDivider: true,
-                icons: [Assets.images.icons.iconRecoveryCode.icon()],
-              ),
-              validator: (value) => value?.isEmpty == true ? '' : null,
-              textInputAction: TextInputAction.done,
-              scrollPadding: EdgeInsets.only(bottom: 200.0.s),
+      child: Center(
+        child: ScreenSideOffset.large(
+          child: TextInput(
+            controller: controller,
+            labelText: context.i18n.two_fa_auth,
+            prefixIcon: TextInputIcons(
+              hasRightDivider: true,
+              icons: [Assets.images.icons.iconRecoveryCode.icon()],
             ),
-          ],
+            validator: (value) => value?.isEmpty == true ? '' : null,
+            textInputAction: TextInputAction.done,
+            scrollPadding: EdgeInsets.only(bottom: 200.0.s),
+          ),
         ),
       ),
     );
