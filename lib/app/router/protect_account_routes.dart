@@ -118,13 +118,13 @@ class AuthenticatorInitialDeleteRoute extends BaseRouteData {
 }
 
 class AuthenticatorDeleteRoute extends BaseRouteData {
-  AuthenticatorDeleteRoute({required this.step})
+  AuthenticatorDeleteRoute({this.$extra, required this.step})
       : super(
-          child: AuthenticatorDeletePage(step),
+          child: AuthenticatorDeletePage(step, twoFaTypes: $extra),
           type: IceRouteType.bottomSheet,
         );
 
-  // final Set<TwoFaType>? $extra;
+  final Set<TwoFaType>? $extra;
   final AuthenticatorDeleteSteps step;
 }
 
