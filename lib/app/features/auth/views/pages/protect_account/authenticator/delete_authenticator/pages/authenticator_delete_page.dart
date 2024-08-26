@@ -18,7 +18,6 @@ import 'step_pages.dart';
 class AuthenticatorDeletePage extends StatelessWidget {
   const AuthenticatorDeletePage(this.step, {super.key});
 
-  // final Set<TwoFaType>? twoFaTypes;
   final AuthenticatorDeleteSteps step;
 
   @override
@@ -55,9 +54,7 @@ class AuthenticatorDeletePage extends StatelessWidget {
                         builder: (BuildContext context, WidgetRef ref, Widget? child) {
                           final selectedOptions = ref.watch(selectedTwoFaOptionsProvider);
 
-                          return AuthenticatorDeleteInputPage(
-                            twoFaTypes: selectedOptions,
-                          );
+                          return AuthenticatorDeleteInputPage(twoFaTypes: selectedOptions);
                         },
                       ),
                   },

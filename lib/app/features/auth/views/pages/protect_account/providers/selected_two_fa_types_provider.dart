@@ -29,23 +29,25 @@ class AuthenticatorDeleteOptions extends _$AuthenticatorDeleteOptions {
   }
 
   void updateOption(int index, TwoFaType? newValue) {
+    final oldValue = state.selectedValues[index];
+    final newSelectedValues = {...state.selectedValues, index: newValue};
+    final newAvailableOptions = _updateAvailableOptions(oldValue, newValue);
+
     state = state.copyWith(
-      selectedValues: {...state.selectedValues, index: newValue},
-      availableOptions: _updateAvailableOptions(index, newValue),
+      selectedValues: newSelectedValues,
+      availableOptions: newAvailableOptions,
     );
   }
 
-  Set<TwoFaType> _updateAvailableOptions(int index, TwoFaType? newValue) {
+  Set<TwoFaType> _updateAvailableOptions(TwoFaType? oldValue, TwoFaType? newValue) {
     final newAvailableOptions = state.availableOptions.toSet();
-    final oldValue = state.selectedValues[index];
-    if (oldValue != null) newAvailableOptions.add(oldValue);
-    if (newValue != null) newAvailableOptions.remove(newValue);
+    if (newValue != null) {
+      newAvailableOptions.remove(newValue);
+    }
+    if (oldValue != null) {
+      newAvailableOptions.add(oldValue);
+    }
     return newAvailableOptions;
-  }
-
-  Set<TwoFaType> getAvailableOptionsForIndex(int index) {
-    final selectedValue = state.selectedValues[index];
-    return {if (selectedValue != null) selectedValue, ...state.availableOptions};
   }
 }
 

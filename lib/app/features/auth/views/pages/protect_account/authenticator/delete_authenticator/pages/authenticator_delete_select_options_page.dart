@@ -26,13 +26,10 @@ class AuthenticatorDeleteSelectOptionsPage extends HookConsumerWidget {
             ...List.generate(
               optionsState.optionsAmount,
               (option) {
-                final availableOptions = ref
-                    .read(authenticatorDeleteOptionsProvider.notifier)
-                    .getAvailableOptionsForIndex(option);
                 return Padding(
                   padding: EdgeInsets.only(bottom: 22.0.s),
                   child: TwoFaOptionSelector(
-                    availableOptions: availableOptions,
+                    availableOptions: optionsState.availableOptions,
                     optionIndex: option + 1,
                     onSaved: (value) {
                       ref

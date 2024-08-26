@@ -124,7 +124,6 @@ class AuthenticatorDeleteRoute extends BaseRouteData {
           type: IceRouteType.bottomSheet,
         );
 
-  // final Set<TwoFaType>? $extra;
   final AuthenticatorDeleteSteps step;
 }
 
