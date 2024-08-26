@@ -20,7 +20,7 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
     required this.twoFaTypes,
   });
 
-  final Set<TwoFaType> twoFaTypes;
+  final List<TwoFaType> twoFaTypes;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,7 +33,7 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TwoFaCodeInputList(twoFaTypes: twoFaTypes.toList()),
+            TwoFaCodeInputList(twoFaTypes: twoFaTypes),
             Button(
               mainAxisSize: MainAxisSize.max,
               label: Text(context.i18n.button_confirm),

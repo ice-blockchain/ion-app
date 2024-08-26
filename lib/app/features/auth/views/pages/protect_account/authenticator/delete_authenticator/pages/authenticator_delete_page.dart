@@ -52,9 +52,10 @@ class AuthenticatorDeletePage extends StatelessWidget {
                     AuthenticatorDeleteSteps.select => AuthenticatorDeleteSelectOptionsPage(),
                     AuthenticatorDeleteSteps.input => Consumer(
                         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                          final selectedOptions = ref.watch(selectedTwoFaOptionsProvider);
+                          final selectedTwoFaOptions = ref.watch(selectedTwoFaOptionsProvider);
 
-                          return AuthenticatorDeleteInputPage(twoFaTypes: selectedOptions);
+                          return AuthenticatorDeleteInputPage(
+                              twoFaTypes: selectedTwoFaOptions.toList());
                         },
                       ),
                   },

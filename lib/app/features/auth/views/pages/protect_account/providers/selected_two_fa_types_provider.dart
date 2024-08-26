@@ -12,7 +12,7 @@ class AuthenticatorDeleteState with _$AuthenticatorDeleteState {
   factory AuthenticatorDeleteState({
     required int optionsAmount,
     required Set<TwoFaType> availableOptions,
-    required Map<int, TwoFaType?> selectedValues,
+    required List<TwoFaType?> selectedValues,
   }) = _AuthenticatorDeleteState;
 }
 
@@ -24,35 +24,32 @@ class AuthenticatorDeleteOptions extends _$AuthenticatorDeleteOptions {
     return AuthenticatorDeleteState(
       optionsAmount: optionsAmount,
       availableOptions: TwoFaType.values.toSet(),
-      selectedValues: {for (int i = 0; i < optionsAmount; i++) i: null},
+      selectedValues: List.generate(optionsAmount, (_) => null),
     );
   }
 
-  void updateOption(int index, TwoFaType? newValue) {
+  void updateSelectedTwoFaOption(int index, TwoFaType? newValue) {
     final oldValue = state.selectedValues[index];
-    final newSelectedValues = {...state.selectedValues, index: newValue};
-    final newAvailableOptions = _updateAvailableOptions(oldValue, newValue);
+    final newSelectedValues = List<TwoFaType?>.from(state.selectedValues);
+    newSelectedValues[index] = newValue;
+
+    Set<TwoFaType> newAvailableOptions = state.availableOptions;
+    if (oldValue != null) {
+      newAvailableOptions = newAvailableOptions.union({oldValue});
+    }
+    if (newValue != null) {
+      newAvailableOptions = newAvailableOptions.difference({newValue});
+    }
 
     state = state.copyWith(
       selectedValues: newSelectedValues,
       availableOptions: newAvailableOptions,
     );
   }
-
-  Set<TwoFaType> _updateAvailableOptions(TwoFaType? oldValue, TwoFaType? newValue) {
-    final newAvailableOptions = state.availableOptions.toSet();
-    if (newValue != null) {
-      newAvailableOptions.remove(newValue);
-    }
-    if (oldValue != null) {
-      newAvailableOptions.add(oldValue);
-    }
-    return newAvailableOptions;
-  }
 }
 
 @riverpod
 Set<TwoFaType> selectedTwoFaOptions(SelectedTwoFaOptionsRef ref) {
   final state = ref.watch(authenticatorDeleteOptionsProvider);
-  return state.selectedValues.values.whereType<TwoFaType>().toSet();
+  return state.selectedValues.whereType<TwoFaType>().toSet();
 }

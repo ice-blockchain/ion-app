@@ -14,7 +14,7 @@ class AuthenticatorDeleteSelectOptionsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final optionsState = ref.watch(authenticatorDeleteOptionsProvider);
+    final authenticatorOptionsState = ref.watch(authenticatorDeleteOptionsProvider);
     final formKey = useRef(GlobalKey<FormState>());
 
     return ScreenSideOffset.large(
@@ -24,17 +24,17 @@ class AuthenticatorDeleteSelectOptionsPage extends HookConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ...List.generate(
-              optionsState.optionsAmount,
+              authenticatorOptionsState.optionsAmount,
               (option) {
                 return Padding(
                   padding: EdgeInsets.only(bottom: 22.0.s),
                   child: TwoFaOptionSelector(
-                    availableOptions: optionsState.availableOptions,
+                    availableOptions: authenticatorOptionsState.availableOptions,
                     optionIndex: option + 1,
                     onSaved: (value) {
                       ref
                           .read(authenticatorDeleteOptionsProvider.notifier)
-                          .updateOption(option, value);
+                          .updateSelectedTwoFaOption(option, value);
                     },
                   ),
                 );
