@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/router/main_tabs/components/components.dart';
 
-class MainTabNavigation extends StatelessWidget {
+class MainTabNavigation extends HookWidget {
   const MainTabNavigation({
     required this.shell,
     required this.state,
@@ -16,9 +19,13 @@ class MainTabNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentTab = TabItem.fromNavigationIndex(shell.currentIndex);
+    final tabPressStreamController = useRef(StreamController<TabPressSteamData>.broadcast());
 
     return Scaffold(
-      body: shell,
+      body: MainTabNavigationContainer(
+        child: shell,
+        tabPressStream: tabPressStreamController.value.stream,
+      ),
       bottomNavigationBar: Container(
         decoration: state.isMainModalOpen
             ? null
@@ -35,7 +42,7 @@ class MainTabNavigation extends StatelessWidget {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           currentIndex: shell.currentIndex,
-          onTap: (index) => _onTabSelected(context, index, currentTab),
+          onTap: (index) => _onTabPress(context, index, currentTab, tabPressStreamController.value),
           items: TabItem.values.map((tabItem) {
             return BottomNavigationBarItem(
               icon: tabItem == TabItem.main
@@ -52,12 +59,18 @@ class MainTabNavigation extends StatelessWidget {
     );
   }
 
-  void _onTabSelected(BuildContext context, int index, TabItem currentTab) {
-    final tabItem = TabItem.values[index];
-    if (tabItem == TabItem.main) {
+  void _onTabPress(
+    BuildContext context,
+    int index,
+    TabItem currentTab,
+    StreamController<TabPressSteamData> tabPressStream,
+  ) {
+    final pressedTab = TabItem.values[index];
+    tabPressStream.add((current: currentTab, pressed: pressedTab));
+    if (pressedTab == TabItem.main) {
       _handleMainButtonTap(context, currentTab);
-    } else if (currentTab != tabItem) {
-      _navigateToTab(context, tabItem);
+    } else if (currentTab != pressedTab) {
+      _navigateToTab(context, pressedTab);
     }
   }
 

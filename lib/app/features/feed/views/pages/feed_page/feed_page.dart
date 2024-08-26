@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/components/scroll_view/load_more_builder.dart';
 import 'package:ice/app/components/scroll_view/pull_to_refresh_builder.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
 import 'package:ice/app/features/feed/providers/feed_current_category_provider.dart';
@@ -14,6 +15,7 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_post
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/pull_right_menu_handler.dart';
+import 'package:ice/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 
 class FeedPage extends HookConsumerWidget {
@@ -23,6 +25,8 @@ class FeedPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
     final feedCategory = ref.watch(feedCurrentCategoryProvider);
+
+    useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final appBarSliver = CollapsingAppBar(
       height: FeedControls.height,
