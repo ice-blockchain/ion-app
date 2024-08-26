@@ -47,8 +47,10 @@ class AuthenticatorDeleteOptions extends _$AuthenticatorDeleteOptions {
     final selectedValue = state.selectedValues[index];
     return {if (selectedValue != null) selectedValue, ...state.availableOptions};
   }
+}
 
-  Set<TwoFaType> getSelectedOptions() {
-    return state.selectedValues.values.whereType<TwoFaType>().toSet();
-  }
+@riverpod
+Set<TwoFaType> selectedTwoFaOptions(SelectedTwoFaOptionsRef ref) {
+  final state = ref.watch(authenticatorDeleteOptionsProvider);
+  return state.selectedValues.values.whereType<TwoFaType>().toSet();
 }

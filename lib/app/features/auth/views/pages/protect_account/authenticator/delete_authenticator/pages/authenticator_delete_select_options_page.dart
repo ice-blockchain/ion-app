@@ -49,10 +49,7 @@ class AuthenticatorDeleteSelectOptionsPage extends HookConsumerWidget {
               onPressed: () {
                 formKey.value.currentState!.save();
                 if (formKey.value.currentState!.validate()) {
-                  final extra =
-                      ref.read(authenticatorDeleteOptionsProvider.notifier).getSelectedOptions();
                   AuthenticatorDeleteRoute(
-                    $extra: extra,
                     step: AuthenticatorDeleteSteps.input,
                   ).push<void>(context);
                 }
