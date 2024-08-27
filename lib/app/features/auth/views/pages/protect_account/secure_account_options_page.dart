@@ -71,8 +71,6 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   isOptionEnabled: protectAccountController.isAuthenticatorEnabled,
-                  // onTap: () =>
-                  //     AuthenticatorSetupRoute(step: AuthenticatorSteps.options).push<void>(context),
                   onTap: () => protectAccountController.isAuthenticatorEnabled
                       ? AuthenticatorInitialDeleteRoute().push<void>(context)
                       : AuthenticatorSetupRoute(step: AuthenticatorSetupSteps.options)

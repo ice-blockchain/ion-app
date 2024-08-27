@@ -72,13 +72,6 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
                     onPressed: () => step == AuthenticatorSetupSteps.confirmation
                         ? _validateAndProceed(context, ref, formKey.value, hideKeyboardAndCallOnce)
                         : _navigateToNextStep(context),
-                    // onPressed: () {
-                    //   if (step == AuthenticatorSetupSteps.confirmation) {
-                    //     _validateAndProceed(context, ref, formKey.value, hideKeyboardAndCallOnce);
-                    //   } else {
-                    //     _navigateToNextStep(context);
-                    //   }
-                    // },
                   ),
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
