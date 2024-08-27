@@ -6,7 +6,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/model/authenticator_steps.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/components/secure_account_option.dart';
-import 'package:ice/app/features/auth/views/pages/protect_account/providers/protect_account_provider.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/providers/security_account_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -18,7 +18,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final protectAccountController = ref.watch(securityContorllerProvider);
+    final securityController = ref.watch(securityAccountControllerProvider);
     final locale = context.i18n;
 
     return SheetContent(
@@ -53,7 +53,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () => BackupOptionsRoute().push<void>(context),
-                  isOptionEnabled: protectAccountController.isBackupEnabled,
+                  isEnabled: securityController.isBackupEnabled,
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
@@ -62,7 +62,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () {},
-                  isOptionEnabled: protectAccountController.isEmailEnabled,
+                  isEnabled: securityController.isEmailEnabled,
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
@@ -70,8 +70,8 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                   icon: Assets.images.icons.iconLoginAuthcode.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  isOptionEnabled: protectAccountController.isAuthenticatorEnabled,
-                  onTap: () => protectAccountController.isAuthenticatorEnabled
+                  isEnabled: securityController.isAuthenticatorEnabled,
+                  onTap: () => securityController.isAuthenticatorEnabled
                       ? AuthenticatorInitialDeleteRoute().push<void>(context)
                       : AuthenticatorSetupRoute(step: AuthenticatorSetupSteps.options)
                           .push<void>(context),
@@ -83,7 +83,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () {},
-                  isOptionEnabled: protectAccountController.isPhoneEnabled,
+                  isEnabled: securityController.isPhoneEnabled,
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],

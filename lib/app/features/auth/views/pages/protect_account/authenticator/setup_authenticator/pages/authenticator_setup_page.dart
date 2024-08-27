@@ -10,7 +10,7 @@ import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_h
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/model/authenticator_steps.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/setup_authenticator/pages/step_pages.dart';
-import 'package:ice/app/features/auth/views/pages/protect_account/providers/protect_account_provider.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/providers/security_account_provider.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -92,7 +92,7 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
     if (formKey?.currentState?.validate() == true) {
       hideKeyboardAndCallOnce(
         callback: () {
-          ref.read(securityContorllerProvider.notifier).toggleAuthenticator(true);
+          ref.read(securityAccountControllerProvider.notifier).toggleAuthenticator(true);
           _navigateToNextStep(context);
         },
       );

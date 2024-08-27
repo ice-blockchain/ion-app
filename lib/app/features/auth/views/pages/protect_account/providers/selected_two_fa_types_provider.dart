@@ -20,6 +20,7 @@ class AuthenticatorDeleteState with _$AuthenticatorDeleteState {
 class AuthenticatorDeleteOptions extends _$AuthenticatorDeleteOptions {
   @override
   AuthenticatorDeleteState build() {
+    // TODO: temporary logic to simulate the options available to delete the authenticator
     final optionsAmount = Random().nextInt(2) + 1;
     return AuthenticatorDeleteState(
       optionsAmount: optionsAmount,

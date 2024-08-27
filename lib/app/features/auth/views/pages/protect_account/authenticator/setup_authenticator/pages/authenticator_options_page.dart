@@ -27,7 +27,7 @@ class AuthenticatorOptionsPage extends StatelessWidget {
               return Padding(
                 padding: EdgeInsets.only(bottom: 12.0.s),
                 child: SecureAccountOption(
-                  isOptionEnabled: false,
+                  isEnabled: false,
                   title: type.getDisplayName(context),
                   icon: type.iconAsset.icon(),
                   onTap: () => onTap(type),

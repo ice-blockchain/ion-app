@@ -1,10 +1,10 @@
 import 'package:ice/app/features/auth/views/pages/protect_account/models/security_methods.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'protect_account_provider.g.dart';
+part 'security_account_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class SecurityContorller extends _$SecurityContorller {
+class SecurityAccountController extends _$SecurityAccountController {
   @override
   SecurityMethods build() {
     return const SecurityMethods();

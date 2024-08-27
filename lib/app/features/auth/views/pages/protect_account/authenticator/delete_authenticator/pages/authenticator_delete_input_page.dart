@@ -8,7 +8,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/twofa_type.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/delete_authenticator/components/two_fa_input_list.dart';
-import 'package:ice/app/features/auth/views/pages/protect_account/providers/protect_account_provider.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/providers/security_account_provider.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_try_again/twofa_try_again_page.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -50,8 +50,10 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
   }
 
   void _onConfirm(WidgetRef ref, BuildContext context) {
+    // TODO: temporary logic to simulate the success or
+    // failure of the deletion of the authenticator
     if (Random().nextBool() == true) {
-      ref.read(securityContorllerProvider.notifier).toggleAuthenticator(false);
+      ref.read(securityAccountControllerProvider.notifier).toggleAuthenticator(false);
       AuthenticatorDeleteSuccessRoute().push<void>(context);
     } else {
       showSimpleBottomSheet<void>(

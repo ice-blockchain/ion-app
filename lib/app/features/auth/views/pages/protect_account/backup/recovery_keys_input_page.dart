@@ -8,7 +8,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/components/recovery_key_input.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/models/recovery_keys.dart';
-import 'package:ice/app/features/auth/views/pages/protect_account/providers/protect_account_provider.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/providers/security_account_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/utils/validators.dart';
@@ -71,7 +71,7 @@ class RecoveryKeysInputPage extends HookConsumerWidget {
               child: Button(
                 onPressed: () {
                   if (formKey.value.currentState!.validate()) {
-                    ref.read(securityContorllerProvider.notifier).toggleBackup(true);
+                    ref.read(securityAccountControllerProvider.notifier).toggleBackup(true);
                     RecoveryKeysSuccessRoute().push<void>(context);
                   }
                 },
