@@ -29,6 +29,7 @@ class TwoFaCodeInput extends HookWidget {
       },
       textInputAction: TextInputAction.next,
       scrollPadding: EdgeInsets.only(bottom: 200.0.s),
+      keyboardType: TextInputType.number,
       suffixIcon: switch (twoFaType) {
         TwoFaType.email || TwoFaType.sms => _SendButton(),
         TwoFaType.auth => null,
