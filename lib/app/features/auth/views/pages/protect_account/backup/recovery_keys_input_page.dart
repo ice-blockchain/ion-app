@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
@@ -7,16 +8,17 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/components/recovery_key_input.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/models/recovery_keys.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/providers/security_account_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class RecoveryKeysInputPage extends HookWidget {
+class RecoveryKeysInputPage extends HookConsumerWidget {
   const RecoveryKeysInputPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useRef(GlobalKey<FormState>());
     final controllers = {
       for (final key in RecoveryKeys.values) key: useTextEditingController(),
@@ -69,6 +71,7 @@ class RecoveryKeysInputPage extends HookWidget {
               child: Button(
                 onPressed: () {
                   if (formKey.value.currentState!.validate()) {
+                    ref.read(securityAccountControllerProvider.notifier).toggleBackup(true);
                     RecoveryKeysSuccessRoute().push<void>(context);
                   }
                 },

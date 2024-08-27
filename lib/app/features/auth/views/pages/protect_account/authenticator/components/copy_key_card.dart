@@ -15,7 +15,7 @@ class CopyKeyCard extends HookWidget {
 
     final isCopied = useState(false);
 
-    return RoundedCard.outlined(
+    return RoundedCard.filled(
       padding: EdgeInsets.symmetric(vertical: 40.0.s),
       child: Column(
         children: [
