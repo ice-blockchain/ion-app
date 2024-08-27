@@ -31,56 +31,62 @@ class ContactsListView extends ConsumerWidget {
     final contacts = ref.watch(contactsProvider);
 
     return SheetContent(
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0.s),
-            child: NavigationAppBar.screen(
-              title: Text(appBarTitle),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            primary: false,
+            flexibleSpace: NavigationAppBar.modal(
               showBackButton: false,
               actions: [
                 NavigationCloseButton(
-                  onPressed: () {
-                    context.pop();
-                  },
+                  onPressed: () => context.pop(),
                 ),
               ],
+              title: Text(appBarTitle),
+            ),
+            automaticallyImplyLeading: false,
+            toolbarHeight: NavigationAppBar.modalHeaderHeight,
+            pinned: true,
+          ),
+          PinnedHeaderSliver(
+            child: ColoredBox(
+              color: context.theme.appColors.onPrimaryAccent,
+              child: Column(
+                children: [
+                  SizedBox(height: 16.0.s),
+                  ScreenSideOffset.small(
+                    child: SearchInput(
+                      onTextChanged: (String value) {},
+                    ),
+                  ),
+                  SizedBox(height: 16.0.s),
+                ],
+              ),
             ),
           ),
-          ScreenSideOffset.small(
-            child: SearchInput(
-              onTextChanged: (String value) {},
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                final contact = contacts[index];
+                return ScreenSideOffset.small(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 12.0.s),
+                    child: ListItem.user(
+                      title: Text(contact.name),
+                      subtitle: Text(contact.nickname!),
+                      profilePicture: contact.icon,
+                      verifiedBadge: contact.isVerified!,
+                      iceBadge: contact.hasIceAccount,
+                      timeago: contact.lastSeen,
+                      onTap: () => action == ContactRouteAction.pop
+                          ? context.pop(contact.id)
+                          : ContactRoute(contactId: contact.id).push<void>(context),
+                    ),
+                  ),
+                );
+              },
+              childCount: contacts.length,
             ),
-          ),
-          SizedBox(
-            height: 12.0.s,
-          ),
-          ListView.separated(
-            shrinkWrap: true,
-            itemCount: contacts.length,
-            separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(
-                height: 12.0.s,
-              );
-            },
-            itemBuilder: (BuildContext context, int index) {
-              final contact = contacts[index];
-
-              return ScreenSideOffset.small(
-                child: ListItem.user(
-                  title: Text(contact.name),
-                  subtitle: Text(contact.nickname!),
-                  profilePicture: contact.icon,
-                  verifiedBadge: contact.isVerified!,
-                  iceBadge: contact.hasIceAccount,
-                  timeago: contact.lastSeen,
-                  onTap: () => action == ContactRouteAction.pop
-                      ? context.pop(contact.id)
-                      : ContactRoute(contactId: contact.id).push<void>(context),
-                ),
-              );
-            },
           ),
         ],
       ),
