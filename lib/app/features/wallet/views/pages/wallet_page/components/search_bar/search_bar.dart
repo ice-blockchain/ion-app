@@ -40,6 +40,11 @@ class WalletSearchBar extends ConsumerWidget {
               );
         },
         onCancelSearch: () {
+          ref.read(walletPageNotifierProvider.notifier).updateSearchValue(
+                searchValue: '',
+                tabType: tabType,
+                ref: ref,
+              );
           ref
               .read(walletPageNotifierProvider.notifier)
               .updateSearchVisible(tabType: tabType, isSearchVisible: false);
