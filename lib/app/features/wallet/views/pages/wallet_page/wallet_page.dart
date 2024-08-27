@@ -19,6 +19,7 @@ import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
+import 'package:ice/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 
@@ -39,6 +40,8 @@ class WalletPage extends HookConsumerWidget {
     }, <Object?>[
       hasContactsPermission,
     ]);
+
+    useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
 
