@@ -69,8 +69,8 @@ class MainTabNavigation extends HookWidget {
     tabPressStream.add((current: currentTab, pressed: pressedTab));
     if (pressedTab == TabItem.main) {
       _handleMainButtonTap(context, currentTab);
-    } else if (currentTab != pressedTab) {
-      _navigateToTab(context, pressedTab);
+    } else {
+      _navigateToTab(context, pressedTab, initialLocation: currentTab == pressedTab);
     }
   }
 
@@ -78,10 +78,8 @@ class MainTabNavigation extends HookWidget {
         state.isMainModalOpen ? currentTab.baseRouteLocation : currentTab.mainModalLocation,
       );
 
-  void _navigateToTab(BuildContext context, TabItem tabItem) => state.isMainModalOpen
-      ? context.go(tabItem.baseRouteLocation)
-      : shell.goBranch(
-          tabItem.navigationIndex,
-          initialLocation: true,
-        );
+  void _navigateToTab(BuildContext context, TabItem tabItem, {required bool initialLocation}) =>
+      state.isMainModalOpen
+          ? context.go(tabItem.baseRouteLocation)
+          : shell.goBranch(tabItem.navigationIndex, initialLocation: initialLocation);
 }
