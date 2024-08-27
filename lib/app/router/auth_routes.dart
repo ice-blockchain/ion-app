@@ -9,6 +9,7 @@ class AuthRoutes {
         TypedGoRoute<SignUpPasswordRoute>(path: 'sign-up-password'),
         TypedGoRoute<RestoreMenuRoute>(path: 'restore-menu'),
         TypedGoRoute<RestoreCredsRoute>(path: 'restore-creds'),
+        TypedGoRoute<RestoreRecoveryKeysRoute>(path: 'recovery-keys'),
         TypedGoRoute<TwoFaCodesRoute>(path: 'twofa-codes'),
         TypedGoRoute<TwoFaOptionsRoute>(path: 'twofa-options'),
         TypedGoRoute<TwoFaSuccessRoute>(path: 'twofa-success'),
@@ -114,6 +115,14 @@ class NotificationsRoute extends BaseRouteData {
   NotificationsRoute()
       : super(
           child: const TurnOnNotifications(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class RestoreRecoveryKeysRoute extends BaseRouteData {
+  RestoreRecoveryKeysRoute()
+      : super(
+          child: const RestoreRecoveryKeysPage(),
           type: IceRouteType.bottomSheet,
         );
 }
