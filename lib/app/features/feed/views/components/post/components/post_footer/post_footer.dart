@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
@@ -39,23 +40,27 @@ class PostFooter extends HookConsumerWidget {
     final activeColor = context.theme.appColors.primaryAccent;
 
     void onToggleComment() {
+      HapticFeedback.lightImpact();
       isCommentActive.value = !isCommentActive.value;
     }
 
     void onToggleRepost() {
+      HapticFeedback.lightImpact();
       ShareTypeRoute($extra: postData).push<void>(context);
       isReposted.value = !isReposted.value;
     }
 
     void onToggleLike() {
+      HapticFeedback.lightImpact();
       isLiked.value = !isLiked.value;
     }
 
     void onShareOptions() {
+      HapticFeedback.lightImpact();
       ShareOptionsRoute().push<void>(context);
     }
 
-    void onIceStroke() {}
+    void onIceStroke() => HapticFeedback.lightImpact();
 
     final commentsActionIcon = PostActionButton(
       icon: Assets.images.icons.iconBlockComment.icon(

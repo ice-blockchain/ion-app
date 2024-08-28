@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/extensions/extensions.dart';
@@ -74,9 +75,13 @@ class MainTabNavigation extends HookWidget {
     }
   }
 
-  void _handleMainButtonTap(BuildContext context, TabItem currentTab) => context.go(
-        state.isMainModalOpen ? currentTab.baseRouteLocation : currentTab.mainModalLocation,
-      );
+  void _handleMainButtonTap(BuildContext context, TabItem currentTab) {
+    HapticFeedback.mediumImpact();
+
+    context.go(
+      state.isMainModalOpen ? currentTab.baseRouteLocation : currentTab.mainModalLocation,
+    );
+  }
 
   void _navigateToTab(BuildContext context, TabItem tabItem, {required bool initialLocation}) =>
       state.isMainModalOpen
