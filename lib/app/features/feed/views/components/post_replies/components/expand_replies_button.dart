@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -16,7 +17,10 @@ class ExpandRepliesButton extends StatelessWidget {
     final textStyles = context.theme.appTextThemes;
 
     return GestureDetector(
-      onTap: () => isExpanded.value = !isExpanded.value,
+      onTap: () {
+        HapticFeedback.lightImpact();
+        isExpanded.value = !isExpanded.value;
+      },
       child: Row(
         children: [
           SizedBox(
