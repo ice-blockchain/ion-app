@@ -85,8 +85,7 @@ class AuthScrollContainer extends HookWidget {
                     title: title,
                     description: description,
                     titleStyle: titleStyle != null ? titleStyle : null,
-                    descriptionStyle:
-                        descriptionStyle != null ? descriptionStyle : null,
+                    descriptionStyle: descriptionStyle != null ? descriptionStyle : null,
                     icon: icon != null ? AuthHeaderIcon(icon: icon) : icon,
                   ),
                   ...children

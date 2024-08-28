@@ -19,6 +19,8 @@ class Auth extends _$Auth {
     try {
       state = const AuthenticationLoading();
 
+      await Future<void>.delayed(const Duration(seconds: 1));
+
       state = Authenticated(
         authToken: AuthToken(
           access: 'access',
@@ -34,6 +36,8 @@ class Auth extends _$Auth {
   Future<void> signIn({required String keyName}) async {
     try {
       state = const AuthenticationLoading();
+
+      await Future<void>.delayed(const Duration(seconds: 1));
 
       state = Authenticated(
         authToken: AuthToken(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
@@ -12,7 +11,7 @@ import 'package:ice/app/features/auth/views/pages/sign_up_passkey/sign_up_passke
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class SignUpPasskeyPage extends HookWidget {
+class SignUpPasskeyPage extends StatelessWidget {
   const SignUpPasskeyPage({super.key});
 
   @override

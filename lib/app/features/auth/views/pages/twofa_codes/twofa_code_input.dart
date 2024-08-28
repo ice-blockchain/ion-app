@@ -8,7 +8,7 @@ import 'package:ice/app/features/auth/data/models/twofa_type.dart';
 import 'package:ice/app/hooks/use_countdown.dart';
 import 'package:ice/app/utils/validators.dart';
 
-class TwoFaCodeInput extends HookWidget {
+class TwoFaCodeInput extends StatelessWidget {
   const TwoFaCodeInput({required this.controller, required this.twoFaType, super.key});
 
   final TextEditingController controller;

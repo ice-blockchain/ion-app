@@ -31,7 +31,7 @@ class LoginForm extends HookConsumerWidget {
           Button(
             disabled: authState is AuthenticationLoading,
             trailingIcon: authState is AuthenticationLoading
-                ? const ButtonLoadingIndicator()
+                ? const ButtonIceLoadingIndicator()
                 : Assets.images.icons.iconButtonNext.icon(
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
