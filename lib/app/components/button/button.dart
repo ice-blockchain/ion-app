@@ -1,13 +1,11 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:lottie/lottie.dart';
 
 part 'variants/button_compact.dart';
 part 'variants/button_dropdown.dart';
@@ -219,22 +217,6 @@ class Button extends StatelessWidget {
   }
 }
 
-class ButtonLoadingIndicator extends StatelessWidget {
-  const ButtonLoadingIndicator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 12.0.s,
-      height: 12.0.s,
-      child: CircularProgressIndicator(
-        strokeWidth: 2,
-        color: context.theme.appColors.onPrimaryAccent,
-      ),
-    );
-  }
-}
-
 class ButtonIconFrame extends StatelessWidget {
   const ButtonIconFrame({
     required this.icon,
@@ -259,29 +241,6 @@ class ButtonIconFrame extends StatelessWidget {
         border: border,
       ),
       child: icon,
-    );
-  }
-}
-
-class ButtonIceLoadingIndicator extends HookWidget {
-  const ButtonIceLoadingIndicator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final animationController = useAnimationController();
-
-    return SizedBox(
-      width: 20.0.s,
-      height: 20.0.s,
-      child: Assets.lottie.whiteLoader.lottie(
-        frameRate: const FrameRate(60),
-        controller: animationController,
-        onLoaded: (composition) {
-          animationController
-            ..duration = composition.duration
-            ..repeat();
-        },
-      ),
     );
   }
 }

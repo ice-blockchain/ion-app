@@ -4,6 +4,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
+import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -126,7 +127,7 @@ class FillProfile extends HookWidget {
                         Button(
                           disabled: loading.value,
                           trailingIcon: loading.value
-                              ? const ButtonLoadingIndicator()
+                              ? const IceLoadingIndicator()
                               : Assets.images.icons.iconProfileSave.icon(
                                   color: context.theme.appColors.onPrimaryAccent,
                                 ),
