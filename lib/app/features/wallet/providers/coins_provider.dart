@@ -18,14 +18,24 @@ CoinData coinById(CoinByIdRef ref, {required String coinId}) {
 
 @Riverpod(keepAlive: true)
 class CoinsNotifier extends _$CoinsNotifier {
+  String? _lastSearchValue;
+
   @override
   Future<List<CoinData>> build() async {
-    // Simulate a delay or fetch operation
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-
     // Fetch the search value
     final searchValue =
         ref.watch(walletPageNotifierProvider).assetSearchValues[WalletTabType.coins];
+
+    // Check if the search value has changed
+    if (_lastSearchValue == searchValue) {
+      // Avoid rebuilding if search value hasn't changed
+      return state.asData?.value ?? ref.watch(coinsDataProvider);
+    }
+
+    _lastSearchValue = searchValue;
+
+    // Simulate a delay or fetch operation
+    await Future<void>.delayed(const Duration(milliseconds: 500));
 
     // Filter data based on search value if provided
     if (searchValue != null && searchValue.isNotEmpty) {

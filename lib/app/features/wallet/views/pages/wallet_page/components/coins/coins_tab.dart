@@ -16,6 +16,7 @@ class CoinsTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Fetch filtered coins
     final coins = useFilteredWalletCoins(ref);
 
     if (coins.isEmpty) {
@@ -32,6 +33,7 @@ class CoinsTab extends HookConsumerWidget {
         );
       },
       itemBuilder: (BuildContext context, int index) {
+        // Prevent re-rendering by ensuring only the needed parts are rebuilt
         return ScreenSideOffset.small(
           child: CoinItem(
             coinData: coins[index],

@@ -46,6 +46,18 @@ class WalletPage extends HookConsumerWidget {
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
     final searchResults = ref.watch(coinsNotifierProvider);
 
+    Widget getActiveTabContent() {
+      if (searchResults.isLoading) {
+        return const ListItemsLoadingState();
+      }
+
+      if (activeTab.value == WalletTabType.coins) {
+        return const CoinsTab();
+      } else {
+        return const NftsTab();
+      }
+    }
+
     return Scaffold(
       body: CustomScrollView(
         controller: scrollController,
@@ -75,17 +87,11 @@ class WalletPage extends HookConsumerWidget {
               ],
             ),
           ),
-
           if (activeTab.value == WalletTabType.nfts)
             const NftsTabHeader()
           else
             const CoinsTabHeader(),
-
-          if (!searchResults.isLoading) ...[
-            if (activeTab.value == WalletTabType.coins) const CoinsTab() else const NftsTab()
-          ],
-
-          if (searchResults.isLoading) ListItemsLoadingState(),
+          getActiveTabContent(),
 
           //     // if (activeTab.value == WalletTabType.coins)
           //     //   const CoinsTabFooter()

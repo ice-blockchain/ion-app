@@ -7,8 +7,6 @@ import 'package:ice/app/features/wallet/providers/nfts_provider.dart';
 List<NftData> useFilteredWalletNfts(WidgetRef ref) {
   final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
 
-  final searchResults = ref.watch(nftsNotifierProvider);
-
   final walletNfts = ref.watch(
     nftsNotifierProvider.select(
       (AsyncValue<List<NftData>> data) => data.value ?? <NftData>[],
@@ -21,6 +19,6 @@ List<NftData> useFilteredWalletNfts(WidgetRef ref) {
           ? walletNfts
           : walletNfts.where((NftData nft) => nft.price > 0.00).toList();
     },
-    <Object?>[isZeroValueAssetsVisible, walletNfts, searchResults.isLoading],
+    <Object?>[isZeroValueAssetsVisible, walletNfts],
   );
 }

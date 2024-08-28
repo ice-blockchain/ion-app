@@ -36,6 +36,11 @@ class WalletPageNotifier extends _$WalletPageNotifier {
     required String searchValue,
     required WalletTabType tabType,
   }) {
+    // Check if the new search value is different from the current one
+    if (state.assetSearchValues[tabType] == searchValue) {
+      return; // Do nothing if the search value hasn't changed
+    }
+
     // Cancel the existing timer if it's active
     _debounce?.cancel();
 

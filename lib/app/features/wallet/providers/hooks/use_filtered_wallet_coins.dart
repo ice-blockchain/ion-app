@@ -7,8 +7,6 @@ import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 List<CoinData> useFilteredWalletCoins(WidgetRef ref) {
   final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
 
-  final searchResults = ref.watch(coinsNotifierProvider);
-
   final walletCoins = ref.watch(
     coinsNotifierProvider.select(
       (AsyncValue<List<CoinData>> data) => data.value ?? <CoinData>[],
@@ -21,6 +19,6 @@ List<CoinData> useFilteredWalletCoins(WidgetRef ref) {
           ? walletCoins
           : walletCoins.where((CoinData coin) => coin.balance > 0.00).toList();
     },
-    <Object?>[isZeroValueAssetsVisible, walletCoins, searchResults.isLoading],
+    [isZeroValueAssetsVisible, walletCoins],
   );
 }
