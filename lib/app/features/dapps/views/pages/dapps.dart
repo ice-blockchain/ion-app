@@ -9,6 +9,7 @@ import 'package:ice/app/features/dapps/views/components/categories/categories.da
 import 'package:ice/app/features/dapps/views/components/favourites/favourites.dart';
 import 'package:ice/app/features/dapps/views/components/wallet_header/wallet_header.dart';
 import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
+import 'package:ice/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 
@@ -18,6 +19,8 @@ class DAppsPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final scrollController = useScrollController();
+
+    useScrollTopOnTabPress(context, scrollController: scrollController);
 
     return Scaffold(
       body: CustomScrollView(
