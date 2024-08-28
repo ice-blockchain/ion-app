@@ -217,22 +217,6 @@ class Button extends StatelessWidget {
   }
 }
 
-class ButtonLoadingIndicator extends StatelessWidget {
-  const ButtonLoadingIndicator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 12.0.s,
-      height: 12.0.s,
-      child: CircularProgressIndicator(
-        strokeWidth: 2,
-        color: context.theme.appColors.onPrimaryAccent,
-      ),
-    );
-  }
-}
-
 class ButtonIconFrame extends StatelessWidget {
   const ButtonIconFrame({
     required this.icon,

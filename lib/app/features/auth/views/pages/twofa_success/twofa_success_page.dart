@@ -48,6 +48,7 @@ class TwoFaSuccessPage extends StatelessWidget {
             ),
           ),
           ScreenBottomOffset(
+            margin: 36.0.s,
             child: ScreenSideOffset.large(
               child: Button(
                 onPressed: onLogin,

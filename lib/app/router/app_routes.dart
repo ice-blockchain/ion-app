@@ -24,6 +24,7 @@ import 'package:ice/app/features/auth/views/pages/protect_account/secure_account
 import 'package:ice/app/features/auth/views/pages/protect_account/secure_account_options_page.dart';
 import 'package:ice/app/features/auth/views/pages/restore_creds/restore_creds.dart';
 import 'package:ice/app/features/auth/views/pages/restore_menu/restore_menu.dart';
+import 'package:ice/app/features/auth/views/pages/restore_recovery_keys/restore_recovery_keys_page.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
 import 'package:ice/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey.dart';
 import 'package:ice/app/features/auth/views/pages/sign_up_password/sign_up_password.dart';

@@ -23,9 +23,12 @@ class TwoFaOptionSelector extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.theme.appColors;
+    final textStyles = context.theme.appTextThemes;
+
     final isOpened = useState(false);
     final iconBorderSize = Border.fromBorderSide(
-      BorderSide(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
+      BorderSide(color: colors.onTerararyFill, width: 1.0.s),
     );
 
     return FormField<TwoFaType?>(
@@ -40,7 +43,7 @@ class TwoFaOptionSelector extends HookWidget {
               elevation: WidgetStateProperty.all(0),
               side: WidgetStateProperty.all(
                 BorderSide(
-                  color: context.theme.appColors.strokeElements,
+                  color: colors.strokeElements,
                   width: 1.0.s,
                 ),
               ),
@@ -74,15 +77,16 @@ class TwoFaOptionSelector extends HookWidget {
                     isOpened.value = false;
                   },
                   leadingIcon: ButtonIconFrame(
-                    color: context.theme.appColors.secondaryBackground,
+                    color: colors.secondaryBackground,
                     icon: option.iconAsset.icon(
                       size: 20.0.s,
-                      color: context.theme.appColors.secondaryText,
+                      color: colors.secondaryText,
                     ),
                     border: iconBorderSize,
                   ),
                   child: Text(
                     option.getDisplayName(context),
+                    style: textStyles.body,
                   ),
                 ),
             ],

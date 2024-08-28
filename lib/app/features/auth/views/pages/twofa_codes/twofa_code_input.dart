@@ -8,7 +8,7 @@ import 'package:ice/app/features/auth/data/models/twofa_type.dart';
 import 'package:ice/app/hooks/use_countdown.dart';
 import 'package:ice/app/utils/validators.dart';
 
-class TwoFaCodeInput extends HookWidget {
+class TwoFaCodeInput extends StatelessWidget {
   const TwoFaCodeInput({required this.controller, required this.twoFaType, super.key});
 
   final TextEditingController controller;
@@ -16,11 +16,6 @@ class TwoFaCodeInput extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSent = useState(false);
-    final countdownState = useCountdown(60);
-    final countdown = countdownState.countdown;
-    final startCountdown = countdownState.startCountdown;
-
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
@@ -34,23 +29,41 @@ class TwoFaCodeInput extends HookWidget {
       },
       textInputAction: TextInputAction.next,
       scrollPadding: EdgeInsets.only(bottom: 200.0.s),
-      suffixIcon: countdown.value > 0
-          ? Padding(
-              padding: EdgeInsets.all(14.0.s),
-              child: Text(
-                context.i18n.common_seconds(countdown.value),
-                style: context.theme.appTextThemes.caption.copyWith(
-                  color: context.theme.appColors.tertararyText,
-                ),
-              ),
-            )
-          : TextInputTextButton(
-              onPressed: () {
-                isSent.value = true;
-                startCountdown();
-              },
-              label: isSent.value ? context.i18n.button_retry : context.i18n.button_send,
-            ),
+      keyboardType: TextInputType.number,
+      suffixIcon: switch (twoFaType) {
+        TwoFaType.email || TwoFaType.sms => _SendButton(),
+        TwoFaType.auth => null,
+      },
     );
+  }
+}
+
+class _SendButton extends HookWidget {
+  const _SendButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final isSent = useState(false);
+    final countdownState = useCountdown(60);
+    final countdown = countdownState.countdown;
+    final startCountdown = countdownState.startCountdown;
+
+    return countdown.value > 0
+        ? Padding(
+            padding: EdgeInsets.all(14.0.s),
+            child: Text(
+              context.i18n.common_seconds(countdown.value),
+              style: context.theme.appTextThemes.caption.copyWith(
+                color: context.theme.appColors.tertararyText,
+              ),
+            ),
+          )
+        : TextInputTextButton(
+            onPressed: () {
+              isSent.value = true;
+              startCountdown();
+            },
+            label: isSent.value ? context.i18n.button_retry : context.i18n.button_send,
+          );
   }
 }

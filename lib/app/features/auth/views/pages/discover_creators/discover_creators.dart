@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
@@ -84,7 +85,7 @@ class DiscoverCreators extends HookConsumerWidget {
                 child: Button(
                   disabled: authState is AuthenticationLoading,
                   trailingIcon:
-                      authState is AuthenticationLoading ? const ButtonLoadingIndicator() : null,
+                      authState is AuthenticationLoading ? const IceLoadingIndicator() : null,
                   label: Text(context.i18n.button_continue),
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {

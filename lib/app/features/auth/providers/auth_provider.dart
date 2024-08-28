@@ -1,6 +1,5 @@
 import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/data/models/auth_token.dart';
-import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_provider.g.dart';
@@ -20,8 +19,7 @@ class Auth extends _$Auth {
     try {
       state = const AuthenticationLoading();
 
-      final ionClient = ref.read(ionApiClientProvider)(username: keyName);
-      await ionClient.auth.registerUser();
+      await Future<void>.delayed(const Duration(seconds: 1));
 
       state = Authenticated(
         authToken: AuthToken(
@@ -39,9 +37,7 @@ class Auth extends _$Auth {
     try {
       state = const AuthenticationLoading();
 
-      final ionClient = ref.read(ionApiClientProvider)(username: keyName);
-      await ionClient.auth.loginUser();
-      await ionClient.wallets.listWallets();
+      await Future<void>.delayed(const Duration(seconds: 1));
 
       state = Authenticated(
         authToken: AuthToken(

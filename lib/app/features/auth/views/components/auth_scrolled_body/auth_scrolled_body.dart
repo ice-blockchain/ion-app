@@ -17,6 +17,7 @@ class AuthScrollContainer extends HookWidget {
     this.actions,
     this.titleStyle,
     this.descriptionStyle,
+    this.mainAxisAlignment,
   });
 
   final List<Widget> children;
@@ -33,6 +34,8 @@ class AuthScrollContainer extends HookWidget {
 
   final TextStyle? titleStyle;
   final TextStyle? descriptionStyle;
+
+  final MainAxisAlignment? mainAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +77,10 @@ class AuthScrollContainer extends HookWidget {
               pinned: true,
             ),
             SliverFillRemaining(
-                hasScrollBody: false,
-                child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              hasScrollBody: false,
+              child: Column(
+                mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.spaceBetween,
+                children: [
                   AuthHeader(
                     title: title,
                     description: description,
@@ -84,7 +89,9 @@ class AuthScrollContainer extends HookWidget {
                     icon: icon != null ? AuthHeaderIcon(icon: icon) : icon,
                   ),
                   ...children
-                ]))
+                ],
+              ),
+            ),
           ],
         ),
       ),
