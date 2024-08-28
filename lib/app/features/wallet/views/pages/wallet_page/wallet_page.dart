@@ -5,23 +5,22 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/app/features/core/providers/permissions_provider_selectors.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
+import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
+import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
+import 'package:ice/app/features/wallet/providers/selectors/wallet_assets_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/header/header.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_footer.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
+import 'package:ice/app/services/logger/logger.dart';
 
 class WalletPage extends HookConsumerWidget {
   const WalletPage({super.key});
@@ -44,6 +43,12 @@ class WalletPage extends HookConsumerWidget {
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
+    final isVisible = walletTabSearchVisibleSelector(ref, activeTab.value);
+    final searchValue = walletAssetSearchValueSelector(ref, activeTab.value);
+    final fetchedData = ref.watch(fetchCoinsDataProvider(searchValue));
+    final isLoading = combinedIsLoadingSelector(ref);
+
+    Logger.log('WalletPage - build - isVisible: $isVisible, isLoading: $isLoading');
 
     return Scaffold(
       body: CustomScrollView(
@@ -74,15 +79,23 @@ class WalletPage extends HookConsumerWidget {
               ],
             ),
           ),
-          if (activeTab.value == WalletTabType.nfts)
-            const NftsTabHeader()
-          else
-            const CoinsTabHeader(),
-          if (activeTab.value == WalletTabType.coins) const CoinsTab() else const NftsTab(),
-          if (activeTab.value == WalletTabType.coins)
-            const CoinsTabFooter()
-          else
-            const NftsTabFooter(),
+          fetchedData.maybeWhen(
+            orElse: () => const ListItemsLoadingState(),
+            data: (data) {
+              return SizedBox.shrink();
+              // return [
+              //   if (activeTab.value == WalletTabType.nfts)
+              //     const NftsTabHeader()
+              //   else
+              //     const CoinsTabHeader(),
+              //   if (activeTab.value == WalletTabType.coins) const CoinsTab() else const NftsTab(),
+              //   if (activeTab.value == WalletTabType.coins)
+              //     const CoinsTabFooter()
+              //   else
+              //     const NftsTabFooter(),
+              // ];
+            },
+          ),
         ],
       ),
     );
