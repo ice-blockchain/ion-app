@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/model/wallet_page_provider_data.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallet_page_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class WalletPageNotifier extends _$WalletPageNotifier {
   Timer? _debounce;
 

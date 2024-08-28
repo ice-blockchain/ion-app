@@ -2,11 +2,18 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
-import 'package:ice/app/features/wallet/providers/selectors/wallet_assets_selectors.dart';
+import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 
 List<CoinData> useFilteredWalletCoins(WidgetRef ref) {
   final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
-  final walletCoins = coinsDataSelector(ref);
+
+  final searchResults = ref.watch(coinsNotifierProvider);
+
+  final walletCoins = ref.watch(
+    coinsNotifierProvider.select(
+      (AsyncValue<List<CoinData>> data) => data.value ?? <CoinData>[],
+    ),
+  );
 
   return useMemoized(
     () {
@@ -14,6 +21,6 @@ List<CoinData> useFilteredWalletCoins(WidgetRef ref) {
           ? walletCoins
           : walletCoins.where((CoinData coin) => coin.balance > 0.00).toList();
     },
-    <Object?>[isZeroValueAssetsVisible, walletCoins],
+    <Object?>[isZeroValueAssetsVisible, walletCoins, searchResults.isLoading],
   );
 }

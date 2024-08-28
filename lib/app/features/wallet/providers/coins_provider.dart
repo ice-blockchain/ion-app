@@ -1,10 +1,12 @@
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_provider.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 List<CoinData> coinsData(CoinsDataRef ref) => mockedCoinsDataArray;
 
 @riverpod
@@ -14,50 +16,31 @@ CoinData coinById(CoinByIdRef ref, {required String coinId}) {
   return coins.firstWhere((CoinData coin) => coin.abbreviation == coinId);
 }
 
-@riverpod
-Future<List<CoinData>> fetchCoinsData(FetchCoinsDataRef ref, String searchValue) async {
-  // to emulate loading state
-  await Future<void>.delayed(const Duration(seconds: 1));
-
-  final lSearchValue = searchValue.trim().toLowerCase();
-  return Future.value(
-    List<CoinData>.unmodifiable(
-      mockedCoinsDataArray.where(
-        (CoinData data) => data.name.toLowerCase().contains(lSearchValue),
-      ),
-    ),
-  );
-}
-
 @Riverpod(keepAlive: true)
 class CoinsNotifier extends _$CoinsNotifier {
   @override
-  AsyncValue<List<CoinData>> build() {
-    return AsyncData<List<CoinData>>(
-      List<CoinData>.unmodifiable(<CoinData>[]),
-    );
-  }
+  Future<List<CoinData>> build() async {
+    // Simulate a delay or fetch operation
+    await Future<void>.delayed(const Duration(milliseconds: 500));
 
-  Future<void> fetch({
-    required String walletId,
-    required String searchValue,
-  }) async {
-    state = const AsyncLoading<List<CoinData>>().copyWithPrevious(state);
+    // Fetch the search value
+    final searchValue =
+        ref.watch(walletPageNotifierProvider).assetSearchValues[WalletTabType.coins];
 
-    // to emulate loading state
-    await Future<void>.delayed(const Duration(seconds: 1));
+    // Filter data based on search value if provided
+    if (searchValue != null && searchValue.isNotEmpty) {
+      final lSearchValue = searchValue.trim().toLowerCase();
+      final filteredData = mockedCoinsDataArray
+          .where(
+            (CoinData data) => data.name.toLowerCase().contains(lSearchValue),
+          )
+          .toList();
 
-    final lSearchValue = searchValue.trim().toLowerCase();
-    final newData = AsyncData<List<CoinData>>(
-      List<CoinData>.unmodifiable(
-        mockedCoinsDataArray.where(
-          (CoinData data) => data.name.toLowerCase().contains(lSearchValue),
-        ),
-      ),
-    );
-
-    if (state.asData?.value != newData) {
-      state = newData;
+      // Return the filtered data
+      return List<CoinData>.unmodifiable(filteredData);
     }
+
+    // If no search value, return the full list
+    return ref.watch(coinsDataProvider);
   }
 }
