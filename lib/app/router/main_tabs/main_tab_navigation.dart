@@ -19,12 +19,12 @@ class MainTabNavigation extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final currentTab = TabItem.fromNavigationIndex(shell.currentIndex);
-    final tabPressStreamController = useRef(StreamController<TabPressSteamData>.broadcast());
+    final tabPressStreamController = useStreamController<TabPressSteamData>();
 
     return Scaffold(
       body: MainTabNavigationContainer(
         child: shell,
-        tabPressStream: tabPressStreamController.value.stream,
+        tabPressStream: tabPressStreamController.stream,
       ),
       bottomNavigationBar: Container(
         decoration: state.isMainModalOpen
@@ -42,7 +42,7 @@ class MainTabNavigation extends HookWidget {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           currentIndex: shell.currentIndex,
-          onTap: (index) => _onTabPress(context, index, currentTab, tabPressStreamController.value),
+          onTap: (index) => _onTabPress(context, index, currentTab, tabPressStreamController),
           items: TabItem.values.map((tabItem) {
             return BottomNavigationBarItem(
               icon: tabItem == TabItem.main
