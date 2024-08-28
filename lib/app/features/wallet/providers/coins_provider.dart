@@ -14,6 +14,21 @@ CoinData coinById(CoinByIdRef ref, {required String coinId}) {
   return coins.firstWhere((CoinData coin) => coin.abbreviation == coinId);
 }
 
+@riverpod
+Future<List<CoinData>> fetchCoinsData(FetchCoinsDataRef ref, String searchValue) async {
+  // to emulate loading state
+  await Future<void>.delayed(const Duration(seconds: 1));
+
+  final lSearchValue = searchValue.trim().toLowerCase();
+  return Future.value(
+    List<CoinData>.unmodifiable(
+      mockedCoinsDataArray.where(
+        (CoinData data) => data.name.toLowerCase().contains(lSearchValue),
+      ),
+    ),
+  );
+}
+
 @Riverpod(keepAlive: true)
 class CoinsNotifier extends _$CoinsNotifier {
   @override
@@ -33,12 +48,16 @@ class CoinsNotifier extends _$CoinsNotifier {
     await Future<void>.delayed(const Duration(seconds: 1));
 
     final lSearchValue = searchValue.trim().toLowerCase();
-    state = AsyncData<List<CoinData>>(
+    final newData = AsyncData<List<CoinData>>(
       List<CoinData>.unmodifiable(
         mockedCoinsDataArray.where(
           (CoinData data) => data.name.toLowerCase().contains(lSearchValue),
         ),
       ),
     );
+
+    if (state.asData?.value != newData) {
+      state = newData;
+    }
   }
 }

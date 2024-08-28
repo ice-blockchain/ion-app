@@ -23,12 +23,16 @@ class NftsNotifier extends _$NftsNotifier {
     await Future<void>.delayed(const Duration(seconds: 1));
 
     final lSearchValue = searchValue.trim().toLowerCase();
-    state = AsyncData<List<NftData>>(
+    final newData = AsyncData<List<NftData>>(
       List<NftData>.unmodifiable(
         mockedNftsDataArray.where(
           (NftData data) => data.collectionName.toLowerCase().contains(lSearchValue),
         ),
       ),
     );
+
+    if (state.asData?.value != newData) {
+      state = newData;
+    }
   }
 }
