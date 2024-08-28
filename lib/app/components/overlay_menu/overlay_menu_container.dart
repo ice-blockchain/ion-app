@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
-class PostMenuContainer extends StatelessWidget {
-  const PostMenuContainer({
+class OverlayMenuContainer extends StatelessWidget {
+  const OverlayMenuContainer({
     required this.child,
     super.key,
   });

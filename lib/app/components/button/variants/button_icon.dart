@@ -2,7 +2,7 @@ part of '../button.dart';
 
 class _ButtonWithIcon extends Button {
   _ButtonWithIcon({
-    required super.onPressed,
+    super.onPressed,
     required Widget icon,
     super.key,
     super.type,

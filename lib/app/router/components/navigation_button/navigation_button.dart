@@ -5,13 +5,13 @@ import 'package:ice/app/extensions/num.dart';
 class NavigationButton extends StatelessWidget {
   const NavigationButton({
     required this.icon,
-    required this.onPressed,
+    this.onPressed,
     super.key,
     this.size,
   });
 
   final Widget icon;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double? size;
 
   static double get defaultSize => 40.0.s;

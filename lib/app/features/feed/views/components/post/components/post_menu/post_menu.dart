@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/overlay_menu/overlay_menu.dart';
+import 'package:ice/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_menu/post_menu_container.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_menu/post_menu_item.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -19,7 +19,7 @@ class PostMenu extends StatelessWidget {
       offset: Offset(-146.0.s, 0),
       menuBuilder: (closeMenu) => Column(
         children: [
-          PostMenuContainer(
+          OverlayMenuContainer(
             child: PostMenuItem(
               label: context.i18n.post_menu_not_interested,
               icon: Assets.images.icons.iconNotinterested.icon(size: iconSize),
@@ -27,7 +27,7 @@ class PostMenu extends StatelessWidget {
             ),
           ),
           SizedBox(height: 14.0.s),
-          PostMenuContainer(
+          OverlayMenuContainer(
             child: Column(
               children: [
                 PostMenuItem(

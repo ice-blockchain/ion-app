@@ -18,6 +18,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.onSecondaryBackground,
     required this.strokeElements,
     required this.sheetLine,
+    required this.attentionBlock,
     required this.attentionRed,
     required this.success,
     required this.orangePeel,
@@ -45,6 +46,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       onSecondaryBackground: templateColors.onSecondaryBackground,
       strokeElements: templateColors.strokeElements,
       sheetLine: templateColors.sheetLine,
+      attentionBlock: templateColors.attentionBlock,
       attentionRed: templateColors.attentionRed,
       success: templateColors.success,
       orangePeel: templateColors.orangePeel,
@@ -71,6 +73,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color onSecondaryBackground;
   final Color strokeElements;
   final Color sheetLine;
+  final Color attentionBlock;
   final Color attentionRed;
   final Color success;
   final Color orangePeel;
@@ -97,6 +100,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? onSecondaryBackground,
     Color? strokeElements,
     Color? sheetLine,
+    Color? attentionBlock,
     Color? attentionRed,
     Color? success,
     Color? orangePeel,
@@ -122,6 +126,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       onSecondaryBackground: onSecondaryBackground ?? this.onSecondaryBackground,
       strokeElements: strokeElements ?? this.strokeElements,
       sheetLine: sheetLine ?? this.sheetLine,
+      attentionBlock: attentionBlock ?? this.attentionBlock,
       attentionRed: attentionRed ?? this.attentionRed,
       success: success ?? this.success,
       orangePeel: orangePeel ?? this.orangePeel,
@@ -158,6 +163,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       onSecondaryBackground: Color.lerp(onSecondaryBackground, other.onSecondaryBackground, t)!,
       strokeElements: Color.lerp(strokeElements, other.strokeElements, t)!,
       sheetLine: Color.lerp(sheetLine, other.sheetLine, t)!,
+      attentionBlock: Color.lerp(attentionBlock, other.attentionBlock, t)!,
       attentionRed: Color.lerp(attentionRed, other.attentionRed, t)!,
       success: Color.lerp(success, other.success, t)!,
       orangePeel: Color.lerp(orangePeel, other.orangePeel, t)!,
