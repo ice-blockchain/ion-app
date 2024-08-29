@@ -14,10 +14,10 @@ class FeedRoutes {
     ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<ShareTypeRoute>(
-          path: 'share-type',
+        TypedGoRoute<RepostOptionsModalRoute>(
+          path: 'repost-options/:postId',
           routes: [
-            TypedGoRoute<CommentPostModalRoute>(path: 'comment-post'),
+            TypedGoRoute<CommentPostModalRoute>(path: 'comment-post/:postId'),
           ],
         ),
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
@@ -49,23 +49,23 @@ class ReplyExpandedRoute extends BaseRouteData {
 }
 
 class CommentPostModalRoute extends BaseRouteData {
-  CommentPostModalRoute({required this.$extra})
+  CommentPostModalRoute({required this.postId})
       : super(
-          child: CommentPostModal(payload: $extra),
+          child: CommentPostModal(postId: postId),
           type: IceRouteType.bottomSheet,
         );
 
-  final PostData $extra;
+  final String postId;
 }
 
-class ShareTypeRoute extends BaseRouteData {
-  ShareTypeRoute({required this.$extra})
+class RepostOptionsModalRoute extends BaseRouteData {
+  RepostOptionsModalRoute({required this.postId})
       : super(
-          child: ShareTypePage(payload: $extra),
+          child: RepostOptionsModal(postId: postId),
           type: IceRouteType.bottomSheet,
         );
 
-  final PostData $extra;
+  final String postId;
 }
 
 class SharePostModalRoute extends BaseRouteData {

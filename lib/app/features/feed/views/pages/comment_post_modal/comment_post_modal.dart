@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/model/post/post_data.dart';
+import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
@@ -11,15 +12,19 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class CommentPostModal extends StatelessWidget {
-  const CommentPostModal({required this.payload, super.key});
+class CommentPostModal extends ConsumerWidget {
+  const CommentPostModal({required this.postId, super.key});
 
-  final PostData payload;
+  final String postId;
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final post = ref.watch(postByIdProvider(postId: postId));
+
+    if (post == null) return SizedBox.shrink();
+
     return SheetContent(
       body: Stack(
         children: [
@@ -46,7 +51,7 @@ class CommentPostModal extends StatelessWidget {
                             child: Post(
                               header: PostHeader(),
                               footer: const SizedBox.shrink(),
-                              postData: payload,
+                              postData: post,
                             ),
                           ),
                         ),

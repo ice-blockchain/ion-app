@@ -3,17 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ShareTypePage extends StatelessWidget {
-  const ShareTypePage({required this.payload, super.key});
+class RepostOptionsModal extends StatelessWidget {
+  const RepostOptionsModal({required this.postId, super.key});
 
-  final PostData payload;
+  final String postId;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +45,7 @@ class ShareTypePage extends StatelessWidget {
                 type: ButtonType.secondary,
                 mainAxisSize: MainAxisSize.max,
                 onPressed: () {
-                  CommentPostModalRoute($extra: payload).push<void>(context);
+                  CommentPostModalRoute(postId: postId).push<void>(context);
                 },
                 leadingIcon: Assets.images.icons.iconFeedQuote.icon(size: 18.0.s),
                 leadingIconOffset: 12.0.s,

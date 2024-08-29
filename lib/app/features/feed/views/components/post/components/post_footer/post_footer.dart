@@ -41,13 +41,13 @@ class PostFooter extends HookConsumerWidget {
 
     void onToggleComment() {
       HapticFeedback.lightImpact();
-      CommentPostModalRoute($extra: postData).go(context);
+      CommentPostModalRoute(postId: postData.id).go(context);
       isCommentActive.value = !isCommentActive.value;
     }
 
     void onToggleRepost() {
       HapticFeedback.lightImpact();
-      ShareTypeRoute($extra: postData).go(context);
+      RepostOptionsModalRoute(postId: postData.id).go(context);
       isReposted.value = !isReposted.value;
     }
 
