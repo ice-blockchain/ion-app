@@ -12,6 +12,17 @@ class FeedRoutes {
         ),
       ],
     ),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<ShareTypeRoute>(
+          path: 'share-type',
+          routes: [
+            TypedGoRoute<CommentPostModalRoute>(path: 'comment-post'),
+          ],
+        ),
+        TypedGoRoute<SharePostModalRoute>(path: 'share-post'),
+      ],
+    ),
   ];
 }
 
@@ -35,4 +46,32 @@ class ReplyExpandedRoute extends BaseRouteData {
         );
 
   final String postId;
+}
+
+class CommentPostModalRoute extends BaseRouteData {
+  CommentPostModalRoute({required this.$extra})
+      : super(
+          child: CommentPostModal(payload: $extra),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final PostData $extra;
+}
+
+class ShareTypeRoute extends BaseRouteData {
+  ShareTypeRoute({required this.$extra})
+      : super(
+          child: ShareTypePage(payload: $extra),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final PostData $extra;
+}
+
+class SharePostModalRoute extends BaseRouteData {
+  SharePostModalRoute()
+      : super(
+          child: const SharePostModal(),
+          type: IceRouteType.bottomSheet,
+        );
 }

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/constants/ui.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
-import 'package:ice/app/features/feed/views/pages/quote_post_modal_page/components/quote_post_comment_input.dart';
+import 'package:ice/app/features/feed/views/pages/comment_post_modal/components/quote_post_comment_input.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class QuotePostModalPage extends StatelessWidget {
-  const QuotePostModalPage({required this.payload, super.key});
+class CommentPostModal extends StatelessWidget {
+  const CommentPostModal({required this.payload, super.key});
 
   final PostData payload;
 
@@ -26,33 +26,7 @@ class QuotePostModalPage extends StatelessWidget {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0.s, horizontal: 16.0.s),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      child: Padding(
-                        padding: EdgeInsets.all(UiConstants.hitSlop),
-                        child: Assets.images.icons.iconSheetClose.icon(
-                          color: context.theme.appColors.quaternaryText,
-                        ),
-                      ),
-                      onPressed: () => context.pop(),
-                    ),
-                    Text(
-                      context.i18n.feed_write_comment,
-                      style: context.theme.appTextThemes.subtitle,
-                    ),
-                    IconButton(
-                      icon: Assets.images.icons.iconFeedScale.icon(
-                        color: context.theme.appColors.quaternaryText,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ),
+              _DialogTitle(),
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -94,6 +68,36 @@ class QuotePostModalPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _DialogTitle extends StatelessWidget {
+  const _DialogTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    return NavigationAppBar.modal(
+      title: Text(
+        context.i18n.feed_write_comment,
+        style: context.theme.appTextThemes.subtitle,
+      ),
+      leading: IconButton(
+        onPressed: context.pop,
+        icon: Assets.images.icons.iconSheetClose.icon(
+          color: context.theme.appColors.quaternaryText,
+          size: 24.0.s,
+        ),
+      ),
+      actions: [
+        IconButton(
+          onPressed: context.pop,
+          icon: Assets.images.icons.iconFeedScale.icon(
+            color: context.theme.appColors.quaternaryText,
+            size: 18.0.s,
+          ),
+        ),
+      ],
     );
   }
 }

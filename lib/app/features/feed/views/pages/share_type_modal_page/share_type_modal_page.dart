@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
@@ -25,8 +26,8 @@ class ShareTypePage extends StatelessWidget {
             child: NavigationAppBar.screen(
               showBackButton: false,
               title: Text(context.i18n.feed_repost_type),
-              actions: const [
-                NavigationCloseButton(),
+              actions: [
+                NavigationCloseButton(onPressed: context.pop),
               ],
             ),
           ),
@@ -59,7 +60,7 @@ class ShareTypePage extends StatelessWidget {
                     type: ButtonType.secondary,
                     backgroundColor: context.theme.appColors.tertararyBackground,
                     onPressed: () {
-                      QuotePostModalRoute($extra: payload).push<void>(context);
+                      CommentPostModalRoute($extra: payload).push<void>(context);
                     },
                     leadingIcon: Assets.images.icons.iconFeedQuote.icon(),
                     label: Text(
