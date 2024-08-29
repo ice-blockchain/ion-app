@@ -10,11 +10,13 @@ import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/header/header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_footer.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
@@ -46,15 +48,23 @@ class WalletPage extends HookConsumerWidget {
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
     final searchResults = ref.watch(coinsNotifierProvider);
 
-    Widget getActiveTabContent() {
+    List<Widget> getActiveTabContent() {
       if (searchResults.isLoading) {
-        return const ListItemsLoadingState();
+        return [
+          const ListItemsLoadingState(),
+        ];
       }
 
       if (activeTab.value == WalletTabType.coins) {
-        return const CoinsTab();
+        return [
+          const CoinsTab(),
+          const CoinsTabFooter(),
+        ];
       } else {
-        return const NftsTab();
+        return [
+          const NftsTab(),
+          const NftsTabFooter(),
+        ];
       }
     }
 
@@ -91,13 +101,7 @@ class WalletPage extends HookConsumerWidget {
             const NftsTabHeader()
           else
             const CoinsTabHeader(),
-          getActiveTabContent(),
-
-          //     // if (activeTab.value == WalletTabType.coins)
-          //     //   const CoinsTabFooter()
-          //     // else
-          //     //   const NftsTabFooter(),
-          //   ],
+          ...getActiveTabContent(),
         ],
       ),
     );
