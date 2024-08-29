@@ -7,7 +7,7 @@ import 'package:ice/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
-import 'package:ice/app/features/feed/providers/feed_current_category_provider.dart';
+import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
@@ -24,7 +24,7 @@ class FeedPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-    final feedCategory = ref.watch(feedCurrentCategoryProvider);
+    final feedCategory = ref.watch(feedCurrentFilterProvider).category;
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
@@ -79,7 +79,7 @@ class FeedPage extends HookConsumerWidget {
   Future<void> _onRefresh(WidgetRef ref) async {
     return ref
         .read(postsProvider.notifier)
-        .fetchCategoryPosts(category: ref.read(feedCurrentCategoryProvider));
+        .fetchCategoryPosts(category: ref.read(feedCurrentFilterProvider).category);
   }
 
   Future<void> _onLoadMore() async {

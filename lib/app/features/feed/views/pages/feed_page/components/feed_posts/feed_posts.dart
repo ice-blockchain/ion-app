@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/feed/providers/feed_current_category_provider.dart';
+import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/views/components/post_list/components/post_list_skeleton.dart';
 import 'package:ice/app/features/feed/views/components/post_list/post_list.dart';
@@ -11,7 +11,7 @@ class FeedPosts extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final category = ref.watch(feedCurrentCategoryProvider);
+    final category = ref.watch(feedCurrentFilterProvider).category;
     final postIds = ref.watch(categoryPostIdsProvider(category: category));
 
     useOnInit(() {

@@ -5,7 +5,6 @@ import 'package:ice/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
 import 'package:ice/app/features/feed/model/feed_filter.dart';
-import 'package:ice/app/features/feed/providers/feed_current_category_provider.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_filters_menu_item.dart';
 
@@ -68,12 +67,12 @@ class _FeedCategoryItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentCategory = ref.watch(feedCurrentCategoryProvider);
+    final currentCategory = ref.watch(feedCurrentFilterProvider).category;
     final isSelected = currentCategory == category;
 
     return FeedFiltersMenuItem(
       onPressed: () {
-        ref.read(feedCurrentCategoryProvider.notifier).category = category;
+        ref.read(feedCurrentFilterProvider.notifier).category = category;
         closeMenu();
       },
       isSelected: isSelected,
@@ -98,7 +97,7 @@ class _FeedFilterItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.theme.appColors;
-    final currentFilter = ref.watch(feedCurrentFilterProvider);
+    final currentFilter = ref.watch(feedCurrentFilterProvider).filter;
     final isSelected = currentFilter == filter;
 
     return FeedFiltersMenuItem(
