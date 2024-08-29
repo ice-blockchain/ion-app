@@ -18,64 +18,46 @@ class ShareTypePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SheetContent(
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0.s),
-            child: NavigationAppBar.screen(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            NavigationAppBar.modal(
               showBackButton: false,
               title: Text(context.i18n.feed_repost_type),
-              actions: [
-                NavigationCloseButton(onPressed: context.pop),
-              ],
+              actions: [NavigationCloseButton(onPressed: context.pop)],
             ),
-          ),
-          ScreenSideOffset.small(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Button.compact(
-                    type: ButtonType.secondary,
-                    backgroundColor: context.theme.appColors.tertararyBackground,
-                    onPressed: () {},
-                    leadingIcon: Assets.images.icons.iconFeedRepost.icon(),
-                    label: Text(
-                      context.i18n.feed_repost,
-                      style: context.theme.appTextThemes.subtitle2,
-                    ),
-                  ),
+            SizedBox(height: 11.0.s),
+            ScreenSideOffset.small(
+              child: Button(
+                type: ButtonType.secondary,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {},
+                leadingIcon: Assets.images.icons.iconFeedRepost.icon(size: 18.0.s),
+                leadingIconOffset: 12.0.s,
+                label: Text(
+                  context.i18n.feed_repost,
                 ),
-              ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 16.0.s,
-          ),
-          ScreenSideOffset.small(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Button.compact(
-                    type: ButtonType.secondary,
-                    backgroundColor: context.theme.appColors.tertararyBackground,
-                    onPressed: () {
-                      CommentPostModalRoute($extra: payload).push<void>(context);
-                    },
-                    leadingIcon: Assets.images.icons.iconFeedQuote.icon(),
-                    label: Text(
-                      context.i18n.feed_quote_post,
-                      style: context.theme.appTextThemes.subtitle2,
-                    ),
-                  ),
+            SizedBox(height: 16.0.s),
+            ScreenSideOffset.small(
+              child: Button(
+                type: ButtonType.secondary,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  CommentPostModalRoute($extra: payload).push<void>(context);
+                },
+                leadingIcon: Assets.images.icons.iconFeedQuote.icon(size: 18.0.s),
+                leadingIconOffset: 12.0.s,
+                label: Text(
+                  context.i18n.feed_quote_post,
                 ),
-              ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 16.0.s,
-          ),
-        ],
+            SizedBox(height: 20.0.s),
+          ],
+        ),
       ),
     );
   }
