@@ -13,22 +13,6 @@ List<CoinData> coinsDataSelector(WidgetRef ref) {
   );
 }
 
-bool combinedIsLoadingSelector(WidgetRef ref) {
-  final coinsLoading = ref.watch(
-    coinsNotifierProvider.select(
-      (AsyncValue<List<CoinData>> data) => data.isLoading,
-    ),
-  );
-
-  final nftsLoading = ref.watch(
-    nftsNotifierProvider.select(
-      (AsyncValue<List<NftData>> data) => data.isLoading,
-    ),
-  );
-
-  return coinsLoading || nftsLoading;
-}
-
 bool coinsIsLoadingSelector(WidgetRef ref) {
   return ref.watch(
     coinsNotifierProvider.select(

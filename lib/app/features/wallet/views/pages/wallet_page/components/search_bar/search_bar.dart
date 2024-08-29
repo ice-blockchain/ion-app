@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
-import 'package:ice/app/features/wallet/providers/selectors/wallet_assets_selectors.dart';
+import 'package:ice/app/features/wallet/providers/coins_provider.dart';
+import 'package:ice/app/features/wallet/providers/nfts_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
@@ -18,9 +19,11 @@ class WalletSearchBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final assetType = tabType.walletAssetType;
+    final coinsProvider = ref.watch(coinsNotifierProvider);
+    final nftsProvider = ref.watch(nftsNotifierProvider);
+    final isLoading = coinsProvider.isLoading || nftsProvider.isLoading;
+
     final defaultValue = walletAssetSearchValueSelector(ref, tabType);
-    final isLoading = walletAssetIsLoadingSelector(ref: ref, assetType: assetType);
     final isVisible = walletTabSearchVisibleSelector(ref, tabType);
 
     if (isVisible == false) {

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ice/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ice/app/components/inputs/hooks/use_text_changed.dart';
 import 'package:ice/app/components/inputs/search_input/components/cancel_button.dart';
 import 'package:ice/app/components/inputs/search_input/components/search_clear_button.dart';
-import 'package:ice/app/components/inputs/hooks/use_node_focused.dart';
+import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:lottie/lottie.dart';
 
 class SearchInput extends HookWidget {
   const SearchInput({
@@ -31,7 +31,6 @@ class SearchInput extends HookWidget {
   Widget build(BuildContext context) {
     final searchController = useTextEditingController(text: defaultValue);
     final focusNode = useFocusNode();
-    final animationController = useAnimationController();
 
     final showClear = useState(false);
     final focused = useNodeFocused(focusNode);
@@ -85,16 +84,8 @@ class SearchInput extends HookWidget {
                 suffixIcon: loading
                     ? Padding(
                         padding: EdgeInsets.all(12.0.s),
-                        child: Assets.lottie.splashLogo.lottie(
-                          frameRate: const FrameRate(60),
-                          height: 20.0.s,
-                          width: 20.0.s,
-                          controller: animationController,
-                          onLoaded: (LottieComposition composition) {
-                            animationController
-                              ..duration = composition.duration
-                              ..forward();
-                          },
+                        child: IceLoadingIndicator(
+                          type: IndicatorType.dark,
                         ),
                       )
                     : showClear.value

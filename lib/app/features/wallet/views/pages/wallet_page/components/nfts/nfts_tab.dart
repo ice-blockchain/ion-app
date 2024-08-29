@@ -66,6 +66,6 @@ class NftsTab extends HookConsumerWidget {
               );
             },
           )
-        : const SizedBox.shrink();
+        : SliverToBoxAdapter(child: const SizedBox.shrink());
   }
 }

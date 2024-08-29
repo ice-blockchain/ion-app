@@ -22,22 +22,17 @@ class CoinsNotifier extends _$CoinsNotifier {
 
   @override
   Future<List<CoinData>> build() async {
-    // Fetch the search value
     final searchValue =
         ref.watch(walletPageNotifierProvider).assetSearchValues[WalletTabType.coins];
 
-    // Check if the search value has changed
     if (_lastSearchValue == searchValue) {
-      // Avoid rebuilding if search value hasn't changed
       return state.asData?.value ?? ref.watch(coinsDataProvider);
     }
 
     _lastSearchValue = searchValue;
 
-    // Simulate a delay or fetch operation
     await Future<void>.delayed(const Duration(milliseconds: 500));
 
-    // Filter data based on search value if provided
     if (searchValue != null && searchValue.isNotEmpty) {
       final lSearchValue = searchValue.trim().toLowerCase();
       final filteredData = mockedCoinsDataArray
@@ -46,11 +41,9 @@ class CoinsNotifier extends _$CoinsNotifier {
           )
           .toList();
 
-      // Return the filtered data
       return List<CoinData>.unmodifiable(filteredData);
     }
 
-    // If no search value, return the full list
     return ref.watch(coinsDataProvider);
   }
 }
