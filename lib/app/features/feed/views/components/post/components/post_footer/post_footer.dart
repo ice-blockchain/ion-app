@@ -58,7 +58,7 @@ class PostFooter extends HookConsumerWidget {
 
     void onShareOptions() {
       HapticFeedback.lightImpact();
-      SharePostModalRoute().go(context);
+      SharePostModalRoute(postId: postData.id).go(context);
     }
 
     void onIceStroke() => HapticFeedback.lightImpact();

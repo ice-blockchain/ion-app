@@ -13,7 +13,9 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class SharePostModal extends HookWidget {
-  const SharePostModal({super.key});
+  const SharePostModal({super.key, required this.postId});
+
+  final String postId;
 
   @override
   Widget build(BuildContext context) {

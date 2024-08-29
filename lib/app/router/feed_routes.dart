@@ -20,7 +20,7 @@ class FeedRoutes {
             TypedGoRoute<CommentPostModalRoute>(path: 'comment-post'),
           ],
         ),
-        TypedGoRoute<SharePostModalRoute>(path: 'share-post'),
+        TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
       ],
     ),
   ];
@@ -69,9 +69,12 @@ class ShareTypeRoute extends BaseRouteData {
 }
 
 class SharePostModalRoute extends BaseRouteData {
-  SharePostModalRoute()
-      : super(
-          child: const SharePostModal(),
+  SharePostModalRoute({
+    required this.postId,
+  }) : super(
+          child: SharePostModal(postId: postId),
           type: IceRouteType.bottomSheet,
         );
+
+  final String postId;
 }
