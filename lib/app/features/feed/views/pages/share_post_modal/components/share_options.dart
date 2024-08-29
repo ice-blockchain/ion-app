@@ -10,6 +10,8 @@ import 'package:ice/generated/assets.gen.dart';
 class ShareOptions extends StatelessWidget {
   const ShareOptions({super.key});
 
+  static double get iconSize => 28.0.s;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -21,31 +23,31 @@ class ShareOptions extends StatelessWidget {
           children: [
             _ShareOptionsMenuItem(
               buttonType: ButtonType.primary,
-              icon: Assets.images.icons.iconFeedStories.icon(),
+              icon: Assets.images.icons.iconFeedStories.icon(size: iconSize),
               label: context.i18n.feed_add_story,
               onPressed: () {},
             ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.images.icons.iconBlockCopy1.icon(color: Colors.black),
+              icon: Assets.images.icons.iconBlockCopy1.icon(size: iconSize, color: Colors.black),
               label: context.i18n.feed_copy_link,
               onPressed: () {},
             ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.images.icons.iconBookmarks.icon(color: Colors.black),
+              icon: Assets.images.icons.iconBookmarks.icon(size: iconSize, color: Colors.black),
               label: context.i18n.feed_bookmark,
               onPressed: () {},
             ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.images.icons.iconFeedWhatsapp.icon(),
+              icon: Assets.images.icons.iconFeedWhatsapp.icon(size: iconSize),
               label: context.i18n.feed_whatsapp,
               onPressed: () {},
             ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.images.icons.iconFeedMore.icon(),
+              icon: Assets.images.icons.iconFeedMore.icon(size: iconSize),
               label: context.i18n.feed_more,
               onPressed: () {},
             ),
@@ -85,6 +87,7 @@ class _ShareOptionsMenuItem extends StatelessWidget {
             label,
             style: context.theme.appTextThemes.caption2,
             textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

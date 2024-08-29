@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/shadow/bottom_menu_shadow.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/pages/share_post_modal/components/share_bottom_menu.dart';
 import 'package:ice/app/features/feed/views/pages/share_post_modal/components/share_send_button.dart';
 import 'package:ice/app/features/feed/views/pages/share_post_modal/components/share_options.dart';
 import 'package:ice/app/features/feed/views/pages/share_post_modal/components/share_user_list.dart';
@@ -58,8 +58,11 @@ class SharePostModal extends HookWidget {
               onUserPressed: onUserPressed,
             ),
           ),
-          ShareBottomMenu(
-            child: selectedUserIds.value.isEmpty ? const ShareOptions() : ShareSendButton(),
+          BottomMenuShadow(
+            child: SizedBox(
+              height: 110.0.s,
+              child: selectedUserIds.value.isEmpty ? const ShareOptions() : ShareSendButton(),
+            ),
           ),
         ],
       ),
