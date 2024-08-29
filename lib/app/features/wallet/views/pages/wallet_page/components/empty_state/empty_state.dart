@@ -19,6 +19,7 @@ class EmptyState extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchValue = walletAssetSearchValueSelector(ref, tabType);
+    final isVisible = walletTabSearchVisibleSelector(ref, tabType);
     final toShowNoResults = searchValue.isNotEmpty == true;
     final asset = toShowNoResults ? Assets.images.misc.emptySearch : tabType.emptyListAsset;
     final title =
@@ -36,11 +37,12 @@ class EmptyState extends ConsumerWidget {
                 title: title,
               ),
             ),
-            BottomAction(
-              asset: tabType.bottomActionAsset,
-              title: tabType.getBottomActionTitle(context),
-              onTap: () {},
-            ),
+            if (!isVisible)
+              BottomAction(
+                asset: tabType.bottomActionAsset,
+                title: tabType.getBottomActionTitle(context),
+                onTap: () {},
+              ),
           ],
         ),
       ),

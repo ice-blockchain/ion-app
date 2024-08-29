@@ -8,6 +8,7 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_cont
 import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
+import 'package:ice/app/features/wallet/providers/nfts_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
@@ -46,13 +47,13 @@ class WalletPage extends HookConsumerWidget {
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
-    final searchResults = ref.watch(coinsNotifierProvider);
+    final coinsProvider = ref.watch(coinsNotifierProvider);
+    final nftsProvider = ref.watch(nftsNotifierProvider);
+    final isLoading = coinsProvider.isLoading || nftsProvider.isLoading;
 
     List<Widget> getActiveTabContent() {
-      if (searchResults.isLoading) {
-        return [
-          const ListItemsLoadingState(),
-        ];
+      if (isLoading) {
+        return [const ListItemsLoadingState()];
       }
 
       if (activeTab.value == WalletTabType.coins) {

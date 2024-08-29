@@ -23,12 +23,6 @@ class NftsTab extends HookConsumerWidget {
     final nfts = useFilteredWalletNfts(ref);
     final nftLayoutType = nftLayoutTypeSelector(ref);
 
-    if (nfts.isEmpty) {
-      return const SliverToBoxAdapter(
-        child: SizedBox.shrink(),
-      );
-    }
-
     if (nftLayoutType == NftLayoutType.grid) {
       return SliverPadding(
         padding: EdgeInsets.symmetric(
@@ -53,23 +47,25 @@ class NftsTab extends HookConsumerWidget {
       );
     }
 
-    return SliverList.separated(
-      itemCount: nfts.length,
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(
-          height: 12.0.s,
-        );
-      },
-      itemBuilder: (BuildContext context, int index) {
-        return ScreenSideOffset.small(
-          child: NftListItem(
-            nftData: nfts[index],
-            onTap: () {
-              NftDetailsRoute($extra: nfts[index]).push<void>(context);
+    return nfts.length > 0
+        ? SliverList.separated(
+            itemCount: nfts.length,
+            separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(
+                height: 12.0.s,
+              );
             },
-          ),
-        );
-      },
-    );
+            itemBuilder: (BuildContext context, int index) {
+              return ScreenSideOffset.small(
+                child: NftListItem(
+                  nftData: nfts[index],
+                  onTap: () {
+                    NftDetailsRoute($extra: nfts[index]).push<void>(context);
+                  },
+                ),
+              );
+            },
+          )
+        : const SizedBox.shrink();
   }
 }

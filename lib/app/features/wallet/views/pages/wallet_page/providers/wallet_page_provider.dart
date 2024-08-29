@@ -22,6 +22,10 @@ class WalletPageNotifier extends _$WalletPageNotifier {
     required WalletTabType tabType,
     required bool isSearchVisible,
   }) {
+    if (state.tabSearchVisibleMap[tabType] == isSearchVisible) {
+      return;
+    }
+
     state = state.copyWith(
       tabSearchVisibleMap: Map<WalletTabType, bool>.from(state.tabSearchVisibleMap)
         ..update(
@@ -36,15 +40,12 @@ class WalletPageNotifier extends _$WalletPageNotifier {
     required String searchValue,
     required WalletTabType tabType,
   }) {
-    // Check if the new search value is different from the current one
     if (state.assetSearchValues[tabType] == searchValue) {
-      return; // Do nothing if the search value hasn't changed
+      return;
     }
 
-    // Cancel the existing timer if it's active
     _debounce?.cancel();
 
-    // Start a new debounce timer
     _debounce = Timer(const Duration(milliseconds: 300), () {
       state = state.copyWith(
         assetSearchValues: Map<WalletTabType, String>.from(state.assetSearchValues)

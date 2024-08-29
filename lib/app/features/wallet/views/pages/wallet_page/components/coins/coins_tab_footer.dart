@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/empty_state/empty_state.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/app/router/app_routes.dart';
 
-class CoinsTabFooter extends HookConsumerWidget {
+class CoinsTabFooter extends ConsumerWidget {
   const CoinsTabFooter({
     super.key,
   });
@@ -16,23 +15,20 @@ class CoinsTabFooter extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coins = useFilteredWalletCoins(ref);
+    final isVisible = walletTabSearchVisibleSelector(ref, tabType);
 
-    if (coins.isEmpty) {
-      return const EmptyState(
-        tabType: tabType,
-      );
-    }
     return SliverToBoxAdapter(
-      child: ScreenSideOffset.small(
-        child: BottomAction(
-          asset: tabType.bottomActionAsset,
-          title: tabType.getBottomActionTitle(context),
-          onTap: () {
-            ManageCoinsRoute().go(context);
-          },
-        ),
-      ),
+      child: !isVisible
+          ? ScreenSideOffset.small(
+              child: BottomAction(
+                asset: tabType.bottomActionAsset,
+                title: tabType.getBottomActionTitle(context),
+                onTap: () {
+                  ManageCoinsRoute().go(context);
+                },
+              ),
+            )
+          : const SizedBox.shrink(),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coin_item.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/empty_state/empty_state.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/app/router/app_routes.dart';
 
@@ -16,12 +17,11 @@ class CoinsTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Fetch filtered coins
     final coins = useFilteredWalletCoins(ref);
 
     if (coins.isEmpty) {
-      return const SliverToBoxAdapter(
-        child: SizedBox.shrink(),
+      return const EmptyState(
+        tabType: tabType,
       );
     }
 
