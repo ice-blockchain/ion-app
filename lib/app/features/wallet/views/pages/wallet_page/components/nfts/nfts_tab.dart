@@ -5,6 +5,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/empty_state/empty_state.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nft_grid_item.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nft_list_item.dart';
@@ -22,6 +23,12 @@ class NftsTab extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final nfts = useFilteredWalletNfts(ref);
     final nftLayoutType = nftLayoutTypeSelector(ref);
+
+    if (nfts.isEmpty) {
+      return const EmptyState(
+        tabType: tabType,
+      );
+    }
 
     if (nftLayoutType == NftLayoutType.grid) {
       return SliverPadding(
