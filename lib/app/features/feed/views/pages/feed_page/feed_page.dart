@@ -30,7 +30,7 @@ class FeedPage extends HookConsumerWidget {
 
     final appBarSliver = CollapsingAppBar(
       height: FeedControls.height,
-      child: FeedControls(pageScrollController: scrollController),
+      child: FeedControls(),
     );
 
     final slivers = [

@@ -26,7 +26,6 @@ class TemplateColors with _$TemplateColors {
     Color strokeElements,
     Color sheetLine,
     Color sharkText,
-    Color attentionBlock,
     Color attentionRed,
     Color success,
     Color orangePeel,
@@ -40,7 +39,6 @@ class TemplateColors with _$TemplateColors {
   factory TemplateColors.fromJson(Map<String, dynamic> json) => _$TemplateColorsFromJson(json);
 
   factory TemplateColors.empty() => const TemplateColors(
-        Colors.transparent,
         Colors.transparent,
         Colors.transparent,
         Colors.transparent,

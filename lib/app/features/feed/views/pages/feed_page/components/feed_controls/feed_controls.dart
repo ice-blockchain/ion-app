@@ -4,13 +4,10 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_cont
 
 class FeedControls extends StatelessWidget {
   const FeedControls({
-    required this.pageScrollController,
     super.key,
   });
 
   static double get height => 40.0.s;
-
-  final ScrollController pageScrollController;
 
   @override
   Widget build(BuildContext context) {

@@ -59,7 +59,7 @@ class _MenuButton extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(20.0.s),
                   border: Border.all(
                     color: colors.secondaryBackground,
-                    width: 1.2.s,
+                    width: 1.0.s,
                   ),
                 ),
                 child: Center(child: smallIcon),

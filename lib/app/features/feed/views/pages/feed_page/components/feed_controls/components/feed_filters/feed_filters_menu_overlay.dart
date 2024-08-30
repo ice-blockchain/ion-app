@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/overlay_menu/overlay_menu_container.dart';
+import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
 import 'package:ice/app/features/feed/model/feed_filter.dart';
@@ -18,8 +19,6 @@ class FeedFiltersMenuOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.theme.appColors;
-
     return OverlayMenuContainer(
       child: SizedBox(
         width: 200.0.s,
@@ -35,11 +34,7 @@ class FeedFiltersMenuOverlay extends StatelessWidget {
                 ),
             ].intersperse(SizedBox(height: 10.0.s)).toList(),
             SizedBox(height: 10.0.s),
-            Divider(
-              color: colors.attentionBlock,
-              height: 0.5.s,
-              thickness: 0.5.s,
-            ),
+            HorizontalSeparator(),
             SizedBox(height: 10.0.s),
             ...<Widget>[
               for (final filter in FeedFilter.values)
