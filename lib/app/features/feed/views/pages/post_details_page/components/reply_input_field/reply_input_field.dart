@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -27,7 +28,10 @@ class ReplyInputField extends HookConsumerWidget {
     final colors = context.theme.appColors;
     final textThemes = context.theme.appTextThemes;
 
-    final isFocused = useState(false);
+    final inputContainerKey = useRef(UniqueKey());
+    final focusNode = useFocusNode();
+    final hasFocus = useNodeFocused(focusNode);
+
     final textController = useTextEditingController(
       text: ref.watch(replyDataNotifierProvider.select((data) => data.text)),
     );
@@ -36,12 +40,17 @@ class ReplyInputField extends HookConsumerWidget {
       child: Column(
         children: [
           SizedBox(height: 12.0.s),
-          if (isFocused.value)
+          if (hasFocus.value)
             Padding(
               padding: EdgeInsets.only(bottom: 12.0.s),
               child: ReplyAuthorHeader(postData: postData),
             ),
           SizedBox(
+            // When we focus the TextField, a new child is added to the Column,
+            // This causes Flutter to rebuild all subsequent children from scratch,
+            // which results in the TextField losing focus and the keyboard hiding.
+            // Assigning a key to this child ensures that Flutter preserves it during rebuilds.
+            key: inputContainerKey.value,
             height: 36.0.s,
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -53,25 +62,23 @@ class ReplyInputField extends HookConsumerWidget {
                 child: Row(
                   children: [
                     Flexible(
-                      child: Focus(
-                        onFocusChange: (value) => isFocused.value = value,
-                        child: TextField(
-                          controller: textController,
-                          onChanged: (value) =>
-                              ref.read(replyDataNotifierProvider.notifier).onTextChanged(value),
-                          style: textThemes.body2,
-                          decoration: InputDecoration(
-                            hintText: context.i18n.post_reply_hint,
-                            hintStyle: textThemes.caption,
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.only(bottom: 10),
-                          ),
-                          cursorColor: colors.primaryAccent,
-                          cursorHeight: 22.0.s,
+                      child: TextField(
+                        focusNode: focusNode,
+                        controller: textController,
+                        onChanged: (value) =>
+                            ref.read(replyDataNotifierProvider.notifier).onTextChanged(value),
+                        style: textThemes.body2,
+                        decoration: InputDecoration(
+                          hintText: context.i18n.post_reply_hint,
+                          hintStyle: textThemes.caption,
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.only(bottom: 10),
                         ),
+                        cursorColor: colors.primaryAccent,
+                        cursorHeight: 22.0.s,
                       ),
                     ),
-                    if (isFocused.value)
+                    if (hasFocus.value)
                       GestureDetector(
                         onTap: () async {
                           await PostReplyModalRoute(postId: postData.id, showCollapseButton: true)
@@ -86,7 +93,7 @@ class ReplyInputField extends HookConsumerWidget {
             ),
           ),
           SizedBox(height: 12.0.s),
-          if (isFocused.value)
+          if (hasFocus.value)
             PostRepliesActionBar(
               onSendPressed: () => ref.read(sendReplyRequestNotifierProvider.notifier).sendReply(),
             ),
