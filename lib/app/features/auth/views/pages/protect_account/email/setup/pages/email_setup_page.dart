@@ -29,24 +29,22 @@ class EmailSetupPage extends StatelessWidget {
             showBackButton: step != EmailSetupSteps.success,
             showProgress: step != EmailSetupSteps.success,
           ),
-          SliverToBoxAdapter(
-            child: AuthHeader(
-              topOffset: 34.0.s,
-              title: step.getPageTitle(context),
-              description: step.getDescription(context),
-              titleStyle: context.theme.appTextThemes.headline2,
-              descriptionStyle: context.theme.appTextThemes.body2.copyWith(
-                color: context.theme.appColors.secondaryText,
-              ),
-              icon: AuthHeaderIcon(
-                icon: Assets.images.icons.icon2faEmailauth.icon(size: 36.0.s),
-              ),
-            ),
-          ),
           SliverFillRemaining(
             hasScrollBody: false,
             child: Column(
               children: [
+                AuthHeader(
+                  topOffset: 34.0.s,
+                  title: step.getPageTitle(context),
+                  description: step.getDescription(context),
+                  titleStyle: context.theme.appTextThemes.headline2,
+                  descriptionStyle: context.theme.appTextThemes.body2.copyWith(
+                    color: context.theme.appColors.secondaryText,
+                  ),
+                  icon: AuthHeaderIcon(
+                    icon: Assets.images.icons.icon2faEmailauth.icon(size: 36.0.s),
+                  ),
+                ),
                 Expanded(
                   child: switch (step) {
                     EmailSetupSteps.input => EmailSetupInputPage(),

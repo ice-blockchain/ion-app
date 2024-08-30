@@ -144,5 +144,5 @@ class EmailSetupRoute extends BaseRouteData {
         );
 
   final EmailSetupSteps step;
-  String? email = '';
+  String? email;
 }
