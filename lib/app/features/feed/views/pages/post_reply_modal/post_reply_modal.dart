@@ -20,10 +20,13 @@ import 'package:ice/generated/assets.gen.dart';
 class PostReplyModal extends ConsumerWidget {
   const PostReplyModal({
     required this.postId,
+    required this.showCollapseButton,
     super.key,
   });
 
   final String postId;
+
+  final bool showCollapseButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +40,7 @@ class PostReplyModal extends ConsumerWidget {
       bottomPadding: 0,
       body: Column(
         children: [
-          _DialogTitle(),
+          _DialogTitle(showCollapseButton: showCollapseButton),
           Expanded(
             child: SingleChildScrollView(
               child: ScreenSideOffset.small(
@@ -106,7 +109,9 @@ class _PostBody extends StatelessWidget {
 }
 
 class _DialogTitle extends StatelessWidget {
-  const _DialogTitle();
+  const _DialogTitle({required this.showCollapseButton});
+
+  final bool showCollapseButton;
 
   @override
   Widget build(BuildContext context) {
@@ -123,13 +128,14 @@ class _DialogTitle extends StatelessWidget {
         ),
       ),
       actions: [
-        IconButton(
-          onPressed: context.pop,
-          icon: Assets.images.icons.iconFeedScale.icon(
-            color: context.theme.appColors.quaternaryText,
-            size: 18.0.s,
+        if (showCollapseButton)
+          IconButton(
+            onPressed: context.pop,
+            icon: Assets.images.icons.iconFeedScale.icon(
+              color: context.theme.appColors.quaternaryText,
+              size: 18.0.s,
+            ),
           ),
-        ),
       ],
     );
   }

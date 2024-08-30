@@ -26,12 +26,15 @@ class PostDetailsRoute extends BaseRouteData {
 class PostReplyModalRoute extends BaseRouteData {
   PostReplyModalRoute({
     required this.postId,
+    this.showCollapseButton = false,
   }) : super(
           type: IceRouteType.bottomSheet,
-          child: PostReplyModal(postId: postId),
+          child: PostReplyModal(postId: postId, showCollapseButton: showCollapseButton),
         );
 
   final String postId;
+
+  final bool showCollapseButton;
 }
 
 class CommentPostModalRoute extends BaseRouteData {
