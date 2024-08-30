@@ -68,7 +68,7 @@ class CommentPostModal extends ConsumerWidget {
               ),
             ),
           ),
-          PostRepliesActionBar.withShadow()
+          PostRepliesActionBar()
         ],
       ),
     );

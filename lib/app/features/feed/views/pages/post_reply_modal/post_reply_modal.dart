@@ -2,6 +2,8 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/posts_provider.dart';
@@ -10,13 +12,13 @@ import 'package:ice/app/features/feed/views/components/post/components/post_body
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/replying_to.dart';
-import 'package:ice/app/features/feed/views/pages/reply_expanded_page/components/expanded_reply_input_field.dart';
+import 'package:ice/app/features/feed/views/pages/post_reply_modal/components/expanded_reply_input_field.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ReplyExpandedPage extends ConsumerWidget {
-  const ReplyExpandedPage({
+class PostReplyModal extends ConsumerWidget {
+  const PostReplyModal({
     required this.postId,
     super.key,
   });
@@ -34,28 +36,29 @@ class ReplyExpandedPage extends ConsumerWidget {
     return SheetContent(
       bottomPadding: 0,
       body: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           _DialogTitle(),
-          Flexible(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0.s),
-              child: SingleChildScrollView(
+          Expanded(
+            child: SingleChildScrollView(
+              child: ScreenSideOffset.small(
                 child: Column(
                   children: [
                     const PostHeader(),
                     _PostBody(postData: postData),
                     SizedBox(height: 12.0.s),
                     ExpandedReplyInputField(),
-                    PostRepliesActionBar(
-                      onSendPressed: () {
-                        ref.read(sendReplyRequestNotifierProvider.notifier).sendReply();
-                        context.pop();
-                      },
-                    ),
                   ],
                 ),
               ),
+            ),
+          ),
+          HorizontalSeparator(),
+          ScreenSideOffset.small(
+            child: PostRepliesActionBar(
+              onSendPressed: () {
+                ref.read(sendReplyRequestNotifierProvider.notifier).sendReply();
+                context.pop();
+              },
             ),
           ),
         ],

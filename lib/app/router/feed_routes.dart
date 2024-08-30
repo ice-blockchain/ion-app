@@ -7,7 +7,7 @@ class FeedRoutes {
       routes: [
         TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:postId'),
         TypedGoRoute<CommentPostModalRoute>(path: 'comment-post/:postId'),
-        TypedGoRoute<PostReplyRoute>(path: 'reply-to-post/:postId'),
+        TypedGoRoute<PostReplyModalRoute>(path: 'reply-to-post/:postId'),
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
       ],
     ),
@@ -23,14 +23,12 @@ class PostDetailsRoute extends BaseRouteData {
   final String postId;
 }
 
-class PostReplyRoute extends BaseRouteData {
-  PostReplyRoute({
+class PostReplyModalRoute extends BaseRouteData {
+  PostReplyModalRoute({
     required this.postId,
   }) : super(
           type: IceRouteType.bottomSheet,
-          child: ReplyExpandedPage(
-            postId: postId,
-          ),
+          child: PostReplyModal(postId: postId),
         );
 
   final String postId;

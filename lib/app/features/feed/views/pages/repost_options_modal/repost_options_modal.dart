@@ -24,7 +24,7 @@ class RepostOptionsModal extends StatelessWidget {
             NavigationAppBar.modal(
               showBackButton: false,
               title: Text(context.i18n.feed_repost_type),
-              actions: [NavigationCloseButton(onPressed: context.pop)],
+              leading: NavigationCloseButton(onPressed: context.pop),
             ),
             SizedBox(height: 11.0.s),
             ScreenSideOffset.small(
