@@ -26,10 +26,10 @@ void main() {
       expect(localStorage.getBool(testKey), testBoolValue);
     });
 
-    test('getBool() returns default value when key not found', () {
+    test('getBool() returns null when key not found', () {
       expect(
-        localStorage.getBool(testKey, defaultValue: !testBoolValue),
-        !testBoolValue,
+        localStorage.getBool(testKey),
+        null,
       );
     });
 
@@ -39,10 +39,10 @@ void main() {
       expect(localStorage.getDouble(testKey), testDoubleValue);
     });
 
-    test('getDouble() returns default value when key not found', () {
+    test('getDouble() returns null when key not found', () {
       expect(
-        localStorage.getDouble(testKey, defaultValue: 0.0),
-        0.0,
+        localStorage.getDouble(testKey),
+        null,
       );
     });
 
@@ -62,33 +62,30 @@ void main() {
         localStorage.getEnum(
           testKey,
           TestEnum.values,
-          defaultValue: TestEnum.one,
         ),
         testEnumValue,
       );
     });
 
-    test('getEnum() returns default value when key not found', () {
+    test('getEnum() returns null when key not found', () {
       expect(
         localStorage.getEnum(
           testKey,
           TestEnum.values,
-          defaultValue: TestEnum.one,
         ),
-        TestEnum.one,
+        null,
       );
     });
 
-    test('getEnum() returns default value when value is invalid', () {
+    test('getEnum() returns null when value is invalid', () {
       localStorage.setString(testKey, 'invalid');
 
       expect(
         localStorage.getEnum(
           testKey,
           TestEnum.values,
-          defaultValue: TestEnum.one,
         ),
-        TestEnum.one,
+        null,
       );
     });
   });

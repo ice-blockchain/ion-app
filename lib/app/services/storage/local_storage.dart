@@ -26,16 +26,16 @@ class LocalStorage {
     return unawaited(_prefs.setBool(key, value));
   }
 
-  bool getBool(String key, {bool defaultValue = false}) {
-    return _prefs.getBool(key) ?? defaultValue;
+  bool? getBool(String key) {
+    return _prefs.getBool(key);
   }
 
   void setDouble(String key, double value) {
     return unawaited(_prefs.setDouble(key, value));
   }
 
-  double getDouble(String key, {double defaultValue = 0.0}) {
-    return _prefs.getDouble(key) ?? defaultValue;
+  double? getDouble(String key) {
+    return _prefs.getDouble(key);
   }
 
   void setString(String key, String value) {
@@ -51,19 +51,18 @@ class LocalStorage {
   }
 
   // Get an enum value
-  T getEnum<T extends Enum>(
+  T? getEnum<T extends Enum>(
     String key,
-    List<T> enumValues, {
-    required T defaultValue,
-  }) {
+    List<T> enumValues,
+  ) {
     final stringValue = _prefs.getString(key);
     if (stringValue == null) {
-      return defaultValue;
+      return null;
     }
     try {
       return EnumExtensions.fromShortString(enumValues, stringValue);
     } catch (e) {
-      return defaultValue;
+      return null;
     }
   }
 }
