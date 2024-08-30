@@ -49,7 +49,7 @@ class CommentPostModal extends ConsumerWidget {
                   children: [
                     const QuotePostCommentInput(),
                     Padding(
-                      padding: EdgeInsets.only(left: 40.0.s, top: 16.0.s),
+                      padding: EdgeInsets.only(left: 40.0.s, top: 12.0.s),
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
