@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/model/feed_category.dart';
-import 'package:ice/app/features/feed/model/feed_filter.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_filters_menu_overlay.dart';
-import 'package:ice/generated/assets.gen.dart';
 
 class FeedFiltersMenuButton extends StatelessWidget {
   const FeedFiltersMenuButton({super.key});
@@ -26,27 +23,51 @@ class _MenuButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = context.theme.appColors;
+
     final currentFilter = ref.watch(feedCurrentFilterProvider);
 
-    final icon = switch (currentFilter) {
-      FeedFiltersState(category: FeedCategory.feed, filter: FeedFilter.forYou) =>
-        Assets.images.icons.iconFeedForyou,
-      FeedFiltersState(category: FeedCategory.feed, filter: FeedFilter.following) =>
-        Assets.images.icons.iconFeedFollowing,
-      FeedFiltersState(category: FeedCategory.articles, filter: FeedFilter.forYou) =>
-        Assets.images.icons.iconArticleForyou,
-      FeedFiltersState(category: FeedCategory.articles, filter: FeedFilter.following) =>
-        Assets.images.icons.iconArticleFollowing,
-      FeedFiltersState(category: FeedCategory.videos, filter: FeedFilter.forYou) =>
-        Assets.images.icons.iconVideoForyou,
-      FeedFiltersState(category: FeedCategory.videos, filter: FeedFilter.following) =>
-        Assets.images.icons.iconVideoFollowing,
-    };
+    final bigIcon = currentFilter.category.getIcon(context);
+    final smallIcon = currentFilter.filter.getIcon(
+      context,
+      size: 12.0.s,
+      color: colors.secondaryBackground,
+    );
 
-    // We need this transform to draw the icon outside of the parent's size
-    return Transform(
-      transform: Matrix4.identity()..scale(1.075),
-      child: icon.icon(size: 40.0.s),
+    return Stack(
+      children: [
+        SizedBox.square(
+          dimension: 40.0.s,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: currentFilter.category.getColor(context),
+              borderRadius: BorderRadius.circular(16.0.s),
+            ),
+            child: Center(child: bigIcon),
+          ),
+        ),
+        Positioned(
+          right: 0,
+          bottom: 0,
+          child: Transform.translate(
+            offset: Offset(3.0.s, 3.0.s),
+            child: SizedBox.square(
+              dimension: 18.0.s,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: currentFilter.category.getColor(context),
+                  borderRadius: BorderRadius.circular(20.0.s),
+                  border: Border.all(
+                    color: colors.secondaryBackground,
+                    width: 1.2.s,
+                  ),
+                ),
+                child: Center(child: smallIcon),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

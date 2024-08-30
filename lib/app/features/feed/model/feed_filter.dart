@@ -6,18 +6,18 @@ enum FeedFilter {
   forYou,
   following;
 
-  Widget getIcon(BuildContext context) {
-    final color = context.theme.appColors.primaryText;
-    return switch (this) {
-      FeedFilter.forYou => Assets.images.icons.iconCategoriesForyou.icon(
-          color: color,
-          size: 18.0.s,
-        ),
-      FeedFilter.following => Assets.images.icons.iconCategoriesFollowing.icon(
-          color: color,
-          size: 18.0.s,
-        ),
+  Widget getIcon(BuildContext context, {double? size, Color? color}) {
+    final defaultColor = context.theme.appColors.primaryText;
+
+    final icon = switch (this) {
+      FeedFilter.forYou => Assets.images.icons.iconCategoriesForyou,
+      FeedFilter.following => Assets.images.icons.iconCategoriesFollowing,
     };
+
+    return icon.icon(
+      color: color ?? defaultColor,
+      size: size ?? 18.0.s,
+    );
   }
 
   String getLabel(BuildContext context) => switch (this) {
