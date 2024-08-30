@@ -2,18 +2,27 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
-import 'package:ice/app/features/wallet/providers/nfts_provider.dart';
+import 'package:ice/app/features/wallet/providers/filtered_assets_provider.dart';
 
-List<NftData> useFilteredWalletNfts(WidgetRef ref) {
+class FilteredNftsResult {
+  final List<NftData> nfts;
+  final bool isLoading;
+
+  FilteredNftsResult({
+    required this.nfts,
+    required this.isLoading,
+  });
+}
+
+FilteredNftsResult useFilteredWalletNfts(WidgetRef ref) {
   final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
 
-  final walletNfts = ref.watch(
-    nftsNotifierProvider.select(
-      (AsyncValue<List<NftData>> data) => data.value ?? <NftData>[],
-    ),
-  );
+  final AsyncValue<List<NftData>> nftsState = ref.watch(filteredNftsProvider);
 
-  return useMemoized(
+  final walletNfts = nftsState.value ?? <NftData>[];
+  final isLoading = nftsState.isLoading;
+
+  final filteredNfts = useMemoized(
     () {
       return isZeroValueAssetsVisible
           ? walletNfts
@@ -21,4 +30,6 @@ List<NftData> useFilteredWalletNfts(WidgetRef ref) {
     },
     <Object?>[isZeroValueAssetsVisible, walletNfts],
   );
+
+  return FilteredNftsResult(nfts: filteredNfts, isLoading: isLoading);
 }

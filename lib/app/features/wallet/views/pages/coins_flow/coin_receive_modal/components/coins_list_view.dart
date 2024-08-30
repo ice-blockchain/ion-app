@@ -24,7 +24,7 @@ class CoinsListView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coins = useFilteredWalletCoins(ref);
+    final coins = useFilteredWalletCoins(ref).coins;
 
     if (coins.isEmpty) {
       return const SizedBox.shrink();

@@ -2,18 +2,27 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
-import 'package:ice/app/features/wallet/providers/coins_provider.dart';
+import 'package:ice/app/features/wallet/providers/filtered_assets_provider.dart';
 
-List<CoinData> useFilteredWalletCoins(WidgetRef ref) {
+class FilteredCoinsResult {
+  final List<CoinData> coins;
+  final bool isLoading;
+
+  FilteredCoinsResult({
+    required this.coins,
+    required this.isLoading,
+  });
+}
+
+FilteredCoinsResult useFilteredWalletCoins(WidgetRef ref) {
   final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
 
-  final walletCoins = ref.watch(
-    coinsNotifierProvider.select(
-      (AsyncValue<List<CoinData>> data) => data.value ?? <CoinData>[],
-    ),
-  );
+  final AsyncValue<List<CoinData>> coinsState = ref.watch(filteredCoinsProvider);
 
-  return useMemoized(
+  final walletCoins = coinsState.value ?? <CoinData>[];
+  final isLoading = coinsState.isLoading;
+
+  final filteredCoins = useMemoized(
     () {
       return isZeroValueAssetsVisible
           ? walletCoins
@@ -21,4 +30,6 @@ List<CoinData> useFilteredWalletCoins(WidgetRef ref) {
     },
     [isZeroValueAssetsVisible, walletCoins],
   );
+
+  return FilteredCoinsResult(coins: filteredCoins, isLoading: isLoading);
 }

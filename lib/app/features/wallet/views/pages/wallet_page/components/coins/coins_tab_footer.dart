@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_visible_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/app/router/app_routes.dart';
 
@@ -15,10 +15,11 @@ class CoinsTabFooter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isVisible = walletTabSearchVisibleSelector(ref, tabType);
+    final searchVisibleProvider = walletSearchVisibleControllerProvider(tabType);
+    final isSearchVisible = ref.watch(searchVisibleProvider);
 
     return SliverToBoxAdapter(
-      child: !isVisible
+      child: !isSearchVisible
           ? ScreenSideOffset.small(
               child: BottomAction(
                 asset: tabType.bottomActionAsset,
