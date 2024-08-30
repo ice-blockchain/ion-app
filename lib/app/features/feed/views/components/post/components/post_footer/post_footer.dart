@@ -41,13 +41,13 @@ class PostFooter extends HookConsumerWidget {
 
     void onToggleComment() {
       HapticFeedback.lightImpact();
-      PostReplyRoute(postId: postData.id).go(context);
+      PostReplyRoute(postId: postData.id).push<void>(context);
       isCommentActive.value = !isCommentActive.value;
     }
 
     void onToggleRepost() {
       HapticFeedback.lightImpact();
-      RepostOptionsModalRoute(postId: postData.id).go(context);
+      RepostOptionsModalRoute(postId: postData.id).push<void>(context);
       isReposted.value = !isReposted.value;
     }
 
@@ -58,7 +58,7 @@ class PostFooter extends HookConsumerWidget {
 
     void onShareOptions() {
       HapticFeedback.lightImpact();
-      SharePostModalRoute(postId: postData.id).go(context);
+      SharePostModalRoute(postId: postData.id).push<void>(context);
     }
 
     void onIceStroke() => HapticFeedback.lightImpact();

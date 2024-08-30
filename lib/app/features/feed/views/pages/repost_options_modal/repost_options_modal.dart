@@ -45,7 +45,7 @@ class RepostOptionsModal extends StatelessWidget {
                 type: ButtonType.secondary,
                 mainAxisSize: MainAxisSize.max,
                 onPressed: () {
-                  CommentPostModalRoute(postId: postId).push<void>(context);
+                  CommentPostModalRoute(postId: postId).pushReplacement(context);
                 },
                 leadingIcon: Assets.images.icons.iconFeedQuote.icon(size: 18.0.s),
                 leadingIconOffset: 12.0.s,

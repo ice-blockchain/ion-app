@@ -76,7 +76,7 @@ class ReplyInputField extends HookConsumerWidget {
                     if (isFocused.value)
                       GestureDetector(
                         onTap: () async {
-                          await PostExpandedReplyRoute(postId: postData.id).push<void>(context);
+                          await PostReplyRoute(postId: postData.id).push<void>(context);
                           textController.text = ref.read(replyDataNotifierProvider).text;
                         },
                         child: Assets.images.icons.iconReplysearchScale.icon(size: 20.0.s),

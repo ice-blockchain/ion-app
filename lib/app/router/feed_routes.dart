@@ -2,25 +2,12 @@ part of 'app_routes.dart';
 
 class FeedRoutes {
   static const routes = <TypedRoute<RouteData>>[
-    TypedGoRoute<PostDetailsRoute>(
-      path: 'post/:postId',
-      routes: [
-        TypedShellRoute<ModalShellRouteData>(
-          routes: [
-            TypedGoRoute<PostExpandedReplyRoute>(path: 'reply-modal/:postId'),
-          ],
-        ),
-      ],
-    ),
+    TypedGoRoute<PostDetailsRoute>(path: 'post/:postId'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<RepostOptionsModalRoute>(
-          path: 'repost-options/:postId',
-          routes: [
-            TypedGoRoute<CommentPostModalRoute>(path: 'comment-post/:postId'),
-          ],
-        ),
-        TypedGoRoute<PostReplyRoute>(path: 'reply-modal/:postId'),
+        TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:postId'),
+        TypedGoRoute<CommentPostModalRoute>(path: 'comment-post/:postId'),
+        TypedGoRoute<PostReplyRoute>(path: 'reply-to-post/:postId'),
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
       ],
     ),
@@ -31,19 +18,6 @@ class PostDetailsRoute extends BaseRouteData {
   PostDetailsRoute({required this.postId})
       : super(
           child: PostDetailsPage(postId: postId),
-        );
-
-  final String postId;
-}
-
-class PostExpandedReplyRoute extends BaseRouteData {
-  PostExpandedReplyRoute({
-    required this.postId,
-  }) : super(
-          type: IceRouteType.bottomSheet,
-          child: ReplyExpandedPage(
-            postId: postId,
-          ),
         );
 
   final String postId;
