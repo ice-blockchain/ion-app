@@ -2,6 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
@@ -9,7 +10,6 @@ import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/post_body.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/replying_to.dart';
 import 'package:ice/app/features/feed/views/pages/post_reply_modal/components/expanded_reply_input_field.dart';
@@ -46,9 +46,18 @@ class PostReplyModal extends ConsumerWidget {
               child: ScreenSideOffset.small(
                 child: Column(
                   children: [
-                    const PostHeader(),
+                    SizedBox(height: 6.0.s),
+                    ListItem.user(
+                      title: const Text('Arnold Grey'),
+                      subtitle: const Text('@arnoldgrey'),
+                      profilePicture:
+                          'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+                      iceBadge: true,
+                      verifiedBadge: true,
+                    ),
+                    SizedBox(height: 8.0.s),
                     _PostBody(postData: postData),
-                    SizedBox(height: 12.0.s),
+                    SizedBox(height: 10.0.s),
                     ExpandedReplyInputField(),
                   ],
                 ),

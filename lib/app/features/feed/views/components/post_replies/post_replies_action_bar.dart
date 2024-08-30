@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -25,24 +24,28 @@ class PostRepliesActionBar extends StatelessWidget {
             onTap: () {},
             child: Assets.images.icons.iconGalleryOpen.icon(),
           ),
-          SizedBox(width: 16.0.s),
+          SizedBox(width: 12.0.s),
           GestureDetector(
             onTap: () {},
             child: Assets.images.icons.iconCameraOpen.icon(),
           ),
-          SizedBox(width: 16.0.s),
+          SizedBox(width: 12.0.s),
           GestureDetector(
             onTap: () {},
             child: Assets.images.icons.iconFeedAddfile.icon(),
           ),
           const Spacer(),
-          Button(
-            minimumSize: Size(48.0.s, 28.0.s),
-            borderRadius: BorderRadius.circular(100.0.s),
-            onPressed: onSendPressed ?? () {},
-            leadingIcon: Padding(
-              padding: EdgeInsets.symmetric(vertical: 4.0.s),
-              child: Assets.images.icons.iconFeedSendbutton.icon(size: 20.0.s),
+          GestureDetector(
+            onTap: onSendPressed ?? () {},
+            child: Container(
+              width: 48.0.s,
+              height: 28.0.s,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.0.s),
+                color: context.theme.appColors.primaryAccent,
+              ),
+              alignment: Alignment.center,
+              child: Assets.images.icons.iconFeedSendbutton.icon(size: 16.0.s),
             ),
           ),
         ],
