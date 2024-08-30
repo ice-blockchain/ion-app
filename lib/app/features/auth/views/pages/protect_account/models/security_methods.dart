@@ -6,7 +6,7 @@ part 'security_methods.freezed.dart';
 class SecurityMethods with _$SecurityMethods {
   const factory SecurityMethods({
     @Default(false) bool isBackupEnabled,
-    @Default(true) bool isEmailEnabled,
+    @Default(false) bool isEmailEnabled,
     @Default(false) bool isAuthenticatorEnabled,
     @Default(false) bool isPhoneEnabled,
   }) = _SecurityMethods;

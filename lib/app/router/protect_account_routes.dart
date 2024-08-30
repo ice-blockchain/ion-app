@@ -16,6 +16,7 @@ class ProtectAccountRoutes {
     TypedGoRoute<AuthenticatorDeleteRoute>(path: '/authenticator-delete/:step'),
     TypedGoRoute<AuthenticatorInitialDeleteRoute>(path: '/authenticator-initial-delete'),
     TypedGoRoute<AuthenticatorDeleteSuccessRoute>(path: '/authenticator-delete-success'),
+    TypedGoRoute<EmailSetupRoute>(path: '/email-setup/:step'),
   ];
 }
 
@@ -133,4 +134,15 @@ class AuthenticatorDeleteSuccessRoute extends BaseRouteData {
           child: AuthenticatorDeleteSuccessPage(),
           type: IceRouteType.bottomSheet,
         );
+}
+
+class EmailSetupRoute extends BaseRouteData {
+  EmailSetupRoute({required this.step, this.email})
+      : super(
+          child: EmailSetupPage(step, email),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final EmailSetupSteps step;
+  String? email = '';
 }
