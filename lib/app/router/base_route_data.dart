@@ -53,6 +53,7 @@ class FadeTransitionSheetPage extends ScrollableNavigationSheetPage<void> {
     required GoRouterState state,
   }) : super(
           key: state.pageKey,
+          physics: ClampingSheetPhysics(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             final fadeInTween = TweenSequence<double>([
               TweenSequenceItem(tween: ConstantTween(0), weight: 1),
