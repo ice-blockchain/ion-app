@@ -29,8 +29,6 @@ class PostFooter extends HookConsumerWidget {
   final ActionIconBuilder? actionBuilder;
   final double bottomPadding;
 
-  static double get iconSize => 16.0.s;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isCommentActive = useState(false);
@@ -65,10 +63,10 @@ class PostFooter extends HookConsumerWidget {
 
     final commentsActionIcon = PostActionButton(
       icon: Assets.images.icons.iconBlockComment.icon(
-        size: PostFooter.iconSize,
+        size: 14.0.s,
       ),
       activeIcon: Assets.images.icons.iconBlockCommentActive.icon(
-        size: PostFooter.iconSize,
+        size: 14.0.s,
       ),
       value: '121k',
       isActive: isCommentActive.value,
@@ -77,10 +75,10 @@ class PostFooter extends HookConsumerWidget {
 
     final repostsActionIcon = PostActionButton(
       icon: Assets.images.icons.iconBlockRepost.icon(
-        size: PostFooter.iconSize,
+        size: 14.0.s,
       ),
       activeIcon: Assets.images.icons.iconBlockRepost.icon(
-        size: PostFooter.iconSize,
+        size: 14.0.s,
         color: activeColor,
       ),
       value: '442k',
@@ -90,11 +88,11 @@ class PostFooter extends HookConsumerWidget {
 
     final likesActionIcon = PostActionButton(
       icon: Assets.images.icons.iconVideoLikeOff.icon(
-        size: PostFooter.iconSize,
+        size: 18.0.s,
         color: context.theme.appColors.onTertararyBackground,
       ),
       activeIcon: Assets.images.icons.iconVideoLikeOn.icon(
-        size: PostFooter.iconSize,
+        size: 18.0.s,
         color: context.theme.appColors.attentionRed,
       ),
       value: '121k',
@@ -104,7 +102,7 @@ class PostFooter extends HookConsumerWidget {
 
     final iceActionIcon = PostActionButton(
       icon: Assets.images.icons.iconButtonIceStroke.icon(
-        size: PostFooter.iconSize,
+        size: 16.0.s,
         color: context.theme.appColors.onTertararyBackground,
       ),
       value: '7',
@@ -113,7 +111,7 @@ class PostFooter extends HookConsumerWidget {
 
     final shareActionIcon = PostActionButton(
       icon: Assets.images.icons.iconBlockShare.icon(
-        size: PostFooter.iconSize,
+        size: 14.0.s,
       ),
       activeColor: activeColor,
     );
