@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -31,10 +32,7 @@ class ReplyInputField extends HookConsumerWidget {
       text: ref.watch(replyDataNotifierProvider.select((data) => data.text)),
     );
 
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16.0.s,
-      ),
+    return ScreenSideOffset.small(
       child: Column(
         children: [
           SizedBox(height: 12.0.s),
