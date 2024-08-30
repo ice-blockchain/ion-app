@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
@@ -26,8 +28,8 @@ class CommentPostModal extends ConsumerWidget {
     if (post == null) return SizedBox.shrink();
 
     return SheetContent(
+      bottomPadding: 0,
       body: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
             title: Text(
@@ -42,8 +44,7 @@ class CommentPostModal extends ConsumerWidget {
           ),
           Expanded(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0.s),
+              child: ScreenSideOffset.small(
                 child: Column(
                   children: [
                     const QuotePostCommentInput(),
@@ -68,7 +69,8 @@ class CommentPostModal extends ConsumerWidget {
               ),
             ),
           ),
-          PostRepliesActionBar()
+          HorizontalSeparator(),
+          ScreenSideOffset.small(child: PostRepliesActionBar()),
         ],
       ),
     );
