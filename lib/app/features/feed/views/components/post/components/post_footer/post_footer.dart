@@ -41,7 +41,7 @@ class PostFooter extends HookConsumerWidget {
 
     void onToggleComment() {
       HapticFeedback.lightImpact();
-      CommentPostModalRoute(postId: postData.id).go(context);
+      PostReplyRoute(postId: postData.id).go(context);
       isCommentActive.value = !isCommentActive.value;
     }
 

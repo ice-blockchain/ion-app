@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/separated/separated_column.dart';
+import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/links_list/links_list_tile.dart';
-import 'package:ice/app/features/user/pages/pull_right_menu_page/components/links_list/links_list_tile_divider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class LinksList extends StatelessWidget {
@@ -19,7 +20,8 @@ class LinksList extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 40.0.s),
       padding: EdgeInsets.symmetric(horizontal: 30.0.s, vertical: 6.0.s),
       decoration: Decorations.borderBoxDecoration(context),
-      child: Column(
+      child: SeparatedColumn(
+        separator: HorizontalSeparator(),
         children: [
           LinksListTile(
             iconAssetName: Assets.images.icons.iconProfileUser.path,
@@ -28,7 +30,6 @@ class LinksList extends StatelessWidget {
             subtitle: context.i18n.profile_profile_desc,
             onTap: () {},
           ),
-          const LinksListTileDivider(),
           LinksListTile(
             iconAssetName: Assets.images.icons.iconProfileFeed.path,
             iconTintColor: context.theme.appColors.purple,
@@ -36,7 +37,6 @@ class LinksList extends StatelessWidget {
             subtitle: context.i18n.profile_feed_desc,
             onTap: () {},
           ),
-          const LinksListTileDivider(),
           LinksListTile(
             iconAssetName: Assets.images.icons.iconVideosTrading.path,
             iconTintColor: context.theme.appColors.raspberry,
@@ -44,7 +44,6 @@ class LinksList extends StatelessWidget {
             subtitle: context.i18n.profile_videos_desc,
             onTap: () {},
           ),
-          const LinksListTileDivider(),
           LinksListTile(
             iconAssetName: Assets.images.icons.iconFeedStories.path,
             iconTintColor: context.theme.appColors.success,
@@ -52,7 +51,6 @@ class LinksList extends StatelessWidget {
             subtitle: context.i18n.profile_articles_desc,
             onTap: () {},
           ),
-          const LinksListTileDivider(),
           LinksListTile(
             iconAssetName: Assets.images.icons.iconBookmarks.path,
             iconTintColor: context.theme.appColors.primaryAccent,

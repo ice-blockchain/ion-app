@@ -26,83 +26,51 @@ class CommentPostModal extends ConsumerWidget {
     if (post == null) return SizedBox.shrink();
 
     return SheetContent(
-      body: Stack(
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _DialogTitle(),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0.s),
-                    child: Column(
-                      children: [
-                        const QuotePostCommentInput(),
-                        Padding(
-                          padding: EdgeInsets.only(left: 40.0.s, top: 16.0.s),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: context.theme.appColors.onTerararyFill,
-                              ),
-                              borderRadius: BorderRadius.circular(16.0.s),
-                            ),
-                            child: Post(
-                              header: PostHeader(),
-                              footer: const SizedBox.shrink(),
-                              postData: post,
-                            ),
+          NavigationAppBar.modal(
+            title: Text(
+              context.i18n.feed_write_comment,
+              style: context.theme.appTextThemes.subtitle,
+            ),
+            leading: IconButton(
+              onPressed: context.pop,
+              icon: Assets.images.icons.iconSheetClose
+                  .icon(color: context.theme.appColors.quaternaryText),
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0.s),
+                child: Column(
+                  children: [
+                    const QuotePostCommentInput(),
+                    Padding(
+                      padding: EdgeInsets.only(left: 40.0.s, top: 16.0.s),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: context.theme.appColors.onTerararyFill,
                           ),
+                          borderRadius: BorderRadius.circular(16.0.s),
                         ),
-                      ],
+                        child: Post(
+                          header: PostHeader(),
+                          footer: const SizedBox.shrink(),
+                          postData: post,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
-              SizedBox(
-                height: 60.0.s,
-              ),
-            ],
+            ),
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: PostRepliesActionBar.withShadow(),
-          ),
+          PostRepliesActionBar.withShadow()
         ],
       ),
-    );
-  }
-}
-
-class _DialogTitle extends StatelessWidget {
-  const _DialogTitle();
-
-  @override
-  Widget build(BuildContext context) {
-    return NavigationAppBar.modal(
-      title: Text(
-        context.i18n.feed_write_comment,
-        style: context.theme.appTextThemes.subtitle,
-      ),
-      leading: IconButton(
-        onPressed: context.pop,
-        icon: Assets.images.icons.iconSheetClose.icon(
-          color: context.theme.appColors.quaternaryText,
-          size: 24.0.s,
-        ),
-      ),
-      actions: [
-        IconButton(
-          onPressed: context.pop,
-          icon: Assets.images.icons.iconFeedScale.icon(
-            color: context.theme.appColors.quaternaryText,
-            size: 18.0.s,
-          ),
-        ),
-      ],
     );
   }
 }

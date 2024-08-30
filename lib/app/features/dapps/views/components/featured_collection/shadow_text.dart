@@ -11,7 +11,7 @@ class ShadowText extends StatelessWidget {
   final TextStyle shadowStyle;
 
   static const TextStyle defaultShadowStyle = TextStyle(
-    shadows: <Shadow>[
+    shadows: [
       Shadow(
         offset: Offset(0, 0.5),
         color: Color.fromRGBO(0, 0, 0, 0.4),
