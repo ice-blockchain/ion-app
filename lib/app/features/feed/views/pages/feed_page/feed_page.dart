@@ -24,7 +24,7 @@ class FeedPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-    final feedCategory = ref.watch(feedCurrentFilterProvider).category;
+    final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
 

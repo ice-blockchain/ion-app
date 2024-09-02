@@ -62,7 +62,7 @@ class _FeedCategoryItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentCategory = ref.watch(feedCurrentFilterProvider).category;
+    final currentCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
     final isSelected = currentCategory == category;
 
     return FeedFiltersMenuItem(
@@ -92,7 +92,7 @@ class _FeedFilterItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.theme.appColors;
-    final currentFilter = ref.watch(feedCurrentFilterProvider).filter;
+    final currentFilter = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
     final isSelected = currentFilter == filter;
 
     return FeedFiltersMenuItem(
