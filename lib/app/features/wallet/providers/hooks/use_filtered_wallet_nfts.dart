@@ -4,15 +4,7 @@ import 'package:ice/app/features/user/providers/user_preferences_selectors.dart'
 import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/providers/filtered_assets_provider.dart';
 
-class FilteredNftsResult {
-  final List<NftData> nfts;
-  final bool isLoading;
-
-  FilteredNftsResult({
-    required this.nfts,
-    required this.isLoading,
-  });
-}
+typedef FilteredNftsResult = ({List<NftData> nfts, bool isLoading});
 
 FilteredNftsResult useFilteredWalletNfts(WidgetRef ref) {
   final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
@@ -31,5 +23,5 @@ FilteredNftsResult useFilteredWalletNfts(WidgetRef ref) {
     <Object?>[isZeroValueAssetsVisible, walletNfts],
   );
 
-  return FilteredNftsResult(nfts: filteredNfts, isLoading: isLoading);
+  return (nfts: filteredNfts, isLoading: isLoading);
 }

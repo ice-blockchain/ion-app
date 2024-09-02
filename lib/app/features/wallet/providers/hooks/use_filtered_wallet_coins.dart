@@ -4,15 +4,7 @@ import 'package:ice/app/features/user/providers/user_preferences_selectors.dart'
 import 'package:ice/app/features/wallet/model/coin_data.dart';
 import 'package:ice/app/features/wallet/providers/filtered_assets_provider.dart';
 
-class FilteredCoinsResult {
-  final List<CoinData> coins;
-  final bool isLoading;
-
-  FilteredCoinsResult({
-    required this.coins,
-    required this.isLoading,
-  });
-}
+typedef FilteredCoinsResult = ({List<CoinData> coins, bool isLoading});
 
 FilteredCoinsResult useFilteredWalletCoins(WidgetRef ref) {
   final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
@@ -31,5 +23,5 @@ FilteredCoinsResult useFilteredWalletCoins(WidgetRef ref) {
     [isZeroValueAssetsVisible, walletCoins],
   );
 
-  return FilteredCoinsResult(coins: filteredCoins, isLoading: isLoading);
+  return (coins: filteredCoins, isLoading: isLoading);
 }

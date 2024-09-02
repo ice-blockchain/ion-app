@@ -5,7 +5,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_query_provider.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_visible_provider.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -22,7 +22,7 @@ class EmptyState extends ConsumerWidget {
     final String searchValue = ref.watch(
       walletSearchQueryControllerProvider(tabType.walletAssetType),
     );
-    final searchVisibleProvider = walletSearchVisibleControllerProvider(tabType);
+    final searchVisibleProvider = walletSearchVisibilityProvider(tabType);
     final isSearchVisible = ref.watch(searchVisibleProvider);
 
     final toShowNoResults = searchValue.isNotEmpty == true;

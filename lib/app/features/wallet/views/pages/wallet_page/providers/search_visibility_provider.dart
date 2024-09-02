@@ -1,10 +1,10 @@
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'search_visible_provider.g.dart';
+part 'search_visibility_provider.g.dart';
 
-@Riverpod(keepAlive: true)
-class WalletSearchVisibleController extends _$WalletSearchVisibleController {
+@riverpod
+class WalletSearchVisibility extends _$WalletSearchVisibility {
   @override
   bool build(WalletTabType tabType) => false;
 

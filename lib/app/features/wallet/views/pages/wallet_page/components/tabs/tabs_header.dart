@@ -8,7 +8,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header_hide_action.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header_tab.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_visible_provider.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -24,7 +24,7 @@ class WalletTabsHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchVisibleProvider = walletSearchVisibleControllerProvider(activeTab);
+    final searchVisibleProvider = walletSearchVisibilityProvider(activeTab);
     return Padding(
       padding: EdgeInsets.only(
         top: 16.0.s - UiConstants.hitSlop,
