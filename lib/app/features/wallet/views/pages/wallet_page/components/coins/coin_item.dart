@@ -5,8 +5,8 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/model/coin_data.dart';
+import 'package:ice/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
 import 'package:ice/app/utils/num.dart';
 
 class CoinItem extends ConsumerWidget {

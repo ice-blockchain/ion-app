@@ -1,25 +1,20 @@
 import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/user/model/nft_sorting_type.dart';
 import 'package:ice/app/features/user/model/user_preferences.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/services/storage/user_preferences_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_preferences_provider.g.dart';
+part 'wallet_user_preferences_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class UserPreferencesNotifier extends _$UserPreferencesNotifier {
+class WalletUserPreferencesNotifier extends _$WalletUserPreferencesNotifier {
   static String isBalanceVisibleKey = 'UserPreferences:isBalanceVisible';
   static String isZeroValueAssetsVisibleKey = 'UserPreferences:isZeroValueAssetsVisible';
   static String nftLayoutTypeKey = 'UserPreferences:nftLayoutType';
   static String nftSortingTypeKey = 'UserPreferences:nftSortingType';
 
-  String? _userId;
-
   @override
-  UserPreferences build() {
-    final userId = ref.watch(userDataNotifierProvider.select((state) => state.id));
-    _userId = userId;
+  UserPreferences build({required String userId}) {
     final userPreferencesService = ref.watch(userPreferencesServiceProvider(userId: userId));
 
     final isBalanceVisible = userPreferencesService.getValue<bool>(isBalanceVisibleKey) ?? true;
@@ -48,8 +43,7 @@ class UserPreferencesNotifier extends _$UserPreferencesNotifier {
   }
 
   void switchBalanceVisibility() {
-    assert(_userId != null);
-    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: _userId!));
+    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: userId));
     state = state.copyWith(isBalanceVisible: !state.isBalanceVisible);
     userPreferencesService.setValue(
       isBalanceVisibleKey,
@@ -58,8 +52,7 @@ class UserPreferencesNotifier extends _$UserPreferencesNotifier {
   }
 
   void switchZeroValueAssetsVisibility() {
-    assert(_userId != null);
-    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: _userId!));
+    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: userId));
     state = state.copyWith(
       isZeroValueAssetsVisible: !state.isZeroValueAssetsVisible,
     );
@@ -70,8 +63,7 @@ class UserPreferencesNotifier extends _$UserPreferencesNotifier {
   }
 
   void setNftLayoutType(NftLayoutType newNftLayoutType) {
-    assert(_userId != null);
-    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: _userId!));
+    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: userId));
     state = state.copyWith(
       nftLayoutType: newNftLayoutType,
     );
@@ -82,8 +74,7 @@ class UserPreferencesNotifier extends _$UserPreferencesNotifier {
   }
 
   void setNftSortingType(NftSortingType newNftSortingType) {
-    assert(_userId != null);
-    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: _userId!));
+    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: userId));
     state = state.copyWith(
       nftSortingType: newNftSortingType,
     );
