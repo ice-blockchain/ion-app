@@ -11,7 +11,7 @@ FilteredCoinsResult useFilteredWalletCoins(WidgetRef ref) {
 
   final AsyncValue<List<CoinData>> coinsState = ref.watch(filteredCoinsProvider);
 
-  final walletCoins = coinsState.value ?? <CoinData>[];
+  final walletCoins = coinsState.valueOrNull ?? <CoinData>[];
   final isLoading = coinsState.isLoading;
 
   final filteredCoins = useMemoized(

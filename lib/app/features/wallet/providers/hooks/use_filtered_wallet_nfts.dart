@@ -11,7 +11,7 @@ FilteredNftsResult useFilteredWalletNfts(WidgetRef ref) {
 
   final AsyncValue<List<NftData>> nftsState = ref.watch(filteredNftsProvider);
 
-  final walletNfts = nftsState.value ?? <NftData>[];
+  final walletNfts = nftsState.valueOrNull ?? <NftData>[];
   final isLoading = nftsState.isLoading;
 
   final filteredNfts = useMemoized(
