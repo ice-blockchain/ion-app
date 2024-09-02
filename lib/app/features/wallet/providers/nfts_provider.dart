@@ -5,30 +5,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'nfts_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class NftsNotifier extends _$NftsNotifier {
-  @override
-  AsyncValue<List<NftData>> build() {
-    return AsyncData<List<NftData>>(
-      List<NftData>.unmodifiable(<NftData>[]),
-    );
-  }
+List<NftData> nftsData(NftsDataRef ref) => mockedNftsDataArray;
 
-  Future<void> fetch({
-    required String walletId,
-    required String searchValue,
-  }) async {
-    state = const AsyncLoading<List<NftData>>().copyWithPrevious(state);
+@riverpod
+NftData nftById(NftByIdRef ref, {required int coinId}) {
+  final coins = ref.watch(nftsDataProvider);
 
-    // to emulate loading state
-    await Future<void>.delayed(const Duration(seconds: 1));
-
-    final lSearchValue = searchValue.trim().toLowerCase();
-    state = AsyncData<List<NftData>>(
-      List<NftData>.unmodifiable(
-        mockedNftsDataArray.where(
-          (NftData data) => data.collectionName.toLowerCase().contains(lSearchValue),
-        ),
-      ),
-    );
-  }
+  return coins.firstWhere((NftData nft) => nft.identifier == coinId);
 }

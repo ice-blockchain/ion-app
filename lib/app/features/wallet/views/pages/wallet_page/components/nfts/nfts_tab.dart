@@ -5,14 +5,11 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
 import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
-import 'package:ice/app/features/wallet/providers/nfts_provider.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/components/empty_state/empty_state.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nft_grid_item.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nft_list_item.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
-import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
-import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/app_routes.dart';
 
 class NftsTab extends HookConsumerWidget {
@@ -24,26 +21,12 @@ class NftsTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nfts = useFilteredWalletNfts(ref);
+    final nfts = useFilteredWalletNfts(ref).nfts;
     final nftLayoutType = nftLayoutTypeSelector(ref);
 
-    final searchValue = walletAssetSearchValueSelector(ref, tabType);
-    final walletId = ref.watch(currentWalletIdProvider);
-
-    useOnInit(
-      () {
-        if (walletId.isNotEmpty) {
-          ref
-              .read(nftsNotifierProvider.notifier)
-              .fetch(searchValue: searchValue, walletId: walletId);
-        }
-      },
-      <Object?>[searchValue, walletId],
-    );
-
     if (nfts.isEmpty) {
-      return const SliverToBoxAdapter(
-        child: SizedBox.shrink(),
+      return const EmptyState(
+        tabType: tabType,
       );
     }
 
@@ -71,23 +54,25 @@ class NftsTab extends HookConsumerWidget {
       );
     }
 
-    return SliverList.separated(
-      itemCount: nfts.length,
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(
-          height: 12.0.s,
-        );
-      },
-      itemBuilder: (BuildContext context, int index) {
-        return ScreenSideOffset.small(
-          child: NftListItem(
-            nftData: nfts[index],
-            onTap: () {
-              NftDetailsRoute($extra: nfts[index]).push<void>(context);
+    return nfts.length > 0
+        ? SliverList.separated(
+            itemCount: nfts.length,
+            separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(
+                height: 12.0.s,
+              );
             },
-          ),
-        );
-      },
-    );
+            itemBuilder: (BuildContext context, int index) {
+              return ScreenSideOffset.small(
+                child: NftListItem(
+                  nftData: nfts[index],
+                  onTap: () {
+                    NftDetailsRoute($extra: nfts[index]).push<void>(context);
+                  },
+                ),
+              );
+            },
+          )
+        : SliverToBoxAdapter(child: const SizedBox.shrink());
   }
 }

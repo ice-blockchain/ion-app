@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
-import 'package:ice/app/features/wallet/providers/selectors/wallet_assets_selectors.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_provider.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_selectors.dart';
+import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
+import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_query_provider.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
-class WalletSearchBar extends ConsumerWidget {
+class WalletSearchBar extends HookConsumerWidget {
   const WalletSearchBar({
     required this.tabType,
     super.key,
@@ -18,31 +19,31 @@ class WalletSearchBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final assetType = tabType.walletAssetType;
-    final defaultValue = walletAssetSearchValueSelector(ref, tabType);
-    final isLoading = walletAssetIsLoadingSelector(ref: ref, assetType: assetType);
-    final isVisible = walletTabSearchVisibleSelector(ref, tabType);
+    final coinsResult = useFilteredWalletCoins(ref);
+    final nftsResult = useFilteredWalletNfts(ref);
 
-    if (isVisible == false) {
+    final isLoading = coinsResult.isLoading || nftsResult.isLoading;
+
+    final searchVisibleProvider = walletSearchVisibilityProvider(tabType);
+    final searchQueryProvider = walletSearchQueryControllerProvider(tabType.walletAssetType);
+
+    final isSearchVisible = ref.watch(searchVisibleProvider);
+
+    if (!isSearchVisible) {
       return const SizedBox.shrink();
     }
 
     return Padding(
       padding: padding,
       child: SearchInput(
-        defaultValue: defaultValue,
+        defaultValue: '',
         loading: isLoading,
         onTextChanged: (String newValue) {
-          ref.read(walletPageNotifierProvider.notifier).updateSearchValue(
-                searchValue: newValue,
-                tabType: tabType,
-                ref: ref,
-              );
+          ref.read(searchQueryProvider.notifier).update(query: newValue);
         },
         onCancelSearch: () {
-          ref
-              .read(walletPageNotifierProvider.notifier)
-              .updateSearchVisible(tabType: tabType, isSearchVisible: false);
+          ref.read(searchQueryProvider.notifier).update(query: '');
+          ref.read(searchVisibleProvider.notifier).update(isVisible: false);
         },
       ),
     );

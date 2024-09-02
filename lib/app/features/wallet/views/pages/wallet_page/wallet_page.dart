@@ -5,7 +5,10 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/app/features/core/providers/permissions_provider_selectors.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
+import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
+import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
+import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
@@ -44,6 +47,28 @@ class WalletPage extends HookConsumerWidget {
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
+    final coinsResult = useFilteredWalletCoins(ref);
+    final nftsResult = useFilteredWalletNfts(ref);
+
+    final isLoading = coinsResult.isLoading || nftsResult.isLoading;
+
+    List<Widget> getActiveTabContent() {
+      if (isLoading) {
+        return [const ListItemsLoadingState()];
+      }
+
+      if (activeTab.value == WalletTabType.coins) {
+        return [
+          const CoinsTab(),
+          const CoinsTabFooter(),
+        ];
+      } else {
+        return [
+          const NftsTab(),
+          const NftsTabFooter(),
+        ];
+      }
+    }
 
     return Scaffold(
       body: CustomScrollView(
@@ -78,11 +103,7 @@ class WalletPage extends HookConsumerWidget {
             const NftsTabHeader()
           else
             const CoinsTabHeader(),
-          if (activeTab.value == WalletTabType.coins) const CoinsTab() else const NftsTab(),
-          if (activeTab.value == WalletTabType.coins)
-            const CoinsTabFooter()
-          else
-            const NftsTabFooter(),
+          ...getActiveTabContent(),
         ],
       ),
     );

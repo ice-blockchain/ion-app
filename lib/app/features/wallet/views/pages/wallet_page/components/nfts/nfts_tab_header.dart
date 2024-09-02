@@ -16,9 +16,9 @@ class NftsTabHeader extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nfts = useFilteredWalletNfts(ref);
+    final result = useFilteredWalletNfts(ref);
 
-    if (nfts.isEmpty) {
+    if (result.nfts.isEmpty) {
       return SliverToBoxAdapter(
         child: ScreenSideOffset.small(
           child: WalletSearchBar(

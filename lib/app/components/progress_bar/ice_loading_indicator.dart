@@ -4,22 +4,31 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
 
+enum IndicatorType {
+  light,
+  dark,
+}
+
 class IceLoadingIndicator extends HookWidget {
   const IceLoadingIndicator({
+    this.type = IndicatorType.light,
     this.size,
     super.key,
   });
 
+  final IndicatorType type;
   final Size? size;
 
   @override
   Widget build(BuildContext context) {
     final animationController = useAnimationController();
 
+    final loader =
+        type == IndicatorType.light ? Assets.lottie.whiteLoader : Assets.lottie.darkLoader;
     return SizedBox(
       width: size?.width ?? 20.0.s,
       height: size?.height ?? 20.0.s,
-      child: Assets.lottie.whiteLoader.lottie(
+      child: loader.lottie(
         frameRate: const FrameRate(60),
         controller: animationController,
         onLoaded: (composition) {

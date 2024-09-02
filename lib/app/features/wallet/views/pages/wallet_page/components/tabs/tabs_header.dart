@@ -8,7 +8,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header_hide_action.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header_tab.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/wallet_page_provider.dart';
+import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -24,6 +24,7 @@ class WalletTabsHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final searchVisibleProvider = walletSearchVisibilityProvider(activeTab);
     return Padding(
       padding: EdgeInsets.only(
         top: 16.0.s - UiConstants.hitSlop,
@@ -50,10 +51,7 @@ class WalletTabsHeader extends ConsumerWidget {
           const WalletTabsHeaderHideAction(),
           TextButton(
             onPressed: () {
-              ref.read(walletPageNotifierProvider.notifier).updateSearchVisible(
-                    tabType: activeTab,
-                    isSearchVisible: true,
-                  );
+              ref.read(searchVisibleProvider.notifier).update(isVisible: true);
             },
             child: Padding(
               padding: EdgeInsets.all(UiConstants.hitSlop),

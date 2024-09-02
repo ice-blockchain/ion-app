@@ -7,5 +7,6 @@ export 'go_router_state.dart';
 export 'iterable.dart';
 export 'list.dart';
 export 'num.dart';
+export 'riverpod.dart';
 export 'string.dart';
 export 'theme_data.dart';
