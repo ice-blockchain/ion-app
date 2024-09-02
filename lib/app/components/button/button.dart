@@ -24,7 +24,7 @@ enum ButtonType {
 
 class Button extends StatelessWidget {
   Button({
-    this.onPressed,
+    required this.onPressed,
     super.key,
     this.trailingIcon,
     this.leadingIcon,
@@ -44,7 +44,7 @@ class Button extends StatelessWidget {
         trailingIconOffset = trailingIconOffset ?? 8.0.s;
 
   factory Button.icon({
-    required VoidCallback? onPressed,
+    required VoidCallback onPressed,
     required Widget icon,
     Key? key,
     ButtonType type,
@@ -101,7 +101,7 @@ class Button extends StatelessWidget {
     bool opened,
   }) = _ButtonDropdown;
 
-  final VoidCallback? onPressed;
+  final VoidCallback onPressed;
   final Widget? leadingIcon;
   final Widget? trailingIcon;
   final Widget? label;
