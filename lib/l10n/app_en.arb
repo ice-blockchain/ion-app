@@ -26,6 +26,7 @@
   "common_step_1": "Step 1",
   "common_step_2": "Step 2",
   "common_step_3": "Step 3",
+  "common_successfully": "Successfully",
   "auth_secured_by": "Secured by",
   "auth_privacy": "By continuing, you are agreeing to our [[:link]]terms_of_service[[/:link]] & [[:link]]privacy_policy[[/:link]]",
   "auth_terms_of_service": "Terms of Service",
@@ -284,5 +285,10 @@
   "follow_instructions_title": "Follow instructions",
   "follow_instructions_description": "Copy the installation key and paste it into your Authentication application",
   "confirm_the_code_title": "Confirm the code",
-  "authenticator_protected_description": "Your authenticator was successfully configured and you are now protected"
+  "authenticator_protected_description": "Your authenticator was successfully configured and you are now protected",
+  "email_verification_title": "Email verification",
+  "email_verification_description": "Enter your email address for verification",
+  "email_confirmation_title": "Confirm email",
+  "email_confirmation_description": "Please enter the code sent to",
+  "email_success_description": "The email address has been successfully verified and added for 2FA"
 }
