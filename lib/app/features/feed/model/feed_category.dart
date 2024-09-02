@@ -21,12 +21,15 @@ enum FeedCategory {
         FeedCategory.articles => context.theme.appColors.success,
       };
 
-  Widget getIcon(BuildContext context) {
-    final color = context.theme.appColors.secondaryBackground;
-    return switch (this) {
-      FeedCategory.feed => Assets.images.icons.iconProfileFeed.icon(color: color),
-      FeedCategory.videos => Assets.images.icons.iconVideosTrading.icon(color: color),
-      FeedCategory.articles => Assets.images.icons.iconFeedStories.icon(color: color),
+  Widget getIcon(BuildContext context, {Color? color}) {
+    final defaultColor = context.theme.appColors.secondaryBackground;
+
+    final icon = switch (this) {
+      FeedCategory.feed => Assets.images.icons.iconProfileFeed,
+      FeedCategory.videos => Assets.images.icons.iconVideosTrading,
+      FeedCategory.articles => Assets.images.icons.iconFeedStories,
     };
+
+    return icon.icon(color: color ?? defaultColor);
   }
 }
