@@ -20,7 +20,7 @@ FilteredNftsResult useFilteredWalletNfts(WidgetRef ref) {
           ? walletNfts
           : walletNfts.where((NftData nft) => nft.price > 0.00).toList();
     },
-    <Object?>[isZeroValueAssetsVisible, walletNfts],
+    [isZeroValueAssetsVisible, walletNfts],
   );
 
   return (nfts: filteredNfts, isLoading: isLoading);
