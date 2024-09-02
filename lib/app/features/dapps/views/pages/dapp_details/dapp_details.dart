@@ -7,10 +7,10 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/dapps/model/dapp_data.dart';
+import 'package:ice/app/features/dapps/providers/mock_data/mocked_featured.dart';
 import 'package:ice/app/features/dapps/views/components/grid_item/grid_item.dart';
 import 'package:ice/app/features/dapps/views/pages/dapp_details/components/dapp_details_info_block/dapp_details_info_block.dart';
-import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
-import 'package:ice/app/features/dapps/views/pages/mocks/mocked_featured.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/services/browser/browser.dart';
 import 'package:ice/app/utils/num.dart';
@@ -19,7 +19,7 @@ import 'package:ice/generated/assets.gen.dart';
 class DAppDetails extends StatelessWidget {
   DAppDetails({super.key});
 
-  final DAppItem item = mockedFeatured[2]; //TODO: get from params or provider
+  final DAppData item = mockedFeatured[2]; //TODO: get from params or provider
 
   @override
   Widget build(BuildContext context) {

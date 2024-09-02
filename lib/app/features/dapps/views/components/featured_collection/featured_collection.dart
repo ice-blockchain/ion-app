@@ -4,13 +4,13 @@ import 'package:ice/app/features/dapps/views/components/featured_collection/shad
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
+import 'package:ice/app/features/dapps/model/dapp_data.dart';
 import 'package:ice/app/router/app_routes.dart';
 
 class FeaturedCollection extends StatelessWidget {
   const FeaturedCollection({required this.items, super.key});
 
-  final List<DAppItem> items;
+  final List<DAppData> items;
 
   @override
   Widget build(BuildContext context) {

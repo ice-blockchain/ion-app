@@ -1,4 +1,4 @@
-import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
+import 'package:ice/app/features/dapps/model/dapp_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 const _description = '''
@@ -20,20 +20,23 @@ one-stop-shop for NFTs, with the largest selection of NFTs and rare digital
 items. OpenSea is a decentralized marketplace that is a one-stop-shop for 
 NFTs, with the largest selection of NFTs and rare digital items.''';
 
-List<DAppItem> mockedFeatured = <DAppItem>[
-  DAppItem(
+List<DAppData> mockedFeatured = <DAppData>[
+  DAppData(
+    identifier: 1,
     backgroundImage: Assets.images.bg.bgWalletUniswap.path,
     iconImage: Assets.images.wallet.walletUniswap1.path,
     title: 'Uniswap wallet',
     description: 'Buy & trade top tokens',
   ),
-  DAppItem(
+  DAppData(
+    identifier: 2,
     backgroundImage: Assets.images.bg.bgWallet1inch.path,
     iconImage: Assets.images.wallet.wallet1inch.path,
     title: '1inch',
     description: 'DEX price optimizer',
   ),
-  DAppItem(
+  DAppData(
+    identifier: 3,
     backgroundImage: Assets.images.bg.bgWalletOpensea.path,
     iconImage: Assets.images.wallet.walletOpensea.path,
     title: 'Opensea',

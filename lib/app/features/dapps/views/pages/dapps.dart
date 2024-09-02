@@ -3,12 +3,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/dapps/model/dapp_data.dart';
+import 'package:ice/app/features/dapps/providers/mock_data/mocked_apps.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/categories/featured.dart';
 import 'package:ice/app/features/dapps/views/components/categories/categories.dart';
 import 'package:ice/app/features/dapps/views/components/favourites/favourites.dart';
 import 'package:ice/app/features/dapps/views/components/wallet_header/wallet_header.dart';
-import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
@@ -72,7 +73,7 @@ class DAppsPage extends HookWidget {
                     DAppsListRoute(
                       $extra: AppsRouteData(
                         title: context.i18n.dapps_section_title_favourites,
-                        items: <DAppItem>[],
+                        items: <DAppData>[],
                       ),
                     ).push<void>(context);
                   },
