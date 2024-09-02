@@ -5,6 +5,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/progress_bar/sliver_app_bar_with_progress.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
@@ -64,6 +65,7 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
                     AuthenticatorSetupSteps.success => AuthenticatorSuccessPage(),
                   },
                 ),
+                HorizontalSeparator(),
                 SizedBox(height: step == AuthenticatorSetupSteps.options ? 12.0.s : 22.0.s),
                 ScreenSideOffset.large(
                   child: Button(

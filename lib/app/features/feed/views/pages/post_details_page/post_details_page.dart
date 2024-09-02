@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
@@ -87,7 +88,7 @@ class PostDetailsPage extends HookConsumerWidget {
               ],
             ),
           ),
-          FeedListSeparator(height: 1.0.s),
+          HorizontalSeparator(),
           ReplyInputField(postData: postData),
         ],
       ),

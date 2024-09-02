@@ -2,26 +2,31 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/list_item/list_item.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/posts_provider.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/post_body.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/replying_to.dart';
-import 'package:ice/app/features/feed/views/pages/reply_expanded_page/components/expanded_reply_input_field.dart';
+import 'package:ice/app/features/feed/views/pages/post_reply_modal/components/expanded_reply_input_field.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class ReplyExpandedPage extends ConsumerWidget {
-  const ReplyExpandedPage({
+class PostReplyModal extends ConsumerWidget {
+  const PostReplyModal({
     required this.postId,
+    required this.showCollapseButton,
     super.key,
   });
 
   final String postId;
+
+  final bool showCollapseButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,28 +39,38 @@ class ReplyExpandedPage extends ConsumerWidget {
     return SheetContent(
       bottomPadding: 0,
       body: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
-          _DialogTitle(),
-          Flexible(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0.s),
-              child: SingleChildScrollView(
+          _DialogTitle(showCollapseButton: showCollapseButton),
+          Expanded(
+            child: SingleChildScrollView(
+              child: ScreenSideOffset.small(
                 child: Column(
                   children: [
-                    const PostHeader(),
-                    _PostBody(postData: postData),
-                    SizedBox(height: 12.0.s),
-                    ExpandedReplyInputField(),
-                    PostRepliesActionBar(
-                      onSendPressed: () {
-                        ref.read(sendReplyRequestNotifierProvider.notifier).sendReply();
-                        context.pop();
-                      },
+                    SizedBox(height: 6.0.s),
+                    ListItem.user(
+                      title: const Text('Arnold Grey'),
+                      subtitle: const Text('@arnoldgrey'),
+                      profilePicture:
+                          'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+                      iceBadge: true,
+                      verifiedBadge: true,
                     ),
+                    SizedBox(height: 8.0.s),
+                    _PostBody(postData: postData),
+                    SizedBox(height: 10.0.s),
+                    ExpandedReplyInputField(),
                   ],
                 ),
               ),
+            ),
+          ),
+          HorizontalSeparator(),
+          ScreenSideOffset.small(
+            child: PostRepliesActionBar(
+              onSendPressed: () {
+                ref.read(sendReplyRequestNotifierProvider.notifier).sendReply();
+                context.pop();
+              },
             ),
           ),
         ],
@@ -103,7 +118,9 @@ class _PostBody extends StatelessWidget {
 }
 
 class _DialogTitle extends StatelessWidget {
-  const _DialogTitle();
+  const _DialogTitle({required this.showCollapseButton});
+
+  final bool showCollapseButton;
 
   @override
   Widget build(BuildContext context) {
@@ -120,13 +137,14 @@ class _DialogTitle extends StatelessWidget {
         ),
       ),
       actions: [
-        IconButton(
-          onPressed: context.pop,
-          icon: Assets.images.icons.iconFeedScale.icon(
-            color: context.theme.appColors.quaternaryText,
-            size: 18.0.s,
+        if (showCollapseButton)
+          IconButton(
+            onPressed: context.pop,
+            icon: Assets.images.icons.iconFeedScale.icon(
+              color: context.theme.appColors.quaternaryText,
+              size: 18.0.s,
+            ),
           ),
-        ),
       ],
     );
   }

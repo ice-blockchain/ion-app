@@ -30,9 +30,14 @@ GoRouter goRouter(GoRouterRef ref) {
       }
 
       if (isInitInProgress || !isSplashAnimationCompleted) {
+        // Redirect if app is not initialized yet
         return SplashRoute().location;
+      } else if (state.matchedLocation.startsWith(SplashRoute().location)) {
+        // Redirect after app init complete
+        return authState is Authenticated ? FeedRoute().location : IntroRoute().location;
       }
 
+      // Redirects when user log in / out
       return switch (authState) {
         Authenticated() when state.matchedLocation.startsWith(IntroRoute().location) =>
           FeedRoute().location,

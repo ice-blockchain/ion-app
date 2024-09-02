@@ -32,21 +32,6 @@ class WalletRoutes {
         TypedGoRoute<ManageCoinsRoute>(path: 'manage-coins'),
       ],
     ),
-    TypedShellRoute<ModalShellRouteData>(
-      routes: [
-        TypedGoRoute<ShareOptionsRoute>(path: 'share-options'),
-      ],
-    ),
-    TypedShellRoute<ModalShellRouteData>(
-      routes: [
-        TypedGoRoute<ShareTypeRoute>(
-          path: 'share-type',
-          routes: [
-            TypedGoRoute<QuotePostModalRoute>(path: 'quote-post'),
-          ],
-        ),
-      ],
-    ),
   ];
 
   static const nftSendRoutes = <TypedRoute<RouteData>>[
@@ -315,34 +300,6 @@ class DeleteWalletRoute extends BaseRouteData {
         );
 
   final String walletId;
-}
-
-class QuotePostModalRoute extends BaseRouteData {
-  QuotePostModalRoute({required this.$extra})
-      : super(
-          child: QuotePostModalPage(payload: $extra),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final PostData $extra;
-}
-
-class ShareOptionsRoute extends BaseRouteData {
-  ShareOptionsRoute()
-      : super(
-          child: const ShareOptionsPage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class ShareTypeRoute extends BaseRouteData {
-  ShareTypeRoute({required this.$extra})
-      : super(
-          child: ShareTypePage(payload: $extra),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final PostData $extra;
 }
 
 class ContactRoute extends BaseRouteData {
