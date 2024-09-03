@@ -5,8 +5,9 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
-import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
+import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
+import 'package:ice/app/features/wallet/providers/wallet_user_preferences/wallet_user_preferences_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class WalletTabsHeaderHideAction extends ConsumerWidget {
@@ -23,9 +24,13 @@ class WalletTabsHeaderHideAction extends ConsumerWidget {
     final asset = isZeroValueAssetsVisible
         ? Assets.images.icons.iconCheckboxOff
         : Assets.images.icons.iconBlockCheckboxOnblue;
+
     return TextButton(
       onPressed: () {
-        ref.watch(userPreferencesNotifierProvider.notifier).switchZeroValueAssetsVisibility();
+        final userId = ref.read(userDataNotifierProvider).id;
+        ref
+            .read(walletUserPreferencesNotifierProvider(userId: userId).notifier)
+            .switchZeroValueAssetsVisibility();
       },
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),

@@ -6,8 +6,9 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/user/model/nft_layout_type.dart';
-import 'package:ice/app/features/user/providers/user_preferences_provider.dart';
-import 'package:ice/app/features/user/providers/user_preferences_selectors.dart';
+import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
+import 'package:ice/app/features/wallet/providers/wallet_user_preferences/wallet_user_preferences_provider.dart';
 
 class NftHeaderLayoutAction extends ConsumerWidget {
   const NftHeaderLayoutAction({
@@ -24,7 +25,10 @@ class NftHeaderLayoutAction extends ConsumerWidget {
       children: [
         TextButton(
           onPressed: () {
-            ref.read(userPreferencesNotifierProvider.notifier).setNftLayoutType(NftLayoutType.grid);
+            final userId = ref.read(userDataNotifierProvider).id;
+            ref
+                .read(walletUserPreferencesNotifierProvider(userId: userId).notifier)
+                .setNftLayoutType(NftLayoutType.grid);
           },
           child: Padding(
             padding: EdgeInsets.only(
@@ -41,8 +45,9 @@ class NftHeaderLayoutAction extends ConsumerWidget {
         ),
         TextButton(
           onPressed: () {
+            final userId = ref.read(userDataNotifierProvider).id;
             ref
-                .watch(userPreferencesNotifierProvider.notifier)
+                .read(walletUserPreferencesNotifierProvider(userId: userId).notifier)
                 .setNftLayoutType(NftLayoutType.list);
           },
           child: Padding(
