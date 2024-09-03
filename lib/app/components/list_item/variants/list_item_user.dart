@@ -20,6 +20,7 @@ class _ListItemUser extends ListItem {
     bool verifiedBadge = false,
     bool iceBadge = false,
     bool showProfilePictureIceBadge = false,
+    bool ntfAvatar = false,
     super.isSelected,
     DateTime? timeago,
   }) : super(
@@ -30,6 +31,7 @@ class _ListItemUser extends ListItem {
                       imageUrl: profilePicture,
                       badge: showProfilePictureIceBadge ? _IceBadge() : null,
                       imageWidget: profilePictureWidget,
+                      nft: ntfAvatar,
                     )
                   : null),
           borderRadius: borderRadius ?? BorderRadius.zero,

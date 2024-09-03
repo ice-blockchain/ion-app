@@ -32,7 +32,6 @@ class ManageWalletTile extends ConsumerWidget {
         leading: Avatar(
           size: 36.0.s,
           imageUrl: walletData.icon,
-          borderRadius: BorderRadius.circular(10.0.s),
         ),
         title: Text(
           walletData.name,

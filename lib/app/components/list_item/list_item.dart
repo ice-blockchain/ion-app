@@ -68,6 +68,7 @@ class ListItem extends StatelessWidget {
     bool verifiedBadge,
     bool iceBadge,
     bool showProfilePictureIceBadge,
+    bool ntfAvatar,
     bool isSelected,
     DateTime? timeago,
   }) = _ListItemUser;
