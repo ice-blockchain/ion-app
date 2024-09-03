@@ -24,9 +24,10 @@ class FeaturedCollection extends StatelessWidget {
         ),
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          final assetBg = items[index].backgroundImage ?? '';
+          final item = items[index];
+          final assetBg = item.backgroundImage ?? '';
           return GestureDetector(
-            onTap: () => DAppDetailsRoute().push<void>(context),
+            onTap: () => DAppDetailsRoute(dappId: item.identifier).push<void>(context),
             child: Container(
               width: 240.0.s,
               decoration: BoxDecoration(

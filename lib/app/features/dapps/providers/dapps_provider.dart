@@ -8,8 +8,8 @@ part 'dapps_provider.g.dart';
 List<DAppData> dappsData(DappsDataRef ref) => mockedApps;
 
 @riverpod
-DAppData dappById(DappByIdRef ref, {required int coinId}) {
+DAppData dappById(DappByIdRef ref, {required int dappId}) {
   final dapps = ref.watch(dappsDataProvider);
 
-  return dapps.firstWhere((DAppData dapp) => dapp.identifier == coinId);
+  return dapps.firstWhere((DAppData dapp) => dapp.identifier == dappId);
 }

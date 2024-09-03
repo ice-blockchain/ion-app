@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/read_more_text/read_more_text.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
@@ -7,8 +8,7 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/dapps/model/dapp_data.dart';
-import 'package:ice/app/features/dapps/providers/mock_data/mocked_featured.dart';
+import 'package:ice/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ice/app/features/dapps/views/components/grid_item/grid_item.dart';
 import 'package:ice/app/features/dapps/views/pages/dapp_details/components/dapp_details_info_block/dapp_details_info_block.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -16,13 +16,17 @@ import 'package:ice/app/services/browser/browser.dart';
 import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class DAppDetails extends StatelessWidget {
-  DAppDetails({super.key});
+class DAppDetails extends ConsumerWidget {
+  DAppDetails({
+    required this.dappId,
+    super.key,
+  });
 
-  final DAppData item = mockedFeatured[2]; //TODO: get from params or provider
+  final int dappId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final item = ref.watch(dappByIdProvider(dappId: dappId));
     return Scaffold(
       appBar: NavigationAppBar.screen(
         title: Text(item.title),
