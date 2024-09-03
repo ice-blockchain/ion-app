@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/dapps/model/dapp_data.dart';
 import 'package:ice/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/categories/featured.dart';
@@ -52,7 +51,6 @@ class DAppsPage extends HookConsumerWidget {
                     DAppsListRoute(
                       $extra: AppsRouteData(
                         title: context.i18n.dapps_section_title_highest_ranked,
-                        items: apps,
                       ),
                     ).push<void>(context);
                   },
@@ -65,7 +63,6 @@ class DAppsPage extends HookConsumerWidget {
                     DAppsListRoute(
                       $extra: AppsRouteData(
                         title: context.i18n.dapps_section_title_recently_added,
-                        items: apps,
                       ),
                     ).push<void>(context);
                   },
@@ -75,7 +72,6 @@ class DAppsPage extends HookConsumerWidget {
                     DAppsListRoute(
                       $extra: AppsRouteData(
                         title: context.i18n.dapps_section_title_favourites,
-                        items: <DAppData>[],
                       ),
                     ).push<void>(context);
                   },

@@ -7,12 +7,10 @@ import 'package:ice/app/features/dapps/views/components/apps_collection/apps_col
 class AppsRouteData {
   AppsRouteData({
     required this.title,
-    this.items = const <DAppData>[],
     this.isSearchVisible = true,
   });
 
   final String title;
-  final List<DAppData>? items;
   final bool? isSearchVisible;
 }
 

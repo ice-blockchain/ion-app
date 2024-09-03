@@ -6,7 +6,6 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -55,7 +54,6 @@ class CategoriesCollection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final apps = ref.watch(dappsDataProvider);
     return Padding(
       padding: EdgeInsets.only(bottom: 8.0.s, top: 3.0.s),
       child: SizedBox(
@@ -76,7 +74,6 @@ class CategoriesCollection extends ConsumerWidget {
                     DAppsListRoute(
                       $extra: AppsRouteData(
                         title: DAppsCategory.values[index].title(context),
-                        items: apps,
                       ),
                     ).push<void>(context);
                   },

@@ -46,15 +46,9 @@ class FeaturedCollection extends ConsumerWidget {
                     left: 12.0.s,
                     child: Row(
                       children: [
-                        DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8.0.s),
-                          ),
-                          child: Image.asset(
-                            items[index].iconImage,
-                            width: 30.0.s,
-                          ),
+                        Image.asset(
+                          items[index].iconImage,
+                          width: 30.0.s,
                         ),
                         SizedBox(width: 8.0.s),
                         Column(

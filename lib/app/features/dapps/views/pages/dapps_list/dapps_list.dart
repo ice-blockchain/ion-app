@@ -7,6 +7,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/dapps/model/dapp_data.dart';
+import 'package:ice/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/components/grid_item/grid_item.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -20,7 +21,7 @@ class DAppsList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
-    final items = payload.items ?? <DAppData>[];
+    final items = ref.watch(dappsDataProvider);
 
     final filteredApps = searchText.value.isEmpty
         ? items
