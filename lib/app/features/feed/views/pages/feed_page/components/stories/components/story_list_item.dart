@@ -11,11 +11,13 @@ class StoryListItem extends StatelessWidget {
     required this.imageUrl,
     required this.label,
     super.key,
+    this.nft = false,
     this.showPlus = false,
   });
 
   final String imageUrl;
   final String label;
+  final bool nft;
   final bool showPlus;
 
   static double get width => 65.0.s;
@@ -41,6 +43,7 @@ class StoryListItem extends StatelessWidget {
                 Avatar(
                   size: width,
                   imageUrl: imageUrl,
+                  nft: nft,
                   borderRadius: BorderRadius.circular(19.5.s),
                 ),
                 if (showPlus)

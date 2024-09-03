@@ -7,6 +7,7 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/components/story_list.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/components/story_list_skeleton.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
+import 'package:ice/app/hooks/use_on_init.dart';
 
 class Stories extends HookConsumerWidget {
   const Stories({super.key});
@@ -14,19 +15,17 @@ class Stories extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loading = useState(true);
-    useEffect(
+    useOnInit(
       () {
         Timer(const Duration(seconds: 3), () => loading.value = false);
-        return null;
       },
-      <Object?>[],
     );
     return Padding(
       padding: EdgeInsets.only(
         bottom: 16.0.s,
         top: 3.0.s,
       ),
-      child: loading.value ? const StoryListSkeleton() : const StoryList(stories: stories),
+      child: loading.value ? const StoryListSkeleton() : StoryList(stories: stories),
     );
   }
 }
