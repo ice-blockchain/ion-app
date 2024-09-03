@@ -23,7 +23,9 @@ class DiscoverCreators extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
 
-    final hasNotificationsPermission = hasPermissionSelector(ref, PermissionType.Notifications);
+    final hasNotificationsPermission = ref.watch(
+      hasPermissionSelectorProvider(PermissionType.Notifications),
+    );
 
     final followedCreators = useState<Set<User>>(<User>{});
 

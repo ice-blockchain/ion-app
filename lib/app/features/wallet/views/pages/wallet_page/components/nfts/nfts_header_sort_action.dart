@@ -16,8 +16,9 @@ class NftHeaderSortAction extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nftSortingType = nftSortingTypeSelector(ref);
+    final nftSortingType = ref.watch(nftSortingTypeSelectorProvider);
     final color = context.theme.appColors.secondaryText;
+
     return TextButton(
       onPressed: () {
         NftsSortingRoute().go(context);

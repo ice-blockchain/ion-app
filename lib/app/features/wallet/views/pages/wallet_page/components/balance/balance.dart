@@ -23,7 +23,7 @@ class Balance extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final walletBalance = ref.watch(currentWalletDataProvider).balance;
 
-    final isBalanceVisible = isBalanceVisibleSelector(ref);
+    final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
     final iconAsset =
         isBalanceVisible ? Assets.images.icons.iconBlockEyeOn : Assets.images.icons.iconBlockEyeOff;
     final hitSlop = 5.0.s;

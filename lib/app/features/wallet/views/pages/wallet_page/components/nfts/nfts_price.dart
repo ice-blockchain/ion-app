@@ -20,7 +20,7 @@ class NftPrice extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBalanceVisible = isBalanceVisibleSelector(ref);
+    final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
     final textStyle = (layoutType == NftLayoutType.grid
             ? context.theme.appTextThemes.caption
             : context.theme.appTextThemes.caption3)

@@ -17,7 +17,7 @@ class NftHeaderLayoutAction extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nftLayoutType = nftLayoutTypeSelector(ref);
+    final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
     final activeColor = context.theme.appColors.primaryText;
     final inactiveColor = context.theme.appColors.tertararyText;
 

@@ -15,7 +15,6 @@ import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/comp
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_section_header.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/providers/coin_transactions_provider.dart';
 import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/providers/hooks/use_transactions_by_date.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/providers/selectors/coin_transactions_selectors.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
@@ -32,7 +31,9 @@ class CoinDetailsPage extends HookConsumerWidget {
     final walletId = ref.watch(currentWalletIdProvider);
     final scrollController = useScrollController();
     final coinTransactionsMap = useTransactionsByDate(context, ref);
-    final isLoading = coinTransactionsIsLoadingSelector(ref);
+    final isLoading = ref.watch(
+      coinTransactionsNotifierProvider.select((data) => data.isLoading),
+    );
     final activeNetworkType = useState<NetworkType>(NetworkType.all);
 
     useOnInit(

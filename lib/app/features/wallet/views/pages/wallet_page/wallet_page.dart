@@ -32,10 +32,10 @@ class WalletPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-    final hasContactsPermission = hasPermissionSelector(ref, PermissionType.Contacts);
+    final hasContactsPermission = ref.watch(hasPermissionSelectorProvider(PermissionType.Contacts));
 
     useOnInit(() {
-      if (hasContactsPermission ?? false) {
+      if (hasContactsPermission) {
         ref.read(contactsDataNotifierProvider.notifier).fetchContacts();
       } else {
         AllowAccessRoute().go(context);

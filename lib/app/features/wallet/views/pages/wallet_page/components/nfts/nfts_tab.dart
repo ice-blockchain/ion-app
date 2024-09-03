@@ -22,7 +22,7 @@ class NftsTab extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final nfts = useFilteredWalletNfts(ref).nfts;
-    final nftLayoutType = nftLayoutTypeSelector(ref);
+    final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
 
     if (nfts.isEmpty) {
       return const EmptyState(

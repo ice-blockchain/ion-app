@@ -6,8 +6,7 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-
-import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_selectors.dart';
+import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.dart';
 import 'package:ice/app/utils/address.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -19,9 +18,15 @@ class ReceiveInfoCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinData = receiveCoinSelector(ref);
-    final networkType = receiveNetworkSelector(ref);
-    final walletAddress = receiveAddressSelector(ref);
+    final coinData = ref.watch(
+      receiveCoinsFormControllerProvider.select((state) => state.selectedCoin),
+    );
+    final networkType = ref.watch(
+      receiveCoinsFormControllerProvider.select((state) => state.selectedNetwork),
+    );
+    final walletAddress = ref.watch(
+      receiveCoinsFormControllerProvider.select((state) => state.address),
+    );
 
     final isCopied = useState<bool>(false);
 
