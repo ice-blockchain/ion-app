@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/features/dapps/views/components/featured_collection/shadow_text.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/dapps/model/dapp_data.dart';
+import 'package:ice/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 
-class FeaturedCollection extends StatelessWidget {
-  const FeaturedCollection({required this.items, super.key});
-
-  final List<DAppData> items;
+class FeaturedCollection extends ConsumerWidget {
+  const FeaturedCollection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final items = ref.watch(dappsFeaturedDataProvider);
     return SizedBox(
       height: 160.0.s,
       child: ListView.separated(

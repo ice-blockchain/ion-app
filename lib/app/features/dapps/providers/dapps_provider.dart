@@ -4,8 +4,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dapps_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 List<DAppData> dappsData(DappsDataRef ref) => mockedApps;
+
+@riverpod
+List<DAppData> dappsFeaturedData(DappsFeaturedDataRef ref) =>
+    mockedApps.where((DAppData dapp) => dapp.isFeatured).toList();
 
 @riverpod
 DAppData dappById(DappByIdRef ref, {required int dappId}) {

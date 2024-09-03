@@ -9,6 +9,7 @@ class DAppData with _$DAppData {
     required String title,
     required int identifier,
     @Default(false) bool isFavourite,
+    @Default(false) bool isFeatured,
     @Default('') String? description,
     @Default('') String? fullDescription,
     @Default(0.0) double? value,
