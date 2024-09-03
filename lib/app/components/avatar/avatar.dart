@@ -4,7 +4,6 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/utils/image.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class Avatar extends StatelessWidget {
@@ -130,7 +129,7 @@ class _NetworkImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: borderRadius,
       child: CachedNetworkImage(
-        imageUrl: getAdaptiveImageUrl(imageUrl, size * 2),
+        imageUrl: imageUrl,
         width: size,
         height: size,
         fit: fit,
