@@ -7,7 +7,7 @@ import 'package:ice/app/features/wallet/providers/wallet_user_preferences/user_p
 typedef FilteredCoinsResult = ({List<CoinData> coins, bool isLoading});
 
 FilteredCoinsResult useFilteredWalletCoins(WidgetRef ref) {
-  final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
+  final isZeroValueAssetsVisible = ref.watch(isZeroValueAssetsVisibleSelectorProvider);
 
   final AsyncValue<List<CoinData>> coinsState = ref.watch(filteredCoinsProvider);
 

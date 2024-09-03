@@ -9,7 +9,6 @@ import 'package:ice/app/features/wallet/components/list_items_loading_state/list
 import 'package:ice/app/features/wallet/views/pages/manage_coins/components/empty_state/empty_state.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/components/manage_coin_item/manage_coin_item.dart';
 import 'package:ice/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.dart';
-import 'package:ice/app/features/wallet/views/pages/manage_coins/providers/selectors/manage_coins_selectors.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -23,14 +22,18 @@ class ManageCoinsPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
 
-    final manageCoinsData = manageCoinsDataSelector(ref);
-    final isLoading = manageCoinsIsLoadingSelector(ref);
+    final manageCoinsData = ref.watch(
+      manageCoinsNotifierProvider.select((data) => data.valueOrNull ?? []),
+    );
+    final isLoading = ref.watch(
+      manageCoinsNotifierProvider.select((data) => data.isLoading),
+    );
 
     useOnInit(
       () {
         ref.read(manageCoinsNotifierProvider.notifier).fetch(searchValue: searchText.value);
       },
-      <Object?>[searchText.value],
+      [searchText.value],
     );
 
     return SheetContent(

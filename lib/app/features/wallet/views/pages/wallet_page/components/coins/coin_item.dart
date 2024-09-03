@@ -21,7 +21,8 @@ class CoinItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBalanceVisible = isBalanceVisibleSelector(ref);
+    final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
+
     return ListItem(
       title: Text(coinData.name),
       subtitle: Text(coinData.abbreviation),

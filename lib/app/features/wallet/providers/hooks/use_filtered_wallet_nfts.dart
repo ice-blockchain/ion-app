@@ -7,7 +7,7 @@ import 'package:ice/app/features/wallet/providers/wallet_user_preferences/user_p
 typedef FilteredNftsResult = ({List<NftData> nfts, bool isLoading});
 
 FilteredNftsResult useFilteredWalletNfts(WidgetRef ref) {
-  final isZeroValueAssetsVisible = isZeroValueAssetsVisibleSelector(ref);
+  final isZeroValueAssetsVisible = ref.watch(isZeroValueAssetsVisibleSelectorProvider);
 
   final AsyncValue<List<NftData>> nftsState = ref.watch(filteredNftsProvider);
 
