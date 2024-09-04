@@ -21,9 +21,11 @@ class ShapeClipper extends CustomClipper<Path> {
 }
 
 class ShapePainter extends CustomPainter {
-  ShapePainter(this.shapeBuilder, {required this.color});
+  ShapePainter(this.shapeBuilder, {required this.color, this.shader});
 
   final Color color;
+
+  final Shader? shader;
 
   final ShapeBuilder shapeBuilder;
 
@@ -31,6 +33,7 @@ class ShapePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
+      ..shader = shader
       ..style = PaintingStyle.fill;
 
     final path = shapeBuilder.build(size);
@@ -39,7 +42,7 @@ class ShapePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+  bool shouldRepaint(covariant ShapePainter oldDelegate) {
+    return color != oldDelegate.color || shader != oldDelegate.shader;
   }
 }
