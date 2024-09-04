@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
@@ -45,7 +44,7 @@ enum DAppsCategory {
   }
 }
 
-class CategoriesCollection extends ConsumerWidget {
+class CategoriesCollection extends StatelessWidget {
   const CategoriesCollection({super.key});
 
   static double get itemWidth => 80.0.s;
@@ -53,7 +52,7 @@ class CategoriesCollection extends ConsumerWidget {
   static double get itemHeight => 104.0.s;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.0.s, top: 3.0.s),
       child: SizedBox(

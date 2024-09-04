@@ -12,18 +12,18 @@ import 'package:ice/generated/assets.gen.dart';
 
 class GridItem extends HookWidget {
   const GridItem({
-    required this.item,
+    required this.dAppData,
     super.key,
     this.showIsFavourite = false,
   });
-  final DAppData item;
+  final DAppData dAppData;
   final bool showIsFavourite;
 
   @override
   Widget build(BuildContext context) {
-    final isFavourite = useState(item.isFavourite);
+    final isFavourite = useState(dAppData.isFavourite);
     return InkWell(
-      onTap: () => DAppDetailsRoute(dappId: item.identifier).push<void>(context),
+      onTap: () => DAppDetailsRoute(dappId: dAppData.identifier).push<void>(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -35,7 +35,7 @@ class GridItem extends HookWidget {
               borderRadius: BorderRadius.circular(12.0.s),
             ),
             child: Image.asset(
-              item.iconImage,
+              dAppData.iconImage,
               width: 48.0.s,
               fit: BoxFit.contain,
             ),
@@ -49,12 +49,12 @@ class GridItem extends HookWidget {
                 Row(
                   children: [
                     Text(
-                      item.title,
+                      dAppData.title,
                       style: context.theme.appTextThemes.body.copyWith(
                         color: context.theme.appColors.primaryText,
                       ),
                     ),
-                    if (item.isVerified)
+                    if (dAppData.isVerified)
                       Padding(
                         padding: EdgeInsets.only(left: 4.0.s),
                         child: IconTheme(
@@ -71,7 +71,7 @@ class GridItem extends HookWidget {
                   ],
                 ),
                 Text(
-                  item.description ?? '',
+                  dAppData.description ?? '',
                   style: context.theme.appTextThemes.caption3.copyWith(
                     color: context.theme.appColors.secondaryText,
                   ),
@@ -85,11 +85,11 @@ class GridItem extends HookWidget {
                       ),
                       child: Assets.images.icons.iconButtonIceStroke.icon(size: 12.0.s),
                     ),
-                    if (item.value != null)
+                    if (dAppData.value != null)
                       Padding(
                         padding: EdgeInsets.only(left: 3.0.s),
                         child: Text(
-                          formatDouble(item.value!),
+                          formatDouble(dAppData.value!),
                           style: context.theme.appTextThemes.caption3.copyWith(
                             color: context.theme.appColors.tertararyText,
                           ),

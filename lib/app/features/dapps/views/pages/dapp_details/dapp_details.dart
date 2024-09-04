@@ -26,7 +26,12 @@ class DAppDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final item = ref.watch(dappByIdProvider(dappId: dappId));
+    final app = ref.watch(dappByIdProvider(dappId: dappId)).valueOrNull;
+
+    if (app == null) {
+      return const SizedBox.shrink();
+    }
+
     return SheetContent(
       body: SingleChildScrollView(
         child: Column(
@@ -34,7 +39,7 @@ class DAppDetails extends ConsumerWidget {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0.s),
               child: NavigationAppBar.screen(
-                title: Text(item.title),
+                title: Text(app.title),
                 showBackButton: false,
                 actions: const [
                   NavigationCloseButton(),
@@ -47,13 +52,13 @@ class DAppDetails extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (item.backgroundImage != null)
+                    if (app.backgroundImage != null)
                       AspectRatio(
                         aspectRatio: 343 / 200,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16.0.s),
                           child: Image.asset(
-                            item.backgroundImage!,
+                            app.backgroundImage!,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -61,35 +66,35 @@ class DAppDetails extends ConsumerWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 14.0.s, bottom: 18.0.s),
                       child: GridItem(
-                        item: item,
+                        dAppData: app,
                         showIsFavourite: true,
                       ),
                     ),
-                    if (item.fullDescription != null)
+                    if (app.fullDescription != null)
                       Padding(
                         padding: EdgeInsets.only(bottom: 6.0.s),
                         child: ReadMoreText(
-                          item.fullDescription!,
+                          app.fullDescription!,
                         ),
                       ),
-                    if (item.link != null)
+                    if (app.link != null)
                       DappDetailsInfoBlock(
                         iconPath: Assets.images.icons.iconWalletLink.path,
                         value: InkWell(
                           onTap: () async {
-                            if (item.link != null) {
-                              await openUrl(item.link!);
+                            if (app.link != null) {
+                              await openUrl(app.link!);
                             }
                           },
                           child: Text(
-                            item.link!,
+                            app.link!,
                             style: context.theme.appTextThemes.caption2.copyWith(
                               color: context.theme.appColors.primaryAccent,
                             ),
                           ),
                         ),
                       ),
-                    if (item.value != null)
+                    if (app.value != null)
                       DappDetailsInfoBlock(
                         title: Text(
                           context.i18n.dapp_details_tips,
@@ -98,7 +103,7 @@ class DAppDetails extends ConsumerWidget {
                           ),
                         ),
                         value: Text(
-                          formatDouble(item.value!),
+                          formatDouble(app.value!),
                           style: context.theme.appTextThemes.subtitle.copyWith(
                             color: context.theme.appColors.primaryText,
                           ),

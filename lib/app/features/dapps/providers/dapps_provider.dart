@@ -5,15 +5,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'dapps_provider.g.dart';
 
 @riverpod
-List<DAppData> dappsData(DappsDataRef ref) => mockedApps;
+Future<List<DAppData>> dappsData(DappsDataRef ref) => Future.value(mockedApps);
 
 @riverpod
-List<DAppData> dappsFeaturedData(DappsFeaturedDataRef ref) =>
-    mockedApps.where((DAppData dapp) => dapp.isFeatured).toList();
+Future<List<DAppData>> dappsFeaturedData(DappsFeaturedDataRef ref) =>
+    Future.value(mockedApps.where((DAppData dapp) => dapp.isFeatured).toList());
 
 @riverpod
-DAppData dappById(DappByIdRef ref, {required int dappId}) {
-  final dapps = ref.watch(dappsDataProvider);
+Future<DAppData> dappById(DappByIdRef ref, {required int dappId}) async {
+  final dapps = await ref.watch(dappsDataProvider.future);
 
   return dapps.firstWhere((DAppData dapp) => dapp.identifier == dappId);
 }

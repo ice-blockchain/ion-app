@@ -31,10 +31,10 @@ class AppsCollection extends StatelessWidget {
         childAspectRatio: containerAspectRatio,
         children: itemList
             .map(
-              (DAppData item) => SizedBox(
+              (item) => SizedBox(
                 width: itemWidth,
                 height: itemHeight,
-                child: GridItem(item: item),
+                child: GridItem(dAppData: item),
               ),
             )
             .toList(),

@@ -20,7 +20,7 @@ class DAppsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-    final apps = ref.watch(dappsDataProvider);
+    final apps = ref.watch(dappsDataProvider).valueOrNull ?? [];
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
 

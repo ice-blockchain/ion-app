@@ -21,11 +21,11 @@ class DAppsList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
-    final items = ref.watch(dappsDataProvider);
+    final apps = ref.watch(dappsDataProvider).valueOrNull ?? [];
 
     final filteredApps = searchText.value.isEmpty
-        ? items
-        : items.where((DAppData app) {
+        ? apps
+        : apps.where((DAppData app) {
             final searchLower = searchText.value.toLowerCase().trim();
             final titleLower = app.title.toLowerCase();
 
@@ -51,7 +51,7 @@ class DAppsList extends HookConsumerWidget {
                       ),
                     Expanded(
                       child: Container(
-                        child: items.isEmpty
+                        child: apps.isEmpty
                             ? EmptyList(
                                 asset: Assets.images.misc.dappsEmpty,
                                 title: context.i18n.dapps_favourites_empty_title,
@@ -66,7 +66,7 @@ class DAppsList extends HookConsumerWidget {
                                   return Padding(
                                     padding: EdgeInsets.symmetric(vertical: 5.5.s),
                                     child: GridItem(
-                                      item: app,
+                                      dAppData: app,
                                       showIsFavourite: true,
                                     ),
                                   );
