@@ -10,7 +10,6 @@ environment:
 
 dependencies:
   cached_network_image: ^3.3.1
-  carousel_slider_plus: ^6.0.0+1
   cupertino_icons: ^1.0.6
   dotted_border: ^2.1.0
   email_validator: ^2.1.16
