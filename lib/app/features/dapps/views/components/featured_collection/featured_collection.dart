@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/features/dapps/views/components/featured_collection/shadow_text.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
+import 'package:ice/app/features/dapps/providers/dapps_provider.dart';
+import 'package:ice/app/features/dapps/views/components/featured_collection/shadow_text.dart';
 import 'package:ice/app/router/app_routes.dart';
 
-class FeaturedCollection extends StatelessWidget {
-  const FeaturedCollection({required this.items, super.key});
-
-  final List<DAppItem> items;
+class FeaturedCollection extends ConsumerWidget {
+  const FeaturedCollection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final featuredApps = ref.watch(dappsFeaturedDataProvider).valueOrNull ?? [];
     return SizedBox(
       height: 160.0.s,
       child: ListView.separated(
@@ -22,11 +22,12 @@ class FeaturedCollection extends StatelessWidget {
         padding: EdgeInsets.symmetric(
           horizontal: ScreenSideOffset.defaultSmallMargin,
         ),
-        itemCount: items.length,
+        itemCount: featuredApps.length,
         itemBuilder: (BuildContext context, int index) {
-          final assetBg = items[index].backgroundImage ?? '';
+          final item = featuredApps[index];
+          final assetBg = item.backgroundImage ?? '';
           return GestureDetector(
-            onTap: () => DAppDetailsRoute().go(context),
+            onTap: () => DAppDetailsRoute(dappId: item.identifier).push<void>(context),
             child: Container(
               width: 240.0.s,
               decoration: BoxDecoration(
@@ -45,15 +46,9 @@ class FeaturedCollection extends StatelessWidget {
                     left: 12.0.s,
                     child: Row(
                       children: [
-                        DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8.0.s),
-                          ),
-                          child: Image.asset(
-                            items[index].iconImage,
-                            width: 30.0.s,
-                          ),
+                        Image.asset(
+                          featuredApps[index].iconImage,
+                          width: 30.0.s,
                         ),
                         SizedBox(width: 8.0.s),
                         Column(
@@ -62,7 +57,7 @@ class FeaturedCollection extends StatelessWidget {
                           children: [
                             ShadowText(
                               child: Text(
-                                items[index].title,
+                                featuredApps[index].title,
                                 style: context.theme.appTextThemes.body.copyWith(
                                   color: context.theme.appColors.secondaryBackground,
                                 ),
@@ -70,7 +65,7 @@ class FeaturedCollection extends StatelessWidget {
                             ),
                             ShadowText(
                               child: Text(
-                                items[index].description ?? '',
+                                featuredApps[index].description ?? '',
                                 style: context.theme.appTextThemes.caption3.copyWith(
                                   color: context.theme.appColors.secondaryBackground,
                                 ),

@@ -6,7 +6,6 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
-import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -74,7 +73,6 @@ class CategoriesCollection extends StatelessWidget {
                     DAppsListRoute(
                       $extra: AppsRouteData(
                         title: DAppsCategory.values[index].title(context),
-                        items: mockedApps,
                       ),
                     ).push<void>(context);
                   },

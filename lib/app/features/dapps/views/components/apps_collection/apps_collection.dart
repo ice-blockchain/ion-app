@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/features/dapps/model/dapp_data.dart';
 import 'package:ice/app/features/dapps/views/components/grid_item/grid_item.dart';
-import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 
 class AppsCollection extends StatelessWidget {
   const AppsCollection({super.key, this.items});
 
-  final List<DAppItem>? items;
+  final List<DAppData>? items;
 
   static double get itemWidth => 255.0.s;
   static double get offsetBetweenItems => 16.0.s;
@@ -17,7 +17,7 @@ class AppsCollection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemList = items ?? <DAppItem>[];
+    final itemList = items ?? <DAppData>[];
 
     return SizedBox(
       height: itemHeight * itemsPerColumn + offsetBetweenItems * (itemsPerColumn - 1),
@@ -31,10 +31,10 @@ class AppsCollection extends StatelessWidget {
         childAspectRatio: containerAspectRatio,
         children: itemList
             .map(
-              (DAppItem item) => SizedBox(
+              (item) => SizedBox(
                 width: itemWidth,
                 height: itemHeight,
-                child: GridItem(item: item),
+                child: GridItem(dAppData: item),
               ),
             )
             .toList(),

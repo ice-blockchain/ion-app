@@ -6,9 +6,10 @@ import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/features/dapps/model/dapp_data.dart';
+import 'package:ice/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/components/grid_item/grid_item.dart';
-import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -20,11 +21,11 @@ class DAppsList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
-    final items = payload.items ?? <DAppItem>[];
+    final apps = ref.watch(dappsDataProvider).valueOrNull ?? [];
 
     final filteredApps = searchText.value.isEmpty
-        ? items
-        : items.where((DAppItem app) {
+        ? apps
+        : apps.where((DAppData app) {
             final searchLower = searchText.value.toLowerCase().trim();
             final titleLower = app.title.toLowerCase();
 
@@ -50,7 +51,7 @@ class DAppsList extends HookConsumerWidget {
                       ),
                     Expanded(
                       child: Container(
-                        child: items.isEmpty
+                        child: apps.isEmpty
                             ? EmptyList(
                                 asset: Assets.images.misc.dappsEmpty,
                                 title: context.i18n.dapps_favourites_empty_title,
@@ -65,7 +66,7 @@ class DAppsList extends HookConsumerWidget {
                                   return Padding(
                                     padding: EdgeInsets.symmetric(vertical: 5.5.s),
                                     child: GridItem(
-                                      item: app,
+                                      dAppData: app,
                                       showIsFavourite: true,
                                     ),
                                   );

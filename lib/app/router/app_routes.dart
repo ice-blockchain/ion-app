@@ -20,8 +20,8 @@ import 'package:ice/app/features/auth/views/pages/protect_account/backup/errors/
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/recovery_keys_input_page.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/recovery_keys_save_page.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/recovery_keys_success_page.dart';
-import 'package:ice/app/features/auth/views/pages/protect_account/email/setup/pages/email_setup_page.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/email/model/email_steps.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/email/setup/pages/email_setup_page.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/secure_account_modal.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/secure_account_options_page.dart';
 import 'package:ice/app/features/auth/views/pages/restore_creds/restore_creds.dart';
@@ -280,11 +280,12 @@ class DAppsListRoute extends BaseRouteData {
 }
 
 class DAppDetailsRoute extends BaseRouteData {
-  DAppDetailsRoute()
+  DAppDetailsRoute({required this.dappId})
       : super(
-          child: DAppDetails(),
+          child: DAppDetails(dappId: dappId),
           type: IceRouteType.bottomSheet,
         );
+  final int dappId;
 }
 
 @TypedGoRoute<PullRightMenuRoute>(

@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ice/app/features/dapps/views/categories/featured.dart';
 import 'package:ice/app/features/dapps/views/components/categories/categories.dart';
 import 'package:ice/app/features/dapps/views/components/favourites/favourites.dart';
 import 'package:ice/app/features/dapps/views/components/wallet_header/wallet_header.dart';
-import 'package:ice/app/features/dapps/views/pages/mocks/mocked_apps.dart';
 import 'package:ice/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 
-class DAppsPage extends HookWidget {
+class DAppsPage extends HookConsumerWidget {
   const DAppsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
+    final apps = ref.watch(dappsDataProvider).valueOrNull ?? [];
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
@@ -44,25 +46,23 @@ class DAppsPage extends HookWidget {
                 const Categories(),
                 Apps(
                   title: context.i18n.dapps_section_title_highest_ranked,
-                  items: mockedApps,
+                  items: apps,
                   onPress: () {
                     DAppsListRoute(
                       $extra: AppsRouteData(
                         title: context.i18n.dapps_section_title_highest_ranked,
-                        items: mockedApps,
                       ),
                     ).push<void>(context);
                   },
                 ),
                 Apps(
                   title: context.i18n.dapps_section_title_recently_added,
-                  items: mockedApps,
+                  items: apps,
                   topOffset: 8.0.s,
                   onPress: () {
                     DAppsListRoute(
                       $extra: AppsRouteData(
                         title: context.i18n.dapps_section_title_recently_added,
-                        items: mockedApps,
                       ),
                     ).push<void>(context);
                   },
@@ -72,7 +72,6 @@ class DAppsPage extends HookWidget {
                     DAppsListRoute(
                       $extra: AppsRouteData(
                         title: context.i18n.dapps_section_title_favourites,
-                        items: <DAppItem>[],
                       ),
                     ).push<void>(context);
                   },
