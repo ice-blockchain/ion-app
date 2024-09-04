@@ -31,11 +31,11 @@ class LoginForm extends HookConsumerWidget {
           SizedBox(height: 16.0.s),
           Button(
             disabled: authState is AuthenticationLoading,
-            trailingIcon: authState is AuthenticationLoading
-                ? const IceLoadingIndicator()
-                : Assets.images.icons.iconButtonNext.icon(
-                    color: context.theme.appColors.onPrimaryAccent,
-                  ),
+            trailingIcon: switch (authState) {
+              AuthenticationLoading() || Authenticated(authToken: _) => const IceLoadingIndicator(),
+              _ => Assets.images.icons.iconButtonNext
+                  .icon(color: context.theme.appColors.onPrimaryAccent),
+            },
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
                 hideKeyboardAndCallOnce(

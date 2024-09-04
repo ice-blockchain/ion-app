@@ -27,9 +27,10 @@ class SignUpPasskeyForm extends HookConsumerWidget {
           SizedBox(height: 16.0.s),
           Button(
             disabled: authState is AuthenticationLoading,
-            trailingIcon: authState is AuthenticationLoading
-                ? const IceLoadingIndicator()
-                : const SizedBox.shrink(),
+            trailingIcon: switch (authState) {
+              AuthenticationLoading() || Authenticated(authToken: _) => const IceLoadingIndicator(),
+              _ => const SizedBox.shrink(),
+            },
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
                 hideKeyboardAndCallOnce(
