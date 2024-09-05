@@ -98,18 +98,15 @@ class StoryListItem extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               children: [
                 nft
-                    ? ColoredBox(
-                        color: Colors.amber,
-                        child: CustomPaint(
-                          size: Size.square(width),
-                          painter: ShapePainter(
-                            HexagonShapeBuilder(borderRadius: (width) / 5),
-                            color: context.theme.appColors.sheetLine,
-                            shader: _borderGradients[Random().nextInt(_borderGradients.length)]
-                                .createShader(
-                              Rect.fromCircle(
-                                  center: Offset(width / 2, width / 2), radius: width / 2),
-                            ),
+                    ? CustomPaint(
+                        size: Size.square(width),
+                        painter: ShapePainter(
+                          HexagonShapeBuilder(borderRadius: width / 5),
+                          color: context.theme.appColors.sheetLine,
+                          shader: _borderGradients[Random().nextInt(_borderGradients.length)]
+                              .createShader(
+                            Rect.fromCircle(
+                                center: Offset(width / 2, width / 2), radius: width / 2),
                           ),
                         ),
                       )

@@ -9,13 +9,15 @@ class HexagonShapeBuilder extends ShapeBuilder {
   HexagonShapeBuilder({this.borderRadius = 0});
 
   Path build(Size size) {
+    final adjustment = borderRadius / (sin(pi / 180 * 60)) - borderRadius;
+    final adjustedSize = Size(size.width + adjustment, size.height + adjustment);
     final center = Offset(size.width / 2, size.height / 2);
 
     final cornerList = List.generate(6, (index) {
       final angleDeg = 60 * index - 30;
       final angleRad = pi / 180 * angleDeg;
-      return Point(center.dx + (size.width / 2) * cos(angleRad),
-          center.dy + (size.height / 2) * sin(angleRad));
+      return Point(center.dx + (adjustedSize.width / 2) * cos(angleRad),
+          center.dy + (adjustedSize.height / 2) * sin(angleRad));
     });
 
     final path = Path();
