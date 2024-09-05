@@ -41,11 +41,7 @@ dependencies:
   share_plus: ^9.0.0
   shared_preferences: ^2.2.2
   shimmer: ^3.0.0
-  smooth_sheets:
-    git:
-      url: https://github.com/ice-orion/smooth_sheets.git
-      ref: feature/modal-dismiss-params
-      path: package/
+  smooth_sheets: ^0.9.4
   timeago: ^3.6.1
   timeago_flutter: ^3.6.0
   url_launcher: ^6.0.12
