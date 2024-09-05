@@ -22,7 +22,7 @@ class CountryCodeInput extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 8.0.s),
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
+            children: [
               Text(
                 country.flag,
                 style: TextStyle(fontSize: 24.0.s),
