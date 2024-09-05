@@ -32,6 +32,8 @@ class StoryList extends StatelessWidget {
             label: story.author,
             nft: story.nft,
             showPlus: story.me,
+            viewed: story.viewed,
+            gradient: storyBorderGradients[story.gradientIndex],
           );
         },
       ),

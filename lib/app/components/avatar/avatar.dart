@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/shapes/hexagon_path.dart';
 import 'package:ice/app/components/shapes/shape.dart';
-import 'package:ice/app/extensions/num.dart';
 
 class Avatar extends StatelessWidget {
   Avatar({
@@ -12,9 +11,9 @@ class Avatar extends StatelessWidget {
     this.badge,
     this.imageWidget,
     BorderRadiusGeometry? borderRadius,
-    this.nft = false,
+    this.hexagon = false,
     BoxFit? fit,
-  })  : borderRadius = borderRadius ?? BorderRadius.circular(10.0.s),
+  })  : borderRadius = borderRadius ?? BorderRadius.circular(size * 0.3),
         fit = fit ?? BoxFit.fitWidth,
         assert(
           imageUrl == null || imageWidget == null,
@@ -24,7 +23,7 @@ class Avatar extends StatelessWidget {
   final double size;
   final BorderRadiusGeometry borderRadius;
   final BoxFit fit;
-  final bool nft;
+  final bool hexagon;
   final Widget? badge;
   final String? imageUrl;
   final Widget? imageWidget;
@@ -47,9 +46,9 @@ class Avatar extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        nft
+        hexagon
             ? ClipPath(
-                clipper: ShapeClipper(HexagonShapeBuilder(borderRadius: size / 5)),
+                clipper: ShapeClipper(HexagonShapeBuilder()),
                 child: image,
               )
             : ClipRRect(borderRadius: borderRadius, child: image),

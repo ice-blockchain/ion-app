@@ -21,9 +21,13 @@ class ShapeClipper extends CustomClipper<Path> {
 }
 
 class ShapePainter extends CustomPainter {
-  ShapePainter(this.shapeBuilder, {required this.color, this.shader});
+  ShapePainter(
+    this.shapeBuilder, {
+    this.color,
+    this.shader,
+  });
 
-  final Color color;
+  final Color? color;
 
   final Shader? shader;
 
@@ -32,7 +36,7 @@ class ShapePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color
+      ..color = color ?? Colors.transparent
       ..shader = shader
       ..style = PaintingStyle.fill;
 

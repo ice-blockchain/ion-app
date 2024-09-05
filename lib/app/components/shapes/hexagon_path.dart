@@ -1,86 +1,38 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/shapes/shape.dart';
 
 class HexagonShapeBuilder extends ShapeBuilder {
-  final double borderRadius;
-
-  HexagonShapeBuilder({this.borderRadius = 0});
+  HexagonShapeBuilder();
 
   Path build(Size size) {
-    final adjustment = borderRadius / (sin(pi / 180 * 60)) - borderRadius;
-    final adjustedSize = Size(size.width + adjustment, size.height + adjustment);
-    final center = Offset(size.width / 2, size.height / 2);
+    Path path = Path();
 
-    final cornerList = List.generate(6, (index) {
-      final angleDeg = 60 * index - 30;
-      final angleRad = pi / 180 * angleDeg;
-      return Point(center.dx + (adjustedSize.width / 2) * cos(angleRad),
-          center.dy + (adjustedSize.height / 2) * sin(angleRad));
-    });
-
-    final path = Path();
-    if (borderRadius > 0) {
-      cornerList.asMap().forEach((index, point) {
-        final rStart = _radiusStart(point, index, cornerList, borderRadius);
-        final rEnd = _radiusEnd(point, index, cornerList, borderRadius);
-        if (index == 0) {
-          path.moveTo(rStart.x, rStart.y);
-        } else {
-          path.lineTo(rStart.x, rStart.y);
-        }
-
-        final control1 = _pointBetween(rStart, point, fraction: 0.7698);
-        final control2 = _pointBetween(rEnd, point, fraction: 0.7698);
-
-        path.cubicTo(
-          control1.x,
-          control1.y,
-          control2.x,
-          control2.y,
-          rEnd.x,
-          rEnd.y,
-        );
-      });
-    } else {
-      cornerList.asMap().forEach((index, point) {
-        if (index == 0) {
-          path.moveTo(point.x, point.y);
-        } else {
-          path.lineTo(point.x, point.y);
-        }
-      });
-    }
-
-    return path..close();
-  }
-
-  Point<double> _pointBetween(Point<double> start, Point<double> end,
-      {double? distance, double? fraction}) {
-    double xLength = end.x - start.x;
-    double yLength = end.y - start.y;
-    if (fraction == null) {
-      if (distance == null) {
-        throw Exception('Distance or fraction should be specified.');
-      }
-      double length = sqrt(xLength * xLength + yLength * yLength);
-      fraction = distance / length;
-    }
-    return Point(start.x + xLength * fraction, start.y + yLength * fraction);
-  }
-
-  Point<double> _radiusStart(
-      Point<double> corner, int index, List<Point<double>> cornerList, double radius) {
-    final prevCorner = index > 0 ? cornerList[index - 1] : cornerList[cornerList.length - 1];
-    double distance = radius * tan(pi / 6);
-    return _pointBetween(corner, prevCorner, distance: distance);
-  }
-
-  Point<double> _radiusEnd(
-      Point<double> corner, int index, List<Point<double>> cornerList, double radius) {
-    final nextCorner = index < cornerList.length - 1 ? cornerList[index + 1] : cornerList[0];
-    double distance = radius * tan(pi / 6);
-    return _pointBetween(corner, nextCorner, distance: distance);
+    path.lineTo(size.width * 0.37, size.height * 0.02);
+    path.cubicTo(
+        size.width * 0.43, -0.01, size.width / 2, -0.01, size.width * 0.56, size.height * 0.02);
+    path.cubicTo(size.width * 0.56, size.height * 0.02, size.width * 0.84, size.height * 0.18,
+        size.width * 0.84, size.height * 0.18);
+    path.cubicTo(size.width * 0.9, size.height * 0.22, size.width * 0.94, size.height * 0.28,
+        size.width * 0.94, size.height * 0.35);
+    path.cubicTo(size.width * 0.94, size.height * 0.35, size.width * 0.94, size.height * 0.65,
+        size.width * 0.94, size.height * 0.65);
+    path.cubicTo(size.width * 0.94, size.height * 0.72, size.width * 0.9, size.height * 0.78,
+        size.width * 0.84, size.height * 0.82);
+    path.cubicTo(size.width * 0.84, size.height * 0.82, size.width * 0.56, size.height * 0.98,
+        size.width * 0.56, size.height * 0.98);
+    path.cubicTo(size.width / 2, size.height, size.width * 0.43, size.height, size.width * 0.37,
+        size.height * 0.98);
+    path.cubicTo(size.width * 0.37, size.height * 0.98, size.width * 0.1, size.height * 0.82,
+        size.width * 0.1, size.height * 0.82);
+    path.cubicTo(
+        size.width * 0.04, size.height * 0.78, 0, size.height * 0.72, 0, size.height * 0.65);
+    path.cubicTo(0, size.height * 0.65, 0, size.height * 0.35, 0, size.height * 0.35);
+    path.cubicTo(0, size.height * 0.28, size.width * 0.04, size.height * 0.22, size.width * 0.1,
+        size.height * 0.18);
+    path.cubicTo(size.width * 0.1, size.height * 0.18, size.width * 0.37, size.height * 0.02,
+        size.width * 0.37, size.height * 0.02);
+    path.cubicTo(size.width * 0.37, size.height * 0.02, size.width * 0.37, size.height * 0.02,
+        size.width * 0.37, size.height * 0.02);
+    return path.shift(Offset(size.width * 0.03, 0));
   }
 }

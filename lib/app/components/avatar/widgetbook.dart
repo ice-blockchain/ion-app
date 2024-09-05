@@ -25,7 +25,7 @@ Widget regularButtonUseCase(BuildContext context) {
           imageWidget: Assets.images.bg.bgWalletOpensea.image(),
         ),
         Avatar(
-          nft: true,
+          hexagon: true,
           size: 200.0.s,
           imageUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
         )

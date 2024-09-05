@@ -31,7 +31,7 @@ class _ListItemUser extends ListItem {
                       imageUrl: profilePicture,
                       badge: showProfilePictureIceBadge ? _IceBadge() : null,
                       imageWidget: profilePictureWidget,
-                      nft: ntfAvatar,
+                      hexagon: ntfAvatar,
                     )
                   : null),
           borderRadius: borderRadius ?? BorderRadius.zero,

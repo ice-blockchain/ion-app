@@ -34,7 +34,7 @@ Widget regularShapeBuilderUseCase(BuildContext context) {
           CustomPaint(
             size: Size(70.0.s, 70.0.s),
             painter: ShapePainter(
-              HexagonShapeBuilder(borderRadius: 10.0.s),
+              HexagonShapeBuilder(),
               color: context.theme.appColors.primaryText,
             ),
           ),
