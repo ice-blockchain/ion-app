@@ -16,7 +16,7 @@ class PhoneSetupInputPage extends HookWidget {
   const PhoneSetupInputPage({super.key});
 
   static const int minPhoneLength = 5;
-  static const int maxPhoneLength = 10;
+  static const int maxPhoneLength = 15;
 
   @override
   Widget build(BuildContext context) {
