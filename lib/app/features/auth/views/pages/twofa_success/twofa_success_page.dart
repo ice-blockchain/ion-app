@@ -39,7 +39,7 @@ class TwoFaSuccessPage extends StatelessWidget {
               children: [
                 SizedBox(height: 12.0.s),
                 InfoCard(
-                  iconAsset: Assets.images.icons.actionWalletSuccess2FA,
+                  iconAsset: Assets.images.icons.actionWalletSuccess2Fa,
                   title: context.i18n.common_congratulations,
                   description: context.i18n.two_fa_success_desc,
                 ),
