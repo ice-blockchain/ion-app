@@ -22,6 +22,9 @@ import 'package:ice/app/features/auth/views/pages/protect_account/backup/recover
 import 'package:ice/app/features/auth/views/pages/protect_account/backup/recovery_keys_success_page.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/email/model/email_steps.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/email/setup/pages/email_setup_page.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/phone/components/select_country_page.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/phone/models/phone_steps.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/phone/setup_phone/pages/phone_setup_page.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/secure_account_modal.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/secure_account_options_page.dart';
 import 'package:ice/app/features/auth/views/pages/restore_creds/restore_creds.dart';

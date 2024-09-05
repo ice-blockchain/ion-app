@@ -7,6 +7,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/authenticator/model/authenticator_steps.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/components/secure_account_option.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/email/model/email_steps.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/phone/models/phone_steps.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/providers/security_account_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -83,7 +84,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                   icon: Assets.images.icons.iconFieldPhone.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  onTap: () {},
+                  onTap: () => PhoneSetupRoute(step: PhoneSetupSteps.input).push<void>(context),
                   isEnabled: securityController.isPhoneEnabled,
                 ),
                 ScreenBottomOffset(margin: 36.0.s),

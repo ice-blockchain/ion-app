@@ -17,6 +17,8 @@ class ProtectAccountRoutes {
     TypedGoRoute<AuthenticatorInitialDeleteRoute>(path: '/authenticator-initial-delete'),
     TypedGoRoute<AuthenticatorDeleteSuccessRoute>(path: '/authenticator-delete-success'),
     TypedGoRoute<EmailSetupRoute>(path: '/email-setup/:step'),
+    TypedGoRoute<PhoneSetupRoute>(path: '/phone-setup/:step'),
+    TypedGoRoute<SelectCountriesRoute>(path: '/select-countries'),
   ];
 }
 
@@ -145,4 +147,23 @@ class EmailSetupRoute extends BaseRouteData {
 
   final EmailSetupSteps step;
   String? email;
+}
+
+class PhoneSetupRoute extends BaseRouteData {
+  PhoneSetupRoute({required this.step, this.phone})
+      : super(
+          child: PhoneSetupPage(step, phone),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final PhoneSetupSteps step;
+  String? phone;
+}
+
+class SelectCountriesRoute extends BaseRouteData {
+  SelectCountriesRoute()
+      : super(
+          child: const SelectCountryPage(),
+          type: IceRouteType.bottomSheet,
+        );
 }

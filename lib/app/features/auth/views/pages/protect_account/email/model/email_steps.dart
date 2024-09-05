@@ -30,7 +30,7 @@ enum EmailSetupSteps {
   String getDescription(BuildContext context) {
     return switch (this) {
       EmailSetupSteps.input => context.i18n.email_verification_description,
-      EmailSetupSteps.confirmation => context.i18n.email_confirmation_description,
+      EmailSetupSteps.confirmation => context.i18n.two_fa_code_confirmation,
       EmailSetupSteps.success => '',
     };
   }

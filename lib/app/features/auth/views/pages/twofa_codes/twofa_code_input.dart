@@ -31,15 +31,15 @@ class TwoFaCodeInput extends StatelessWidget {
       scrollPadding: EdgeInsets.only(bottom: 200.0.s),
       keyboardType: TextInputType.number,
       suffixIcon: switch (twoFaType) {
-        TwoFaType.email || TwoFaType.sms => _SendButton(),
+        TwoFaType.email || TwoFaType.sms => SendButton(),
         TwoFaType.auth => null,
       },
     );
   }
 }
 
-class _SendButton extends HookWidget {
-  const _SendButton();
+class SendButton extends HookWidget {
+  const SendButton();
 
   @override
   Widget build(BuildContext context) {

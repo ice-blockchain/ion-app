@@ -38,6 +38,7 @@
   "two_fa_email": "Email code",
   "two_fa_sms": "SMS code",
   "two_fa_auth": "Authenticator code",
+  "two_fa_code_confirmation": "Please enter the code sent to",
   "two_fa_option_backup": "Backup",
   "two_fa_option_email": "Email",
   "two_fa_option_authenticator": "Authenticator",
@@ -289,6 +290,12 @@
   "email_verification_title": "Email verification",
   "email_verification_description": "Enter your email address for verification",
   "email_confirmation_title": "Confirm email",
-  "email_confirmation_description": "Please enter the code sent to",
-  "email_success_description": "The email address has been successfully verified and added for 2FA"
+  "email_success_description": "The email address has been successfully verified and added for 2FA",
+  "phone_verification_title": "Phone number verification",
+  "phone_verification_description": "Enter your phone number for verification",
+  "phone_confirmation_title": "Confirm phone number",
+  "phone_success_description": "The phone number has been successfully verified and added for 2FA",
+  "phone_number": "Phone number",
+  "phone_number_invalid": "Invalid phone number",
+  "select_countries_nav_title": "Select country"
 }
