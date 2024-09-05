@@ -8,7 +8,6 @@ class Story {
     required this.author,
     this.nft = false,
     this.me = false,
-    this.viewed = false,
     this.gradientIndex = 0,
   });
 
@@ -16,7 +15,6 @@ class Story {
   final String author;
   final bool nft;
   final bool me;
-  final bool viewed;
   final int gradientIndex;
 }
 
@@ -28,126 +26,108 @@ final List<Story> stories = [
     imageUrl: 'https://i.pravatar.cc/150?u=@john',
     me: true,
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@mysterox',
     imageUrl: 'https://i.pravatar.cc/150?u=@mysterox',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@foxydyrr',
     imageUrl: 'https://i.pravatar.cc/150?u=@foxydyrr',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@mikeydiy',
     imageUrl: 'https://i.pravatar.cc/150?u=@mikeydiy',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@isaiah ',
     imageUrl: 'https://i.pravatar.cc/150?u=@isaiah',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@kilback',
     imageUrl: 'https://i.pravatar.cc/150?u=@kilback',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@jamison',
     imageUrl: 'https://i.pravatar.cc/150?u=@jamison',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@rolfson',
     imageUrl: 'https://i.pravatar.cc/150?u=@rolfson',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@wendy',
     imageUrl: 'https://i.pravatar.cc/150?u=@wendy',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@cruickshank',
     imageUrl: 'https://i.pravatar.cc/150?u=@cruickshank',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@pierre',
     imageUrl: 'https://i.pravatar.cc/150?u=@pierre',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@armstrong',
     imageUrl: 'https://i.pravatar.cc/150?u=@armstrong',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@emanuel',
     imageUrl: 'https://i.pravatar.cc/150?u=@emanuel',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@kozey',
     imageUrl: 'https://i.pravatar.cc/150?u=@kozey',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@estella',
     imageUrl: 'https://i.pravatar.cc/150?u=@estella',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@ward',
     imageUrl: 'https://i.pravatar.cc/150?u=@ward',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@javier',
     imageUrl: 'https://i.pravatar.cc/150?u=@javier',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
   Story(
     author: '@bergnaum',
     imageUrl: 'https://i.pravatar.cc/150?u=@bergnaum',
     nft: random.nextBool(),
-    viewed: random.nextBool(),
     gradientIndex: Random().nextInt(storyBorderGradients.length),
   ),
 ];

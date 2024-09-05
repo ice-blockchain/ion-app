@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -6,22 +9,20 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/components/plus_icon.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
 
-class StoryListItem extends StatelessWidget {
+class StoryListItem extends HookWidget {
   const StoryListItem({
     required this.imageUrl,
     required this.label,
     super.key,
     this.nft = false,
-    this.viewed = false,
-    this.showPlus = false,
+    this.me = false,
     this.gradient,
   });
 
   final String imageUrl;
   final String label;
   final bool nft;
-  final bool viewed;
-  final bool showPlus;
+  final bool me;
   final Gradient? gradient;
 
   static double get width => 65.0.s;
@@ -34,8 +35,12 @@ class StoryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewed = useState(me ? false : Random().nextBool());
+
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (!me) viewed.value = true;
+      },
       child: SizedBox(
         width: width,
         height: height,
@@ -50,7 +55,7 @@ class StoryListItem extends StatelessWidget {
                   hexagon: nft,
                   size: width,
                   color: context.theme.appColors.strokeElements,
-                  gradient: viewed ? null : gradient,
+                  gradient: viewed.value ? null : gradient,
                   child: StoryColoredBorder(
                     hexagon: nft,
                     size: width - borderSize * 2,
@@ -62,7 +67,7 @@ class StoryListItem extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (showPlus)
+                if (me)
                   Positioned(
                     bottom: -plusSize / 2,
                     child: PlusIcon(
