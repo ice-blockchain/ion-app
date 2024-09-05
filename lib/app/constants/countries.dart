@@ -1,18 +1,18 @@
-class Country {
-  const Country({
-    required this.name,
-    required this.flag,
-    required this.isoCode,
-    required this.iddCode,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  final String name;
-  final String flag;
-  final String isoCode;
-  final String iddCode;
+part 'countries.freezed.dart';
+
+@freezed
+class Country with _$Country {
+  const factory Country({
+    required String name,
+    required String flag,
+    required String isoCode,
+    required String iddCode,
+  }) = _Country;
 }
 
-const List<Country> countries = <Country>[
+const List<Country> countriesData = [
   Country(name: 'Andorra', flag: '🇦🇩', isoCode: 'AD', iddCode: '+376'),
   Country(
     name: 'United Arab Emirates',

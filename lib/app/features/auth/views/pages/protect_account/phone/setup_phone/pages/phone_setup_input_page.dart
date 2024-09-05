@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/constants/countries.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/views/pages/protect_account/phone/components/country_code_input.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/phone/components/countries/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/phone/models/phone_steps.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/phone/provider/selected_country_provider.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/validators.dart';
 
-class PhoneSetupInputPage extends HookWidget {
+class PhoneSetupInputPage extends HookConsumerWidget {
   const PhoneSetupInputPage({super.key});
 
   static const int minPhoneLength = 5;
   static const int maxPhoneLength = 15;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
     final formKey = useRef(GlobalKey<FormState>());
     final phoneController = useTextEditingController();
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
-    final country = useState(countries[1]);
+    final country = ref.watch(selectedCountryProvider);
 
     return Form(
       key: formKey.value,
@@ -41,13 +43,15 @@ class PhoneSetupInputPage extends HookWidget {
                   padding: EdgeInsets.only(bottom: 20.0.s),
                   child: TextInput(
                     alwaysShowPrefixIcon: true,
-                    prefix: Text('${country.value.iddCode} '),
+                    prefix: Text('${country.iddCode} '),
                     prefixIcon: CountryCodeInput(
-                      country: country.value,
+                      country: country,
                       onTap: () async {
                         final data = await SelectCountriesRoute().push<Country>(context);
 
-                        if (data != null) country.value = data;
+                        if (data != null) {
+                          ref.read(selectedCountryProvider.notifier).setCountry(data);
+                        }
                       },
                     ),
                     labelText: context.i18n.phone_number,
@@ -67,7 +71,8 @@ class PhoneSetupInputPage extends HookWidget {
                       hideKeyboardAndCallOnce(
                         callback: () {
                           final fullPhoneNumber =
-                              '${country.value.iddCode}${phoneController.text.trim()}';
+                              '${country.iddCode}${phoneController.text.trim()}';
+
                           PhoneSetupRoute(
                             step: PhoneSetupSteps.confirmation,
                             phone: fullPhoneNumber,
