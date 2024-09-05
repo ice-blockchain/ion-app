@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -20,8 +22,9 @@ class PostHeader extends StatelessWidget {
         profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
         trailing: trailing,
         constraints: BoxConstraints(minHeight: 55.0.s),
-        iceBadge: true,
-        verifiedBadge: true,
+        iceBadge: Random().nextBool(),
+        verifiedBadge: Random().nextBool(),
+        ntfAvatar: Random().nextBool(),
       ),
     );
   }

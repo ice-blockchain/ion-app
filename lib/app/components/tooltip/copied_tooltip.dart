@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/painters/triangle_painter.dart';
+import 'package:ice/app/components/shapes/shape.dart';
+import 'package:ice/app/components/shapes/triangle_path.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -48,7 +49,8 @@ class CopiedTooltip extends HookConsumerWidget {
         ),
         CustomPaint(
           size: Size(7.0.s, 5.0.s),
-          painter: TrianglePainter(
+          painter: ShapePainter(
+            TriangleShapeBuilder(),
             color: context.theme.appColors.primaryText,
           ),
         ),

@@ -8,7 +8,6 @@ import 'package:ice/app/features/user/model/nft_layout_type.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_price.dart';
-import 'package:ice/app/utils/image.dart';
 
 class NftGridItem extends StatelessWidget {
   const NftGridItem({
@@ -40,7 +39,7 @@ class NftGridItem extends StatelessWidget {
           ClipRRect(
             borderRadius: borderRadius,
             child: CachedNetworkImage(
-              imageUrl: getAdaptiveImageUrl(nftData.iconUrl, imageWidth * 2),
+              imageUrl: nftData.iconUrl,
               width: imageWidth,
               height: imageWidth * 1.13,
               fit: BoxFit.fitHeight,

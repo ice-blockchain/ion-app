@@ -19,7 +19,8 @@ class _ListItemUser extends ListItem {
     Widget? profilePictureWidget,
     bool verifiedBadge = false,
     bool iceBadge = false,
-    bool? showProfilePictureIceBadge,
+    bool showProfilePictureIceBadge = false,
+    bool ntfAvatar = false,
     super.isSelected,
     DateTime? timeago,
   }) : super(
@@ -28,8 +29,9 @@ class _ListItemUser extends ListItem {
                   ? Avatar(
                       size: avatarSize,
                       imageUrl: profilePicture,
-                      iceBadge: showProfilePictureIceBadge ?? false,
+                      badge: showProfilePictureIceBadge ? _IceBadge() : null,
                       imageWidget: profilePictureWidget,
+                      hexagon: ntfAvatar,
                     )
                   : null),
           borderRadius: borderRadius ?? BorderRadius.zero,
@@ -101,6 +103,36 @@ class _TimeAgo extends StatelessWidget {
       date: date,
       builder: (BuildContext context, String value) => Text(' • $value'),
       locale: 'en_short',
+    );
+  }
+}
+
+class _IceBadge extends StatelessWidget {
+  const _IceBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: -2.0.s,
+      right: -2.0.s,
+      child: Container(
+        width: 12.0.s,
+        height: 12.0.s,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(3.5.s),
+          border: Border.all(
+            width: 1.0.s,
+            color: context.theme.appColors.secondaryBackground,
+          ),
+          color: context.theme.appColors.darkBlue,
+        ),
+        child: Center(
+          child: Assets.images.icons.iconIcelogoSecuredby.icon(
+            color: context.theme.appColors.secondaryBackground,
+            size: 10.0.s,
+          ),
+        ),
+      ),
     );
   }
 }

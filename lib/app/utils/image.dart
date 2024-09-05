@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-String getAdaptiveImageUrl(String imageUrl, double imageWidth) {
-  return '$imageUrl?width=${imageWidth.toInt()}';
-}
-
 const int pickerImageQuality = 50;
 
 Future<CroppedFile?> pickImageFromGallery() async {

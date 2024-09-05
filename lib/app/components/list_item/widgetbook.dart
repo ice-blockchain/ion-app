@@ -73,6 +73,15 @@ Widget userListItemUseCase(BuildContext context) {
             subtitle: const Text('@alinaproxima'),
             profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
             verifiedBadge: true,
+            showProfilePictureIceBadge: true,
+          ),
+          ListItem.user(
+            title: const Text('Alina Proxima'),
+            subtitle: const Text('@alinaproxima'),
+            profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+            verifiedBadge: true,
+            showProfilePictureIceBadge: true,
+            ntfAvatar: true,
           ),
           ListItem.user(
             title: const Text('Alina Proxima'),

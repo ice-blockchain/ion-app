@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
-import 'package:ice/app/utils/image.dart';
 
 class BackgroundPicture extends ConsumerWidget {
   const BackgroundPicture({
@@ -21,7 +20,7 @@ class BackgroundPicture extends ConsumerWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30.0.s),
       child: CachedNetworkImage(
-        imageUrl: getAdaptiveImageUrl(userData.profilePicture, imageWidth),
+        imageUrl: userData.profilePicture,
         width: imageWidth,
         height: imageHeight,
         fit: BoxFit.fitWidth,

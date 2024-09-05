@@ -1,22 +1,29 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/components/plus_icon.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
 
-class StoryListItem extends StatelessWidget {
+class StoryListItem extends HookWidget {
   const StoryListItem({
     required this.imageUrl,
     required this.label,
     super.key,
-    this.showPlus = false,
+    this.nft = false,
+    this.me = false,
+    this.gradient,
   });
 
   final String imageUrl;
   final String label;
-  final bool showPlus;
+  final bool nft;
+  final bool me;
+  final Gradient? gradient;
 
   static double get width => 65.0.s;
 
@@ -24,10 +31,16 @@ class StoryListItem extends StatelessWidget {
 
   static double get plusSize => 18.0.s;
 
+  static double get borderSize => 2.0.s;
+
   @override
   Widget build(BuildContext context) {
+    final viewed = useState(me ? false : Random().nextBool());
+
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (!me) viewed.value = true;
+      },
       child: SizedBox(
         width: width,
         height: height,
@@ -38,12 +51,23 @@ class StoryListItem extends StatelessWidget {
               clipBehavior: Clip.none,
               alignment: Alignment.bottomCenter,
               children: [
-                Avatar(
+                StoryColoredBorder(
+                  hexagon: nft,
                   size: width,
-                  imageUrl: imageUrl,
-                  borderRadius: BorderRadius.circular(19.5.s),
+                  color: context.theme.appColors.strokeElements,
+                  gradient: viewed.value ? null : gradient,
+                  child: StoryColoredBorder(
+                    hexagon: nft,
+                    size: width - borderSize * 2,
+                    color: context.theme.appColors.secondaryBackground,
+                    child: Avatar(
+                      size: width - borderSize * 4,
+                      imageUrl: imageUrl,
+                      hexagon: nft,
+                    ),
+                  ),
                 ),
-                if (showPlus)
+                if (me)
                   Positioned(
                     bottom: -plusSize / 2,
                     child: PlusIcon(

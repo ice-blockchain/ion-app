@@ -30,7 +30,9 @@ class StoryList extends StatelessWidget {
           return StoryListItem(
             imageUrl: story.imageUrl,
             label: story.author,
-            showPlus: story.me,
+            nft: story.nft,
+            me: story.me,
+            gradient: storyBorderGradients[story.gradientIndex],
           );
         },
       ),
