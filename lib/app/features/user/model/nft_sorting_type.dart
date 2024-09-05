@@ -13,7 +13,7 @@ enum NftSortingType {
     };
   }
 
-  AssetGenImage get iconAsset {
+  String get iconAsset {
     return switch (this) {
       NftSortingType.asc => Assets.images.icons.iconButtonDown,
       NftSortingType.desc => Assets.images.icons.iconButtonUp,

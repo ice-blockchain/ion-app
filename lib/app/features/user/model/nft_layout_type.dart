@@ -4,7 +4,7 @@ enum NftLayoutType {
   list,
   grid;
 
-  AssetGenImage get iconAsset {
+  String get iconAsset {
     return switch (this) {
       NftLayoutType.grid => Assets.images.icons.iconBlockGrid,
       NftLayoutType.list => Assets.images.icons.iconBlockList,

@@ -13,7 +13,7 @@ enum TransactionType {
     };
   }
 
-  AssetGenImage get iconAsset {
+  String get iconAsset {
     return switch (this) {
       TransactionType.send => Assets.images.icons.iconButtonSend,
       TransactionType.receive => Assets.images.icons.iconButtonReceive,

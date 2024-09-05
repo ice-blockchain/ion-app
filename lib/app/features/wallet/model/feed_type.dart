@@ -36,7 +36,7 @@ enum FeedType {
     };
   }
 
-  AssetGenImage get iconAsset {
+  String get iconAsset {
     return switch (this) {
       FeedType.post => Assets.images.icons.iconFeedPost,
       FeedType.story => Assets.images.icons.iconFeedStory,

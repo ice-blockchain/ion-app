@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -39,11 +40,14 @@ class DappDetailsInfoBlock extends StatelessWidget {
                     if (iconPath != null)
                       Padding(
                         padding: EdgeInsets.only(right: 6.0.s),
-                        child: Image.asset(
+                        child: SvgPicture.asset(
                           iconPath!,
                           width: 24.0.s,
                           height: 24.0.s,
-                          color: context.theme.appColors.primaryAccent,
+                          colorFilter: ColorFilter.mode(
+                            context.theme.appColors.primaryAccent,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     if (value != null) value!,

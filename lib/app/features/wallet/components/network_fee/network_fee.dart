@@ -28,10 +28,7 @@ class NetworkFee extends StatelessWidget {
                 context.theme.appColors.tertararyText,
                 BlendMode.srcIn,
               ),
-              child: Assets.images.icons.iconBlockInformation.image(
-                width: 16.0.s,
-                height: 16.0.s,
-              ),
+              child: Assets.images.icons.iconBlockInformation.icon(size: 16.0.s),
             ),
           ),
         ),

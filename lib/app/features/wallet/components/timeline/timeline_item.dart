@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/components/timeline/timeline.dart';
 import 'package:ice/app/features/wallet/components/timeline/timeline_separator.dart';
@@ -29,10 +30,10 @@ class TimelineItem extends StatelessWidget {
         Column(
           children: [
             Center(
-              child: Image.asset(
+              child: SvgPicture.asset(
                 data.isDone
-                    ? Assets.images.icons.iconStepsCheckActive.path
-                    : Assets.images.icons.iconStepsCheckInactive.path,
+                    ? Assets.images.icons.iconStepsCheckActive
+                    : Assets.images.icons.iconStepsCheckInactive,
                 width: 16.0.s,
                 height: 16.0.s,
               ),

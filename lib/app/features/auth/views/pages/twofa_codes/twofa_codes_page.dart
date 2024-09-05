@@ -39,7 +39,7 @@ class TwoFaCodesPage extends HookWidget {
       body: AuthScrollContainer(
         title: context.i18n.two_fa_title,
         description: context.i18n.two_fa_desc,
-        icon: Assets.images.icons.iconWalletProtectVar1.icon(size: 36.0.s),
+        icon: Assets.images.icons.iconWalletProtectFill.icon(size: 36.0.s),
         children: [
           Column(
             children: [

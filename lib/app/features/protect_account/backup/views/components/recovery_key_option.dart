@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/card/rounded_card.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/generated/assets.gen.dart';
 
 class RecoveryKeyOption extends StatelessWidget {
   const RecoveryKeyOption({
@@ -13,7 +12,7 @@ class RecoveryKeyOption extends StatelessWidget {
 
   final String title;
   final String subtitle;
-  final AssetGenImage iconAsset;
+  final String iconAsset;
 
   @override
   Widget build(BuildContext context) {

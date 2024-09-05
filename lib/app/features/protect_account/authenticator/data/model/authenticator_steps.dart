@@ -32,7 +32,7 @@ enum AuthenticatorSetupSteps {
         AuthenticatorSetupSteps.success => 1.0
       };
 
-  AssetGenImage get headerImageAsset {
+  String get headerImageAsset {
     return switch (this) {
       AuthenticatorSetupSteps.options => Assets.images.icons.icon2faAuthsetup,
       AuthenticatorSetupSteps.instruction => Assets.images.icons.icon2faFollowinstuction,

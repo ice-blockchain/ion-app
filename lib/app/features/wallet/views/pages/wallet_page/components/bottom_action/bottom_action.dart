@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/generated/assets.gen.dart';
 
 class BottomAction extends StatelessWidget {
   const BottomAction({
@@ -13,7 +12,7 @@ class BottomAction extends StatelessWidget {
   });
 
   final VoidCallback onTap;
-  final AssetGenImage asset;
+  final String asset;
   final String title;
 
   @override

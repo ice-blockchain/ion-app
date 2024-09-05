@@ -79,7 +79,7 @@ class DAppDetails extends ConsumerWidget {
                       ),
                     if (app.link != null)
                       DappDetailsInfoBlock(
-                        iconPath: Assets.images.icons.iconWalletLink.path,
+                        iconPath: Assets.images.icons.iconWalletLink,
                         value: InkWell(
                           onTap: () async {
                             if (app.link != null) {
@@ -108,7 +108,7 @@ class DAppDetails extends ConsumerWidget {
                             color: context.theme.appColors.primaryText,
                           ),
                         ),
-                        iconPath: Assets.images.icons.iconButtonIceStroke.path,
+                        iconPath: Assets.images.icons.iconButtonIceStroke,
                       ),
                     Row(
                       children: [
@@ -126,7 +126,7 @@ class DAppDetails extends ConsumerWidget {
                                 color: context.theme.appColors.primaryText,
                               ),
                             ),
-                            iconPath: Assets.images.icons.iconDappGames.path,
+                            iconPath: Assets.images.icons.iconDappGames,
                           ),
                         ),
                         SizedBox(
@@ -146,7 +146,7 @@ class DAppDetails extends ConsumerWidget {
                                 color: context.theme.appColors.primaryText,
                               ),
                             ),
-                            iconPath: Assets.images.icons.iconDappGames.path,
+                            iconPath: Assets.images.icons.iconDappGames,
                           ),
                         ),
                       ],
