@@ -31,13 +31,6 @@ Widget regularShapeBuilderUseCase(BuildContext context) {
               color: context.theme.appColors.primaryText,
             ),
           ),
-          CustomPaint(
-            size: Size(70.0.s, 70.0.s),
-            painter: ShapePainter(
-              HexagonShapeBuilder(),
-              color: context.theme.appColors.primaryText,
-            ),
-          ),
         ],
       ),
     ),
