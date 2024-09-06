@@ -14,17 +14,17 @@ enum WalletTabType {
     };
   }
 
-  AssetGenImage get emptyListAsset {
+  String get emptyListAsset {
     return switch (this) {
-      WalletTabType.coins => Assets.images.misc.emptyCoins,
-      WalletTabType.nfts => Assets.images.misc.emptyNft,
+      WalletTabType.coins => Assets.svg.walletIconWalletEmptycoins,
+      WalletTabType.nfts => Assets.svg.categoriesNft,
     };
   }
 
   String get bottomActionAsset {
     return switch (this) {
-      WalletTabType.coins => Assets.images.icons.iconButtonManagecoin,
-      WalletTabType.nfts => Assets.images.icons.iconButtonWalletnft,
+      WalletTabType.coins => Assets.svg.iconButtonManagecoin,
+      WalletTabType.nfts => Assets.svg.iconButtonWalletnft,
     };
   }
 

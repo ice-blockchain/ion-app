@@ -46,7 +46,7 @@ class SliderThumb extends StatelessWidget {
         );
         onChanged(sliderValue.value);
       },
-      child: Assets.images.icons.iconBlockRocket.icon(
+      child: Assets.svg.iconBlockRocket.icon(
         size: thumbIconSize.s,
       ),
     );

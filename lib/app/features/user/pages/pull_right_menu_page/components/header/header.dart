@@ -22,19 +22,19 @@ class Header extends StatelessWidget {
               onPressed: () {
                 FeedRoute().go(context);
               },
-              assetName: Assets.images.icons.iconChatBack,
+              assetName: Assets.svg.iconChatBack,
             ),
             const Spacer(),
             HeaderAction(
               onPressed: () {},
-              assetName: Assets.images.icons.iconChatDarkmode,
+              assetName: Assets.svg.iconChatDarkmode,
             ),
             SizedBox(width: 12.0.s),
             HeaderAction(
               onPressed: () {
                 SwitchAccountRoute().go(context);
               },
-              assetName: Assets.images.icons.iconSwitchProfile,
+              assetName: Assets.svg.iconSwitchProfile,
             ),
           ],
         ),

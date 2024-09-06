@@ -24,8 +24,7 @@ class FavouriteIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconPath =
-        isFavourite ? Assets.images.icons.iconBookmarksOn : Assets.images.icons.iconBookmarks;
+    final iconPath = isFavourite ? Assets.svg.iconBookmarksOn : Assets.svg.iconBookmarks;
 
     return Button.icon(
       onPressed: () {

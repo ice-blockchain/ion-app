@@ -43,7 +43,7 @@ class ContactButton extends ConsumerWidget {
         timeago: contact.lastSeen,
         trailing: IconButton(
           onPressed: onClearTap,
-          icon: Assets.images.icons.iconSheetClose.icon(
+          icon: Assets.svg.iconSheetClose.icon(
             size: 16.0.s,
             color: colors.primaryText,
           ),

@@ -26,7 +26,7 @@ class ExpandRepliesButton extends StatelessWidget {
           SizedBox(
             width: 4.0.s,
             height: 16.0.s,
-            child: Assets.images.icons.iconMorePopup.icon(fit: BoxFit.none),
+            child: Assets.svg.iconMorePopup.icon(fit: BoxFit.none),
           ),
           SizedBox(width: 14.0.s),
           Text(

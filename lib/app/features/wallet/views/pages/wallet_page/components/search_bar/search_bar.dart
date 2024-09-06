@@ -36,7 +36,6 @@ class WalletSearchBar extends HookConsumerWidget {
     return Padding(
       padding: padding,
       child: SearchInput(
-        defaultValue: '',
         loading: isLoading,
         onTextChanged: (String newValue) {
           ref.read(searchQueryProvider.notifier).update(query: newValue);

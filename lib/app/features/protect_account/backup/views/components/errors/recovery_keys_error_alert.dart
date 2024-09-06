@@ -11,7 +11,7 @@ class RecoveryKeysErrorAlert extends StatelessWidget {
     return SimpleModalSheet.alert(
       title: context.i18n.error_recovery_keys_title,
       description: context.i18n.error_recovery_keys_description,
-      iconAsset: Assets.images.icons.actionWalletKeyserror,
+      iconAsset: Assets.svg.actionWalletKeyserror,
       buttonText: context.i18n.button_try_again,
       onPressed: () {},
     );

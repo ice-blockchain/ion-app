@@ -32,7 +32,7 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
           )
         ],
         title: locale.backup_option_with_recovery_keys_title,
-        icon: Assets.images.icons.iconLoginRestorekey.icon(size: 36.0.s),
+        icon: Assets.svg.iconLoginRestorekey.icon(size: 36.0.s),
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 38.0.s),
@@ -40,7 +40,7 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
               children: [
                 SizedBox(height: 12.0.s),
                 InfoCard(
-                  iconAsset: Assets.images.icons.actionWalletSecureaccsuccess,
+                  iconAsset: Assets.svg.actionWalletSecureaccsuccess,
                   title: locale.recovery_keys_successfully_protected_title,
                   description: locale.recovery_keys_successfully_protected_description,
                 ),

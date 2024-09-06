@@ -20,8 +20,8 @@ class ManageCoinItem extends HookConsumerWidget {
 
   Widget _getCheckbox() {
     return manageCoinData.isSelected
-        ? Assets.images.icons.iconBlockCheckboxOn.icon()
-        : Assets.images.icons.iconBlockCheckboxOff.icon();
+        ? Assets.svg.iconBlockCheckboxOn.icon()
+        : Assets.svg.iconBlockCheckboxOff.icon();
   }
 
   @override

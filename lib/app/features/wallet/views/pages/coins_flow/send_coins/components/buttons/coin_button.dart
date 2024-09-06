@@ -65,7 +65,7 @@ class CoinButton extends StatelessWidget {
               onTap: onTap,
               child: Padding(
                 padding: EdgeInsets.all(8.0.s),
-                child: Assets.images.icons.iconArrowDown.icon(),
+                child: Assets.svg.iconArrowDown.icon(),
               ),
             ),
           ],

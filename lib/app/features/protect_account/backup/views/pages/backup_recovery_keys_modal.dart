@@ -12,7 +12,7 @@ class BackupRecoveryKeysModal extends StatelessWidget {
     return SimpleModalSheet.info(
       title: context.i18n.secure_your_recovery_keys_title,
       description: context.i18n.secure_your_recovery_keys_description,
-      iconAsset: Assets.images.icons.actionWalletLock,
+      iconAsset: Assets.svg.actionWalletLock,
       buttonText: context.i18n.button_lets_start,
       onPressed: () => RecoveryKeysSaveRoute().push<void>(context),
     );

@@ -23,14 +23,14 @@ class Header extends StatelessWidget {
             children: [
               NavigationButton(
                 onPressed: () {},
-                icon: Assets.images.icons.iconHeaderCopy.icon(
+                icon: Assets.svg.iconHeaderCopy.icon(
                   color: context.theme.appColors.primaryText,
                 ),
               ),
               SizedBox(width: 12.0.s),
               NavigationButton(
                 onPressed: () => ScanWalletRoute().push<void>(context),
-                icon: Assets.images.icons.iconHeaderScan1.icon(
+                icon: Assets.svg.iconHeaderScan1.icon(
                   color: context.theme.appColors.primaryText,
                 ),
               ),

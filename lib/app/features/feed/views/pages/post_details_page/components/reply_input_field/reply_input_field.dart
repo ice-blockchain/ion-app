@@ -85,7 +85,7 @@ class ReplyInputField extends HookConsumerWidget {
                               .push<void>(context);
                           textController.text = ref.read(replyDataNotifierProvider).text;
                         },
-                        child: Assets.images.icons.iconReplysearchScale.icon(size: 20.0.s),
+                        child: Assets.svg.iconReplysearchScale.icon(size: 20.0.s),
                       ),
                   ],
                 ),

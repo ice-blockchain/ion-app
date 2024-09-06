@@ -36,7 +36,7 @@ class SecureAccountErrorAlert extends StatelessWidget {
             child: Column(
               children: [
                 InfoCard(
-                  iconAsset: Assets.images.icons.actionWalletAutherror,
+                  iconAsset: Assets.svg.actionWalletAutherror,
                   title: locale.two_fa_failure_authenticator_title,
                   description: locale.two_fa_failure_authenticator_description,
                 ),

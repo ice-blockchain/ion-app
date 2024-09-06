@@ -16,7 +16,7 @@ class EmptyState extends ConsumerWidget {
       hasScrollBody: false,
       child: ScreenSideOffset.small(
         child: EmptyList(
-          asset: Assets.images.misc.emptyHistory,
+          asset: Assets.svg.walletIconWalletEmptyhistory,
           title: context.i18n.core_empty_transactions_history,
         ),
       ),

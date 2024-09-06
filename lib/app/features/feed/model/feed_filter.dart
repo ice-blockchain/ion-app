@@ -10,8 +10,8 @@ enum FeedFilter {
     final defaultColor = context.theme.appColors.primaryText;
 
     final icon = switch (this) {
-      FeedFilter.forYou => Assets.images.icons.iconCategoriesForyou,
-      FeedFilter.following => Assets.images.icons.iconCategoriesFollowing,
+      FeedFilter.forYou => Assets.svg.iconCategoriesForyou,
+      FeedFilter.following => Assets.svg.iconCategoriesFollowing,
     };
 
     return icon.icon(

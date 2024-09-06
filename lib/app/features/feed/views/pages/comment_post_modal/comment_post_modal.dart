@@ -38,8 +38,7 @@ class CommentPostModal extends ConsumerWidget {
             ),
             leading: IconButton(
               onPressed: context.pop,
-              icon: Assets.images.icons.iconSheetClose
-                  .icon(color: context.theme.appColors.quaternaryText),
+              icon: Assets.svg.iconSheetClose.icon(color: context.theme.appColors.quaternaryText),
             ),
           ),
           Expanded(

@@ -11,7 +11,7 @@ class ScreenshotSecurityAlert extends StatelessWidget {
     return SimpleModalSheet.alert(
       title: context.i18n.error_screenshots_arent_secure_title,
       description: context.i18n.error_screenshots_arent_secure_description,
-      iconAsset: Assets.images.icons.actionWalletScreenshot,
+      iconAsset: Assets.svg.actionWalletScreenshot,
       buttonText: context.i18n.button_continue,
       onPressed: () {},
     );

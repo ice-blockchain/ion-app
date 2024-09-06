@@ -34,7 +34,7 @@ class ArrivalTimeIndicator extends ConsumerWidget {
           ),
           child: Row(
             children: [
-              Assets.images.icons.iconBlockTime.icon(
+              Assets.svg.iconBlockTime.icon(
                 size: 12.0.s,
               ),
               SizedBox(width: 5.0.s),

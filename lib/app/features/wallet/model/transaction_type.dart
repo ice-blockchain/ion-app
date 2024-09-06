@@ -15,8 +15,8 @@ enum TransactionType {
 
   String get iconAsset {
     return switch (this) {
-      TransactionType.send => Assets.images.icons.iconButtonSend,
-      TransactionType.receive => Assets.images.icons.iconButtonReceive,
+      TransactionType.send => Assets.svg.iconButtonSend,
+      TransactionType.receive => Assets.svg.iconButtonReceive,
     };
   }
 

@@ -31,7 +31,7 @@ class ManageWalletsModal extends StatelessWidget {
             ),
             ScreenSideOffset.small(
               child: Button(
-                leadingIcon: Assets.images.icons.iconButtonAddstroke
+                leadingIcon: Assets.svg.iconButtonAddstroke
                     .icon(color: context.theme.appColors.onPrimaryAccent),
                 onPressed: () {
                   CreateWalletRoute().push<void>(context);

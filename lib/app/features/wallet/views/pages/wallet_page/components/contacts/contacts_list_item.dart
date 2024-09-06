@@ -65,7 +65,7 @@ class ContactsListItem extends StatelessWidget {
                       position: DecorationPosition.foreground,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(iceLogoBorderRadius),
-                        child: Assets.images.icons.iconBadgeIcelogo.icon(
+                        child: Assets.svg.iconBadgeIcelogo.icon(
                           size: iceLogoSize,
                         ),
                       ),

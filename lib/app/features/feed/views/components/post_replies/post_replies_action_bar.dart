@@ -22,17 +22,17 @@ class PostRepliesActionBar extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {},
-            child: Assets.images.icons.iconGalleryOpen.icon(),
+            child: Assets.svg.iconGalleryOpen.icon(),
           ),
           SizedBox(width: 12.0.s),
           GestureDetector(
             onTap: () {},
-            child: Assets.images.icons.iconCameraOpen.icon(),
+            child: Assets.svg.iconCameraOpen.icon(),
           ),
           SizedBox(width: 12.0.s),
           GestureDetector(
             onTap: () {},
-            child: Assets.images.icons.iconFeedAddfile.icon(),
+            child: Assets.svg.iconFeedAddfile.icon(),
           ),
           const Spacer(),
           GestureDetector(
@@ -45,7 +45,7 @@ class PostRepliesActionBar extends StatelessWidget {
                 color: context.theme.appColors.primaryAccent,
               ),
               alignment: Alignment.center,
-              child: Assets.images.icons.iconFeedSendbutton.icon(size: 16.0.s),
+              child: Assets.svg.iconFeedSendbutton.icon(size: 16.0.s),
             ),
           ),
         ],

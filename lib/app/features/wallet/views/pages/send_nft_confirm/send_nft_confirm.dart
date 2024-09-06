@@ -78,7 +78,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                       title: Text(locale.wallet_arrival_time),
                       value: '${formData.arrivalTime} '
                           '${locale.wallet_arrival_time_minutes}',
-                      icon: Assets.images.icons.iconBlockTime.icon(
+                      icon: Assets.svg.iconBlockTime.icon(
                         size: 16.0.s,
                       ),
                     ),
@@ -86,7 +86,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_network_fee),
                       value: '1.00 USDT',
-                      icon: Assets.images.icons.iconBlockCoins.icon(
+                      icon: Assets.svg.iconBlockCoins.icon(
                         size: 16.0.s,
                       ),
                     ),

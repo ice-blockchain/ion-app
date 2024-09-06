@@ -33,7 +33,7 @@ class AuthenticatorCodeConfirmPage extends HookWidget {
             labelText: context.i18n.two_fa_auth,
             prefixIcon: TextInputIcons(
               hasRightDivider: true,
-              icons: [Assets.images.icons.iconRecoveryCode.icon()],
+              icons: [Assets.svg.iconRecoveryCode.icon()],
             ),
             validator: (value) => value?.isEmpty == true ? '' : null,
             textInputAction: TextInputAction.done,

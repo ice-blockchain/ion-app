@@ -20,14 +20,14 @@ Widget regularListItemUseCase(BuildContext context) {
             title: const Text('Simple'),
             subtitle: const Text('List Item'),
             backgroundColor: context.theme.appColors.primaryBackground,
-            leading: Assets.images.icons.iconBadgeLinkedin.icon(),
+            leading: Assets.svg.iconBadgeLinkedin.icon(),
           ),
           ListItem(
             title: const Text('With On Tap'),
             subtitle: const Text('List Item'),
             onTap: () {},
             backgroundColor: context.theme.appColors.primaryBackground,
-            trailing: Assets.images.icons.iconArrowRight.icon(),
+            trailing: Assets.svg.iconArrowRight.icon(),
           ),
         ],
       ),
@@ -90,7 +90,7 @@ Widget userListItemUseCase(BuildContext context) {
             verifiedBadge: true,
             iceBadge: true,
             trailing: IconButton(
-              icon: Assets.images.icons.iconMorePopup.icon(),
+              icon: Assets.svg.iconMorePopup.icon(),
               onPressed: () {},
             ),
           ),
@@ -101,7 +101,7 @@ Widget userListItemUseCase(BuildContext context) {
             verifiedBadge: true,
             iceBadge: true,
             trailing: IconButton(
-              icon: Assets.images.icons.iconCheckboxOn.icon(),
+              icon: Assets.svg.iconCheckboxOn.icon(),
               onPressed: () {},
             ),
             onTap: () {},
@@ -138,7 +138,7 @@ Widget textListItemUseCase(BuildContext context) {
           ListItem.textWithIcon(
             title: const Text('List Item title'),
             value: 'List Item value long long long long long',
-            icon: Assets.images.icons.iconBadgeLinkedin.icon(),
+            icon: Assets.svg.iconBadgeLinkedin.icon(),
           ),
           ListItem.textWithIcon(
             title: const Text('List Item title'),
@@ -148,7 +148,7 @@ Widget textListItemUseCase(BuildContext context) {
               textAlign: TextAlign.right,
               style: context.theme.appTextThemes.caption3.copyWith(),
             ),
-            icon: Assets.images.icons.iconBadgeLinkedin.icon(),
+            icon: Assets.svg.iconBadgeLinkedin.icon(),
           ),
         ],
       ),

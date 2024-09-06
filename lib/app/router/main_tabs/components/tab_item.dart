@@ -11,11 +11,11 @@ enum TabItem {
   const TabItem();
 
   String get icon => switch (this) {
-        TabItem.feed => Assets.images.icons.iconHomeOff,
-        TabItem.chat => Assets.images.icons.iconChatOff,
+        TabItem.feed => Assets.svg.iconHomeOff,
+        TabItem.chat => Assets.svg.iconChatOff,
         TabItem.main => Assets.images.logo.logoButton,
-        TabItem.dapps => Assets.images.icons.iconDappOff,
-        TabItem.wallet => Assets.images.icons.iconsWalletOff
+        TabItem.dapps => Assets.svg.iconDappOff,
+        TabItem.wallet => Assets.svg.iconsWalletOff
       };
 
   int get navigationIndex => index > TabItem.main.index ? index - 1 : index;

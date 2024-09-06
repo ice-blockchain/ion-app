@@ -25,14 +25,14 @@ class WalletHeader extends ConsumerWidget {
             children: [
               NavigationButton(
                 onPressed: () {},
-                icon: Assets.images.icons.iconFieldSearch.icon(
+                icon: Assets.svg.iconFieldSearch.icon(
                   color: context.theme.appColors.primaryText,
                 ),
               ),
               SizedBox(width: 12.0.s),
               NavigationButton(
                 onPressed: () {},
-                icon: Assets.images.icons.iconHeaderMenu.icon(
+                icon: Assets.svg.iconHeaderMenu.icon(
                   color: context.theme.appColors.primaryText,
                 ),
               ),

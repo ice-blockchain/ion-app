@@ -19,7 +19,7 @@ class TextInputClearButton extends StatelessWidget {
       onPressed: controller.clear,
       icon: Padding(
         padding: EdgeInsets.all(6.0.s),
-        child: Assets.images.icons.iconSheetClose
+        child: Assets.svg.iconSheetClose
             .icon(size: 16.0.s, color: context.theme.appColors.secondaryText),
       ),
     );

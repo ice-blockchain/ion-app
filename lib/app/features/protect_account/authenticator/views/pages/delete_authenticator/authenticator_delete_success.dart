@@ -39,13 +39,13 @@ class AuthenticatorDeleteSuccessPage extends StatelessWidget {
               color: context.theme.appColors.secondaryText,
             ),
             icon: AuthHeaderIcon(
-              icon: Assets.images.icons.icon2faAuthsetup.icon(size: 36.0.s),
+              icon: Assets.svg.icon2faAuthsetup.icon(size: 36.0.s),
             ),
           ),
           Spacer(),
           ScreenSideOffset.medium(
             child: InfoCard(
-              iconAsset: Assets.images.icons.actionWalletGoogleauth,
+              iconAsset: Assets.svg.actionWalletGoogleauth,
               title: locale.common_congratulations,
               description: locale.authenticator_has_deleted,
             ),

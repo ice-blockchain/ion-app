@@ -3,6 +3,7 @@ part of 'app_routes.dart';
 class FeedRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<PostDetailsRoute>(path: 'post/:postId'),
+    TypedGoRoute<FeedSearchRoute>(path: 'feed-search'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:postId'),
@@ -66,4 +67,12 @@ class SharePostModalRoute extends BaseRouteData {
         );
 
   final String postId;
+}
+
+class FeedSearchRoute extends BaseRouteData {
+  FeedSearchRoute()
+      : super(
+          child: FeedSearchPage(),
+          type: IceRouteType.fade,
+        );
 }

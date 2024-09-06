@@ -32,7 +32,7 @@ class IdentityKeyNameInput extends HookWidget {
       keyboardType: TextInputType.emailAddress,
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
-        icons: [Assets.images.icons.iconIdentitykey.icon()],
+        icons: [Assets.svg.iconIdentitykey.icon()],
       ),
       suffixIcon: notShowInfoIcon
           ? null
@@ -40,7 +40,7 @@ class IdentityKeyNameInput extends HookWidget {
               SizedBox.square(
                 dimension: 40.0.s,
                 child: IconButton(
-                  icon: Assets.images.icons.iconBlockInformation.icon(),
+                  icon: Assets.svg.iconBlockInformation.icon(),
                   onPressed: () {
                     hideKeyboardAndCallOnce(callback: () {
                       showSimpleBottomSheet<void>(

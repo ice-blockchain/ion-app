@@ -17,7 +17,7 @@ class NavigationCloseButton extends StatelessWidget {
     return TextButton(
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),
-        child: Assets.images.icons.iconSheetClose.icon(
+        child: Assets.svg.iconSheetClose.icon(
           color: context.theme.appColors.tertararyText,
         ),
       ),

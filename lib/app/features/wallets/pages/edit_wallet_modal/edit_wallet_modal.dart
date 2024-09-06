@@ -76,7 +76,7 @@ class EditWalletModal extends HookConsumerWidget {
                       onPressed: () {
                         DeleteWalletRoute(walletId: walletId).replace(context);
                       },
-                      leadingIcon: Assets.images.icons.iconBlockDelete
+                      leadingIcon: Assets.svg.iconBlockDelete
                           .icon(color: context.theme.appColors.onPrimaryAccent),
                       label: Text(context.i18n.wallet_delete),
                       mainAxisSize: MainAxisSize.max,

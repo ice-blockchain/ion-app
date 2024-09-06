@@ -29,7 +29,7 @@ class PlusIcon extends StatelessWidget {
             shape: BoxShape.circle,
           ),
         ),
-        Assets.images.icons.iconPlusCreatechannel.icon(
+        Assets.svg.iconPlusCreatechannel.icon(
           size: size,
           color: context.theme.appColors.secondaryBackground,
         ),

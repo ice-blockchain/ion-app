@@ -60,7 +60,7 @@ Widget regularTextInputUseCase(BuildContext context) {
                 labelText: 'Basic text input with prefix icon',
                 prefixIcon: TextInputIcons(
                   icons: [
-                    Assets.images.icons.iconBadgeCompany.icon(),
+                    Assets.svg.iconBadgeCompany.icon(),
                   ],
                   hasRightDivider: true,
                 ),
@@ -70,11 +70,11 @@ Widget regularTextInputUseCase(BuildContext context) {
                 suffixIcon: TextInputIcons(
                   icons: [
                     IconButton(
-                      icon: Assets.images.icons.iconBlockEyeOn.icon(),
+                      icon: Assets.svg.iconBlockEyeOn.icon(),
                       onPressed: () {},
                     ),
                     IconButton(
-                      icon: Assets.images.icons.iconArrowDown.icon(),
+                      icon: Assets.svg.iconArrowDown.icon(),
                       onPressed: () {},
                     ),
                   ],
@@ -116,7 +116,7 @@ class TextInputWithClear extends HookWidget {
       labelText: 'With clear button',
       prefixIcon: TextInputIcons(
         icons: [
-          Assets.images.icons.iconBadgeCompany.icon(),
+          Assets.svg.iconBadgeCompany.icon(),
         ],
         hasRightDivider: true,
       ),

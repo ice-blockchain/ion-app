@@ -15,7 +15,7 @@ class RecoveryCodeInput extends StatelessWidget {
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
-        icons: [Assets.images.icons.iconCode4.icon()],
+        icons: [Assets.svg.iconCode4.icon()],
       ),
       labelText: context.i18n.restore_identity_creds_recovery_code,
       controller: controller,

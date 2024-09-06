@@ -31,7 +31,7 @@ class TwoFaSuccessPage extends StatelessWidget {
         ],
         title: context.i18n.two_fa_title,
         description: context.i18n.two_fa_desc,
-        icon: Assets.images.icons.iconWalletProtect.icon(size: 36.0.s),
+        icon: Assets.svg.iconWalletProtect.icon(size: 36.0.s),
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 38.0.s),
@@ -39,7 +39,7 @@ class TwoFaSuccessPage extends StatelessWidget {
               children: [
                 SizedBox(height: 12.0.s),
                 InfoCard(
-                  iconAsset: Assets.images.icons.actionWalletSuccess2Fa,
+                  iconAsset: Assets.svg.actionWalletSuccess2Fa,
                   title: context.i18n.common_congratulations,
                   description: context.i18n.two_fa_success_desc,
                 ),

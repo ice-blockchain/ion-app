@@ -35,14 +35,14 @@ class SecureAccountModal extends StatelessWidget {
             child: Column(
               children: [
                 InfoCard(
-                  iconAsset: Assets.images.icons.actionWalletSecureaccount,
+                  iconAsset: Assets.svg.actionWalletSecureaccount,
                   title: locale.protect_account_title_secure_account,
                   description: locale.protect_account_description_secure_account,
                 ),
                 SizedBox(height: 32.0.s),
                 Button(
                   mainAxisSize: MainAxisSize.max,
-                  leadingIcon: Assets.images.icons.iconWalletProtectAccount.icon(
+                  leadingIcon: Assets.svg.iconWalletProtectAccount.icon(
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
                   label: Text(locale.protect_account_button),

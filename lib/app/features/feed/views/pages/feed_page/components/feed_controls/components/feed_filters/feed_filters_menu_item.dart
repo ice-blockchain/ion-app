@@ -41,7 +41,7 @@ class FeedFiltersMenuItem extends ConsumerWidget {
                 ),
               ),
               if (isSelected)
-                Assets.images.icons.iconDappCheck.icon(
+                Assets.svg.iconDappCheck.icon(
                   color: colors.success,
                 ),
             ],

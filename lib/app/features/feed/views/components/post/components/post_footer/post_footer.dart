@@ -62,10 +62,10 @@ class PostFooter extends HookConsumerWidget {
     void onIceStroke() => HapticFeedback.lightImpact();
 
     final commentsActionIcon = PostActionButton(
-      icon: Assets.images.icons.iconBlockComment.icon(
+      icon: Assets.svg.iconBlockComment.icon(
         size: 14.0.s,
       ),
-      activeIcon: Assets.images.icons.iconBlockCommenton.icon(
+      activeIcon: Assets.svg.iconBlockCommenton.icon(
         size: 14.0.s,
       ),
       value: '121k',
@@ -74,10 +74,10 @@ class PostFooter extends HookConsumerWidget {
     );
 
     final repostsActionIcon = PostActionButton(
-      icon: Assets.images.icons.iconBlockRepost.icon(
+      icon: Assets.svg.iconBlockRepost.icon(
         size: 14.0.s,
       ),
-      activeIcon: Assets.images.icons.iconBlockRepost.icon(
+      activeIcon: Assets.svg.iconBlockRepost.icon(
         size: 14.0.s,
         color: activeColor,
       ),
@@ -87,11 +87,11 @@ class PostFooter extends HookConsumerWidget {
     );
 
     final likesActionIcon = PostActionButton(
-      icon: Assets.images.icons.iconVideoLikeOff.icon(
+      icon: Assets.svg.iconVideoLikeOff.icon(
         size: 18.0.s,
         color: context.theme.appColors.onTertararyBackground,
       ),
-      activeIcon: Assets.images.icons.iconVideoLikeOn.icon(
+      activeIcon: Assets.svg.iconVideoLikeOn.icon(
         size: 18.0.s,
         color: context.theme.appColors.attentionRed,
       ),
@@ -101,7 +101,7 @@ class PostFooter extends HookConsumerWidget {
     );
 
     final iceActionIcon = PostActionButton(
-      icon: Assets.images.icons.iconButtonIceStroke.icon(
+      icon: Assets.svg.iconButtonIceStroke.icon(
         size: 16.0.s,
         color: context.theme.appColors.onTertararyBackground,
       ),
@@ -110,7 +110,7 @@ class PostFooter extends HookConsumerWidget {
     );
 
     final shareActionIcon = PostActionButton(
-      icon: Assets.images.icons.iconBlockShare.icon(
+      icon: Assets.svg.iconBlockShare.icon(
         size: 14.0.s,
       ),
       activeColor: activeColor,

@@ -22,7 +22,7 @@ class BalanceActions extends StatelessWidget {
       children: [
         Expanded(
           child: Button.compact(
-            leadingIcon: Assets.images.icons.iconButtonSend.icon(),
+            leadingIcon: Assets.svg.iconButtonSend.icon(),
             label: Text(
               context.i18n.wallet_send,
             ),
@@ -35,7 +35,7 @@ class BalanceActions extends StatelessWidget {
         Expanded(
           child: Button.compact(
             type: ButtonType.outlined,
-            leadingIcon: Assets.images.icons.iconButtonReceive.icon(),
+            leadingIcon: Assets.svg.iconButtonReceive.icon(),
             label: Text(
               context.i18n.wallet_receive,
             ),

@@ -20,11 +20,11 @@ enum AutethenticatorType {
 
   String get iconAsset {
     return switch (this) {
-      AutethenticatorType.google => Assets.images.icons.icon2faGoogleauth,
-      AutethenticatorType.micsrosoft => Assets.images.icons.icon2famicrosoft,
-      AutethenticatorType.lastpass => Assets.images.icons.icon2faLastpass,
-      AutethenticatorType.authy => Assets.images.icons.icon2faAuthy,
-      AutethenticatorType.userLockPush => Assets.images.icons.icon2faUserlock,
+      AutethenticatorType.google => Assets.svg.icon2faGoogleauth,
+      AutethenticatorType.micsrosoft => Assets.svg.icon2famicrosoft,
+      AutethenticatorType.lastpass => Assets.svg.icon2faLastpass,
+      AutethenticatorType.authy => Assets.svg.icon2faAuthy,
+      AutethenticatorType.userLockPush => Assets.svg.icon2faUserlock,
     };
   }
 }

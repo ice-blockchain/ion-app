@@ -23,7 +23,7 @@ class VideosIcon extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsets.fromLTRB(2.0.s, 1.0.s, 0, 0),
-        child: Assets.images.icons.iconVideosTrading.icon(
+        child: Assets.svg.iconVideosTrading.icon(
           color: context.theme.appColors.secondaryBackground,
           size: 20.0.s,
         ),

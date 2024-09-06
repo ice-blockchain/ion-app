@@ -36,14 +36,14 @@ class SwitchAccountModal extends ConsumerWidget {
                 ],
               ),
               ActionButton(
-                icon: Assets.images.icons.iconChannelType.icon(),
+                icon: Assets.svg.iconChannelType.icon(),
                 label: context.i18n.profile_create_new_account,
                 onTap: () {},
               ),
               const AccountsList(),
               SizedBox(height: 16.0.s),
               ActionButton(
-                icon: Assets.images.icons.iconMenuLogout.icon(size: 24.0.s),
+                icon: Assets.svg.iconMenuLogout.icon(size: 24.0.s),
                 label: context.i18n.profile_log_out(
                   prefixUsername(
                     username: activeUser.nickname,

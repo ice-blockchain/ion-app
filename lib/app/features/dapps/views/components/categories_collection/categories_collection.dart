@@ -20,13 +20,13 @@ enum DAppsCategory {
 
   Widget get icon {
     return switch (this) {
-      DAppsCategory.defi => Assets.images.categories.categoriesDefi,
-      DAppsCategory.marketplaces => Assets.images.categories.categoriesMarketplace,
-      DAppsCategory.nft => Assets.images.categories.categoriesNft,
-      DAppsCategory.games => Assets.images.categories.categoriesGames,
-      DAppsCategory.social => Assets.images.categories.categoriesSocial,
-      DAppsCategory.utilities => Assets.images.categories.categoriesUtilites,
-      DAppsCategory.other => Assets.images.categories.categoriesOther,
+      DAppsCategory.defi => Assets.svg.categoriesDefi,
+      DAppsCategory.marketplaces => Assets.svg.categoriesMarketplace,
+      DAppsCategory.nft => Assets.svg.categoriesNft,
+      DAppsCategory.games => Assets.svg.categoriesGames,
+      DAppsCategory.social => Assets.svg.categoriesSocial,
+      DAppsCategory.utilities => Assets.svg.categoriesUtilites,
+      DAppsCategory.other => Assets.svg.categoriesOther,
     }
         .icon(size: 50.0.s);
   }

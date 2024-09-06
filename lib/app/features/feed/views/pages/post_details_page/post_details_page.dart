@@ -47,7 +47,7 @@ class PostDetailsPage extends HookConsumerWidget {
         title: Text(context.i18n.post_page_title),
         actions: [
           IconButton(
-            icon: Assets.images.icons.iconBookmarks.icon(
+            icon: Assets.svg.iconBookmarks.icon(
               size: NavigationAppBar.actionButtonSide,
               color: context.theme.appColors.primaryText,
             ),

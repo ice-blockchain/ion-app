@@ -34,7 +34,7 @@ class AuthenticatorInitialDeletePage extends StatelessWidget {
               color: context.theme.appColors.secondaryText,
             ),
             icon: AuthHeaderIcon(
-              icon: Assets.images.icons.icon2faAuthsetup.icon(size: 36.0.s),
+              icon: Assets.svg.icon2faAuthsetup.icon(size: 36.0.s),
             ),
           ),
           SizedBox(height: 42.0.s),
@@ -46,7 +46,7 @@ class AuthenticatorInitialDeletePage extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Assets.images.icons.actionWalletGoogleauth.icon(size: 80.0.s),
+                  Assets.svg.actionWalletGoogleauth.icon(size: 80.0.s),
                   SizedBox(height: 20.0.s),
                   Text(
                     locale.authenticator_is_linked_to_account,

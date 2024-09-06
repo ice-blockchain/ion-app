@@ -16,7 +16,7 @@ class BookmarkButton extends ConsumerWidget {
 
     return IconButton(
       icon: SvgPicture.asset(
-        isBookmarked ? Assets.images.icons.iconBookmarks : Assets.images.icons.iconBookmarksOn,
+        isBookmarked ? Assets.svg.iconBookmarks : Assets.svg.iconBookmarksOn,
       ),
       onPressed: () {
         ref.read(bookmarkNotifierProvider.notifier).toggleBookmark(id);

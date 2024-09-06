@@ -42,7 +42,7 @@ class PhoneSetupPage extends StatelessWidget {
                     color: context.theme.appColors.secondaryText,
                   ),
                   icon: AuthHeaderIcon(
-                    icon: Assets.images.icons.icon2faEmailauth.icon(size: 36.0.s),
+                    icon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
                   ),
                 ),
                 Expanded(

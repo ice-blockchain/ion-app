@@ -13,24 +13,26 @@ import 'package:ice/generated/assets.gen.dart';
 
 class SearchInput extends HookWidget {
   const SearchInput({
-    required this.onTextChanged,
     super.key,
+    this.onTextChanged,
     this.loading = false,
     this.onCancelSearch,
     this.defaultValue = '',
-  });
+    FocusNode? focusNode,
+  }) : externalFocusNode = focusNode;
 
   static double get height => 40.0.s;
 
-  final void Function(String) onTextChanged;
+  final void Function(String)? onTextChanged;
   final VoidCallback? onCancelSearch;
   final bool loading;
   final String defaultValue;
+  final FocusNode? externalFocusNode;
 
   @override
   Widget build(BuildContext context) {
     final searchController = useTextEditingController(text: defaultValue);
-    final focusNode = useFocusNode();
+    final focusNode = externalFocusNode ?? useFocusNode();
 
     final showClear = useState(false);
     final focused = useNodeFocused(focusNode);
@@ -38,7 +40,7 @@ class SearchInput extends HookWidget {
     useTextChanged(
       controller: searchController,
       onTextChanged: (String text) {
-        onTextChanged(text);
+        onTextChanged?.call(text);
         showClear.value = text.isNotEmpty;
       },
     );
@@ -76,7 +78,7 @@ class SearchInput extends HookWidget {
                 ),
                 prefixIcon: Padding(
                   padding: EdgeInsets.only(left: 12.0.s, right: 6.0.s),
-                  child: Assets.images.icons.iconFieldSearch.icon(
+                  child: Assets.svg.iconFieldSearch.icon(
                     color: context.theme.appColors.tertararyText,
                     size: 18.0.s,
                   ),

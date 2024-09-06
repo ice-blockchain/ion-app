@@ -35,10 +35,10 @@ class SecureAccountOption extends StatelessWidget {
         icon: icon,
       ),
       trailing: isEnabled
-          ? Assets.images.icons.iconDappCheck.icon(
+          ? Assets.svg.iconDappCheck.icon(
               color: context.theme.appColors.success,
             )
-          : Assets.images.icons.iconArrowRight.icon(),
+          : Assets.svg.iconArrowRight.icon(),
       onTap: onTap,
     );
   }

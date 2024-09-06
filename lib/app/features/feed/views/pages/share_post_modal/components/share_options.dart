@@ -23,31 +23,31 @@ class ShareOptions extends StatelessWidget {
           children: [
             _ShareOptionsMenuItem(
               buttonType: ButtonType.primary,
-              icon: Assets.images.icons.iconFeedStories.icon(size: iconSize),
+              icon: Assets.svg.iconFeedStories.icon(size: iconSize),
               label: context.i18n.feed_add_story,
               onPressed: () {},
             ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.images.icons.iconBlockCopy1.icon(size: iconSize, color: Colors.black),
+              icon: Assets.svg.iconBlockCopy1.icon(size: iconSize, color: Colors.black),
               label: context.i18n.feed_copy_link,
               onPressed: () {},
             ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.images.icons.iconBookmarks.icon(size: iconSize, color: Colors.black),
+              icon: Assets.svg.iconBookmarks.icon(size: iconSize, color: Colors.black),
               label: context.i18n.feed_bookmark,
               onPressed: () {},
             ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.images.icons.iconFeedWhatsapp.icon(size: iconSize),
+              icon: Assets.svg.iconFeedWhatsapp.icon(size: iconSize),
               label: context.i18n.feed_whatsapp,
               onPressed: () {},
             ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
-              icon: Assets.images.icons.iconFeedMore.icon(size: iconSize),
+              icon: Assets.svg.iconFeedMore.icon(size: iconSize),
               label: context.i18n.feed_more,
               onPressed: () {},
             ),
