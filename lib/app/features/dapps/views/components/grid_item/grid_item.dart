@@ -15,9 +15,11 @@ class GridItem extends HookWidget {
     required this.dAppData,
     super.key,
     this.showIsFavourite = false,
+    this.showTips = true,
   });
   final DAppData dAppData;
   final bool showIsFavourite;
+  final bool showTips;
 
   @override
   Widget build(BuildContext context) {
@@ -73,27 +75,28 @@ class GridItem extends HookWidget {
                     color: context.theme.appColors.secondaryText,
                   ),
                 ),
-                Row(
-                  children: [
-                    IconTheme(
-                      data: IconThemeData(
-                        size: 12.0.s,
-                        color: context.theme.appColors.onTertararyBackground,
+                if (showTips)
+                  Row(
+                    children: [
+                      IconTheme(
+                        data: IconThemeData(
+                          size: 12.0.s,
+                          color: context.theme.appColors.onTertararyBackground,
+                        ),
+                        child: Assets.svg.iconButtonIceStroke.icon(size: 12.0.s),
                       ),
-                      child: Assets.svg.iconButtonIceStroke.icon(size: 12.0.s),
-                    ),
-                    if (dAppData.value != null)
-                      Padding(
-                        padding: EdgeInsets.only(left: 3.0.s),
-                        child: Text(
-                          formatDouble(dAppData.value!),
-                          style: context.theme.appTextThemes.caption3.copyWith(
-                            color: context.theme.appColors.tertararyText,
+                      if (dAppData.value != null)
+                        Padding(
+                          padding: EdgeInsets.only(left: 3.0.s),
+                          child: Text(
+                            formatDouble(dAppData.value!),
+                            style: context.theme.appTextThemes.caption3.copyWith(
+                              color: context.theme.appColors.tertararyText,
+                            ),
                           ),
                         ),
-                      ),
-                  ],
-                ),
+                    ],
+                  ),
               ],
             ),
           ),

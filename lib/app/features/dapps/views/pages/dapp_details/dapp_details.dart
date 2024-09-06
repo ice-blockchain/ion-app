@@ -48,7 +48,6 @@ class DAppDetails extends ConsumerWidget {
             ),
             ScreenSideOffset.small(
               child: SingleChildScrollView(
-                padding: EdgeInsets.only(top: 10.0.s),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -68,6 +67,7 @@ class DAppDetails extends ConsumerWidget {
                       child: GridItem(
                         dAppData: app,
                         showIsFavourite: true,
+                        showTips: false,
                       ),
                     ),
                     if (app.fullDescription != null)

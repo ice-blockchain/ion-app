@@ -27,7 +27,7 @@ class DappDetailsInfoBlock extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.0.s),
           color: context.theme.appColors.tertararyBackground,
         ),
-        padding: EdgeInsets.all(12.0.s),
+        padding: EdgeInsets.symmetric(vertical: 8.0.s, horizontal: 12.0.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
