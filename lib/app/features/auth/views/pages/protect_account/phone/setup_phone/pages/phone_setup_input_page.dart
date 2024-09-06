@@ -9,7 +9,7 @@ import 'package:ice/app/constants/countries.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/phone/components/countries/country_code_input.dart';
 import 'package:ice/app/features/auth/views/pages/protect_account/phone/models/phone_steps.dart';
-import 'package:ice/app/features/auth/views/pages/protect_account/phone/provider/selected_country_provider.dart';
+import 'package:ice/app/features/auth/views/pages/protect_account/phone/provider/country_provider.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/utils/validators.dart';
