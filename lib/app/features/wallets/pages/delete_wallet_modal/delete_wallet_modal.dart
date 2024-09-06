@@ -30,7 +30,7 @@ class DeleteWalletModal extends ConsumerWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(top: 31.0.s, bottom: 4.0.s),
-              child: Assets.images.misc.actionDeletewallet.icon(size: 80.0.s),
+              child: Assets.images.icons.actionWalletDelete.icon(size: 80.0.s),
             ),
             Text(
               context.i18n.wallet_delete_q,

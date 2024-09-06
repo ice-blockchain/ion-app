@@ -102,13 +102,11 @@ flutter:
     - assets/images/
     - assets/images/icons/
     - assets/images/wallet/
-    - assets/images/categories/
     - assets/images/bg/
     - assets/images/logo/
     - assets/images/misc/
     - assets/images/qr_code/
     - assets/images/notifications/
-    - assets/images/identity/
 
 flutter_gen:
   output: lib/generated/

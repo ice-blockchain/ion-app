@@ -14,10 +14,10 @@ enum WalletTabType {
     };
   }
 
-  AssetGenImage get emptyListAsset {
+  String get emptyListAsset {
     return switch (this) {
-      WalletTabType.coins => Assets.images.misc.emptyCoins,
-      WalletTabType.nfts => Assets.images.misc.emptyNft,
+      WalletTabType.coins => Assets.images.icons.walletIconWalletEmptycoins,
+      WalletTabType.nfts => Assets.images.icons.categoriesNft,
     };
   }
 

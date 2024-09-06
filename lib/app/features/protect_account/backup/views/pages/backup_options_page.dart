@@ -59,7 +59,7 @@ class BackupOptionsPage extends StatelessWidget {
                 BackupOption(
                   title: locale.backup_option_with_google_drive_title,
                   subtitle: locale.backup_option_with_google_drive_description,
-                  icon: Assets.images.identity.walletLoginCloud.icon(
+                  icon: Assets.images.icons.walletLoginCloud.icon(
                     size: 48.0.s,
                   ),
                   isOptionEnabled: true,
@@ -69,7 +69,7 @@ class BackupOptionsPage extends StatelessWidget {
                 BackupOption(
                   title: locale.backup_option_with_recovery_keys_title,
                   subtitle: locale.backup_option_with_recovery_keys_description,
-                  icon: Assets.images.identity.walletLoginRecovery.icon(
+                  icon: Assets.images.icons.walletLoginRecovery.icon(
                     size: 48.0.s,
                   ),
                   onTap: () => BackupRecoveryKeysRoute().push<void>(context),

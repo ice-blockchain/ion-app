@@ -3,7 +3,6 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/generated/assets.gen.dart';
 
 class EmptyList extends StatelessWidget {
   EmptyList({
@@ -13,7 +12,7 @@ class EmptyList extends StatelessWidget {
     double? imageSize,
   }) : imageSize = imageSize ?? 48.0.s;
 
-  final AssetGenImage asset;
+  final String asset;
   final String title;
   final double imageSize;
 

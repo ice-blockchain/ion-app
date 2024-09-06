@@ -30,14 +30,14 @@ class RestoreMenuPage extends HookWidget {
               children: [
                 SizedBox(height: 12.0.s),
                 RestoreMenuItem(
-                  icon: Assets.images.identity.walletLoginCloud.icon(size: 48.0.s),
+                  icon: Assets.images.icons.walletLoginCloud.icon(size: 48.0.s),
                   title: context.i18n.restore_identity_type_icloud_title,
                   description: context.i18n.restore_identity_type_icloud_description,
                   onPressed: () {},
                 ),
                 SizedBox(height: 16.0.s),
                 RestoreMenuItem(
-                  icon: Assets.images.identity.walletLoginRecovery.icon(size: 48.0.s),
+                  icon: Assets.images.icons.walletLoginRecovery.icon(size: 48.0.s),
                   title: context.i18n.restore_identity_type_credentials_title,
                   description: context.i18n.restore_identity_type_credentials_description,
                   onPressed: () {
