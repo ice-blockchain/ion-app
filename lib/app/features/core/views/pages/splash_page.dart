@@ -3,36 +3,28 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
-import 'package:ice/generated/assets.gen.dart';
-import 'package:lottie/lottie.dart';
+import 'package:ice/app/hooks/use_on_init.dart';
 
 class SplashPage extends HookConsumerWidget {
   const SplashPage({super.key});
 
-  static const Color backgroundColor = Color(0xFF0166FF);
+  static const Color backgroundColor = Colors.white;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final animationController = useAnimationController();
+    final animationController = useAnimationController(duration: Duration.zero);
 
     _setSystemChrome();
 
-    return ColoredBox(
+    useOnInit(() {
+      animationController.forward().whenComplete(
+            () => ref.read(splashProvider.notifier).animationCompleted = true,
+          );
+    });
+
+    return const ColoredBox(
       color: backgroundColor,
-      child: FittedBox(
-        fit: BoxFit.cover,
-        child: Assets.lottie.splashLogo.lottie(
-          frameRate: const FrameRate(60),
-          controller: animationController,
-          onLoaded: (LottieComposition composition) {
-            animationController
-              ..duration = composition.duration
-              ..forward().whenComplete(
-                () => ref.read(splashProvider.notifier).animationCompleted = true,
-              );
-          },
-        ),
-      ),
+      child: SizedBox.expand(),
     );
   }
 
