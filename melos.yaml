@@ -18,3 +18,7 @@ scripts:
     exec: flutter analyze && dart run custom_lint
   test:
     exec: flutter test
+  build_runner:
+    exec: flutter pub run build_runner build --delete-conflicting-outputs
+  build_runner_watch:
+    exec: flutter pub run build_runner watch --delete-conflicting-outputs

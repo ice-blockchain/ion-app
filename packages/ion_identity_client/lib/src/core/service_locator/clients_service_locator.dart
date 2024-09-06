@@ -80,7 +80,6 @@ mixin _WalletsClient {
       config: config,
       signer: signer,
       dataSource: createWalletsDataSource(config: config),
-      tokenStorage: IonServiceLocator.getTokenStorage(),
     );
   }
 
@@ -92,6 +91,7 @@ mixin _WalletsClient {
     return IonWalletsDataSource(
       config: config,
       networkClient: networkClient,
+      tokenStorage: IonServiceLocator.getTokenStorage(),
     );
   }
 }

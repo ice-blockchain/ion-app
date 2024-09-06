@@ -1,9 +1,8 @@
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
-import 'package:ion_identity_client/src/auth/dtos/login_request.dart';
-import 'package:ion_identity_client/src/auth/dtos/login_response.dart';
 import 'package:ion_identity_client/src/auth/types/login_user_result.dart';
 import 'package:ion_identity_client/src/auth/types/register_user_result.dart';
 import 'package:ion_identity_client/src/core/network/network.dart';
+import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 
@@ -13,9 +12,10 @@ class IonAuthDataSource {
     required this.networkClient,
   });
 
-  static const loginInitPath = '/login';
-  static const registerInitPath = '/register/init';
-  static const registerCompletePath = '/register/complete';
+  static const registerInitPath = '/auth/registration/delegated';
+  static const registerCompletePath = '/auth/registration/enduser';
+  static const loginInitPath = '/auth/login/init';
+  static const loginCompletePath = '/auth/login';
 
   final IonClientConfig config;
   final NetworkClient networkClient;
@@ -23,10 +23,7 @@ class IonAuthDataSource {
   TaskEither<RegisterUserFailure, UserRegistrationChallenge> registerInit({
     required String username,
   }) {
-    final requestData = RegisterInitRequest(
-      appId: config.appId,
-      username: username,
-    );
+    final requestData = RegisterInitRequest(email: username);
 
     return networkClient
         .post(
@@ -35,10 +32,9 @@ class IonAuthDataSource {
           decoder: UserRegistrationChallenge.fromJson,
         )
         .mapLeft(
-          // TODO: find a complete list of user registration failures
           (l) => switch (l) {
             ResponseFormatNetworkFailure() => UserAlreadyExistsRegisterUserFailure(),
-            _ => UnknownRegisterUserFailure(),
+            _ => const UnknownRegisterUserFailure(),
           },
         );
   }
@@ -47,40 +43,58 @@ class IonAuthDataSource {
     required Fido2Attestation attestation,
     required String temporaryAuthenticationToken,
   }) {
-    final requestData = RegisterCompleteRequest(
-      appId: config.appId,
-      signedChallenge: SignedChallenge(firstFactorCredential: attestation),
-      temporaryAuthenticationToken: temporaryAuthenticationToken,
+    return networkClient.post(
+      registerCompletePath,
+      data: SignedChallenge(firstFactorCredential: attestation).toJson(),
+      decoder: RegistrationCompleteResponse.fromJson,
+      headers: {
+        ...RequestHeaders.getAuthorizationHeader(token: temporaryAuthenticationToken),
+      },
+    ).mapLeft(
+      // TODO: find a complete list of user registration failures
+      (l) => switch (l) {
+        ResponseFormatNetworkFailure() => UserAlreadyExistsRegisterUserFailure(),
+        _ => const UnknownRegisterUserFailure(),
+      },
     );
-
-    return networkClient
-        .post(
-          registerCompletePath,
-          data: requestData.toJson(),
-          decoder: RegistrationCompleteResponse.fromJson,
-        )
-        .mapLeft(
-          // TODO: find a complete list of user registration failures
-          (l) => switch (l) {
-            ResponseFormatNetworkFailure() => UserAlreadyExistsRegisterUserFailure(),
-            _ => UnknownRegisterUserFailure(),
-          },
-        );
   }
 
-  TaskEither<LoginUserFailure, LoginResponse> login({
+  TaskEither<LoginUserFailure, UserActionChallenge> loginInit({
     required String username,
   }) {
-    final requestData = LoginRequest(username: username);
+    final requestData = LoginInitRequest(
+      username: username,
+      orgId: config.orgId,
+    );
 
     return networkClient
         .post(
           loginInitPath,
           data: requestData.toJson(),
-          decoder: LoginResponse.fromJson,
+          decoder: UserActionChallenge.fromJson,
         )
         .mapLeft(
-          (l) => UnknownLoginUserFailure(),
+          (l) => const UnknownLoginUserFailure(),
+        );
+  }
+
+  TaskEither<LoginUserFailure, Authentication> loginComplete({
+    required Fido2Assertion assertion,
+    required String challengeIdentifier,
+  }) {
+    final requestData = LoginCompleteRequest(
+      challengeIdentifier: challengeIdentifier,
+      firstFactor: assertion,
+    );
+
+    return networkClient
+        .post(
+          loginCompletePath,
+          data: requestData.toJson(),
+          decoder: Authentication.fromJson,
+        )
+        .mapLeft(
+          (l) => const UnknownLoginUserFailure(),
         );
   }
 }

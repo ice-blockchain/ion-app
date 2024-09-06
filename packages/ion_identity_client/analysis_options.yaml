@@ -10,3 +10,5 @@ analyzer:
     unnecessary_library_directive: ignore
   plugins:
     - custom_lint
+  exclude:
+    - '**/*.g.dart'

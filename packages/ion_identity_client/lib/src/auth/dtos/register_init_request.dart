@@ -1,21 +1,22 @@
+import 'package:ion_identity_client/src/core/types/request_defaults.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
 
 class RegisterInitRequest {
   RegisterInitRequest({
-    required this.appId,
-    required this.username,
+    required this.email,
+    this.kind = RequestDefaults.registerInitKind,
   });
 
-  final String appId;
-  final String username;
+  final String kind;
+  final String email;
 
   JsonObject toJson() {
     return {
-      'appId': appId,
-      'username': username,
+      'email': email,
+      'kind': kind,
     };
   }
 
   @override
-  String toString() => 'RegisterInitRequest(appId: $appId, username: $username)';
+  String toString() => 'RegisterInitRequest(kind: $kind, email: $email)';
 }

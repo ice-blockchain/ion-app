@@ -17,5 +17,5 @@ class LoginResponse {
   final String token;
 
   @override
-  String toString() => 'LoginResponse(username: $username, token: $token)';
+  String toString() => 'LoginResponse(username: $username, token: <redacted>)';
 }

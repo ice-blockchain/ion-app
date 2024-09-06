@@ -132,4 +132,8 @@ class PasskeysSigner {
       ),
     );
   }
+
+  Future<bool> canAuthenticate() {
+    return PasskeyAuthenticator().canAuthenticate();
+  }
 }

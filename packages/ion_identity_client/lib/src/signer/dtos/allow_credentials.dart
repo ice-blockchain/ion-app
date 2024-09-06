@@ -1,6 +1,10 @@
 import 'package:ion_identity_client/src/core/types/types.dart';
 import 'package:ion_identity_client/src/signer/dtos/public_key_credential_descriptor.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'allow_credentials.g.dart';
+
+@JsonSerializable()
 class AllowCredentials {
   AllowCredentials(
     this.webauthn,
@@ -8,19 +12,11 @@ class AllowCredentials {
   );
 
   factory AllowCredentials.fromJson(JsonObject json) {
-    return AllowCredentials(
-      List<PublicKeyCredentialDescriptor>.from(
-        json['webauthn'].map(PublicKeyCredentialDescriptor.fromJson) as List<dynamic>,
-      ),
-      List<PublicKeyCredentialDescriptor>.from(
-        json['key'].map(PublicKeyCredentialDescriptor.fromJson) as List<dynamic>,
-      ),
-    );
+    return _$AllowCredentialsFromJson(json);
   }
 
   final List<PublicKeyCredentialDescriptor> webauthn;
   final List<PublicKeyCredentialDescriptor> key;
 
-  @override
-  String toString() => 'AllowCredentials(webauthn: $webauthn, key: $key)';
+  JsonObject toJson() => _$AllowCredentialsToJson(this);
 }

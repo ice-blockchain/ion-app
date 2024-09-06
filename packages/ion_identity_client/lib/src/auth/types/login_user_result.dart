@@ -1,13 +1,29 @@
-sealed class LoginUserResult {}
+sealed class LoginUserResult {
+  const LoginUserResult();
+}
 
 final class LoginUserSuccess extends LoginUserResult {}
 
-sealed class LoginUserFailure extends LoginUserResult {}
+sealed class LoginUserFailure extends LoginUserResult {
+  const LoginUserFailure();
+}
 
-final class PasskeyValidationLoginUserFailure extends LoginUserFailure {}
+final class PasskeyNotAvailableLoginUserFailure extends LoginUserFailure {
+  const PasskeyNotAvailableLoginUserFailure();
+}
+
+final class PasskeyValidationLoginUserFailure extends LoginUserFailure {
+  const PasskeyValidationLoginUserFailure([
+    this.error,
+    this.stackTrace,
+  ]);
+
+  final Object? error;
+  final StackTrace? stackTrace;
+}
 
 final class UnknownLoginUserFailure extends LoginUserFailure {
-  UnknownLoginUserFailure([
+  const UnknownLoginUserFailure([
     this.error,
     this.stackTrace,
   ]);
