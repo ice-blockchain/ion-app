@@ -6,6 +6,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_filters_menu_button.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -20,8 +21,10 @@ class FeedNavigation extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: SearchInput(
-              onTextChanged: (String st) {},
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => FeedSearchRoute().push<void>(context),
+              child: IgnorePointer(child: SearchInput()),
             ),
           ),
           Padding(
