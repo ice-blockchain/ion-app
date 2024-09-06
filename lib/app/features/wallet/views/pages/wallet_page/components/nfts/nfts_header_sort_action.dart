@@ -36,7 +36,7 @@ class NftHeaderSortAction extends ConsumerWidget {
             SizedBox(
               width: 5.0.s,
             ),
-            Assets.images.icons.iconArrowDown.icon(size: 20.0.s, color: color),
+            Assets.svg.iconArrowDown.icon(size: 20.0.s, color: color),
           ],
         ),
       ),

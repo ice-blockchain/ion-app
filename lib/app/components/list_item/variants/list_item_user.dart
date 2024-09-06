@@ -44,12 +44,12 @@ class _ListItemUser extends ListItem {
               if (iceBadge)
                 Padding(
                   padding: EdgeInsets.only(left: 4.0.s),
-                  child: Assets.images.icons.iconBadgeIcelogo.icon(size: badgeSize),
+                  child: Assets.svg.iconBadgeIcelogo.icon(size: badgeSize),
                 ),
               if (verifiedBadge)
                 Padding(
                   padding: EdgeInsets.only(left: 4.0.s),
-                  child: Assets.images.icons.iconBadgeVerify.icon(size: badgeSize),
+                  child: Assets.svg.iconBadgeVerify.icon(size: badgeSize),
                 ),
             ],
           ),
@@ -127,7 +127,7 @@ class _IceBadge extends StatelessWidget {
           color: context.theme.appColors.darkBlue,
         ),
         child: Center(
-          child: Assets.images.icons.iconIcelogoSecuredby.icon(
+          child: Assets.svg.iconIcelogoSecuredby.icon(
             color: context.theme.appColors.secondaryBackground,
             size: 10.0.s,
           ),

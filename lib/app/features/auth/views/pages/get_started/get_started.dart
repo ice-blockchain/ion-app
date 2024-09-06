@@ -28,7 +28,7 @@ class GetStartedPage extends HookWidget {
           showBackButton: false,
           title: context.i18n.get_started_title,
           description: context.i18n.get_started_description,
-          icon: Assets.images.icons.iconLoginIcelogo.icon(size: 44.0.s),
+          icon: Assets.svg.iconLoginIcelogo.icon(size: 44.0.s),
           children: [
             ScreenSideOffset.large(
               child: Column(
@@ -45,7 +45,7 @@ class GetStartedPage extends HookWidget {
                   SizedBox(height: 14.0.s),
                   Button(
                     type: ButtonType.outlined,
-                    leadingIcon: Assets.images.icons.iconLoginCreateacc.icon(
+                    leadingIcon: Assets.svg.iconLoginCreateacc.icon(
                       color: context.theme.appColors.secondaryText,
                     ),
                     onPressed: () {
@@ -59,7 +59,7 @@ class GetStartedPage extends HookWidget {
                   SizedBox(height: 16.0.s),
                   Button(
                     type: ButtonType.outlined,
-                    leadingIcon: Assets.images.icons.iconRestorekey.icon(
+                    leadingIcon: Assets.svg.iconRestorekey.icon(
                       color: context.theme.appColors.secondaryText,
                     ),
                     onPressed: () {

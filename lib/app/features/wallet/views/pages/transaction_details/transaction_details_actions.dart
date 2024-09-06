@@ -24,7 +24,7 @@ class TransactionDetailsActions extends StatelessWidget {
               context.i18n.transaction_details_view_on_explorer,
             ),
             mainAxisSize: MainAxisSize.max,
-            leadingIcon: Assets.images.icons.iconButtonInternet.icon(),
+            leadingIcon: Assets.svg.iconButtonInternet.icon(),
             onPressed: onViewOnExplorer,
             backgroundColor: context.theme.appColors.tertararyBackground,
             borderColor: context.theme.appColors.onTerararyFill,
@@ -34,7 +34,7 @@ class TransactionDetailsActions extends StatelessWidget {
           width: 12.0.s,
         ),
         Button.icon(
-          icon: Assets.images.icons.iconButtonShare.icon(),
+          icon: Assets.svg.iconButtonShare.icon(),
           type: ButtonType.outlined,
           onPressed: onShare,
           backgroundColor: context.theme.appColors.tertararyBackground,

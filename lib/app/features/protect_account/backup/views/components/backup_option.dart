@@ -32,7 +32,7 @@ class BackupOption extends StatelessWidget {
       ),
       leading: icon,
       trailing: isOptionEnabled
-          ? Assets.images.icons.iconDappCheck.icon(
+          ? Assets.svg.iconDappCheck.icon(
               color: context.theme.appColors.success,
             )
           : null,

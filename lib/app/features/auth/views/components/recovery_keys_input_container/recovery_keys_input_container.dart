@@ -32,7 +32,7 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
       body: AuthScrollContainer(
         title: context.i18n.backup_option_with_recovery_keys_title,
         description: context.i18n.restore_identity_creds_description,
-        icon: Assets.images.icons.iconLoginRestorekey.icon(size: 36.0.s),
+        icon: Assets.svg.iconLoginRestorekey.icon(size: 36.0.s),
         titleStyle: context.theme.appTextThemes.headline2,
         descriptionStyle: context.theme.appTextThemes.body2.copyWith(
           color: context.theme.appColors.secondaryText,

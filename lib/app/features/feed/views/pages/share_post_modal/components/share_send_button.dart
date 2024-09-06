@@ -21,8 +21,8 @@ class ShareSendButton extends StatelessWidget {
         child: Button.compact(
           mainAxisSize: MainAxisSize.max,
           minimumSize: Size(56.0.s, 56.0.s),
-          trailingIcon: Assets.images.icons.iconButtonNext
-              .icon(color: context.theme.appColors.onPrimaryAccent),
+          trailingIcon:
+              Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
           label: Text(
             context.i18n.feed_send,
           ),

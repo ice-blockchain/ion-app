@@ -38,7 +38,7 @@ class AuthenticatorDeletePage extends StatelessWidget {
               title: locale.authenticator_delete_title,
               description: locale.authenticator_delete_description,
               icon: AuthHeaderIcon(
-                icon: Assets.images.icons.iconWalletProtectFill.icon(size: 36.0.s),
+                icon: Assets.svg.iconWalletProtectFill.icon(size: 36.0.s),
               ),
             ),
           ),

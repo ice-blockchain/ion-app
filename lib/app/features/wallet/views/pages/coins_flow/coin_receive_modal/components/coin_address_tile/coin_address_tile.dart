@@ -60,7 +60,7 @@ class CoinAddressTile extends HookConsumerWidget {
                   SizedBox(
                     width: 6.0.s,
                   ),
-                  Assets.images.icons.iconBlockInformation.icon(size: 20.0.s),
+                  Assets.svg.iconBlockInformation.icon(size: 20.0.s),
                 ],
               ),
               SizedBox(
@@ -79,7 +79,7 @@ class CoinAddressTile extends HookConsumerWidget {
             clipBehavior: Clip.none,
             children: [
               NavigationButton(
-                icon: Assets.images.icons.iconBlockCopyBlue.icon(
+                icon: Assets.svg.iconBlockCopyBlue.icon(
                   color: context.theme.appColors.primaryText,
                 ),
                 size: buttonSize,
@@ -109,7 +109,7 @@ class CoinAddressTile extends HookConsumerWidget {
           ),
           NavigationButton(
             size: buttonSize,
-            icon: Assets.images.icons.iconButtonQrcode.icon(
+            icon: Assets.svg.iconButtonQrcode.icon(
               color: context.theme.appColors.primaryText,
             ),
             onPressed: () {},

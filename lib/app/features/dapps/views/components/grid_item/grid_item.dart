@@ -62,7 +62,7 @@ class GridItem extends HookWidget {
                             size: 16.0.s,
                             color: context.theme.appColors.onTertararyBackground,
                           ),
-                          child: Assets.images.icons.iconBadgeVerify.icon(size: 16.0.s),
+                          child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
                         ),
                       ),
                   ],
@@ -80,7 +80,7 @@ class GridItem extends HookWidget {
                         size: 12.0.s,
                         color: context.theme.appColors.onTertararyBackground,
                       ),
-                      child: Assets.images.icons.iconButtonIceStroke.icon(size: 12.0.s),
+                      child: Assets.svg.iconButtonIceStroke.icon(size: 12.0.s),
                     ),
                     if (dAppData.value != null)
                       Padding(

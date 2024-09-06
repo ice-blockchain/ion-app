@@ -24,8 +24,7 @@ class Balance extends ConsumerWidget {
     final walletBalance = ref.watch(currentWalletDataProvider).balance;
 
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
-    final iconAsset =
-        isBalanceVisible ? Assets.images.icons.iconBlockEyeOn : Assets.images.icons.iconBlockEyeOff;
+    final iconAsset = isBalanceVisible ? Assets.svg.iconBlockEyeOn : Assets.svg.iconBlockEyeOff;
     final hitSlop = 5.0.s;
     return ScreenSideOffset.small(
       child: Column(

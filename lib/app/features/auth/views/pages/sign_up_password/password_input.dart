@@ -15,7 +15,7 @@ class PasswordInput extends StatelessWidget {
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
-        icons: [Assets.images.icons.iconPass.icon()],
+        icons: [Assets.svg.iconPass.icon()],
       ),
       labelText: context.i18n.common_password,
       controller: controller,

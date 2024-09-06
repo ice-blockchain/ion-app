@@ -29,7 +29,7 @@ class AddressInputField extends StatelessWidget {
       suffixIcon: TextInputIcons(
         icons: [
           IconButton(
-            icon: Assets.images.icons.iconContactList.icon(),
+            icon: Assets.svg.iconContactList.icon(),
             onPressed: onOpenContactList,
           ),
           IconButton(
@@ -38,7 +38,7 @@ class AddressInputField extends StatelessWidget {
                 context.theme.appColors.primaryAccent,
                 BlendMode.srcIn,
               ),
-              child: Assets.images.icons.iconHeaderScan1.icon(),
+              child: Assets.svg.iconHeaderScan1.icon(),
             ),
             onPressed: onScanPressed,
           ),

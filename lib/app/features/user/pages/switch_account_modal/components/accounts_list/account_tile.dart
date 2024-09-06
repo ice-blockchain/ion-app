@@ -42,8 +42,7 @@ class AccountsTile extends ConsumerWidget {
         profilePicture: userData.profilePicture,
         verifiedBadge: userData.isVerified ?? false,
         trailing: isActiveUser == true
-            ? Assets.images.icons.iconBlockCheckboxOn
-                .icon(color: context.theme.appColors.onPrimaryAccent)
+            ? Assets.svg.iconBlockCheckboxOn.icon(color: context.theme.appColors.onPrimaryAccent)
             : null,
         contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s),
         backgroundColor: context.theme.appColors.tertararyBackground,

@@ -32,7 +32,7 @@ class RepostOptionsModal extends StatelessWidget {
                 type: ButtonType.secondary,
                 mainAxisSize: MainAxisSize.max,
                 onPressed: () {},
-                leadingIcon: Assets.images.icons.iconFeedRepost.icon(size: 18.0.s),
+                leadingIcon: Assets.svg.iconFeedRepost.icon(size: 18.0.s),
                 leadingIconOffset: 12.0.s,
                 label: Text(
                   context.i18n.feed_repost,
@@ -47,7 +47,7 @@ class RepostOptionsModal extends StatelessWidget {
                 onPressed: () {
                   CommentPostModalRoute(postId: postId).pushReplacement(context);
                 },
-                leadingIcon: Assets.images.icons.iconFeedQuote.icon(size: 18.0.s),
+                leadingIcon: Assets.svg.iconFeedQuote.icon(size: 18.0.s),
                 leadingIconOffset: 12.0.s,
                 label: Text(
                   context.i18n.feed_quote_post,

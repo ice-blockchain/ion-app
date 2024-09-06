@@ -53,8 +53,8 @@ class RequestContactAccessModal extends ConsumerWidget {
             ),
             Button(
               mainAxisSize: MainAxisSize.max,
-              leadingIcon: Assets.images.icons.iconButtonInvite
-                  .icon(color: context.theme.appColors.onPrimaryAccent),
+              leadingIcon:
+                  Assets.svg.iconButtonInvite.icon(color: context.theme.appColors.onPrimaryAccent),
               label: Text(
                 context.i18n.contacts_allow_pop_up_action,
               ),

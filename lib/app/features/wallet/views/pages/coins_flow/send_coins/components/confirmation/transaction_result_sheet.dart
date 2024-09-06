@@ -27,7 +27,7 @@ class TransactionResultSheet extends ConsumerWidget {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
-    final icons = Assets.images.icons;
+    final icons = Assets.svg;
 
     return SheetContent(
       body: ScreenSideOffset.small(

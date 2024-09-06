@@ -26,21 +26,21 @@ Widget regularButtonUseCase(BuildContext context) {
             ),
           ),
           mainAxisSize: MainAxisSize.max,
-          leadingIcon: Assets.images.icons.iconBookmarks.icon(),
+          leadingIcon: Assets.svg.iconBookmarks.icon(),
           onPressed: () {},
         ),
         Button(
           type: ButtonType.secondary,
           label: const Text('Secondary'),
           mainAxisSize: MainAxisSize.max,
-          trailingIcon: Assets.images.icons.iconBookmarks.icon(),
+          trailingIcon: Assets.svg.iconBookmarks.icon(),
           onPressed: () {},
         ),
         Button(
           type: ButtonType.outlined,
           label: const Text('Outlined'),
           mainAxisSize: MainAxisSize.max,
-          leadingIcon: Assets.images.icons.iconBookmarks.icon(),
+          leadingIcon: Assets.svg.iconBookmarks.icon(),
           onPressed: () {},
         ),
         Button(
@@ -48,14 +48,14 @@ Widget regularButtonUseCase(BuildContext context) {
           tintColor: context.theme.appColors.attentionRed,
           label: const Text('Outlined with Tint color'),
           mainAxisSize: MainAxisSize.max,
-          leadingIcon: Assets.images.icons.iconBookmarks.icon(),
+          leadingIcon: Assets.svg.iconBookmarks.icon(),
           onPressed: () {},
         ),
         Button(
           type: ButtonType.disabled,
           label: const Text('Disabled'),
           mainAxisSize: MainAxisSize.max,
-          trailingIcon: Assets.images.icons.iconBookmarks.icon(),
+          trailingIcon: Assets.svg.iconBookmarks.icon(),
           onPressed: () {},
         ),
         Button(
@@ -76,7 +76,7 @@ Widget regularButtonUseCase(BuildContext context) {
             backgroundColor: context.theme.appColors.onTerararyFill,
           ),
           mainAxisSize: MainAxisSize.max,
-          trailingIcon: Assets.images.icons.iconBookmarks.icon(
+          trailingIcon: Assets.svg.iconBookmarks.icon(
             color: context.theme.appColors.attentionRed,
           ),
           onPressed: () {},
@@ -96,18 +96,18 @@ Widget iconButtonUseCase(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Button.icon(
-          icon: Assets.images.icons.iconHeaderMenu.icon(),
+          icon: Assets.svg.iconHeaderMenu.icon(),
           onPressed: () {},
         ),
         Button.icon(
           type: ButtonType.outlined,
-          icon: Assets.images.icons.iconHeaderMenu.icon(),
+          icon: Assets.svg.iconHeaderMenu.icon(),
           onPressed: () {},
         ),
         Button.icon(
           size: 40.0.s,
           type: ButtonType.outlined,
-          icon: Assets.images.icons.iconHeaderMenu.icon(
+          icon: Assets.svg.iconHeaderMenu.icon(
             size: 20.0.s,
           ),
           style: OutlinedButton.styleFrom(
@@ -121,7 +121,7 @@ Widget iconButtonUseCase(BuildContext context) {
           size: 40.0.s,
           tintColor: context.theme.appColors.attentionRed,
           type: ButtonType.outlined,
-          icon: Assets.images.icons.iconHeaderMenu.icon(
+          icon: Assets.svg.iconHeaderMenu.icon(
             size: 20.0.s,
           ),
           onPressed: () {},
@@ -145,7 +145,7 @@ Widget compactButtonUseCase(BuildContext context) {
           children: [
             Expanded(
               child: Button.compact(
-                leadingIcon: Assets.images.icons.iconButtonReceive.icon(),
+                leadingIcon: Assets.svg.iconButtonReceive.icon(),
                 label: Text(
                   context.knobs.string(
                     label: 'Label',
@@ -161,7 +161,7 @@ Widget compactButtonUseCase(BuildContext context) {
             Expanded(
               child: Button.compact(
                 type: ButtonType.outlined,
-                leadingIcon: Assets.images.icons.iconButtonSend.icon(),
+                leadingIcon: Assets.svg.iconButtonSend.icon(),
                 label: Text(
                   context.knobs.string(
                     label: 'Label',
@@ -190,7 +190,7 @@ Widget menuButtonUseCase(BuildContext context) {
         Button.menu(
           onPressed: () {},
           leadingIcon: ButtonIconFrame(
-            icon: Assets.images.icons.iconTabsCoins.icon(
+            icon: Assets.svg.iconTabsCoins.icon(
               size: 20.0.s,
             ),
           ),
@@ -200,7 +200,7 @@ Widget menuButtonUseCase(BuildContext context) {
           onPressed: () {},
           leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.primaryAccent,
-            icon: Assets.images.icons.iconTabsCoins.icon(
+            icon: Assets.svg.iconTabsCoins.icon(
               size: 20.0.s,
               color: context.theme.appColors.secondaryBackground,
             ),
@@ -238,7 +238,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
           onPressed: () {},
           leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.success,
-            icon: Assets.images.icons.iconFeedStories.icon(
+            icon: Assets.svg.iconFeedStories.icon(
               size: 24.0.s,
               color: context.theme.appColors.secondaryBackground,
             ),
@@ -249,7 +249,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
           onPressed: () {},
           leadingIcon: ButtonIconFrame(
             color: context.theme.appColors.success,
-            icon: Assets.images.icons.iconFeedStories.icon(
+            icon: Assets.svg.iconFeedStories.icon(
               size: 24.0.s,
               color: context.theme.appColors.secondaryBackground,
             ),
@@ -260,7 +260,7 @@ Widget dropdownButtonUseCase(BuildContext context) {
         Button.dropdown(
           onPressed: () {},
           leadingIcon: ButtonIconFrame(
-            icon: Assets.images.icons.iconBadgeIcelogo.icon(size: 26.0.s),
+            icon: Assets.svg.iconBadgeIcelogo.icon(size: 26.0.s),
           ),
           leadingIconOffset: 4.0.s,
           backgroundColor: context.theme.appColors.tertararyBackground,

@@ -33,8 +33,7 @@ class LoginForm extends HookConsumerWidget {
             disabled: authState is AuthenticationLoading,
             trailingIcon: switch (authState) {
               AuthenticationLoading() || Authenticated(authToken: _) => const IceLoadingIndicator(),
-              _ => Assets.images.icons.iconButtonNext
-                  .icon(color: context.theme.appColors.onPrimaryAccent),
+              _ => Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
             },
             onPressed: () {
               if (formKey.value.currentState!.validate()) {

@@ -34,10 +34,10 @@ enum AuthenticatorSetupSteps {
 
   String get headerImageAsset {
     return switch (this) {
-      AuthenticatorSetupSteps.options => Assets.images.icons.icon2faAuthsetup,
-      AuthenticatorSetupSteps.instruction => Assets.images.icons.icon2faFollowinstuction,
-      AuthenticatorSetupSteps.confirmation => Assets.images.icons.iconLoginPassword,
-      AuthenticatorSetupSteps.success => Assets.images.icons.icon2faAuthsetup,
+      AuthenticatorSetupSteps.options => Assets.svg.icon2faAuthsetup,
+      AuthenticatorSetupSteps.instruction => Assets.svg.icon2faFollowinstuction,
+      AuthenticatorSetupSteps.confirmation => Assets.svg.iconLoginPassword,
+      AuthenticatorSetupSteps.success => Assets.svg.icon2faAuthsetup,
     };
   }
 

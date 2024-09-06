@@ -6,8 +6,8 @@ enum NftLayoutType {
 
   String get iconAsset {
     return switch (this) {
-      NftLayoutType.grid => Assets.images.icons.iconBlockGrid,
-      NftLayoutType.list => Assets.images.icons.iconBlockList,
+      NftLayoutType.grid => Assets.svg.iconBlockGrid,
+      NftLayoutType.list => Assets.svg.iconBlockList,
     };
   }
 }

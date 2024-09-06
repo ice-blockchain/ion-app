@@ -43,7 +43,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.0.s),
                   child: InfoCard(
-                    iconAsset: Assets.images.icons.actionWalletSecureaccount,
+                    iconAsset: Assets.svg.actionWalletSecureaccount,
                     title: locale.protect_account_title_secure_account,
                     description: locale.protect_account_description_secure_account_2fa,
                   ),
@@ -51,7 +51,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                 SizedBox(height: 32.0.s),
                 SecureAccountOption(
                   title: locale.two_fa_option_backup,
-                  icon: Assets.images.icons.iconProtectwalletIcloud.icon(
+                  icon: Assets.svg.iconProtectwalletIcloud.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () => BackupOptionsRoute().push<void>(context),
@@ -60,7 +60,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
                   title: locale.two_fa_option_email,
-                  icon: Assets.images.icons.iconFieldEmail.icon(
+                  icon: Assets.svg.iconFieldEmail.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () => EmailSetupRoute(step: EmailSetupSteps.input).push<void>(context),
@@ -69,7 +69,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
                   title: locale.two_fa_option_authenticator,
-                  icon: Assets.images.icons.iconLoginAuthcode.icon(
+                  icon: Assets.svg.iconLoginAuthcode.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
                   isEnabled: securityController.isAuthenticatorEnabled,
@@ -81,7 +81,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
                   title: locale.two_fa_option_phone,
-                  icon: Assets.images.icons.iconFieldPhone.icon(
+                  icon: Assets.svg.iconFieldPhone.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () => PhoneSetupRoute(step: PhoneSetupSteps.input).push<void>(context),

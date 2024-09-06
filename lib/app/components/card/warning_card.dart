@@ -19,7 +19,7 @@ class WarningCard extends StatelessWidget {
       child: ListItem(
         contentPadding: EdgeInsets.zero,
         borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
-        leading: Assets.images.icons.iconReport.icon(
+        leading: Assets.svg.iconReport.icon(
           size: 20.0.s,
           color: context.theme.appColors.attentionRed,
         ),

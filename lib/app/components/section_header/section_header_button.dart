@@ -23,7 +23,7 @@ class SectionHeaderButton extends StatelessWidget {
       child: IconButton(
         padding: EdgeInsets.zero,
         onPressed: onPress,
-        icon: Assets.images.icons.iconButtonNext.icon(
+        icon: Assets.svg.iconButtonNext.icon(
           size: iconSize,
         ),
       ),

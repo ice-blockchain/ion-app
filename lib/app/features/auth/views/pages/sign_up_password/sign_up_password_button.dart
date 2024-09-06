@@ -23,7 +23,7 @@ class SignUpPasswordButton extends ConsumerWidget {
       disabled: authState is AuthenticationLoading,
       trailingIcon: authState is AuthenticationLoading
           ? const IceLoadingIndicator()
-          : Assets.images.icons.iconButtonNext.icon(
+          : Assets.svg.iconButtonNext.icon(
               color: context.theme.appColors.onPrimaryAccent,
             ),
       onPressed: onPressed,

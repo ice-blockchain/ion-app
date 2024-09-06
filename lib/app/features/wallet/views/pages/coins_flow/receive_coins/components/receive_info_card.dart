@@ -82,8 +82,8 @@ class ReceiveInfoCard extends HookConsumerWidget {
                 Button(
                   minimumSize: Size(148.0.s, 48.0.s),
                   leadingIcon: isCopied.value
-                      ? Assets.images.icons.iconBlockCheckGreen.icon()
-                      : Assets.images.icons.iconBlockCopyBlue.icon(),
+                      ? Assets.svg.iconBlockCheckGreen.icon()
+                      : Assets.svg.iconBlockCopyBlue.icon(),
                   borderColor: isCopied.value
                       ? context.theme.appColors.success
                       : context.theme.appColors.strokeElements,

@@ -55,9 +55,9 @@ class LanguageListItem extends StatelessWidget {
                   ),
                 ),
                 if (isSelected)
-                  Assets.images.icons.iconBlockCheckboxOn.icon()
+                  Assets.svg.iconBlockCheckboxOn.icon()
                 else
-                  Assets.images.icons.iconBlockCheckboxOff.icon(),
+                  Assets.svg.iconBlockCheckboxOff.icon(),
               ],
             ),
           ),

@@ -131,7 +131,7 @@ class _DialogTitle extends StatelessWidget {
       ),
       leading: IconButton(
         onPressed: context.pop,
-        icon: Assets.images.icons.iconSheetClose.icon(
+        icon: Assets.svg.iconSheetClose.icon(
           color: context.theme.appColors.quaternaryText,
           size: 24.0.s,
         ),
@@ -140,7 +140,7 @@ class _DialogTitle extends StatelessWidget {
         if (showCollapseButton)
           IconButton(
             onPressed: context.pop,
-            icon: Assets.images.icons.iconFeedScale.icon(
+            icon: Assets.svg.iconFeedScale.icon(
               color: context.theme.appColors.quaternaryText,
               size: 18.0.s,
             ),

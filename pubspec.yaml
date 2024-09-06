@@ -99,8 +99,8 @@ flutter:
     - lib/app/templates/basic.json
     - assets/videos/
     - assets/lottie/
+    - assets/svg/
     - assets/images/
-    - assets/images/icons/
     - assets/images/wallet/
     - assets/images/bg/
     - assets/images/logo/

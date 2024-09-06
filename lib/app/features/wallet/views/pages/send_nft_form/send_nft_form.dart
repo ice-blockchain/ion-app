@@ -106,7 +106,7 @@ class SendNftForm extends ConsumerWidget {
                             colors.primaryBackground,
                             BlendMode.srcIn,
                           ),
-                          child: Assets.images.icons.iconButtonNext.icon(),
+                          child: Assets.svg.iconButtonNext.icon(),
                         ),
                         onPressed: () {
                           SendNftConfirmRoute().push<void>(context);

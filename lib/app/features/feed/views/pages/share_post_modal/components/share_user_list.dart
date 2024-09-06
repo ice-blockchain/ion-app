@@ -44,8 +44,7 @@ class ShareUserList extends StatelessWidget {
 
   Widget _getCheckbox(BuildContext context, bool isSelected) {
     return isSelected
-        ? Assets.images.icons.iconBlockCheckboxOn.icon()
-        : Assets.images.icons.iconBlockCheckboxOff
-            .icon(color: context.theme.appColors.onTerararyFill);
+        ? Assets.svg.iconBlockCheckboxOn.icon()
+        : Assets.svg.iconBlockCheckboxOff.icon(color: context.theme.appColors.onTerararyFill);
   }
 }

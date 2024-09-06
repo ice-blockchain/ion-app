@@ -22,7 +22,7 @@ class ContactItemName extends StatelessWidget {
         ),
         if (contactData.isVerified ?? false) ...[
           SizedBox(width: 4.0.s),
-          Assets.images.icons.iconBadgeVerify.icon(size: 16.0.s),
+          Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
         ],
       ],
     );

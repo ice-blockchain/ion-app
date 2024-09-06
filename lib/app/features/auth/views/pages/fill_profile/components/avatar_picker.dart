@@ -32,13 +32,13 @@ class AvatarPicker extends HookWidget {
             backgroundImage: FileImage(File(avatar.value!.path)),
           )
         else
-          Assets.images.icons.userPhotoArea.icon(size: 100.0.s),
+          Assets.svg.userPhotoArea.icon(size: 100.0.s),
         Positioned(
           bottom: 0,
           right: 0,
           child: GestureDetector(
             onTap: pickAvatar,
-            child: Assets.images.icons.iconProfileCamera.icon(size: 36.0.s),
+            child: Assets.svg.iconProfileCamera.icon(size: 36.0.s),
           ),
         ),
       ],

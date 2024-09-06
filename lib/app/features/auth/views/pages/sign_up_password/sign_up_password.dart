@@ -38,7 +38,7 @@ class SignUpPasswordPage extends HookConsumerWidget {
             child: AuthScrollContainer(
               title: context.i18n.sign_up_password_title,
               description: context.i18n.sign_up_password_description,
-              icon: Assets.images.icons.iconLoginPassword.icon(size: 36.0.s),
+              icon: Assets.svg.iconLoginPassword.icon(size: 36.0.s),
               children: [
                 ScreenSideOffset.large(
                   child: Form(
@@ -49,17 +49,17 @@ class SignUpPasswordPage extends HookConsumerWidget {
                         SignUpListItem(
                           title: context.i18n.sign_up_password_disadvantage_1_title,
                           subtitle: context.i18n.sign_up_password_disadvantage_1_description,
-                          icon: Assets.images.icons.iconLoginHack.icon(),
+                          icon: Assets.svg.iconLoginHack.icon(),
                         ),
                         SignUpListItem(
                           title: context.i18n.sign_up_password_disadvantage_2_title,
                           subtitle: context.i18n.sign_up_password_disadvantage_2_description,
-                          icon: Assets.images.icons.iconLoginReused.icon(),
+                          icon: Assets.svg.iconLoginReused.icon(),
                         ),
                         SignUpListItem(
                           title: context.i18n.sign_up_password_disadvantage_3_title,
                           subtitle: context.i18n.sign_up_password_disadvantage_3_description,
-                          icon: Assets.images.icons.iconLoginManage.icon(),
+                          icon: Assets.svg.iconLoginManage.icon(),
                         ),
                         SizedBox(height: 18.0.s),
                         IdentityKeyNameInput(

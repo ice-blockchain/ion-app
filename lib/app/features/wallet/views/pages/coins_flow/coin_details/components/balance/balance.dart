@@ -48,7 +48,7 @@ class Balance extends ConsumerWidget {
                     SizedBox(
                       width: 4.0.s,
                     ),
-                    Assets.images.icons.iconArrowSelect.icon(size: 12.0.s),
+                    Assets.svg.iconArrowSelect.icon(size: 12.0.s),
                   ],
                 ),
                 Text(

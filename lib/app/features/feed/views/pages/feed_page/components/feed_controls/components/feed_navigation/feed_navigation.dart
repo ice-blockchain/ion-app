@@ -31,7 +31,7 @@ class FeedNavigation extends StatelessWidget {
             padding: EdgeInsets.only(left: 12.0.s),
             child: NavigationButton(
               onPressed: () => {},
-              icon: Assets.images.icons.iconHomeNotification.icon(
+              icon: Assets.svg.iconHomeNotification.icon(
                 color: context.theme.appColors.primaryText,
               ),
             ),

@@ -31,7 +31,7 @@ class TwoFaOptionsPage extends HookWidget {
       body: AuthScrollContainer(
         title: context.i18n.two_fa_title,
         description: context.i18n.two_fa_desc,
-        icon: Assets.images.icons.iconWalletProtect.icon(size: 36.0.s),
+        icon: Assets.svg.iconWalletProtect.icon(size: 36.0.s),
         children: [
           Column(
             children: [

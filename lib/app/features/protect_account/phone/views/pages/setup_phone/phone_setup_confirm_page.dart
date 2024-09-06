@@ -48,7 +48,7 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
                   child: TextInput(
                     prefixIcon: TextInputIcons(
                       hasRightDivider: true,
-                      icons: [Assets.images.icons.iconFieldPhone.icon()],
+                      icons: [Assets.svg.iconFieldPhone.icon()],
                     ),
                     labelText: locale.two_fa_sms,
                     controller: phoneController,

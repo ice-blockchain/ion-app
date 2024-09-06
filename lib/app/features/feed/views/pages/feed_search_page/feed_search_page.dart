@@ -19,7 +19,7 @@ class FeedSearchPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Assets.images.icons.walletIconWalletSearching.icon(size: 48.0.s),
+                  Assets.svg.walletIconWalletSearching.icon(size: 48.0.s),
                   SizedBox(height: 8.0.s),
                   Text(
                     context.i18n.feed_search_empty,

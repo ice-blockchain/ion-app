@@ -31,9 +31,7 @@ class TimelineItem extends StatelessWidget {
           children: [
             Center(
               child: SvgPicture.asset(
-                data.isDone
-                    ? Assets.images.icons.iconStepsCheckActive
-                    : Assets.images.icons.iconStepsCheckInactive,
+                data.isDone ? Assets.svg.iconStepsCheckActive : Assets.svg.iconStepsCheckInactive,
                 width: 16.0.s,
                 height: 16.0.s,
               ),

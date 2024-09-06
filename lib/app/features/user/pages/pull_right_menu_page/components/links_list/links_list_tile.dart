@@ -41,7 +41,7 @@ class LinksListTile extends StatelessWidget {
         style: context.theme.appTextThemes.caption3
             .copyWith(color: context.theme.appColors.tertararyText),
       ),
-      trailing: Assets.images.icons.iconArrowRight.icon(
+      trailing: Assets.svg.iconArrowRight.icon(
         color: context.theme.appColors.primaryText,
       ),
       contentPadding: EdgeInsets.symmetric(vertical: 12.0.s),

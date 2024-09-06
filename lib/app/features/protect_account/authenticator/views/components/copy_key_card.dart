@@ -22,7 +22,7 @@ class CopyKeyCard extends HookWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Assets.images.icons.iconFieldIdentitykey.icon(
+              Assets.svg.iconFieldIdentitykey.icon(
                 size: 16.0.s,
                 color: context.theme.appColors.onTertararyBackground,
               ),
@@ -44,8 +44,8 @@ class CopyKeyCard extends HookWidget {
           Button(
             minimumSize: Size(148.0.s, 48.0.s),
             leadingIcon: isCopied.value
-                ? Assets.images.icons.iconBlockCheckGreen.icon()
-                : Assets.images.icons.iconBlockCopyBlue.icon(),
+                ? Assets.svg.iconBlockCheckGreen.icon()
+                : Assets.svg.iconBlockCopyBlue.icon(),
             borderColor: isCopied.value
                 ? context.theme.appColors.success
                 : context.theme.appColors.strokeElements,

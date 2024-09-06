@@ -42,8 +42,8 @@ class SignUpPasswordCheckbox extends HookWidget {
         IconButton(
           onPressed: onToggle,
           icon: selected
-              ? Assets.images.icons.iconCheckboxOn.icon(size: 20.0.s, color: color)
-              : Assets.images.icons.iconCheckboxOff.icon(size: 20.0.s, color: color),
+              ? Assets.svg.iconCheckboxOn.icon(size: 20.0.s, color: color)
+              : Assets.svg.iconCheckboxOff.icon(size: 20.0.s, color: color),
         ),
         Flexible(
           child: Text.rich(

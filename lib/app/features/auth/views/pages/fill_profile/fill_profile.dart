@@ -46,7 +46,7 @@ class FillProfile extends HookWidget {
                     title: context.i18n.fill_profile_title,
                     description: context.i18n.fill_profile_description,
                     icon: AuthHeaderIcon(
-                      icon: Assets.images.icons.iconLoginIcelogo.icon(size: 44.0.s),
+                      icon: Assets.svg.iconLoginIcelogo.icon(size: 44.0.s),
                     ),
                   ),
                   ScreenSideOffset.large(
@@ -65,7 +65,7 @@ class FillProfile extends HookWidget {
                           prefixIcon: TextInputIcons(
                             hasRightDivider: true,
                             icons: [
-                              Assets.images.icons.iconFieldName.icon(),
+                              Assets.svg.iconFieldName.icon(),
                             ],
                           ),
                           labelText: context.i18n.fill_profile_input_name,
@@ -84,7 +84,7 @@ class FillProfile extends HookWidget {
                           prefixIcon: TextInputIcons(
                             hasRightDivider: true,
                             icons: [
-                              Assets.images.icons.iconFieldNickname.icon(),
+                              Assets.svg.iconFieldNickname.icon(),
                             ],
                           ),
                           labelText: context.i18n.fill_profile_input_nickname,
@@ -109,7 +109,7 @@ class FillProfile extends HookWidget {
                           prefixIcon: TextInputIcons(
                             hasRightDivider: true,
                             icons: [
-                              Assets.images.icons.iconFieldInviter.icon(),
+                              Assets.svg.iconFieldInviter.icon(),
                             ],
                           ),
                           labelText: context.i18n.fill_profile_input_who_invited,
@@ -128,7 +128,7 @@ class FillProfile extends HookWidget {
                           disabled: loading.value,
                           trailingIcon: loading.value
                               ? const IceLoadingIndicator()
-                              : Assets.images.icons.iconProfileSave.icon(
+                              : Assets.svg.iconProfileSave.icon(
                                   color: context.theme.appColors.onPrimaryAccent,
                                 ),
                           onPressed: () async {

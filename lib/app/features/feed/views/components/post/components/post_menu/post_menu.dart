@@ -22,7 +22,7 @@ class PostMenu extends StatelessWidget {
           OverlayMenuContainer(
             child: PostMenuItem(
               label: context.i18n.post_menu_not_interested,
-              icon: Assets.images.icons.iconNotinterested.icon(size: iconSize),
+              icon: Assets.svg.iconNotinterested.icon(size: iconSize),
               onPressed: closeMenu,
             ),
           ),
@@ -32,17 +32,17 @@ class PostMenu extends StatelessWidget {
               children: [
                 PostMenuItem(
                   label: context.i18n.post_menu_follow_nickname('nickname'),
-                  icon: Assets.images.icons.iconFollowuser.icon(size: iconSize),
+                  icon: Assets.svg.iconFollowuser.icon(size: iconSize),
                   onPressed: closeMenu,
                 ),
                 PostMenuItem(
                   label: context.i18n.post_menu_block_nickname('nickname'),
-                  icon: Assets.images.icons.iconBlock.icon(size: iconSize),
+                  icon: Assets.svg.iconBlock.icon(size: iconSize),
                   onPressed: closeMenu,
                 ),
                 PostMenuItem(
                   label: context.i18n.post_menu_report_post,
-                  icon: Assets.images.icons.iconReport.icon(size: iconSize),
+                  icon: Assets.svg.iconReport.icon(size: iconSize),
                   onPressed: closeMenu,
                 ),
               ],
@@ -57,7 +57,7 @@ class PostMenu extends StatelessWidget {
           transform: Matrix4.translationValues(12.0.s, 0, 0),
           child: IconButton(
             onPressed: null,
-            icon: Assets.images.icons.iconMorePopup.icon(
+            icon: Assets.svg.iconMorePopup.icon(
               color: context.theme.appColors.onTertararyBackground,
             ),
           ),

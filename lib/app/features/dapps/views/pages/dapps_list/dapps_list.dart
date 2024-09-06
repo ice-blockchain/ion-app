@@ -53,7 +53,7 @@ class DAppsList extends HookConsumerWidget {
                       child: Container(
                         child: apps.isEmpty
                             ? EmptyList(
-                                asset: Assets.images.icons.walletIconWalletEmptyfavourites,
+                                asset: Assets.svg.walletIconWalletEmptyfavourites,
                                 title: context.i18n.dapps_favourites_empty_title,
                               )
                             : ListView.builder(

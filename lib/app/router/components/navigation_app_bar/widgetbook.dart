@@ -25,7 +25,7 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
             showBackButton: false,
             actions: [
               IconButton(
-                icon: Assets.images.icons.iconSheetClose.icon(
+                icon: Assets.svg.iconSheetClose.icon(
                   size: NavigationAppBar.actionButtonSide,
                   color: context.theme.appColors.primaryText,
                 ),
@@ -37,7 +37,7 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
             title: Text('Some title'),
             actions: [
               IconButton(
-                icon: Assets.images.icons.iconChannelAdmin.icon(
+                icon: Assets.svg.iconChannelAdmin.icon(
                   size: NavigationAppBar.actionButtonSide,
                   color: context.theme.appColors.primaryText,
                 ),
@@ -49,14 +49,14 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
             title: Text('Some title'),
             actions: [
               IconButton(
-                icon: Assets.images.icons.iconChannelAdmin.icon(
+                icon: Assets.svg.iconChannelAdmin.icon(
                   size: NavigationAppBar.actionButtonSide,
                   color: context.theme.appColors.primaryText,
                 ),
                 onPressed: () {},
               ),
               IconButton(
-                icon: Assets.images.icons.iconMorePopup.icon(
+                icon: Assets.svg.iconMorePopup.icon(
                   size: NavigationAppBar.actionButtonSide,
                   color: context.theme.appColors.primaryText,
                 ),
@@ -68,7 +68,7 @@ Widget regularNavigationAppBarUseCase(BuildContext context) {
             title: Text('Some very very long title'),
             actions: [
               IconButton(
-                icon: Assets.images.icons.iconMorePopup.icon(
+                icon: Assets.svg.iconMorePopup.icon(
                   size: NavigationAppBar.actionButtonSide,
                   color: context.theme.appColors.primaryText,
                 ),

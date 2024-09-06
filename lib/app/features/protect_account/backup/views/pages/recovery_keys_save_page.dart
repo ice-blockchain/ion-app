@@ -43,7 +43,7 @@ class RecoveryKeysSavePage extends StatelessWidget {
                 color: context.theme.appColors.secondaryText,
               ),
               icon: AuthHeaderIcon(
-                icon: Assets.images.icons.iconLoginRestorekey.icon(
+                icon: Assets.svg.iconLoginRestorekey.icon(
                   size: 36.0.s,
                 ),
               ),
@@ -54,19 +54,19 @@ class RecoveryKeysSavePage extends StatelessWidget {
               children: [
                 RecoveryKeyOption(
                   title: locale.common_identity_key_name,
-                  iconAsset: Assets.images.icons.iconIdentitykey,
+                  iconAsset: Assets.svg.iconIdentitykey,
                   subtitle: '838402-28385-432',
                 ),
                 SizedBox(height: 12.0.s),
                 RecoveryKeyOption(
                   title: locale.restore_identity_creds_recovery_key,
-                  iconAsset: Assets.images.icons.iconChannelPrivate,
+                  iconAsset: Assets.svg.iconChannelPrivate,
                   subtitle: '08402934823044809485',
                 ),
                 SizedBox(height: 12.0.s),
                 RecoveryKeyOption(
                   title: locale.restore_identity_creds_recovery_code,
-                  iconAsset: Assets.images.icons.iconCode4,
+                  iconAsset: Assets.svg.iconCode4,
                   subtitle: '0405904949596000',
                 ),
                 SizedBox(height: 20.0.s),
@@ -78,7 +78,7 @@ class RecoveryKeysSavePage extends StatelessWidget {
                     borderRadius: BorderRadius.all(
                       Radius.circular(16.0.s),
                     ),
-                    leading: Assets.images.icons.iconReport.icon(
+                    leading: Assets.svg.iconReport.icon(
                       size: 20.0.s,
                       color: context.theme.appColors.attentionRed,
                     ),

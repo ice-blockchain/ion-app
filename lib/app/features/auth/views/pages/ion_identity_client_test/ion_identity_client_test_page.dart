@@ -147,7 +147,7 @@ class _UsersTab extends ConsumerWidget {
                   onTap: () {
                     ionClient(username: users[index]).auth.logOut();
                   },
-                  child: Assets.images.icons.iconMenuLogout.icon(),
+                  child: Assets.svg.iconMenuLogout.icon(),
                 ),
               ),
             );

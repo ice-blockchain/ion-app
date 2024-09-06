@@ -39,7 +39,7 @@ class ProfileDetails extends ConsumerWidget {
               ),
               if (userData.isVerified ?? false) ...[
                 SizedBox(width: 6.0.s),
-                Assets.images.icons.iconBadgeVerify.icon(size: verifiedIconSize),
+                Assets.svg.iconBadgeVerify.icon(size: verifiedIconSize),
               ],
             ],
           ),

@@ -21,12 +21,12 @@ class Footer extends StatelessWidget {
           children: [
             FooterAction(
               onPressed: () {},
-              icon: Assets.images.icons.iconProfileSettings.icon(),
+              icon: Assets.svg.iconProfileSettings.icon(),
               label: context.i18n.profile_privacy,
             ),
             FooterAction(
               onPressed: () {},
-              icon: Assets.images.icons.iconProfileHelp.icon(),
+              icon: Assets.svg.iconProfileHelp.icon(),
               label: context.i18n.profile_help,
             ),
           ],

@@ -41,7 +41,7 @@ class ContactPage extends ConsumerWidget {
                     size: 32.0.s,
                     type: ButtonType.dropdown,
                     onPressed: () {},
-                    icon: Assets.images.icons.iconButtonHistory.icon(),
+                    icon: Assets.svg.iconButtonHistory.icon(),
                   ),
                 ),
             ],
@@ -61,7 +61,7 @@ class ContactPage extends ConsumerWidget {
               child: Button.compact(
                 mainAxisSize: MainAxisSize.max,
                 minimumSize: Size(56.0.s, 56.0.s),
-                leadingIcon: Assets.images.icons.iconButtonInvite
+                leadingIcon: Assets.svg.iconButtonInvite
                     .icon(color: context.theme.appColors.onPrimaryAccent),
                 label: Text(
                   context.i18n.wallet_invite_friends,

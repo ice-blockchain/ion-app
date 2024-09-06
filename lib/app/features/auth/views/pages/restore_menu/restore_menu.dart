@@ -22,7 +22,7 @@ class RestoreMenuPage extends HookWidget {
       body: AuthScrollContainer(
         title: context.i18n.restore_identity_title,
         description: context.i18n.restore_identity_type_description,
-        icon: Assets.images.icons.iconLoginRestorekey.icon(size: 36.0.s),
+        icon: Assets.svg.iconLoginRestorekey.icon(size: 36.0.s),
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 38.0.s),
@@ -30,14 +30,14 @@ class RestoreMenuPage extends HookWidget {
               children: [
                 SizedBox(height: 12.0.s),
                 RestoreMenuItem(
-                  icon: Assets.images.icons.walletLoginCloud.icon(size: 48.0.s),
+                  icon: Assets.svg.walletLoginCloud.icon(size: 48.0.s),
                   title: context.i18n.restore_identity_type_icloud_title,
                   description: context.i18n.restore_identity_type_icloud_description,
                   onPressed: () {},
                 ),
                 SizedBox(height: 16.0.s),
                 RestoreMenuItem(
-                  icon: Assets.images.icons.walletLoginRecovery.icon(size: 48.0.s),
+                  icon: Assets.svg.walletLoginRecovery.icon(size: 48.0.s),
                   title: context.i18n.restore_identity_type_credentials_title,
                   description: context.i18n.restore_identity_type_credentials_description,
                   onPressed: () {

@@ -28,7 +28,7 @@ class RestoreCredsPage extends HookWidget {
       body: AuthScrollContainer(
         title: context.i18n.restore_identity_title,
         description: context.i18n.restore_identity_creds_description,
-        icon: Assets.images.icons.iconLoginRestorekey.icon(size: 36.0.s),
+        icon: Assets.svg.iconLoginRestorekey.icon(size: 36.0.s),
         children: [
           Column(
             children: [

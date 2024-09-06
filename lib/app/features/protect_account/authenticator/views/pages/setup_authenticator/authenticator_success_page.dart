@@ -14,7 +14,7 @@ class AuthenticatorSuccessPage extends StatelessWidget {
       children: [
         ScreenSideOffset.medium(
           child: InfoCard(
-            iconAsset: Assets.images.icons.actionWalletGoogleauth,
+            iconAsset: Assets.svg.actionWalletGoogleauth,
             title: context.i18n.recovery_keys_successfully_protected_title,
             description: context.i18n.authenticator_protected_description,
           ),
