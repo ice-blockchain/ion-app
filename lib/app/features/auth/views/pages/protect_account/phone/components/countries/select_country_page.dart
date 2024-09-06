@@ -35,11 +35,17 @@ class SelectCountryPage extends HookConsumerWidget {
                   onCancelSearch: () => searchText.value = '',
                 ),
                 filteredCountriesAsync.maybeWhen(
-                  data: (filteredCountries) => CountryList(
-                    countries: filteredCountries,
-                    onCountrySelected: (country) => hideKeyboardAndCallOnce(
-                      callback: () => context.pop(country),
-                    ),
+                  data: (filteredCountries) => SliverList.builder(
+                    itemCount: filteredCountries.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final country = filteredCountries[index];
+                      return CountryListItem(
+                        country: country,
+                        onTap: () => hideKeyboardAndCallOnce(
+                          callback: () => context.pop(country),
+                        ),
+                      );
+                    },
                   ),
                   orElse: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
                 ),
