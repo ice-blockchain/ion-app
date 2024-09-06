@@ -42,7 +42,7 @@ class IntroPage extends HookWidget {
                 ),
               ],
               child: Button(
-                onPressed: () => GetStartedRoute().go(context),
+                onPressed: () => FillProfileRoute().go(context),
                 label: Text(context.i18n.button_continue),
                 trailingIcon: Assets.images.icons.iconButtonNext.icon(
                   color: context.theme.appColors.secondaryBackground,

@@ -104,7 +104,6 @@ flutter:
     - assets/images/wallet/
     - assets/images/bg/
     - assets/images/logo/
-    - assets/images/misc/
     - assets/images/qr_code/
     - assets/images/notifications/
 
