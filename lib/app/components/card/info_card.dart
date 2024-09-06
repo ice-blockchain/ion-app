@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/generated/assets.gen.dart';
 
 class InfoCard extends StatelessWidget {
   const InfoCard({
@@ -10,7 +9,7 @@ class InfoCard extends StatelessWidget {
     required this.description,
   });
 
-  final AssetGenImage iconAsset;
+  final String iconAsset;
   final String title;
   final String description;
 

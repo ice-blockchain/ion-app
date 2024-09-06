@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/utils/username.dart';
@@ -44,7 +41,10 @@ class AccountsTile extends ConsumerWidget {
         ),
         profilePicture: userData.profilePicture,
         verifiedBadge: userData.isVerified ?? false,
-        trailing: isActiveUser == true ? Assets.images.icons.iconBlockCheckboxOnWhite.icon() : null,
+        trailing: isActiveUser == true
+            ? Assets.images.icons.iconBlockCheckboxOn
+                .icon(color: context.theme.appColors.onPrimaryAccent)
+            : null,
         contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s),
         backgroundColor: context.theme.appColors.tertararyBackground,
         borderRadius: ListItem.defaultBorderRadius,

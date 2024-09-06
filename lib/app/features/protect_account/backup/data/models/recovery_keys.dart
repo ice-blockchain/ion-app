@@ -15,7 +15,7 @@ enum RecoveryKeys {
     };
   }
 
-  AssetGenImage get iconAsset {
+  String get iconAsset {
     return switch (this) {
       RecoveryKeys.identityKeyName => Assets.images.icons.iconIdentitykey,
       RecoveryKeys.recoveryKeyId => Assets.images.icons.iconChannelPrivate,

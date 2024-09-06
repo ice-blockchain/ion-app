@@ -52,7 +52,8 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
                           child: RecoveryKeyInput(
                             controller: controllers[key]!,
                             labelText: key.getDisplayName(context),
-                            prefixIcon: key.iconAsset.icon(),
+                            prefixIcon:
+                                key.iconAsset.icon(color: context.theme.appColors.secondaryText),
                             validator: (value) {
                               if (Validators.isEmpty(value)) return '';
                               return null;

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/extensions/extensions.dart';
 
 class HeaderAction extends StatelessWidget {
   const HeaderAction({
@@ -25,10 +23,7 @@ class HeaderAction extends StatelessWidget {
       borderColor: context.theme.appColors.onTerararyFill,
       backgroundColor: context.theme.appColors.tertararyBackground,
       tintColor: context.theme.appColors.primaryText,
-      icon: ImageIcon(
-        AssetImage(assetName),
-        size: iconSize,
-      ),
+      icon: assetName.icon(size: iconSize),
       onPressed: onPressed,
     );
   }

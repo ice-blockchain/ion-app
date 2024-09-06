@@ -35,7 +35,7 @@ class TransactionResultSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(height: 40.0.s),
-            icons.actionSendfunds.iconWithDimensions(
+            icons.actionSendfundsSuccessful.iconWithDimensions(
               width: 74.0.s,
               height: 76.0.s,
             ),

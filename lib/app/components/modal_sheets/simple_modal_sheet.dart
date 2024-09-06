@@ -5,7 +5,6 @@ import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/generated/assets.gen.dart';
 
 enum OffsetType { large, small }
 
@@ -25,7 +24,7 @@ class SimpleModalSheet extends StatelessWidget {
 
   final String title;
   final String description;
-  final AssetGenImage iconAsset;
+  final String iconAsset;
   final String? buttonText;
   final VoidCallback? onPressed;
   final Widget? button;
@@ -34,7 +33,7 @@ class SimpleModalSheet extends StatelessWidget {
   factory SimpleModalSheet.info({
     required String title,
     required String description,
-    required AssetGenImage iconAsset,
+    required String iconAsset,
     String? buttonText,
     VoidCallback? onPressed,
     Widget? button,
@@ -53,7 +52,7 @@ class SimpleModalSheet extends StatelessWidget {
   factory SimpleModalSheet.alert({
     required String title,
     required String description,
-    required AssetGenImage iconAsset,
+    required String iconAsset,
     String? buttonText,
     VoidCallback? onPressed,
     Widget? button,

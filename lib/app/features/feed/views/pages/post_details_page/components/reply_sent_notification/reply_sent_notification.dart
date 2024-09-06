@@ -21,7 +21,7 @@ class ReplySentNotification extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 15.0.s),
           child: Row(
             children: [
-              Assets.images.icons.iconBlockCheckboxOnWhite.icon(),
+              Assets.images.icons.iconBlockCheckboxOn.icon(color: colors.onPrimaryAccent),
               SizedBox(width: 8.0.s),
               Text(
                 context.i18n.post_reply_sent,

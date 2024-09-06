@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -23,18 +24,18 @@ class FavouriteIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconPath = isFavourite
-        ? Assets.images.icons.iconBookmarksOn.path
-        : Assets.images.icons.iconBookmarks.path;
+    final iconPath =
+        isFavourite ? Assets.images.icons.iconBookmarksOn : Assets.images.icons.iconBookmarks;
 
     return Button.icon(
       onPressed: () {
         onTap?.call();
       },
-      icon: Image.asset(
+      icon: SvgPicture.asset(
         iconPath,
         width: 24.0.s,
-        color: isFavourite ? null : tintColor,
+        colorFilter:
+            isFavourite || tintColor == null ? null : ColorFilter.mode(tintColor!, BlendMode.srcIn),
       ),
       type: ButtonType.outlined,
       size: size ?? iconSideDimension,

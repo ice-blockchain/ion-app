@@ -62,10 +62,7 @@ class GridItem extends HookWidget {
                             size: 16.0.s,
                             color: context.theme.appColors.onTertararyBackground,
                           ),
-                          child: Assets.images.icons.iconBadgeVerify.image(
-                            width: 16.0.s,
-                            height: 16.0.s,
-                          ),
+                          child: Assets.images.icons.iconBadgeVerify.icon(size: 16.0.s),
                         ),
                       ),
                   ],

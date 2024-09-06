@@ -41,7 +41,7 @@ class ContactPage extends ConsumerWidget {
                     size: 32.0.s,
                     type: ButtonType.dropdown,
                     onPressed: () {},
-                    icon: Assets.images.icons.iconButtonHistory.image(),
+                    icon: Assets.images.icons.iconButtonHistory.icon(),
                   ),
                 ),
             ],

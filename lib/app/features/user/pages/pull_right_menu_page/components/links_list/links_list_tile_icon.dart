@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/extensions/extensions.dart';
 
 class LinksListTileIcon extends StatelessWidget {
   const LinksListTileIcon({
@@ -30,8 +28,7 @@ class LinksListTileIcon extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(12.0.s),
       ),
-      child: ImageIcon(
-        AssetImage(iconAssetName),
+      child: iconAssetName.icon(
         size: iconSize,
         color: iconTintColor,
       ),

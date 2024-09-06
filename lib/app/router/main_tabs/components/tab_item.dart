@@ -10,7 +10,7 @@ enum TabItem {
 
   const TabItem();
 
-  AssetGenImage get icon => switch (this) {
+  String get icon => switch (this) {
         TabItem.feed => Assets.images.icons.iconHomeOff,
         TabItem.chat => Assets.images.icons.iconChatOff,
         TabItem.main => Assets.images.logo.logoButton,

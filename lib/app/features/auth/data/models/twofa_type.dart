@@ -15,7 +15,7 @@ enum TwoFaType {
     };
   }
 
-  AssetGenImage get iconAsset {
+  String get iconAsset {
     return switch (this) {
       TwoFaType.auth => Assets.images.icons.iconLoginAuthcode,
       TwoFaType.email => Assets.images.icons.iconFieldEmail,

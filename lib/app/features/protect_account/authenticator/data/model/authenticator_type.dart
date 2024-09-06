@@ -18,7 +18,7 @@ enum AutethenticatorType {
     };
   }
 
-  AssetGenImage get iconAsset {
+  String get iconAsset {
     return switch (this) {
       AutethenticatorType.google => Assets.images.icons.icon2faGoogleauth,
       AutethenticatorType.micsrosoft => Assets.images.icons.icon2famicrosoft,

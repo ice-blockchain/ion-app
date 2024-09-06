@@ -21,7 +21,7 @@ enum WalletTabType {
     };
   }
 
-  AssetGenImage get bottomActionAsset {
+  String get bottomActionAsset {
     return switch (this) {
       WalletTabType.coins => Assets.images.icons.iconButtonManagecoin,
       WalletTabType.nfts => Assets.images.icons.iconButtonWalletnft,

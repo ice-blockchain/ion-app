@@ -65,7 +65,7 @@ class PostFooter extends HookConsumerWidget {
       icon: Assets.images.icons.iconBlockComment.icon(
         size: 14.0.s,
       ),
-      activeIcon: Assets.images.icons.iconBlockCommentActive.icon(
+      activeIcon: Assets.images.icons.iconBlockCommenton.icon(
         size: 14.0.s,
       ),
       value: '121k',
