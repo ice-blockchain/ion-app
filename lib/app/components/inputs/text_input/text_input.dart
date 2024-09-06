@@ -26,6 +26,7 @@ class TextInput extends HookWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
+    this.alwaysShowPrefixIcon = false,
     EdgeInsets? scrollPadding,
     EdgeInsetsGeometry? contentPadding,
   })  : scrollPadding = scrollPadding ?? EdgeInsets.all(20.0.s),
@@ -58,6 +59,7 @@ class TextInput extends HookWidget {
   final EdgeInsetsGeometry contentPadding;
 
   final ValueChanged<String>? onChanged;
+  final bool alwaysShowPrefixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +110,8 @@ class TextInput extends HookWidget {
         context: context,
         verified: verified,
         prefix: prefix,
-        prefixIcon: !hasFocus.value && !hasValue.value ? prefixIcon : null,
+        prefixIcon:
+            alwaysShowPrefixIcon || (!hasFocus.value && !hasValue.value) ? prefixIcon : null,
         suffixIcon: suffixIcon,
         errorText: errorText ?? error.value,
         contentPadding: contentPadding,
