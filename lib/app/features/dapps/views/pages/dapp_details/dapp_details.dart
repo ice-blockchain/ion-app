@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/read_more_text/read_more_text.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
@@ -18,7 +21,7 @@ import 'package:ice/generated/assets.gen.dart';
 
 double get defaultLargeMargin => 44.0.s;
 
-class DAppDetails extends ConsumerWidget {
+class DAppDetails extends HookConsumerWidget {
   DAppDetails({
     required this.dappId,
     super.key,
@@ -29,6 +32,8 @@ class DAppDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final app = ref.watch(dappByIdProvider(dappId: dappId)).valueOrNull;
+
+    final isVoted = useState<bool>(false);
 
     if (app == null) {
       return const SizedBox.shrink();
@@ -112,6 +117,34 @@ class DAppDetails extends ConsumerWidget {
                             ),
                           ),
                           iconPath: Assets.svg.iconButtonIceStroke,
+                          trailing: Button.compact(
+                            label: Text(
+                              isVoted.value
+                                  ? context.i18n.dapp_details_tips_voted
+                                  : context.i18n.dapp_details_tips_vote,
+                              style: context.theme.appTextThemes.body,
+                            ),
+                            minimumSize: Size(55.0.s, 28.0.s),
+                            paddingHorizontal: 10.0.s,
+                            style: ButtonStyle(
+                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14.0.s),
+                                ),
+                              ),
+                              backgroundColor: WidgetStateProperty.all<Color>(
+                                isVoted.value
+                                    ? context.theme.appColors.success
+                                    : context.theme.appColors.primaryAccent,
+                              ),
+                            ),
+                            onPressed: () {
+                              isVoted.value = !isVoted.value;
+                            },
+                            leadingIcon:
+                                isVoted.value ? Assets.svg.iconDappCheck.icon(size: 16.0.s) : null,
+                            leadingIconOffset: 4.0.s,
+                          ),
                         ),
                       Row(
                         children: [

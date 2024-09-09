@@ -10,11 +10,13 @@ class DappDetailsInfoBlock extends StatelessWidget {
     this.title,
     this.iconPath,
     this.value,
+    this.trailing,
   });
 
   final Widget? title;
   final String? iconPath;
   final Widget? value;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,8 @@ class DappDetailsInfoBlock extends StatelessWidget {
                         ),
                       ),
                     if (value != null) value!,
+                    if (trailing != null) const Spacer(),
+                    if (trailing != null) trailing!,
                   ],
                 ),
               ),
