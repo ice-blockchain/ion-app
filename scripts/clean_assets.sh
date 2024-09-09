@@ -120,7 +120,7 @@ for FILE in $ASSET_FILES; do
 
   # Check if the file exists in the app folder
   if [ -z "$FOUND" ]; then
-    echo "File not found in app folder: $RELATIVE_PATH"
+    echo "File not found in app folder: $RELATIVE_PATH with asset name $GENERATED_ASSET_NAME"
     if [ "$DRY_RUN" = false ]; then
       # Remove the file from assets folder
       remove_asset "$ASSETS_FOLDER/$RELATIVE_PATH"
