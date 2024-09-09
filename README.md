@@ -1,36 +1,65 @@
-# ice
+# Ice
 
 The Flutter app for the ice ecosystem.
-If you are starting this project for the first time, follow these steps:
-Min supported flutter version is Flutter 3.22.1
-# Configure folder structure:
 
-## Fetch repository https://github.com/ice-blockchain/flutter-app-secrets and put nearest with
-## current project
- Run from root folder to configure key
-```bash
-$ ./scripts/configure_env.sh staging
+# Getting started
+
+## Set up environment
+
+All environment-related files and keys are stored separately in the [secrets repository](https://github.com/ice-blockchain/flutter-app-secrets).
+
+Clone the [secrets repository](https://github.com/ice-blockchain/flutter-app-secrets) and place it at the same directory level as the main project repository.
+Example directory structure:
+```
+    ~/projects/flutter-app
+    ~/projects/flutter-app-secrets
+```
+To switch or set up an environment, run the `./scripts/configure_env.sh` script from the root of the main app project passing it a desired environment (`staging` or `production`).
+Example:
+
+```
+./scripts/configure_env.sh staging
 ```
 
+## Set up git hooks
 
-
-
-# Step to run
-(1) Upgrade build runner
-```bash
-$ flutter upgrade build_runner
 ```
-(2) Install flutter_gen (https://pub.dev/packages/flutter_gen)
-```bash
-$  brew install FlutterGen/tap/fluttergen
-```
-(3) Specify the path to generate
-```bash
-$ fluttergen -c pubspec.yaml
+./scripts/install_hooks.sh
 ```
 
-## To run app use the next command OR set flavor=staging as run configuration
-```bash
-$  flutter run --debug --flavor=staging
+We use Git hooks to ensure that commits adhere to the rules set by our code analyzer.
+
+To set up the hooks, run the script once from the root of the main project. All the precommit hooks are defined in `pre_commit.sh` script, if the content of this files changes, the hooks should be updated using the same `install_hooks.sh` script.
+
+## Set up Melos
+
+```
+./scripts/bootstrap.sh
 ```
 
+We maintain additional packages alongside the main app package (currently, only `packages/ion_identity_client` at the time of writing the README). To simplify the organization of this process, we use Melos. To set it up, simply run the script once. 
+
+## Generate code / locales
+
+```
+./scripts/generate_code.sh && ./scripts/generate_locales.sh
+```
+
+We use dart code generation in conjunction with libraries like `freezed`, `widgetbook`, `riverpod` and many other third-party libs. The code generation for locales is handled by a separate script, allowing you to trigger this process when, for instance, an `*.arb` file is saved.
+
+## Get dependencies
+
+```
+melos run pub_get
+```
+Since we use monorepo with several packages, we need to download dependencies for each package. To simplify this process, we use Melos, which allows us to define commands that run across all packages. For a list of available commands, check `melos.yaml`.
+
+# Run the project
+
+```
+flutter run
+```
+
+> [!IMPORTANT]
+> To run the project on Android with staging environment, we need to specify the `flavor`:
+> ```flutter run --flavor=staging```
