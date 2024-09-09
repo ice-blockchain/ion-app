@@ -158,7 +158,7 @@ class DAppDetails extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(
-                  height: launchButtonContainerHeight,
+                  height: fullLaunchContainerHeight + 10.0.s,
                 ),
               ],
             ),
