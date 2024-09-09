@@ -4,13 +4,20 @@ import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/model/wallet_data_with_loading_state.dart';
 import 'package:ice/app/features/wallet/providers/coins_provider.dart';
 import 'package:ice/app/features/wallet/providers/nfts_provider.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_query_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'filtered_assets_provider.g.dart';
 
 const debounceDuration = Duration(milliseconds: 300);
 const apiCallDelay = Duration(milliseconds: 500);
+
+@Riverpod(keepAlive: true)
+class WalletSearchQueryController extends _$WalletSearchQueryController {
+  @override
+  String build(WalletAssetType assetType) => '';
+
+  void update({required String query}) => state = query;
+}
 
 @Riverpod(keepAlive: true)
 Future<List<CoinData>> filteredCoins(FilteredCoinsRef ref) async {
