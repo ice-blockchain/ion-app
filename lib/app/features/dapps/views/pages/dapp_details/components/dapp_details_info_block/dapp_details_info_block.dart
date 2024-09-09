@@ -30,34 +30,38 @@ class DappDetailsInfoBlock extends StatelessWidget {
           color: context.theme.appColors.tertararyBackground,
         ),
         padding: EdgeInsets.symmetric(vertical: 8.0.s, horizontal: 12.0.s),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            title ?? const SizedBox.shrink(),
-            if (showBottomPart)
-              Padding(
-                padding: EdgeInsets.only(top: 4.0.s),
-                child: Row(
-                  children: [
-                    if (iconPath != null)
-                      Padding(
-                        padding: EdgeInsets.only(right: 6.0.s),
-                        child: SvgPicture.asset(
-                          iconPath!,
-                          width: 24.0.s,
-                          height: 24.0.s,
-                          colorFilter: ColorFilter.mode(
-                            context.theme.appColors.primaryAccent,
-                            BlendMode.srcIn,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                title ?? const SizedBox.shrink(),
+                if (showBottomPart)
+                  Padding(
+                    padding: EdgeInsets.only(top: 4.0.s),
+                    child: Row(
+                      children: [
+                        if (iconPath != null)
+                          Padding(
+                            padding: EdgeInsets.only(right: 6.0.s),
+                            child: SvgPicture.asset(
+                              iconPath!,
+                              width: 24.0.s,
+                              height: 24.0.s,
+                              colorFilter: ColorFilter.mode(
+                                context.theme.appColors.primaryAccent,
+                                BlendMode.srcIn,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    if (value != null) value!,
-                    if (trailing != null) const Spacer(),
-                    if (trailing != null) trailing!,
-                  ],
-                ),
-              ),
+                        if (value != null) value!,
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            if (trailing != null) const Spacer(),
+            if (trailing != null) trailing!,
           ],
         ),
       ),
