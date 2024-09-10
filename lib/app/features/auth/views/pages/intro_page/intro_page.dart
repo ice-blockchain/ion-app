@@ -4,18 +4,25 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/providers/video_player_provider.dart';
+import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:video_player/video_player.dart';
 
-class IntroPage extends ConsumerWidget {
+class IntroPage extends HookConsumerWidget {
   const IntroPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // We watch the intro page video controller here and ensure we pass the same parameters
+    // (looping: true) to get the same instance of the already initialized provider from SplashPage.
     final videoController = ref.watch(
       videoControllerProvider(Assets.videos.intro, looping: true),
     );
+
+    // Playing the intro video as soon as the widget is built.
+    // This ensures the video starts playing immediately after the page is displayed.
+    useOnInit(videoController.play);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

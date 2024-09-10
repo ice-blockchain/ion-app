@@ -13,12 +13,12 @@ Raw<VideoPlayerController> videoController(
   final controller = VideoPlayerController.asset(assetPath);
 
   controller.initialize().then((_) {
+    ref.notifyListeners();
     controller.setLooping(looping);
     if (autoPlay) controller.play();
   });
 
-  controller.addListener(ref.notifyListeners);
-  ref.onDispose(() => controller.dispose());
+  ref.onDispose(controller.dispose);
 
   return controller;
 }

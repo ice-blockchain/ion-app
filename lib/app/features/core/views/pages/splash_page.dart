@@ -14,16 +14,15 @@ class SplashPage extends ConsumerWidget {
       videoControllerProvider(Assets.videos.logoStatic, autoPlay: true),
     );
 
-    final introVideoController = ref.watch(
-      videoControllerProvider(Assets.videos.intro, looping: true),
-    );
+    // We watch the intro video controller here to initialize the intro video in advance.
+    // This ensures a seamless transition to the IntroPage without flickering or delays.
+    ref.watch(videoControllerProvider(Assets.videos.intro, looping: true));
 
     ref.listen<VideoPlayerController>(
       videoControllerProvider(Assets.videos.logoStatic, autoPlay: true),
       (previous, controller) {
         void onSplashVideoComplete() {
           if (controller.value.position >= controller.value.duration) {
-            introVideoController.play();
             ref.read(splashProvider.notifier).animationCompleted = true;
 
             controller.removeListener(onSplashVideoComplete);
