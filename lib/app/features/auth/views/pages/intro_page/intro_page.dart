@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/auth/views/pages/intro_page/hooks/use_video_controller_hook.dart';
+import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/auth/views/pages/intro_page/providers/video_player_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:video_player/video_player.dart';
 
-class IntroPage extends HookWidget {
+class IntroPage extends ConsumerWidget {
   const IntroPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final videoController = useVideoController(Assets.videos.intro);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final videoController = ref.watch(
+      videoControllerProvider(Assets.videos.intro, looping: true),
+    );
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
