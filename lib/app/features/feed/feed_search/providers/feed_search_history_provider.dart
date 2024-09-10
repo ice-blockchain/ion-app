@@ -16,8 +16,8 @@ class FeedSearchHistoryState with _$FeedSearchHistoryState {
 
 @riverpod
 class FeedSearchHistory extends _$FeedSearchHistory {
-  static String _userIdStoreKey = '___u';
-  static String _queriesStoreKey = '___q';
+  static String _userIdsStoreKey = 'FeedSearchHistory:userIds';
+  static String _queriesStoreKey = 'FeedSearchHistory:queries';
 
   @override
   FeedSearchHistoryState build() {
@@ -25,8 +25,32 @@ class FeedSearchHistory extends _$FeedSearchHistory {
     final userPreferencesService = ref.watch(userPreferencesServiceProvider(userId: userId));
 
     return FeedSearchHistoryState(
-      userIds: userPreferencesService.getValue<List<String>>(_userIdStoreKey) ?? [],
+      userIds: userPreferencesService.getValue<List<String>>(_userIdsStoreKey) ?? [],
       queries: userPreferencesService.getValue<List<String>>(_queriesStoreKey) ?? [],
     );
+  }
+
+  Future<bool> addUserToTheHistory(String userId) async {
+    if (!state.userIds.contains(userId)) {
+      final newUserIds = [...state.userIds, userId];
+      final currentUserId = ref.read(currentUserIdSelectorProvider);
+      final userPreferencesService =
+          ref.read(userPreferencesServiceProvider(userId: currentUserId));
+      state = state.copyWith(userIds: newUserIds);
+      return userPreferencesService.setValue<List<String>>(_userIdsStoreKey, newUserIds);
+    }
+    return false;
+  }
+
+  Future<bool> addQueryToTheHistory(String query) async {
+    if (!state.queries.contains(query)) {
+      final newQueries = [...state.queries, query];
+      final currentUserId = ref.read(currentUserIdSelectorProvider);
+      final userPreferencesService =
+          ref.read(userPreferencesServiceProvider(userId: currentUserId));
+      state = state.copyWith(queries: newQueries);
+      return userPreferencesService.setValue<List<String>>(_queriesStoreKey, newQueries);
+    }
+    return false;
   }
 }
