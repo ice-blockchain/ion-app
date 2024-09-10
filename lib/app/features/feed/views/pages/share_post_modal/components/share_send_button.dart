@@ -18,7 +18,7 @@ class ShareSendButton extends StatelessWidget {
           left: 44.0.s,
           right: 44.0.s,
         ),
-        child: Button.compact(
+        child: Button(
           mainAxisSize: MainAxisSize.max,
           minimumSize: Size(56.0.s, 56.0.s),
           trailingIcon:

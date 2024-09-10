@@ -1,48 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/separated/separator.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-
-double get launchButtonContainerHeight => 86.0.s;
-double get launchButtonHeight => 56.0.s;
-double get fullLaunchContainerHeight => launchButtonContainerHeight + 10.0.s;
+import 'package:ice/app/extensions/extensions.dart';
 
 class LaunchDappButton extends StatelessWidget {
-  const LaunchDappButton({Key? key}) : super(key: key);
+  const LaunchDappButton({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: fullLaunchContainerHeight,
-      child: Container(
-        color: context.theme.appColors.secondaryBackground,
-        child: ScreenSideOffset.small(
-          child: Stack(
-            children: [
-              Container(
-                color: context.theme.appColors.secondaryBackground,
-                padding: EdgeInsets.symmetric(
-                    vertical: (launchButtonContainerHeight - launchButtonHeight) / 2),
-                width: double.infinity,
-                child: SizedBox(
-                  height: launchButtonHeight,
-                  child: Button(
-                    label: Text(
-                      context.i18n.dapp_details_launch_dapp_button_title,
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
-              ),
-              HorizontalSeparator(),
-            ],
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: 18.0.s,
+          left: 16.0.s,
+          right: 16.0.s,
+          bottom: 36.0.s,
+        ),
+        child: Button(
+          mainAxisSize: MainAxisSize.max,
+          minimumSize: Size(56.0.s, 56.0.s),
+          label: Text(
+            context.i18n.dapp_details_launch_dapp_button_title,
           ),
+          onPressed: () {},
         ),
       ),
     );
