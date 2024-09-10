@@ -22,7 +22,7 @@ import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
-import 'package:ice/app/features/dapps/views/pages/dapp_details/dapp_details.dart';
+import 'package:ice/app/features/dapps/views/pages/dapp_details/dapp_details_modal.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_main_modal/dapps_main_modal_page.dart';
@@ -287,7 +287,7 @@ class DAppsListRoute extends BaseRouteData {
 class DAppDetailsRoute extends BaseRouteData {
   DAppDetailsRoute({required this.dappId})
       : super(
-          child: DAppDetails(dappId: dappId),
+          child: DAppDetailsModal(dappId: dappId),
           type: IceRouteType.bottomSheet,
         );
   final int dappId;

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
+import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 final double iconSideDimension = 40.0.s;
@@ -11,14 +13,12 @@ class FavouriteIcon extends StatelessWidget {
     super.key,
     this.isFavourite = false,
     this.onTap,
-    this.tintColor = Colors.black,
     this.borderRadius,
     this.size,
   });
 
   final bool isFavourite;
   final VoidCallback? onTap;
-  final Color? tintColor;
   final double? borderRadius;
   final double? size;
 
@@ -30,11 +30,11 @@ class FavouriteIcon extends StatelessWidget {
       onPressed: () {
         onTap?.call();
       },
+      backgroundColor: context.theme.appColors.tertararyBackground,
+      borderColor: context.theme.appColors.onTerararyFill,
       icon: SvgPicture.asset(
         iconPath,
         width: 24.0.s,
-        colorFilter:
-            isFavourite || tintColor == null ? null : ColorFilter.mode(tintColor!, BlendMode.srcIn),
       ),
       type: ButtonType.outlined,
       size: size ?? iconSideDimension,

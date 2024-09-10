@@ -46,7 +46,6 @@ class Favourites extends StatelessWidget {
                 FavouriteIcon(
                   borderRadius: 12.0.s,
                   size: 36.0.s,
-                  tintColor: context.theme.appColors.primaryAccent,
                 ),
                 SizedBox(width: 10.0.s),
                 Expanded(

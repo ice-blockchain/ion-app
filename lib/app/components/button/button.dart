@@ -69,6 +69,7 @@ class Button extends StatelessWidget {
     Color? tintColor,
     Color? backgroundColor,
     Size? minimumSize,
+    double? leadingIconOffset,
   }) = _ButtonCompact;
 
   factory Button.menu({

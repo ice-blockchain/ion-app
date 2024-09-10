@@ -1,30 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/generated/assets.gen.dart';
 
-class ShareSendButton extends StatelessWidget {
-  const ShareSendButton({
+class LaunchDappButton extends StatelessWidget {
+  const LaunchDappButton({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
+    return ScreenSideOffset.small(
       child: Padding(
         padding: EdgeInsets.only(
-          top: 22.0.s,
-          left: 44.0.s,
-          right: 44.0.s,
+          top: 18.0.s,
+          bottom: 36.0.s,
         ),
         child: Button(
           mainAxisSize: MainAxisSize.max,
-          minimumSize: Size(56.0.s, 56.0.s),
-          trailingIcon:
-              Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
           label: Text(
-            context.i18n.feed_send,
+            context.i18n.dapp_details_launch_dapp_button_title,
           ),
           onPressed: () {},
         ),

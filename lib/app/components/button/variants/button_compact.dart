@@ -12,6 +12,7 @@ class _ButtonCompact extends Button {
     super.type,
     super.disabled,
     super.tintColor,
+    super.leadingIconOffset,
     Size? minimumSize,
     ButtonStyle style = const ButtonStyle(),
   }) : super(
