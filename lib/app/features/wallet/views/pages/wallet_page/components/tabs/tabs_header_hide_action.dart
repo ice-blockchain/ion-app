@@ -26,7 +26,7 @@ class WalletTabsHeaderHideAction extends ConsumerWidget {
 
     return TextButton(
       onPressed: () {
-        final userId = ref.read(userDataNotifierProvider).id;
+        final userId = ref.read(currentUserIdSelectorProvider);
         ref
             .read(walletUserPreferencesNotifierProvider(userId: userId).notifier)
             .switchZeroValueAssetsVisibility();

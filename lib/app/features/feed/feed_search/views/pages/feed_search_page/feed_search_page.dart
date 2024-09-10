@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/pages/feed_search_page/components/feed_search_navigation.dart';
+import 'package:ice/app/features/feed/feed_search/views/pages/feed_search_page/components/feed_search_navigation.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class FeedSearchPage extends StatelessWidget {

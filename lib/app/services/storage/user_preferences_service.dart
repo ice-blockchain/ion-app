@@ -29,6 +29,8 @@ class UserPreferencesService {
       _localStorage.setDouble(userKey, value as double);
     } else if (T == String) {
       _localStorage.setString(userKey, value as String);
+    } else if (T == List<String>) {
+      _localStorage.setStringList(userKey, value as List<String>);
     } else {
       throw ArgumentError('Unsupported type: $T');
     }
@@ -42,6 +44,8 @@ class UserPreferencesService {
       return _localStorage.getDouble(userKey) as T?;
     } else if (T == String) {
       return _localStorage.getString(userKey) as T?;
+    } else if (T == List<String>) {
+      return _localStorage.getStringList(userKey) as T?;
     } else {
       throw ArgumentError('Unsupported type: $T');
     }
