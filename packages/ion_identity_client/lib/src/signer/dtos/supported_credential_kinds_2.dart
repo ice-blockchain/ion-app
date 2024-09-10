@@ -1,5 +1,9 @@
 import 'package:ion_identity_client/src/core/types/types.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'supported_credential_kinds_2.g.dart';
+
+@JsonSerializable()
 class SupportedCredentialKinds2 {
   SupportedCredentialKinds2(
     this.kind,
@@ -8,18 +12,12 @@ class SupportedCredentialKinds2 {
   );
 
   factory SupportedCredentialKinds2.fromJson(JsonObject json) {
-    return SupportedCredentialKinds2(
-      json['kind'] as String,
-      json['factor'] as String,
-      json['requiresSecondFactor'] as bool,
-    );
+    return _$SupportedCredentialKinds2FromJson(json);
   }
 
   final String kind;
   final String factor;
   final bool requiresSecondFactor;
 
-  @override
-  String toString() =>
-      'SupportedCredentialKinds2(kind: $kind, factor: $factor, requiresSecondFactor: $requiresSecondFactor)';
+  JsonObject toJson() => _$SupportedCredentialKinds2ToJson(this);
 }

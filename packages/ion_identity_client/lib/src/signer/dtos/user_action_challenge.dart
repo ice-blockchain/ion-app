@@ -2,7 +2,11 @@ import 'package:ion_identity_client/src/core/types/types.dart';
 import 'package:ion_identity_client/src/signer/dtos/allow_credentials.dart';
 import 'package:ion_identity_client/src/signer/dtos/relying_party.dart';
 import 'package:ion_identity_client/src/signer/dtos/supported_credential_kinds_2.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'user_action_challenge.g.dart';
+
+@JsonSerializable()
 class UserActionChallenge {
   UserActionChallenge(
     this.attestation,
@@ -16,18 +20,7 @@ class UserActionChallenge {
   );
 
   factory UserActionChallenge.fromJson(JsonObject json) {
-    return UserActionChallenge(
-      json['attestation'] as String,
-      json['userVerification'] as String,
-      json['externalAuthenticationUrl'] as String,
-      json['challenge'] as String,
-      json['challengeIdentifier'] as String,
-      RelyingParty.fromJson(json['rp'] as JsonObject),
-      List<SupportedCredentialKinds2>.from(
-        json['supportedCredentialKinds'].map(SupportedCredentialKinds2.fromJson) as List<dynamic>,
-      ),
-      AllowCredentials.fromJson(json['allowCredentials'] as JsonObject),
-    );
+    return _$UserActionChallengeFromJson(json);
   }
 
   final String attestation;
@@ -39,8 +32,5 @@ class UserActionChallenge {
   final List<SupportedCredentialKinds2> supportedCredentialKinds;
   final AllowCredentials allowCredentials;
 
-  @override
-  String toString() {
-    return 'UserActionChallenge(attestation: $attestation, userVerification: $userVerification, externalAuthenticationUrl: $externalAuthenticationUrl, challenge: $challenge, challengeIdentifier: $challengeIdentifier, rp: $rp, supportedCredentialKinds: $supportedCredentialKinds, allowCredentials: $allowCredentials)';
-  }
+  JsonObject toJson() => _$UserActionChallengeToJson(this);
 }

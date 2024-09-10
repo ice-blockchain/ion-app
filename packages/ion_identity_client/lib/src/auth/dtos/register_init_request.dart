@@ -1,21 +1,20 @@
-import 'package:ion_identity_client/src/core/types/types.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'register_init_request.g.dart';
+
+@JsonSerializable()
 class RegisterInitRequest {
   RegisterInitRequest({
-    required this.appId,
-    required this.username,
+    required this.email,
   });
 
-  final String appId;
-  final String username;
+  factory RegisterInitRequest.fromJson(Map<String, dynamic> json) =>
+      _$RegisterInitRequestFromJson(json);
 
-  JsonObject toJson() {
-    return {
-      'appId': appId,
-      'username': username,
-    };
-  }
+  final String email;
+
+  Map<String, dynamic> toJson() => _$RegisterInitRequestToJson(this);
 
   @override
-  String toString() => 'RegisterInitRequest(appId: $appId, username: $username)';
+  String toString() => 'RegisterInitRequest(email: $email)';
 }

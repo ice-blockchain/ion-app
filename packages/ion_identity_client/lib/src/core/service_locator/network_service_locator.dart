@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
+import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class NetworkServiceLocator with _Dio, _Interceptors, _TokenStorage, _NetworkClient {
@@ -28,7 +29,7 @@ mixin _Dio {
     final dioOptions = BaseOptions(
       baseUrl: config.origin,
       headers: {
-        'X-DFNS-APPID': config.appId,
+        RequestHeaders.ionIdentityClientId: config.appId,
       },
     );
     final dio = Dio(dioOptions);

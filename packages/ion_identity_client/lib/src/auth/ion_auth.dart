@@ -39,12 +39,17 @@ class IonAuth {
   /// Returns a [RegisterUserResult], which can either be a [RegisterUserSuccess]
   /// on success or a specific [RegisterUserFailure] type on failure.
   Future<RegisterUserResult> registerUser() async {
+    final canAuthenticate = await signer.canAuthenticate();
+    if (!canAuthenticate) {
+      return const PasskeyNotAvailableRegisterUserFailure();
+    }
+
     final result = await dataSource
         .registerInit(username: username)
         .flatMap(
           (userRegistrationChallenge) => TaskEither<RegisterUserFailure, Fido2Attestation>.tryCatch(
             () => signer.register(userRegistrationChallenge),
-            (_, __) => PasskeyValidationRegisterUserFailure(),
+            PasskeyValidationRegisterUserFailure.new,
           ).flatMap(
             (attestation) => dataSource.registerComplete(
               attestation: attestation,
@@ -73,8 +78,24 @@ class IonAuth {
   /// Returns a [LoginUserResult], which can either be a [LoginUserSuccess] on success
   /// or a specific [LoginUserFailure] type on failure.
   Future<LoginUserResult> loginUser() async {
+    final canAuthenticate = await signer.canAuthenticate();
+    if (!canAuthenticate) {
+      return const PasskeyNotAvailableLoginUserFailure();
+    }
+
     final response = await dataSource
-        .login(username: username)
+        .loginInit(username: username)
+        .flatMap(
+          (userActionChallenge) => TaskEither<LoginUserFailure, Fido2Assertion>.tryCatch(
+            () => signer.sign(userActionChallenge),
+            PasskeyValidationLoginUserFailure.new,
+          ).flatMap(
+            (assertion) => dataSource.loginComplete(
+              assertion: assertion,
+              challengeIdentifier: userActionChallenge.challengeIdentifier,
+            ),
+          ),
+        )
         .flatMap(
           (r) => tokenStorage.setToken(
             username: username,

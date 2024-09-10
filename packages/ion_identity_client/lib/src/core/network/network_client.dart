@@ -27,11 +27,13 @@ class NetworkClient {
     String path, {
     required Decoder<Result> decoder,
     JsonObject queryParams = const {},
+    JsonObject headers = const {},
   }) {
     return _makeRequest(
       request: () => dio.get<JsonObject>(
         path,
         queryParameters: queryParams,
+        options: Options(headers: headers),
       ),
       decoder: decoder,
     );
@@ -47,6 +49,7 @@ class NetworkClient {
     String path, {
     required Decoder<Result> decoder,
     JsonObject queryParams = const {},
+    JsonObject headers = const {},
     Object? data,
   }) {
     return _makeRequest(
@@ -54,6 +57,7 @@ class NetworkClient {
         path,
         queryParameters: queryParams,
         data: data,
+        options: Options(headers: headers),
       ),
       decoder: decoder,
     );
@@ -81,7 +85,7 @@ class NetworkClient {
         .flatMap(
           (r) => Either.tryCatch(
             () => decoder(r),
-            (_, __) => DecodeNetworkFailure(r),
+            (error, stackTrace) => DecodeNetworkFailure(r, error, stackTrace),
           ).toTaskEither(),
         );
   }

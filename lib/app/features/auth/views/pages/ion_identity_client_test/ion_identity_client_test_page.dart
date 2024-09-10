@@ -158,7 +158,7 @@ class _UsersTab extends ConsumerWidget {
   }
 }
 
-class UserWalletsDialog extends HookConsumerWidget {
+class UserWalletsDialog extends ConsumerWidget {
   const UserWalletsDialog({
     required this.username,
     super.key,
@@ -170,29 +170,35 @@ class UserWalletsDialog extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ionClient = ref.watch(ionApiClientProvider);
 
-    final walletsFuture = useFuture(ionClient(username: username).wallets.listWallets());
-
-    final isLoading = !walletsFuture.hasData;
-    final data = switch (walletsFuture.data) {
-      ListWalletsSuccess(wallets: final wallets) => wallets,
-      _ => <Wallet>[],
-    };
-
     return SheetContent(
-      body: isLoading
-          ? Center(
+      body: FutureBuilder(
+        future: ionClient(username: username).wallets.listWallets(),
+        builder: (context, snapshot) {
+          final isLoading = !snapshot.hasData;
+
+          if (isLoading) {
+            return Center(
               child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              shrinkWrap: true,
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return ListItem.text(
-                  title: Text('${data[index].id}'),
-                  value: data[index].network,
-                );
-              },
-            ),
+            );
+          }
+
+          final data = switch (snapshot.data) {
+            ListWalletsSuccess(wallets: final wallets) => wallets,
+            _ => <Wallet>[],
+          };
+
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              return ListItem.text(
+                title: Text('${data[index].id}'),
+                value: data[index].network,
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

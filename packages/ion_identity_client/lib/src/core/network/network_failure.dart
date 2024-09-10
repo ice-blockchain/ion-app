@@ -32,8 +32,10 @@ final class ResponseFormatNetworkFailure extends NetworkFailure {
 /// into a Dart object. This typically happens when the JSON structure does not
 /// match the expected model.
 final class DecodeNetworkFailure extends NetworkFailure {
-  const DecodeNetworkFailure(this.map);
+  const DecodeNetworkFailure(this.map, this.error, this.stackTrace);
 
   /// The JSON object that failed to decode into the expected Dart object.
   final JsonObject map;
+  final Object error;
+  final StackTrace stackTrace;
 }

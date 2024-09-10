@@ -12,4 +12,6 @@ final class ListWalletsSuccess extends ListWalletsResult {
 
 sealed class ListWalletsFailure extends ListWalletsResult {}
 
+final class UnauthorizedListWalletsFailure extends ListWalletsFailure {}
+
 final class UnknownListWalletsFailure extends ListWalletsFailure {}

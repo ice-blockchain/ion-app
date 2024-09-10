@@ -1,21 +1,21 @@
-import 'package:ion_identity_client/src/core/types/types.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'list_wallets_request.g.dart';
+
+@JsonSerializable()
 class ListWalletsRequest {
   ListWalletsRequest({
-    required this.appId,
-    required this.authToken,
+    required this.username,
+    required this.paginationToken,
   });
 
-  final String appId;
-  final String authToken;
+  factory ListWalletsRequest.fromJson(Map<String, dynamic> json) =>
+      _$ListWalletsRequestFromJson(json);
 
-  JsonObject toJson() {
-    return {
-      'appId': appId,
-      'authToken': authToken,
-    };
-  }
+  final String username;
 
-  @override
-  String toString() => 'ListWalletsRequest(appId: $appId, authToken: $authToken)';
+  @JsonKey(includeIfNull: false)
+  final String? paginationToken;
+
+  Map<String, dynamic> toJson() => _$ListWalletsRequestToJson(this);
 }
