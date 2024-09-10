@@ -27,9 +27,7 @@ Future<List<Country>> countryFilter(CountryFilterRef ref, String searchText) asy
     return countries;
   }
 
-  const debounceDuration = Duration(milliseconds: 500);
-
-  await ref.debounce(debounceDuration);
+  await ref.debounce();
   return _filterCountries(countries, searchText);
 }
 
