@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
 import 'package:ion_identity_client/src/ion_api_user_client.dart';
@@ -22,6 +24,10 @@ class IonApiClient {
   factory IonApiClient.createDefault({
     required IonClientConfig config,
   }) {
+    if (!(Platform.isAndroid || Platform.isIOS)) {
+      throw UnimplementedError('Current platform is not supproted');
+    }
+
     final signer = PasskeysSigner();
 
     return IonApiClient._(
