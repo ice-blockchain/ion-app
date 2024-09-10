@@ -12,9 +12,8 @@ class _ButtonCompact extends Button {
     super.type,
     super.disabled,
     super.tintColor,
+    super.leadingIconOffset,
     Size? minimumSize,
-    double? leadingIconOffset,
-    double? paddingHorizontal,
     ButtonStyle style = const ButtonStyle(),
   }) : super(
           style: style.merge(
@@ -24,9 +23,7 @@ class _ButtonCompact extends Button {
               ),
               minimumSize: minimumSize ?? Size(40.0.s, 40.0.s),
               backgroundColor: backgroundColor,
-              padding: EdgeInsets.symmetric(horizontal: paddingHorizontal ?? 16.0.s),
             ),
           ),
-          leadingIconOffset: leadingIconOffset ?? 8.0.s,
         );
 }

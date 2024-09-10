@@ -120,12 +120,14 @@ class DAppDetailsModal extends HookConsumerWidget {
                             style: context.theme.appTextThemes.body,
                           ),
                           minimumSize: Size(55.0.s, 28.0.s),
-                          paddingHorizontal: 10.0.s,
                           style: ButtonStyle(
                             shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14.0.s),
                               ),
+                            ),
+                            padding: WidgetStateProperty.all<EdgeInsets>(
+                              EdgeInsets.symmetric(horizontal: 10.0.s),
                             ),
                             backgroundColor: WidgetStateProperty.all<Color>(
                               isVoted.value
