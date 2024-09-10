@@ -62,10 +62,7 @@ class IonAuthDataSource {
   TaskEither<LoginUserFailure, UserActionChallenge> loginInit({
     required String username,
   }) {
-    final requestData = LoginInitRequest(
-      username: username,
-      orgId: config.orgId,
-    );
+    final requestData = LoginInitRequest(username: username);
 
     return networkClient
         .post(

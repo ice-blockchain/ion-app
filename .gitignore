@@ -44,8 +44,6 @@ app.*.map.json
 *.freezed.dart
 *.gen.dart
 
-!packages/ion_identity_client/lib/src/**/*.g.dart
-
 # VSCode related
 .vscode
 

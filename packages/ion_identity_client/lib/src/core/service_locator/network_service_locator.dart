@@ -29,7 +29,7 @@ mixin _Dio {
     final dioOptions = BaseOptions(
       baseUrl: config.origin,
       headers: {
-        RequestHeaders.xDfnsAppId: config.appId,
+        RequestHeaders.ionIdentityClientId: config.appId,
       },
     );
     final dio = Dio(dioOptions);

@@ -7,16 +7,14 @@ part 'login_init_request.g.dart';
 class LoginInitRequest {
   const LoginInitRequest({
     required this.username,
-    required this.orgId,
   });
 
   factory LoginInitRequest.fromJson(JsonObject json) => _$LoginInitRequestFromJson(json);
 
   final String username;
-  final String orgId;
 
   JsonObject toJson() => _$LoginInitRequestToJson(this);
 
   @override
-  String toString() => 'LoginInitRequest(username: $username, orgId: $orgId)';
+  String toString() => 'LoginInitRequest(username: $username)';
 }

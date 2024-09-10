@@ -9,7 +9,6 @@ part 'env_provider.g.dart';
 enum EnvVariable {
   ION_ANDROID_APP_ID,
   ION_IOS_APP_ID,
-  ION_ORG_ID,
   ION_ORIGIN,
 }
 

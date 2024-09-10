@@ -10,27 +10,15 @@ part 'ion_identity_client_provider.g.dart';
 IonApiClient ionApiClient(IonApiClientRef ref) {
   final envController = ref.watch(envProvider.notifier);
 
-  final appId = ref.watch(appIdProvider);
+  final appId = envController
+      .get(Platform.isAndroid ? EnvVariable.ION_ANDROID_APP_ID : EnvVariable.ION_IOS_APP_ID);
 
   final config = IonClientConfig(
     appId: appId,
-    orgId: envController.get(EnvVariable.ION_ORG_ID),
     origin: envController.get(EnvVariable.ION_ORIGIN),
   );
 
   final ionClient = IonApiClient.createDefault(config: config);
 
   return ionClient;
-}
-
-@Riverpod(keepAlive: true)
-String appId(AppIdRef ref) {
-  final envController = ref.watch(envProvider.notifier);
-
-  final androidAppId = envController.get(EnvVariable.ION_ANDROID_APP_ID);
-  final iosAppId = envController.get(EnvVariable.ION_IOS_APP_ID);
-
-  final appId = Platform.isAndroid ? androidAppId : iosAppId;
-
-  return appId;
 }
