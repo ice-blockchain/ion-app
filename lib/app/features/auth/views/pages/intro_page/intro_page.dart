@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/views/pages/intro_page/providers/video_player_provider.dart';
+import 'package:ice/app/features/core/providers/video_player_provider.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
