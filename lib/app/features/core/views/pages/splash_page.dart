@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/app/features/core/providers/video_player_provider.dart';
@@ -8,8 +9,12 @@ import 'package:video_player/video_player.dart';
 class SplashPage extends ConsumerWidget {
   const SplashPage({super.key});
 
+  static const Color backgroundColor = Colors.white;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    _setSystemChrome();
+
     final splashVideoController = ref.watch(
       videoControllerProvider(Assets.videos.logoStatic, autoPlay: true),
     );
@@ -34,6 +39,7 @@ class SplashPage extends ConsumerWidget {
     );
 
     return Scaffold(
+      backgroundColor: backgroundColor,
       body: Center(
         child: splashVideoController.value.isInitialized
             ? AspectRatio(
@@ -41,6 +47,15 @@ class SplashPage extends ConsumerWidget {
                 child: VideoPlayer(splashVideoController),
               )
             : const SizedBox.shrink(),
+      ),
+    );
+  }
+
+  void _setSystemChrome() {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: backgroundColor,
       ),
     );
   }
