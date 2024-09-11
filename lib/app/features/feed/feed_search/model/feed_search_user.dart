@@ -9,6 +9,7 @@ class FeedSearchUser with _$FeedSearchUser {
     required String nickname,
     required String name,
     required String imageUrl,
-    bool? isVerified,
+    required bool isVerified,
+    required bool nft,
   }) = _FeedSearchUser;
 }
