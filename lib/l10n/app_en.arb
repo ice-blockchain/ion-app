@@ -299,5 +299,8 @@
   "phone_success_description": "The phone number has been successfully verified and added for 2FA",
   "phone_number": "Phone number",
   "phone_number_invalid": "Invalid phone number",
-  "select_countries_nav_title": "Select country"
+  "select_countries_nav_title": "Select country",
+  "create_article_nav_title": "New article",
+  "create_story_nav_title": "Add a story",
+  "create_video_nav_title": "Add video"
 }
