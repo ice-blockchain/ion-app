@@ -44,7 +44,7 @@ class IntroPage extends HookConsumerWidget {
                 ScaleEffect(
                   duration: 500.ms,
                   curve: Curves.easeOutBack,
-                  delay: 4.5.seconds,
+                  delay: 2.0.seconds,
                 ),
               ],
               child: Button(
