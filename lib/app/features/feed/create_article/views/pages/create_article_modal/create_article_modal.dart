@@ -30,7 +30,7 @@ class CreateArticleModal extends StatelessWidget {
               ),
             ],
           ),
-          Expanded(child: SizedBox.shrink()),
+          Spacer(),
         ],
       ),
     );
