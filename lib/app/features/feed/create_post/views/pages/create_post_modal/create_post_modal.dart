@@ -29,7 +29,7 @@ class CreatePostModal extends HookWidget {
                 child: Column(
                   children: [
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start, // Aligns everything to the top
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 8.0.s),
@@ -51,7 +51,7 @@ class CreatePostModal extends HookWidget {
                                 color: context.theme.appColors.quaternaryText,
                               ),
                               hintText: context.i18n.create_post_modal_placeholder,
-                              border: InputBorder.none, // Remove border for a cleaner look
+                              border: InputBorder.none,
                             ),
                             cursorColor: context.theme.appColors.primaryAccent,
                             cursorHeight: 13.0.s,
