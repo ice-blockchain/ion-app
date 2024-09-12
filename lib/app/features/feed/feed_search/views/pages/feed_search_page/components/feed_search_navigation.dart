@@ -15,14 +15,22 @@ class FeedSearchNavigation extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final focusNode = useFocusNode();
+    final searchController = useTextEditingController();
     useOnInit(focusNode.requestFocus);
     useGoBackOnBlur(focusNode: focusNode);
+
+    ref.listen(feedSearchQueryControllerProvider, (_, value) {
+      if (searchController.text != value) {
+        searchController.text = value;
+      }
+    });
 
     return ScreenSideOffset.small(
       child: Row(
         children: [
           Expanded(
             child: SearchInput(
+              controller: searchController,
               focusNode: focusNode,
               onTextChanged: (String query) {
                 ref.read(feedSearchQueryControllerProvider.notifier).update(query: query);

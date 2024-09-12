@@ -19,7 +19,9 @@ class SearchInput extends HookWidget {
     this.onCancelSearch,
     this.defaultValue = '',
     FocusNode? focusNode,
-  }) : externalFocusNode = focusNode;
+    TextEditingController? controller,
+  })  : externalFocusNode = focusNode,
+        externalController = controller;
 
   static double get height => 40.0.s;
 
@@ -28,10 +30,11 @@ class SearchInput extends HookWidget {
   final bool loading;
   final String defaultValue;
   final FocusNode? externalFocusNode;
+  final TextEditingController? externalController;
 
   @override
   Widget build(BuildContext context) {
-    final searchController = useTextEditingController(text: defaultValue);
+    final searchController = externalController ?? useTextEditingController(text: defaultValue);
     final focusNode = externalFocusNode ?? useFocusNode();
 
     final showClear = useState(false);

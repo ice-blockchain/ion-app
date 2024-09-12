@@ -7,6 +7,7 @@ import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/feed_search/model/feed_search_user.dart';
 import 'package:ice/app/features/feed/feed_search/providers/feed_search_history_provider.dart';
+import 'package:ice/app/features/feed/feed_search/providers/feed_search_query_provider.dart';
 import 'package:ice/app/features/feed/feed_search/providers/feed_simple_search_results.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_search_page/components/feed_search_navigation.dart';
 import 'package:ice/app/utils/username.dart';
@@ -112,7 +113,7 @@ class FeedSearchEmptyHistory extends StatelessWidget {
   }
 }
 
-class FeedSearchHistory extends StatelessWidget {
+class FeedSearchHistory extends ConsumerWidget {
   const FeedSearchHistory({
     super.key,
     required this.users,
@@ -124,7 +125,7 @@ class FeedSearchHistory extends StatelessWidget {
   final List<String> queries;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Flexible(
       child: Column(
         children: [
@@ -204,7 +205,9 @@ class FeedSearchHistory extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final query = queries[index];
                   return GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      ref.read(feedSearchQueryControllerProvider.notifier).update(query: query);
+                    },
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: 8.0.s,
