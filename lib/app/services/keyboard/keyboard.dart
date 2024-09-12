@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 bool isKeyboardVisible(BuildContext context) {
-  return MediaQuery.of(context).viewInsets.bottom > 0;
+  if (context.mounted) {
+    return MediaQuery.of(context).viewInsets.bottom > 0;
+  }
+  return false;
 }
 
 void hideKeyboard(

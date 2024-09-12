@@ -19,7 +19,6 @@ class WebViewBrowser extends StatelessWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.transaction_details_title),
-            showBackButton: true,
             actions: const [NavigationCloseButton()],
           ),
           Expanded(

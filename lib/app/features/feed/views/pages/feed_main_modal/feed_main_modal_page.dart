@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/components/feed_modal_item.dart';
@@ -32,14 +33,10 @@ class FeedMainModalPage extends StatelessWidget {
               return FeedModalItem(
                 feedType: type,
                 onTap: () {
-                  final actions = {
-                    FeedType.post: () => null,
-                    FeedType.story: () => CreateStoryRoute().go(context),
-                    FeedType.video: () => CreateVideoRoute().go(context),
-                    FeedType.article: () => CreateArticleRoute().go(context),
-                  };
-
-                  actions[type]?.call();
+                  final createFlowRouteLocation = _getCreateFlowRouteLocation(type);
+                  context
+                    ..go(GoRouterState.of(context).currentTab.baseRouteLocation)
+                    ..go(createFlowRouteLocation);
                 },
               );
             },
@@ -47,5 +44,18 @@ class FeedMainModalPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getCreateFlowRouteLocation(FeedType type) {
+    switch (type) {
+      case FeedType.post:
+        return CreatePostRoute().location;
+      case FeedType.story:
+        return CreateStoryRoute().location;
+      case FeedType.video:
+        return CreateVideoRoute().location;
+      case FeedType.article:
+        return CreateArticleRoute().location;
+    }
   }
 }

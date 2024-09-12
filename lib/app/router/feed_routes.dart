@@ -10,6 +10,7 @@ class FeedRoutes {
         TypedGoRoute<CommentPostModalRoute>(path: 'comment-post/:postId'),
         TypedGoRoute<PostReplyModalRoute>(path: 'reply-to-post/:postId'),
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
+        TypedGoRoute<CreatePostRoute>(path: 'create-post'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
         TypedGoRoute<CreateStoryRoute>(path: 'create-story'),
         TypedGoRoute<CreateVideoRoute>(path: 'create-video'),
@@ -77,6 +78,14 @@ class FeedSearchRoute extends BaseRouteData {
       : super(
           child: FeedSearchPage(),
           type: IceRouteType.fade,
+        );
+}
+
+class CreatePostRoute extends BaseRouteData {
+  CreatePostRoute()
+      : super(
+          child: const CreatePostModal(),
+          type: IceRouteType.bottomSheet,
         );
 }
 
