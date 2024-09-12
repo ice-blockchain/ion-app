@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/views/components/toolbar/toolbar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
@@ -31,6 +32,7 @@ class CreateArticleModal extends StatelessWidget {
             ],
           ),
           Spacer(),
+          Toolbar(),
         ],
       ),
     );
