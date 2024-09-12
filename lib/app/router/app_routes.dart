@@ -26,7 +26,10 @@ import 'package:ice/app/features/dapps/views/pages/dapp_details/dapp_details_mod
 import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_main_modal/dapps_main_modal_page.dart';
+import 'package:ice/app/features/feed/create_article/views/pages/create_article_modal/create_article_modal.dart';
 import 'package:ice/app/features/feed/create_post/views/pages/create_post_modal/create_post_modal.dart';
+import 'package:ice/app/features/feed/create_story/views/pages/create_story_modal/create_story_modal.dart';
+import 'package:ice/app/features/feed/create_video/views/pages/create_video_modal/create_video_modal.dart';
 import 'package:ice/app/features/feed/views/pages/comment_post_modal/comment_post_modal.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';

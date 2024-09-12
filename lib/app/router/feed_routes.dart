@@ -11,6 +11,9 @@ class FeedRoutes {
         TypedGoRoute<PostReplyModalRoute>(path: 'reply-to-post/:postId'),
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
         TypedGoRoute<CreatePostRoute>(path: 'create-post'),
+        TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
+        TypedGoRoute<CreateStoryRoute>(path: 'create-story'),
+        TypedGoRoute<CreateVideoRoute>(path: 'create-video'),
       ],
     ),
   ];
@@ -82,6 +85,30 @@ class CreatePostRoute extends BaseRouteData {
   CreatePostRoute()
       : super(
           child: const CreatePostModal(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class CreateArticleRoute extends BaseRouteData {
+  CreateArticleRoute()
+      : super(
+          child: CreateArticleModal(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class CreateStoryRoute extends BaseRouteData {
+  CreateStoryRoute()
+      : super(
+          child: CreateStoryModal(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class CreateVideoRoute extends BaseRouteData {
+  CreateVideoRoute()
+      : super(
+          child: CreateVideoModal(),
           type: IceRouteType.bottomSheet,
         );
 }

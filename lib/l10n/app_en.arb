@@ -302,5 +302,8 @@
   "phone_number_invalid": "Invalid phone number",
   "select_countries_nav_title": "Select country",
   "create_post_modal_title": "New post",
-  "create_post_modal_placeholder": "What’s happening?"
+  "create_post_modal_placeholder": "What’s happening?",
+  "create_article_nav_title": "New article",
+  "create_story_nav_title": "Add a story",
+  "create_video_nav_title": "Add video"
 }

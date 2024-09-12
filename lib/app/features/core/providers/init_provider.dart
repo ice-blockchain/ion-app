@@ -13,12 +13,12 @@ part 'init_provider.g.dart';
 Future<void> initApp(InitAppRef ref) async {
   Nostr.initialize();
   await ref.read(envProvider.future);
+  await ref.watch(sharedPreferencesProvider.future);
   await Future.wait([
     ref.read(appTemplateProvider.future),
     ref.read(authProvider.notifier).rehydrate(),
   ]);
 
-  await ref.watch(sharedPreferencesProvider.future);
   ref.watch(relaysProvider.notifier);
   await ref.read(permissionsProvider.notifier).checkAllPermissions();
 }

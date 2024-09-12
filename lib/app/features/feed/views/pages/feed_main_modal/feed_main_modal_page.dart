@@ -29,12 +29,14 @@ class FeedMainModalPage extends StatelessWidget {
             separatorBuilder: (_, __) => HorizontalSeparator(),
             itemCount: feedTypeValues.length,
             itemBuilder: (BuildContext context, int index) {
+              final FeedType type = feedTypeValues[index];
               return FeedModalItem(
-                feedType: feedTypeValues[index],
+                feedType: type,
                 onTap: () {
+                  final createFlowRouteLocation = _getCreateFlowRouteLocation(type);
                   context
                     ..go(GoRouterState.of(context).currentTab.baseRouteLocation)
-                    ..go(CreatePostRoute().location);
+                    ..go(createFlowRouteLocation);
                 },
               );
             },
@@ -42,5 +44,18 @@ class FeedMainModalPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getCreateFlowRouteLocation(FeedType type) {
+    switch (type) {
+      case FeedType.post:
+        return CreatePostRoute().location;
+      case FeedType.story:
+        return CreateStoryRoute().location;
+      case FeedType.video:
+        return CreateVideoRoute().location;
+      case FeedType.article:
+        return CreateArticleRoute().location;
+    }
   }
 }
