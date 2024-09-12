@@ -10,6 +10,7 @@ class FeedRoutes {
         TypedGoRoute<CommentPostModalRoute>(path: 'comment-post/:postId'),
         TypedGoRoute<PostReplyModalRoute>(path: 'reply-to-post/:postId'),
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
+        TypedGoRoute<CreatePostRoute>(path: 'create-post'),
       ],
     ),
   ];
@@ -74,5 +75,13 @@ class FeedSearchRoute extends BaseRouteData {
       : super(
           child: FeedSearchPage(),
           type: IceRouteType.fade,
+        );
+}
+
+class CreatePostRoute extends BaseRouteData {
+  CreatePostRoute()
+      : super(
+          child: const CreatePostModal(),
+          type: IceRouteType.bottomSheet,
         );
 }
