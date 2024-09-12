@@ -5,8 +5,8 @@ import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/services/storage/user_preferences_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'feed_search_history_provider.g.dart';
-part 'feed_search_history_provider.freezed.dart';
+part 'feed_search_history_store_provider.g.dart';
+part 'feed_search_history_store_provider.freezed.dart';
 
 @Freezed(copyWith: true)
 class FeedSearchHistoryState with _$FeedSearchHistoryState {
@@ -17,7 +17,7 @@ class FeedSearchHistoryState with _$FeedSearchHistoryState {
 }
 
 @riverpod
-class FeedSearchHistory extends _$FeedSearchHistory {
+class FeedSearchHistoryStore extends _$FeedSearchHistoryStore {
   static String _userIdsStoreKey = 'FeedSearchHistory:userIds';
   static String _queriesStoreKey = 'FeedSearchHistory:queries';
 

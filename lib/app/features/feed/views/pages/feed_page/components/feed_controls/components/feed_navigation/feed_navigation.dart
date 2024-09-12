@@ -23,7 +23,7 @@ class FeedNavigation extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => FeedSearchRoute().push<void>(context),
+              onTap: () => FeedSimpleSearchRoute().push<void>(context),
               child: IgnorePointer(child: SearchInput()),
             ),
           ),
