@@ -49,6 +49,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version-file: main-repo/pubspec.yaml
           cache: true
       - run: flutter --version
       - name: Bootstrap
