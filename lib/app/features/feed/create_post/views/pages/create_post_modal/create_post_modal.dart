@@ -20,7 +20,6 @@ class CreatePostModal extends HookWidget {
       body: Column(
         children: [
           NavigationAppBar.modal(
-            showBackButton: true,
             title: Text(context.i18n.create_post_modal_title),
           ),
           Expanded(

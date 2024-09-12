@@ -23,7 +23,6 @@ class AuthenticatorInitialDeletePage extends StatelessWidget {
       body: Column(
         children: [
           NavigationAppBar.modal(
-            showBackButton: true,
             title: Text(locale.two_fa_option_authenticator),
           ),
           AuthHeader(
