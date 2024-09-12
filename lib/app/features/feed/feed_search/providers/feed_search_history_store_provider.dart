@@ -26,10 +26,10 @@ class FeedSearchHistoryStore extends _$FeedSearchHistoryStore {
     final userId = ref.watch(currentUserIdSelectorProvider);
     final userPreferencesService = ref.watch(userPreferencesServiceProvider(userId: userId));
 
-    final storedUserIds = userPreferencesService.getValue<List<String>>(_userIdsStoreKey);
-    final storedQueries = userPreferencesService.getValue<List<String>>(_queriesStoreKey);
+    final storedUserIds = userPreferencesService.getValue<List<String>>(_userIdsStoreKey) ?? [];
+    final storedQueries = userPreferencesService.getValue<List<String>>(_queriesStoreKey) ?? [];
 
-    final users = storedUserIds != null && storedUserIds.isNotEmpty
+    final users = storedUserIds.isNotEmpty
         ? await Future(() async {
             await Future<void>.delayed(Duration(seconds: 1));
             return storedUserIds
@@ -38,7 +38,7 @@ class FeedSearchHistoryStore extends _$FeedSearchHistoryStore {
           })
         : <FeedSearchUser>[];
 
-    return FeedSearchHistoryState(users: users, queries: storedQueries ?? []);
+    return FeedSearchHistoryState(users: users, queries: storedQueries);
   }
 
   Future<void> addUserToTheHistory(FeedSearchUser user) async {
