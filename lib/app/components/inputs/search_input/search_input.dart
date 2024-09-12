@@ -18,6 +18,8 @@ class SearchInput extends HookWidget {
     this.loading = false,
     this.onCancelSearch,
     this.defaultValue = '',
+    this.textInputAction,
+    this.onSubmitted,
     FocusNode? focusNode,
     TextEditingController? controller,
   })  : externalFocusNode = focusNode,
@@ -31,6 +33,8 @@ class SearchInput extends HookWidget {
   final String defaultValue;
   final FocusNode? externalFocusNode;
   final TextEditingController? externalController;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +107,8 @@ class SearchInput extends HookWidget {
                 fillColor: context.theme.appColors.primaryBackground,
               ),
               controller: searchController,
+              textInputAction: textInputAction,
+              onSubmitted: onSubmitted,
             ),
           ),
         ),

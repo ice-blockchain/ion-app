@@ -61,5 +61,10 @@ class UserPreferencesService {
     return _localStorage.getEnum(userKey, values);
   }
 
+  Future<bool> remove(String key) {
+    final userKey = _getUserKey(key);
+    return _localStorage.remove(userKey);
+  }
+
   String _getUserKey(String key) => 'user_$_userId:$key';
 }

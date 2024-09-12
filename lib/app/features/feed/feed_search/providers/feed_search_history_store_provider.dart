@@ -69,4 +69,14 @@ class FeedSearchHistoryStore extends _$FeedSearchHistoryStore {
       state = AsyncValue.data(stateValue.copyWith(queries: newQueries));
     }
   }
+
+  Future<void> clear() async {
+    final currentUserId = ref.read(currentUserIdSelectorProvider);
+    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: currentUserId));
+    await Future.wait([
+      userPreferencesService.remove(_userIdsStoreKey),
+      userPreferencesService.remove(_queriesStoreKey),
+    ]);
+    state = AsyncValue.data(FeedSearchHistoryState(queries: [], users: []));
+  }
 }
