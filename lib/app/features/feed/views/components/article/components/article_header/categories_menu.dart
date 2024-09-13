@@ -4,11 +4,19 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/article_category.dart';
 import 'package:ice/app/features/feed/views/components/article/components/article_header/categories_row.dart';
 
-class SelectableMenu extends HookWidget {
+class CategoriesMenu extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selectedItems = useState<Set<String>>({});
     final List<ArticleCategory> items = mockedArticleCategories;
+
+    final toggleSelection = useCallback((String id) {
+      final newSelected = Set<String>.from(selectedItems.value);
+
+      newSelected.contains(id) ? newSelected.remove(id) : newSelected.add(id);
+
+      selectedItems.value = newSelected;
+    }, [selectedItems.value]);
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -21,38 +29,18 @@ class SelectableMenu extends HookWidget {
             CategoriesRow(
               items: items.sublist(0, 5),
               selectedItems: selectedItems.value,
-              onToggle: (label) {
-                if (selectedItems.value.contains(label)) {
-                  selectedItems.value = Set.from(selectedItems.value)..remove(label);
-                } else {
-                  selectedItems.value = Set.from(selectedItems.value)..add(label);
-                }
-              },
+              onToggle: toggleSelection,
               showAddButton: true,
             ),
             SizedBox(height: 10),
             CategoriesRow(
               items: items.sublist(5),
               selectedItems: selectedItems.value,
-              onToggle: (label) {
-                if (selectedItems.value.contains(label)) {
-                  selectedItems.value = Set.from(selectedItems.value)..remove(label);
-                } else {
-                  selectedItems.value = Set.from(selectedItems.value)..add(label);
-                }
-              },
+              onToggle: toggleSelection,
             ),
           ],
         ),
       ),
     );
   }
-
-  //   void toggleSelection(String label) {
-  //   if (selectedItems.value.contains(label)) {
-  //     selectedItems.value = Set.from(selectedItems.value)..remove(label);
-  //   } else {
-  //     selectedItems.value = Set.from(selectedItems.value)..add(label);
-  //   }
-  // }
 }

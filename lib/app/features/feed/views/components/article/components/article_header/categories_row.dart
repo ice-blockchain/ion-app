@@ -34,39 +34,61 @@ class CategoriesRow extends StatelessWidget {
               backgroundColor: colors.tertararyBackground,
               size: 40.0.s,
               type: ButtonType.outlined,
-              icon: Assets.svg.iconPlusCreatechannel.icon(color: colors.primaryAccent),
+              icon: Assets.svg.iconPlusCreatechannel.icon(
+                color: colors.primaryAccent,
+                size: 28.0.s,
+              ),
               onPressed: () {},
             ),
           ),
         ...items.map(
           (item) => Padding(
             padding: EdgeInsets.only(right: 12.0.s),
-            child: Button.compact(
-              backgroundColor: colors.tertararyBackground,
-              type: ButtonType.outlined,
-              leadingIcon: item.icon.icon(
-                color:
-                    selectedItems.contains(item.id) ? colors.primaryAccent : colors.tertararyText,
-              ),
-              label: Text(
-                item.name,
-                style: context.theme.appTextThemes.caption.copyWith(
-                  color:
-                      selectedItems.contains(item.id) ? colors.primaryAccent : colors.tertararyText,
-                ),
-              ),
-              onPressed: () => onToggle(item.id),
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(
-                  color: selectedItems.contains(item.id)
-                      ? colors.primaryAccent
-                      : colors.onTerararyFill,
-                ),
-              ),
+            child: _CategoryButton(
+              category: item,
+              isSelected: selectedItems.contains(item.id),
+              onToggle: onToggle,
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _CategoryButton extends StatelessWidget {
+  final ArticleCategory category;
+  final bool isSelected;
+  final ValueChanged<String> onToggle;
+
+  const _CategoryButton({
+    required this.category,
+    required this.isSelected,
+    required this.onToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.theme.appColors;
+
+    return Button.compact(
+      backgroundColor: colors.tertararyBackground,
+      type: ButtonType.outlined,
+      leadingIcon: category.icon.icon(
+        color: isSelected ? colors.primaryAccent : colors.tertararyText,
+      ),
+      label: Text(
+        category.name,
+        style: context.theme.appTextThemes.caption.copyWith(
+          color: isSelected ? colors.primaryAccent : colors.tertararyText,
+        ),
+      ),
+      onPressed: () => onToggle(category.id),
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(
+          color: isSelected ? colors.primaryAccent : colors.onTerararyFill,
+        ),
+      ),
     );
   }
 }

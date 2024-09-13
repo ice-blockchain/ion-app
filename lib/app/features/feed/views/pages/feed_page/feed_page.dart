@@ -8,7 +8,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/providers/posts_provider.dart';
-import 'package:ice/app/features/feed/views/components/article/components/article_header/selectable_menu.dart';
+import 'package:ice/app/features/feed/views/components/article/components/article_header/categories_menu.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
@@ -38,7 +38,7 @@ class FeedPage extends HookConsumerWidget {
         child: Column(
           children: [
             if (feedCategory == FeedCategory.articles) ...[
-              SelectableMenu(),
+              CategoriesMenu(),
               FeedListSeparator(),
             ],
             if (feedCategory != FeedCategory.articles) ...[
