@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -21,10 +22,9 @@ class FeedAdvancedSearchNavigation extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final searchController = useTextEditingController();
 
-    useEffect(() {
+    useOnInit(() {
       searchController.text = query;
       //TODO:run search here
-      return null;
     }, [query]);
 
     return ScreenSideOffset.small(
@@ -40,7 +40,7 @@ class FeedAdvancedSearchNavigation extends HookConsumerWidget {
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => FeedSimpleSearchRoute().push<void>(context),
+              onTap: () => FeedSimpleSearchRoute(query: query).push<void>(context),
               child: IgnorePointer(
                 child: SearchInput(controller: searchController, suffix: SizedBox.shrink()),
               ),

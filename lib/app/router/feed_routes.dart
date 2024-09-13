@@ -75,11 +75,13 @@ class SharePostModalRoute extends BaseRouteData {
 }
 
 class FeedSimpleSearchRoute extends BaseRouteData {
-  FeedSimpleSearchRoute()
+  FeedSimpleSearchRoute({this.query = ''})
       : super(
-          child: FeedSimpleSearchPage(),
+          child: FeedSimpleSearchPage(query: query),
           type: IceRouteType.fade,
         );
+
+  final String query;
 }
 
 class FeedAdvancedSearchRoute extends BaseRouteData {
