@@ -18,8 +18,12 @@ class SearchInput extends HookWidget {
     this.loading = false,
     this.onCancelSearch,
     this.defaultValue = '',
+    this.textInputAction,
+    this.onSubmitted,
     FocusNode? focusNode,
-  }) : externalFocusNode = focusNode;
+    TextEditingController? controller,
+  })  : externalFocusNode = focusNode,
+        externalController = controller;
 
   static double get height => 40.0.s;
 
@@ -28,10 +32,13 @@ class SearchInput extends HookWidget {
   final bool loading;
   final String defaultValue;
   final FocusNode? externalFocusNode;
+  final TextEditingController? externalController;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
 
   @override
   Widget build(BuildContext context) {
-    final searchController = useTextEditingController(text: defaultValue);
+    final searchController = externalController ?? useTextEditingController(text: defaultValue);
     final focusNode = externalFocusNode ?? useFocusNode();
 
     final showClear = useState(false);
@@ -100,6 +107,8 @@ class SearchInput extends HookWidget {
                 fillColor: context.theme.appColors.primaryBackground,
               ),
               controller: searchController,
+              textInputAction: textInputAction,
+              onSubmitted: onSubmitted,
             ),
           ),
         ),

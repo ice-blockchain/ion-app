@@ -21,14 +21,16 @@ class UserPreferencesService {
   final String _userId;
   final LocalStorage _localStorage;
 
-  void setValue<T>(String key, T value) {
+  Future<bool> setValue<T>(String key, T value) {
     final userKey = _getUserKey(key);
     if (T == bool) {
-      _localStorage.setBool(key: userKey, value: value as bool);
+      return _localStorage.setBool(key: userKey, value: value as bool);
     } else if (T == double) {
-      _localStorage.setDouble(userKey, value as double);
+      return _localStorage.setDouble(userKey, value as double);
     } else if (T == String) {
-      _localStorage.setString(userKey, value as String);
+      return _localStorage.setString(userKey, value as String);
+    } else if (T == List<String>) {
+      return _localStorage.setStringList(userKey, value as List<String>);
     } else {
       throw ArgumentError('Unsupported type: $T');
     }
@@ -42,6 +44,8 @@ class UserPreferencesService {
       return _localStorage.getDouble(userKey) as T?;
     } else if (T == String) {
       return _localStorage.getString(userKey) as T?;
+    } else if (T == List<String>) {
+      return _localStorage.getStringList(userKey) as T?;
     } else {
       throw ArgumentError('Unsupported type: $T');
     }
@@ -55,6 +59,11 @@ class UserPreferencesService {
   T? getEnum<T extends Enum>(String key, List<T> values) {
     final userKey = _getUserKey(key);
     return _localStorage.getEnum(userKey, values);
+  }
+
+  Future<bool> remove(String key) {
+    final userKey = _getUserKey(key);
+    return _localStorage.remove(userKey);
   }
 
   String _getUserKey(String key) => 'user_$_userId:$key';

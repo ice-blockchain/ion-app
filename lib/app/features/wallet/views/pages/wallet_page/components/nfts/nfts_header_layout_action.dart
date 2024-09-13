@@ -25,7 +25,7 @@ class NftHeaderLayoutAction extends ConsumerWidget {
       children: [
         TextButton(
           onPressed: () {
-            final userId = ref.read(userDataNotifierProvider).id;
+            final userId = ref.read(currentUserIdSelectorProvider);
             ref
                 .read(walletUserPreferencesNotifierProvider(userId: userId).notifier)
                 .setNftLayoutType(NftLayoutType.grid);
@@ -45,7 +45,7 @@ class NftHeaderLayoutAction extends ConsumerWidget {
         ),
         TextButton(
           onPressed: () {
-            final userId = ref.read(userDataNotifierProvider).id;
+            final userId = ref.read(currentUserIdSelectorProvider);
             ref
                 .read(walletUserPreferencesNotifierProvider(userId: userId).notifier)
                 .setNftLayoutType(NftLayoutType.list);

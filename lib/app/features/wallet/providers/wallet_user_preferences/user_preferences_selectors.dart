@@ -9,7 +9,7 @@ part 'user_preferences_selectors.g.dart';
 
 @riverpod
 bool isBalanceVisibleSelector(IsBalanceVisibleSelectorRef ref) {
-  final userId = ref.watch(userDataNotifierProvider.select((state) => state.id));
+  final userId = ref.watch(currentUserIdSelectorProvider);
 
   return ref.watch(
     walletUserPreferencesNotifierProvider(userId: userId).select(
@@ -20,7 +20,7 @@ bool isBalanceVisibleSelector(IsBalanceVisibleSelectorRef ref) {
 
 @riverpod
 bool isZeroValueAssetsVisibleSelector(IsZeroValueAssetsVisibleSelectorRef ref) {
-  final userId = ref.watch(userDataNotifierProvider.select((state) => state.id));
+  final userId = ref.watch(currentUserIdSelectorProvider);
 
   return ref.watch(
     walletUserPreferencesNotifierProvider(userId: userId).select(
@@ -31,7 +31,7 @@ bool isZeroValueAssetsVisibleSelector(IsZeroValueAssetsVisibleSelectorRef ref) {
 
 @riverpod
 NftLayoutType nftLayoutTypeSelector(NftLayoutTypeSelectorRef ref) {
-  final userId = ref.watch(userDataNotifierProvider.select((state) => state.id));
+  final userId = ref.watch(currentUserIdSelectorProvider);
 
   return ref.watch(
     walletUserPreferencesNotifierProvider(userId: userId).select(
@@ -42,7 +42,7 @@ NftLayoutType nftLayoutTypeSelector(NftLayoutTypeSelectorRef ref) {
 
 @riverpod
 NftSortingType nftSortingTypeSelector(NftSortingTypeSelectorRef ref) {
-  final userId = ref.watch(userDataNotifierProvider.select((state) => state.id));
+  final userId = ref.watch(currentUserIdSelectorProvider);
 
   return ref.watch(
     walletUserPreferencesNotifierProvider(userId: userId).select(

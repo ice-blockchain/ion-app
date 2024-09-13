@@ -24,3 +24,8 @@ class UserDataNotifier extends _$UserDataNotifier {
     );
   }
 }
+
+@riverpod
+String currentUserIdSelector(CurrentUserIdSelectorRef ref) {
+  return ref.watch(userDataNotifierProvider.select((state) => state.id));
+}
