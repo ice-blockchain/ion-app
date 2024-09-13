@@ -12,6 +12,7 @@ enum ToolbarType {
           ToolbarButtonType.poll,
           ToolbarButtonType.font,
           ToolbarButtonType.spacer,
+          ToolbarButtonType.schedule,
           ToolbarButtonType.send,
         ];
       case ToolbarType.article:
@@ -30,6 +31,7 @@ enum ToolbarButtonType {
   poll,
   font,
   spacer,
+  schedule,
   send;
 
   String? get iconAsset {
@@ -42,6 +44,8 @@ enum ToolbarButtonType {
         return Assets.svg.iconPostRegulartextOff;
       case ToolbarButtonType.send:
         return Assets.svg.sendbuttonDisabled;
+      case ToolbarButtonType.schedule:
+        return Assets.svg.iconCreatepostShedule;
       case ToolbarButtonType.spacer:
         return null;
     }
