@@ -24,7 +24,6 @@ class FeedAdvancedSearchNavigation extends HookConsumerWidget {
 
     useOnInit(() {
       searchController.text = query;
-      //TODO:run search here
     }, [query]);
 
     return ScreenSideOffset.small(

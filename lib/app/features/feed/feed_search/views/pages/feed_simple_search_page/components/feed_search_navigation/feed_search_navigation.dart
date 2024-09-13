@@ -4,15 +4,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/features/feed/feed_search/providers/feed_search_history_store_provider.dart';
-import 'package:ice/app/features/feed/feed_search/providers/feed_search_query_provider.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/hooks/use_go_back_on_blur.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/app_routes.dart';
 
 class FeedSearchNavigation extends HookConsumerWidget {
-  const FeedSearchNavigation({
-    super.key,
-  });
+  const FeedSearchNavigation({super.key, required this.query});
+
+  final String query;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,11 +20,12 @@ class FeedSearchNavigation extends HookConsumerWidget {
     useOnInit(focusNode.requestFocus);
     useGoBackOnBlur(focusNode: focusNode);
 
-    ref.listen(feedSearchQueryControllerProvider, (_, value) {
-      if (searchController.text != value) {
-        searchController.text = value;
+    useOnInit(() {
+      // Sync query and text input value after setting a query from the history
+      if (searchController.text != query) {
+        searchController.text = query;
       }
-    });
+    }, [query]);
 
     return ScreenSideOffset.small(
       child: Row(
@@ -41,8 +41,10 @@ class FeedSearchNavigation extends HookConsumerWidget {
                   ref.read(feedSearchHistoryStoreProvider.notifier).addQueryToTheHistory(query);
                 }
               },
-              onTextChanged: (String query) {
-                ref.read(feedSearchQueryControllerProvider.notifier).update(query: query);
+              onTextChanged: (String text) {
+                if (query != text) {
+                  FeedSimpleSearchRoute(query: text).replace(context);
+                }
               },
             ),
           ),
