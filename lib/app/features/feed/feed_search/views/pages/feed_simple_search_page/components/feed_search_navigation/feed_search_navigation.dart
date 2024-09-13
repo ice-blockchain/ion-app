@@ -7,6 +7,7 @@ import 'package:ice/app/features/feed/feed_search/providers/feed_search_history_
 import 'package:ice/app/features/feed/feed_search/providers/feed_search_query_provider.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/hooks/use_go_back_on_blur.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
+import 'package:ice/app/router/app_routes.dart';
 
 class FeedSearchNavigation extends HookConsumerWidget {
   const FeedSearchNavigation({
@@ -35,7 +36,10 @@ class FeedSearchNavigation extends HookConsumerWidget {
               focusNode: focusNode,
               textInputAction: TextInputAction.search,
               onSubmitted: (String query) {
-                ref.read(feedSearchHistoryStoreProvider.notifier).addQueryToTheHistory(query);
+                if (query.isNotEmpty) {
+                  FeedAdvancedSearchRoute(query: query).go(context);
+                  ref.read(feedSearchHistoryStoreProvider.notifier).addQueryToTheHistory(query);
+                }
               },
               onTextChanged: (String query) {
                 ref.read(feedSearchQueryControllerProvider.notifier).update(query: query);

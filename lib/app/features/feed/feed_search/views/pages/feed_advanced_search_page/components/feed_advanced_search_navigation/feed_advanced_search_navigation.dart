@@ -1,0 +1,60 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/inputs/search_input/search_input.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/router/components/navigation_button/navigation_button.dart';
+import 'package:ice/generated/assets.gen.dart';
+
+class FeedAdvancedSearchNavigation extends HookConsumerWidget {
+  const FeedAdvancedSearchNavigation({
+    super.key,
+    required this.query,
+  });
+
+  final String query;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchController = useTextEditingController();
+
+    useEffect(() {
+      searchController.text = query;
+      //TODO:run search here
+      return null;
+    }, [query]);
+
+    return ScreenSideOffset.small(
+      child: Row(
+        children: [
+          NavigationButton(
+            onPressed: context.pop,
+            icon: Assets.svg.iconBackArrow.icon(
+              color: context.theme.appColors.primaryText,
+            ),
+          ),
+          SizedBox(width: 12.0.s),
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => FeedSimpleSearchRoute().push<void>(context),
+              child: IgnorePointer(
+                child: SearchInput(controller: searchController, suffix: SizedBox.shrink()),
+              ),
+            ),
+          ),
+          SizedBox(width: 12.0.s),
+          NavigationButton(
+            onPressed: () {},
+            icon: Assets.svg.iconButtonManagecoin.icon(
+              color: context.theme.appColors.primaryText,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

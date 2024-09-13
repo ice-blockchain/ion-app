@@ -4,6 +4,7 @@ class FeedRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<PostDetailsRoute>(path: 'post/:postId'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
+    TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:postId'),
@@ -79,6 +80,16 @@ class FeedSimpleSearchRoute extends BaseRouteData {
           child: FeedSimpleSearchPage(),
           type: IceRouteType.fade,
         );
+}
+
+class FeedAdvancedSearchRoute extends BaseRouteData {
+  FeedAdvancedSearchRoute({required this.query})
+      : super(
+          child: FeedAdvancedSearchPage(query: query),
+          type: IceRouteType.fade,
+        );
+
+  final String query;
 }
 
 class CreatePostRoute extends BaseRouteData {

@@ -20,6 +20,7 @@ class SearchInput extends HookWidget {
     this.defaultValue = '',
     this.textInputAction,
     this.onSubmitted,
+    this.suffix,
     FocusNode? focusNode,
     TextEditingController? controller,
   })  : externalFocusNode = focusNode,
@@ -35,6 +36,7 @@ class SearchInput extends HookWidget {
   final TextEditingController? externalController;
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onSubmitted;
+  final Widget? suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -90,18 +92,19 @@ class SearchInput extends HookWidget {
                     size: 18.0.s,
                   ),
                 ),
-                suffixIcon: loading
-                    ? Padding(
-                        padding: EdgeInsets.all(12.0.s),
-                        child: IceLoadingIndicator(
-                          type: IndicatorType.dark,
-                        ),
-                      )
-                    : showClear.value
-                        ? SearchClearButton(
-                            onPressed: searchController.clear,
+                suffixIcon: suffix ??
+                    (loading
+                        ? Padding(
+                            padding: EdgeInsets.all(12.0.s),
+                            child: IceLoadingIndicator(
+                              type: IndicatorType.dark,
+                            ),
                           )
-                        : null,
+                        : showClear.value
+                            ? SearchClearButton(
+                                onPressed: searchController.clear,
+                              )
+                            : null),
                 prefixIconConstraints: const BoxConstraints(),
                 filled: true,
                 fillColor: context.theme.appColors.primaryBackground,
