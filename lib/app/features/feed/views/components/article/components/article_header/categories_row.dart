@@ -31,9 +31,9 @@ class CategoriesRow extends StatelessWidget {
             padding: EdgeInsets.only(right: 12.0.s),
             child: Button.icon(
               borderRadius: BorderRadius.circular(12.0.s),
-              backgroundColor: colors.tertararyBackground,
+              borderColor: colors.onTerararyFill,
               size: 40.0.s,
-              type: ButtonType.outlined,
+              type: ButtonType.secondary,
               icon: Assets.svg.iconPlusCreatechannel.icon(
                 color: colors.primaryAccent,
                 size: 28.0.s,
@@ -74,6 +74,7 @@ class _CategoryButton extends StatelessWidget {
     return Button.compact(
       backgroundColor: colors.tertararyBackground,
       type: ButtonType.outlined,
+      leadingIconOffset: 6.0.s,
       leadingIcon: category.icon.icon(
         color: isSelected ? colors.primaryAccent : colors.tertararyText,
       ),
@@ -85,6 +86,10 @@ class _CategoryButton extends StatelessWidget {
       ),
       onPressed: () => onToggle(category.id),
       style: OutlinedButton.styleFrom(
+        padding: EdgeInsets.symmetric(
+          horizontal: 10.0.s,
+          vertical: 8.0.s,
+        ),
         side: BorderSide(
           color: isSelected ? colors.primaryAccent : colors.onTerararyFill,
         ),

@@ -32,7 +32,7 @@ class CategoriesMenu extends HookWidget {
               onToggle: toggleSelection,
               showAddButton: true,
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 10.0.s),
             CategoriesRow(
               items: items.sublist(5),
               selectedItems: selectedItems.value,
