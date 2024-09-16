@@ -4,13 +4,13 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/article_category.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class CategoriesRow extends StatelessWidget {
+class ArticleCategoriesRow extends StatelessWidget {
   final List<ArticleCategory> items;
   final Set<String> selectedItems;
   final ValueChanged<String> onToggle;
   final bool showAddButton;
 
-  const CategoriesRow({
+  const ArticleCategoriesRow({
     super.key,
     required this.items,
     required this.selectedItems,
