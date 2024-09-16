@@ -6,7 +6,10 @@ import 'package:ice/app/features/feed/data/models/toolbar.dart';
 class ToolbarText extends HookWidget {
   const ToolbarText({
     super.key,
+    this.onTextStyleChange,
   });
+
+  final void Function(ToolbarTextButtonType)? onTextStyleChange;
 
   Widget _buildButton(ToolbarTextButtonType buttonType, bool isSelected, BuildContext context,
       VoidCallback? onPress) {
@@ -29,6 +32,7 @@ class ToolbarText extends HookWidget {
     VoidCallback onPress(ToolbarTextButtonType type) {
       return () {
         if (type != selectedType.value) {
+          onTextStyleChange?.call(type);
           selectedType.value = type;
         }
       };

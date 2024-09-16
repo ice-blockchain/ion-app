@@ -43,7 +43,9 @@ class Toolbar extends StatelessWidget {
               if (buttonType == ToolbarButtonType.spacer) {
                 return const Spacer();
               } else if (buttonType == ToolbarButtonType.font) {
-                return ToolbarText();
+                return ToolbarText(
+                  onTextStyleChange: (ToolbarTextButtonType type) => {},
+                );
               }
 
               return Padding(
