@@ -17,21 +17,22 @@ ThemeData buildLightTheme(TemplateTheme templateTheme) {
   final colors = AppColorsExtension.fromTemplate(templateTheme.colors.light);
   final textThemes = AppTextThemesExtension.fromTemplate(templateTheme.textThemes);
   return ThemeData.light().copyWith(
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      splashFactory: NoSplash.splashFactory,
-      extensions: <ThemeExtension<dynamic>>[colors, textThemes],
-      appBarTheme: buildLightAppBarTheme(templateTheme, colors, textThemes),
-      menuTheme: buildMenuTheme(templateTheme, colors, textThemes),
-      menuButtonTheme: buildMenuButtonTheme(templateTheme, colors, textThemes),
-      iconButtonTheme: buildIconButtonTheme(templateTheme, textThemes),
-      elevatedButtonTheme: buildElevatedButtonTheme(),
-      outlinedButtonTheme: buildOutlinedButtonTheme(),
-      iconTheme: buildIconTheme(templateTheme),
-      textButtonTheme: buildTextButtonTheme(),
-      scaffoldBackgroundColor: colors.secondaryBackground,
-      bottomSheetTheme: buildBottomSheetTheme(colors),
-      tabBarTheme: buildTabBarTheme());
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
+    splashFactory: NoSplash.splashFactory,
+    extensions: <ThemeExtension<dynamic>>[colors, textThemes],
+    appBarTheme: buildLightAppBarTheme(templateTheme, colors, textThemes),
+    menuTheme: buildMenuTheme(templateTheme, colors, textThemes),
+    menuButtonTheme: buildMenuButtonTheme(templateTheme, colors, textThemes),
+    iconButtonTheme: buildIconButtonTheme(templateTheme, textThemes),
+    elevatedButtonTheme: buildElevatedButtonTheme(),
+    outlinedButtonTheme: buildOutlinedButtonTheme(),
+    iconTheme: buildIconTheme(templateTheme),
+    textButtonTheme: buildTextButtonTheme(),
+    scaffoldBackgroundColor: colors.secondaryBackground,
+    bottomSheetTheme: buildBottomSheetTheme(colors),
+    tabBarTheme: buildTabBarTheme(),
+  );
 }
 
 ThemeData buildDarkTheme(TemplateTheme templateTheme) {
