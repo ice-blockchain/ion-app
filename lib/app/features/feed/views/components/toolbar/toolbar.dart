@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/data/models/toolbar.dart';
+import 'package:ice/app/features/feed/views/components/toolbar_text/toolbar_text.dart';
 
 class Toolbar extends StatelessWidget {
   const Toolbar({
@@ -16,10 +17,6 @@ class Toolbar extends StatelessWidget {
   final void Function(ToolbarButtonType)? onButtonType;
 
   Widget _buildButton(ToolbarButtonType buttonType, BuildContext context) {
-    if (buttonType == ToolbarButtonType.spacer) {
-      return const Spacer();
-    }
-
     final double buttonHeight = buttonType == ToolbarButtonType.send ? 28.0.s : 24.0.s;
 
     return GestureDetector(
@@ -45,7 +42,10 @@ class Toolbar extends StatelessWidget {
             ...toolbarButtons.map((buttonType) {
               if (buttonType == ToolbarButtonType.spacer) {
                 return const Spacer();
+              } else if (buttonType == ToolbarButtonType.font) {
+                return ToolbarText();
               }
+
               return Padding(
                 padding: EdgeInsets.only(right: 12.0.s),
                 child: _buildButton(buttonType, context),
