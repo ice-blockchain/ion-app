@@ -9,18 +9,20 @@ import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history.dart';
 
 class FeedSimpleSearchPage extends ConsumerWidget {
-  const FeedSimpleSearchPage({super.key});
+  const FeedSimpleSearchPage({super.key, required this.query});
+
+  final String query;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final history = ref.watch(feedSearchHistoryStoreProvider);
-    final searchResults = ref.watch(feedSimpleSearchResultsProvider);
+    final searchResults = ref.watch(feedSimpleSearchResultsProvider(query));
 
     return Scaffold(
       body: ScreenTopOffset(
         child: Column(
           children: [
-            FeedSearchNavigation(),
+            FeedSearchNavigation(query: query),
             searchResults.maybeWhen(
               data: (searchResultsData) => searchResultsData == null
                   ? history.maybeWhen(

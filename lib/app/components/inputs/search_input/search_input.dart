@@ -4,7 +4,7 @@ import 'package:ice/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ice/app/components/inputs/hooks/use_text_changed.dart';
 import 'package:ice/app/components/inputs/search_input/components/cancel_button.dart';
 import 'package:ice/app/components/inputs/search_input/components/search_clear_button.dart';
-import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
+import 'package:ice/app/components/inputs/search_input/components/search_loading_indicator.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
@@ -20,6 +20,7 @@ class SearchInput extends HookWidget {
     this.defaultValue = '',
     this.textInputAction,
     this.onSubmitted,
+    this.suffix,
     FocusNode? focusNode,
     TextEditingController? controller,
   })  : externalFocusNode = focusNode,
@@ -35,6 +36,7 @@ class SearchInput extends HookWidget {
   final TextEditingController? externalController;
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onSubmitted;
+  final Widget? suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -90,18 +92,12 @@ class SearchInput extends HookWidget {
                     size: 18.0.s,
                   ),
                 ),
-                suffixIcon: loading
-                    ? Padding(
-                        padding: EdgeInsets.all(12.0.s),
-                        child: IceLoadingIndicator(
-                          type: IndicatorType.dark,
-                        ),
-                      )
-                    : showClear.value
-                        ? SearchClearButton(
-                            onPressed: searchController.clear,
-                          )
-                        : null,
+                suffixIcon: suffix ??
+                    (loading
+                        ? SearchLoadingIndicator()
+                        : showClear.value
+                            ? SearchClearButton(onPressed: searchController.clear)
+                            : null),
                 prefixIconConstraints: const BoxConstraints(),
                 filled: true,
                 fillColor: context.theme.appColors.primaryBackground,
