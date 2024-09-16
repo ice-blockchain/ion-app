@@ -5,6 +5,7 @@ import 'package:ion_identity_client/src/core/network/network.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
+import 'package:ion_identity_client/src/signer/dtos/user_action_signing_complete_request.dart';
 
 class IonAuthDataSource {
   IonAuthDataSource({
@@ -79,7 +80,7 @@ class IonAuthDataSource {
     required Fido2Assertion assertion,
     required String challengeIdentifier,
   }) {
-    final requestData = LoginCompleteRequest(
+    final requestData = UserActionSigningCompleteRequest(
       challengeIdentifier: challengeIdentifier,
       firstFactor: assertion,
     );
