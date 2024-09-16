@@ -30,6 +30,10 @@ ThemeData buildLightTheme(TemplateTheme templateTheme) {
     textButtonTheme: buildTextButtonTheme(),
     scaffoldBackgroundColor: colors.secondaryBackground,
     bottomSheetTheme: buildBottomSheetTheme(colors),
+    //TODO::to a file
+    tabBarTheme: TabBarTheme(
+        splashFactory: NoSplash.splashFactory,
+        overlayColor: WidgetStatePropertyAll<Color>(Colors.transparent)),
   );
 }
 

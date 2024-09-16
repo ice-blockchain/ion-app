@@ -11,7 +11,7 @@ enum FeedAdvancedSearchCategory {
   groups,
   channels;
 
-  Widget get icon {
+  String icon(BuildContext context) {
     return switch (this) {
       FeedAdvancedSearchCategory.top => Assets.svg.iconSearchTop,
       FeedAdvancedSearchCategory.latest => Assets.svg.iconSearchLast,
@@ -20,8 +20,7 @@ enum FeedAdvancedSearchCategory {
       FeedAdvancedSearchCategory.videos => Assets.svg.iconVideosTrading,
       FeedAdvancedSearchCategory.groups => Assets.svg.iconSearchGroups,
       FeedAdvancedSearchCategory.channels => Assets.svg.iconSearchChannel,
-    }
-        .icon(size: 50.0.s);
+    };
   }
 
   String label(BuildContext context) {

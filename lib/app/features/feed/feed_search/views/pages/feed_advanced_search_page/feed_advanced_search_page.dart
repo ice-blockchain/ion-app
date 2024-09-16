@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/feed_search/model/feed_advanced_search_category.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_search_page/components/feed_advanced_search_navigation/feed_advanced_search_navigation.dart';
+import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_search_page/components/feed_advanced_search_tab_bar/feed_advanced_search_tab_bar.dart';
 
 class FeedAdvancedSearchPage extends ConsumerWidget {
   const FeedAdvancedSearchPage({super.key, required this.query});
@@ -13,30 +16,12 @@ class FeedAdvancedSearchPage extends ConsumerWidget {
     return Scaffold(
       body: ScreenTopOffset(
         child: DefaultTabController(
-          length: 3,
+          length: FeedAdvancedSearchCategory.values.length,
           child: Column(
             children: [
               FeedAdvancedSearchNavigation(query: query),
-              TabBar(
-                tabAlignment: TabAlignment.start,
-                indicatorSize: TabBarIndicatorSize.label,
-                padding: EdgeInsets.zero,
-                isScrollable: true,
-                labelPadding: EdgeInsets.only(left: 0, right: 0),
-                tabs: [
-                  Row(
-                    children: [],
-                  ),
-                  Tab(
-                    icon: Icon(Icons.beach_access_sharp),
-                    text: 'Foop',
-                  ),
-                  Text('Foooooooo'),
-                  Tab(
-                    icon: Icon(Icons.brightness_5_sharp),
-                  ),
-                ],
-              ),
+              SizedBox(height: 16.0.s),
+              FeedAdvancedSearchTabBar(),
               Expanded(
                 child: const TabBarView(
                   children: [
@@ -45,6 +30,18 @@ class FeedAdvancedSearchPage extends ConsumerWidget {
                     ),
                     Center(
                       child: Text("It's rainy here"),
+                    ),
+                    Center(
+                      child: Text("It's sunny here"),
+                    ),
+                    Center(
+                      child: Text("It's sunny here"),
+                    ),
+                    Center(
+                      child: Text("It's sunny here"),
+                    ),
+                    Center(
+                      child: Text("It's sunny here"),
                     ),
                     Center(
                       child: Text("It's sunny here"),
