@@ -13,6 +13,7 @@ class FeedSearchHistoryQueryListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         FeedSimpleSearchRoute(query: query).replace(context);
       },

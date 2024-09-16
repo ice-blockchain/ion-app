@@ -24,6 +24,7 @@ class FeedSearchResults extends ConsumerWidget {
         itemBuilder: (context, index) {
           final user = users[index];
           return GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () {
               ref.read(feedSearchHistoryStoreProvider.notifier).addUserToTheHistory(user);
             },
