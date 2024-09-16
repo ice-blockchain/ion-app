@@ -5,10 +5,10 @@ import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/components/scroll_view/load_more_builder.dart';
 import 'package:ice/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/model/feed_category.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/providers/posts_provider.dart';
+import 'package:ice/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
@@ -37,8 +37,14 @@ class FeedPage extends HookConsumerWidget {
       SliverToBoxAdapter(
         child: Column(
           children: [
-            const Stories(),
-            FeedListSeparator(height: 16.0.s),
+            if (feedCategory == FeedCategory.articles) ...[
+              ArticleCategoriesMenu(),
+              FeedListSeparator(),
+            ],
+            if (feedCategory != FeedCategory.articles) ...[
+              const Stories(),
+              FeedListSeparator(height: 16.0.s),
+            ],
             if (feedCategory == FeedCategory.feed) ...[
               const TrendingVideos(),
               FeedListSeparator(),
