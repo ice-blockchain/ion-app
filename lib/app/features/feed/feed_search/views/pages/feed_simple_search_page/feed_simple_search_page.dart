@@ -23,7 +23,7 @@ class FeedSimpleSearchPage extends ConsumerWidget {
       body: ScreenTopOffset(
         child: Column(
           children: [
-            FeedSearchNavigation(query: query),
+            FeedSearchNavigation(query: query, loading: searchResults.isLoading),
             searchResults.maybeWhen(
               data: (searchResultsData) => searchResultsData == null
                   ? history.maybeWhen(
