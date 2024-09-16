@@ -7,6 +7,7 @@ import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_navigation/feed_search_navigation.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history.dart';
+import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results_loading/feed_search_results_loading.dart';
 
 class FeedSimpleSearchPage extends ConsumerWidget {
   const FeedSimpleSearchPage({super.key, required this.query});
@@ -36,6 +37,7 @@ class FeedSimpleSearchPage extends ConsumerWidget {
                       orElse: () => SizedBox.shrink(),
                     )
                   : FeedSearchResults(users: searchResultsData),
+              loading: () => FeedSearchResultsLoading(),
               orElse: () => SizedBox.shrink(),
             ),
           ],

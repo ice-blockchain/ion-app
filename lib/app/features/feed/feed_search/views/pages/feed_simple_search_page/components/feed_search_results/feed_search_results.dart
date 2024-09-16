@@ -13,13 +13,17 @@ class FeedSearchResults extends ConsumerWidget {
     required this.users,
   });
 
+  static double get listVerticalOffset => 14.0.s;
+
+  static double get itemVerticalOffset => 8.0.s;
+
   final List<FeedSearchUser> users;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Flexible(
       child: ListView.builder(
-        padding: EdgeInsets.symmetric(vertical: 14.0.s),
+        padding: EdgeInsets.symmetric(vertical: listVerticalOffset),
         itemCount: users.length,
         itemBuilder: (context, index) {
           final user = users[index];
@@ -29,7 +33,7 @@ class FeedSearchResults extends ConsumerWidget {
               ref.read(feedSearchHistoryStoreProvider.notifier).addUserToTheHistory(user);
             },
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0.s),
+              padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),
               child: ScreenSideOffset.small(
                 child: ListItem.user(
                   title: Text(user.name),
