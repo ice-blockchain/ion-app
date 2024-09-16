@@ -6,6 +6,7 @@ import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
 import 'package:ion_identity_client/src/core/network/network.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
+import 'package:ion_identity_client/src/signer/extensions/passkey_signer_extentions.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 
 /// A class that handles user authentication processes, including user registration,
@@ -83,17 +84,15 @@ class IonAuth {
       return const PasskeyNotAvailableLoginUserFailure();
     }
 
-    final response = await dataSource
-        .loginInit(username: username)
+    final response = await signer
+        .signChallenge(
+          dataSource.loginInit(username: username),
+          PasskeyValidationLoginUserFailure.new,
+        )
         .flatMap(
-          (userActionChallenge) => TaskEither<LoginUserFailure, Fido2Assertion>.tryCatch(
-            () => signer.sign(userActionChallenge),
-            PasskeyValidationLoginUserFailure.new,
-          ).flatMap(
-            (assertion) => dataSource.loginComplete(
-              assertion: assertion,
-              challengeIdentifier: userActionChallenge.challengeIdentifier,
-            ),
+          (signedChallenge) => dataSource.loginComplete(
+            challengeIdentifier: signedChallenge.userActionChallenge.challengeIdentifier,
+            assertion: signedChallenge.assertion,
           ),
         )
         .flatMap(
