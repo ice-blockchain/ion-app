@@ -10,7 +10,9 @@ class ArticleCategoriesMenu extends HookWidget {
     final selectedItems = useState<Set<String>>({});
     final List<ArticleCategory> items = mockedArticleCategories;
 
-    final firstRowCount = (items.length / 2).ceil();
+    final firstRowItemCount = (items.length / 2).ceil();
+    final firstRowItems = items.sublist(0, firstRowItemCount);
+    final secondRowItems = items.sublist(firstRowItemCount);
 
     final toggleSelection = useCallback((String id) {
       final newSelected = Set<String>.from(selectedItems.value);
@@ -29,18 +31,17 @@ class ArticleCategoriesMenu extends HookWidget {
           children: [
             SizedBox(width: 16.0.s),
             ArticleCategoriesRow(
-              items: items.sublist(0, firstRowCount),
+              items: firstRowItems,
               selectedItems: selectedItems.value,
               onToggle: toggleSelection,
               showAddButton: true,
             ),
             SizedBox(height: 10.0.s),
-            if (items.length > firstRowCount)
-              ArticleCategoriesRow(
-                items: items.sublist(firstRowCount),
-                selectedItems: selectedItems.value,
-                onToggle: toggleSelection,
-              ),
+            ArticleCategoriesRow(
+              items: secondRowItems,
+              selectedItems: selectedItems.value,
+              onToggle: toggleSelection,
+            ),
           ],
         ),
       ),
