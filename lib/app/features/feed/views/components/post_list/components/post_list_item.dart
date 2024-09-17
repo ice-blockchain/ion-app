@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/feed/providers/posts_provider.dart';
+import 'package:ice/app/features/feed/providers/posts_store_provider.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies.dart';
@@ -18,7 +18,7 @@ class PostListItem extends HookConsumerWidget {
     final replyIds = ref.watch(postReplyIdsSelectorProvider(postId: postId));
 
     useOnInit(() {
-      ref.read(postsProvider.notifier).fetchPostReplies(postId: postId);
+      ref.read(postsStoreProvider.notifier).fetchPostReplies(postId: postId);
     });
 
     if (post == null) return SizedBox.shrink();

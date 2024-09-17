@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_search_history_provider.g.dart';
 part 'feed_search_history_provider.freezed.dart';
 
-@Freezed(copyWith: true)
+@Freezed(copyWith: true, equal: true)
 class FeedSearchHistoryState with _$FeedSearchHistoryState {
   const factory FeedSearchHistoryState({
     required List<String> userIds,
