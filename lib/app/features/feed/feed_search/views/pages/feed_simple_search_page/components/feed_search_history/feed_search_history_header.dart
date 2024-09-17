@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/feed_search/providers/feed_search_history_store_provider.dart';
+import 'package:ice/app/features/feed/feed_search/providers/feed_search_history_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class FeedSearchHistoryHeader extends ConsumerWidget {
@@ -24,7 +24,7 @@ class FeedSearchHistoryHeader extends ConsumerWidget {
         ),
         GestureDetector(
           onTap: () {
-            ref.read(feedSearchHistoryStoreProvider.notifier).clear();
+            ref.read(feedSearchHistoryProvider.notifier).clear();
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
