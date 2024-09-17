@@ -55,17 +55,18 @@ class Posts extends _$Posts {
 }
 
 @riverpod
-PostData? postById(PostByIdRef ref, {required String postId}) {
+PostData? postByIdSelector(PostByIdSelectorRef ref, {required String postId}) {
   return ref.watch(postsProvider.select((state) => state.store[postId]));
 }
 
 @riverpod
-List<String> categoryPostIds(CategoryPostIdsRef ref, {required FeedCategory category}) {
+List<String> categoryPostIdsSelector(CategoryPostIdsSelectorRef ref,
+    {required FeedCategory category}) {
   return ref.watch(postsProvider.select((state) => state.categoryPostIds[category] ?? []));
 }
 
 @riverpod
-List<String> postReplyIds(PostReplyIdsRef ref, {required String postId}) {
+List<String> postReplyIdsSelector(PostReplyIdsSelectorRef ref, {required String postId}) {
   return ref.watch(postsProvider.select((state) => state.postReplyIds[postId] ?? []));
 }
 

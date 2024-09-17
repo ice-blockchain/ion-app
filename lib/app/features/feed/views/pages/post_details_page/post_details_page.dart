@@ -28,8 +28,8 @@ class PostDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(postByIdProvider(postId: postId));
-    final replyIds = ref.watch(postReplyIdsProvider(postId: postId));
+    final postData = ref.watch(postByIdSelectorProvider(postId: postId));
+    final replyIds = ref.watch(postReplyIdsSelectorProvider(postId: postId));
 
     useOnInit(() {
       ref.read(postsProvider.notifier).fetchPostReplies(postId: postId);

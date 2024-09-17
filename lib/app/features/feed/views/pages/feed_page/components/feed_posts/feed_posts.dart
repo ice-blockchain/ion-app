@@ -12,7 +12,7 @@ class FeedPosts extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final category = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
-    final postIds = ref.watch(categoryPostIdsProvider(category: category));
+    final postIds = ref.watch(categoryPostIdsSelectorProvider(category: category));
 
     useOnInit(() {
       ref.read(postsProvider.notifier).fetchCategoryPosts(category: category);

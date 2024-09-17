@@ -14,8 +14,8 @@ class PostListItem extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(postByIdProvider(postId: postId));
-    final replyIds = ref.watch(postReplyIdsProvider(postId: postId));
+    final post = ref.watch(postByIdSelectorProvider(postId: postId));
+    final replyIds = ref.watch(postReplyIdsSelectorProvider(postId: postId));
 
     useOnInit(() {
       ref.read(postsProvider.notifier).fetchPostReplies(postId: postId);

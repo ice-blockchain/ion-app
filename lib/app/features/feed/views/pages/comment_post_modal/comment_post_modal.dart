@@ -23,7 +23,7 @@ class CommentPostModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(postByIdProvider(postId: postId));
+    final post = ref.watch(postByIdSelectorProvider(postId: postId));
 
     if (post == null) return SizedBox.shrink();
 

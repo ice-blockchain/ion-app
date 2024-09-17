@@ -30,7 +30,7 @@ class PostReplyModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(postByIdProvider(postId: postId));
+    final postData = ref.watch(postByIdSelectorProvider(postId: postId));
 
     if (postData == null) {
       return SizedBox.shrink();
