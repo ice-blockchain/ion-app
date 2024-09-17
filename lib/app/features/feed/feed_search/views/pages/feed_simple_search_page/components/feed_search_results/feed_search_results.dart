@@ -30,7 +30,7 @@ class FeedSearchResults extends ConsumerWidget {
           return GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
-              ref.read(feedSearchHistoryStoreProvider.notifier).addUserToTheHistory(user);
+              ref.read(feedSearchHistoryStoreProvider.notifier).addUserIdToTheHistory(user.id);
             },
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),

@@ -3,7 +3,7 @@ import 'package:ice/app/features/feed/feed_search/model/feed_search_user.dart';
 import 'package:ice/app/features/feed/feed_search/providers/mocked_search_users.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'feed_simple_search_results.g.dart';
+part 'feed_simple_search_results_provider.g.dart';
 
 @riverpod
 Future<List<FeedSearchUser>?> feedSimpleSearchResults(
