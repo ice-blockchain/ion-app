@@ -6,6 +6,7 @@ import 'package:ice/app/features/feed/feed_search/model/feed_advanced_search_cat
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_search_page/components/feed_advanced_search_navigation/feed_advanced_search_navigation.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_search_page/components/feed_advanced_search_tab_bar/feed_advanced_search_tab_bar.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
+import 'package:ice/app/features/feed/views/components/post_list/post_list_skeleton.dart';
 
 class FeedAdvancedSearchPage extends ConsumerWidget {
   const FeedAdvancedSearchPage({super.key, required this.query});
@@ -27,27 +28,13 @@ class FeedAdvancedSearchPage extends ConsumerWidget {
               Expanded(
                 child: const TabBarView(
                   children: [
-                    Center(
-                      child: Text("It's cloudy here"),
-                    ),
-                    Center(
-                      child: Text("It's rainy here"),
-                    ),
-                    Center(
-                      child: Text("It's sunny here"),
-                    ),
-                    Center(
-                      child: Text("It's sunny here"),
-                    ),
-                    Center(
-                      child: Text("It's sunny here"),
-                    ),
-                    Center(
-                      child: Text("It's sunny here"),
-                    ),
-                    Center(
-                      child: Text("It's sunny here"),
-                    ),
+                    CustomScrollView(slivers: [PostListSkeleton()]),
+                    CustomScrollView(slivers: [PostListSkeleton()]),
+                    CustomScrollView(slivers: [PostListSkeleton()]),
+                    CustomScrollView(slivers: [PostListSkeleton()]),
+                    CustomScrollView(slivers: [PostListSkeleton()]),
+                    CustomScrollView(slivers: [PostListSkeleton()]),
+                    CustomScrollView(slivers: [PostListSkeleton()]),
                   ],
                 ),
               )

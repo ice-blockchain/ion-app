@@ -4,8 +4,8 @@ import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results.dart';
 
-class FeedSearchResultsLoading extends StatelessWidget {
-  const FeedSearchResultsLoading({super.key});
+class FeedSearchResultsSkeleton extends StatelessWidget {
+  const FeedSearchResultsSkeleton({super.key});
 
   static const int numberOfItems = 12;
 
