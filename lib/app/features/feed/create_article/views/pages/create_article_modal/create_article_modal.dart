@@ -49,7 +49,6 @@ class CreateArticleModal extends HookWidget {
                     color: context.theme.appColors.quaternaryText,
                   ),
                   hintText: context.i18n.create_post_modal_placeholder,
-                  border: InputBorder.none,
                 ),
                 cursorColor: context.theme.appColors.primaryAccent,
                 cursorHeight: 13.0.s,

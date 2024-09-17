@@ -26,21 +26,18 @@ class Toolbar extends StatelessWidget {
         padding: padding,
         child: Row(
           children: [
-            ...toolbarButtons.map((buttonType) {
-              switch (buttonType) {
-                case ToolbarButtonType.spacer:
-                  return const Spacer();
-                case ToolbarButtonType.font:
-                  return ToolbarText(
-                    onTextStyleChange: (ToolbarTextButtonType type) => {},
-                  );
-                default:
-                  return Padding(
-                    padding: EdgeInsets.only(right: 12.0.s),
-                    child: _ToolbarButton(buttonType: buttonType, onButtonTap: onButtonTap),
-                  );
-              }
-            }).toList(),
+            ...toolbarButtons
+                .map((buttonType) => switch (buttonType) {
+                      ToolbarButtonType.spacer => const Spacer(),
+                      ToolbarButtonType.font => ToolbarText(
+                          onTextStyleChange: (ToolbarTextButtonType type) => {},
+                        ),
+                      _ => Padding(
+                          padding: EdgeInsets.only(right: 12.0.s),
+                          child: _ToolbarButton(buttonType: buttonType, onButtonTap: onButtonTap),
+                        ),
+                    })
+                .toList(),
           ],
         ),
       ),
