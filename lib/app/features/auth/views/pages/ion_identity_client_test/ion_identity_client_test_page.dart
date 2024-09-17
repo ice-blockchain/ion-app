@@ -205,7 +205,6 @@ class UserWalletsDialog extends ConsumerWidget {
   }
 }
 
-// ignore_for_file: hooks_unuse_widget
 class _WalletsTab extends HookConsumerWidget {
   const _WalletsTab();
 
@@ -213,7 +212,9 @@ class _WalletsTab extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ionClient = ref.watch(ionApiClientProvider);
 
-    final walletNameController = useTextEditingController(text: 'My Wallet 1');
+    final walletNameController = useTextEditingController.fromValue(
+      TextEditingValue(text: 'My Wallet 1'),
+    );
 
     return ListView(
       children: [
