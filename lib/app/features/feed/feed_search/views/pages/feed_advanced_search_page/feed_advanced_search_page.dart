@@ -6,6 +6,7 @@ import 'package:ice/app/features/feed/feed_search/model/feed_advanced_search_cat
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_search_page/components/feed_advanced_search_navigation/feed_advanced_search_navigation.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_search_page/components/feed_advanced_search_tab_bar/feed_advanced_search_tab_bar.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_search_page/components/feed_advanced_search_top/feed_advanced_search_top.dart';
+import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_search_page/components/feed_advanced_search_users/feed_advanced_search_users.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 
 class FeedAdvancedSearchPage extends ConsumerWidget {
@@ -29,13 +30,13 @@ class FeedAdvancedSearchPage extends ConsumerWidget {
                 child: TabBarView(
                   children: FeedAdvancedSearchCategory.values.map((category) {
                     return switch (category) {
-                      FeedAdvancedSearchCategory.top => FeedAdvancedSearchTop(),
-                      FeedAdvancedSearchCategory.latest => FeedAdvancedSearchTop(),
-                      FeedAdvancedSearchCategory.people => FeedAdvancedSearchTop(),
-                      FeedAdvancedSearchCategory.photos => FeedAdvancedSearchTop(),
-                      FeedAdvancedSearchCategory.videos => FeedAdvancedSearchTop(),
-                      FeedAdvancedSearchCategory.groups => FeedAdvancedSearchTop(),
-                      FeedAdvancedSearchCategory.channels => FeedAdvancedSearchTop(),
+                      FeedAdvancedSearchCategory.top => FeedAdvancedSearchTop(query: query),
+                      FeedAdvancedSearchCategory.latest => FeedAdvancedSearchTop(query: query),
+                      FeedAdvancedSearchCategory.people => FeedAdvancedSearchUsers(query: query),
+                      FeedAdvancedSearchCategory.photos => FeedAdvancedSearchTop(query: query),
+                      FeedAdvancedSearchCategory.videos => FeedAdvancedSearchTop(query: query),
+                      FeedAdvancedSearchCategory.groups => FeedAdvancedSearchTop(query: query),
+                      FeedAdvancedSearchCategory.channels => FeedAdvancedSearchTop(query: query),
                     };
                   }).toList(),
                 ),

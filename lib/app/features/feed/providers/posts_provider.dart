@@ -20,6 +20,7 @@ class PostsState with _$PostsState {
   }) = _PostsState;
 }
 
+//TODO:change to PostsStore and remove categoryPostIds from here
 @riverpod
 class Posts extends _$Posts {
   @override

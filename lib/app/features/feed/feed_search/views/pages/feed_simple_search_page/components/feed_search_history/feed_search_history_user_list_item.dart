@@ -19,7 +19,7 @@ class FeedSearchHistoryUserListItem extends HookWidget {
   Widget build(BuildContext context) {
     final user = useState<FeedSearchUser?>(
       // Simulate that user might be either loaded or not
-      Random().nextBool() ? feedSearchUsers.firstWhere((user) => user.id == userId) : null,
+      Random().nextBool() ? mockedFeedSearchUsers.firstWhere((user) => user.id == userId) : null,
     );
 
     // Simulate loading user data
@@ -27,7 +27,7 @@ class FeedSearchHistoryUserListItem extends HookWidget {
       if (user.value == null) {
         Future<void>.delayed(Duration(milliseconds: Random().nextInt(500) + 500)).then(
           (value) {
-            user.value = feedSearchUsers.firstWhere((user) => user.id == userId);
+            user.value = mockedFeedSearchUsers.firstWhere((user) => user.id == userId);
           },
         );
       }
