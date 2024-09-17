@@ -20,7 +20,7 @@ class IonIdentityClientTestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         body: SafeArea(
           child: Column(
@@ -30,6 +30,7 @@ class IonIdentityClientTestPage extends StatelessWidget {
                   Tab(text: 'Register'),
                   Tab(text: 'Login'),
                   Tab(text: 'Users'),
+                  Tab(text: 'Wallets'),
                 ],
               ),
               Expanded(
@@ -38,6 +39,7 @@ class IonIdentityClientTestPage extends StatelessWidget {
                     _RegisterTab(),
                     _LoginTab(),
                     _UsersTab(),
+                    _WalletsTab(),
                   ],
                 ),
               ),
@@ -199,6 +201,38 @@ class UserWalletsDialog extends ConsumerWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _WalletsTab extends HookConsumerWidget {
+  const _WalletsTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ionClient = ref.watch(ionApiClientProvider);
+
+    final walletNameController = useTextEditingController.fromValue(
+      TextEditingValue(text: 'My Wallet 1'),
+    );
+
+    return ListView(
+      children: [
+        SizedBox(height: 16.0.s),
+        TextInput(
+          controller: walletNameController,
+        ),
+        SizedBox(height: 16.0.s),
+        Button(
+          label: Text('Create Wallet'),
+          onPressed: () async {
+            await ionClient(username: 'testauth1@mail.com').wallets.createWallet(
+                  network: 'EthereumSepolia',
+                  name: walletNameController.text,
+                );
+          },
+        ),
+      ],
     );
   }
 }
