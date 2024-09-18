@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/providers/posts_provider.dart';
+import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
@@ -23,7 +23,7 @@ class CommentPostModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(postByIdProvider(postId: postId));
+    final post = ref.watch(postByIdSelectorProvider(postId: postId));
 
     if (post == null) return SizedBox.shrink();
 

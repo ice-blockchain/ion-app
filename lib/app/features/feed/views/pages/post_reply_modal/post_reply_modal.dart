@@ -7,7 +7,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
-import 'package:ice/app/features/feed/providers/posts_provider.dart';
+import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
@@ -30,7 +30,7 @@ class PostReplyModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(postByIdProvider(postId: postId));
+    final postData = ref.watch(postByIdSelectorProvider(postId: postId));
 
     if (postData == null) {
       return SizedBox.shrink();

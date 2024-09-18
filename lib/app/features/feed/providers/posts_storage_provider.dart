@@ -1,75 +1,28 @@
 import 'dart:math';
 
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ice/app/features/feed/model/feed_category.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
-import 'package:ice/app/features/nostr/constants.dart';
-import 'package:ice/app/features/nostr/providers/relays_provider.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'posts_provider.freezed.dart';
-part 'posts_provider.g.dart';
+part 'posts_storage_provider.g.dart';
 
-@Freezed(copyWith: true)
-class PostsState with _$PostsState {
-  const factory PostsState({
-    required Map<String, PostData> store,
-    required Map<FeedCategory, List<String>> categoryPostIds,
-    required Map<String, List<String>> postReplyIds,
-  }) = _PostsState;
-}
-
-@riverpod
-class Posts extends _$Posts {
+@Riverpod(keepAlive: true)
+class PostsStorage extends _$PostsStorage {
   @override
-  PostsState build() {
-    return const PostsState(store: {}, categoryPostIds: {}, postReplyIds: {});
+  Map<String, PostData> build() {
+    return {};
   }
 
-  Future<void> fetchCategoryPosts({required FeedCategory category}) async {
-    final relay = await ref.read(relaysProvider.notifier).getOrCreate(mainRelay);
-    final requestMessage = RequestMessage()
-      ..addFilter(const RequestFilter(kinds: <int>[1], limit: 20));
-    final events = await requestEvents(requestMessage, relay);
-
-    final posts = events.map(PostData.fromEventMessage).toList();
-
-    state = state.copyWith(
-      store: {...state.store, for (final post in posts) post.id: post},
-      categoryPostIds: {...state.categoryPostIds, category: posts.map((post) => post.id).toList()},
-    );
-  }
-
-  Future<void> fetchPostReplies({required String postId}) async {
-    if (state.postReplyIds[postId] != null) {
-      return;
-    }
-
-    final posts = List.generate(Random().nextInt(10) + 1, (_) => _generateFakePost());
-    state = state.copyWith(
-      store: {...state.store, for (final post in posts) post.id: post},
-      postReplyIds: {...state.postReplyIds, postId: posts.map((post) => post.id).toList()},
-    );
+  void store({required List<PostData> posts}) {
+    state = {...state, for (final post in posts) post.id: post};
   }
 }
 
 @riverpod
-PostData? postById(PostByIdRef ref, {required String postId}) {
-  return ref.watch(postsProvider.select((state) => state.store[postId]));
+PostData? postByIdSelector(PostByIdSelectorRef ref, {required String postId}) {
+  return ref.watch(postsStorageProvider.select((state) => state[postId]));
 }
 
-@riverpod
-List<String> categoryPostIds(CategoryPostIdsRef ref, {required FeedCategory category}) {
-  return ref.watch(postsProvider.select((state) => state.categoryPostIds[category] ?? []));
-}
-
-@riverpod
-List<String> postReplyIds(PostReplyIdsRef ref, {required String postId}) {
-  return ref.watch(postsProvider.select((state) => state.postReplyIds[postId] ?? []));
-}
-
-PostData _generateFakePost() {
+PostData generateFakePost() {
   var random = Random.secure();
   final post = PostData.fromRawContent(
     id: random.nextInt(10000000).toString(),

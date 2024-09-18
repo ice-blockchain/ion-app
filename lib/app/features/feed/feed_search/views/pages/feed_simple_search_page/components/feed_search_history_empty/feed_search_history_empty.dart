@@ -3,8 +3,8 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class FeedSearchEmptyHistory extends StatelessWidget {
-  const FeedSearchEmptyHistory({super.key});
+class FeedSearchHistoryEmpty extends StatelessWidget {
+  const FeedSearchHistoryEmpty({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -3,11 +3,11 @@ import 'package:ice/app/features/feed/feed_search/model/feed_search_user.dart';
 import 'package:ice/app/features/feed/feed_search/providers/mocked_search_users.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'feed_simple_search_results.g.dart';
+part 'feed_search_users_provider.g.dart';
 
 @riverpod
-Future<List<FeedSearchUser>?> feedSimpleSearchResults(
-  FeedSimpleSearchResultsRef ref,
+Future<List<FeedSearchUser>?> feedSearchUsers(
+  FeedSearchUsersRef ref,
   String query,
 ) async {
   if (query.isEmpty) {
@@ -16,7 +16,7 @@ Future<List<FeedSearchUser>?> feedSimpleSearchResults(
   await ref.debounce();
   await Future<void>.delayed(Duration(milliseconds: 500));
 
-  return feedSearchUsers
+  return mockedFeedSearchUsers
       .where((user) => user.name.toLowerCase().contains(query.toLowerCase()))
       .toList();
 }
