@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/components/webview/web_view_browser.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/twofa_type.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
@@ -31,10 +30,10 @@ import 'package:ice/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ice/app/features/feed/create_story/views/pages/create_story_modal/create_story_modal.dart';
 import 'package:ice/app/features/feed/create_video/views/pages/create_video_modal/create_video_modal.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_search_page/feed_advanced_search_page.dart';
+import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/feed_simple_search_page.dart';
 import 'package:ice/app/features/feed/views/pages/comment_post_modal/comment_post_modal.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/feed_page.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/feed_simple_search_page.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ice/app/features/feed/views/pages/post_reply_modal/post_reply_modal.dart';
 import 'package:ice/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
