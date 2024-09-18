@@ -10,7 +10,9 @@ import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/post_reply/reply_data_notifier.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
-import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/components/reply_author_header.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -94,8 +96,25 @@ class ReplyInputField extends HookConsumerWidget {
           ),
           SizedBox(height: 12.0.s),
           if (hasFocus.value)
-            PostRepliesActionBar(
-              onSendPressed: () => ref.read(sendReplyRequestNotifierProvider.notifier).sendReply(),
+            ActionsToolbar(
+              actions: [
+                ActionsToolbarButton(
+                  buttonType: ActionsToolbarButtonType.gallery,
+                  onPressed: () {},
+                ),
+                ActionsToolbarButton(
+                  buttonType: ActionsToolbarButtonType.camera,
+                  onPressed: () {},
+                ),
+                ActionsToolbarButton(
+                  buttonType: ActionsToolbarButtonType.addFile,
+                  onPressed: () {},
+                ),
+              ],
+              trailing: ActionsToolbarButtonSend(
+                enabled: true,
+                onPressed: () => ref.read(sendReplyRequestNotifierProvider.notifier).sendReply(),
+              ),
             ),
         ],
       ),

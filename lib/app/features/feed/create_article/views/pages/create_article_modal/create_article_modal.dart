@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/data/models/toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
