@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/model/media_type.dart';
-import 'package:ice/app/features/feed/model/post/post_media_data.dart';
+import 'package:ice/app/features/feed/data/models/post/post_media_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_carousel.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 import 'package:ice/app/features/feed/views/components/post/constants.dart';

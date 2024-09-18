@@ -1,4 +1,4 @@
-import 'package:ice/app/features/feed/model/post/post_data.dart';
+import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ice/app/features/nostr/constants.dart';

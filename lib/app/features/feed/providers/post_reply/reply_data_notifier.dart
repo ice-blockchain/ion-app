@@ -1,4 +1,4 @@
-import 'package:ice/app/features/feed/model/post_reply/post_reply_data.dart';
+import 'package:ice/app/features/feed/data/models/post_reply/post_reply_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reply_data_notifier.g.dart';
