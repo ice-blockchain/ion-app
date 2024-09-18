@@ -17,7 +17,7 @@ class ToolbarText extends HookWidget {
       onTap: onPress,
       child: Padding(
         padding: EdgeInsets.only(right: 12.0.s),
-        child: Container(
+        child: SizedBox(
           height: 24.0.s,
           child: buttonType.getIconAsset(isSelected).icon(size: 24.0.s),
         ),

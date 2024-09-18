@@ -5,7 +5,6 @@ import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/components/scroll_view/load_more_builder.dart';
 import 'package:ice/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/feed/data/models/feed_category.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/providers/feed_post_ids_provider.dart';

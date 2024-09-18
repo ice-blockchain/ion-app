@@ -8,26 +8,13 @@ class Toolbar extends StatelessWidget {
   const Toolbar({
     this.padding,
     this.toolbarType = ToolbarType.post,
-    this.onButtonType,
+    this.onButtonTap,
     super.key,
   });
 
   final EdgeInsets? padding;
   final ToolbarType toolbarType;
-  final void Function(ToolbarButtonType)? onButtonType;
-
-  Widget _buildButton(ToolbarButtonType buttonType, BuildContext context) {
-    final double buttonHeight = buttonType == ToolbarButtonType.send ? 28.0.s : 24.0.s;
-
-    return GestureDetector(
-      onTap: onButtonType != null ? () => onButtonType!(buttonType) : null,
-      child: Container(
-        height: buttonHeight,
-        alignment: buttonType == ToolbarButtonType.send ? Alignment.center : null,
-        child: buttonType.iconAsset != null ? buttonType.iconAsset!.icon(size: buttonHeight) : null,
-      ),
-    );
-  }
+  final ValueChanged<ToolbarButtonType>? onButtonTap;
 
   @override
   Widget build(BuildContext context) {
@@ -40,21 +27,46 @@ class Toolbar extends StatelessWidget {
         child: Row(
           children: [
             ...toolbarButtons.map((buttonType) {
-              if (buttonType == ToolbarButtonType.spacer) {
-                return const Spacer();
-              } else if (buttonType == ToolbarButtonType.font) {
-                return ToolbarText(
-                  onTextStyleChange: (ToolbarTextButtonType type) => {},
-                );
+              switch (buttonType) {
+                case ToolbarButtonType.spacer:
+                  return const Spacer();
+                case ToolbarButtonType.font:
+                  return ToolbarText(
+                    onTextStyleChange: (ToolbarTextButtonType type) => {},
+                  );
+                default:
+                  return Padding(
+                    padding: EdgeInsets.only(right: 12.0.s),
+                    child: _ToolbarButton(buttonType: buttonType, onButtonTap: onButtonTap),
+                  );
               }
-
-              return Padding(
-                padding: EdgeInsets.only(right: 12.0.s),
-                child: _buildButton(buttonType, context),
-              );
             }).toList(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ToolbarButton extends StatelessWidget {
+  final ToolbarButtonType buttonType;
+  final ValueChanged<ToolbarButtonType>? onButtonTap;
+
+  const _ToolbarButton({
+    required this.buttonType,
+    this.onButtonTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final double buttonHeight = buttonType == ToolbarButtonType.send ? 28.0.s : 24.0.s;
+
+    return GestureDetector(
+      onTap: onButtonTap != null ? () => onButtonTap!(buttonType) : null,
+      child: Container(
+        height: buttonHeight,
+        alignment: buttonType == ToolbarButtonType.send ? Alignment.center : null,
+        child: buttonType.iconAsset != null ? buttonType.iconAsset!.icon(size: buttonHeight) : null,
       ),
     );
   }

@@ -34,21 +34,14 @@ enum ToolbarButtonType {
   schedule,
   send;
 
-  String? get iconAsset {
-    switch (this) {
-      case ToolbarButtonType.gallery:
-        return Assets.svg.iconGalleryOpen;
-      case ToolbarButtonType.poll:
-        return Assets.svg.iconPostPoll;
-      case ToolbarButtonType.send:
-        return Assets.svg.sendbuttonDisabled;
-      case ToolbarButtonType.schedule:
-        return Assets.svg.iconCreatepostShedule;
-      case ToolbarButtonType.spacer:
-      case ToolbarButtonType.font:
-        return null;
-    }
-  }
+  String? get iconAsset => switch (this) {
+        ToolbarButtonType.gallery => Assets.svg.iconGalleryOpen,
+        ToolbarButtonType.poll => Assets.svg.iconPostPoll,
+        ToolbarButtonType.send => Assets.svg.sendbuttonDisabled,
+        ToolbarButtonType.schedule => Assets.svg.iconCreatepostShedule,
+        ToolbarButtonType.spacer => null,
+        ToolbarButtonType.font => null,
+      };
 }
 
 enum ToolbarTextButtonType {
