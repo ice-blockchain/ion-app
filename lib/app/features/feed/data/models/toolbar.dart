@@ -1,63 +1,27 @@
 import 'package:ice/generated/assets.gen.dart';
 
-// enum ToolbarType {
-//   post,
-//   article;
-
-//   List<ToolbarButtonType> get buttons {
-//     switch (this) {
-//       case ToolbarType.post:
-//         return [
-//           ToolbarButtonType.gallery,
-//           ToolbarButtonType.poll,
-//           ToolbarButtonType.font,
-//           ToolbarButtonType.spacer,
-//           ToolbarButtonType.schedule,
-//           ToolbarButtonType.send,
-//         ];
-//       case ToolbarType.article:
-//         return [
-//           ToolbarButtonType.gallery,
-//           ToolbarButtonType.font,
-//           ToolbarButtonType.spacer,
-//           ToolbarButtonType.send,
-//         ];
-//     }
-//   }
-// }
-
-// TODO: toobar button
-enum ToolbarButtonType {
+enum ActionsToolbarButtonType {
   gallery,
   poll,
-  font,
-  spacer,
   schedule,
-  send;
-
-  String? get iconAsset => switch (this) {
-        ToolbarButtonType.gallery => Assets.svg.iconGalleryOpen,
-        ToolbarButtonType.poll => Assets.svg.iconPostPoll,
-        ToolbarButtonType.send => Assets.svg.sendbuttonDisabled,
-        ToolbarButtonType.schedule => Assets.svg.iconCreatepostShedule,
-        ToolbarButtonType.spacer => null,
-        ToolbarButtonType.font => null,
-      };
-}
-
-enum ToolbarTextButtonType {
+  send,
   regular,
+  regularSelected,
   bold,
-  italic;
+  boldSelected,
+  italic,
+  italicSelected;
 
-  String getIconAsset(bool isSelected) {
-    switch (this) {
-      case ToolbarTextButtonType.regular:
-        return isSelected ? Assets.svg.iconPostRegulartextOn : Assets.svg.iconPostRegulartextOff;
-      case ToolbarTextButtonType.bold:
-        return isSelected ? Assets.svg.iconPostBoldtextOn : Assets.svg.iconPostBoldtextOff;
-      case ToolbarTextButtonType.italic:
-        return isSelected ? Assets.svg.iconPostItalictextOn : Assets.svg.iconPostItalictextOff;
-    }
-  }
+  String get iconAsset => switch (this) {
+        ActionsToolbarButtonType.gallery => Assets.svg.iconGalleryOpen,
+        ActionsToolbarButtonType.poll => Assets.svg.iconPostPoll,
+        ActionsToolbarButtonType.send => Assets.svg.sendbuttonDisabled,
+        ActionsToolbarButtonType.schedule => Assets.svg.iconCreatepostShedule,
+        ActionsToolbarButtonType.regular => Assets.svg.iconPostRegulartextOff,
+        ActionsToolbarButtonType.regularSelected => Assets.svg.iconPostRegulartextOn,
+        ActionsToolbarButtonType.bold => Assets.svg.iconPostBoldtextOff,
+        ActionsToolbarButtonType.boldSelected => Assets.svg.iconPostBoldtextOn,
+        ActionsToolbarButtonType.italic => Assets.svg.iconPostItalictextOff,
+        ActionsToolbarButtonType.italicSelected => Assets.svg.iconPostItalictextOn,
+      };
 }

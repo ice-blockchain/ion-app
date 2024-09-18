@@ -3,6 +3,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/data/models/toolbar.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -14,6 +18,14 @@ class CreateArticleModal extends HookWidget {
   Widget build(BuildContext context) {
     final focusNode = useFocusNode();
     useOnInit(focusNode.requestFocus);
+    final selectedType = useState(ActionsToolbarButtonType.regular);
+
+    updateSelectedType(ActionsToolbarButtonType type) {
+      if (type == selectedType.value) {
+        return;
+      }
+      selectedType.value = type;
+    }
 
     return SheetContent(
       body: Column(
@@ -54,7 +66,39 @@ class CreateArticleModal extends HookWidget {
               ),
             ),
           ),
-          // ActionsToolbar(),
+          ActionsToolbar(
+            actions: [
+              ActionsToolbarButton(
+                buttonType: ActionsToolbarButtonType.gallery,
+                onPressed: () {},
+              ),
+              ActionsToolbarButton(
+                buttonType: ActionsToolbarButtonType.poll,
+                onPressed: () => {},
+              ),
+              ActionsToolbarButton(
+                buttonType: ActionsToolbarButtonType.regular,
+                buttonTypeSelected: ActionsToolbarButtonType.regularSelected,
+                onPressed: () => updateSelectedType(ActionsToolbarButtonType.regular),
+                selected: selectedType.value == ActionsToolbarButtonType.regular,
+              ),
+              ActionsToolbarButton(
+                buttonType: ActionsToolbarButtonType.bold,
+                buttonTypeSelected: ActionsToolbarButtonType.boldSelected,
+                onPressed: () => updateSelectedType(ActionsToolbarButtonType.bold),
+                selected: selectedType.value == ActionsToolbarButtonType.bold,
+              ),
+              ActionsToolbarButton(
+                buttonType: ActionsToolbarButtonType.italic,
+                buttonTypeSelected: ActionsToolbarButtonType.italicSelected,
+                onPressed: () => updateSelectedType(ActionsToolbarButtonType.italic),
+                selected: selectedType.value == ActionsToolbarButtonType.italic,
+              ),
+            ],
+            trailing: ActionsToolbarButtonSend(
+              onPressed: () {},
+            ),
+          ),
         ],
       ),
     );
