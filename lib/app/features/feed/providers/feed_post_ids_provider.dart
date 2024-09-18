@@ -1,17 +1,17 @@
-import 'package:ice/app/features/feed/model/feed_category.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
+import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/providers/posts_store_provider.dart';
 import 'package:ice/app/features/nostr/constants.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'feed_category_post_ids.g.dart';
+part 'feed_post_ids_provider.g.dart';
 
 @riverpod
-class FeedCategoryPostIds extends _$FeedCategoryPostIds {
+class FeedPostIds extends _$FeedPostIds {
   @override
-  List<String> build({required FeedCategory category}) {
+  List<String> build({required FeedFiltersState filters}) {
     return [];
   }
 

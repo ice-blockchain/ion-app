@@ -10,7 +10,7 @@ part 'posts_store_provider.g.dart';
 @Freezed(copyWith: true, equal: true)
 class PostsState with _$PostsState {
   const factory PostsState({
-    required Map<String, PostData> store,
+    required Map<String, PostData> store, //TODO:rename to posts
     required Map<String, List<String>> postReplyIds,
   }) = _PostsState;
 }
@@ -27,7 +27,7 @@ class PostsStore extends _$PostsStore {
       return;
     }
 
-    final posts = List.generate(Random().nextInt(10) + 1, (_) => _generateFakePost());
+    final posts = List.generate(Random().nextInt(10) + 1, (_) => generateFakePost());
     state = state.copyWith(
       store: {...state.store, for (final post in posts) post.id: post},
       postReplyIds: {...state.postReplyIds, postId: posts.map((post) => post.id).toList()},
@@ -51,7 +51,7 @@ List<String> postReplyIdsSelector(PostReplyIdsSelectorRef ref, {required String 
   return ref.watch(postsStoreProvider.select((state) => state.postReplyIds[postId] ?? []));
 }
 
-PostData _generateFakePost() {
+PostData generateFakePost() {
   var random = Random.secure();
   final post = PostData.fromRawContent(
     id: random.nextInt(10000000).toString(),

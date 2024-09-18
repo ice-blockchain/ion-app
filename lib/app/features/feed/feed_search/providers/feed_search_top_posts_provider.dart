@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/providers/posts_store_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_search_top_posts_provider.g.dart';
@@ -14,6 +17,8 @@ Future<List<String>?> feedSearchTopPosts(
   await ref.debounce();
   await Future<void>.delayed(Duration(milliseconds: 500));
 
-  return [];
-  // return ref.read(postsStoreProvider).categoryPostIds[FeedCategory.feed]?.sublist(0, 3) ?? [];
+  final posts = List.generate(Random().nextInt(5) + 1, (_) => generateFakePost());
+  ref.read(postsStoreProvider.notifier).store(posts: posts);
+
+  return posts.map((post) => post.id).toList();
 }
