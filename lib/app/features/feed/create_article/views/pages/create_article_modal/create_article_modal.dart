@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/components/toolbar/toolbar.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -55,7 +54,7 @@ class CreateArticleModal extends HookWidget {
               ),
             ),
           ),
-          Toolbar(),
+          // ActionsToolbar(),
         ],
       ),
     );

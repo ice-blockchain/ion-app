@@ -1,31 +1,32 @@
 import 'package:ice/generated/assets.gen.dart';
 
-enum ToolbarType {
-  post,
-  article;
+// enum ToolbarType {
+//   post,
+//   article;
 
-  List<ToolbarButtonType> get buttons {
-    switch (this) {
-      case ToolbarType.post:
-        return [
-          ToolbarButtonType.gallery,
-          ToolbarButtonType.poll,
-          ToolbarButtonType.font,
-          ToolbarButtonType.spacer,
-          ToolbarButtonType.schedule,
-          ToolbarButtonType.send,
-        ];
-      case ToolbarType.article:
-        return [
-          ToolbarButtonType.gallery,
-          ToolbarButtonType.font,
-          ToolbarButtonType.spacer,
-          ToolbarButtonType.send,
-        ];
-    }
-  }
-}
+//   List<ToolbarButtonType> get buttons {
+//     switch (this) {
+//       case ToolbarType.post:
+//         return [
+//           ToolbarButtonType.gallery,
+//           ToolbarButtonType.poll,
+//           ToolbarButtonType.font,
+//           ToolbarButtonType.spacer,
+//           ToolbarButtonType.schedule,
+//           ToolbarButtonType.send,
+//         ];
+//       case ToolbarType.article:
+//         return [
+//           ToolbarButtonType.gallery,
+//           ToolbarButtonType.font,
+//           ToolbarButtonType.spacer,
+//           ToolbarButtonType.send,
+//         ];
+//     }
+//   }
+// }
 
+// TODO: toobar button
 enum ToolbarButtonType {
   gallery,
   poll,

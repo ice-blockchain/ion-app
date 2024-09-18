@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/data/models/toolbar.dart';
 
-class ToolbarText extends HookWidget {
-  const ToolbarText({
+class ActionsToolbarFont extends HookWidget {
+  const ActionsToolbarFont({
     super.key,
     this.onTextStyleChange,
   });
