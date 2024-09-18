@@ -30,7 +30,7 @@ class FeedAdvancedSearchUserListItem extends StatelessWidget {
           ),
           SizedBox(height: 10.0.s),
           Text(
-            'Bitcoin Investor & Entepreneur. Faunder of WealthMastery.',
+            'Bitcoin Investor & Entrepreneur. Founder of WealthMastery.',
             style: context.theme.appTextThemes.body2.copyWith(
               color: context.theme.appColors.sharkText,
             ),
