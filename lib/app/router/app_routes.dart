@@ -80,6 +80,7 @@ import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/nfts_sort
 import 'package:ice/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
 import 'package:ice/app/features/wallet/views/pages/send_nft_confirm/send_nft_confirm.dart';
 import 'package:ice/app/features/wallet/views/pages/send_nft_form/send_nft_form.dart';
+import 'package:ice/app/features/wallet/views/pages/transaction_details/transaction_details.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_page/wallet_page.dart';
 import 'package:ice/app/features/wallet/views/pages/wallet_scan/wallet_scan_modal_page.dart';
