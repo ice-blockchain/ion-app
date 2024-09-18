@@ -14,16 +14,17 @@ class ActionsToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 1.0.s,
-          width: double.infinity,
-          color: Theme.of(context).appColors.onTerararyFill,
-        ),
-        ScreenSideOffset.small(
-          child: Container(
-            height: 40.0.s,
+    return Container(
+      height: 40.0.s,
+      child: Column(
+        children: [
+          Container(
+            height: 1.0.s,
+            width: double.infinity,
+            color: Theme.of(context).appColors.onTerararyFill,
+          ),
+          SizedBox(height: 6.0.s),
+          ScreenSideOffset.small(
             child: Row(
               children: [
                 ...actions,
@@ -32,8 +33,8 @@ class ActionsToolbar extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

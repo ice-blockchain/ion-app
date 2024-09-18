@@ -67,8 +67,7 @@ class PostReplyModal extends ConsumerWidget {
             ),
           ),
           HorizontalSeparator(),
-          ScreenSideOffset.small(
-              child: ActionsToolbar(
+          ActionsToolbar(
             actions: [
               ActionsToolbarButton(
                 buttonType: ActionsToolbarButtonType.gallery,
@@ -87,7 +86,7 @@ class PostReplyModal extends ConsumerWidget {
               enabled: true,
               onPressed: () => ref.read(sendReplyRequestNotifierProvider.notifier).sendReply(),
             ),
-          )),
+          ),
         ],
       ),
     );
