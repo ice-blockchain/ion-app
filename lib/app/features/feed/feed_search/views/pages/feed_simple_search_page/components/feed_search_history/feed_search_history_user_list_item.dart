@@ -33,14 +33,12 @@ class FeedSearchHistoryUserListItem extends HookWidget {
       }
     });
 
-    return user.value != null
-        ? _FeedSearchHistoryUserListItemLoaded(user: user.value!)
-        : _FeedSearchHistoryUserListItemLoading();
+    return user.value != null ? _UserListItem(user: user.value!) : _UserListItemLoading();
   }
 }
 
-class _FeedSearchHistoryUserListItemLoaded extends StatelessWidget {
-  const _FeedSearchHistoryUserListItemLoaded({required this.user});
+class _UserListItem extends StatelessWidget {
+  const _UserListItem({required this.user});
 
   final FeedSearchUser user;
 
@@ -80,8 +78,8 @@ class _FeedSearchHistoryUserListItemLoaded extends StatelessWidget {
   }
 }
 
-class _FeedSearchHistoryUserListItemLoading extends StatelessWidget {
-  const _FeedSearchHistoryUserListItemLoading();
+class _UserListItemLoading extends StatelessWidget {
+  const _UserListItemLoading();
 
   @override
   Widget build(BuildContext context) {

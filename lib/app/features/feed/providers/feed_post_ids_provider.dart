@@ -1,6 +1,6 @@
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
-import 'package:ice/app/features/feed/providers/posts_store_provider.dart';
+import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ice/app/features/nostr/constants.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -25,6 +25,6 @@ class FeedPostIds extends _$FeedPostIds {
 
     state = [...state, ...posts.map((post) => post.id).toList()];
 
-    ref.read(postsStoreProvider.notifier).store(posts: posts);
+    ref.read(postsStorageProvider.notifier).store(posts: posts);
   }
 }

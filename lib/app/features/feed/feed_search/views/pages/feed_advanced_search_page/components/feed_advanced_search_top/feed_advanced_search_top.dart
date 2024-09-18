@@ -19,12 +19,7 @@ class FeedAdvancedSearchTop extends HookConsumerWidget {
     return CustomScrollView(
       slivers: [
         topPostsSearchResults.maybeWhen(
-          data: (postIds) {
-            if (postIds == null) {
-              return SizedBox.shrink();
-            }
-            return PostList(postIds: postIds);
-          },
+          data: (postIds) => PostList(postIds: postIds ?? []),
           orElse: () => PostListSkeleton(),
         )
       ],

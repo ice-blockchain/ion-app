@@ -1,54 +1,25 @@
 import 'dart:math';
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ice/app/features/feed/model/post/post_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'posts_store_provider.freezed.dart';
-part 'posts_store_provider.g.dart';
-
-@Freezed(copyWith: true, equal: true)
-class PostsState with _$PostsState {
-  const factory PostsState({
-    required Map<String, PostData> posts,
-    required Map<String, List<String>> postReplyIds,
-  }) = _PostsState;
-}
+part 'posts_storage_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class PostsStore extends _$PostsStore {
+class PostsStorage extends _$PostsStorage {
   @override
-  PostsState build() {
-    return const PostsState(posts: {}, postReplyIds: {});
-  }
-
-  Future<void> fetchPostReplies({required String postId}) async {
-    if (state.postReplyIds[postId] != null) {
-      return;
-    }
-
-    final posts = List.generate(Random().nextInt(10) + 1, (_) => generateFakePost());
-    state = state.copyWith(
-      posts: {...state.posts, for (final post in posts) post.id: post},
-      postReplyIds: {...state.postReplyIds, postId: posts.map((post) => post.id).toList()},
-    );
+  Map<String, PostData> build() {
+    return {};
   }
 
   void store({required List<PostData> posts}) {
-    state = state.copyWith(
-      posts: {...state.posts, for (final post in posts) post.id: post},
-    );
+    state = {...state, for (final post in posts) post.id: post};
   }
 }
 
 @riverpod
 PostData? postByIdSelector(PostByIdSelectorRef ref, {required String postId}) {
-  return ref.watch(postsStoreProvider.select((state) => state.posts[postId]));
-}
-
-@riverpod
-List<String> postReplyIdsSelector(PostReplyIdsSelectorRef ref, {required String postId}) {
-  return ref.watch(postsStoreProvider.select((state) => state.postReplyIds[postId] ?? []));
+  return ref.watch(postsStorageProvider.select((state) => state[postId]));
 }
 
 PostData generateFakePost() {
