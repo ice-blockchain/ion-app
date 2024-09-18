@@ -10,7 +10,7 @@ part 'posts_store_provider.g.dart';
 @Freezed(copyWith: true, equal: true)
 class PostsState with _$PostsState {
   const factory PostsState({
-    required Map<String, PostData> store, //TODO:rename to posts
+    required Map<String, PostData> posts,
     required Map<String, List<String>> postReplyIds,
   }) = _PostsState;
 }
@@ -19,7 +19,7 @@ class PostsState with _$PostsState {
 class PostsStore extends _$PostsStore {
   @override
   PostsState build() {
-    return const PostsState(store: {}, postReplyIds: {});
+    return const PostsState(posts: {}, postReplyIds: {});
   }
 
   Future<void> fetchPostReplies({required String postId}) async {
@@ -29,21 +29,21 @@ class PostsStore extends _$PostsStore {
 
     final posts = List.generate(Random().nextInt(10) + 1, (_) => generateFakePost());
     state = state.copyWith(
-      store: {...state.store, for (final post in posts) post.id: post},
+      posts: {...state.posts, for (final post in posts) post.id: post},
       postReplyIds: {...state.postReplyIds, postId: posts.map((post) => post.id).toList()},
     );
   }
 
   void store({required List<PostData> posts}) {
     state = state.copyWith(
-      store: {...state.store, for (final post in posts) post.id: post},
+      posts: {...state.posts, for (final post in posts) post.id: post},
     );
   }
 }
 
 @riverpod
 PostData? postByIdSelector(PostByIdSelectorRef ref, {required String postId}) {
-  return ref.watch(postsStoreProvider.select((state) => state.store[postId]));
+  return ref.watch(postsStoreProvider.select((state) => state.posts[postId]));
 }
 
 @riverpod
