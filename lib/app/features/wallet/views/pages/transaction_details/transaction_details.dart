@@ -15,6 +15,7 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/services/browser/browser.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class TransactionDetailsPage extends ConsumerWidget {
@@ -122,10 +123,9 @@ class TransactionDetailsPage extends ConsumerWidget {
                     SizedBox(height: 15.0.s),
                     TransactionDetailsActions(
                       onViewOnExplorer: () {
-                        WebViewBrowserRoute(
-                                url:
-                                    'https://etherscan.io/address/0x1f9090aae28b8a3dceadf281b0f12828e676c326')
-                            .push<void>(context);
+                        openUrlInAppBrowser(
+                          'https://etherscan.io/address/0x1f9090aae28b8a3dceadf281b0f12828e676c326',
+                        );
                       },
                       onShare: () {},
                     ),
