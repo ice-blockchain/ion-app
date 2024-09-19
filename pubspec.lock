@@ -334,6 +334,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.3"
+  dart_quill_delta:
+    dependency: transitive
+    description:
+      name: dart_quill_delta
+      sha256: "23e914001e2c1f6d758c1cfaae96279ec261794a5dfbf7a5f2403b703bd5039e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.5.16"
   dart_style:
     dependency: transitive
     description:
@@ -358,6 +366,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  diff_match_patch:
+    dependency: transitive
+    description:
+      name: diff_match_patch
+      sha256: "2efc9e6e8f449d0abe15be240e2c2a3bcd977c8d126cfd70598aee60af35c0a4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   dio:
     dependency: transitive
     description:
@@ -483,6 +499,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.0"
+  flutter_colorpicker:
+    dependency: transitive
+    description:
+      name: flutter_colorpicker
+      sha256: "969de5f6f9e2a570ac660fb7b501551451ea2a1ab9e2097e89475f60e07816ea"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   flutter_dotenv:
     dependency: "direct main"
     description:
@@ -656,6 +680,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.21"
+  flutter_quill:
+    dependency: "direct main"
+    description:
+      name: flutter_quill
+      sha256: "7283325ff73be09b958776a4f1c8d8ec0e62afc12edb322fbda99ce4497e5838"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.5.16"
+  flutter_quill_delta_from_html:
+    dependency: transitive
+    description:
+      name: flutter_quill_delta_from_html
+      sha256: "5461df689818d34237f7a5109763e1e4663b973c2a44a46c398bbd46381d297a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   flutter_riverpod:
     dependency: transitive
     description:
@@ -1081,6 +1121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.2-main.4"
+  markdown:
+    dependency: transitive
+    description:
+      name: markdown
+      sha256: ef2a1298144e3f985cc736b22e0ccdaf188b5b3970648f2d9dc13efd1d9df051
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.2.2"
   matcher:
     dependency: transitive
     description:
@@ -1458,6 +1506,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  quill_native_bridge:
+    dependency: transitive
+    description:
+      name: quill_native_bridge
+      sha256: "80cc180a6e5cc625c5431b61e2fbc056d36654964337f497c5990e34925844fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.5.16"
   quiver:
     dependency: transitive
     description:
@@ -2064,5 +2120,5 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
-  dart: ">=3.5.0-259.0.dev <4.0.0"
+  dart: ">=3.5.1 <4.0.0"
   flutter: ">=3.24.2"
