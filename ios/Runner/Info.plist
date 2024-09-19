@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
+		<true />
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -25,13 +25,13 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
+		<false />
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
-	<true/>
+		<true />
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires access to the camera.</string>
 	<key>NSContactsUsageDescription</key>
@@ -41,7 +41,7 @@
 	<key>PermissionGroupNotification</key>
 	<string>This app requires access to notifications to keep you informed.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
+		<true />
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -52,12 +52,19 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiresFullScreen</key>
-	<true/>
+		<true />
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+		<false />
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Мы используем вашу фото библиотеку для выбора изображений.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Мы используем камеру для съемки фотографий.</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>Мы используем вашу фото библиотеку для сохранения изображений.</string>
+
 </dict>
 </plist>
