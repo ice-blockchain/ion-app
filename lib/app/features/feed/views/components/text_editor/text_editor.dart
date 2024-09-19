@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/custom_blocks/text_editor_code_block.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/custom_blocks/text_editor_divider_block.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/custom_blocks/text_editor_poll_block.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/custom_blocks/text_editor_single_image_block.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/toolbar_buttons/text_editor_bold_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/toolbar_buttons/text_editor_code_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/toolbar_buttons/text_editor_divider_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/toolbar_buttons/text_editor_heading1_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/toolbar_buttons/text_editor_image_button.dart';
@@ -37,6 +39,7 @@ class TextEditor extends HookWidget {
               TextEditorPollBlockBuilder(),
               TextEditorSingleImageBuilder(),
               TextEditorDividerBuilder(),
+              TextEditorCodeBuilder(),
             ],
             autoFocus: true,
             placeholder: context.i18n.create_post_modal_placeholder,
@@ -155,6 +158,8 @@ class TextEditorToolbar extends StatelessWidget {
               TextEditorQuoteButton(_controller),
               SizedBox(width: 8),
               TextEditorDividerButton(_controller),
+              SizedBox(width: 8),
+              TextEditorCodeButton(_controller),
             ],
           ),
         ],
