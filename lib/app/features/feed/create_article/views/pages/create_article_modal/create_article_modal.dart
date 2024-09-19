@@ -4,12 +4,14 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/providers/use_font_type.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/generated/assets.gen.dart';
 
 class CreateArticleModal extends HookWidget {
   const CreateArticleModal({super.key});
@@ -18,14 +20,8 @@ class CreateArticleModal extends HookWidget {
   Widget build(BuildContext context) {
     final focusNode = useFocusNode();
     useOnInit(focusNode.requestFocus);
-    final selectedType = useState(ActionsToolbarButtonType.regular);
 
-    updateSelectedType(ActionsToolbarButtonType type) {
-      if (type == selectedType.value) {
-        return;
-      }
-      selectedType.value = type;
-    }
+    final fontTypeState = useFontType();
 
     return SheetContent(
       bottomPadding: 0,
@@ -74,30 +70,30 @@ class CreateArticleModal extends HookWidget {
                 child: ActionsToolbar(
                   actions: [
                     ActionsToolbarButton(
-                      buttonType: ActionsToolbarButtonType.gallery,
+                      icon: Assets.svg.iconGalleryOpen,
                       onPressed: () {},
                     ),
                     ActionsToolbarButton(
-                      buttonType: ActionsToolbarButtonType.poll,
+                      icon: Assets.svg.iconPostPoll,
                       onPressed: () => {},
                     ),
                     ActionsToolbarButton(
-                      buttonType: ActionsToolbarButtonType.regular,
-                      buttonTypeSelected: ActionsToolbarButtonType.regularSelected,
-                      onPressed: () => updateSelectedType(ActionsToolbarButtonType.regular),
-                      selected: selectedType.value == ActionsToolbarButtonType.regular,
+                      icon: Assets.svg.iconPostRegulartextOff,
+                      iconSelected: Assets.svg.iconPostRegulartextOn,
+                      onPressed: () => fontTypeState.setFontType(FontType.regular),
+                      selected: fontTypeState.fontType == FontType.regular,
                     ),
                     ActionsToolbarButton(
-                      buttonType: ActionsToolbarButtonType.bold,
-                      buttonTypeSelected: ActionsToolbarButtonType.boldSelected,
-                      onPressed: () => updateSelectedType(ActionsToolbarButtonType.bold),
-                      selected: selectedType.value == ActionsToolbarButtonType.bold,
+                      icon: Assets.svg.iconPostBoldtextOff,
+                      iconSelected: Assets.svg.iconPostBoldtextOn,
+                      onPressed: () => fontTypeState.setFontType(FontType.bold),
+                      selected: fontTypeState.fontType == FontType.bold,
                     ),
                     ActionsToolbarButton(
-                      buttonType: ActionsToolbarButtonType.italic,
-                      buttonTypeSelected: ActionsToolbarButtonType.italicSelected,
-                      onPressed: () => updateSelectedType(ActionsToolbarButtonType.italic),
-                      selected: selectedType.value == ActionsToolbarButtonType.italic,
+                      icon: Assets.svg.iconPostItalictextOff,
+                      iconSelected: Assets.svg.iconPostItalictextOn,
+                      onPressed: () => fontTypeState.setFontType(FontType.italic),
+                      selected: fontTypeState.fontType == FontType.italic,
                     ),
                   ],
                   trailing: ActionsToolbarButtonSend(

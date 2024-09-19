@@ -99,15 +99,15 @@ class ReplyInputField extends HookConsumerWidget {
             ActionsToolbar(
               actions: [
                 ActionsToolbarButton(
-                  buttonType: ActionsToolbarButtonType.gallery,
+                  icon: Assets.svg.iconGalleryOpen,
                   onPressed: () {},
                 ),
                 ActionsToolbarButton(
-                  buttonType: ActionsToolbarButtonType.camera,
+                  icon: Assets.svg.iconCameraOpen,
                   onPressed: () {},
                 ),
                 ActionsToolbarButton(
-                  buttonType: ActionsToolbarButtonType.addFile,
+                  icon: Assets.svg.iconFeedAddfile,
                   onPressed: () {},
                 ),
               ],

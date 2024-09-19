@@ -13,13 +13,12 @@ class ActionsToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 40.0.s,
       child: Row(
         children: [
-          ...actions,
-          Spacer(),
-          if (trailing != null) trailing!,
+          ...actions.intersperse(SizedBox(width: 12.0.s)).toList(),
+          if (trailing != null) ...[SizedBox(width: 12.0.s), Spacer(), trailing!]
         ],
       ),
     );
