@@ -4,7 +4,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/providers/use_font_type.dart';
+import 'package:ice/app/features/feed/create_article/views/pages/create_article_modal/hooks/use_font_type.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
@@ -21,7 +21,7 @@ class CreateArticleModal extends HookWidget {
     final focusNode = useFocusNode();
     useOnInit(focusNode.requestFocus);
 
-    final fontTypeState = useFontType();
+    final (fontType, setFontType) = useFontType();
 
     return SheetContent(
       bottomPadding: 0,
@@ -80,20 +80,20 @@ class CreateArticleModal extends HookWidget {
                     ActionsToolbarButton(
                       icon: Assets.svg.iconPostRegulartextOff,
                       iconSelected: Assets.svg.iconPostRegulartextOn,
-                      onPressed: () => fontTypeState.setFontType(FontType.regular),
-                      selected: fontTypeState.fontType == FontType.regular,
+                      onPressed: () => setFontType(FontType.regular),
+                      selected: fontType == FontType.regular,
                     ),
                     ActionsToolbarButton(
                       icon: Assets.svg.iconPostBoldtextOff,
                       iconSelected: Assets.svg.iconPostBoldtextOn,
-                      onPressed: () => fontTypeState.setFontType(FontType.bold),
-                      selected: fontTypeState.fontType == FontType.bold,
+                      onPressed: () => setFontType(FontType.bold),
+                      selected: fontType == FontType.bold,
                     ),
                     ActionsToolbarButton(
                       icon: Assets.svg.iconPostItalictextOff,
                       iconSelected: Assets.svg.iconPostItalictextOn,
-                      onPressed: () => fontTypeState.setFontType(FontType.italic),
-                      selected: fontTypeState.fontType == FontType.italic,
+                      onPressed: () => setFontType(FontType.italic),
+                      selected: fontType == FontType.italic,
                     ),
                   ],
                   trailing: ActionsToolbarButtonSend(
