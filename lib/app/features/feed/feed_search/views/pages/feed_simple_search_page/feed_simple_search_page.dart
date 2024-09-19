@@ -4,6 +4,7 @@ import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ice/app/features/feed/feed_search/providers/feed_search_history_provider.dart'
     show feedSearchHistoryProvider;
 import 'package:ice/app/features/feed/feed_search/providers/feed_search_users_provider.dart';
+import 'package:ice/app/features/feed/feed_search/views/components/nothing_is_found.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history_empty/feed_search_history_empty.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_navigation/feed_search_navigation.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results.dart';
@@ -30,7 +31,9 @@ class FeedSimpleSearchPage extends ConsumerWidget {
                   ? history.userIds.isEmpty && history.queries.isEmpty
                       ? FeedSearchHistoryEmpty()
                       : FeedSearchHistory(userIds: history.userIds, queries: history.queries)
-                  : FeedSearchResults(users: users),
+                  : users.isEmpty
+                      ? NothingIsFound()
+                      : FeedSearchResults(users: users),
               orElse: () => FeedSearchResultsSkeleton(),
             ),
           ],

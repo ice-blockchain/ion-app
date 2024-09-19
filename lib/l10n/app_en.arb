@@ -220,6 +220,7 @@
   "feed_modal_article_description": "Share your wisdom",
   "feed_share_via": "Share via message",
   "feed_search_empty": "Search here for users, hashtags, channels...",
+  "feed_nothing_found": "Nothing was found for your query",
   "feed_search_history_title": "Recent searches",
   "feed_advanced_search_category_top": "Top",
   "feed_advanced_search_category_latest": "Latest",
