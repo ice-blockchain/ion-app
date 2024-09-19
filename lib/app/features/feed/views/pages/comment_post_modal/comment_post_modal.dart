@@ -72,24 +72,26 @@ class CommentPostModal extends ConsumerWidget {
             ),
           ),
           HorizontalSeparator(),
-          ActionsToolbar(
-            actions: [
-              ActionsToolbarButton(
-                buttonType: ActionsToolbarButtonType.gallery,
-                onPressed: () {},
+          ScreenSideOffset.small(
+            child: ActionsToolbar(
+              actions: [
+                ActionsToolbarButton(
+                  buttonType: ActionsToolbarButtonType.gallery,
+                  onPressed: () {},
+                ),
+                ActionsToolbarButton(
+                  buttonType: ActionsToolbarButtonType.camera,
+                  onPressed: () {},
+                ),
+                ActionsToolbarButton(
+                  buttonType: ActionsToolbarButtonType.addFile,
+                  onPressed: () {},
+                ),
+              ],
+              trailing: ActionsToolbarButtonSend(
+                enabled: true,
+                onPressed: () => ref.read(sendReplyRequestNotifierProvider.notifier).sendReply(),
               ),
-              ActionsToolbarButton(
-                buttonType: ActionsToolbarButtonType.camera,
-                onPressed: () {},
-              ),
-              ActionsToolbarButton(
-                buttonType: ActionsToolbarButtonType.addFile,
-                onPressed: () {},
-              ),
-            ],
-            trailing: ActionsToolbarButtonSend(
-              enabled: true,
-              onPressed: () => ref.read(sendReplyRequestNotifierProvider.notifier).sendReply(),
             ),
           ),
         ],

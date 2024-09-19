@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
@@ -27,6 +28,7 @@ class CreateArticleModal extends HookWidget {
     }
 
     return SheetContent(
+      bottomPadding: 0,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -65,38 +67,45 @@ class CreateArticleModal extends HookWidget {
               ),
             ),
           ),
-          ActionsToolbar(
-            actions: [
-              ActionsToolbarButton(
-                buttonType: ActionsToolbarButtonType.gallery,
-                onPressed: () {},
-              ),
-              ActionsToolbarButton(
-                buttonType: ActionsToolbarButtonType.poll,
-                onPressed: () => {},
-              ),
-              ActionsToolbarButton(
-                buttonType: ActionsToolbarButtonType.regular,
-                buttonTypeSelected: ActionsToolbarButtonType.regularSelected,
-                onPressed: () => updateSelectedType(ActionsToolbarButtonType.regular),
-                selected: selectedType.value == ActionsToolbarButtonType.regular,
-              ),
-              ActionsToolbarButton(
-                buttonType: ActionsToolbarButtonType.bold,
-                buttonTypeSelected: ActionsToolbarButtonType.boldSelected,
-                onPressed: () => updateSelectedType(ActionsToolbarButtonType.bold),
-                selected: selectedType.value == ActionsToolbarButtonType.bold,
-              ),
-              ActionsToolbarButton(
-                buttonType: ActionsToolbarButtonType.italic,
-                buttonTypeSelected: ActionsToolbarButtonType.italicSelected,
-                onPressed: () => updateSelectedType(ActionsToolbarButtonType.italic),
-                selected: selectedType.value == ActionsToolbarButtonType.italic,
+          Column(
+            children: [
+              HorizontalSeparator(),
+              ScreenSideOffset.small(
+                child: ActionsToolbar(
+                  actions: [
+                    ActionsToolbarButton(
+                      buttonType: ActionsToolbarButtonType.gallery,
+                      onPressed: () {},
+                    ),
+                    ActionsToolbarButton(
+                      buttonType: ActionsToolbarButtonType.poll,
+                      onPressed: () => {},
+                    ),
+                    ActionsToolbarButton(
+                      buttonType: ActionsToolbarButtonType.regular,
+                      buttonTypeSelected: ActionsToolbarButtonType.regularSelected,
+                      onPressed: () => updateSelectedType(ActionsToolbarButtonType.regular),
+                      selected: selectedType.value == ActionsToolbarButtonType.regular,
+                    ),
+                    ActionsToolbarButton(
+                      buttonType: ActionsToolbarButtonType.bold,
+                      buttonTypeSelected: ActionsToolbarButtonType.boldSelected,
+                      onPressed: () => updateSelectedType(ActionsToolbarButtonType.bold),
+                      selected: selectedType.value == ActionsToolbarButtonType.bold,
+                    ),
+                    ActionsToolbarButton(
+                      buttonType: ActionsToolbarButtonType.italic,
+                      buttonTypeSelected: ActionsToolbarButtonType.italicSelected,
+                      onPressed: () => updateSelectedType(ActionsToolbarButtonType.italic),
+                      selected: selectedType.value == ActionsToolbarButtonType.italic,
+                    ),
+                  ],
+                  trailing: ActionsToolbarButtonSend(
+                    onPressed: () {},
+                  ),
+                ),
               ),
             ],
-            trailing: ActionsToolbarButtonSend(
-              onPressed: () {},
-            ),
           ),
         ],
       ),
