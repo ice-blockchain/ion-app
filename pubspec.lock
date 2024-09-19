@@ -62,6 +62,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.0"
+  asn1lib:
+    dependency: transitive
+    description:
+      name: asn1lib
+      sha256: "2ca377ad4d677bbadca278e0ba4da4e057b80a10b927bfc8f7d8bda8fe2ceb75"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.4"
   async:
     dependency: transitive
     description:
@@ -290,10 +298,26 @@ packages:
     dependency: transitive
     description:
       name: crypto
-      sha256: ff625774173754681d66daaf4a448684fb04b78f902da9cb3d308c19cc5e8bab
+      sha256: ec30d999af904f33454ba22ed9a86162b35e52b44ac4807d1d93c288041d7d27
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.3"
+    version: "3.0.5"
+  crypto_keys:
+    dependency: transitive
+    description:
+      name: crypto_keys
+      sha256: acc19abf34623d990a0e8aec69463d74a824c31f137128f42e2810befc509ad0
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0+1"
+  cryptography:
+    dependency: transitive
+    description:
+      name: cryptography
+      sha256: d146b76d33d94548cf035233fbc2f4338c1242fa119013bead807d033fc4ae05
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.7.0"
   csslib:
     dependency: transitive
     description:

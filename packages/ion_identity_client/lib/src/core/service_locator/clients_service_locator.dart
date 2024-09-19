@@ -1,5 +1,6 @@
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/ion_auth_data_source.dart';
+import 'package:ion_identity_client/src/auth/recovery_key/recovery_key_service.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
 import 'package:ion_identity_client/src/ion_api_user_client.dart';
 import 'package:ion_identity_client/src/signer/data_sources/user_action_signer_data_source.dart';
@@ -8,7 +9,8 @@ import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets_data_source.dart';
 
-class ClientsServiceLocator with _IonClient, _AuthClient, _WalletsClient, _UserActionSigner {
+class ClientsServiceLocator
+    with _IonClient, _AuthClient, _WalletsClient, _UserActionSigner, _RecoveryKeyService {
   factory ClientsServiceLocator() {
     return _instance;
   }
@@ -58,6 +60,11 @@ mixin _AuthClient {
       signer: signer,
       dataSource: createAuthDataSource(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
+      userActionSigner: ClientsServiceLocator().createUserActionSigner(
+        config: config,
+        signer: signer,
+      ),
+      recoveryKeyService: ClientsServiceLocator().createRecoveryKeyService(),
     );
   }
 
@@ -67,6 +74,7 @@ mixin _AuthClient {
     return IonAuthDataSource(
       config: config,
       networkClient: IonServiceLocator.getNetworkClient(config: config),
+      tokenStorage: IonServiceLocator.getTokenStorage(),
     );
   }
 }
@@ -120,5 +128,11 @@ mixin _UserActionSigner {
       networkClient: IonServiceLocator.getNetworkClient(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
     );
+  }
+}
+
+mixin _RecoveryKeyService {
+  RecoveryKeyService createRecoveryKeyService() {
+    return RecoveryKeyService();
   }
 }

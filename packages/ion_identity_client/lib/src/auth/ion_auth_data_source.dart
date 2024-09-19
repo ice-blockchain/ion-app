@@ -1,16 +1,23 @@
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
+import 'package:ion_identity_client/src/auth/recovery_key/recovery_key_types.dart';
 import 'package:ion_identity_client/src/auth/types/login_user_result.dart';
 import 'package:ion_identity_client/src/auth/types/register_user_result.dart';
+import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
 import 'package:ion_identity_client/src/core/network/network.dart';
+import 'package:ion_identity_client/src/core/types/http_method.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/dtos/user_action_signing_complete_request.dart';
+import 'package:ion_identity_client/src/signer/types/user_action_signing_request.dart';
+
+const recoveryKeyBody = {'kind': 'RecoveryKey'};
 
 class IonAuthDataSource {
   IonAuthDataSource({
     required this.config,
     required this.networkClient,
+    required this.tokenStorage,
   });
 
   static const registerInitPath = '/auth/registration/delegated';
@@ -18,8 +25,12 @@ class IonAuthDataSource {
   static const loginInitPath = '/auth/login/init';
   static const loginCompletePath = '/auth/login';
 
+  static const createCredentialInitPath = '/auth/credentials/init';
+  static const createCredentialPath = '/auth/credentials';
+
   final IonClientConfig config;
   final NetworkClient networkClient;
+  final TokenStorage tokenStorage;
 
   TaskEither<RegisterUserFailure, UserRegistrationChallenge> registerInit({
     required String username,
@@ -94,5 +105,35 @@ class IonAuthDataSource {
         .mapLeft(
           (l) => const UnknownLoginUserFailure(),
         );
+  }
+
+  TaskEither<NetworkFailure, CredentialChallenge> createCredentialInit({
+    required String username,
+  }) {
+    final token = tokenStorage.getToken(username: username);
+    if (token == null) {
+      return TaskEither.left(RequestExecutionNetworkFailure(401, StackTrace.current));
+    }
+
+    return networkClient
+        .post(
+          createCredentialInitPath,
+          data: recoveryKeyBody,
+          decoder: CredentialChallenge.fromJson,
+          headers: RequestHeaders.getAuthorizationHeader(token: token.token),
+        )
+        .mapLeft((l) => l);
+  }
+
+  UserActionSigningRequest buildCreateCredentialSigningRequest(
+    String username,
+    CredentialRequestData credentialRequestData,
+  ) {
+    return UserActionSigningRequest(
+      username: username,
+      method: HttpMethod.post,
+      path: createCredentialPath,
+      body: credentialRequestData.toJson(),
+    );
   }
 }
