@@ -6,11 +6,13 @@ import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/model/post/post_data.dart';
-import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
+import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
+import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/post_body.dart';
-import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/replying_to.dart';
 import 'package:ice/app/features/feed/views/pages/post_reply_modal/components/expanded_reply_input_field.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -66,11 +68,25 @@ class PostReplyModal extends ConsumerWidget {
           ),
           HorizontalSeparator(),
           ScreenSideOffset.small(
-            child: PostRepliesActionBar(
-              onSendPressed: () {
-                ref.read(sendReplyRequestNotifierProvider.notifier).sendReply();
-                context.pop();
-              },
+            child: ActionsToolbar(
+              actions: [
+                ActionsToolbarButton(
+                  icon: Assets.svg.iconGalleryOpen,
+                  onPressed: () {},
+                ),
+                ActionsToolbarButton(
+                  icon: Assets.svg.iconCameraOpen,
+                  onPressed: () {},
+                ),
+                ActionsToolbarButton(
+                  icon: Assets.svg.iconFeedAddfile,
+                  onPressed: () {},
+                ),
+              ],
+              trailing: ActionsToolbarButtonSend(
+                enabled: true,
+                onPressed: () => ref.read(sendReplyRequestNotifierProvider.notifier).sendReply(),
+              ),
             ),
           ),
         ],

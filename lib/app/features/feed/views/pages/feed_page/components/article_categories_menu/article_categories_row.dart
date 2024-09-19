@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/model/article_category.dart';
+import 'package:ice/app/features/feed/data/models/article_category.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class ArticleCategoriesRow extends StatelessWidget {

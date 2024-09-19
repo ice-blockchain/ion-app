@@ -4,8 +4,8 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/model/feed_category.dart';
-import 'package:ice/app/features/feed/model/feed_filter.dart';
+import 'package:ice/app/features/feed/data/models/feed_category.dart';
+import 'package:ice/app/features/feed/data/models/feed_filter.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_filters_menu_item.dart';
 

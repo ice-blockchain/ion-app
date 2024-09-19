@@ -4,10 +4,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
+import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
-import 'package:ice/app/features/feed/views/components/post_replies/post_replies_action_bar.dart';
 import 'package:ice/app/features/feed/views/pages/comment_post_modal/components/quote_post_comment_input.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -69,7 +72,28 @@ class CommentPostModal extends ConsumerWidget {
             ),
           ),
           HorizontalSeparator(),
-          ScreenSideOffset.small(child: PostRepliesActionBar()),
+          ScreenSideOffset.small(
+            child: ActionsToolbar(
+              actions: [
+                ActionsToolbarButton(
+                  icon: Assets.svg.iconGalleryOpen,
+                  onPressed: () {},
+                ),
+                ActionsToolbarButton(
+                  icon: Assets.svg.iconCameraOpen,
+                  onPressed: () {},
+                ),
+                ActionsToolbarButton(
+                  icon: Assets.svg.iconFeedAddfile,
+                  onPressed: () {},
+                ),
+              ],
+              trailing: ActionsToolbarButtonSend(
+                enabled: true,
+                onPressed: () => ref.read(sendReplyRequestNotifierProvider.notifier).sendReply(),
+              ),
+            ),
+          ),
         ],
       ),
     );

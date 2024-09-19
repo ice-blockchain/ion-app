@@ -1,4 +1,4 @@
-part of './post_data.dart';
+part of 'post_data.dart';
 
 class _PostDataFromEvent extends PostData {
   _PostDataFromEvent(

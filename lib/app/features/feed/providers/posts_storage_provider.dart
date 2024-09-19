@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:ice/app/features/feed/model/post/post_data.dart';
+import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'posts_storage_provider.g.dart';
