@@ -1,7 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/src/auth/ion_auth_data_source.dart';
 import 'package:ion_identity_client/src/auth/recovery_key/recovery_key_service.dart';
-import 'package:ion_identity_client/src/auth/recovery_key/recovery_key_types.dart';
 import 'package:ion_identity_client/src/auth/types/login_user_result.dart';
 import 'package:ion_identity_client/src/auth/types/register_user_result.dart';
 import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
