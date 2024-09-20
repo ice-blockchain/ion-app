@@ -3,6 +3,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/feed_search/providers/feed_search_history_provider.dart';
+import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history_clear_confirm.dart';
+import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class FeedSearchHistoryHeader extends ConsumerWidget {
@@ -23,8 +25,15 @@ class FeedSearchHistoryHeader extends ConsumerWidget {
           ),
         ),
         GestureDetector(
-          onTap: () {
-            ref.read(feedSearchHistoryProvider.notifier).clear();
+          onTap: () async {
+            final confirmed = await showSimpleBottomSheet<bool>(
+                  context: context,
+                  child: FeedSearchHistoryClearConfirm(),
+                ) ??
+                false;
+            if (confirmed) {
+              ref.read(feedSearchHistoryProvider.notifier).clear();
+            }
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
