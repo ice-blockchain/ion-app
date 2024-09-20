@@ -118,9 +118,7 @@ class IonAuth {
     );
   }
 
-  Future<RecoveryKeyResult> createRecoveryCredentials({
-    required String credentialName,
-  }) async {
+  Future<RecoveryKeyResult> createRecoveryCredentials() async {
     final challengeResponse = await dataSource.createCredentialInit(username: username).run();
     final credentialChallenge = challengeResponse.toNullable()!;
 
@@ -131,18 +129,22 @@ class IonAuth {
 
     final credentialRequestData = CredentialRequestData(
       challengeIdentifier: credentialChallenge.challengeIdentifier,
-      credentialName: credentialName,
+      credentialName: recoveryKeyData.name,
       credentialKind: 'RecoveryKey',
       credentialInfo: recoveryKeyData.credentialInfo,
       encryptedPrivateKey: recoveryKeyData.encryptedPrivateKey,
     );
 
     final request = dataSource.buildCreateCredentialSigningRequest(username, credentialRequestData);
-    final result = await userActionSigner.execute(request).run();
+    final result = await userActionSigner.execute(request, CredentialResponse.fromJson).run();
 
     return result.fold(
       (failure) => RecoveryKeyFailure(failure.toString()),
-      (success) => RecoveryKeySuccess(recoveryCode: recoveryKeyData.recoveryCode),
+      (success) => RecoveryKeySuccess(
+        recoveryCode: recoveryKeyData.recoveryCode,
+        recoveryName: success.name,
+        recoveryId: success.credentialId,
+      ),
     );
   }
 

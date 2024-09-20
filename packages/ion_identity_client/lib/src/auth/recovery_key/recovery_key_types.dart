@@ -9,11 +9,13 @@ class RecoveryKeyData {
     required this.credentialInfo,
     required this.encryptedPrivateKey,
     required this.recoveryCode,
+    required this.name,
   });
 
   final CredentialInfo credentialInfo;
   final String encryptedPrivateKey;
   final String recoveryCode;
+  final String name;
 }
 
 @JsonSerializable()
@@ -76,9 +78,13 @@ abstract class RecoveryKeyResult {
 
 class RecoveryKeySuccess extends RecoveryKeyResult {
   const RecoveryKeySuccess({
+    required this.recoveryName,
+    required this.recoveryId,
     required this.recoveryCode,
   });
 
+  final String recoveryName;
+  final String recoveryId;
   final String recoveryCode;
 }
 
@@ -99,4 +105,31 @@ class CredentialChallenge {
 
   final String challenge;
   final String challengeIdentifier;
+}
+
+@JsonSerializable()
+class CredentialResponse {
+  const CredentialResponse({
+    required this.credentialUuid,
+    required this.credentialId,
+    required this.dateCreated,
+    required this.isActive,
+    required this.kind,
+    required this.name,
+    required this.origin,
+    required this.relyingPartyId,
+    required this.publicKey,
+  });
+
+  factory CredentialResponse.fromJson(JsonObject json) => _$CredentialResponseFromJson(json);
+
+  final String credentialUuid;
+  final String credentialId;
+  final DateTime dateCreated;
+  final bool isActive;
+  final String kind;
+  final String name;
+  final String origin;
+  final String relyingPartyId;
+  final String publicKey;
 }

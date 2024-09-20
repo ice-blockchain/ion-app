@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:asn1lib/asn1lib.dart';
@@ -42,7 +43,7 @@ class RecoveryKeyService {
 
     final credId = generateCredId(keyPair.publicKey);
 
-    final encryptedPrivateKey = base64Encode(keyPair.privateKeyBytes);
+    final encryptedPrivateKey = encryptPrivateKey(keyPair.privateKeyPem);
 
     final credentialInfo = CredentialInfo(
       credId: credId,
@@ -57,6 +58,7 @@ class RecoveryKeyService {
       credentialInfo: credentialInfo,
       encryptedPrivateKey: encryptedPrivateKey,
       recoveryCode: recoveryCode,
+      name: generateCredentialName(),
     );
   }
 
@@ -168,8 +170,7 @@ class RecoveryKeyService {
 
   // Placeholder function to encrypt the private key
   String encryptPrivateKey(String privateKeyPem) {
-    // Implement encryption logic here (e.g., encrypt with a user-provided passphrase)
-    // For demonstration, we'll return the base64-encoded private key
+    // TODO: Implement private key encryption
     return base64UrlEncode(utf8.encode(privateKeyPem));
   }
 
@@ -216,4 +217,7 @@ class RecoveryKeyService {
 
     return '-----BEGIN PRIVATE KEY-----\n${chunk(base64Str)}\n-----END PRIVATE KEY-----';
   }
+
+  String generateCredentialName() =>
+      '${Random().nextInt(999999).toString().padLeft(6, '0')}-${Random().nextInt(99999).toString().padLeft(5, '0')}-${Random().nextInt(999).toString().padLeft(3, '0')}';
 }

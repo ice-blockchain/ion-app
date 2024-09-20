@@ -55,10 +55,11 @@ class IonWallets {
       name: name,
     );
 
-    final result = await userActionSigner.execute(request).run();
+    final result = await userActionSigner.execute(request, Wallet.fromJson).run();
+
     return result.fold(
       (l) => UnknownCreateWalletFailure(l, StackTrace.current),
-      (r) => CreateWalletSuccess(wallet: Wallet.fromJson(r)),
+      (wallet) => CreateWalletSuccess(wallet: wallet),
     );
   }
 }

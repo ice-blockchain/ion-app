@@ -261,9 +261,7 @@ class _RecoveryTab extends HookConsumerWidget {
         Button(
           label: Text('Create Recovery Credentials'),
           onPressed: () async {
-            await ionClient(username: 'testauth1@mail.com')
-                .auth
-                .createRecoveryCredentials(credentialName: keyNameController.text);
+            await ionClient(username: 'testauth1@mail.com').auth.createRecoveryCredentials();
           },
         ),
       ],

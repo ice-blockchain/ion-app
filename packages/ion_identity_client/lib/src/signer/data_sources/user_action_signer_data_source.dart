@@ -84,10 +84,11 @@ class UserActionSignerDataSource {
         );
   }
 
-  TaskEither<UserActionSignerFailure, JsonObject> makeRequest(
+  TaskEither<UserActionSignerFailure, T> makeRequest<T>(
     String username,
     String signature,
     UserActionSigningRequest request,
+    T Function(JsonObject) responseDecoder,
   ) {
     final token = tokenStorage.getToken(username: username);
     if (token == null) {
@@ -109,7 +110,7 @@ class UserActionSignerDataSource {
           request.path,
           data: request.body,
           headers: headers,
-          decoder: (response) => response,
+          decoder: responseDecoder,
         ),
       _ => throw UnimplementedError('Method ${request.method} is not supported'),
     }
