@@ -1,85 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/camera/data/models/image_data.dart';
-import 'package:ice/app/features/camera/providers/media_service_provider.dart';
+import 'package:ice/app/features/camera/providers/providers.dart';
+import 'package:ice/app/features/camera/views/components/components.dart';
 
 class ImageCell extends ConsumerWidget {
+  const ImageCell({
+    super.key,
+    required this.imageData,
+  });
+
   final ImageData imageData;
 
-  const ImageCell({Key? key, required this.imageData}) : super(key: key);
-
-  void _toggleSelection(BuildContext context, WidgetRef ref) {
-    final selectedImages = ref.read(selectedImagesProvider);
-    final isSelected = selectedImages.any((img) => img.id == imageData.id);
-
-    if (isSelected) {
-      ref.read(selectedImagesProvider.notifier).removeImage(imageData.id);
-    } else {
-      final maxSelection = ref.read(maxSelectionProvider);
-      if (selectedImages.length >= maxSelection) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Максимум $maxSelection изображений.')),
-        );
-        return;
-      }
-      ref.read(selectedImagesProvider.notifier).addImage(
-            imageData.copyWith(order: selectedImages.length + 1),
-          );
-    }
-  }
+  static const double cellHeight = 120.0;
+  static const double cellWidth = 122.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedImages = ref.watch(selectedImagesProvider);
-    final isSelected = selectedImages.any((img) => img.id == imageData.id);
-    final selectionOrder =
-        isSelected ? selectedImages.firstWhere((img) => img.id == imageData.id).order : null;
+    final selectionState = ref.watch(imageSelectionStateProvider(imageData.id));
+    final thumbnailAsync = ref.watch(thumbnailDataProvider(imageData.asset.id));
 
-    return GestureDetector(
-      onTap: () => _toggleSelection(context, ref),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: imageData.thumbData != null
-                ? Image.memory(
-                    imageData.thumbData!,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                  )
-                : Container(
-                    color: Colors.grey,
-                    width: double.infinity,
-                    height: double.infinity,
-                  ),
-          ),
-          if (isSelected)
-            Positioned(
-              top: 8,
-              right: 8,
-              child: CircleAvatar(
-                radius: 12,
-                backgroundColor: Colors.blue,
-                child: Text(
-                  '$selectionOrder',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
+    return SizedBox(
+      width: cellWidth.s,
+      height: cellHeight.s,
+      child: GestureDetector(
+        onTap: () {
+          final success =
+              ref.read(imageSelectionNotifierProvider.notifier).toggleSelection(imageData);
+          if (!success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Max ${ref.read(maxSelectionProvider)} images.'),
+              ),
+            );
+          }
+        },
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            thumbnailAsync.maybeWhen(
+              data: (thumbData) => thumbData != null
+                  ? Image.memory(
+                      thumbData,
+                      fit: BoxFit.cover,
+                    )
+                  : const SizedBox.shrink(),
+              orElse: () => const ShimmerLoadingCell(),
+            ),
+            if (selectionState.isSelected)
+              Positioned(
+                top: 8.0.s,
+                right: 8.0.s,
+                child: SelectionBadge(
+                  selectionOrder: selectionState.order.toString(),
                 ),
               ),
-            ),
-          if (isSelected)
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

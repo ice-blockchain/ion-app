@@ -1,25 +1,42 @@
-// lib/widgets/camera_cell.dart
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/camera/providers/media_service_provider.dart';
+import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/camera/providers/providers.dart';
 
 class CameraCell extends ConsumerWidget {
   const CameraCell({super.key});
 
+  static final double cellHeight = 120.0.s;
+  static final double cellWidth = 122.0.s;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final cameraController = ref.watch(cameraControllerProvider).value;
+    final isInitialized = cameraController?.value.isInitialized ?? false;
+
     return GestureDetector(
-      onTap: () async => await ref.read(selectedImagesProvider.notifier).selectImageFromCamera(),
-      child: Container(
-        margin: const EdgeInsets.all(4.0),
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: const Icon(
-          Icons.camera_alt,
-          size: 40,
-          color: Colors.grey,
+      onTap: () =>
+          ref.read(imageSelectionNotifierProvider.notifier).captureAndAddImageFromSystemCamera(),
+      child: SizedBox(
+        width: cellWidth,
+        height: cellHeight,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            if (isInitialized)
+              AspectRatio(
+                aspectRatio: cameraController!.value.aspectRatio,
+                child: CameraPreview(cameraController),
+              ),
+            Center(
+              child: Icon(
+                Icons.camera_alt,
+                size: 40.0.s,
+                color: isInitialized ? Colors.white.withOpacity(0.7) : Colors.grey,
+              ),
+            ),
+          ],
         ),
       ),
     );

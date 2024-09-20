@@ -1,6 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 part 'image_data.freezed.dart';
 
@@ -8,7 +7,7 @@ part 'image_data.freezed.dart';
 class ImageData with _$ImageData {
   const factory ImageData({
     required String id,
-    Uint8List? thumbData,
+    required AssetEntity asset,
     required int order,
     @Default(false) bool isFromCamera,
   }) = _ImageData;
