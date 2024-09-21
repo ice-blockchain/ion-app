@@ -14,42 +14,45 @@ class ImageSelectionNotifier extends _$ImageSelectionNotifier {
   bool toggleSelection(String assetId) {
     final isSelected = state.selectedImages.any((img) => img.asset.id == assetId);
 
-    if (isSelected) {
-      state = state.copyWith(
-        selectedImages: state.selectedImages.where((img) => img.asset.id != assetId).toList(),
-      );
+    return isSelected ? _deselectImage(assetId) : _selectImage(assetId);
+  }
 
-      _updateOrder();
+  bool _deselectImage(String assetId) {
+    state = state.copyWith(
+      selectedImages: state.selectedImages.where((img) => img.asset.id != assetId).toList(),
+    );
+    _updateOrder();
 
-      return true;
-    } else {
-      final maxSelection = ref.read(maxSelectionProvider);
+    return true;
+  }
 
-      if (state.selectedImages.length >= maxSelection) {
-        return false;
-      }
+  bool _selectImage(String assetId) {
+    final maxSelection = ref.read(maxSelectionProvider);
 
-      final galleryState = ref.read(galleryImagesNotifierProvider).value;
-      if (galleryState == null) return false;
-
-      final imageData = galleryState.images.firstWhereOrNull((img) => img.asset.id == assetId);
-      if (imageData == null) return false;
-
-      final newImage = ImageData(
-        asset: imageData.asset,
-        order: state.selectedImages.length + 1,
-        isFromCamera: imageData.isFromCamera,
-      );
-
-      state = state.copyWith(
-        selectedImages: [
-          ...state.selectedImages,
-          newImage,
-        ],
-      );
-
-      return true;
+    if (state.selectedImages.length >= maxSelection) {
+      return false;
     }
+
+    final galleryState = ref.read(galleryImagesNotifierProvider).value;
+    if (galleryState == null) return false;
+
+    final imageData = galleryState.images.firstWhereOrNull((img) => img.asset.id == assetId);
+    if (imageData == null) return false;
+
+    final newImage = ImageData(
+      asset: imageData.asset,
+      order: state.selectedImages.length + 1,
+      isFromCamera: imageData.isFromCamera,
+    );
+
+    state = state.copyWith(
+      selectedImages: [
+        ...state.selectedImages,
+        newImage,
+      ],
+    );
+
+    return true;
   }
 
   Future<void> captureAndAddImageFromCamera() async {
