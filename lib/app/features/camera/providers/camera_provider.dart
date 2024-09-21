@@ -12,7 +12,7 @@ Future<Raw<CameraController?>> cameraController(CameraControllerRef ref) async {
   if (!permissionStatus.isGranted) {
     final result = await Permission.camera.request();
     if (!result.isGranted) {
-      log('Camer Permission denied');
+      log('Camera Permission denied');
       return null;
     }
   }

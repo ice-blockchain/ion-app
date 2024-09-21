@@ -59,12 +59,12 @@ class ImagePickerPage extends HookConsumerWidget {
                   );
                 }
                 return GalleryGridview(
-                  state: state,
+                  galleryState: state,
                   scrollController: scrollController,
                 );
               },
               orElse: () => GalleryGridview(
-                state: GalleryImagesState(
+                galleryState: GalleryImagesState(
                   images: [],
                   currentPage: 0,
                   hasMore: false,

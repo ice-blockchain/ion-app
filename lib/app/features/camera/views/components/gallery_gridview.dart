@@ -6,14 +6,14 @@ import 'package:ice/app/features/camera/views/components/components.dart';
 class GalleryGridview extends StatelessWidget {
   const GalleryGridview({
     super.key,
-    required this.state,
+    required this.galleryState,
     required this.scrollController,
   });
 
-  static double get offsetBetweenItems => 4.0.s;
-  static const int itemsPerColumn = 3;
+  static const _offsetBetweenItems = 4.0;
+  static const _itemsPerColumn = 3;
 
-  final GalleryImagesState state;
+  final GalleryImagesState galleryState;
   final ScrollController scrollController;
 
   @override
@@ -21,18 +21,19 @@ class GalleryGridview extends StatelessWidget {
     return GridView.builder(
       controller: scrollController,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: itemsPerColumn,
-        crossAxisSpacing: offsetBetweenItems,
-        mainAxisSpacing: offsetBetweenItems,
+        crossAxisCount: _itemsPerColumn,
+        crossAxisSpacing: _offsetBetweenItems.s,
+        mainAxisSpacing: _offsetBetweenItems.s,
       ),
-      itemCount: state.hasMore ? state.images.length + 2 : state.images.length + 1,
+      itemCount:
+          galleryState.hasMore ? galleryState.images.length + 2 : galleryState.images.length + 1,
       itemBuilder: (context, index) {
         if (index == 0) return const CameraCell();
 
-        if (index <= state.images.length) {
-          final imageData = state.images[index - 1];
+        if (index <= galleryState.images.length) {
+          final imageData = galleryState.images[index - 1];
           return RepaintBoundary(
-            key: ValueKey(imageData.id),
+            key: ValueKey(imageData.asset.id),
             child: ImageCell(
               imageData: imageData,
             ),

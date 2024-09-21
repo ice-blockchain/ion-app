@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/camera/data/models/image_data.dart';
-import 'package:ice/app/features/camera/providers/providers.dart';
+import 'package:ice/app/features/camera/providers/image_selection_provider.dart';
+import 'package:ice/app/features/camera/providers/media_service_provider.dart';
+import 'package:ice/app/features/camera/providers/thumbnail_data_provider.dart';
 import 'package:ice/app/features/camera/views/components/components.dart';
 
 class ImageCell extends ConsumerWidget {
@@ -18,7 +20,7 @@ class ImageCell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectionState = ref.watch(imageSelectionStateProvider(imageData.id));
+    final selectionState = ref.watch(imageSelectionStateProvider(imageData.asset.id));
     final thumbnailAsync = ref.watch(thumbnailDataProvider(imageData.asset.id));
 
     return SizedBox(
@@ -27,7 +29,7 @@ class ImageCell extends ConsumerWidget {
       child: GestureDetector(
         onTap: () {
           final success =
-              ref.read(imageSelectionNotifierProvider.notifier).toggleSelection(imageData);
+              ref.read(imageSelectionNotifierProvider.notifier).toggleSelection(imageData.asset.id);
           if (!success) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -45,7 +47,7 @@ class ImageCell extends ConsumerWidget {
                       thumbData,
                       fit: BoxFit.cover,
                     )
-                  : const SizedBox.shrink(),
+                  : const ShimmerLoadingCell(),
               orElse: () => const ShimmerLoadingCell(),
             ),
             if (selectionState.isSelected)

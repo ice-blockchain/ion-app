@@ -6,7 +6,6 @@ part 'image_data.freezed.dart';
 @Freezed(copyWith: true)
 class ImageData with _$ImageData {
   const factory ImageData({
-    required String id,
     required AssetEntity asset,
     required int order,
     @Default(false) bool isFromCamera,

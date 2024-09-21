@@ -1,56 +1,79 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:ice/app/features/camera/data/models/image_data.dart';
-import 'package:ice/app/features/camera/utils/media_utils.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 class MediaService {
-  const MediaService(this._picker, this._cameraController);
+  MediaService({required this.picker});
 
-  final ImagePicker _picker;
-  final CameraController _cameraController;
+  final ImagePicker picker;
 
-  Future<ImageData?> captureImageFromSystemCamera() async {
-    final image = await _picker.pickImage(source: ImageSource.camera);
+  Future<ImageData?> captureImageFromCamera() async {
+    final image = await picker.pickImage(source: ImageSource.camera);
+
     if (image != null) {
-      return await saveCameraImage(File(image.path));
+      return await _saveCameraImage(File(image.path));
+    }
+
+    return null;
+  }
+
+  Future<ImageData?> _saveCameraImage(File imageFile) async {
+    try {
+      final asset = await PhotoManager.editor.saveImageWithPath(
+        imageFile.path,
+        title: 'Camera_${DateTime.now().millisecondsSinceEpoch}.jpg',
+      );
+
+      if (asset != null) {
+        return ImageData(
+          asset: asset,
+          order: 0,
+          isFromCamera: true,
+        );
+      }
+    } catch (e) {
+      log('Error saving camera image: $e');
+      return null;
     }
     return null;
   }
 
   Future<List<ImageData>> fetchGalleryImages({required int page, required int size}) async {
-    return await MediaUtils.fetchGalleryImages(page: page, size: size);
-  }
-
-  Future<ImageData?> saveCameraImage(File imageFile) async {
-    return await MediaUtils.saveCameraImage(imageFile);
-  }
-
-  Future<ImageData?> captureImageFromCamera() async {
-    if (!_cameraController.value.isInitialized) {
-      return null;
-    }
-
     try {
-      final xFile = await _cameraController.takePicture();
-      return await saveCameraImage(File(xFile.path));
+      final permission = await PhotoManager.requestPermissionExtend();
+
+      if (!permission.isAuth) {
+        await PhotoManager.openSetting();
+        return [];
+      }
+
+      final albums = await PhotoManager.getAssetPathList(
+        type: RequestType.image,
+        hasAll: true,
+      );
+
+      if (albums.isEmpty) return [];
+
+      final assets = await albums.first.getAssetListPaged(
+        page: page,
+        size: size,
+      );
+
+      final images = assets.map((asset) {
+        return ImageData(
+          asset: asset,
+          order: 0,
+          isFromCamera: false,
+        );
+      }).toList();
+
+      return images;
     } catch (e) {
-      log('Error capturing image: $e');
-      return null;
+      log('Error fetching gallery images: $e');
+      return [];
     }
-  }
-
-  Future<ImageData?> pickImageFromGallery() async {
-    final image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      return await saveCameraImage(File(image.path));
-    }
-    return null;
-  }
-
-  Future<ImageData?> pickImageFromCamera() async {
-    return await captureImageFromCamera();
   }
 }
