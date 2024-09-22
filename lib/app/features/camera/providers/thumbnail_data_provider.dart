@@ -18,8 +18,8 @@ Future<Uint8List?> thumbnailData(ThumbnailDataRef ref, String assetId) async {
 
   if (asset == null) return null;
 
-  const int thumbnailWidth = 300;
-  const int thumbnailHeight = 300;
+  const int thumbnailWidth = 500;
+  const int thumbnailHeight = 500;
 
   return asset.thumbnailDataWithSize(
     ThumbnailSize(thumbnailWidth, thumbnailHeight),

@@ -29,7 +29,7 @@ class ImagePickerPage extends HookConsumerWidget {
       return () => scrollController.removeListener(onScroll);
     }, [scrollController, onScroll]);
 
-    final galleryState = ref.watch(galleryImagesNotifierProvider);
+    final galleryImagesProvider = ref.watch(galleryImagesNotifierProvider);
     final selectedImages = ref.watch(
       imageSelectionNotifierProvider.select((state) => state.selectedImages),
     );
@@ -51,26 +51,15 @@ class ImagePickerPage extends HookConsumerWidget {
             ],
           ),
           Expanded(
-            child: galleryState.maybeWhen(
-              data: (state) {
-                if (state.images.isEmpty) {
-                  return const Center(
-                    child: Text('No images found'),
-                  );
-                }
-                return GalleryGridview(
-                  galleryState: state,
-                  scrollController: scrollController,
-                );
-              },
-              orElse: () => GalleryGridview(
-                galleryState: GalleryImagesState(
-                  images: [],
-                  currentPage: 0,
-                  hasMore: false,
-                ),
-                scrollController: scrollController,
-              ),
+            child: GalleryGridview(
+              galleryState: galleryImagesProvider.valueOrNull ??
+                  GalleryImagesState(
+                    images: [],
+                    currentPage: 0,
+                    hasMore: true,
+                  ),
+              isLoading: galleryImagesProvider.isLoading,
+              scrollController: scrollController,
             ),
           ),
         ],

@@ -7,6 +7,7 @@ class GalleryGridview extends StatelessWidget {
   const GalleryGridview({
     super.key,
     required this.galleryState,
+    required this.isLoading,
     required this.scrollController,
   });
 
@@ -14,6 +15,7 @@ class GalleryGridview extends StatelessWidget {
   static const _itemsPerColumn = 3;
 
   final GalleryImagesState galleryState;
+  final bool isLoading;
   final ScrollController scrollController;
 
   @override
@@ -25,22 +27,22 @@ class GalleryGridview extends StatelessWidget {
         crossAxisSpacing: _offsetBetweenItems.s,
         mainAxisSpacing: _offsetBetweenItems.s,
       ),
-      itemCount:
-          galleryState.hasMore ? galleryState.images.length + 2 : galleryState.images.length + 1,
+      itemCount: galleryState.images.length + 1,
       itemBuilder: (context, index) {
         if (index == 0) return const CameraCell();
 
-        if (index <= galleryState.images.length) {
-          final imageData = galleryState.images[index - 1];
-          return RepaintBoundary(
-            key: ValueKey(imageData.asset.id),
-            child: ImageCell(
-              imageData: imageData,
-            ),
-          );
-        } else {
+        if (isLoading || galleryState.images.isEmpty) {
           return const ShimmerLoadingCell();
         }
+
+        final imageData = galleryState.images[index - 1];
+
+        return RepaintBoundary(
+          key: ValueKey(imageData.asset.id),
+          child: ImageCell(
+            imageData: imageData,
+          ),
+        );
       },
     );
   }
