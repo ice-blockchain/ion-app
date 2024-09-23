@@ -1,5 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/src/auth/ion_auth_data_source.dart';
+import 'package:ion_identity_client/src/auth/recovery_key/recovery_key_service.dart';
+import 'package:ion_identity_client/src/auth/recovery_key/recovery_key_types.dart';
 import 'package:ion_identity_client/src/auth/types/login_user_result.dart';
 import 'package:ion_identity_client/src/auth/types/register_user_result.dart';
 import 'package:ion_identity_client/src/auth/utils/token_storage.dart';
@@ -8,24 +10,28 @@ import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/extensions/passkey_signer_extentions.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
+import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 
 /// A class that handles user authentication processes, including user registration,
 /// login, and logout.
 class IonAuth {
   /// Creates an instance of [IonAuth] with the provided [username], [config],
-  /// [dataSource], [signer], and [tokenStorage].
+  /// [dataSource], [signer], [tokenStorage], [userActionSigner] and [recoveryKeyService].
   ///
   /// - [username]: The username of the user being authenticated.
   /// - [config]: The client configuration containing necessary identifiers.
   /// - [dataSource]: The data source responsible for API interactions related to authentication.
   /// - [signer]: The passkey signer used for handling cryptographic operations.
   /// - [tokenStorage]: The token storage used to securely manage authentication tokens.
+  /// - [recoveryKeyManager]: The recovery key manager used for creating recovery keys.
   IonAuth({
     required this.username,
     required this.config,
     required this.dataSource,
     required this.signer,
     required this.tokenStorage,
+    required this.userActionSigner,
+    required this.recoveryKeyService,
   });
 
   final String username;
@@ -33,6 +39,8 @@ class IonAuth {
   final IonAuthDataSource dataSource;
   final PasskeysSigner signer;
   final TokenStorage tokenStorage;
+  final UserActionSigner userActionSigner;
+  final RecoveryKeyService recoveryKeyService;
 
   /// Registers a new user using the provided username and handles the necessary
   /// cryptographic operations and API interactions.
@@ -107,6 +115,36 @@ class IonAuth {
     return response.fold(
       (l) => l,
       (r) => LoginUserSuccess(),
+    );
+  }
+
+  Future<RecoveryKeyResult> createRecoveryCredentials() async {
+    final challengeResponse = await dataSource.createCredentialInit(username: username).run();
+    final credentialChallenge = challengeResponse.toNullable()!;
+
+    final recoveryKeyData = await recoveryKeyService.createRecoveryKey(
+      challenge: credentialChallenge.challenge,
+      origin: config.origin,
+    );
+
+    final credentialRequestData = CredentialRequestData(
+      challengeIdentifier: credentialChallenge.challengeIdentifier,
+      credentialName: recoveryKeyData.name,
+      credentialKind: 'RecoveryKey',
+      credentialInfo: recoveryKeyData.credentialInfo,
+      encryptedPrivateKey: recoveryKeyData.encryptedPrivateKey,
+    );
+
+    final request = dataSource.buildCreateCredentialSigningRequest(username, credentialRequestData);
+    final result = await userActionSigner.execute(request, CredentialResponse.fromJson).run();
+
+    return result.fold(
+      (failure) => RecoveryKeyFailure(failure.toString()),
+      (success) => RecoveryKeySuccess(
+        recoveryCode: recoveryKeyData.recoveryCode,
+        recoveryName: success.name,
+        recoveryId: success.credentialId,
+      ),
     );
   }
 

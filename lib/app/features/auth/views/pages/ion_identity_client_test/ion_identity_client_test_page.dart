@@ -20,17 +20,19 @@ class IonIdentityClientTestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         body: SafeArea(
           child: Column(
             children: [
               TabBar(
+                isScrollable: true,
                 tabs: [
                   Tab(text: 'Register'),
                   Tab(text: 'Login'),
                   Tab(text: 'Users'),
                   Tab(text: 'Wallets'),
+                  Tab(text: 'Recovery'),
                 ],
               ),
               Expanded(
@@ -40,6 +42,7 @@ class IonIdentityClientTestPage extends StatelessWidget {
                     _LoginTab(),
                     _UsersTab(),
                     _WalletsTab(),
+                    _RecoveryTab(),
                   ],
                 ),
               ),
@@ -57,7 +60,7 @@ class _RegisterTab extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ionClient = ref.watch(ionApiClientProvider);
-    final usernameController = useTextEditingController(text: 'user1@mail.com');
+    final usernameController = useTextEditingController(text: 'testauth1@mail.com');
 
     final registerResult = useState<RegisterUserResult?>(null);
 
@@ -90,7 +93,7 @@ class _LoginTab extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ionClient = ref.watch(ionApiClientProvider);
-    final usernameController = useTextEditingController(text: 'user1@mail.com');
+    final usernameController = useTextEditingController(text: 'testauth1@mail.com');
 
     final loginResult = useState<LoginUserResult?>(null);
 
@@ -230,6 +233,35 @@ class _WalletsTab extends HookConsumerWidget {
                   network: 'EthereumSepolia',
                   name: walletNameController.text,
                 );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _RecoveryTab extends HookConsumerWidget {
+  const _RecoveryTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ionClient = ref.watch(ionApiClientProvider);
+
+    final keyNameController = useTextEditingController.fromValue(
+      TextEditingValue(text: 'Recovery Credential 1'),
+    );
+
+    return ListView(
+      children: [
+        SizedBox(height: 16.0.s),
+        TextInput(
+          controller: keyNameController,
+        ),
+        SizedBox(height: 16.0.s),
+        Button(
+          label: Text('Create Recovery Credentials'),
+          onPressed: () async {
+            await ionClient(username: 'testauth1@mail.com').auth.createRecoveryCredentials();
           },
         ),
       ],

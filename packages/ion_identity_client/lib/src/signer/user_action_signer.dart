@@ -15,8 +15,9 @@ class UserActionSigner {
   final UserActionSignerDataSource dataSource;
   final PasskeysSigner passkeysSigner;
 
-  TaskEither<UserActionSignerFailure, JsonObject> execute(
+  TaskEither<UserActionSignerFailure, T> execute<T>(
     UserActionSigningRequest request,
+    T Function(JsonObject) responseDecoder,
   ) {
     return passkeysSigner
         .signChallenge(
@@ -38,6 +39,7 @@ class UserActionSigner {
             request.username,
             signedSignature,
             request,
+            responseDecoder,
           ),
         );
   }
