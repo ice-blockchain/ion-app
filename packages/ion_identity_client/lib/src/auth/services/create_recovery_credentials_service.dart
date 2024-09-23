@@ -4,10 +4,57 @@ import 'dart:typed_data';
 import 'package:asn1lib/asn1lib.dart';
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart' as crypto;
-import 'package:ion_identity_client/src/auth/recovery_key/recovery_key_types.dart';
+import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/src/auth/data_sources/create_recovery_credentials_data_source.dart';
+import 'package:ion_identity_client/src/auth/dtos/credential_info.dart';
+import 'package:ion_identity_client/src/auth/dtos/credential_request_data.dart';
+import 'package:ion_identity_client/src/auth/dtos/credential_response.dart';
+import 'package:ion_identity_client/src/auth/dtos/key_pair_data.dart';
+import 'package:ion_identity_client/src/auth/dtos/recovery_key_data.dart';
+import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 
-class RecoveryKeyService {
-  RecoveryKeyService();
+class CreateRecoveryCredentialsService {
+  CreateRecoveryCredentialsService({
+    required this.username,
+    required this.config,
+    required this.dataSource,
+    required this.userActionSigner,
+  });
+
+  final String username;
+  final IonClientConfig config;
+  final CreateRecoveryCredentialsDataSource dataSource;
+  final UserActionSigner userActionSigner;
+
+  Future<CreateRecoveryCredentialsResult> createRecoveryCredentials() async {
+    final challengeResponse = await dataSource.createCredentialInit(username: username).run();
+    final credentialChallenge = challengeResponse.toNullable()!;
+
+    final recoveryKeyData = await createRecoveryKey(
+      challenge: credentialChallenge.challenge,
+      origin: config.origin,
+    );
+
+    final credentialRequestData = CredentialRequestData(
+      challengeIdentifier: credentialChallenge.challengeIdentifier,
+      credentialName: recoveryKeyData.name,
+      credentialKind: 'RecoveryKey',
+      credentialInfo: recoveryKeyData.credentialInfo,
+      encryptedPrivateKey: recoveryKeyData.encryptedPrivateKey,
+    );
+
+    final request = dataSource.buildCreateCredentialSigningRequest(username, credentialRequestData);
+    final result = await userActionSigner.execute(request, CredentialResponse.fromJson).run();
+
+    return result.fold(
+      (failure) => CreateRecoveryCredentialsFailure(failure, StackTrace.current),
+      (success) => CreateRecoveryCredentialsSuccess(
+        recoveryCode: recoveryKeyData.recoveryCode,
+        recoveryName: success.name,
+        recoveryId: success.credentialId,
+      ),
+    );
+  }
 
   Future<RecoveryKeyData> createRecoveryKey({
     required String challenge,
