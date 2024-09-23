@@ -74,7 +74,7 @@ class PostReplyModal extends ConsumerWidget {
               actions: [
                 ActionsToolbarButton(
                   icon: Assets.svg.iconGalleryOpen,
-                  onPressed: () => ImagePickerRoute().push<List<ImageData>>(context),
+                  onPressed: () => MediaPickerRoute().push<List<ImageData>>(context),
                 ),
                 ActionsToolbarButton(
                   icon: Assets.svg.iconCameraOpen,

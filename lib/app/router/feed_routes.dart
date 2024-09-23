@@ -15,7 +15,7 @@ class FeedRoutes {
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
         TypedGoRoute<CreateStoryRoute>(path: 'create-story'),
         TypedGoRoute<CreateVideoRoute>(path: 'create-video'),
-        TypedGoRoute<ImagePickerRoute>(path: 'image-picker'),
+        TypedGoRoute<MediaPickerRoute>(path: 'media-picker'),
       ],
     ),
   ];
@@ -127,10 +127,10 @@ class CreateVideoRoute extends BaseRouteData {
         );
 }
 
-class ImagePickerRoute extends BaseRouteData {
-  ImagePickerRoute()
+class MediaPickerRoute extends BaseRouteData {
+  MediaPickerRoute()
       : super(
-          child: ImagePickerPage(),
+          child: MediaPickerPage(),
           type: IceRouteType.bottomSheet,
         );
 }

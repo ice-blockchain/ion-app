@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/gallery/providers/providers.dart';
-import 'package:ice/app/features/gallery/views/components/camera/camera_placeholder.dart';
-import 'package:ice/app/features/gallery/views/components/camera/camera_preview.dart';
+import 'package:ice/app/features/gallery/views/components/camera/camera.dart';
 import 'package:ice/app/features/gallery/views/components/shimmer_loading_cell.dart';
 
 class CameraCell extends ConsumerWidget {

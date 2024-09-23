@@ -27,17 +27,17 @@ class SelectionBadge extends StatelessWidget {
                   width: 1.0.s,
                 ),
         ),
-        child: Center(
-          child: isSelected
-              ? Text(
+        child: isSelected
+            ? Center(
+                child: Text(
                   '$selectionOrder',
                   style: context.theme.appTextThemes.caption.copyWith(
                     color: context.theme.appColors.secondaryBackground,
                     fontSize: 12.0.s,
                   ),
-                )
-              : null,
-        ),
+                ),
+              )
+            : null,
       ),
     );
   }
