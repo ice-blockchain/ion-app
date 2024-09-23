@@ -1,6 +1,6 @@
 import 'package:ion_identity_client/ion_client.dart';
-import 'package:ion_identity_client/src/auth/ion_auth_data_source.dart';
-import 'package:ion_identity_client/src/auth/recovery_key/recovery_key_service.dart';
+import 'package:ion_identity_client/src/auth/data_sources/data_sources.dart';
+import 'package:ion_identity_client/src/auth/services/services.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
 import 'package:ion_identity_client/src/ion_api_user_client.dart';
 import 'package:ion_identity_client/src/signer/data_sources/user_action_signer_data_source.dart';
@@ -9,8 +9,7 @@ import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets_data_source.dart';
 
-class ClientsServiceLocator
-    with _IonClient, _AuthClient, _WalletsClient, _UserActionSigner, _RecoveryKeyService {
+class ClientsServiceLocator with _IonClient, _AuthClient, _WalletsClient, _UserActionSigner {
   factory ClientsServiceLocator() {
     return _instance;
   }
@@ -56,23 +55,79 @@ mixin _AuthClient {
   }) {
     return IonAuth(
       username: username,
-      config: config,
-      signer: signer,
-      dataSource: createAuthDataSource(config: config),
+      registerService: createRegisterService(username: username, config: config, signer: signer),
+      loginService: createLoginService(username: username, config: config, signer: signer),
+      recoveryKeyService: createCreateRecoveryCredentialsService(
+        username: username,
+        config: config,
+        signer: signer,
+      ),
       tokenStorage: IonServiceLocator.getTokenStorage(),
+    );
+  }
+
+  RegisterService createRegisterService({
+    required String username,
+    required IonClientConfig config,
+    required PasskeysSigner signer,
+  }) {
+    return RegisterService(
+      username: username,
+      signer: signer,
+      dataSource: createRegisterDataSource(config: config),
+      tokenStorage: IonServiceLocator.getTokenStorage(),
+    );
+  }
+
+  RegisterDataSource createRegisterDataSource({
+    required IonClientConfig config,
+  }) {
+    return RegisterDataSource(
+      networkClient: IonServiceLocator.getNetworkClient(config: config),
+    );
+  }
+
+  LoginService createLoginService({
+    required String username,
+    required IonClientConfig config,
+    required PasskeysSigner signer,
+  }) {
+    return LoginService(
+      username: username,
+      signer: signer,
+      dataSource: createLoginDataSource(config: config),
+      tokenStorage: IonServiceLocator.getTokenStorage(),
+    );
+  }
+
+  LoginDataSource createLoginDataSource({
+    required IonClientConfig config,
+  }) {
+    return LoginDataSource(
+      networkClient: IonServiceLocator.getNetworkClient(config: config),
+    );
+  }
+
+  CreateRecoveryCredentialsService createCreateRecoveryCredentialsService({
+    required String username,
+    required IonClientConfig config,
+    required PasskeysSigner signer,
+  }) {
+    return CreateRecoveryCredentialsService(
+      username: username,
+      config: config,
+      dataSource: createCreateRecoveryCredentialsDataSource(config: config),
       userActionSigner: ClientsServiceLocator().createUserActionSigner(
         config: config,
         signer: signer,
       ),
-      recoveryKeyService: ClientsServiceLocator().createRecoveryKeyService(),
     );
   }
 
-  IonAuthDataSource createAuthDataSource({
+  CreateRecoveryCredentialsDataSource createCreateRecoveryCredentialsDataSource({
     required IonClientConfig config,
   }) {
-    return IonAuthDataSource(
-      config: config,
+    return CreateRecoveryCredentialsDataSource(
       networkClient: IonServiceLocator.getNetworkClient(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
     );
@@ -128,11 +183,5 @@ mixin _UserActionSigner {
       networkClient: IonServiceLocator.getNetworkClient(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
     );
-  }
-}
-
-mixin _RecoveryKeyService {
-  RecoveryKeyService createRecoveryKeyService() {
-    return RecoveryKeyService();
   }
 }
