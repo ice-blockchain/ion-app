@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ice/app/features/user/model/nft_layout_type.dart';
-import 'package:ice/app/features/user/model/nft_sorting_type.dart';
+import 'package:ice/app/features/wallet/model/nft_layout_type.dart';
+import 'package:ice/app/features/wallet/model/nft_sorting_type.dart';
 
 part 'user_preferences.freezed.dart';
 

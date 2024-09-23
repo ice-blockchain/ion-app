@@ -1,7 +1,7 @@
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/user/model/nft_layout_type.dart';
-import 'package:ice/app/features/user/model/nft_sorting_type.dart';
-import 'package:ice/app/features/user/model/user_preferences.dart';
+import 'package:ice/app/features/wallet/model/nft_layout_type.dart';
+import 'package:ice/app/features/wallet/model/nft_sorting_type.dart';
+import 'package:ice/app/features/wallet/model/user_preferences.dart';
 import 'package:ice/app/features/wallet/providers/wallet_user_preferences/wallet_user_preferences_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
