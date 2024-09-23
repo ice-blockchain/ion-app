@@ -1,4 +1,4 @@
-import 'package:ice/app/features/camera/services/media_service.dart';
+import 'package:ice/app/features/gallery/services/media_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

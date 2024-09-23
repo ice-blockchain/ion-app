@@ -3,9 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/camera/data/models/gallery_images_state.dart';
-import 'package:ice/app/features/camera/providers/providers.dart';
-import 'package:ice/app/features/camera/views/components/components.dart';
+import 'package:ice/app/features/gallery/data/models/gallery_images_state.dart';
+import 'package:ice/app/features/gallery/providers/providers.dart';
+import 'package:ice/app/features/gallery/views/components/components.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
@@ -39,27 +39,26 @@ class ImagePickerPage extends HookConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(
-              'Add photo',
+              context.i18n.gallery_add_photo_title,
               style: context.theme.appTextThemes.subtitle,
             ),
             showBackButton: true,
             actions: [
               AddImagesButton(
                 onPressed: () => context.pop(selectedImages),
-                imageCount: selectedImages.length.toString(),
+                imageCount: selectedImages.length,
               ),
             ],
           ),
           Expanded(
             child: GalleryGridview(
+              scrollController: scrollController,
               galleryState: galleryImagesProvider.valueOrNull ??
                   GalleryImagesState(
                     images: [],
                     currentPage: 0,
                     hasMore: true,
                   ),
-              isLoading: galleryImagesProvider.isLoading,
-              scrollController: scrollController,
             ),
           ),
         ],

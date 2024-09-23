@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ice/app/features/camera/data/models/image_data.dart';
+import 'package:ice/app/features/gallery/data/models/image_data.dart';
 
 part 'image_selection_state.freezed.dart';
 

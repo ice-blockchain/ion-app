@@ -18,6 +18,7 @@
   "button_back_to_security": "Back to Security",
   "button_lets_start": "Let's start",
   "button_next": "Next",
+  "button_add": "Add",
   "common_show_more": "Show more",
   "common_show_less": "Show less",
   "common_identity_key_name": "Identity key name",
@@ -316,5 +317,7 @@
   "create_post_modal_placeholder": "What’s happening?",
   "create_article_nav_title": "New article",
   "create_story_nav_title": "Add a story",
-  "create_video_nav_title": "Add video"
+  "create_video_nav_title": "Add video",
+  "gallery_add_photo_title": "Add photo",
+  "camera": "Camera"
 }

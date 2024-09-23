@@ -10,16 +10,19 @@ class AddImagesButton extends StatelessWidget {
   });
 
   final VoidCallback onPressed;
-  final String imageCount;
+  final int imageCount;
 
   @override
   Widget build(BuildContext context) {
+    final bool notSelected = imageCount == 0;
+    final text = context.i18n.button_add;
+
     return TextButton(
-      onPressed: onPressed,
+      onPressed: notSelected ? null : onPressed,
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Text(
-          'Add ($imageCount)',
+          notSelected ? text : '$text ($imageCount)',
           style: context.theme.appTextThemes.body.copyWith(
             color: context.theme.appColors.primaryAccent,
           ),

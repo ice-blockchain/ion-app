@@ -1,47 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/camera/data/models/gallery_images_state.dart';
-import 'package:ice/app/features/camera/views/components/components.dart';
+import 'package:ice/app/features/gallery/data/models/gallery_images_state.dart';
+import 'package:ice/app/features/gallery/views/components/components.dart';
 
 class GalleryGridview extends StatelessWidget {
   const GalleryGridview({
     super.key,
     required this.galleryState,
-    required this.isLoading,
     required this.scrollController,
   });
 
   static const _offsetBetweenItems = 4.0;
-  static const _itemsPerColumn = 3;
+  static const _itemsPerRow = 3;
 
-  final GalleryImagesState galleryState;
-  final bool isLoading;
   final ScrollController scrollController;
+  final GalleryImagesState galleryState;
 
   @override
   Widget build(BuildContext context) {
+    // +1 for CameraCell
+    final totalItemCount = galleryState.images.length + 1;
+
     return GridView.builder(
       controller: scrollController,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: _itemsPerColumn,
+        crossAxisCount: _itemsPerRow,
         crossAxisSpacing: _offsetBetweenItems.s,
         mainAxisSpacing: _offsetBetweenItems.s,
       ),
-      itemCount: galleryState.images.length + 1,
+      itemCount: totalItemCount,
       itemBuilder: (context, index) {
         if (index == 0) return const CameraCell();
 
-        if (isLoading || galleryState.images.isEmpty) {
-          return const ShimmerLoadingCell();
+        final imageIndex = index - 1;
+
+        if (imageIndex >= galleryState.images.length) {
+          return const SizedBox.shrink();
         }
 
-        final imageData = galleryState.images[index - 1];
+        final imageData = galleryState.images[imageIndex];
 
-        return RepaintBoundary(
+        return ImageCell(
           key: ValueKey(imageData.asset.id),
-          child: ImageCell(
-            imageData: imageData,
-          ),
+          imageData: imageData,
         );
       },
     );

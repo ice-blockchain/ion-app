@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:ice/app/features/camera/data/models/image_data.dart';
+import 'package:ice/app/features/gallery/data/models/image_data.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 

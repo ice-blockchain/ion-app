@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:ice/app/features/camera/data/models/gallery_images_state.dart';
-import 'package:ice/app/features/camera/providers/media_service_provider.dart';
+import 'package:ice/app/features/gallery/data/models/gallery_images_state.dart';
+import 'package:ice/app/features/gallery/providers/media_service_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'gallery_images_provider.g.dart';
@@ -57,7 +57,7 @@ class GalleryImagesNotifier extends _$GalleryImagesNotifier {
     });
   }
 
-  Future<void> reset() async {
+  Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final mediaService = ref.read(mediaServiceProvider);
