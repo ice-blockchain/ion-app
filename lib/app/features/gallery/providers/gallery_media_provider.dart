@@ -4,7 +4,7 @@ import 'package:ice/app/features/gallery/data/models/gallery_media_state.dart';
 import 'package:ice/app/features/gallery/providers/media_service_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'gallery_images_provider.g.dart';
+part 'gallery_media_provider.g.dart';
 
 @riverpod
 class GalleryMediaNotifier extends _$GalleryMediaNotifier {
