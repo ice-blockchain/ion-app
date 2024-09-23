@@ -1,31 +1,31 @@
 import 'dart:developer';
 
-import 'package:ice/app/features/gallery/data/models/gallery_media_state.dart';
-import 'package:ice/app/features/gallery/providers/media_service_provider.dart';
+import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
+import 'package:ice/app/features/gallery/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'gallery_media_provider.g.dart';
+part 'gallery_provider.g.dart';
 
 @riverpod
-class GalleryMediaNotifier extends _$GalleryMediaNotifier {
+class GalleryNotifier extends _$GalleryNotifier {
   static const int _pageSize = 100;
 
   @override
-  Future<GalleryMediaState> build() async {
+  Future<GalleryState> build() async {
     try {
       final mediaService = ref.watch(mediaServiceProvider);
 
       final mediaData = await mediaService.fetchGalleryMedia(page: 0, size: _pageSize);
       final hasMore = mediaData.length == _pageSize;
 
-      return GalleryMediaState(
+      return GalleryState(
         mediaData: mediaData,
         currentPage: 1,
         hasMore: hasMore,
       );
     } catch (e) {
       log('Error in GalleryImagesNotifier build: $e');
-      return GalleryMediaState(
+      return GalleryState(
         mediaData: [],
         currentPage: 0,
         hasMore: false,
@@ -65,11 +65,23 @@ class GalleryMediaNotifier extends _$GalleryMediaNotifier {
       final newMedia = await mediaService.fetchGalleryMedia(page: 0, size: _pageSize);
       final hasMore = newMedia.length == _pageSize;
 
-      return GalleryMediaState(
+      return GalleryState(
         mediaData: newMedia,
         currentPage: 1,
         hasMore: hasMore,
       );
     });
+  }
+
+  Future<void> captureImage() async {
+    final mediaService = ref.read(mediaServiceProvider);
+    final mediaSelectionNotifier = ref.read(mediaSelectionNotifierProvider.notifier);
+
+    final mediaData = await mediaService.captureImageFromCamera();
+
+    if (mediaData != null) {
+      await refresh();
+      mediaSelectionNotifier.toggleSelection(mediaData.asset.id);
+    }
   }
 }

@@ -29,7 +29,7 @@ class MediaSelectionNotifier extends _$MediaSelectionNotifier {
   }
 
   void _selectMedia(String assetId) {
-    final galleryState = ref.read(galleryMediaNotifierProvider).value;
+    final galleryState = ref.read(galleryNotifierProvider).value;
     if (galleryState == null) return;
 
     final mediaData = galleryState.mediaData.firstWhereOrNull((media) => media.asset.id == assetId);

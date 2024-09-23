@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/gallery/data/models/gallery_media_state.dart';
+import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ice/app/features/gallery/views/components/components.dart';
 
 class GalleryGridview extends StatelessWidget {
@@ -12,7 +12,7 @@ class GalleryGridview extends StatelessWidget {
   static const _offsetBetweenItems = 4.0;
   static const _itemsPerRow = 3;
 
-  final GalleryMediaState galleryState;
+  final GalleryState galleryState;
 
   @override
   Widget build(BuildContext context) {

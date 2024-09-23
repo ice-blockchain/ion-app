@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/gallery/providers/media_capture_provider.dart';
 import 'package:ice/app/features/gallery/providers/providers.dart';
 import 'package:ice/app/features/gallery/views/components/camera/camera.dart';
 import 'package:ice/app/features/gallery/views/components/shimmer_loading_cell.dart';
@@ -21,7 +20,7 @@ class CameraCell extends ConsumerWidget {
         final isInitialized = controller?.value.isInitialized ?? false;
 
         return GestureDetector(
-          onTap: () async => await ref.read(mediaCaptureNotifierProvider.notifier).captureImage(),
+          onTap: () async => await ref.read(galleryNotifierProvider.notifier).captureImage(),
           child: SizedBox(
             width: cellWidth,
             height: cellHeight,

@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/scroll_view/load_more_builder.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/gallery/data/models/gallery_media_state.dart';
+import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ice/app/features/gallery/providers/providers.dart';
 import 'package:ice/app/features/gallery/views/components/components.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -14,7 +14,7 @@ class MediaPickerPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final galleryState = ref.watch(galleryMediaNotifierProvider);
+    final galleryState = ref.watch(galleryNotifierProvider);
     final selectedMedia = ref.watch(
       mediaSelectionNotifierProvider.select((state) => state.selectedMedia),
     );
@@ -40,7 +40,7 @@ class MediaPickerPage extends ConsumerWidget {
       ),
       GalleryGridview(
         galleryState: galleryState.valueOrNull ??
-            GalleryMediaState(
+            GalleryState(
               mediaData: [],
               currentPage: 0,
               hasMore: true,
@@ -52,7 +52,7 @@ class MediaPickerPage extends ConsumerWidget {
       body: LoadMoreBuilder(
         slivers: slivers,
         hasMore: galleryState.value?.hasMore ?? false,
-        onLoadMore: () => ref.read(galleryMediaNotifierProvider.notifier).fetchNextPage(),
+        onLoadMore: () => ref.read(galleryNotifierProvider.notifier).fetchNextPage(),
         builder: (context, slivers) => CustomScrollView(slivers: slivers),
       ),
     );
