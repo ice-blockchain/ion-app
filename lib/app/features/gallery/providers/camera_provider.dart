@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:camera/camera.dart';
-import 'package:ice/app/features/gallery/providers/providers.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -44,17 +43,4 @@ Future<Raw<CameraController?>> cameraController(CameraControllerRef ref) async {
   }
 
   return cameraController;
-}
-
-@riverpod
-Future<void> captureImage(CaptureImageRef ref) async {
-  final mediaService = ref.watch(mediaServiceProvider);
-  final mediaSelectionNotifier = ref.watch(mediaSelectionNotifierProvider.notifier);
-
-  final mediaData = await mediaService.captureImageFromCamera();
-
-  if (mediaData != null) {
-    await ref.watch(galleryMediaNotifierProvider.notifier).refresh();
-    mediaSelectionNotifier.toggleSelection(mediaData.asset.id);
-  }
 }
