@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -20,12 +19,10 @@ class SignUpPasswordButton extends ConsumerWidget {
     final authState = ref.watch(authProvider);
 
     return Button(
-      disabled: authState is AuthenticationLoading,
-      trailingIcon: authState is AuthenticationLoading
+      disabled: authState.isLoading,
+      trailingIcon: authState.isLoading || (authState.valueOrNull?.isAuthenticated).falseOrValue
           ? const IceLoadingIndicator()
-          : Assets.svg.iconButtonNext.icon(
-              color: context.theme.appColors.onPrimaryAccent,
-            ),
+          : Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
       onPressed: onPressed,
       label: Text(context.i18n.button_continue),
       mainAxisSize: MainAxisSize.max,

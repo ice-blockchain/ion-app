@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 
@@ -10,11 +11,12 @@ class ProfileDetailsCell extends StatelessWidget {
   });
 
   final String title;
-  final int value;
+  final int? value;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
@@ -22,12 +24,14 @@ class ProfileDetailsCell extends StatelessWidget {
             color: context.theme.appColors.tertararyText,
           ),
         ),
-        Text(
-          value.toString(),
-          style: context.theme.appTextThemes.title.copyWith(
-            color: context.theme.appColors.primaryText,
-          ),
-        ),
+        value == null
+            ? IceLoadingIndicator(type: IndicatorType.dark)
+            : Text(
+                value.toString(),
+                style: context.theme.appTextThemes.title.copyWith(
+                  color: context.theme.appColors.primaryText,
+                ),
+              ),
       ],
     );
   }

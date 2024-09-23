@@ -1,7 +1,7 @@
-import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:ice/app/extensions/extensions.dart';
 
 part 'relays_provider.g.dart';
 
@@ -12,8 +12,8 @@ class Relays extends _$Relays {
 
   @override
   Map<String, NostrRelay> build() {
-    ref.listen(authProvider, (AuthState? previous, AuthState next) {
-      if (next is Unauthenticated) {
+    ref.listen(authProvider, (previous, next) {
+      if ((next.valueOrNull?.isAuthenticated).falseOrValue) {
         _closeAll();
       }
     });

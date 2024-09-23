@@ -1,8 +1,9 @@
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'followed_users_provider.g.dart';
 
+//TODO::combine with user_following_provider
 @riverpod
 class FollowedUsers extends _$FollowedUsers {
   @override

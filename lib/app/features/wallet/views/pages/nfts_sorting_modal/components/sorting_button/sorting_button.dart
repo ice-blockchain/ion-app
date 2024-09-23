@@ -5,8 +5,8 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/user/model/nft_sorting_type.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/features/wallet/providers/wallet_user_preferences/wallet_user_preferences_provider.dart';
 
 class SortingButton extends ConsumerWidget {

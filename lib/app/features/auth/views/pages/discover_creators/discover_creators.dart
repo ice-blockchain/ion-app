@@ -6,7 +6,6 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
@@ -85,9 +84,8 @@ class DiscoverCreators extends HookConsumerWidget {
                   bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
                 ),
                 child: Button(
-                  disabled: authState is AuthenticationLoading,
-                  trailingIcon:
-                      authState is AuthenticationLoading ? const IceLoadingIndicator() : null,
+                  disabled: authState.isLoading,
+                  trailingIcon: authState.isLoading ? const IceLoadingIndicator() : null,
                   label: Text(context.i18n.button_continue),
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {

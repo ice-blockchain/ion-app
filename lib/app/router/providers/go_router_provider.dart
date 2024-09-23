@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
@@ -7,6 +6,7 @@ import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/router/app_router_listenable.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/services/logger/config.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'go_router_provider.g.dart';
@@ -24,6 +24,7 @@ GoRouter goRouter(GoRouterRef ref) {
 
       final isInitInProgress = initState.isLoading;
       final isInitError = initState.hasError;
+      final isAuthenticated = (authState.valueOrNull?.isAuthenticated).falseOrValue;
 
       if (isInitError) {
         return ErrorRoute().location;
@@ -32,19 +33,21 @@ GoRouter goRouter(GoRouterRef ref) {
       if (isInitInProgress || !isSplashAnimationCompleted) {
         // Redirect if app is not initialized yet
         return SplashRoute().location;
-      } else if (state.matchedLocation.startsWith(SplashRoute().location)) {
+      }
+
+      if (state.matchedLocation.startsWith(SplashRoute().location)) {
         // Redirect after app init complete
-        return authState is Authenticated ? FeedRoute().location : IntroRoute().location;
+        return isAuthenticated ? FeedRoute().location : IntroRoute().location;
       }
 
       // Redirects when user log in / out
-      return switch (authState) {
-        Authenticated() when state.matchedLocation.startsWith(IntroRoute().location) =>
-          FeedRoute().location,
-        Unauthenticated() when !state.matchedLocation.startsWith(IntroRoute().location) =>
-          IntroRoute().location,
-        _ => null
-      };
+      if (isAuthenticated && state.matchedLocation.startsWith(IntroRoute().location)) {
+        return FeedRoute().location;
+      } else if (!isAuthenticated && !state.matchedLocation.startsWith(IntroRoute().location)) {
+        return IntroRoute().location;
+      }
+
+      return null;
     },
     routes: $appRoutes,
     errorBuilder: (context, state) => ErrorPage(error: state.error ?? Exception('Unknown error')),

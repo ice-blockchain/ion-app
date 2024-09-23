@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/data/models/auth_state.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
@@ -26,11 +25,11 @@ class SignUpPasskeyForm extends HookConsumerWidget {
           IdentityKeyNameInput(controller: identityKeyNameController),
           SizedBox(height: 16.0.s),
           Button(
-            disabled: authState is AuthenticationLoading,
-            trailingIcon: switch (authState) {
-              AuthenticationLoading() || Authenticated(authToken: _) => const IceLoadingIndicator(),
-              _ => const SizedBox.shrink(),
-            },
+            disabled: authState.isLoading,
+            trailingIcon:
+                authState.isLoading || (authState.valueOrNull?.isAuthenticated).falseOrValue
+                    ? const IceLoadingIndicator()
+                    : SizedBox.shrink(),
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
                 hideKeyboardAndCallOnce(

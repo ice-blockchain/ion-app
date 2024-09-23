@@ -7,7 +7,6 @@ import 'package:ice/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ice/app/router/providers/go_router_provider.dart';
 import 'package:ice/app/services/logger/config.dart';
 import 'package:ice/app/services/riverpod/riverpod_logger.dart';
-import 'package:ice/app/templates/template.dart';
 import 'package:ice/app/theme/theme.dart';
 import 'package:ice/generated/app_localizations.dart';
 
@@ -36,12 +35,8 @@ class IceApp extends ConsumerWidget {
         child: MaterialApp.router(
           localizationsDelegates: I18n.localizationsDelegates,
           supportedLocales: I18n.supportedLocales,
-          theme: template.whenOrNull(
-            data: (Template data) => buildLightTheme(data.theme),
-          ),
-          darkTheme: template.whenOrNull(
-            data: (Template data) => buildDarkTheme(data.theme),
-          ),
+          theme: template.whenOrNull(data: (data) => buildLightTheme(data.theme)),
+          darkTheme: template.whenOrNull(data: (data) => buildDarkTheme(data.theme)),
           themeMode: appThemeMode,
           routerConfig: goRouter,
         ),
