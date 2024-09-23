@@ -29,11 +29,11 @@ class GalleryGridview extends StatelessWidget {
         (context, index) {
           if (index == 0) return const CameraCell();
 
-          final imageData = galleryState.mediaData[index - 1];
+          final mediaData = galleryState.mediaData[index - 1];
 
           return ImageCell(
-            key: ValueKey(imageData.asset.id),
-            imageData: imageData,
+            key: ValueKey(mediaData.asset.id),
+            mediaData: mediaData,
           );
         },
         childCount: totalItemCount,

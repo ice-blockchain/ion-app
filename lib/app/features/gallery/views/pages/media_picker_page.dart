@@ -15,7 +15,7 @@ class MediaPickerPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final galleryState = ref.watch(galleryMediaNotifierProvider);
-    final selectedImages = ref.watch(
+    final selectedMedia = ref.watch(
       mediaSelectionNotifierProvider.select((state) => state.selectedMedia),
     );
 
@@ -30,8 +30,8 @@ class MediaPickerPage extends ConsumerWidget {
           showBackButton: true,
           actions: [
             AddImagesButton(
-              onPressed: () => context.pop(selectedImages),
-              imageCount: selectedImages.length,
+              onPressed: () => context.pop(selectedMedia),
+              mediaCount: selectedMedia.length,
             ),
           ],
         ),

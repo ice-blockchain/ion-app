@@ -10,28 +10,28 @@ import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 class ImageCell extends ConsumerWidget {
   const ImageCell({
     super.key,
-    required this.imageData,
+    required this.mediaData,
   });
 
-  final MediaData imageData;
+  final MediaData mediaData;
 
   static const double cellHeight = 120.0;
   static const double cellWidth = 122.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectionState = ref.watch(mediaSelectionStateProvider(imageData.asset.id));
+    final selectionState = ref.watch(mediaSelectionStateProvider(mediaData.asset.id));
 
     return SizedBox(
       width: cellWidth.s,
       height: cellHeight.s,
       child: GestureDetector(
         onTap: () {
-          ref.read(mediaSelectionNotifierProvider.notifier).toggleSelection(imageData.asset.id);
+          ref.read(mediaSelectionNotifierProvider.notifier).toggleSelection(mediaData.asset.id);
         },
         child: Image(
           image: AssetEntityImageProvider(
-            imageData.asset,
+            mediaData.asset,
             isOriginal: false,
             thumbnailSize: const ThumbnailSize.square(300),
             thumbnailFormat: ThumbnailFormat.jpeg,
