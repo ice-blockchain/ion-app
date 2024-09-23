@@ -7,7 +7,6 @@ import 'package:ice/app/features/user/pages/pull_right_menu_page/components/prof
 import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/features/user/providers/user_followers_provider.dart';
 import 'package:ice/app/features/user/providers/user_following_provider.dart';
-import 'package:ice/app/features/user/providers/user_verified_provider.dart';
 import 'package:ice/app/utils/username.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -24,7 +23,6 @@ class ProfileDetails extends ConsumerWidget {
     final userDataValue = ref.watch(userDataProvider(currentUserId)).valueOrNull;
     final userFollowers = ref.watch(userFollowersProvider(currentUserId));
     final userFollowing = ref.watch(userFollowingProvider(currentUserId));
-    final userVerified = ref.watch(userVerifiedProvider(currentUserId));
 
     return Container(
       alignment: Alignment.center,
@@ -39,12 +37,12 @@ class ProfileDetails extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      userDataValue.displayName ?? '',
+                      userDataValue.displayName ?? userDataValue.name,
                       style: context.theme.appTextThemes.title.copyWith(
                         color: context.theme.appColors.primaryText,
                       ),
                     ),
-                    if (userVerified) ...[
+                    if (userDataValue.verified) ...[
                       SizedBox(width: 6.0.s),
                       Assets.svg.iconBadgeVerify.icon(size: verifiedIconSize),
                     ],

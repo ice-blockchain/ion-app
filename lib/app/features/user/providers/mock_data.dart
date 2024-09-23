@@ -9,6 +9,7 @@ const Map<String, UserData> mockedUserData = {
     displayName: 'John D',
     website: 'https://johndoe.dev',
     banner: 'https://i.pravatar.cc/750?u=john_banner',
+    verified: true,
   ),
   '002': UserData(
     id: '002',
@@ -17,6 +18,7 @@ const Map<String, UserData> mockedUserData = {
     picture: 'https://i.pravatar.cc/150?u=jane_smith',
     displayName: 'Jane UX',
     website: 'https://janesmith.com',
+    nft: true,
   ),
   '003': UserData(
     id: '003',
@@ -25,6 +27,7 @@ const Map<String, UserData> mockedUserData = {
     picture: 'https://i.pravatar.cc/150?u=tom_brown',
     displayName: 'Tom Brown',
     banner: 'https://i.pravatar.cc/750?u=tom_banner',
+    verified: true,
   ),
   '004': UserData(
     id: '004',
@@ -36,9 +39,11 @@ const Map<String, UserData> mockedUserData = {
     id: '005',
     name: 'michaellee',
     about: 'Data scientist exploring the world of machine learning and AI.',
-    picture: 'https://i.pravatar.cc/150?u=michael_lee',
+    picture: 'https://i.pravatar.cc/150?u=michael_lee_11',
     displayName: 'ML Michael',
     website: 'https://michaellee.ai',
+    verified: true,
+    nft: true,
   ),
   '006': UserData(
     id: '006',
@@ -61,6 +66,7 @@ const Map<String, UserData> mockedUserData = {
     picture: 'https://i.pravatar.cc/150?u=sophie_black',
     displayName: 'Soph Style',
     banner: 'https://i.pravatar.cc/750?u=sophie_banner',
+    nft: true,
   ),
   '009': UserData(
     id: '009',
@@ -75,6 +81,8 @@ const Map<String, UserData> mockedUserData = {
     picture: 'https://i.pravatar.cc/150?u=jessica_davis',
     displayName: 'Jessie Eats',
     website: 'https://jessicadavisfood.com',
+    verified: true,
+    nft: true,
   ),
   '011': UserData(
     id: '011',
@@ -136,6 +144,7 @@ const Map<String, UserData> mockedUserData = {
     name: 'graceyoung',
     about: 'Environmentalist working towards a sustainable future.',
     picture: 'https://i.pravatar.cc/150?u=grace_young',
+    nft: true,
   ),
   '020': UserData(
     id: '020',

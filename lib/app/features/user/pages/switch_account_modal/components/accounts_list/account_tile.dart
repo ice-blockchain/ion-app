@@ -34,7 +34,7 @@ class AccountsTile extends ConsumerWidget {
         }
       },
       title: Text(
-        userDataValue.displayName ?? '',
+        userDataValue.displayName ?? userDataValue.name,
         style: context.theme.appTextThemes.subtitle3,
       ),
       subtitle: Text(

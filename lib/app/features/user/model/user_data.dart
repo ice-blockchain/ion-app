@@ -13,5 +13,7 @@ class UserData with _$UserData {
     String? website,
     String? banner,
     @Default(false) bool bot,
+    @Default(false) bool verified,
+    @Default(false) bool nft,
   }) = _UserData;
 }
