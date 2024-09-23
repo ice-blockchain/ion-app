@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
@@ -9,26 +8,28 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
-import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/app/features/core/providers/permissions_provider_selectors.dart';
+import 'package:ice/app/features/user/providers/mock_data.dart';
+import 'package:ice/app/features/user/providers/user_following_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
-class DiscoverCreators extends HookConsumerWidget {
+class DiscoverCreators extends ConsumerWidget {
   const DiscoverCreators({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
+    final currentUserId = ref.watch(currentUserIdSelectorProvider);
+    final followingIds = ref.watch(userFollowingProvider(currentUserId));
+    final creatorIds = mockedUserData.values.toList().sublist(6).map((user) => user.id).toList();
 
     final hasNotificationsPermission = ref.watch(
       hasPermissionSelectorProvider(PermissionType.Notifications),
     );
 
-    final followedCreators = useState<Set<User>>(<User>{});
-
-    final mayContinue = followedCreators.value.isNotEmpty;
+    final mayContinue = followingIds.valueOrNull?.isNotEmpty ?? false;
 
     return SheetContent(
       body: Column(
@@ -47,24 +48,9 @@ class DiscoverCreators extends HookConsumerWidget {
                   separatorBuilder: (BuildContext _, int __) => SizedBox(
                     height: 8.0.s,
                   ),
-                  itemCount: creators.length,
+                  itemCount: creatorIds.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final creator = creators[index];
-                    final followed = followedCreators.value.contains(creator);
-
-                    return CreatorListItem(
-                      creator: creator,
-                      followed: followed,
-                      onPressed: () {
-                        final newFollowedCreators = Set<User>.from(followedCreators.value);
-                        if (followed) {
-                          newFollowedCreators.remove(creator);
-                        } else {
-                          newFollowedCreators.add(creator);
-                        }
-                        followedCreators.value = newFollowedCreators;
-                      },
-                    );
+                    return CreatorListItem(userId: creatorIds[index]);
                   },
                 ),
                 // TODO add ScreenBottomOffset.sliver factory for this case

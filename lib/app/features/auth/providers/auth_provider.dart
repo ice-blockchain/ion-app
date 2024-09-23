@@ -102,10 +102,5 @@ class Auth extends _$Auth {
 
 @riverpod
 String currentUserIdSelector(CurrentUserIdSelectorRef ref) {
-  final currentUserId = ref.watch(authProvider.select((state) => state.valueOrNull?.currentUserId));
-  if (currentUserId == null) {
-    //TODO:test on logout - what happens first - the page is changed or it rebuilds and this exc is thrown
-    throw Exception('Bad state: currentUserId is null');
-  }
-  return currentUserId;
+  return ref.watch(authProvider.select((state) => state.valueOrNull?.currentUserId)) ?? '';
 }
