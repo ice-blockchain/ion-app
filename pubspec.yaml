@@ -51,7 +51,6 @@ dependencies:
   smooth_sheets: ^1.0.0-f324.0.9.4
   timeago: ^3.6.1
   timeago_flutter: ^3.6.0
-  transparent_image: ^2.0.1
   url_launcher: ^6.0.12
   video_player: ^2.9.1
   widgetbook: ^3.7.1
