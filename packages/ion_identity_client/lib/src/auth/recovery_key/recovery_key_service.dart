@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:asn1lib/asn1lib.dart';
@@ -218,6 +217,5 @@ class RecoveryKeyService {
     return '-----BEGIN PRIVATE KEY-----\n${chunk(base64Str)}\n-----END PRIVATE KEY-----';
   }
 
-  String generateCredentialName() =>
-      '${Random().nextInt(999999).toString().padLeft(6, '0')}-${Random().nextInt(99999).toString().padLeft(5, '0')}-${Random().nextInt(999).toString().padLeft(3, '0')}';
+  String generateCredentialName() => 'main';
 }
