@@ -12,7 +12,7 @@ import 'package:ice/app/features/feed/views/components/actions_toolbar_button_se
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/pages/comment_post_modal/components/quote_post_comment_input.dart';
-import 'package:ice/app/features/gallery/data/models/image_data.dart';
+import 'package:ice/app/features/gallery/data/models/media_data.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -79,7 +79,7 @@ class CommentPostModal extends ConsumerWidget {
               actions: [
                 ActionsToolbarButton(
                   icon: Assets.svg.iconGalleryOpen,
-                  onPressed: () => MediaPickerRoute().push<List<ImageData>>(context),
+                  onPressed: () => MediaPickerRoute().push<List<MediaData>>(context),
                 ),
                 ActionsToolbarButton(
                   icon: Assets.svg.iconCameraOpen,

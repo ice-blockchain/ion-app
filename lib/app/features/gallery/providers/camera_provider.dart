@@ -49,12 +49,12 @@ Future<Raw<CameraController?>> cameraController(CameraControllerRef ref) async {
 @riverpod
 Future<void> captureImage(CaptureImageRef ref) async {
   final mediaService = ref.read(mediaServiceProvider);
-  final imageSelectionNotifier = ref.read(imageSelectionNotifierProvider.notifier);
+  final mediaSelectionNotifier = ref.read(mediaSelectionNotifierProvider.notifier);
 
-  final imageData = await mediaService.captureImageFromCamera();
+  final mediaData = await mediaService.captureImageFromCamera();
 
-  if (imageData != null) {
-    await ref.read(galleryImagesNotifierProvider.notifier).refresh();
-    imageSelectionNotifier.toggleSelection(imageData.asset.id);
+  if (mediaData != null) {
+    await ref.read(galleryMediaNotifierProvider.notifier).refresh();
+    mediaSelectionNotifier.toggleSelection(mediaData.asset.id);
   }
 }

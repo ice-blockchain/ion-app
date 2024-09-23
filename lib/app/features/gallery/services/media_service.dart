@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:ice/app/features/gallery/data/models/image_data.dart';
+import 'package:ice/app/features/gallery/data/models/media_data.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -10,7 +10,7 @@ class MediaService {
 
   final ImagePicker picker;
 
-  Future<ImageData?> captureImageFromCamera() async {
+  Future<MediaData?> captureImageFromCamera() async {
     final image = await picker.pickImage(source: ImageSource.camera);
 
     if (image != null) {
@@ -20,7 +20,7 @@ class MediaService {
     return null;
   }
 
-  Future<ImageData?> _saveCameraImage(File imageFile) async {
+  Future<MediaData?> _saveCameraImage(File imageFile) async {
     try {
       final asset = await PhotoManager.editor.saveImageWithPath(
         imageFile.path,
@@ -28,7 +28,7 @@ class MediaService {
       );
 
       if (asset != null) {
-        return ImageData(
+        return MediaData(
           asset: asset,
           order: 0,
           isFromCamera: true,
@@ -41,7 +41,7 @@ class MediaService {
     return null;
   }
 
-  Future<List<ImageData>> fetchGalleryImages({required int page, required int size}) async {
+  Future<List<MediaData>> fetchGalleryMedia({required int page, required int size}) async {
     try {
       final permission = await PhotoManager.requestPermissionExtend();
 
@@ -63,7 +63,7 @@ class MediaService {
       );
 
       final images = assets.map((asset) {
-        return ImageData(
+        return MediaData(
           asset: asset,
           order: 0,
           isFromCamera: false,

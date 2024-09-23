@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/gallery/data/models/image_data.dart';
-import 'package:ice/app/features/gallery/providers/image_selection_provider.dart';
+import 'package:ice/app/features/gallery/data/models/media_data.dart';
+import 'package:ice/app/features/gallery/providers/media_selection_provider.dart';
 import 'package:ice/app/features/gallery/views/components/components.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
@@ -13,21 +13,21 @@ class ImageCell extends ConsumerWidget {
     required this.imageData,
   });
 
-  final ImageData imageData;
+  final MediaData imageData;
 
   static const double cellHeight = 120.0;
   static const double cellWidth = 122.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectionState = ref.watch(imageSelectionStateProvider(imageData.asset.id));
+    final selectionState = ref.watch(mediaSelectionStateProvider(imageData.asset.id));
 
     return SizedBox(
       width: cellWidth.s,
       height: cellHeight.s,
       child: GestureDetector(
         onTap: () {
-          ref.read(imageSelectionNotifierProvider.notifier).toggleSelection(imageData.asset.id);
+          ref.read(mediaSelectionNotifierProvider.notifier).toggleSelection(imageData.asset.id);
         },
         child: Image(
           image: AssetEntityImageProvider(

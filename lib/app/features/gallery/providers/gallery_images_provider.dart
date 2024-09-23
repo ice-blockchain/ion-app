@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'gallery_images_provider.g.dart';
 
 @riverpod
-class GalleryImagesNotifier extends _$GalleryImagesNotifier {
+class GalleryMediaNotifier extends _$GalleryMediaNotifier {
   static const int _pageSize = 100;
 
   @override
@@ -15,18 +15,18 @@ class GalleryImagesNotifier extends _$GalleryImagesNotifier {
     try {
       final mediaService = ref.watch(mediaServiceProvider);
 
-      final images = await mediaService.fetchGalleryImages(page: 0, size: _pageSize);
-      final hasMore = images.length == _pageSize;
+      final mediaData = await mediaService.fetchGalleryMedia(page: 0, size: _pageSize);
+      final hasMore = mediaData.length == _pageSize;
 
       return GalleryMediaState(
-        images: images,
+        mediaData: mediaData,
         currentPage: 1,
         hasMore: hasMore,
       );
     } catch (e) {
       log('Error in GalleryImagesNotifier build: $e');
       return GalleryMediaState(
-        images: [],
+        mediaData: [],
         currentPage: 0,
         hasMore: false,
       );
@@ -42,15 +42,15 @@ class GalleryImagesNotifier extends _$GalleryImagesNotifier {
     state = await AsyncValue.guard(() async {
       final mediaService = ref.read(mediaServiceProvider);
 
-      final newImages = await mediaService.fetchGalleryImages(
+      final newMedia = await mediaService.fetchGalleryMedia(
         page: currentState.currentPage,
         size: _pageSize,
       );
 
-      final hasMore = newImages.length == _pageSize;
+      final hasMore = newMedia.length == _pageSize;
 
       return currentState.copyWith(
-        images: [...currentState.images, ...newImages],
+        mediaData: [...currentState.mediaData, ...newMedia],
         currentPage: currentState.currentPage + 1,
         hasMore: hasMore,
       );
@@ -62,11 +62,11 @@ class GalleryImagesNotifier extends _$GalleryImagesNotifier {
     state = await AsyncValue.guard(() async {
       final mediaService = ref.read(mediaServiceProvider);
 
-      final newImages = await mediaService.fetchGalleryImages(page: 0, size: _pageSize);
-      final hasMore = newImages.length == _pageSize;
+      final newMedia = await mediaService.fetchGalleryMedia(page: 0, size: _pageSize);
+      final hasMore = newMedia.length == _pageSize;
 
       return GalleryMediaState(
-        images: newImages,
+        mediaData: newMedia,
         currentPage: 1,
         hasMore: hasMore,
       );

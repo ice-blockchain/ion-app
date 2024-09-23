@@ -8,7 +8,7 @@ import 'package:ice/app/features/feed/create_article/views/pages/create_article_
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
-import 'package:ice/app/features/gallery/data/models/image_data.dart';
+import 'package:ice/app/features/gallery/data/models/media_data.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -73,7 +73,7 @@ class CreateArticleModal extends HookWidget {
                   actions: [
                     ActionsToolbarButton(
                       icon: Assets.svg.iconGalleryOpen,
-                      onPressed: () => MediaPickerRoute().push<List<ImageData>>(context),
+                      onPressed: () => MediaPickerRoute().push<List<MediaData>>(context),
                     ),
                     ActionsToolbarButton(
                       icon: Assets.svg.iconPostPoll,

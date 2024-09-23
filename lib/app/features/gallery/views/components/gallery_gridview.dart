@@ -17,7 +17,7 @@ class GalleryGridview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // +1 for CameraCell
-    final totalItemCount = galleryState.images.length + 1;
+    final totalItemCount = galleryState.mediaData.length + 1;
 
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -29,7 +29,7 @@ class GalleryGridview extends StatelessWidget {
         (context, index) {
           if (index == 0) return const CameraCell();
 
-          final imageData = galleryState.images[index - 1];
+          final imageData = galleryState.mediaData[index - 1];
 
           return ImageCell(
             key: ValueKey(imageData.asset.id),

@@ -14,9 +14,9 @@ class MediaPickerPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final galleryState = ref.watch(galleryImagesNotifierProvider);
+    final galleryState = ref.watch(galleryMediaNotifierProvider);
     final selectedImages = ref.watch(
-      imageSelectionNotifierProvider.select((state) => state.selectedImages),
+      mediaSelectionNotifierProvider.select((state) => state.selectedMedia),
     );
 
     final slivers = [
@@ -41,7 +41,7 @@ class MediaPickerPage extends ConsumerWidget {
       GalleryGridview(
         galleryState: galleryState.valueOrNull ??
             GalleryMediaState(
-              images: [],
+              mediaData: [],
               currentPage: 0,
               hasMore: true,
             ),
@@ -52,7 +52,7 @@ class MediaPickerPage extends ConsumerWidget {
       body: LoadMoreBuilder(
         slivers: slivers,
         hasMore: galleryState.value?.hasMore ?? false,
-        onLoadMore: () => ref.read(galleryImagesNotifierProvider.notifier).fetchNextPage(),
+        onLoadMore: () => ref.read(galleryMediaNotifierProvider.notifier).fetchNextPage(),
         builder: (context, slivers) => CustomScrollView(slivers: slivers),
       ),
     );
