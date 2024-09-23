@@ -6,7 +6,11 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  asn1lib: ^1.5.4
   collection: ^1.18.0
+  crypto: ^3.0.5
+  crypto_keys: ^0.3.0+1
+  cryptography: ^2.7.0
   dio: 5.5.0+1
   flutter:
     sdk: flutter
@@ -14,6 +18,7 @@ dependencies:
   fpdart: ^1.1.0
   json_annotation: ^4.9.0
   passkeys: ^2.0.9
+  pointycastle: ^3.9.1
   pretty_dio_logger: ^1.4.0
 
 dev_dependencies:

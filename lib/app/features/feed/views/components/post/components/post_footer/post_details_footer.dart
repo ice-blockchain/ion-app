@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/model/post/post_data.dart';
+import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_details_action_button.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
 

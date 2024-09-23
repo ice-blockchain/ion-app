@@ -1,6 +1,7 @@
 import 'package:ice/app/features/feed/feed_search/model/feed_search_user.dart';
 
-final feedSearchUsers = [
+//TODO:rework to a single User provider
+final mockedFeedSearchUsers = [
   FeedSearchUser(
     id: '1',
     nickname: 'cool_cat',

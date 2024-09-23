@@ -4,7 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/providers/posts_provider.dart';
+import 'package:ice/app/features/feed/providers/post_reply_ids_provider.dart';
+import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_details_footer.dart';
@@ -28,11 +29,11 @@ class PostDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(postByIdProvider(postId: postId));
-    final replyIds = ref.watch(postReplyIdsProvider(postId: postId));
+    final postData = ref.watch(postByIdSelectorProvider(postId: postId));
+    final replyIds = ref.watch(postReplyIdsSelectorProvider(postId: postId));
 
     useOnInit(() {
-      ref.read(postsProvider.notifier).fetchPostReplies(postId: postId);
+      ref.read(postReplyIdsProvider.notifier).fetchReplies(postId: postId);
     });
 
     final showReplySentNotification = useState(false);

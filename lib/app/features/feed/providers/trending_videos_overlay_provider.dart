@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:ice/app/features/feed/model/trending_videos_overlay.dart';
+import 'package:ice/app/features/feed/data/models/trending_videos_overlay.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'trending_videos_overlay_provider.g.dart';

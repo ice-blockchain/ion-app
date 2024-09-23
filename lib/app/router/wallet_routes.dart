@@ -13,7 +13,6 @@ class WalletRoutes {
         TypedGoRoute<ContactRoute>(path: 'one-contact/:contactId'),
         ...coinSendRoutes,
         ...coinReceiveRoutes,
-        TypedGoRoute<WebViewBrowserRoute>(path: 'web-view-browser/:url'),
       ],
     ),
     ...walletManagementRoutes,
@@ -347,13 +346,4 @@ class CoinTransactionDetailsRoute extends BaseRouteData {
           type: IceRouteType.bottomSheet,
         );
   final CryptoAssetType cryptoAssetType;
-}
-
-class WebViewBrowserRoute extends BaseRouteData {
-  WebViewBrowserRoute({required this.url})
-      : super(
-          child: WebViewBrowser(url: url),
-          type: IceRouteType.bottomSheet,
-        );
-  final String url;
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/features/feed/providers/feed_post_ids_provider.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
-import 'package:ice/app/features/feed/providers/posts_provider.dart';
-import 'package:ice/app/features/feed/views/components/post_list/components/post_list_skeleton.dart';
+import 'package:ice/app/features/feed/views/components/post_list/post_list_skeleton.dart';
 import 'package:ice/app/features/feed/views/components/post_list/post_list.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 
@@ -11,12 +11,12 @@ class FeedPosts extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final category = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
-    final postIds = ref.watch(categoryPostIdsProvider(category: category));
+    final filters = ref.watch(feedCurrentFilterProvider);
+    final postIds = ref.watch(feedPostIdsProvider(filters: filters));
 
     useOnInit(() {
-      ref.read(postsProvider.notifier).fetchCategoryPosts(category: category);
-    }, [category]);
+      ref.read(feedPostIdsProvider(filters: filters).notifier).fetchPosts();
+    }, [filters]);
 
     if (postIds.isEmpty) {
       return const PostListSkeleton();

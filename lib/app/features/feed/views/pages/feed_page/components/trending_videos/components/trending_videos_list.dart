@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/features/feed/model/trending_videos_overlay.dart';
+import 'package:ice/app/features/feed/data/models/trending_videos_overlay.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_item.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_separator.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/mock.dart';
