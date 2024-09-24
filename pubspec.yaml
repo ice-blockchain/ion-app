@@ -55,8 +55,6 @@ dependencies:
   video_player: ^2.9.1
   widgetbook: ^3.7.1
   widgetbook_annotation: ^3.1.0
-  ion_identity_client:
-    path: packages/ion_identity_client
   flutter_quill: ^10.7.5
   markdown_quill: ^4.1.0
 
