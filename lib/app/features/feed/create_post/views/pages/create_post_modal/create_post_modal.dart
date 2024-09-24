@@ -135,16 +135,8 @@ class CreatePostModal extends HookWidget {
                   trailing: ActionsToolbarButtonSend(
                     enabled: !isDocumentEmpty.value,
                     onPressed: () {
-                      final markdown = DeltaToMarkdown(
-                        customEmbedHandlers: {
-                          TextEditorSingleImageBuilder().key: (embed, out) {
-                            out.write('![image](${embed.value.data})');
-                          },
-                        },
-                      ).convert(_textEditorController.document.toDelta());
+                      String markdown = _convertToMarkdown(_textEditorController);
                       log(markdown);
-                      //TODO: Send the markdown to the server
-
                       context.pop();
                     },
                   ),
@@ -155,6 +147,17 @@ class CreatePostModal extends HookWidget {
         ],
       ),
     );
+  }
+
+  String _convertToMarkdown(QuillController _textEditorController) {
+    final markdown = DeltaToMarkdown(
+      customEmbedHandlers: {
+        TextEditorSingleImageBuilder().key: (embed, out) {
+          out.write('![image](${embed.value.data})');
+        },
+      },
+    ).convert(_textEditorController.document.toDelta());
+    return markdown;
   }
 
   void _addSingleImageBlock(QuillController _textEditorController) {
