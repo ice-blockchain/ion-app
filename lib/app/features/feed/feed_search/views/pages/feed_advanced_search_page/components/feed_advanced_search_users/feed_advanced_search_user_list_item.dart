@@ -1,36 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/components/follow_user_button/follow_user_button.dart';
-import 'package:ice/app/features/feed/feed_search/model/feed_search_user.dart';
+import 'package:ice/app/features/feed/views/components/post/post_skeleton.dart';
+import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/utils/username.dart';
 
-class FeedAdvancedSearchUserListItem extends StatelessWidget {
+class FeedAdvancedSearchUserListItem extends ConsumerWidget {
   const FeedAdvancedSearchUserListItem({
     super.key,
-    required this.user,
+    required this.userId,
   });
 
-  final FeedSearchUser user;
+  final String userId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userData = ref.watch(userDataProvider(userId));
+    final userDataValue = userData.valueOrNull;
+
+    if (userDataValue == null) {
+      return ScreenSideOffset.small(child: Skeleton(child: PostSkeleton()));
+    }
+
     return ScreenSideOffset.small(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 12.0.s),
           ListItem.user(
-            title: Text(user.name),
-            subtitle: Text(user.nickname),
-            ntfAvatar: user.nft,
-            profilePicture: user.imageUrl,
-            verifiedBadge: user.isVerified,
-            trailing: FollowUserButton(userId: user.id),
+            title: Text(userDataValue.displayName ?? userDataValue.name),
+            subtitle: Text(prefixUsername(username: userDataValue.name, context: context)),
+            ntfAvatar: userDataValue.nft,
+            profilePicture: userDataValue.picture,
+            verifiedBadge: userDataValue.verified,
+            trailing: FollowUserButton(userId: userId),
           ),
           SizedBox(height: 10.0.s),
           Text(
-            'Bitcoin Investor & Entrepreneur. Founder of WealthMastery.',
+            userDataValue.about,
             style: context.theme.appTextThemes.body2.copyWith(
               color: context.theme.appColors.sharkText,
             ),

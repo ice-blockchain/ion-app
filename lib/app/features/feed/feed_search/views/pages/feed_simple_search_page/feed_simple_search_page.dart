@@ -27,13 +27,13 @@ class FeedSimpleSearchPage extends ConsumerWidget {
           children: [
             FeedSearchNavigation(query: query, loading: usersSearchResults.isLoading),
             usersSearchResults.maybeWhen(
-              data: (users) => users == null
+              data: (userIds) => userIds == null
                   ? history.userIds.isEmpty && history.queries.isEmpty
                       ? FeedSearchHistoryEmpty()
                       : FeedSearchHistory(userIds: history.userIds, queries: history.queries)
-                  : users.isEmpty
+                  : userIds.isEmpty
                       ? NothingIsFound()
-                      : FeedSearchResults(users: users),
+                      : FeedSearchResults(userIds: userIds),
               orElse: () => FeedSearchResultsSkeleton(),
             ),
           ],

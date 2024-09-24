@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/footer/footer.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/header/header.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/links_list/links_list.dart';
-import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_info/profile_info.dart';
+import 'package:ice/app/features/user/pages/pull_right_menu_page/components/background_picture/background_picture.dart';
+import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_details/profile_details.dart';
 import 'package:go_router/go_router.dart';
 
 class PullRightMenuPage extends StatelessWidget {
@@ -20,24 +21,24 @@ class PullRightMenuPage extends StatelessWidget {
             context.pop();
           }
         },
-        child: const Stack(
+        child: Stack(
           alignment: Alignment.topCenter,
           children: [
+            Positioned(child: const BackgroundPicture()),
             SingleChildScrollView(
-              child: Column(
-                children: [
-                  ProfileInfo(),
-                  LinksList(),
-                  Footer(),
-                ],
+              child: ScreenTopOffset(
+                child: Column(
+                  children: [
+                    SizedBox(height: 115.0.s),
+                    ProfileDetails(),
+                    SizedBox(height: 20.0.s),
+                    LinksList(),
+                    Footer(),
+                  ],
+                ),
               ),
             ),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Header(),
-            ),
+            Positioned(child: Header()),
           ],
         ),
       ),

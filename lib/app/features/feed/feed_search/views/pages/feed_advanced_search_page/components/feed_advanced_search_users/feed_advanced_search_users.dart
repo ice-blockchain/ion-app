@@ -19,14 +19,14 @@ class FeedAdvancedSearchUsers extends HookConsumerWidget {
     final usersSearchResults = ref.watch(feedSearchUsersProvider(query));
 
     return usersSearchResults.maybeWhen(
-      data: (users) {
-        if (users == null || users.isEmpty) {
+      data: (userIds) {
+        if (userIds == null || userIds.isEmpty) {
           return NothingIsFound();
         }
 
         return ListView.separated(
-          itemCount: users.length,
-          itemBuilder: (context, index) => FeedAdvancedSearchUserListItem(user: users[index]),
+          itemCount: userIds.length,
+          itemBuilder: (context, index) => FeedAdvancedSearchUserListItem(userId: userIds[index]),
           separatorBuilder: (_, __) => FeedListSeparator(),
         );
       },

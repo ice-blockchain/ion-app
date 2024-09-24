@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/user/model/user_data.dart';
+import 'package:ice/app/components/separated/separated_column.dart';
+import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/user/pages/switch_account_modal/components/accounts_list/account_tile.dart';
-import 'package:ice/app/features/user/providers/users_data_provider.dart';
 
 class AccountsList extends ConsumerWidget {
   const AccountsList({
@@ -11,14 +12,16 @@ class AccountsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final usersData = ref.watch(usersDataNotifierProvider);
-    return Column(
-      children: usersData.values
-          .map(
-            (UserData userData) => AccountsTile(
-              userData: userData,
-            ),
-          )
+    final authStateValue = ref.watch(authProvider).valueOrNull;
+
+    if (authStateValue == null) {
+      return SizedBox.shrink();
+    }
+
+    return SeparatedColumn(
+      separator: SizedBox(height: 16.0.s),
+      children: authStateValue.authenticatedUserIds
+          .map((userId) => AccountsTile(userId: userId))
           .toList(),
     );
   }
