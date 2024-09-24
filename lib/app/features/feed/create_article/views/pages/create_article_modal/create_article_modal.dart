@@ -45,11 +45,24 @@ class CreateArticleModal extends HookWidget {
               ),
             ],
           ),
-          // Expanded(
-          //   child: ScreenSideOffset.small(
-          //     child: TextEditor(),
-          //   ),
-          // ),
+          Expanded(
+            child: ScreenSideOffset.small(
+              child: TextField(
+                maxLines: null,
+                focusNode: focusNode,
+                keyboardType: TextInputType.multiline,
+                style: context.theme.appTextThemes.body2,
+                decoration: InputDecoration(
+                  hintStyle: context.theme.appTextThemes.body2.copyWith(
+                    color: context.theme.appColors.quaternaryText,
+                  ),
+                  hintText: context.i18n.create_post_modal_placeholder,
+                ),
+                cursorColor: context.theme.appColors.primaryAccent,
+                cursorHeight: 13.0.s,
+              ),
+            ),
+          ),
           Column(
             children: [
               HorizontalSeparator(),
