@@ -35,11 +35,9 @@ class AccountsTile extends ConsumerWidget {
       },
       title: Text(
         userDataValue.displayName ?? userDataValue.name,
-        style: context.theme.appTextThemes.subtitle3,
       ),
       subtitle: Text(
         prefixUsername(username: userDataValue.name, context: context),
-        style: context.theme.appTextThemes.caption,
       ),
       profilePicture: userDataValue.picture,
       trailing: isCurrentUser == true
