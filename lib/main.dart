@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/translations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
@@ -33,7 +34,10 @@ class IceApp extends ConsumerWidget {
     return ContentScaler(
       child: SheetScope(
         child: MaterialApp.router(
-          localizationsDelegates: I18n.localizationsDelegates,
+          localizationsDelegates: [
+            ...I18n.localizationsDelegates,
+            FlutterQuillLocalizations.delegate,
+          ],
           supportedLocales: I18n.supportedLocales,
           theme: template.whenOrNull(data: (data) => buildLightTheme(data.theme)),
           darkTheme: template.whenOrNull(data: (data) => buildDarkTheme(data.theme)),

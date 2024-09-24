@@ -45,7 +45,7 @@ dependencies:
   qr_code_scanner: ^1.0.1
   qr_flutter: ^4.1.0
   riverpod_annotation: ^2.3.5
-  share_plus: ^9.0.0
+  share_plus: ^10.0.2
   shared_preferences: ^2.2.2
   shimmer: ^3.0.0
   smooth_sheets: ^1.0.0-f324.0.9.4
@@ -55,6 +55,8 @@ dependencies:
   video_player: ^2.9.1
   widgetbook: ^3.7.1
   widgetbook_annotation: ^3.1.0
+  flutter_quill: ^10.7.5
+  markdown_quill: ^4.1.0
 
 dev_dependencies:
   build_runner: ^2.4.8
