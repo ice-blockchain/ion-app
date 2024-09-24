@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:camera/camera.dart';
+import 'package:ice/app/services/logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,14 +11,14 @@ Future<Raw<CameraController?>> cameraController(CameraControllerRef ref) async {
   if (!permissionStatus.isGranted) {
     final result = await Permission.camera.request();
     if (!result.isGranted) {
-      log('Camera Permission denied');
+      Logger.log('Camera Permission denied');
       return null;
     }
   }
 
   final cameras = await availableCameras();
   if (cameras.isEmpty) {
-    log('No available cameras.');
+    Logger.log('No available cameras.');
     return null;
   }
 
@@ -38,7 +37,7 @@ Future<Raw<CameraController?>> cameraController(CameraControllerRef ref) async {
 
     cameraController.addListener(() => ref.notifyListeners());
   } catch (e) {
-    log('Camera initialization error: $e');
+    Logger.log('Camera initialization error: $e');
     cameraController.dispose();
   }
 

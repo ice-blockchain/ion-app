@@ -1,7 +1,7 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:ice/app/features/gallery/data/models/media_data.dart';
+import 'package:ice/app/services/logger/logger.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -35,7 +35,7 @@ class MediaService {
         );
       }
     } catch (e) {
-      log('Error saving camera image: $e');
+      Logger.log('Error saving camera image: $e');
       return null;
     }
     return null;
@@ -72,7 +72,7 @@ class MediaService {
 
       return images;
     } catch (e) {
-      log('Error fetching gallery images: $e');
+      Logger.log('Error fetching gallery images: $e');
       return [];
     }
   }

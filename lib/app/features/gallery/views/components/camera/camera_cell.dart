@@ -8,8 +8,8 @@ import 'package:ice/app/features/gallery/views/components/shimmer_loading_cell.d
 class CameraCell extends ConsumerWidget {
   const CameraCell({super.key});
 
-  static final double cellHeight = 120.0.s;
-  static final double cellWidth = 122.0.s;
+  static double get cellHeight => 120.0.s;
+  static double get cellWidth => 122.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

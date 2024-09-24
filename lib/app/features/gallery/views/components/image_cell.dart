@@ -15,16 +15,16 @@ class ImageCell extends ConsumerWidget {
 
   final MediaData mediaData;
 
-  static const double cellHeight = 120.0;
-  static const double cellWidth = 122.0;
+  static double get cellHeight => 120.0.s;
+  static double get cellWidth => 122.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectionState = ref.watch(mediaSelectionStateProvider(mediaData.asset.id));
 
     return SizedBox(
-      width: cellWidth.s,
-      height: cellHeight.s,
+      width: cellWidth,
+      height: cellHeight,
       child: GestureDetector(
         onTap: () {
           ref.read(mediaSelectionNotifierProvider.notifier).toggleSelection(mediaData.asset.id);

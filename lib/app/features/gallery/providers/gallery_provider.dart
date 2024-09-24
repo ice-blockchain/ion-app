@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ice/app/features/gallery/providers/providers.dart';
+import 'package:ice/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'gallery_provider.g.dart';
@@ -24,7 +23,7 @@ class GalleryNotifier extends _$GalleryNotifier {
         hasMore: hasMore,
       );
     } catch (e) {
-      log('Error in GalleryImagesNotifier build: $e');
+      Logger.log('Error in GalleryImagesNotifier build: $e');
       return GalleryState(
         mediaData: [],
         currentPage: 0,
