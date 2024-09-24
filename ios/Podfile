@@ -58,16 +58,16 @@ post_install do |installer|
         'PERMISSION_CONTACTS=1',
 
         ## dart: PermissionGroup.camera
-        'PERMISSION_CAMERA=0',
+        'PERMISSION_CAMERA=1',
 
         ## dart: PermissionGroup.microphone
-        'PERMISSION_MICROPHONE=0',
+        'PERMISSION_MICROPHONE=1',
 
         ## dart: PermissionGroup.speech
         'PERMISSION_SPEECH_RECOGNIZER=0',
 
         ## dart: PermissionGroup.photos
-        'PERMISSION_PHOTOS=0',
+        'PERMISSION_PHOTOS=1',
 
         ## The 'PERMISSION_LOCATION' macro enables the `locationWhenInUse` and `locationAlways` permission. If
         ## the application only requires `locationWhenInUse`, only specify the `PERMISSION_LOCATION_WHENINUSE`
