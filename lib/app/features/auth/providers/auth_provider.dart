@@ -15,7 +15,7 @@ class AuthState with _$AuthState {
   }) = _AuthState;
 
   bool get isAuthenticated {
-    return this.authenticatedUserIds.isNotEmpty;
+    return authenticatedUserIds.isNotEmpty;
   }
 }
 
