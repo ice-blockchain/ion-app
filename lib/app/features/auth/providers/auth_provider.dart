@@ -14,7 +14,7 @@ class AuthState with _$AuthState {
     required String? currentUserId,
   }) = _AuthState;
 
-  bool get isAuthenticated {
+  bool get hasAuthenticated {
     return authenticatedUserIds.isNotEmpty;
   }
 }

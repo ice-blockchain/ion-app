@@ -24,7 +24,7 @@ GoRouter goRouter(GoRouterRef ref) {
 
       final isInitInProgress = initState.isLoading;
       final isInitError = initState.hasError;
-      final isAuthenticated = (authState.valueOrNull?.isAuthenticated).falseOrValue;
+      final hasAuthenticated = (authState.valueOrNull?.hasAuthenticated).falseOrValue;
 
       if (isInitError) {
         return ErrorRoute().location;
@@ -37,13 +37,13 @@ GoRouter goRouter(GoRouterRef ref) {
 
       if (state.matchedLocation.startsWith(SplashRoute().location)) {
         // Redirect after app init complete
-        return isAuthenticated ? FeedRoute().location : IntroRoute().location;
+        return hasAuthenticated ? FeedRoute().location : IntroRoute().location;
       }
 
       // Redirects when user log in / out
-      if (isAuthenticated && state.matchedLocation.startsWith(IntroRoute().location)) {
+      if (hasAuthenticated && state.matchedLocation.startsWith(IntroRoute().location)) {
         return FeedRoute().location;
-      } else if (!isAuthenticated && !state.matchedLocation.startsWith(IntroRoute().location)) {
+      } else if (!hasAuthenticated && !state.matchedLocation.startsWith(IntroRoute().location)) {
         return IntroRoute().location;
       }
 

@@ -27,7 +27,7 @@ class SignUpPasskeyForm extends HookConsumerWidget {
           Button(
             disabled: authState.isLoading,
             trailingIcon:
-                authState.isLoading || (authState.valueOrNull?.isAuthenticated).falseOrValue
+                authState.isLoading || (authState.valueOrNull?.hasAuthenticated).falseOrValue
                     ? const IceLoadingIndicator()
                     : SizedBox.shrink(),
             onPressed: () {
