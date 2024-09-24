@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
@@ -13,6 +14,7 @@ class VisibilitySettingsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      shrinkWrap: true,
       padding: EdgeInsets.symmetric(
         horizontal: ScreenSideOffset.defaultSmallMargin,
       ),
@@ -25,7 +27,14 @@ class VisibilitySettingsList extends StatelessWidget {
         return ListItem(
           title: Text(option.getTitle(context)),
           backgroundColor: context.theme.appColors.secondaryBackground,
-          leading: option.getIcon(context),
+          leading: Button.icon(
+            onPressed: () {},
+            icon: option.getIcon(context),
+            size: 36.0.s,
+            backgroundColor: context.theme.appColors.tertararyBackground,
+            borderColor: context.theme.appColors.onTerararyFill,
+            borderRadius: BorderRadius.circular(10.0.s),
+          ),
         );
       },
     );

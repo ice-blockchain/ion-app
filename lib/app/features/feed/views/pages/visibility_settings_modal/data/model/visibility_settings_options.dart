@@ -25,10 +25,10 @@ enum VisibilitySettingsOptions {
     final icon = switch (this) {
       VisibilitySettingsOptions.everyone => Assets.svg.iconPostEveryone,
       VisibilitySettingsOptions.followed_accounts => Assets.svg.iconSearchFollow,
-      VisibilitySettingsOptions.verified_accounts => Assets.svg.iconBadgeVerify,
+      VisibilitySettingsOptions.verified_accounts => Assets.svg.iconPostVerifyaccount,
       VisibilitySettingsOptions.mentioned_accounts => Assets.svg.iconFieldNickname,
     };
 
-    return icon.icon(size: 24.0.s);
+    return icon.icon(size: 24.0.s, color: context.theme.appColors.primaryAccent);
   }
 }
