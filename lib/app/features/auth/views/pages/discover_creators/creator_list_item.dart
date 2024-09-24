@@ -1,40 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
 import 'package:ice/app/features/components/follow_user_button/follow_user_button.dart';
+import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/utils/username.dart';
 
-class CreatorListItem extends StatelessWidget {
+class CreatorListItem extends ConsumerWidget {
   const CreatorListItem({
-    required this.creator,
-    required this.followed,
-    required this.onPressed,
+    required this.userId,
     super.key,
   });
 
-  final User creator;
-
-  final bool followed;
-
-  final VoidCallback onPressed;
+  final String userId;
 
   @override
-  Widget build(BuildContext context) {
-    return ScreenSideOffset.small(
-      child: ListItem.user(
-        title: Text(creator.name),
-        subtitle: Text(creator.nickname),
-        profilePicture: creator.imageUrl,
-        verifiedBadge: creator.isVerified ?? false,
-        backgroundColor: context.theme.appColors.tertararyBackground,
-        contentPadding: EdgeInsets.all(12.0.s),
-        borderRadius: BorderRadius.circular(16.0.s),
-        trailing: FollowUserButton(userId: creator.id),
-        trailingPadding: EdgeInsets.only(left: 6.0.s),
-      ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userData = ref.watch(userDataProvider(userId));
+
+    return userData.maybeWhen(
+      data: (userData) {
+        return ScreenSideOffset.small(
+          child: ListItem.user(
+            title: Text(userData.displayName ?? userData.name),
+            subtitle: Text(prefixUsername(username: userData.name, context: context)),
+            profilePicture: userData.picture,
+            verifiedBadge: userData.verified,
+            ntfAvatar: userData.nft,
+            backgroundColor: context.theme.appColors.tertararyBackground,
+            contentPadding: EdgeInsets.all(12.0.s),
+            borderRadius: BorderRadius.circular(16.0.s),
+            trailing: FollowUserButton(userId: userData.id),
+            trailingPadding: EdgeInsets.only(left: 6.0.s),
+          ),
+        );
+      },
+      orElse: () => ScreenSideOffset.small(child: Skeleton(child: ListItem())),
     );
   }
 }

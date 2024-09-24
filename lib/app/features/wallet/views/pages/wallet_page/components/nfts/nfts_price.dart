@@ -4,7 +4,7 @@ import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/user/model/nft_layout_type.dart';
+import 'package:ice/app/features/wallet/model/nft_layout_type.dart';
 import 'package:ice/app/features/wallet/model/nft_data.dart';
 import 'package:ice/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
 

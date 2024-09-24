@@ -1,98 +1,106 @@
-import 'package:ice/app/features/auth/data/models/auth_state.dart';
-import 'package:ice/app/features/auth/data/models/auth_token.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
-import 'package:ice/app/services/storage/user_preferences_service.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ice/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_provider.g.dart';
+part 'auth_provider.freezed.dart';
+
+@Freezed(copyWith: true, equal: true)
+class AuthState with _$AuthState {
+  const AuthState._();
+
+  const factory AuthState({
+    required List<String> authenticatedUserIds,
+    required String? currentUserId,
+  }) = _AuthState;
+
+  bool get hasAuthenticated {
+    return authenticatedUserIds.isNotEmpty;
+  }
+}
 
 @Riverpod(keepAlive: true)
 class Auth extends _$Auth {
-  static const String authTokenKey = 'authToken';
+  static const String _authenticatedUserIdsKey = 'Auth:authenticatedUserIds';
+  static const String _currentUserIdKey = 'Auth:currentUserId';
 
   @override
-  AuthState build() {
-    return const AuthenticationUnknown();
+  AsyncValue<AuthState> build() {
+    return AsyncLoading();
   }
 
+  /// Method to init the auth provider with the stored values.
+  ///
+  /// Using a separate method instead of doing so in the `build` method
+  /// to be able to run it only when some conditions are met:
+  /// e.g. when the local storage is already initialized.
   Future<void> rehydrate() async {
-    final activeUser = ref.read(userDataNotifierProvider);
-    final storedToken = ref
-            .read(userPreferencesServiceProvider(userId: activeUser.id))
-            .getValue<String>(authTokenKey) ??
-        '';
-
-    state = storedToken.isEmpty
-        ? const Unauthenticated()
-        : Authenticated(
-            authToken: AuthToken(
-              access: storedToken,
-              refresh: 'refresh',
-            ),
-          );
+    final localStorage = ref.read(localStorageProvider);
+    await Future<void>.delayed(Duration(seconds: 1));
+    final authenticatedUserIds = localStorage.getStringList(_authenticatedUserIdsKey) ?? [];
+    final storedCurrentUserId = localStorage.getString(_currentUserIdKey);
+    state = AsyncValue.data(
+      AuthState(
+        authenticatedUserIds: authenticatedUserIds,
+        currentUserId: authenticatedUserIds.contains(storedCurrentUserId)
+            ? storedCurrentUserId
+            : authenticatedUserIds.isNotEmpty
+                ? authenticatedUserIds.last
+                : null,
+      ),
+    );
   }
 
   Future<void> signUp({required String keyName}) async {
-    try {
-      state = const AuthenticationLoading();
-
-      await Future<void>.delayed(const Duration(seconds: 1));
-
-      final activeUser = ref.read(userDataNotifierProvider);
-
-      final authToken = AuthToken(
-        access: 'access',
-        refresh: 'refresh',
-      );
-
-      ref
-          .read(userPreferencesServiceProvider(userId: activeUser.id))
-          .setValue(authTokenKey, authToken.access);
-
-      state = Authenticated(authToken: authToken);
-    } catch (error) {
-      state = AuthenticationFailure(message: error.toString());
-      rethrow;
-    }
+    return signIn(keyName: keyName);
   }
 
   Future<void> signIn({required String keyName}) async {
-    try {
-      state = const AuthenticationLoading();
+    state = AsyncValue.loading();
 
-      await Future<void>.delayed(const Duration(seconds: 1));
+    final localStorage = ref.read(localStorageProvider);
+    final authenticatedUserIds = ['001', '002', '003'];
+    final currentUserId = authenticatedUserIds.first;
 
-      final activeUser = ref.read(userDataNotifierProvider);
+    await Future<void>.delayed(const Duration(seconds: 1));
 
-      final authToken = AuthToken(
-        access: 'access',
-        refresh: 'refresh',
-      );
+    await Future.wait([
+      localStorage.setStringList(_authenticatedUserIdsKey, authenticatedUserIds),
+      localStorage.setString(_currentUserIdKey, currentUserId),
+    ]);
 
-      ref
-          .read(userPreferencesServiceProvider(userId: activeUser.id))
-          .setValue(authTokenKey, authToken.access);
-
-      state = Authenticated(authToken: authToken);
-    } catch (error) {
-      state = AuthenticationFailure(message: error.toString());
-      rethrow;
-    }
+    state = AsyncData(
+      AuthState(authenticatedUserIds: authenticatedUserIds, currentUserId: currentUserId),
+    );
   }
 
   Future<void> signOut() async {
-    try {
-      state = const AuthenticationLoading();
-      await Future<void>.delayed(const Duration(seconds: 2));
+    state = AsyncValue.loading();
 
-      final activeUser = ref.read(userDataNotifierProvider);
+    await Future<void>.delayed(const Duration(seconds: 1));
 
-      ref.read(userPreferencesServiceProvider(userId: activeUser.id)).setValue(authTokenKey, '');
+    final localStorage = ref.read(localStorageProvider);
 
-      state = const Unauthenticated();
-    } catch (error) {
-      state = AuthenticationFailure(message: error.toString());
-      rethrow;
+    await Future.wait([
+      localStorage.remove(_authenticatedUserIdsKey),
+      localStorage.remove(_currentUserIdKey),
+    ]);
+
+    state = AsyncData(AuthState(authenticatedUserIds: [], currentUserId: null));
+  }
+
+  void setCurrentUser(String userId) {
+    final stateValue = state.valueOrNull;
+    if (stateValue == null) return;
+
+    if (stateValue.authenticatedUserIds.contains(userId)) {
+      ref.read(localStorageProvider).setString(_currentUserIdKey, userId);
+      state = AsyncData(stateValue.copyWith(currentUserId: userId));
     }
   }
+}
+
+@riverpod
+String currentUserIdSelector(CurrentUserIdSelectorRef ref) {
+  return ref.watch(authProvider.select((state) => state.valueOrNull?.currentUserId)) ?? '';
 }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/user/providers/followed_users_provider.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/user/providers/user_following_provider.dart';
 
 class FollowUserButton extends ConsumerWidget {
   const FollowUserButton({
@@ -14,17 +15,18 @@ class FollowUserButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final followed = ref.watch(isUserFollowedSelectorProvider(userId));
+    final currentUserId = ref.watch(currentUserIdSelectorProvider);
+    final following = ref.watch(isCurrentUserFollowingSelectorProvider(userId));
     return Button(
       onPressed: () {
-        ref.read(followedUsersProvider.notifier).toggleFollow(userId);
+        ref.read(userFollowingProvider(currentUserId).notifier).toggleFollow(userId);
       },
-      type: followed ? ButtonType.primary : ButtonType.outlined,
-      tintColor: followed ? null : context.theme.appColors.primaryAccent,
+      type: following ? ButtonType.primary : ButtonType.outlined,
+      tintColor: following ? null : context.theme.appColors.primaryAccent,
       label: Text(
-        followed ? context.i18n.button_following : context.i18n.button_follow,
+        following ? context.i18n.button_following : context.i18n.button_follow,
         style: context.theme.appTextThemes.caption.copyWith(
-          color: followed
+          color: following
               ? context.theme.appColors.secondaryBackground
               : context.theme.appColors.primaryAccent,
         ),

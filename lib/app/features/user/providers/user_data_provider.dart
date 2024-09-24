@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:ice/app/features/user/providers/mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -5,27 +8,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_data_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class UserDataNotifier extends _$UserDataNotifier {
-  @override
-  UserData build() {
-    return mockedUserAccounts[0];
+Future<UserData> userData(UserDataRef ref, String userId) async {
+  await Future<void>.delayed(Duration(milliseconds: Random().nextInt(500) + 300));
+  final user = mockedUserData[userId];
+  if (user == null) {
+    throw Exception('User with id=${userId} not found');
   }
-
-  set userData(UserData newData) {
-    state = state.copyWith(
-      id: newData.id,
-      nickname: newData.nickname,
-      name: newData.name,
-      whoInvitedNickname: newData.whoInvitedNickname,
-      profilePicture: newData.profilePicture,
-      followers: newData.followers,
-      following: newData.following,
-      isVerified: newData.isVerified,
-    );
-  }
+  return user;
 }
 
 @riverpod
-String currentUserIdSelector(CurrentUserIdSelectorRef ref) {
-  return ref.watch(userDataNotifierProvider.select((state) => state.id));
+AsyncValue<UserData> currentUserData(CurrentUserDataRef ref) {
+  final currentUserId = ref.watch(currentUserIdSelectorProvider);
+  return ref.watch(userDataProvider(currentUserId));
 }

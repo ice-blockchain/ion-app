@@ -6,12 +6,14 @@ part 'user_data.freezed.dart';
 class UserData with _$UserData {
   const factory UserData({
     required String id,
-    required String nickname,
     required String name,
-    required String whoInvitedNickname,
-    required String profilePicture,
-    int? following,
-    int? followers,
-    bool? isVerified,
+    required String about,
+    required String picture,
+    String? displayName,
+    String? website,
+    String? banner,
+    @Default(false) bool bot,
+    @Default(false) bool verified,
+    @Default(false) bool nft,
   }) = _UserData;
 }

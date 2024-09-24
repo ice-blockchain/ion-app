@@ -11,6 +11,8 @@ environment:
 
 dependencies:
   cached_network_image: ^3.3.1
+  camera: ^0.11.0+2
+  collection: ^1.18.0
   cupertino_icons: ^1.0.6
   dotted_border: ^2.1.0
   email_validator: ^2.1.16
@@ -28,14 +30,18 @@ dependencies:
   go_router: ^14.2.0
   hooks_riverpod: ^2.5.1
   image_cropper: ^5.0.0
-  image_picker: ^1.0.4
+  image_picker: ^1.1.2
   intl: any
+  ion_identity_client:
+    path: packages/ion_identity_client
   json_annotation: ^4.8.1
   lottie: ^3.1.0
   mocktail: ^1.0.4
   nostr_dart:
     git: https://github.com/ice-blockchain/nostr-dart.git
   permission_handler: ^11.3.0
+  photo_manager: ^3.3.0
+  photo_manager_image_provider: ^2.1.1
   qr_code_scanner: ^1.0.1
   qr_flutter: ^4.1.0
   riverpod_annotation: ^2.3.5

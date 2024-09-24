@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/feed/data/models/feed_category.dart';
 import 'package:ice/app/features/feed/data/models/feed_filter.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/services/storage/user_preferences_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

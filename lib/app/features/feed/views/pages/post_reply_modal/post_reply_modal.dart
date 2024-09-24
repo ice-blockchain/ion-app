@@ -15,6 +15,8 @@ import 'package:ice/app/features/feed/views/components/actions_toolbar_button_se
 import 'package:ice/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/replying_to.dart';
 import 'package:ice/app/features/feed/views/pages/post_reply_modal/components/expanded_reply_input_field.dart';
+import 'package:ice/app/features/gallery/data/models/media_data.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -72,7 +74,7 @@ class PostReplyModal extends ConsumerWidget {
               actions: [
                 ActionsToolbarButton(
                   icon: Assets.svg.iconGalleryOpen,
-                  onPressed: () {},
+                  onPressed: () => MediaPickerRoute().push<List<MediaData>>(context),
                 ),
                 ActionsToolbarButton(
                   icon: Assets.svg.iconCameraOpen,

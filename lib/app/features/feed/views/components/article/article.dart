@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
 import 'package:ice/app/features/feed/views/components/article/components/article_header/article_header.dart';
 import 'package:ice/app/features/feed/views/components/article/components/article_image/article_image.dart';
 import 'package:ice/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
+import 'package:ice/app/features/user/model/user_data.dart';
+import 'package:ice/app/utils/username.dart';
 
 class Article extends StatelessWidget {
   const Article({
@@ -19,7 +20,7 @@ class Article extends StatelessWidget {
 
   final String id;
 
-  final User user;
+  final UserData user;
 
   final DateTime publishedAt;
 
@@ -34,10 +35,11 @@ class Article extends StatelessWidget {
     return Column(
       children: [
         ListItem.user(
-          title: Text(user.name),
-          subtitle: Text(user.nickname),
-          profilePicture: user.imageUrl,
-          verifiedBadge: user.isVerified.falseOrValue,
+          title: Text(user.displayName ?? user.name),
+          subtitle: Text(prefixUsername(username: user.name, context: context)),
+          profilePicture: user.picture,
+          verifiedBadge: user.verified,
+          ntfAvatar: user.nft,
           timeago: publishedAt,
           onTap: () {},
           trailing: const BookmarkButton(id: 'test_article_id'),

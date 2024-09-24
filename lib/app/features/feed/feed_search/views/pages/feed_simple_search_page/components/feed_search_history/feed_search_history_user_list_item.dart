@@ -1,46 +1,31 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/feed_search/model/feed_search_user.dart';
-import 'package:ice/app/features/feed/feed_search/providers/mocked_search_users.dart';
-import 'package:ice/app/hooks/use_on_init.dart';
+import 'package:ice/app/features/user/model/user_data.dart';
+import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/utils/username.dart';
 
-class FeedSearchHistoryUserListItem extends HookWidget {
+class FeedSearchHistoryUserListItem extends ConsumerWidget {
   const FeedSearchHistoryUserListItem({required this.userId});
 
   final String userId;
 
   @override
-  Widget build(BuildContext context) {
-    final user = useState<FeedSearchUser?>(
-      // Simulate that user might be either loaded or not
-      Random().nextBool() ? mockedFeedSearchUsers.firstWhere((user) => user.id == userId) : null,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userData = ref.watch(userDataProvider(userId));
+    return userData.maybeWhen(
+      data: (data) => _UserListItem(user: data),
+      orElse: () => _UserListItemLoading(),
     );
-
-    // Simulate loading user data
-    useOnInit(() {
-      if (user.value == null) {
-        Future<void>.delayed(Duration(milliseconds: Random().nextInt(500) + 500)).then(
-          (value) {
-            user.value = mockedFeedSearchUsers.firstWhere((user) => user.id == userId);
-          },
-        );
-      }
-    });
-
-    return user.value != null ? _UserListItem(user: user.value!) : _UserListItemLoading();
   }
 }
 
 class _UserListItem extends StatelessWidget {
   const _UserListItem({required this.user});
 
-  final FeedSearchUser user;
+  final UserData user;
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +35,12 @@ class _UserListItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Avatar(size: 65.0.s, imageUrl: user.imageUrl, hexagon: user.nft),
+          Avatar(size: 65.0.s, imageUrl: user.picture, hexagon: user.nft),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                user.name,
+                user.displayName ?? user.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.theme.appTextThemes.caption3.copyWith(
@@ -63,7 +48,7 @@ class _UserListItem extends StatelessWidget {
                 ),
               ),
               Text(
-                prefixUsername(username: user.nickname, context: context),
+                prefixUsername(username: user.name, context: context),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.theme.appTextThemes.caption3.copyWith(

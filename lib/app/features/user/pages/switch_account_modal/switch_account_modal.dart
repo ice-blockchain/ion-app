@@ -19,7 +19,8 @@ class SwitchAccountModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activeUser = ref.watch(userDataNotifierProvider);
+    final userDataValue = ref.watch(currentUserDataProvider).valueOrNull;
+
     return SheetContent(
       body: ScreenSideOffset.small(
         child: SingleChildScrollView(
@@ -30,25 +31,21 @@ class SwitchAccountModal extends ConsumerWidget {
                 showBackButton: false,
                 title: Text(context.i18n.profile_switch_user_header),
                 actions: [
-                  NavigationCloseButton(
-                    onPressed: () => context.pop(),
-                  ),
+                  NavigationCloseButton(onPressed: context.pop),
                 ],
               ),
               ActionButton(
-                icon: Assets.svg.iconChannelType.icon(),
+                icon: Assets.svg.iconChannelType.icon(color: context.theme.appColors.primaryAccent),
                 label: context.i18n.profile_create_new_account,
                 onTap: () {},
               ),
+              SizedBox(height: 16.0.s),
               const AccountsList(),
               SizedBox(height: 16.0.s),
               ActionButton(
                 icon: Assets.svg.iconMenuLogout.icon(size: 24.0.s),
                 label: context.i18n.profile_log_out(
-                  prefixUsername(
-                    username: activeUser.nickname,
-                    context: context,
-                  ),
+                  prefixUsername(username: userDataValue?.name, context: context),
                 ),
                 onTap: () {
                   ref.read(authProvider.notifier).signOut();

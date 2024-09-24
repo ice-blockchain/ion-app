@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/user/model/nft_sorting_type.dart';
+import 'package:ice/app/features/wallet/model/nft_sorting_type.dart';
 import 'package:ice/app/features/wallet/views/pages/nfts_sorting_modal/components/sorting_button/sorting_button.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';

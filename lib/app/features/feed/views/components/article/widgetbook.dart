@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/features/auth/views/pages/discover_creators/mocked_creators.dart';
 import 'package:ice/app/features/feed/views/components/article/article.dart';
+import 'package:ice/app/features/user/model/user_data.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -32,18 +32,19 @@ Widget feedPostUseCase(BuildContext context) {
               label: 'Minutes to read',
               initialValue: 7,
             ),
-            user: User(
+            user: UserData(
               id: '1',
               name: context.knobs.string(
                 label: 'Name',
                 initialValue: 'Alina Proxima',
               ),
-              nickname: context.knobs.string(
+              displayName: context.knobs.string(
                 label: 'Username',
                 initialValue: 'alinaproxima',
               ),
-              imageUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-              isVerified: true,
+              about: '',
+              picture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+              verified: true,
             ),
           ),
         ],

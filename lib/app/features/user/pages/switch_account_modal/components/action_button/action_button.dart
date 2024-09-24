@@ -34,7 +34,7 @@ class ActionButton extends StatelessWidget {
         icon: icon,
       ),
       title: Text(label, style: context.theme.appTextThemes.body),
-      trailing: Assets.svg.iconArrowRight.icon(),
+      trailing: Assets.svg.iconArrowRight.icon(color: context.theme.appColors.primaryText),
       backgroundColor: context.theme.appColors.tertararyBackground,
     );
   }
