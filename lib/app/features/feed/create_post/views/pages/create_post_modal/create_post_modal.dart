@@ -24,9 +24,14 @@ class CreatePostModal extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textEditorController = useRef(
-      QuillController.basic(),
-    ).value;
+    late final QuillController textEditorController;
+
+    useEffect(() {
+      textEditorController = QuillController.basic();
+      return () {
+        textEditorController.dispose();
+      };
+    }, []);
 
     final hasContent = useTextEditorHasContent(textEditorController);
 
@@ -54,6 +59,7 @@ class CreatePostModal extends HookWidget {
                         Expanded(
                           child: TextEditor(
                             textEditorController,
+                            placeholder: context.i18n.create_post_modal_placeholder,
                           ),
                         ),
                       ],

@@ -5,7 +5,8 @@ import 'package:ice/app/features/feed/views/components/text_editor/components/cu
 
 class TextEditor extends StatelessWidget {
   final QuillController controller;
-  const TextEditor(this.controller, {super.key});
+  final String? placeholder;
+  const TextEditor(this.controller, {super.key, this.placeholder});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class TextEditor extends StatelessWidget {
               TextEditorSingleImageBuilder(),
             ],
             autoFocus: true,
-            placeholder: context.i18n.create_post_modal_placeholder,
+            placeholder: placeholder,
             customStyles: _getCustomStyles(context),
             floatingCursorDisabled: true,
           ),
