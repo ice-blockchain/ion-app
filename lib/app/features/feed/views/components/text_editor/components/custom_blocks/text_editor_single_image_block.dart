@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 
-const _kTextEditorSingleImage = 'text-editor-single-image';
+const textEditorSingleImageKey = 'text-editor-single-image';
 
 ///
 /// Embeds a single image in the text editor.
 ///
 class TextEditorSingleImageEmbed extends CustomBlockEmbed {
-  TextEditorSingleImageEmbed(String imageUrl) : super(_kTextEditorSingleImage, imageUrl);
+  TextEditorSingleImageEmbed(String imageUrl) : super(textEditorSingleImageKey, imageUrl);
 
   static BlockEmbed image(String imageUrl) => TextEditorSingleImageEmbed(imageUrl);
 }
@@ -17,7 +17,7 @@ class TextEditorSingleImageEmbed extends CustomBlockEmbed {
 ///
 class TextEditorSingleImageBuilder extends EmbedBuilder {
   @override
-  String get key => _kTextEditorSingleImage;
+  String get key => textEditorSingleImageKey;
 
   @override
   Widget build(BuildContext context, QuillController controller, Embed node, bool readOnly,

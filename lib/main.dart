@@ -37,7 +37,7 @@ class IceApp extends ConsumerWidget {
         child: MaterialApp.router(
           localizationsDelegates: [
             ...I18n.localizationsDelegates,
-            FlutterQuillLocalizations.delegate
+            FlutterQuillLocalizations.delegate,
           ],
           supportedLocales: I18n.supportedLocales,
           theme: template.whenOrNull(
