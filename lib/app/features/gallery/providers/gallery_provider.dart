@@ -1,6 +1,5 @@
 import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ice/app/features/gallery/providers/providers.dart';
-import 'package:ice/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'gallery_provider.g.dart';
@@ -11,25 +10,16 @@ class GalleryNotifier extends _$GalleryNotifier {
 
   @override
   Future<GalleryState> build() async {
-    try {
-      final mediaService = ref.watch(mediaServiceProvider);
+    final mediaService = ref.watch(mediaServiceProvider);
 
-      final mediaData = await mediaService.fetchGalleryMedia(page: 0, size: _pageSize);
-      final hasMore = mediaData.length == _pageSize;
+    final mediaData = await mediaService.fetchGalleryMedia(page: 0, size: _pageSize);
+    final hasMore = mediaData.length == _pageSize;
 
-      return GalleryState(
-        mediaData: mediaData,
-        currentPage: 1,
-        hasMore: hasMore,
-      );
-    } catch (e) {
-      Logger.log('Error in GalleryImagesNotifier build: $e');
-      return GalleryState(
-        mediaData: [],
-        currentPage: 0,
-        hasMore: false,
-      );
-    }
+    return GalleryState(
+      mediaData: mediaData,
+      currentPage: 1,
+      hasMore: hasMore,
+    );
   }
 
   Future<void> fetchNextPage() async {
