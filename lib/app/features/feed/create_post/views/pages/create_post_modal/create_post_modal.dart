@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
@@ -13,6 +12,7 @@ import 'package:ice/app/features/feed/views/components/text_editor/components/to
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_italic_button/text_editor_italic_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_poll_button/text_editor_poll_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_regular_button/text_editor_regular_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -24,15 +24,7 @@ class CreatePostModal extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    late final QuillController textEditorController;
-
-    useEffect(() {
-      textEditorController = QuillController.basic();
-      return () {
-        textEditorController.dispose();
-      };
-    }, []);
-
+    final textEditorController = useQuillController();
     final hasContent = useTextEditorHasContent(textEditorController);
 
     return SheetContent(
