@@ -11,12 +11,10 @@ import 'package:ice/generated/assets.gen.dart';
 class VisibilitySettingsListItem extends ConsumerWidget {
   const VisibilitySettingsListItem({
     required this.option,
-    required this.isSelected,
     super.key,
   });
 
   final VisibilitySettingsOptions option;
-  final bool isSelected;
 
   void selectOption(BuildContext context, WidgetRef ref) {
     ref.read(selectedVisibilityOptionsProvider.notifier).selectedOption = option;
@@ -25,6 +23,9 @@ class VisibilitySettingsListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final selectedOption = ref.watch(selectedVisibilityOptionsProvider);
+    final isSelected = selectedOption == option;
+
     return ListItem(
       onTap: () => selectOption(context, ref),
       title: Text(option.getTitle(context)),

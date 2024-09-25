@@ -29,6 +29,6 @@ enum VisibilitySettingsOptions {
       VisibilitySettingsOptions.mentionedAccounts => Assets.svg.iconFieldNickname,
     };
 
-    return icon.icon(size: 24.0.s, color: context.theme.appColors.primaryAccent);
+    return icon.icon(color: context.theme.appColors.primaryAccent);
   }
 }
