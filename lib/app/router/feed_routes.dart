@@ -16,7 +16,6 @@ class FeedRoutes {
         TypedGoRoute<CreateStoryRoute>(path: 'create-story'),
         TypedGoRoute<CreateVideoRoute>(path: 'create-video'),
         TypedGoRoute<MediaPickerRoute>(path: 'media-picker'),
-        TypedGoRoute<VisibilitySettingsRoute>(path: 'visibility-settings'),
       ],
     ),
   ];
@@ -132,13 +131,5 @@ class MediaPickerRoute extends BaseRouteData {
   MediaPickerRoute()
       : super(
           child: MediaPickerPage(),
-        );
-}
-
-class VisibilitySettingsRoute extends BaseRouteData {
-  VisibilitySettingsRoute()
-      : super(
-          child: VisibilitySettingsModal(),
-          type: IceRouteType.bottomSheet,
         );
 }
