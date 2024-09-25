@@ -91,7 +91,7 @@ class ListItem extends StatelessWidget {
   static BorderRadius get defaultBorderRadius => BorderRadius.all(Radius.circular(16.0.s));
 
   static EdgeInsets get defaultContentPadding =>
-      EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 10.0.s);
+      EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 8.0.s);
 
   static EdgeInsets get defaultLeadingPadding => EdgeInsets.only(right: 10.0.s);
 

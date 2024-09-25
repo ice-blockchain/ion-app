@@ -73,7 +73,53 @@ class FeedSearchFiltersPage extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 16.0.s),
-                ListItem(),
+                ListItem(
+                  leading: Container(
+                    width: 30.0.s,
+                    height: 30.0.s,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: context.theme.appColors.onSecondaryBackground,
+                      borderRadius: BorderRadius.all(Radius.circular(8.0.s)),
+                      border: Border.all(
+                        width: 1.0.s,
+                        color: context.theme.appColors.onTerararyFill,
+                      ),
+                    ),
+                    child: Assets.svg.iconSelectLanguage
+                        .icon(size: 20.0.s, color: context.theme.appColors.secondaryText),
+                  ),
+                  title: Text('Select languages'),
+                  trailing: Assets.svg.iconArrowRight.icon(),
+                  backgroundColor: context.theme.appColors.secondaryBackground,
+                  border: Border.all(color: context.theme.appColors.strokeElements),
+                ),
+                ListItem(
+                  leading: Container(
+                    width: 30.0.s,
+                    height: 30.0.s,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: context.theme.appColors.onSecondaryBackground,
+                      borderRadius: BorderRadius.all(Radius.circular(8.0.s)),
+                      border: Border.all(
+                        width: 1.0.s,
+                        color: context.theme.appColors.onTerararyFill,
+                      ),
+                    ),
+                    child: Assets.svg.iconSelectLanguage
+                        .icon(size: 20.0.s, color: context.theme.appColors.secondaryText),
+                  ),
+                  title: Text('Select languages'),
+                  subtitle: Text(
+                    'English, Italian, German, Russian, Chinese, Danish, Polish',
+                    overflow: TextOverflow.visible,
+                  ),
+                  switchTitleStyles: true,
+                  trailing: Assets.svg.iconArrowRight.icon(),
+                  backgroundColor: context.theme.appColors.secondaryBackground,
+                  border: Border.all(color: context.theme.appColors.strokeElements),
+                ),
                 SizedBox(height: 34.0.s),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 28.0.s),
