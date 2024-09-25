@@ -7,7 +7,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/language_list_item.dart';
-import 'package:ice/app/features/auth/views/pages/select_languages/languages.dart';
+import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
