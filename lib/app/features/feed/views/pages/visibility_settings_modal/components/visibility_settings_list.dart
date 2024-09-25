@@ -24,7 +24,7 @@ class VisibilitySettingsList extends StatelessWidget {
         final option = VisibilitySettingsOptions.values[index];
         return ListItem(
           title: Text(option.getTitle(context)),
-          backgroundColor: context.theme.appColors.onSecondaryBackground,
+          backgroundColor: context.theme.appColors.secondaryBackground,
           leading: option.getIcon(context),
         );
       },

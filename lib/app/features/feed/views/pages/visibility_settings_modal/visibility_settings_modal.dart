@@ -7,11 +7,8 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class VisibilitySettingsModal extends StatelessWidget {
   const VisibilitySettingsModal({
-    required this.title,
     super.key,
   });
-
-  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +18,13 @@ class VisibilitySettingsModal extends StatelessWidget {
         children: [
           NavigationAppBar.modal(
             showBackButton: false,
-            title: Text(title),
+            title: Text(context.i18n.visibility_settings_title_video),
           ),
           SizedBox(height: 12.0.s),
           HorizontalSeparator(),
-          VisibilitySettingsList(),
+          Flexible(
+            child: VisibilitySettingsList(),
+          ),
         ],
       ),
     );

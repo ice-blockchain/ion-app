@@ -14,6 +14,7 @@ import 'package:ice/app/features/feed/views/components/text_editor/components/to
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/text_editor.dart';
+import 'package:ice/app/features/feed/views/components/visibility_settings_toolbar/visibility_settings_toolbar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
@@ -56,6 +57,10 @@ class CreateArticleModal extends HookWidget {
           ),
           Column(
             children: [
+              HorizontalSeparator(),
+              ScreenSideOffset.small(
+                child: VisibilitySettingsToolbar(),
+              ),
               HorizontalSeparator(),
               ScreenSideOffset.small(
                 child: ActionsToolbar(
