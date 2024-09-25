@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/providers/selected_visibility_option_provider.dart';
-import 'package:ice/app/features/feed/views/pages/visibility_settings_modal/data/model/visibility_settings_options.dart';
+import 'package:ice/app/features/feed/data/models/visibility_settings_options.dart';
+import 'package:ice/app/features/feed/providers/selected_visibility_options_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class VisibilitySettingsListItem extends ConsumerWidget {
@@ -19,7 +19,7 @@ class VisibilitySettingsListItem extends ConsumerWidget {
   final bool isSelected;
 
   void selectOption(BuildContext context, WidgetRef ref) {
-    ref.read(selectedVisibilityOptionNotifierProvider.notifier).selectedOption = option;
+    ref.read(selectedVisibilityOptionsProvider.notifier).selectedOption = option;
     context.pop();
   }
 
