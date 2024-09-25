@@ -44,6 +44,7 @@ class FeedSearchFiltersPage extends ConsumerWidget {
                 SizedBox(height: 10.0.s),
                 ...FeedSearchFilter.values.map((filter) {
                   return ListItem(
+                    onTap: () {},
                     leading: Container(
                       width: 36.0.s,
                       height: 36.0.s,
@@ -75,33 +76,31 @@ class FeedSearchFiltersPage extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 16.0.s),
-                GestureDetector(
+                ListItem(
                   onTap: () async {
                     final languages =
                         await FeedSearchLanguagesRoute().push<List<Language>>(context);
                     print(languages);
                   },
-                  child: ListItem(
-                    leading: Container(
-                      width: 30.0.s,
-                      height: 30.0.s,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: context.theme.appColors.onSecondaryBackground,
-                        borderRadius: BorderRadius.all(Radius.circular(8.0.s)),
-                        border: Border.all(
-                          width: 1.0.s,
-                          color: context.theme.appColors.onTerararyFill,
-                        ),
+                  leading: Container(
+                    width: 30.0.s,
+                    height: 30.0.s,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: context.theme.appColors.onSecondaryBackground,
+                      borderRadius: BorderRadius.all(Radius.circular(8.0.s)),
+                      border: Border.all(
+                        width: 1.0.s,
+                        color: context.theme.appColors.onTerararyFill,
                       ),
-                      child: Assets.svg.iconSelectLanguage
-                          .icon(size: 20.0.s, color: context.theme.appColors.secondaryText),
                     ),
-                    title: Text(context.i18n.feed_search_filter_select_languages),
-                    trailing: Assets.svg.iconArrowRight.icon(),
-                    backgroundColor: context.theme.appColors.secondaryBackground,
-                    border: Border.all(color: context.theme.appColors.strokeElements),
+                    child: Assets.svg.iconSelectLanguage
+                        .icon(size: 20.0.s, color: context.theme.appColors.secondaryText),
                   ),
+                  title: Text(context.i18n.feed_search_filter_select_languages),
+                  trailing: Assets.svg.iconArrowRight.icon(),
+                  backgroundColor: context.theme.appColors.secondaryBackground,
+                  border: Border.all(color: context.theme.appColors.strokeElements),
                 ),
                 ListItem(
                   leading: Container(
