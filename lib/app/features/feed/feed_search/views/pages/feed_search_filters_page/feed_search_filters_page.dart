@@ -89,7 +89,7 @@ class FeedSearchFiltersPage extends ConsumerWidget {
                     child: Assets.svg.iconSelectLanguage
                         .icon(size: 20.0.s, color: context.theme.appColors.secondaryText),
                   ),
-                  title: Text('Select languages'),
+                  title: Text(context.i18n.feed_search_filter_select_languages),
                   trailing: Assets.svg.iconArrowRight.icon(),
                   backgroundColor: context.theme.appColors.secondaryBackground,
                   border: Border.all(color: context.theme.appColors.strokeElements),
@@ -110,7 +110,7 @@ class FeedSearchFiltersPage extends ConsumerWidget {
                     child: Assets.svg.iconSelectLanguage
                         .icon(size: 20.0.s, color: context.theme.appColors.secondaryText),
                   ),
-                  title: Text('Select languages'),
+                  title: Text(context.i18n.feed_search_filter_select_languages),
                   subtitle: Text(
                     'English, Italian, German, Russian, Chinese, Danish, Polish',
                     overflow: TextOverflow.visible,
