@@ -7,8 +7,8 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/language_list_item.dart';
-import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
+import 'package:ice/app/hooks/use_languages.dart';
 import 'package:ice/app/hooks/use_selected_state.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
@@ -19,18 +19,11 @@ class SelectLanguages extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (selectedLanguages, toggleLanguageSelection) = useSelectedState<Language>();
-    final searchText = useState('');
+    final (selectedLanguages, toggleLanguageSelection) = useSelectedState<String>();
+    final searchQuery = useState('');
+    final languages = useLanguages(query: searchQuery.value);
 
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
-
-    final filteredLanguages = searchText.value.isEmpty
-        ? languages
-        : languages.where((Language country) {
-            final searchLower = searchText.value.toLowerCase().trim();
-            final nameLower = country.name.toLowerCase();
-            return nameLower.contains(searchLower);
-          }).toList();
 
     final mayContinue = selectedLanguages.isNotEmpty;
 
@@ -49,22 +42,22 @@ class SelectLanguages extends HookWidget {
                   height: SearchInput.height,
                   child: ScreenSideOffset.small(
                     child: SearchInput(
-                      onTextChanged: (String value) => searchText.value = value,
+                      onTextChanged: (String value) => searchQuery.value = value,
                     ),
                   ),
                 ),
                 SliverList.separated(
-                  itemCount: filteredLanguages.length,
+                  itemCount: languages.length,
                   separatorBuilder: (BuildContext _, int __) => SizedBox(
                     height: 12.0.s,
                   ),
                   itemBuilder: (BuildContext context, int index) {
-                    final language = filteredLanguages[index];
+                    final language = languages[index];
                     return LanguageListItem(
                       language: language,
-                      isSelected: selectedLanguages.contains(language),
+                      isSelected: selectedLanguages.contains(language.isoCode),
                       onTap: () {
-                        toggleLanguageSelection(language);
+                        toggleLanguageSelection(language.isoCode);
                       },
                     );
                   },

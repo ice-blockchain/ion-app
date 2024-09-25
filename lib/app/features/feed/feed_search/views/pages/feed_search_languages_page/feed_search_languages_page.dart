@@ -6,27 +6,21 @@ import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
-import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/feed_search/views/pages/feed_search_languages_page/feed_search_language_list_item.dart';
+import 'package:ice/app/hooks/use_languages.dart';
 import 'package:ice/app/hooks/use_selected_state.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/generated/assets.gen.dart';
 
 class FeedSearchLanguagesPage extends HookWidget {
   const FeedSearchLanguagesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final (selectedLanguages, toggleLanguageSelection) = useSelectedState<Language>();
-    final searchText = useState('');
-
-    final filteredLanguages = searchText.value.isEmpty
-        ? languages
-        : languages
-            .where((language) =>
-                language.name.toLowerCase().contains(searchText.value.toLowerCase().trim()))
-            .toList();
+    final (selectedLanguages, toggleLanguageSelection) = useSelectedState<String>();
+    final searchQuery = useState('');
+    final languages = useLanguages(query: searchQuery.value);
 
     return SheetContent(
       body: Column(
@@ -36,45 +30,27 @@ class FeedSearchLanguagesPage extends HookWidget {
           ),
           ScreenSideOffset.small(
             child: SearchInput(
-              onTextChanged: (String value) => searchText.value = value,
+              onTextChanged: (String value) => searchQuery.value = value,
             ),
           ),
           SizedBox(height: 14.0.s),
           Expanded(
             child: ListView.builder(
-                itemCount: filteredLanguages.length,
+                itemCount: languages.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final language = filteredLanguages[index];
-                  final isSelected = selectedLanguages.contains(language);
+                  final language = languages[index];
                   return GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      toggleLanguageSelection(language);
-                    },
-                    child: ScreenSideOffset.small(
-                      child: SizedBox(
-                        height: 44.0.s,
-                        child: Row(
-                          children: [
-                            Text(language.flag, style: TextStyle(fontSize: 21.0.s)),
-                            SizedBox(width: 16.0.s),
-                            Expanded(
-                              child: Text(
-                                language.name,
-                                style: context.theme.appTextThemes.subtitle2.copyWith(
-                                  color: context.theme.appColors.primaryText,
-                                ),
-                              ),
-                            ),
-                            if (isSelected) Assets.svg.iconBlockCheckboxOnblue.icon(),
-                          ],
-                        ),
-                      ),
+                    onTap: () => toggleLanguageSelection(language.isoCode),
+                    child: FeedSearchLanguageListItem(
+                      language: language,
+                      selected: selectedLanguages.contains(language.isoCode),
                     ),
                   );
                 }),
           ),
           if (selectedLanguages.isNotEmpty) ...[
+            SizedBox(height: 10.0.s),
             HorizontalSeparator(),
             SizedBox(height: 16.0.s),
             ScreenSideOffset.small(
