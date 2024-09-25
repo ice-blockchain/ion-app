@@ -30,7 +30,7 @@ class VisibilitySettingsToolbar extends StatelessWidget {
       trailing: Assets.svg.iconArrowRight.icon(color: context.theme.appColors.primaryAccent),
       constraints: BoxConstraints(minHeight: 40.0.s),
       onTap: () {
-        VisibilitySettingsRoute().go(context);
+        VisibilitySettingsRoute().push<void>(context);
       },
     );
   }
