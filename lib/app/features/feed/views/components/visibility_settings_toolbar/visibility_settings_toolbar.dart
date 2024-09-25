@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/pages/visibility_settings_modal/data/model/visibility_settings_options.dart';
+import 'package:ice/app/features/feed/providers/selected_visibility_option_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class VisibilitySettingsToolbar extends StatelessWidget {
+class VisibilitySettingsToolbar extends ConsumerWidget {
   const VisibilitySettingsToolbar({
     this.trailing,
     super.key,
@@ -14,19 +15,17 @@ class VisibilitySettingsToolbar extends StatelessWidget {
   final Widget? trailing;
 
   @override
-  Widget build(BuildContext context) {
-    final option = VisibilitySettingsOptions.values[0];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedOption = ref.watch(selectedVisibilityOptionNotifierProvider);
 
     return ListItem(
-      title: Text(
-        option.getTitle(context),
-        style: context.theme.appTextThemes.caption.copyWith(
-          color: context.theme.appColors.primaryAccent,
-        ),
-      ),
+      title: Text(selectedOption != null ? selectedOption.getTitle(context) : '',
+          style: context.theme.appTextThemes.caption.copyWith(
+            color: context.theme.appColors.primaryAccent,
+          )),
       contentPadding: EdgeInsets.zero,
       backgroundColor: context.theme.appColors.secondaryBackground,
-      leading: option.getIcon(context),
+      leading: selectedOption != null ? selectedOption.getIcon(context) : null,
       trailing: Assets.svg.iconArrowRight.icon(color: context.theme.appColors.primaryAccent),
       constraints: BoxConstraints(minHeight: 40.0.s),
       onTap: () {
