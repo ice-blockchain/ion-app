@@ -50,7 +50,9 @@ class FeedAdvancedSearchNavigation extends HookConsumerWidget {
           ),
           SizedBox(width: 12.0.s),
           NavigationButton(
-            onPressed: () {},
+            onPressed: () {
+              FeedSearchFiltersRoute().push<void>(context);
+            },
             icon: Assets.svg.iconButtonManagecoin.icon(
               color: context.theme.appColors.primaryText,
             ),
