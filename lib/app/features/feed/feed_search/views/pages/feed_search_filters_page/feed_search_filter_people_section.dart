@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/feed_search/model/feed_search_filter.dart';
+import 'package:ice/app/features/feed/feed_search/model/feed_search_filter_people.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class FeedSearchFilterPeople extends StatelessWidget {
-  const FeedSearchFilterPeople({super.key});
+class FeedSearchFilterPeopleSection extends StatelessWidget {
+  const FeedSearchFilterPeopleSection({
+    super.key,
+    required this.selectedFilter,
+    required this.onFilterChange,
+  });
+
+  final FeedSearchFilterPeople selectedFilter;
+
+  final void Function(FeedSearchFilterPeople) onFilterChange;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +28,11 @@ class FeedSearchFilterPeople extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10.0.s),
-        ...FeedSearchFilter.values.map((filter) {
+        ...FeedSearchFilterPeople.values.map((filter) {
           return ListItem(
-            onTap: () {},
+            onTap: () {
+              onFilterChange(filter);
+            },
             leading: Container(
               width: 36.0.s,
               height: 36.0.s,
@@ -37,7 +47,9 @@ class FeedSearchFilterPeople extends StatelessWidget {
               ),
               child: filter.getIcon(context).icon(color: context.theme.appColors.primaryAccent),
             ),
-            trailing: Assets.svg.iconDappCheck.icon(color: context.theme.appColors.success),
+            trailing: selectedFilter == filter
+                ? Assets.svg.iconDappCheck.icon(color: context.theme.appColors.success)
+                : null,
             title: Text(filter.getLabel(context)),
             backgroundColor: context.theme.appColors.secondaryBackground,
             contentPadding: EdgeInsets.zero,

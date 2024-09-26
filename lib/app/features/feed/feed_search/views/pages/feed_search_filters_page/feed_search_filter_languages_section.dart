@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
+import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class FeedSearchFilterLanguages extends StatelessWidget {
-  const FeedSearchFilterLanguages({super.key});
+class FeedSearchFilterLanguagesSection extends StatelessWidget {
+  const FeedSearchFilterLanguagesSection({
+    super.key,
+    required this.selectedLanguages,
+    required this.onFilterChange,
+  });
+
+  final List<Language> selectedLanguages;
+
+  final void Function(List<Language>) onFilterChange;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +30,11 @@ class FeedSearchFilterLanguages extends StatelessWidget {
         ),
         SizedBox(height: 16.0.s),
         ListItem(
+          onTap: () async {
+            final languages = await FeedSearchLanguagesRoute(selectedLanguages: selectedLanguages)
+                .push<List<Language>>(context);
+            if (languages != null) onFilterChange(languages);
+          },
           leading: Container(
             width: 30.0.s,
             height: 30.0.s,
@@ -37,7 +52,7 @@ class FeedSearchFilterLanguages extends StatelessWidget {
           ),
           title: Text(context.i18n.feed_search_filter_select_languages),
           subtitle: Text(
-            'English, Italian, German, Russian, Chinese, Danish, Polish',
+            selectedLanguages.map((language) => language.name).join(', '),
             overflow: TextOverflow.visible,
           ),
           switchTitleStyles: true,

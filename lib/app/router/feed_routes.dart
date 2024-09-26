@@ -146,9 +146,11 @@ class FeedSearchFiltersRoute extends BaseRouteData {
 }
 
 class FeedSearchLanguagesRoute extends BaseRouteData {
-  FeedSearchLanguagesRoute()
+  FeedSearchLanguagesRoute({this.selectedLanguages = const []})
       : super(
-          child: const FeedSearchLanguagesPage(),
+          child: FeedSearchLanguagesPage(defaultSelected: selectedLanguages),
           type: IceRouteType.bottomSheet,
         );
+
+  final List<Language> selectedLanguages;
 }

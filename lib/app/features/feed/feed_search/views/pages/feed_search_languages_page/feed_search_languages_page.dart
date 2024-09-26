@@ -6,6 +6,7 @@ import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
+import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_search_languages_page/feed_search_language_list_item.dart';
 import 'package:ice/app/hooks/use_languages.dart';
@@ -14,11 +15,17 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class FeedSearchLanguagesPage extends HookWidget {
-  const FeedSearchLanguagesPage({super.key});
+  const FeedSearchLanguagesPage({
+    super.key,
+    required this.defaultSelected,
+  });
+
+  final List<Language> defaultSelected;
 
   @override
   Widget build(BuildContext context) {
-    final (selectedLanguages, toggleLanguageSelection) = useSelectedState<String>();
+    final (selectedLanguages, toggleLanguageSelection) =
+        useSelectedState<Language>(defaultSelected);
     final searchQuery = useState('');
     final languages = useLanguages(query: searchQuery.value);
 
@@ -41,10 +48,10 @@ class FeedSearchLanguagesPage extends HookWidget {
                 final language = languages[index];
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () => toggleLanguageSelection(language.isoCode),
+                  onTap: () => toggleLanguageSelection(language),
                   child: FeedSearchLanguageListItem(
                     language: language,
-                    selected: selectedLanguages.contains(language.isoCode),
+                    selected: selectedLanguages.contains(language),
                   ),
                 );
               },
