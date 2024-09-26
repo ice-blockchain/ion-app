@@ -9,7 +9,6 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 enum OffsetType { large, small }
 
 class SimpleModalSheet extends StatelessWidget {
-
   factory SimpleModalSheet.info({
     required String title,
     required String description,
@@ -51,7 +50,8 @@ class SimpleModalSheet extends StatelessWidget {
     required this.title,
     required this.description,
     required this.iconAsset,
-    required this.offsetType, this.buttonText,
+    required this.offsetType,
+    this.buttonText,
     this.onPressed,
     this.button,
   }) : assert(

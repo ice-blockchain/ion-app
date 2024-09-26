@@ -16,13 +16,16 @@ class ArticleCategoriesMenu extends HookWidget {
     final firstRowItems = items.sublist(0, firstRowItemCount);
     final secondRowItems = items.sublist(firstRowItemCount);
 
-    final toggleSelection = useCallback((String id) {
-      final newSelected = Set<String>.from(selectedItems.value);
+    final toggleSelection = useCallback(
+      (String id) {
+        final newSelected = Set<String>.from(selectedItems.value);
 
-      newSelected.contains(id) ? newSelected.remove(id) : newSelected.add(id);
+        newSelected.contains(id) ? newSelected.remove(id) : newSelected.add(id);
 
-      selectedItems.value = newSelected;
-    }, [selectedItems.value],);
+        selectedItems.value = newSelected;
+      },
+      [selectedItems.value],
+    );
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,

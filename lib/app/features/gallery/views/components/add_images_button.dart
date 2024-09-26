@@ -4,7 +4,9 @@ import 'package:ice/app/extensions/extensions.dart';
 
 class AddImagesButton extends StatelessWidget {
   const AddImagesButton({
-    required this.mediaCount, required this.onPressed, super.key,
+    required this.mediaCount,
+    required this.onPressed,
+    super.key,
   });
 
   final VoidCallback onPressed;

@@ -4,7 +4,11 @@ import 'package:ice/app/extensions/extensions.dart';
 
 class RestoreMenuItem extends StatelessWidget {
   const RestoreMenuItem({
-    required this.icon, required this.title, required this.description, required this.onPressed, super.key,
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.onPressed,
+    super.key,
   });
 
   final Widget icon;

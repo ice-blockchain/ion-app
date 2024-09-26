@@ -7,9 +7,10 @@ import 'package:ice/generated/assets.gen.dart';
 import 'package:intl/intl.dart';
 
 class TimelineItem extends StatelessWidget {
-
   const TimelineItem({
-    required this.isLast, required this.data, super.key,
+    required this.isLast,
+    required this.data,
+    super.key,
     this.isNextDone = false,
   });
   final bool isLast;

@@ -16,7 +16,10 @@ Widget regularButtonUseCase(BuildContext context) {
         Avatar(
           size: 200.0.s,
           badge: Positioned(
-              right: 0, bottom: 0, child: Container(width: 20, height: 20, color: Colors.amber),),
+            right: 0,
+            bottom: 0,
+            child: Container(width: 20, height: 20, color: Colors.amber),
+          ),
           imageUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
         ),
         Avatar(

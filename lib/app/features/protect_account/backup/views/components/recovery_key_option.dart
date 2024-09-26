@@ -4,7 +4,10 @@ import 'package:ice/app/extensions/extensions.dart';
 
 class RecoveryKeyOption extends StatelessWidget {
   const RecoveryKeyOption({
-    required this.title, required this.subtitle, required this.iconAsset, super.key,
+    required this.title,
+    required this.subtitle,
+    required this.iconAsset,
+    super.key,
   });
 
   final String title;

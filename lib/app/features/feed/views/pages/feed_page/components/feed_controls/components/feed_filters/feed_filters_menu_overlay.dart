@@ -11,7 +11,8 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_cont
 
 class FeedFiltersMenuOverlay extends StatelessWidget {
   const FeedFiltersMenuOverlay({
-    required this.closeMenu, super.key,
+    required this.closeMenu,
+    super.key,
   });
 
   final VoidCallback closeMenu;

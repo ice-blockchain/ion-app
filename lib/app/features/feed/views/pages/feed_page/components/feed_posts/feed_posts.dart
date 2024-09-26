@@ -14,9 +14,12 @@ class FeedPosts extends HookConsumerWidget {
     final filters = ref.watch(feedCurrentFilterProvider);
     final postIds = ref.watch(feedPostIdsProvider(filters: filters));
 
-    useOnInit(() {
-      ref.read(feedPostIdsProvider(filters: filters).notifier).fetchPosts();
-    }, [filters],);
+    useOnInit(
+      () {
+        ref.read(feedPostIdsProvider(filters: filters).notifier).fetchPosts();
+      },
+      [filters],
+    );
 
     if (postIds.isEmpty) {
       return const PostListSkeleton();

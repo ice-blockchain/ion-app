@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
 class RoundedCard extends StatelessWidget {
-
   factory RoundedCard.filled({
     required Widget child,
     EdgeInsets? padding,
@@ -32,7 +31,8 @@ class RoundedCard extends StatelessWidget {
   }
   const RoundedCard._({
     required this.child,
-    required this.isOutlined, this.padding,
+    required this.isOutlined,
+    this.padding,
     this.borderColor,
     this.backgroundColor,
   });

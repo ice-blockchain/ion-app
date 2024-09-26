@@ -4,7 +4,9 @@ import 'package:ice/app/components/overlay_menu/hooks/use_hide_on_scroll.dart';
 
 class OverlayMenu extends HookWidget {
   const OverlayMenu({
-    required this.child, required this.menuBuilder, super.key,
+    required this.child,
+    required this.menuBuilder,
+    super.key,
     this.offset = Offset.zero,
   });
 

@@ -5,9 +5,11 @@ import 'package:ice/app/features/feed/data/models/article_category.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class ArticleCategoriesRow extends StatelessWidget {
-
   const ArticleCategoriesRow({
-    required this.items, required this.selectedItems, required this.onToggle, super.key,
+    required this.items,
+    required this.selectedItems,
+    required this.onToggle,
+    super.key,
     this.showAddButton = false,
   });
   final List<ArticleCategory> items;
@@ -54,7 +56,6 @@ class ArticleCategoriesRow extends StatelessWidget {
 }
 
 class _CategoryButton extends StatelessWidget {
-
   const _CategoryButton({
     required this.category,
     required this.isSelected,

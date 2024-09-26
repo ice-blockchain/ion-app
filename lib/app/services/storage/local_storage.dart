@@ -18,7 +18,6 @@ LocalStorage localStorage(LocalStorageRef ref) {
 }
 
 class LocalStorage {
-
   const LocalStorage(this._prefs);
   final SharedPreferences _prefs;
 

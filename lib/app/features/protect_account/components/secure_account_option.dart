@@ -5,9 +5,12 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SecureAccountOption extends StatelessWidget {
-
   const SecureAccountOption({
-    required this.title, required this.icon, required this.onTap, required this.isEnabled, super.key,
+    required this.title,
+    required this.icon,
+    required this.onTap,
+    required this.isEnabled,
+    super.key,
   });
   final String title;
   final Widget icon;

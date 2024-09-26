@@ -5,7 +5,8 @@ import 'package:ice/app/features/protect_account/components/secure_account_optio
 
 class AuthenticatorOptionsPage extends StatelessWidget {
   const AuthenticatorOptionsPage({
-    required this.onTap, super.key,
+    required this.onTap,
+    super.key,
   });
 
   final void Function(AutethenticatorType type) onTap;

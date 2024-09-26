@@ -10,7 +10,9 @@ import 'package:ice/app/router/app_routes.dart';
 
 class FeedSearchNavigation extends HookConsumerWidget {
   const FeedSearchNavigation({
-    required this.query, required this.loading, super.key,
+    required this.query,
+    required this.loading,
+    super.key,
   });
 
   final String query;
@@ -23,12 +25,15 @@ class FeedSearchNavigation extends HookConsumerWidget {
     final searchController = useTextEditingController();
     useOnInit(focusNode.requestFocus);
 
-    useOnInit(() {
-      // Sync query and text input value after setting a query from the history
-      if (searchController.text != query) {
-        searchController.text = query;
-      }
-    }, [query],);
+    useOnInit(
+      () {
+        // Sync query and text input value after setting a query from the history
+        if (searchController.text != query) {
+          searchController.text = query;
+        }
+      },
+      [query],
+    );
 
     return ScreenSideOffset.small(
       child: Row(

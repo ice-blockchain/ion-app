@@ -7,7 +7,6 @@ part 'auth_provider.freezed.dart';
 
 @Freezed(copyWith: true, equal: true)
 class AuthState with _$AuthState {
-
   const factory AuthState({
     required List<String> authenticatedUserIds,
     required String? currentUserId,

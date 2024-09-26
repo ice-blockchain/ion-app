@@ -9,7 +9,8 @@ import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
 class ImageCell extends ConsumerWidget {
   const ImageCell({
-    required this.mediaData, super.key,
+    required this.mediaData,
+    super.key,
   });
 
   final MediaData mediaData;

@@ -7,7 +7,9 @@ import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search
 
 class FeedSearchHistory extends StatelessWidget {
   const FeedSearchHistory({
-    required this.userIds, required this.queries, super.key,
+    required this.userIds,
+    required this.queries,
+    super.key,
   });
 
   final List<String> userIds;

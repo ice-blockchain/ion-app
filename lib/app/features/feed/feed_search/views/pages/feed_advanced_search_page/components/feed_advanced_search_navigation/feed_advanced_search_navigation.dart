@@ -12,7 +12,8 @@ import 'package:ice/generated/assets.gen.dart';
 
 class FeedAdvancedSearchNavigation extends HookConsumerWidget {
   const FeedAdvancedSearchNavigation({
-    required this.query, super.key,
+    required this.query,
+    super.key,
   });
 
   final String query;
@@ -21,9 +22,12 @@ class FeedAdvancedSearchNavigation extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final searchController = useTextEditingController();
 
-    useOnInit(() {
-      searchController.text = query;
-    }, [query],);
+    useOnInit(
+      () {
+        searchController.text = query;
+      },
+      [query],
+    );
 
     return ScreenSideOffset.small(
       child: Row(

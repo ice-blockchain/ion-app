@@ -88,8 +88,9 @@ class SendNftForm extends ConsumerWidget {
                         initialValue: formController.arrivalTime.toDouble(),
                         onChanged: (double value) {
                           ref
-                              .read(sendAssetFormControllerProvider(type: CryptoAssetType.nft)
-                                  .notifier,)
+                              .read(
+                                sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier,
+                              )
                               .updateArrivalTime(value.toInt());
                         },
                       ),

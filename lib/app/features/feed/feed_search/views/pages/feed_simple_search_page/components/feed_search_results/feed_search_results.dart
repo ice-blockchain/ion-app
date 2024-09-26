@@ -5,7 +5,8 @@ import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search
 
 class FeedSearchResults extends ConsumerWidget {
   const FeedSearchResults({
-    required this.userIds, super.key,
+    required this.userIds,
+    super.key,
   });
 
   static double get listVerticalOffset => 14.0.s;

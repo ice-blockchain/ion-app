@@ -3,7 +3,9 @@ import 'package:ice/app/extensions/extensions.dart';
 
 class SelectionBadge extends StatelessWidget {
   const SelectionBadge({
-    required this.isSelected, required this.selectionOrder, super.key,
+    required this.isSelected,
+    required this.selectionOrder,
+    super.key,
   });
 
   final bool isSelected;

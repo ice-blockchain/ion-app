@@ -20,8 +20,14 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
   String get key => textEditorSingleImageKey;
 
   @override
-  Widget build(BuildContext context, QuillController controller, Embed node, bool readOnly,
-      bool inline, TextStyle textStyle,) {
+  Widget build(
+    BuildContext context,
+    QuillController controller,
+    Embed node,
+    bool readOnly,
+    bool inline,
+    TextStyle textStyle,
+  ) {
     final imageUrl = node.value.data as String;
 
     return ClipRRect(

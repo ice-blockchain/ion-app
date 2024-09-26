@@ -17,6 +17,8 @@ void main() {
         ],
       );
 
+      container.read(selectedWalletIdNotifierProvider.notifier).selectedWalletId = '1';
+
       final currentWalletId = container.read(currentWalletIdProvider);
 
       expect(currentWalletId, equals('1'));
@@ -29,6 +31,9 @@ void main() {
           selectedWalletIdNotifierProvider.overrideWith(MockSelectedWalletIdNotifier.new),
         ],
       );
+
+      container.read(selectedWalletIdNotifierProvider.notifier).selectedWalletId =
+          'non_existing_id';
 
       final currentWalletId = container.read(currentWalletIdProvider);
 
@@ -64,6 +69,8 @@ void main() {
         ],
       );
 
+      container.read(walletsDataNotifierProvider.notifier).state = mockedWalletDataArray;
+
       final currentWalletData = container.read(currentWalletDataProvider);
 
       expect(currentWalletData.id, equals('1'));
@@ -78,6 +85,8 @@ void main() {
           currentWalletIdProvider.overrideWithValue('non_existing_id'),
         ],
       );
+
+      container.read(walletsDataNotifierProvider.notifier).state = mockedWalletDataArray;
 
       expect(() => container.read(currentWalletDataProvider), throwsStateError);
     });

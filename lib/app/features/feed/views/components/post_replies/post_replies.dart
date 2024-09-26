@@ -18,9 +18,12 @@ class PostReplies extends HookWidget {
 
     final expandReplies = useState(false);
 
-    final originalReplies = useMemoized<List<Widget>>(() {
-      return postIds.map((postId) => ReplyListItem(postId: postId)).toList();
-    }, [postIds],);
+    final originalReplies = useMemoized<List<Widget>>(
+      () {
+        return postIds.map((postId) => ReplyListItem(postId: postId)).toList();
+      },
+      [postIds],
+    );
 
     final replies = expandReplies.value ? originalReplies : originalReplies.take(1);
 

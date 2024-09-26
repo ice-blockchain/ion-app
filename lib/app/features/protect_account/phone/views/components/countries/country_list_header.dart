@@ -5,7 +5,10 @@ import 'package:ice/app/extensions/extensions.dart';
 
 class CountrySearchHeader extends StatelessWidget {
   const CountrySearchHeader({
-    required this.isLoading, required this.onTextChanged, required this.onCancelSearch, super.key,
+    required this.isLoading,
+    required this.onTextChanged,
+    required this.onCancelSearch,
+    super.key,
   });
 
   final bool isLoading;
