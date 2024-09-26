@@ -9,7 +9,7 @@ typedef FilteredNftsResult = ({List<NftData> nfts, bool isLoading});
 FilteredNftsResult useFilteredWalletNfts(WidgetRef ref) {
   final isZeroValueAssetsVisible = ref.watch(isZeroValueAssetsVisibleSelectorProvider);
 
-  final AsyncValue<List<NftData>> nftsState = ref.watch(filteredNftsProvider);
+  final nftsState = ref.watch(filteredNftsProvider);
 
   final walletNfts = nftsState.valueOrNull ?? <NftData>[];
   final isLoading = nftsState.isLoading;

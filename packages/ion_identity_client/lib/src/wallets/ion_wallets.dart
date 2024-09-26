@@ -3,7 +3,6 @@ import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/types/create_wallet_result.dart';
-import 'package:ion_identity_client/src/wallets/types/list_wallets_result.dart';
 
 /// A class that handles operations related to user wallets, such as listing the wallets
 /// associated with a specific user.

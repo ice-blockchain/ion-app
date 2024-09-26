@@ -7,15 +7,13 @@ typedef TabPressSteamData = ({TabItem current, TabItem pressed});
 
 class MainTabNavigationContainer extends InheritedWidget {
   const MainTabNavigationContainer({
-    super.key,
-    required super.child,
-    required this.tabPressStream,
+    required super.child, required this.tabPressStream, super.key,
   });
 
   final Stream<TabPressSteamData> tabPressStream;
 
   static MainTabNavigationContainer of(BuildContext context) {
-    final MainTabNavigationContainer? result =
+    final result =
         context.dependOnInheritedWidgetOfExactType<MainTabNavigationContainer>();
     assert(result != null, 'No MainTabNavigationContainer found in context');
     return result!;

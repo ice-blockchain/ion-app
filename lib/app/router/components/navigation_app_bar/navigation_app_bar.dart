@@ -77,7 +77,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
             textAlign: TextAlign.center,
             style: context.theme.appTextThemes.subtitle
                 .copyWith(color: context.theme.appColors.primaryText),
-            child: title!)
+            child: title!,)
         : null;
     final Widget appBarContent = NavigationToolbar(
       leading: leading ??

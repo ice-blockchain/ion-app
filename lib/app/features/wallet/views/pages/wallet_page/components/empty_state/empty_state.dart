@@ -19,7 +19,7 @@ class EmptyState extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final String searchValue = ref.watch(
+    final searchValue = ref.watch(
       walletSearchQueryControllerProvider(tabType.walletAssetType),
     );
     final searchVisibleProvider = walletSearchVisibilityProvider(tabType);

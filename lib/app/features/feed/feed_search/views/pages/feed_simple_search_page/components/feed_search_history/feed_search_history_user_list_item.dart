@@ -8,7 +8,7 @@ import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/utils/username.dart';
 
 class FeedSearchHistoryUserListItem extends ConsumerWidget {
-  const FeedSearchHistoryUserListItem({required this.userId});
+  const FeedSearchHistoryUserListItem({required this.userId, super.key});
 
   final String userId;
 
@@ -17,7 +17,7 @@ class FeedSearchHistoryUserListItem extends ConsumerWidget {
     final userData = ref.watch(userDataProvider(userId));
     return userData.maybeWhen(
       data: (data) => _UserListItem(user: data),
-      orElse: () => _UserListItemLoading(),
+      orElse: _UserListItemLoading.new,
     );
   }
 }
@@ -56,7 +56,7 @@ class _UserListItem extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

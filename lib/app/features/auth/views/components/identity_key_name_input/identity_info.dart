@@ -38,7 +38,7 @@ class IdentityInfo extends StatelessWidget {
                   children: [
                     TextSpan(text: context.i18n.identity_key_name_usage),
                     WidgetSpan(child: SizedBox(width: 6.0.s)),
-                    WidgetSpan(
+                    const WidgetSpan(
                       alignment: PlaceholderAlignment.middle,
                       child: IdentityLink(),
                     ),

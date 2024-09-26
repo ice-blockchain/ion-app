@@ -9,7 +9,7 @@ typedef FilteredCoinsResult = ({List<CoinData> coins, bool isLoading});
 FilteredCoinsResult useFilteredWalletCoins(WidgetRef ref) {
   final isZeroValueAssetsVisible = ref.watch(isZeroValueAssetsVisibleSelectorProvider);
 
-  final AsyncValue<List<CoinData>> coinsState = ref.watch(filteredCoinsProvider);
+  final coinsState = ref.watch(filteredCoinsProvider);
 
   final walletCoins = coinsState.valueOrNull ?? <CoinData>[];
   final isLoading = coinsState.isLoading;

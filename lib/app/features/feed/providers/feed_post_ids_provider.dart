@@ -23,7 +23,7 @@ class FeedPostIds extends _$FeedPostIds {
 
     final posts = events.map(PostData.fromEventMessage).toList();
 
-    state = [...state, ...posts.map((post) => post.id).toList()];
+    state = [...state, ...posts.map((post) => post.id)];
 
     ref.read(postsStorageProvider.notifier).store(posts: posts);
   }

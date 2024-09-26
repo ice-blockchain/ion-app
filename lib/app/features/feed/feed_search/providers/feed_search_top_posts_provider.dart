@@ -15,7 +15,7 @@ Future<List<String>?> feedSearchTopPosts(
     return null;
   }
   await ref.debounce();
-  await Future<void>.delayed(Duration(milliseconds: 500));
+  await Future<void>.delayed(const Duration(milliseconds: 500));
 
   final posts = List.generate(Random().nextInt(5) + 1, (_) => generateFakePost());
   ref.read(postsStorageProvider.notifier).store(posts: posts);

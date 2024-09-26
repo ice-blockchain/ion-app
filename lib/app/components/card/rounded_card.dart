@@ -2,19 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
 class RoundedCard extends StatelessWidget {
-  const RoundedCard._({
-    required this.child,
-    this.padding,
-    this.borderColor,
-    this.backgroundColor,
-    required this.isOutlined,
-  });
-
-  final Widget child;
-  final EdgeInsets? padding;
-  final Color? borderColor;
-  final Color? backgroundColor;
-  final bool isOutlined;
 
   factory RoundedCard.filled({
     required Widget child,
@@ -22,10 +9,10 @@ class RoundedCard extends StatelessWidget {
     Color? backgroundColor,
   }) {
     return RoundedCard._(
-      child: child,
       padding: padding,
       backgroundColor: backgroundColor,
       isOutlined: false,
+      child: child,
     );
   }
 
@@ -36,13 +23,25 @@ class RoundedCard extends StatelessWidget {
     Color? backgroundColor,
   }) {
     return RoundedCard._(
-      child: child,
       padding: padding ?? EdgeInsets.zero,
       borderColor: borderColor,
       backgroundColor: backgroundColor,
       isOutlined: true,
+      child: child,
     );
   }
+  const RoundedCard._({
+    required this.child,
+    required this.isOutlined, this.padding,
+    this.borderColor,
+    this.backgroundColor,
+  });
+
+  final Widget child;
+  final EdgeInsets? padding;
+  final Color? borderColor;
+  final Color? backgroundColor;
+  final bool isOutlined;
 
   @override
   Widget build(BuildContext context) {

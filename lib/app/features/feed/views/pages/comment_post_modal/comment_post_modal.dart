@@ -30,7 +30,7 @@ class CommentPostModal extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final post = ref.watch(postByIdSelectorProvider(postId: postId));
 
-    if (post == null) return SizedBox.shrink();
+    if (post == null) return const SizedBox.shrink();
 
     return SheetContent(
       bottomPadding: 0,
@@ -62,7 +62,7 @@ class CommentPostModal extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(16.0.s),
                         ),
                         child: Post(
-                          header: PostHeader(),
+                          header: const PostHeader(),
                           footer: const SizedBox.shrink(),
                           postData: post,
                         ),
@@ -73,7 +73,7 @@ class CommentPostModal extends ConsumerWidget {
               ),
             ),
           ),
-          HorizontalSeparator(),
+          const HorizontalSeparator(),
           ScreenSideOffset.small(
             child: ActionsToolbar(
               actions: [

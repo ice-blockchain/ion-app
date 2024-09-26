@@ -11,8 +11,7 @@ import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_cont
 
 class FeedFiltersMenuOverlay extends StatelessWidget {
   const FeedFiltersMenuOverlay({
-    super.key,
-    required this.closeMenu,
+    required this.closeMenu, super.key,
   });
 
   final VoidCallback closeMenu;
@@ -32,9 +31,9 @@ class FeedFiltersMenuOverlay extends StatelessWidget {
                   category: category,
                   closeMenu: closeMenu,
                 ),
-            ].intersperse(SizedBox(height: 10.0.s)).toList(),
+            ].intersperse(SizedBox(height: 10.0.s)),
             SizedBox(height: 10.0.s),
-            HorizontalSeparator(),
+            const HorizontalSeparator(),
             SizedBox(height: 10.0.s),
             ...<Widget>[
               for (final filter in FeedFilter.values)
@@ -42,7 +41,7 @@ class FeedFiltersMenuOverlay extends StatelessWidget {
                   filter: filter,
                   closeMenu: closeMenu,
                 ),
-            ].intersperse(SizedBox(height: 10.0.s)).toList(),
+            ].intersperse(SizedBox(height: 10.0.s)),
             SizedBox(height: 16.0.s),
           ],
         ),

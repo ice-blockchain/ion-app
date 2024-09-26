@@ -10,11 +10,12 @@ class SecurityAccountController extends _$SecurityAccountController {
     return const SecurityMethods();
   }
 
-  void toggleBackup(bool value) => state = state.copyWith(isBackupEnabled: value);
+  void toggleBackup({required bool value}) => state = state.copyWith(isBackupEnabled: value);
 
-  void toggleEmail(bool value) => state = state.copyWith(isEmailEnabled: value);
+  void toggleEmail({required bool value}) => state = state.copyWith(isEmailEnabled: value);
 
-  void toggleAuthenticator(bool value) => state = state.copyWith(isAuthenticatorEnabled: value);
+  void toggleAuthenticator({required bool value}) =>
+      state = state.copyWith(isAuthenticatorEnabled: value);
 
-  void togglePhone(bool value) => state = state.copyWith(isPhoneEnabled: value);
+  void togglePhone({required bool value}) => state = state.copyWith(isPhoneEnabled: value);
 }

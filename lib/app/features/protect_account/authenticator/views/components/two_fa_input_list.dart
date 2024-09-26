@@ -5,12 +5,11 @@ import 'package:ice/app/features/auth/data/models/twofa_type.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
 
 class TwoFaCodeInputList extends HookWidget {
-  final List<TwoFaType> twoFaTypes;
 
   const TwoFaCodeInputList({
-    super.key,
-    required this.twoFaTypes,
+    required this.twoFaTypes, super.key,
   });
+  final List<TwoFaType> twoFaTypes;
 
   @override
   Widget build(BuildContext context) {

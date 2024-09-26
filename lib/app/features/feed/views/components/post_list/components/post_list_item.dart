@@ -9,7 +9,7 @@ import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/app_routes.dart';
 
 class PostListItem extends HookConsumerWidget {
-  const PostListItem({required this.postId});
+  const PostListItem({required this.postId, super.key});
 
   final String postId;
 
@@ -22,7 +22,7 @@ class PostListItem extends HookConsumerWidget {
       ref.read(postReplyIdsProvider.notifier).fetchReplies(postId: postId);
     });
 
-    if (post == null) return SizedBox.shrink();
+    if (post == null) return const SizedBox.shrink();
 
     return GestureDetector(
       onTap: () => PostDetailsRoute(postId: postId).push<void>(context),
@@ -31,7 +31,7 @@ class PostListItem extends HookConsumerWidget {
         footer: Column(
           children: [
             PostFooter(postData: post),
-            if (replyIds.length > 0) PostReplies(postIds: replyIds),
+            if (replyIds.isNotEmpty) PostReplies(postIds: replyIds),
           ],
         ),
       ),

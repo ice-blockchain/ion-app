@@ -30,7 +30,7 @@ class FeedPage extends HookConsumerWidget {
 
     final appBarSliver = CollapsingAppBar(
       height: FeedControls.height,
-      child: FeedControls(),
+      child: const FeedControls(),
     );
 
     final slivers = [
@@ -38,7 +38,7 @@ class FeedPage extends HookConsumerWidget {
         child: Column(
           children: [
             if (feedCategory == FeedCategory.articles) ...[
-              ArticleCategoriesMenu(),
+              const ArticleCategoriesMenu(),
               FeedListSeparator(),
             ],
             if (feedCategory != FeedCategory.articles) ...[
@@ -60,7 +60,7 @@ class FeedPage extends HookConsumerWidget {
         body: LoadMoreBuilder(
           slivers: slivers,
           hasMore: true,
-          onLoadMore: () => _onLoadMore(),
+          onLoadMore: _onLoadMore,
           builder: (context, slivers) {
             return PullToRefreshBuilder(
               sliverAppBar: appBarSliver,
@@ -89,6 +89,6 @@ class FeedPage extends HookConsumerWidget {
   }
 
   Future<void> _onLoadMore() async {
-    await Future<void>.delayed(Duration(seconds: 3));
+    await Future<void>.delayed(const Duration(seconds: 3));
   }
 }

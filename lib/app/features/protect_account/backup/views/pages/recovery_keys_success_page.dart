@@ -29,7 +29,7 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
         actions: [
           NavigationCloseButton(
             onPressed: () => WalletRoute().go(context),
-          )
+          ),
         ],
         title: locale.backup_option_with_recovery_keys_title,
         icon: Assets.svg.iconLoginRestorekey.icon(size: 36.0.s),

@@ -13,7 +13,7 @@ class Featured extends IceComponent {
     return Column(
       children: [
         SectionHeader(title: context.i18n.dapps_section_title_featured),
-        FeaturedCollection(),
+        const FeaturedCollection(),
       ],
     );
   }

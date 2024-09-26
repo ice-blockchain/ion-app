@@ -79,7 +79,7 @@ class ProfileDetails extends ConsumerWidget {
                 ),
               ],
             )
-          : SizedBox.shrink(),
+          : const SizedBox.shrink(),
     );
   }
 }

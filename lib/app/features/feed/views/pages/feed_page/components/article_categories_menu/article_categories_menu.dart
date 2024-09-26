@@ -5,10 +5,12 @@ import 'package:ice/app/features/feed/data/models/article_category.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_row.dart';
 
 class ArticleCategoriesMenu extends HookWidget {
+  const ArticleCategoriesMenu({super.key});
+
   @override
   Widget build(BuildContext context) {
     final selectedItems = useState<Set<String>>({});
-    final List<ArticleCategory> items = mockedArticleCategories;
+    final items = mockedArticleCategories;
 
     final firstRowItemCount = (items.length / 2).ceil();
     final firstRowItems = items.sublist(0, firstRowItemCount);
@@ -20,7 +22,7 @@ class ArticleCategoriesMenu extends HookWidget {
       newSelected.contains(id) ? newSelected.remove(id) : newSelected.add(id);
 
       selectedItems.value = newSelected;
-    }, [selectedItems.value]);
+    }, [selectedItems.value],);
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,

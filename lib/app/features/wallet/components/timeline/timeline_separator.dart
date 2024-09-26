@@ -3,9 +3,9 @@ import 'package:ice/app/extensions/extensions.dart';
 
 class TimelineSeparator extends StatelessWidget {
   const TimelineSeparator({
-    Key? key,
+    super.key,
     this.color = Colors.transparent,
-  }) : super(key: key);
+  });
 
   final Color color;
 

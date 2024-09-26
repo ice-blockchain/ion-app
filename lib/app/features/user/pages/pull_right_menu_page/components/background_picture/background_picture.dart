@@ -19,7 +19,7 @@ class BackgroundPicture extends ConsumerWidget {
     final imageHeight = imageWidth / aspectRatio;
 
     if (banner == null) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     return ClipRRect(

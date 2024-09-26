@@ -8,7 +8,7 @@ QuillController useQuillController() {
     return () {
       textEditorController.value.dispose();
     };
-  }, []);
+  }, [],);
 
   return textEditorController.value;
 }

@@ -21,8 +21,7 @@ import 'package:ice/generated/assets.gen.dart';
 
 class TwoFaCodesPage extends HookWidget {
   const TwoFaCodesPage({
-    super.key,
-    required this.twoFaTypes,
+    required this.twoFaTypes, super.key,
   });
 
   final Set<TwoFaType> twoFaTypes;
@@ -57,7 +56,7 @@ class TwoFaCodesPage extends HookWidget {
                             twoFaType: twoFaType,
                           ),
                         );
-                      }).toList(),
+                      }),
                       Button(
                         onPressed: () {
                           if (formKey.value.currentState!.validate()) {
@@ -70,7 +69,7 @@ class TwoFaCodesPage extends HookWidget {
                                   child: const TwoFaTryAgainPage(),
                                 );
                               }
-                            });
+                            },);
                           }
                         },
                         label: Text(context.i18n.button_confirm),
@@ -80,7 +79,7 @@ class TwoFaCodesPage extends HookWidget {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
           ScreenBottomOffset(

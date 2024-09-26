@@ -31,7 +31,6 @@ class SendToRecipient extends StatelessWidget {
             ),
             SizedBox(height: 12.0.s),
             Align(
-              alignment: Alignment.center,
               child: Text(
                 address,
                 style: context.theme.appTextThemes.caption3.copyWith(),
@@ -44,7 +43,6 @@ class SendToRecipient extends StatelessWidget {
       return ListItem.textWithIcon(
         title: Text(locale.wallet_send_to),
         secondary: Align(
-          alignment: Alignment.center,
           child: Text(
             address,
             textAlign: TextAlign.center,

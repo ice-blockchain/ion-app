@@ -71,9 +71,10 @@ class TwoFaOptionSelector extends HookWidget {
               for (final TwoFaType option in availableOptions)
                 MenuItemButton(
                   onPressed: () {
-                    state.didChange(option);
-                    state.save();
-                    state.validate();
+                    state
+                      ..didChange(option)
+                      ..save()
+                      ..validate();
                     isOpened.value = false;
                   },
                   leadingIcon: ButtonIconFrame(

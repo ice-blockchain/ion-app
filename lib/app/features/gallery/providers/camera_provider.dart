@@ -33,12 +33,12 @@ Future<Raw<CameraController?>> cameraController(CameraControllerRef ref) async {
   try {
     await cameraController.initialize();
 
-    ref.onDispose(() => cameraController.dispose());
+    ref.onDispose(cameraController.dispose);
 
     cameraController.addListener(() => ref.notifyListeners());
   } catch (e) {
     Logger.log('Camera initialization error: $e');
-    cameraController.dispose();
+    await cameraController.dispose();
   }
 
   return cameraController;

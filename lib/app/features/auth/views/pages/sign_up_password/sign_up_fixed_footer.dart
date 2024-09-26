@@ -24,7 +24,7 @@ class SignUpFixedFooter extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          HorizontalSeparator(),
+          const HorizontalSeparator(),
           ScreenBottomOffset(
             margin: 0,
             child: Container(

@@ -8,7 +8,7 @@ import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class FeedSearchHistoryHeader extends ConsumerWidget {
-  const FeedSearchHistoryHeader();
+  const FeedSearchHistoryHeader({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,18 +28,18 @@ class FeedSearchHistoryHeader extends ConsumerWidget {
           onTap: () async {
             final confirmed = await showSimpleBottomSheet<bool>(
                   context: context,
-                  child: FeedSearchHistoryClearConfirm(),
+                  child: const FeedSearchHistoryClearConfirm(),
                 ) ??
                 false;
             if (confirmed) {
-              ref.read(feedSearchHistoryProvider.notifier).clear();
+              await ref.read(feedSearchHistoryProvider.notifier).clear();
             }
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
             child: Assets.svg.iconSheetClose.icon(size: 20.0.s),
           ),
-        )
+        ),
       ],
     );
   }

@@ -6,14 +6,14 @@ bool useTextEditorHasContent(QuillController textEditorController) {
 
   final textEditorListener = useCallback(() {
     document.value = !textEditorController.document.isEmpty();
-  }, []);
+  }, [],);
 
   useEffect(() {
     textEditorController.addListener(textEditorListener);
     return () {
       textEditorController.removeListener(textEditorListener);
     };
-  }, []);
+  }, [],);
 
   return document.value;
 }

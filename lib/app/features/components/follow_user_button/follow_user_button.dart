@@ -7,8 +7,7 @@ import 'package:ice/app/features/user/providers/user_following_provider.dart';
 
 class FollowUserButton extends ConsumerWidget {
   const FollowUserButton({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
   });
 
   final String userId;

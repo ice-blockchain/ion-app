@@ -24,9 +24,7 @@ class ProfileDetailsCell extends StatelessWidget {
             color: context.theme.appColors.tertararyText,
           ),
         ),
-        value == null
-            ? IceLoadingIndicator(type: IndicatorType.dark)
-            : Text(
+        if (value == null) const IceLoadingIndicator(type: IndicatorType.dark) else Text(
                 value.toString(),
                 style: context.theme.appTextThemes.title.copyWith(
                   color: context.theme.appColors.primaryText,

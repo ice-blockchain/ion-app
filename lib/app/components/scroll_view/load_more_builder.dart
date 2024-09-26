@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class LoadMoreBuilder extends HookWidget {
-  const LoadMoreBuilder({
-    required this.builder,
-    required this.slivers,
-    required this.onLoadMore,
-    required this.hasMore,
+  const LoadMoreBuilder({required this.builder, required this.slivers, required this.onLoadMore, required this.hasMore, super.key,
     this.loadMoreOffset = 300,
   });
 
@@ -40,7 +36,7 @@ class LoadMoreBuilder extends HookWidget {
         loading.value
             ? [
                 ...slivers,
-                SliverToBoxAdapter(child: Center(child: CircularProgressIndicator.adaptive()))
+                const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator.adaptive())),
               ]
             : slivers,
       ),

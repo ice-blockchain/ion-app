@@ -63,7 +63,9 @@ class RequestContactAccessModal extends ConsumerWidget {
                     .read(permissionsProvider.notifier)
                     .requestPermission(PermissionType.Contacts)
                     .then((_) {
-                  Navigator.of(context).pop();
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
                 });
               },
             ),

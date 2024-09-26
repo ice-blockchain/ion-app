@@ -15,17 +15,17 @@ class NavigationCloseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
+      onPressed: onPressed ??
+          () {
+            final state = GoRouterState.of(context);
+            context.go(state.currentTab.baseRouteLocation);
+          },
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Assets.svg.iconSheetClose.icon(
           color: context.theme.appColors.tertararyText,
         ),
       ),
-      onPressed: onPressed ??
-          () {
-            final state = GoRouterState.of(context);
-            context.go(state.currentTab.baseRouteLocation);
-          },
     );
   }
 }

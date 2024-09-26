@@ -6,8 +6,7 @@ import 'package:ice/generated/assets.gen.dart';
 
 class WarningCard extends StatelessWidget {
   const WarningCard({
-    super.key,
-    required this.text,
+    required this.text, super.key,
   });
 
   final String text;

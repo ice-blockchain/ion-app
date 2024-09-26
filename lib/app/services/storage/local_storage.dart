@@ -18,9 +18,9 @@ LocalStorage localStorage(LocalStorageRef ref) {
 }
 
 class LocalStorage {
-  final SharedPreferences _prefs;
 
   const LocalStorage(this._prefs);
+  final SharedPreferences _prefs;
 
   Future<bool> setBool({required String key, required bool value}) {
     return _prefs.setBool(key, value);

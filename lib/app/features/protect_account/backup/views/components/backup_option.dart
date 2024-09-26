@@ -5,11 +5,7 @@ import 'package:ice/generated/assets.gen.dart';
 
 class BackupOption extends StatelessWidget {
   const BackupOption({
-    super.key,
-    required this.title,
-    required this.icon,
-    required this.onTap,
-    required this.subtitle,
+    required this.title, required this.icon, required this.onTap, required this.subtitle, super.key,
     this.isOptionEnabled = false,
     this.trailing,
   });

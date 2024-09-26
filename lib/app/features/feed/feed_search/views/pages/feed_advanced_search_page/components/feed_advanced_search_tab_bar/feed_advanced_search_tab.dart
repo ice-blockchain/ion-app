@@ -3,7 +3,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/feed_search/model/feed_advanced_search_category.dart';
 
 class FeedAdvancedSearchTab extends StatelessWidget {
-  const FeedAdvancedSearchTab({required this.category});
+  const FeedAdvancedSearchTab({required this.category, super.key});
 
   final FeedAdvancedSearchCategory category;
 
@@ -20,7 +20,7 @@ class FeedAdvancedSearchTab extends StatelessWidget {
           Text(
             category.label(context),
             style: context.theme.appTextThemes.subtitle3.copyWith(color: color),
-          )
+          ),
         ],
       ),
     );

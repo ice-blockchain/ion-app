@@ -5,11 +5,10 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ice/app/features/protect_account/email/data/model/email_steps.dart';
+import 'package:ice/app/features/protect_account/email/views/pages/setup_email/step_pages.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
-
-import 'step_pages.dart';
 
 class EmailSetupPage extends StatelessWidget {
   const EmailSetupPage(this.step, this.email, {super.key});
@@ -47,9 +46,9 @@ class EmailSetupPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: switch (step) {
-                    EmailSetupSteps.input => EmailSetupInputPage(),
+                    EmailSetupSteps.input => const EmailSetupInputPage(),
                     EmailSetupSteps.confirmation => EmailSetupConfirmPage(email: email!),
-                    EmailSetupSteps.success => EmailSetupSuccessPage(),
+                    EmailSetupSteps.success => const EmailSetupSuccessPage(),
                   },
                 ),
                 ScreenBottomOffset(margin: 36.0.s),

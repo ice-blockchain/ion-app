@@ -12,7 +12,7 @@ Future<UserData> userData(UserDataRef ref, String userId) async {
   await Future<void>.delayed(Duration(milliseconds: Random().nextInt(500) + 300));
   final user = mockedUserData[userId];
   if (user == null) {
-    throw Exception('User with id=${userId} not found');
+    throw Exception('User with id=$userId not found');
   }
   return user;
 }

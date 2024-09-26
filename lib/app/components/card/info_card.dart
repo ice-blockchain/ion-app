@@ -3,10 +3,7 @@ import 'package:ice/app/extensions/extensions.dart';
 
 class InfoCard extends StatelessWidget {
   const InfoCard({
-    super.key,
-    required this.iconAsset,
-    required this.title,
-    required this.description,
+    required this.iconAsset, required this.title, required this.description, super.key,
   });
 
   final String iconAsset;

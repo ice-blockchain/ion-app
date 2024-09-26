@@ -20,7 +20,7 @@ class CameraCell extends ConsumerWidget {
         final isInitialized = controller?.value.isInitialized ?? false;
 
         return GestureDetector(
-          onTap: () async => await ref.read(galleryNotifierProvider.notifier).captureImage(),
+          onTap: () async => ref.read(galleryNotifierProvider.notifier).captureImage(),
           child: SizedBox(
             width: cellWidth,
             height: cellHeight,

@@ -13,7 +13,7 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class TransactionResultSheet extends ConsumerWidget {
-  const TransactionResultSheet({super.key, required this.type});
+  const TransactionResultSheet({required this.type, super.key});
 
   final CryptoAssetType type;
 
@@ -27,7 +27,7 @@ class TransactionResultSheet extends ConsumerWidget {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
-    final icons = Assets.svg;
+    const icons = Assets.svg;
 
     return SheetContent(
       body: ScreenSideOffset.small(

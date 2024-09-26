@@ -26,7 +26,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
     return () {
       timer?.cancel();
     };
-  }, []);
+  }, [],);
 
   return (countdown: countdown, startCountdown: startCountdown);
 }

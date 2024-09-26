@@ -115,7 +115,7 @@ class AuthenticatorSetupRoute extends BaseRouteData {
 class AuthenticatorInitialDeleteRoute extends BaseRouteData {
   AuthenticatorInitialDeleteRoute()
       : super(
-          child: AuthenticatorInitialDeletePage(),
+          child: const AuthenticatorInitialDeletePage(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -133,7 +133,7 @@ class AuthenticatorDeleteRoute extends BaseRouteData {
 class AuthenticatorDeleteSuccessRoute extends BaseRouteData {
   AuthenticatorDeleteSuccessRoute()
       : super(
-          child: AuthenticatorDeleteSuccessPage(),
+          child: const AuthenticatorDeleteSuccessPage(),
           type: IceRouteType.bottomSheet,
         );
 }

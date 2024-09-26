@@ -48,11 +48,11 @@ class IdentityKeyNameInput extends HookWidget {
                         child: const IdentityInfo(),
                         useRootNavigator: false,
                       );
-                    });
+                    },);
                   },
                 ),
               ),
-            ]),
+            ],),
       labelText: context.i18n.common_identity_key_name,
       controller: controller,
       validator: (String? value) {

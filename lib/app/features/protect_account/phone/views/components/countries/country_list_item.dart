@@ -5,9 +5,7 @@ import 'package:ice/app/extensions/extensions.dart';
 
 class CountryListItem extends StatelessWidget {
   const CountryListItem({
-    super.key,
-    required this.country,
-    required this.onTap,
+    required this.country, required this.onTap, super.key,
   });
 
   final Country country;

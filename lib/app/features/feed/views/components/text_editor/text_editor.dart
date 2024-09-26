@@ -4,9 +4,9 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block.dart';
 
 class TextEditor extends StatelessWidget {
+  const TextEditor(this.controller, {super.key, this.placeholder});
   final QuillController controller;
   final String? placeholder;
-  const TextEditor(this.controller, {super.key, this.placeholder});
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +34,9 @@ class TextEditor extends StatelessWidget {
         context.theme.appTextThemes.body2.copyWith(
           color: context.theme.appColors.primaryText,
         ),
-        HorizontalSpacing(0, 0),
-        VerticalSpacing(0, 0),
-        VerticalSpacing(0, 0),
+        HorizontalSpacing.zero,
+        VerticalSpacing.zero,
+        VerticalSpacing.zero,
         null,
       ),
       bold: context.theme.appTextThemes.body2.copyWith(
@@ -51,9 +51,9 @@ class TextEditor extends StatelessWidget {
         context.theme.appTextThemes.body2.copyWith(
           color: context.theme.appColors.quaternaryText,
         ),
-        HorizontalSpacing(0, 0),
-        VerticalSpacing(0, 0),
-        VerticalSpacing(0, 0),
+        HorizontalSpacing.zero,
+        VerticalSpacing.zero,
+        VerticalSpacing.zero,
         null,
       ),
     );

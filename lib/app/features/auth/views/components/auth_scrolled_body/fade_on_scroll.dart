@@ -3,13 +3,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 class FadeOnScroll extends HookWidget {
   const FadeOnScroll({
-    super.key,
-    required this.child,
-    required this.positionNotifier,
+    required this.child, required this.positionNotifier, super.key,
     this.zeroOpacityOffset = 0,
     this.fullOpacityOffset = 100,
   }) : assert(zeroOpacityOffset >= 0 && fullOpacityOffset >= 0,
-            'Both zeroOpacityOffset and fullOpacityOffset must be positive');
+            'Both zeroOpacityOffset and fullOpacityOffset must be positive',);
 
   final Widget child;
 
@@ -35,7 +33,7 @@ class FadeOnScroll extends HookWidget {
       void setOpacity() => opacity.value = _calculateOpacity(positionNotifier.value);
       positionNotifier.addListener(setOpacity);
       return () => positionNotifier.removeListener(setOpacity);
-    }, []);
+    }, [],);
 
     return Opacity(
       opacity: opacity.value,

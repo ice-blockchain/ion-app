@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/router/components/sheet_content/main_modal_content.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ice/app/router/components/sheet_content/main_modal_content.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum IceRouteType {
   single,
@@ -41,7 +41,7 @@ class FadeTransitionSheetPage extends ScrollableNavigationSheetPage<void> {
     required GoRouterState state,
   }) : super(
           key: state.pageKey,
-          physics: ClampingSheetPhysics(),
+          physics: const ClampingSheetPhysics(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             final fadeInTween = TweenSequence<double>([
               TweenSequenceItem(tween: ConstantTween(0), weight: 1),

@@ -11,7 +11,7 @@ class ShimmerLoadingCell extends StatelessWidget {
       child: SizedBox(
         width: 122.0.s,
         height: 120.0.s,
-        child: DecoratedBox(
+        child: const DecoratedBox(
           decoration: BoxDecoration(
             color: Colors.grey,
           ),

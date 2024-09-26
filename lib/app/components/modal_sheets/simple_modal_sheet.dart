@@ -9,26 +9,6 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 enum OffsetType { large, small }
 
 class SimpleModalSheet extends StatelessWidget {
-  const SimpleModalSheet._({
-    required this.title,
-    required this.description,
-    required this.iconAsset,
-    this.buttonText,
-    this.onPressed,
-    this.button,
-    required this.offsetType,
-  }) : assert(
-          (button != null) || (buttonText != null && onPressed != null),
-          'Either button or both buttonText and onPressed must be provided',
-        );
-
-  final String title;
-  final String description;
-  final String iconAsset;
-  final String? buttonText;
-  final VoidCallback? onPressed;
-  final Widget? button;
-  final OffsetType offsetType;
 
   factory SimpleModalSheet.info({
     required String title,
@@ -67,6 +47,25 @@ class SimpleModalSheet extends StatelessWidget {
       offsetType: OffsetType.small,
     );
   }
+  const SimpleModalSheet._({
+    required this.title,
+    required this.description,
+    required this.iconAsset,
+    required this.offsetType, this.buttonText,
+    this.onPressed,
+    this.button,
+  }) : assert(
+          (button != null) || (buttonText != null && onPressed != null),
+          'Either button or both buttonText and onPressed must be provided',
+        );
+
+  final String title;
+  final String description;
+  final String iconAsset;
+  final String? buttonText;
+  final VoidCallback? onPressed;
+  final Widget? button;
+  final OffsetType offsetType;
 
   @override
   Widget build(BuildContext context) {

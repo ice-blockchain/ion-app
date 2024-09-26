@@ -6,10 +6,7 @@ import 'package:ice/generated/assets.gen.dart';
 
 class ShareUserList extends StatelessWidget {
   const ShareUserList({
-    super.key,
-    required this.users,
-    required this.selectedUserIds,
-    required this.onUserPressed,
+    required this.users, required this.selectedUserIds, required this.onUserPressed, super.key,
   });
 
   final List<int> users;

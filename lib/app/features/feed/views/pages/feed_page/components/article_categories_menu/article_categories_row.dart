@@ -5,18 +5,15 @@ import 'package:ice/app/features/feed/data/models/article_category.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class ArticleCategoriesRow extends StatelessWidget {
+
+  const ArticleCategoriesRow({
+    required this.items, required this.selectedItems, required this.onToggle, super.key,
+    this.showAddButton = false,
+  });
   final List<ArticleCategory> items;
   final Set<String> selectedItems;
   final ValueChanged<String> onToggle;
   final bool showAddButton;
-
-  const ArticleCategoriesRow({
-    super.key,
-    required this.items,
-    required this.selectedItems,
-    required this.onToggle,
-    this.showAddButton = false,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,15 +54,15 @@ class ArticleCategoriesRow extends StatelessWidget {
 }
 
 class _CategoryButton extends StatelessWidget {
-  final ArticleCategory category;
-  final bool isSelected;
-  final ValueChanged<String> onToggle;
 
   const _CategoryButton({
     required this.category,
     required this.isSelected,
     required this.onToggle,
   });
+  final ArticleCategory category;
+  final bool isSelected;
+  final ValueChanged<String> onToggle;
 
   @override
   Widget build(BuildContext context) {

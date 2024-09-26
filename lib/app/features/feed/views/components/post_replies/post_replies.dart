@@ -6,7 +6,7 @@ import 'package:ice/app/features/feed/views/components/post_replies/expand_repli
 import 'package:ice/app/features/feed/views/components/post_replies/reply_list_item.dart';
 
 class PostReplies extends HookWidget {
-  const PostReplies({super.key, required this.postIds});
+  const PostReplies({required this.postIds, super.key});
 
   final List<String> postIds;
 
@@ -20,7 +20,7 @@ class PostReplies extends HookWidget {
 
     final originalReplies = useMemoized<List<Widget>>(() {
       return postIds.map((postId) => ReplyListItem(postId: postId)).toList();
-    }, [postIds]);
+    }, [postIds],);
 
     final replies = expandReplies.value ? originalReplies : originalReplies.take(1);
 
@@ -51,7 +51,7 @@ class PostReplies extends HookWidget {
             padding: EdgeInsets.only(top: 10.0.s),
             child: ExpandRepliesButton(isExpanded: expandReplies),
           ),
-        SizedBox(height: 10.0.s)
+        SizedBox(height: 10.0.s),
       ],
     );
   }

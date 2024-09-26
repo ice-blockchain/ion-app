@@ -5,8 +5,7 @@ import 'package:ice/app/features/gallery/views/components/components.dart';
 
 class GalleryGridview extends StatelessWidget {
   const GalleryGridview({
-    super.key,
-    required this.galleryState,
+    required this.galleryState, super.key,
   });
 
   static const _offsetBetweenItems = 4.0;

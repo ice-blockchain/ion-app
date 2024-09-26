@@ -16,8 +16,8 @@ class FeedSearchHistoryState with _$FeedSearchHistoryState {
 
 @riverpod
 class FeedSearchHistory extends _$FeedSearchHistory {
-  static String _userIdsStoreKey = 'FeedSearchHistory:userIds';
-  static String _queriesStoreKey = 'FeedSearchHistory:queries';
+  static const String _userIdsStoreKey = 'FeedSearchHistory:userIds';
+  static const String _queriesStoreKey = 'FeedSearchHistory:queries';
 
   @override
   FeedSearchHistoryState build() {
@@ -63,6 +63,6 @@ class FeedSearchHistory extends _$FeedSearchHistory {
       userPreferencesService.remove(_userIdsStoreKey),
       userPreferencesService.remove(_queriesStoreKey),
     ]);
-    state = FeedSearchHistoryState(queries: [], userIds: []);
+    state = const FeedSearchHistoryState(queries: [], userIds: []);
   }
 }

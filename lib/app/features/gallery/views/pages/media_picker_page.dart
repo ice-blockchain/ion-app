@@ -27,7 +27,6 @@ class MediaPickerPage extends ConsumerWidget {
             context.i18n.gallery_add_photo_title,
             style: context.theme.appTextThemes.subtitle,
           ),
-          showBackButton: true,
           actions: [
             AddImagesButton(
               onPressed: () => context.pop(selectedMedia),
@@ -40,7 +39,7 @@ class MediaPickerPage extends ConsumerWidget {
       ),
       GalleryGridview(
         galleryState: galleryState.valueOrNull ??
-            GalleryState(
+            const GalleryState(
               mediaData: [],
               currentPage: 0,
               hasMore: true,

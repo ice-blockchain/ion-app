@@ -6,8 +6,8 @@ import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_tex
 import 'package:ice/generated/assets.gen.dart';
 
 class TextEditorItalicButton extends HookWidget {
+  const TextEditorItalicButton({required this.textEditorController, super.key});
   final QuillController textEditorController;
-  const TextEditorItalicButton({super.key, required this.textEditorController});
 
   @override
   Widget build(BuildContext context) {

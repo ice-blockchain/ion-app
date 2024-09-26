@@ -7,21 +7,29 @@ import 'package:ice/app/router/main_tabs/components/main_tab_navigation_containe
 void useScrollTopOnTabPress(BuildContext context, {required ScrollController scrollController}) {
   final tabPressStream = MainTabNavigationContainer.of(context).tabPressStream;
 
-  useEffect(() {
-    final listener = tabPressStream.listen((tabPressData) {
-      // taking the GoRouterState here instead of out of listener,
-      // because otherwise it is considered the same even if the screen is changed
-      final routerState = GoRouterState.of(context);
-      if (
-          // if we pressed the same tab we're currently on
-          tabPressData.current == tabPressData.pressed &&
-              // if we pressed the tab that our page belongs to
-              tabPressData.pressed == routerState.currentTab &&
-              // if we're on the root tab page
-              routerState.topRoute?.path == routerState.fullPath) {
-        scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.easeOut);
-      }
-    });
-    return () => listener.cancel();
-  }, [tabPressStream]);
+  useEffect(
+    () {
+      final listener = tabPressStream.listen((tabPressData) {
+        // taking the GoRouterState here instead of out of listener,
+        // because otherwise it is considered the same even if the screen is changed
+        if (!context.mounted) return;
+        final routerState = GoRouterState.of(context);
+        if (
+            // if we pressed the same tab we're currently on
+            tabPressData.current == tabPressData.pressed &&
+                // if we pressed the tab that our page belongs to
+                tabPressData.pressed == routerState.currentTab &&
+                // if we're on the root tab page
+                routerState.topRoute?.path == routerState.fullPath) {
+          scrollController.animateTo(
+            0,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+      return listener.cancel;
+    },
+    [tabPressStream],
+  );
 }

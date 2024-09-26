@@ -64,7 +64,7 @@ class RestoreCredsPage extends HookWidget {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
           ScreenBottomOffset(

@@ -15,7 +15,7 @@ class WalletSearchQueryController extends _$WalletSearchQueryController {
   @override
   String build(WalletAssetType assetType) => '';
 
-  void update({required String query}) => state = query;
+  set query(String query) => state = query;
 }
 
 @Riverpod(keepAlive: true)
@@ -43,9 +43,11 @@ List<CoinData> _filterCoins(List<CoinData> coins, String query) {
     return coins;
   }
   return coins
-      .where((coin) =>
-          coin.name.toLowerCase().contains(query) ||
-          coin.abbreviation.toLowerCase().contains(query))
+      .where(
+        (coin) =>
+            coin.name.toLowerCase().contains(query) ||
+            coin.abbreviation.toLowerCase().contains(query),
+      )
       .toList();
 }
 

@@ -30,7 +30,7 @@ class EmailSetupInputPage extends HookWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (isKeyboardVisible) SizedBox(height: 58.0.s),
-                Spacer(),
+                const Spacer(),
                 Padding(
                   padding: EdgeInsets.only(bottom: 20.0.s),
                   child: TextInput(
@@ -41,17 +41,17 @@ class EmailSetupInputPage extends HookWidget {
                     labelText: TwoFaType.email.getDisplayName(context),
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
-                    validator: (value) => value?.isEmpty == true ? '' : null,
+                    validator: (value) => (value?.isEmpty ?? false) ? '' : null,
                     textInputAction: TextInputAction.done,
                     scrollPadding: EdgeInsets.only(bottom: 200.0.s),
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   label: Text(locale.button_next),
                   onPressed: () {
-                    if (formKey.value.currentState?.validate() == true) {
+                    if (formKey.value.currentState?.validate() ?? false) {
                       hideKeyboardAndCallOnce(
                         callback: () {
                           EmailSetupRoute(

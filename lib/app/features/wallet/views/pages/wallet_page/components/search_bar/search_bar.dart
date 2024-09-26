@@ -38,11 +38,11 @@ class WalletSearchBar extends HookConsumerWidget {
       child: SearchInput(
         loading: isLoading,
         onTextChanged: (String newValue) {
-          ref.read(searchQueryProvider.notifier).update(query: newValue);
+          ref.read(searchQueryProvider.notifier).query = newValue;
         },
         onCancelSearch: () {
-          ref.read(searchQueryProvider.notifier).update(query: '');
-          ref.read(searchVisibleProvider.notifier).update(isVisible: false);
+          ref.read(searchQueryProvider.notifier).query = '';
+          ref.read(searchVisibleProvider.notifier).isVisible = false;
         },
       ),
     );

@@ -8,12 +8,11 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ice/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
+import 'package:ice/app/features/protect_account/authenticator/views/pages/delete_authenticator/step_pages.dart';
 import 'package:ice/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
-
-import 'step_pages.dart';
 
 class AuthenticatorDeletePage extends StatelessWidget {
   const AuthenticatorDeletePage(this.step, {super.key});
@@ -49,7 +48,7 @@ class AuthenticatorDeletePage extends StatelessWidget {
                 SizedBox(height: 64.0.s),
                 Expanded(
                   child: switch (step) {
-                    AuthenticatorDeleteSteps.select => AuthenticatorDeleteSelectOptionsPage(),
+                    AuthenticatorDeleteSteps.select => const AuthenticatorDeleteSelectOptionsPage(),
                     AuthenticatorDeleteSteps.input => Consumer(
                         builder: (BuildContext context, WidgetRef ref, Widget? child) {
                           final selectedTwoFaOptions = ref.watch(selectedTwoFaOptionsProvider);

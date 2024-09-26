@@ -13,7 +13,7 @@ class FeedControls extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
-      child: FeedNavigation(),
+      child: const FeedNavigation(),
     );
   }
 }

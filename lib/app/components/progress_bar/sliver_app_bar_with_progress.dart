@@ -6,10 +6,8 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 
 class SliverAppBarWithProgress extends StatelessWidget {
   const SliverAppBarWithProgress({
-    super.key,
+    required this.title, required this.onClose, super.key,
     this.progressValue,
-    required this.title,
-    required this.onClose,
     this.showBackButton = true,
     this.showProgress = true,
   });

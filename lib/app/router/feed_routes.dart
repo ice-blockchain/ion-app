@@ -106,7 +106,7 @@ class CreatePostRoute extends BaseRouteData {
 class CreateArticleRoute extends BaseRouteData {
   CreateArticleRoute()
       : super(
-          child: CreateArticleModal(),
+          child: const CreateArticleModal(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -114,7 +114,7 @@ class CreateArticleRoute extends BaseRouteData {
 class CreateStoryRoute extends BaseRouteData {
   CreateStoryRoute()
       : super(
-          child: CreateStoryModal(),
+          child: const CreateStoryModal(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -122,7 +122,7 @@ class CreateStoryRoute extends BaseRouteData {
 class CreateVideoRoute extends BaseRouteData {
   CreateVideoRoute()
       : super(
-          child: CreateVideoModal(),
+          child: const CreateVideoModal(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -130,7 +130,7 @@ class CreateVideoRoute extends BaseRouteData {
 class MediaPickerRoute extends BaseRouteData {
   MediaPickerRoute()
       : super(
-          child: MediaPickerPage(),
+          child: const MediaPickerPage(),
           type: IceRouteType.bottomSheet,
         );
 }

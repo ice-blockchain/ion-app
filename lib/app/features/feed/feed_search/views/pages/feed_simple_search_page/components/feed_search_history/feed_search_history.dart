@@ -7,9 +7,7 @@ import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search
 
 class FeedSearchHistory extends StatelessWidget {
   const FeedSearchHistory({
-    super.key,
-    required this.userIds,
-    required this.queries,
+    required this.userIds, required this.queries, super.key,
   });
 
   final List<String> userIds;
@@ -22,7 +20,7 @@ class FeedSearchHistory extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 20.0.s),
-          FeedSearchHistoryHeader(),
+          const FeedSearchHistoryHeader(),
           if (userIds.isNotEmpty)
             Padding(
               padding: EdgeInsets.only(top: 16.0.s),
@@ -46,7 +44,7 @@ class FeedSearchHistory extends StatelessWidget {
                 itemBuilder: (context, index) =>
                     FeedSearchHistoryQueryListItem(query: queries[index]),
               ),
-            )
+            ),
         ],
       ),
     );

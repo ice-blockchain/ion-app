@@ -34,7 +34,7 @@ class IceApp extends ConsumerWidget {
     return ContentScaler(
       child: SheetScope(
         child: MaterialApp.router(
-          localizationsDelegates: [
+          localizationsDelegates: const [
             ...I18n.localizationsDelegates,
             FlutterQuillLocalizations.delegate,
           ],

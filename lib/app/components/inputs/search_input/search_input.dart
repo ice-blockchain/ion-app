@@ -94,7 +94,7 @@ class SearchInput extends HookWidget {
                 ),
                 suffixIcon: suffix ??
                     (loading
-                        ? SearchLoadingIndicator()
+                        ? const SearchLoadingIndicator()
                         : showClear.value
                             ? SearchClearButton(onPressed: searchController.clear)
                             : null),

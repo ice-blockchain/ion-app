@@ -3,12 +3,11 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/wallet/components/timeline/timeline_item.dart';
 
 class Timeline extends StatelessWidget {
-  final List<TimelineItemData> items;
-
   const Timeline({
-    super.key,
     required this.items,
+    super.key,
   });
+  final List<TimelineItemData> items;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +19,12 @@ class Timeline extends StatelessWidget {
       padding: EdgeInsets.all(12.0.s),
       child: Column(
         children: items.asMap().entries.map((entry) {
-          int idx = entry.key;
-          TimelineItemData item = entry.value;
+          final idx = entry.key;
+          final item = entry.value;
           return TimelineItem(
             isLast: idx == items.length - 1,
             data: item,
-            isNextDone: idx < items.length - 1 ? items[idx + 1].isDone : false,
+            isNextDone: (idx < items.length - 1) && items[idx + 1].isDone,
           );
         }).toList(),
       ),
@@ -34,9 +33,8 @@ class Timeline extends StatelessWidget {
 }
 
 class TimelineItemData {
+  TimelineItemData({required this.title, this.isDone = false, this.date});
   final String title;
   final bool isDone;
   final DateTime? date;
-
-  TimelineItemData({required this.title, this.isDone = false, this.date});
 }

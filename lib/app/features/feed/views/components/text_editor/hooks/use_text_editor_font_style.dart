@@ -16,14 +16,14 @@ FontType useTextEditorFontStyle(QuillController textEditorController) {
     } else {
       fontType.value = FontType.regular;
     }
-  }, []);
+  }, [],);
 
   useEffect(() {
     textEditorController.addListener(textEditorListener);
     return () {
       textEditorController.removeListener(textEditorListener);
     };
-  }, []);
+  }, [],);
 
   return fontType.value;
 }

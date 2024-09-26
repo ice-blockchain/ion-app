@@ -21,11 +21,11 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
 
   @override
   Widget build(BuildContext context, QuillController controller, Embed node, bool readOnly,
-      bool inline, TextStyle textStyle) {
-    final String imageUrl = node.value.data as String;
+      bool inline, TextStyle textStyle,) {
+    final imageUrl = node.value.data as String;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(12.0),
+      borderRadius: BorderRadius.circular(12),
       child: Image.network(
         imageUrl,
         fit: BoxFit.contain,

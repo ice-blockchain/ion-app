@@ -10,7 +10,7 @@ import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_sear
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 
 class FeedAdvancedSearchPage extends ConsumerWidget {
-  const FeedAdvancedSearchPage({super.key, required this.query});
+  const FeedAdvancedSearchPage({required this.query, super.key});
 
   final String query;
 
@@ -24,7 +24,7 @@ class FeedAdvancedSearchPage extends ConsumerWidget {
             children: [
               FeedAdvancedSearchNavigation(query: query),
               SizedBox(height: 16.0.s),
-              FeedAdvancedSearchTabBar(),
+              const FeedAdvancedSearchTabBar(),
               FeedListSeparator(),
               Expanded(
                 child: TabBarView(
@@ -40,7 +40,7 @@ class FeedAdvancedSearchPage extends ConsumerWidget {
                     };
                   }).toList(),
                 ),
-              )
+              ),
             ],
           ),
         ),

@@ -137,7 +137,7 @@ class ScanWalletRoute extends BaseRouteData {
 class NetworkSelectReceiveRoute extends BaseRouteData {
   NetworkSelectReceiveRoute()
       : super(
-          child: NetworkListView(type: NetworkListViewType.receive),
+          child: const NetworkListView(type: NetworkListViewType.receive),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -145,7 +145,7 @@ class NetworkSelectReceiveRoute extends BaseRouteData {
 class NetworkSelectSendRoute extends BaseRouteData {
   NetworkSelectSendRoute()
       : super(
-          child: NetworkListView(type: NetworkListViewType.send),
+          child: const NetworkListView(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -161,7 +161,7 @@ class ShareAddressRoute extends BaseRouteData {
 class NftSendFormRoute extends BaseRouteData {
   NftSendFormRoute()
       : super(
-          child: SendNftForm(),
+          child: const SendNftForm(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -324,7 +324,7 @@ class NftDetailsRoute extends BaseRouteData {
 class SendNftConfirmRoute extends BaseRouteData {
   SendNftConfirmRoute()
       : super(
-          child: SendNftConfirmPage(),
+          child: const SendNftConfirmPage(),
           type: IceRouteType.bottomSheet,
         );
 }

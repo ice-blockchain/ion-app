@@ -35,7 +35,7 @@ class ChatPage extends ConsumerWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (context) => IonIdentityClientTestPage(),
+                      builder: (context) => const IonIdentityClientTestPage(),
                     ),
                   );
                 },

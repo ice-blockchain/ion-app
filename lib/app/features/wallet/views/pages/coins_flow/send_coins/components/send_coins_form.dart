@@ -33,8 +33,8 @@ class SendCoinsForm extends HookConsumerWidget {
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
 
-    final formController = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.coin));
-    final notifier = ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.coin).notifier);
+    final formController = ref.watch(sendAssetFormControllerProvider());
+    final notifier = ref.read(sendAssetFormControllerProvider().notifier);
     final selectedContact = formController.selectedContact;
 
     final amountController = useTextEditingController.fromValue(

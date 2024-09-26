@@ -10,12 +10,11 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ice/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
+import 'package:ice/app/features/protect_account/authenticator/views/pages/setup_authenticator/step_pages.dart';
 import 'package:ice/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-
-import 'step_pages.dart';
 
 class AuthenticatorSetupPage extends HookConsumerWidget {
   const AuthenticatorSetupPage(this.step, {super.key});
@@ -53,20 +52,21 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
                     icon: step.headerImageAsset.icon(size: 36.0.s),
                   ),
                 ),
-                step == AuthenticatorSetupSteps.options
-                    ? SizedBox.shrink()
-                    : SizedBox(height: 32.0.s),
+                if (step == AuthenticatorSetupSteps.options)
+                  const SizedBox.shrink()
+                else
+                  SizedBox(height: 32.0.s),
                 Expanded(
                   child: switch (step) {
                     AuthenticatorSetupSteps.options => AuthenticatorOptionsPage(onTap: (type) {}),
-                    AuthenticatorSetupSteps.instruction => AuthenticatorInstructionsPage(),
+                    AuthenticatorSetupSteps.instruction => const AuthenticatorInstructionsPage(),
                     AuthenticatorSetupSteps.confirmation => AuthenticatorCodeConfirmPage(
                         onFormKeySet: (key) => formKey.value = key,
                       ),
-                    AuthenticatorSetupSteps.success => AuthenticatorSuccessPage(),
+                    AuthenticatorSetupSteps.success => const AuthenticatorSuccessPage(),
                   },
                 ),
-                HorizontalSeparator(),
+                const HorizontalSeparator(),
                 SizedBox(height: step == AuthenticatorSetupSteps.options ? 12.0.s : 22.0.s),
                 ScreenSideOffset.large(
                   child: Button(
@@ -90,12 +90,14 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     GlobalKey<FormState>? formKey,
-    Function hideKeyboardAndCallOnce,
+    void Function({
+      required VoidCallback callback,
+    }) hideKeyboardAndCallOnce,
   ) {
-    if (formKey?.currentState?.validate() == true) {
+    if (formKey?.currentState?.validate() ?? false) {
       hideKeyboardAndCallOnce(
         callback: () {
-          ref.read(securityAccountControllerProvider.notifier).toggleAuthenticator(true);
+          ref.read(securityAccountControllerProvider.notifier).toggleAuthenticator(value: true);
           _navigateToNextStep(context);
         },
       );

@@ -5,14 +5,14 @@ import 'package:ice/app/features/feed/feed_search/providers/feed_search_history_
     show feedSearchHistoryProvider;
 import 'package:ice/app/features/feed/feed_search/providers/feed_search_users_provider.dart';
 import 'package:ice/app/features/feed/feed_search/views/components/nothing_is_found.dart';
+import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history_empty/feed_search_history_empty.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_navigation/feed_search_navigation.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results_skeleton.dart';
 
 class FeedSimpleSearchPage extends ConsumerWidget {
-  const FeedSimpleSearchPage({super.key, required this.query});
+  const FeedSimpleSearchPage({required this.query, super.key});
 
   final String query;
 
@@ -29,12 +29,12 @@ class FeedSimpleSearchPage extends ConsumerWidget {
             usersSearchResults.maybeWhen(
               data: (userIds) => userIds == null
                   ? history.userIds.isEmpty && history.queries.isEmpty
-                      ? FeedSearchHistoryEmpty()
+                      ? const FeedSearchHistoryEmpty()
                       : FeedSearchHistory(userIds: history.userIds, queries: history.queries)
                   : userIds.isEmpty
-                      ? NothingIsFound()
+                      ? const NothingIsFound()
                       : FeedSearchResults(userIds: userIds),
-              orElse: () => FeedSearchResultsSkeleton(),
+              orElse: FeedSearchResultsSkeleton.new,
             ),
           ],
         ),

@@ -63,7 +63,7 @@ class CreatePostModal extends HookWidget {
           ),
           Column(
             children: [
-              HorizontalSeparator(),
+              const HorizontalSeparator(),
               ScreenSideOffset.small(
                 child: ActionsToolbar(
                   actions: [

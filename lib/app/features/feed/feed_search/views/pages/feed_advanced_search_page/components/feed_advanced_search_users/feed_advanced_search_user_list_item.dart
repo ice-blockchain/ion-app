@@ -11,8 +11,7 @@ import 'package:ice/app/utils/username.dart';
 
 class FeedAdvancedSearchUserListItem extends ConsumerWidget {
   const FeedAdvancedSearchUserListItem({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
   });
 
   final String userId;
@@ -23,7 +22,7 @@ class FeedAdvancedSearchUserListItem extends ConsumerWidget {
     final userDataValue = userData.valueOrNull;
 
     if (userDataValue == null) {
-      return ScreenSideOffset.small(child: Skeleton(child: PostSkeleton()));
+      return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));
     }
 
     return ScreenSideOffset.small(

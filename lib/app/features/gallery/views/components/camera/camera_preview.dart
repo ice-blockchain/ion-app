@@ -5,8 +5,7 @@ import 'package:ice/generated/assets.gen.dart';
 
 class CameraPreviewWidget extends StatelessWidget {
   const CameraPreviewWidget({
-    super.key,
-    required this.controller,
+    required this.controller, super.key,
   });
 
   final CameraController controller;

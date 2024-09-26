@@ -15,7 +15,7 @@ class HorizontalSeparator extends StatelessWidget {
             context.theme.appColors.onTerararyFill,
             context.theme.appColors.secondaryBackground,
           ],
-          stops: [
+          stops: const [
             0.0,
             0.5,
             1.0,

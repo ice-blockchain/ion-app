@@ -4,10 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PullToRefreshBuilder extends StatelessWidget {
-  const PullToRefreshBuilder({
-    required this.builder,
-    required this.slivers,
-    required this.onRefresh,
+  const PullToRefreshBuilder({required this.builder, required this.slivers, required this.onRefresh, super.key,
     this.refreshIndicatorEdgeOffset = 0,
     this.sliverAppBar,
   });
@@ -28,7 +25,7 @@ class PullToRefreshBuilder extends StatelessWidget {
       return builder(context, [
         if (sliverAppBar != null) sliverAppBar!,
         CupertinoSliverRefreshControl(onRefresh: onRefresh),
-        ...slivers
+        ...slivers,
       ]);
     }
 

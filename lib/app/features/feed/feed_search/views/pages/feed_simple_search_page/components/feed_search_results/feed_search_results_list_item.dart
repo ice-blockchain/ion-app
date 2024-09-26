@@ -10,7 +10,7 @@ import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/utils/username.dart';
 
 class FeedSearchResultsListItem extends ConsumerWidget {
-  const FeedSearchResultsListItem({required this.userId});
+  const FeedSearchResultsListItem({required this.userId, super.key});
 
   static double get itemVerticalOffset => 8.0.s;
 
@@ -38,7 +38,7 @@ class FeedSearchResultsListItem extends ConsumerWidget {
           ),
         ),
       ),
-      orElse: () => Skeleton(child: FeedSearchResultsListItemShape()),
+      orElse: () => const Skeleton(child: FeedSearchResultsListItemShape()),
     );
   }
 }

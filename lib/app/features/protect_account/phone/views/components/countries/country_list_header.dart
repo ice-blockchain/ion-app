@@ -5,10 +5,7 @@ import 'package:ice/app/extensions/extensions.dart';
 
 class CountrySearchHeader extends StatelessWidget {
   const CountrySearchHeader({
-    super.key,
-    required this.isLoading,
-    required this.onTextChanged,
-    required this.onCancelSearch,
+    required this.isLoading, required this.onTextChanged, required this.onCancelSearch, super.key,
   });
 
   final bool isLoading;
@@ -25,7 +22,6 @@ class CountrySearchHeader extends StatelessWidget {
             SizedBox(height: 16.0.s),
             ScreenSideOffset.small(
               child: SearchInput(
-                defaultValue: '',
                 loading: isLoading,
                 onTextChanged: onTextChanged,
                 onCancelSearch: onCancelSearch,

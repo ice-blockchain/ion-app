@@ -8,7 +8,7 @@ const testKey = 'testKey';
 const testStringValue = 'testValue';
 const testBoolValue = true;
 const testDoubleValue = 1.5;
-final testEnumValue = TestEnum.two;
+const testEnumValue = TestEnum.two;
 
 void main() {
   late LocalStorage localStorage;

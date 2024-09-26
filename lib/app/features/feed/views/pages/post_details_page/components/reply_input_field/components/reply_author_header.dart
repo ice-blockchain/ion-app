@@ -14,7 +14,7 @@ class ReplyAuthorHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final postAuthorName = 'markpoland';
+    const postAuthorName = 'markpoland';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -27,7 +27,7 @@ class ReplyAuthorHeader extends StatelessWidget {
           verifiedBadge: true,
         ),
         SizedBox(height: 6.0.s),
-        ReplyingTo(name: postAuthorName),
+        const ReplyingTo(name: postAuthorName),
       ],
     );
   }

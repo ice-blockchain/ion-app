@@ -10,12 +10,11 @@ part 'feed_current_filter_provider.g.dart';
 
 @Freezed(copyWith: true, equal: true)
 class FeedFiltersState with _$FeedFiltersState {
-  const FeedFiltersState._();
-
   const factory FeedFiltersState({
     required FeedCategory category,
     required FeedFilter filter,
   }) = _FeedFiltersState;
+  const FeedFiltersState._();
 
   static const FeedCategory defaultCategory = FeedCategory.feed;
   static const FeedFilter defaultFilter = FeedFilter.forYou;
@@ -49,10 +48,9 @@ class FeedCurrentFilter extends _$FeedCurrentFilter {
 
   void _saveState(FeedFiltersState state) {
     final userId = ref.read(currentUserIdSelectorProvider);
-    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: userId));
-
-    userPreferencesService.setEnum(_feedFilterCategoryKey, state.category);
-    userPreferencesService.setEnum(_feedFilterFilterKey, state.filter);
+    ref.read(userPreferencesServiceProvider(userId: userId))
+      ..setEnum(_feedFilterCategoryKey, state.category)
+      ..setEnum(_feedFilterFilterKey, state.filter);
   }
 
   FeedFiltersState _loadSavedState() {

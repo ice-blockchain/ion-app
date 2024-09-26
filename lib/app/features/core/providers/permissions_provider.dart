@@ -1,6 +1,5 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -33,8 +32,6 @@ class Permissions extends _$Permissions {
           PermissionType.Contacts,
           () => contactsPermissionStatus,
         );
-    } on MissingPluginException {
-    } on UnimplementedError {
     } finally {
       state = Map<PermissionType, PermissionStatus>.unmodifiable(permissions);
     }
