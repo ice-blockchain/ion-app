@@ -12,6 +12,7 @@ import 'package:ice/app/features/feed/views/components/text_editor/components/to
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_italic_button/text_editor_italic_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_poll_button/text_editor_poll_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_regular_button/text_editor_regular_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_schedule_button/text_editor_schedule_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/text_editor.dart';
@@ -72,9 +73,17 @@ class CreateArticleModal extends HookWidget {
                     TextEditorItalicButton(textEditorController: textEditorController),
                     TextEditorBoldButton(textEditorController: textEditorController),
                   ],
-                  trailing: ActionsToolbarButtonSend(
-                    enabled: hasContent,
-                    onPressed: () {},
+                  trailing: Row(
+                    children: [
+                      const TextEditorScheduleButton(),
+                      SizedBox(
+                        width: 16.0.s,
+                      ),
+                      ActionsToolbarButtonSend(
+                        enabled: hasContent,
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
                 ),
               ),
