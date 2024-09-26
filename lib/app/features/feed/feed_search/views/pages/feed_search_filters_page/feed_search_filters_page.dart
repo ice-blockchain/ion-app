@@ -40,6 +40,7 @@ class FeedSearchFiltersPage extends HookConsumerWidget {
           ScreenSideOffset.small(
             child: Column(
               children: [
+                SizedBox(height: 8.0.s),
                 FeedSearchFilterPeopleSection(
                   selectedFilter: filterLocalState.value.people,
                   onFilterChange: (peopleFilter) {
