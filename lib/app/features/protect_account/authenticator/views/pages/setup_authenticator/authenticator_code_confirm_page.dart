@@ -8,21 +8,23 @@ import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class AuthenticatorCodeConfirmPage extends HookWidget {
-  final void Function(GlobalKey<FormState>) onFormKeySet;
-
   const AuthenticatorCodeConfirmPage({
-    super.key,
     required this.onFormKeySet,
+    super.key,
   });
+  final void Function(GlobalKey<FormState>) onFormKeySet;
 
   @override
   Widget build(BuildContext context) {
     final controller = useTextEditingController();
     final formKey = useRef(GlobalKey<FormState>());
 
-    useOnInit(() {
-      onFormKeySet(formKey.value);
-    }, []);
+    useOnInit(
+      () {
+        onFormKeySet(formKey.value);
+      },
+      [],
+    );
 
     return Form(
       key: formKey.value,
@@ -35,7 +37,7 @@ class AuthenticatorCodeConfirmPage extends HookWidget {
               hasRightDivider: true,
               icons: [Assets.svg.iconRecoveryCode.icon()],
             ),
-            validator: (value) => value?.isEmpty == true ? '' : null,
+            validator: (value) => (value?.isEmpty ?? false) ? '' : null,
             textInputAction: TextInputAction.done,
             scrollPadding: EdgeInsets.only(bottom: 200.0.s),
           ),

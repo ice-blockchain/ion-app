@@ -26,10 +26,10 @@ class FeedMainModalPage extends StatelessWidget {
           ),
           ListView.separated(
             shrinkWrap: true,
-            separatorBuilder: (_, __) => HorizontalSeparator(),
+            separatorBuilder: (_, __) => const HorizontalSeparator(),
             itemCount: feedTypeValues.length,
             itemBuilder: (BuildContext context, int index) {
-              final FeedType type = feedTypeValues[index];
+              final type = feedTypeValues[index];
               return FeedModalItem(
                 feedType: type,
                 onTap: () {

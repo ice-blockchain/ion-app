@@ -51,7 +51,7 @@ class WalletTabsHeader extends ConsumerWidget {
           const WalletTabsHeaderHideAction(),
           TextButton(
             onPressed: () {
-              ref.read(searchVisibleProvider.notifier).update(isVisible: true);
+              ref.read(searchVisibleProvider.notifier).isVisible = true;
             },
             child: Padding(
               padding: EdgeInsets.all(UiConstants.hitSlop),

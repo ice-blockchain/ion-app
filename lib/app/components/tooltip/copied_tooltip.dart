@@ -18,7 +18,7 @@ class CopiedTooltip extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tooltipKey = useMemoized(() => GlobalKey());
+    final tooltipKey = useMemoized(GlobalKey.new);
 
     useOnInit(() {
       final renderBox = tooltipKey.currentContext?.findRenderObject() as RenderBox?;

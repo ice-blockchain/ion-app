@@ -4,8 +4,8 @@ import 'package:ice/app/features/feed/views/components/actions_toolbar_button/ac
 import 'package:ice/generated/assets.gen.dart';
 
 class TextEditorPollButton extends StatelessWidget {
+  const TextEditorPollButton({required this.textEditorController, super.key});
   final QuillController textEditorController;
-  const TextEditorPollButton({super.key, required this.textEditorController});
 
   @override
   Widget build(BuildContext context) {

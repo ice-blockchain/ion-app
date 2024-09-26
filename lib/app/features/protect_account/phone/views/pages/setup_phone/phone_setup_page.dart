@@ -5,11 +5,10 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ice/app/features/protect_account/phone/models/phone_steps.dart';
+import 'package:ice/app/features/protect_account/phone/views/pages/setup_phone/step_pages.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
-
-import 'step_pages.dart';
 
 class PhoneSetupPage extends StatelessWidget {
   const PhoneSetupPage(this.step, this.phone, {super.key});
@@ -47,9 +46,9 @@ class PhoneSetupPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: switch (step) {
-                    PhoneSetupSteps.input => PhoneSetupInputPage(),
+                    PhoneSetupSteps.input => const PhoneSetupInputPage(),
                     PhoneSetupSteps.confirmation => PhoneSetupConfirmPage(phone: phone!),
-                    PhoneSetupSteps.success => PhoneSetupSuccessPage(),
+                    PhoneSetupSteps.success => const PhoneSetupSuccessPage(),
                   },
                 ),
                 ScreenBottomOffset(margin: 36.0.s),

@@ -5,15 +5,15 @@ import 'package:ice/app/features/protect_account/components/secure_account_optio
 
 class AuthenticatorOptionsPage extends StatelessWidget {
   const AuthenticatorOptionsPage({
-    super.key,
     required this.onTap,
+    super.key,
   });
 
   final void Function(AutethenticatorType type) onTap;
 
   @override
   Widget build(BuildContext context) {
-    final authenticatorTypes = AutethenticatorType.values;
+    const authenticatorTypes = AutethenticatorType.values;
 
     return Column(
       children: [

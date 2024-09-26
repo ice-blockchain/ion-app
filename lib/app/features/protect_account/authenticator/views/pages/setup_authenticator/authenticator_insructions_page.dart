@@ -15,9 +15,9 @@ class AuthenticatorInstructionsPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Spacer(),
-          CopyKeyCard(),
-          Spacer(),
+          const Spacer(),
+          const CopyKeyCard(),
+          const Spacer(),
           WarningCard(text: locale.warning_authenticator_setup),
         ],
       ),

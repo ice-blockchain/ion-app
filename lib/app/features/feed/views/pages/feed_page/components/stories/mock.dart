@@ -133,20 +133,20 @@ final List<Story> stories = [
 ];
 
 final storyBorderGradients = [
-  SweepGradient(
+  const SweepGradient(
     colors: [
       Color(0xFFEF1D4F),
       Color(0xFFFF9F0E),
       Color(0xFFFFBB0E),
       Color(0xFFFF012F),
-      Color(0xFFEF1D4F)
+      Color(0xFFEF1D4F),
     ],
     stops: [0.0, 0.21, 0.47, 0.77, 1],
     startAngle: pi / 2,
     endAngle: pi * 5 / 2,
     tileMode: TileMode.repeated,
   ),
-  SweepGradient(
+  const SweepGradient(
     colors: [
       Color(0xFF0166FF),
       Color(0XFF00DDB5),
@@ -158,7 +158,7 @@ final storyBorderGradients = [
     endAngle: pi * 5 / 2,
     tileMode: TileMode.repeated,
   ),
-  SweepGradient(
+  const SweepGradient(
     colors: [
       Color(0xFFAE01FF),
       Color(0XFF1F00DD),
@@ -170,7 +170,7 @@ final storyBorderGradients = [
     endAngle: pi * 5 / 2,
     tileMode: TileMode.repeated,
   ),
-  SweepGradient(
+  const SweepGradient(
     colors: [
       Color(0xFF00AFA5),
       Color(0XFF1B76FF),

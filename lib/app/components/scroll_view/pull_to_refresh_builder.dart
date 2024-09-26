@@ -8,6 +8,7 @@ class PullToRefreshBuilder extends StatelessWidget {
     required this.builder,
     required this.slivers,
     required this.onRefresh,
+    super.key,
     this.refreshIndicatorEdgeOffset = 0,
     this.sliverAppBar,
   });
@@ -28,7 +29,7 @@ class PullToRefreshBuilder extends StatelessWidget {
       return builder(context, [
         if (sliverAppBar != null) sliverAppBar!,
         CupertinoSliverRefreshControl(onRefresh: onRefresh),
-        ...slivers
+        ...slivers,
       ]);
     }
 

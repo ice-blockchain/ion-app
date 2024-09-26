@@ -7,7 +7,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class FeedSearchHistoryClearConfirm extends StatelessWidget {
-  const FeedSearchHistoryClearConfirm();
+  const FeedSearchHistoryClearConfirm({super.key});
 
   @override
   Widget build(BuildContext context) {

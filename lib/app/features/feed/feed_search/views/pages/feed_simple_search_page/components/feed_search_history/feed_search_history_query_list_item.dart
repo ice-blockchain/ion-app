@@ -6,7 +6,7 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class FeedSearchHistoryQueryListItem extends ConsumerWidget {
-  const FeedSearchHistoryQueryListItem({required this.query});
+  const FeedSearchHistoryQueryListItem({required this.query, super.key});
 
   final String query;
 

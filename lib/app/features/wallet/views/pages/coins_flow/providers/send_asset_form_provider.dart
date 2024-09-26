@@ -20,14 +20,11 @@ class SendAssetFormController extends _$SendAssetFormController {
     _cryptoType = type;
 
     return CryptoAssetData(
-      selectedCoin: null,
-      selectedNft: null,
       selectedNetwork: NetworkType.eth,
       wallet: wallet,
       address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
       usdtAmount: 350,
       arrivalTime: 15,
-      selectedContact: null,
     );
   }
 

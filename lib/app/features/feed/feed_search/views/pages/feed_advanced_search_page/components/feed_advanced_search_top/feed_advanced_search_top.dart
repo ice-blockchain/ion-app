@@ -7,7 +7,7 @@ import 'package:ice/app/features/feed/views/components/post_list/post_list.dart'
 import 'package:ice/app/features/feed/views/components/post_list/post_list_skeleton.dart';
 
 class FeedAdvancedSearchTop extends HookConsumerWidget {
-  const FeedAdvancedSearchTop({super.key, required this.query});
+  const FeedAdvancedSearchTop({required this.query, super.key});
 
   final String query;
 
@@ -20,11 +20,11 @@ class FeedAdvancedSearchTop extends HookConsumerWidget {
     return topPostsSearchResults.maybeWhen(
       data: (postIds) {
         if (postIds == null || postIds.isEmpty) {
-          return NothingIsFound();
+          return const NothingIsFound();
         }
         return CustomScrollView(slivers: [PostList(postIds: postIds)]);
       },
-      orElse: () => CustomScrollView(slivers: [PostListSkeleton()]),
+      orElse: () => const CustomScrollView(slivers: [PostListSkeleton()]),
     );
   }
 }

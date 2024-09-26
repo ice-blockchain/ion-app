@@ -191,11 +191,10 @@ class ModalShellRouteData extends ShellRouteData {
       key: state.pageKey,
       child: ModalWrapper(child: navigator),
       barrierColor: context.theme.appColors.backgroundSheet,
-      transitionDuration: Duration(milliseconds: 300),
       transitionCurve: Easing.standardDecelerate,
       swipeDismissible: true,
       swipeDismissSensitivity:
-          SwipeDismissSensitivity(minFlingVelocityRatio: 3.0, minDragDistance: 300.0.s),
+          SwipeDismissSensitivity(minFlingVelocityRatio: 3, minDragDistance: 300.0.s),
     );
   }
 }

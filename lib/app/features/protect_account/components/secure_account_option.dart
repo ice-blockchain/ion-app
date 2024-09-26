@@ -5,18 +5,17 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class SecureAccountOption extends StatelessWidget {
-  final String title;
-  final Widget icon;
-  final VoidCallback onTap;
-  final bool isEnabled;
-
   const SecureAccountOption({
-    super.key,
     required this.title,
     required this.icon,
     required this.onTap,
     required this.isEnabled,
+    super.key,
   });
+  final String title;
+  final Widget icon;
+  final VoidCallback onTap;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {

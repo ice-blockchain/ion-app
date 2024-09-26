@@ -7,8 +7,8 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class TextEditorImageButton extends StatelessWidget {
+  const TextEditorImageButton({required this.textEditorController, super.key});
   final QuillController textEditorController;
-  const TextEditorImageButton({super.key, required this.textEditorController});
 
   @override
   Widget build(BuildContext context) {
@@ -23,19 +23,20 @@ class TextEditorImageButton extends StatelessWidget {
 
   void addSingleImageBlock(QuillController textEditorController) {
     final index = textEditorController.selection.baseOffset;
-    textEditorController.replaceText(
-      index,
-      0, // No text to delete
-      TextEditorSingleImageEmbed.image("https://picsum.photos/600/300"),
-      TextSelection.collapsed(
-          offset: textEditorController.document.length), // Move cursor to the end of the document
-    );
-    //add a new line after the image embed
-    textEditorController.replaceText(
-      index + 1,
-      0,
-      "\n",
-      TextSelection.collapsed(offset: textEditorController.document.length),
-    );
+    textEditorController
+      ..replaceText(
+        index,
+        0, // No text to delete
+        TextEditorSingleImageEmbed.image('https://picsum.photos/600/300'),
+        TextSelection.collapsed(
+          offset: textEditorController.document.length,
+        ), // Move cursor to the end of the document
+      )
+      ..replaceText(
+        index + 1,
+        0,
+        '\n',
+        TextSelection.collapsed(offset: textEditorController.document.length),
+      );
   }
 }

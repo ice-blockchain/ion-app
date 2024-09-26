@@ -35,7 +35,7 @@ class StoryListItem extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewed = useState(me ? false : Random().nextBool());
+    final viewed = useState(!me && Random().nextBool());
 
     return GestureDetector(
       onTap: () {

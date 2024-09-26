@@ -17,8 +17,7 @@ void main() {
         ],
       );
 
-      final mockNotifier = container.read(selectedWalletIdNotifierProvider.notifier);
-      mockNotifier.selectedWalletId = '1';
+      container.read(selectedWalletIdNotifierProvider.notifier).selectedWalletId = '1';
 
       final currentWalletId = container.read(currentWalletIdProvider);
 
@@ -33,9 +32,8 @@ void main() {
         ],
       );
 
-      final mockNotifier = container.read(selectedWalletIdNotifierProvider.notifier);
-
-      mockNotifier.selectedWalletId = 'non_existing_id';
+      container.read(selectedWalletIdNotifierProvider.notifier).selectedWalletId =
+          'non_existing_id';
 
       final currentWalletId = container.read(currentWalletIdProvider);
 
@@ -71,9 +69,7 @@ void main() {
         ],
       );
 
-      final mockWalletsNotifier = container.read(walletsDataNotifierProvider.notifier);
-
-      mockWalletsNotifier.state = mockedWalletDataArray;
+      container.read(walletsDataNotifierProvider.notifier).state = mockedWalletDataArray;
 
       final currentWalletData = container.read(currentWalletDataProvider);
 
@@ -90,9 +86,7 @@ void main() {
         ],
       );
 
-      final mockWalletsNotifier = container.read(walletsDataNotifierProvider.notifier);
-
-      mockWalletsNotifier.state = mockedWalletDataArray;
+      container.read(walletsDataNotifierProvider.notifier).state = mockedWalletDataArray;
 
       expect(() => container.read(currentWalletDataProvider), throwsStateError);
     });
@@ -143,7 +137,7 @@ void main() {
       );
       final notifier = container.read(walletsDataNotifierProvider.notifier);
 
-      final newWallet = WalletData(
+      const newWallet = WalletData(
         id: '4',
         name: 'New Wallet',
         icon: 'icon',
@@ -163,7 +157,7 @@ void main() {
       );
       final notifier = container.read(walletsDataNotifierProvider.notifier);
 
-      final updatedWallet = WalletData(
+      const updatedWallet = WalletData(
         id: '1',
         name: 'Updated Wallet',
         icon: 'new_icon',
@@ -184,9 +178,7 @@ void main() {
           walletsDataNotifierProvider.overrideWith(WalletsDataNotifier.new),
         ],
       );
-      final notifier = container.read(walletsDataNotifierProvider.notifier);
-
-      notifier.deleteWallet('1');
+      final notifier = container.read(walletsDataNotifierProvider.notifier)..deleteWallet('1');
 
       expect(notifier.state.any((wallet) => wallet.id == '1'), isFalse);
     });
@@ -221,7 +213,7 @@ void main() {
       );
       final notifier = container.read(walletsDataNotifierProvider.notifier);
 
-      final nonExistentWallet = WalletData(
+      const nonExistentWallet = WalletData(
         id: 'non-existent',
         name: 'Non-existent Wallet',
         icon: 'icon',

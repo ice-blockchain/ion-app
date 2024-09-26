@@ -15,7 +15,7 @@ class CreateVideoModal extends StatelessWidget {
           NavigationAppBar.modal(
             title: Text(context.i18n.create_video_nav_title),
           ),
-          Spacer(),
+          const Spacer(),
         ],
       ),
     );

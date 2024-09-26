@@ -19,7 +19,7 @@ class TwoFaSuccessPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onLogin = () => GetStartedRoute().go(context);
+    void onLogin() => GetStartedRoute().go(context);
 
     return SheetContent(
       body: AuthScrollContainer(
@@ -27,7 +27,7 @@ class TwoFaSuccessPage extends StatelessWidget {
         actions: [
           NavigationCloseButton(
             onPressed: onLogin,
-          )
+          ),
         ],
         title: context.i18n.two_fa_title,
         description: context.i18n.two_fa_desc,

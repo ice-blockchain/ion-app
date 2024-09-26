@@ -38,7 +38,6 @@ class MediaSelectionNotifier extends _$MediaSelectionNotifier {
     final newMedia = MediaData(
       asset: mediaData.asset,
       order: state.selectedMedia.length + 1,
-      isFromCamera: false,
     );
 
     state = state.copyWith(selectedMedia: [...state.selectedMedia, newMedia]);

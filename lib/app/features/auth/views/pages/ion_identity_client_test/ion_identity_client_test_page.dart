@@ -10,7 +10,6 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_client.dart';
-import 'package:ion_identity_client/src/wallets/types/list_wallets_result.dart';
 
 class IonIdentityClientTestPage extends StatelessWidget {
   const IonIdentityClientTestPage({
@@ -19,7 +18,7 @@ class IonIdentityClientTestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    return const DefaultTabController(
       length: 5,
       child: Scaffold(
         body: SafeArea(
@@ -76,7 +75,7 @@ class _RegisterTab extends HookConsumerWidget {
           SizedBox(height: 16.0.s),
         ],
         Button(
-          label: Text('Register'),
+          label: const Text('Register'),
           onPressed: () async {
             registerResult.value =
                 await ionClient(username: usernameController.text).auth.registerUser();
@@ -109,7 +108,7 @@ class _LoginTab extends HookConsumerWidget {
           SizedBox(height: 16.0.s),
         ],
         Button(
-          label: Text('Login'),
+          label: const Text('Login'),
           onPressed: () async {
             loginResult.value = await ionClient(username: usernameController.text).auth.loginUser();
           },
@@ -130,7 +129,7 @@ class _UsersTab extends ConsumerWidget {
       stream: ionClient.authorizedUsers,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
@@ -182,7 +181,7 @@ class UserWalletsDialog extends ConsumerWidget {
           final isLoading = !snapshot.hasData;
 
           if (isLoading) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -197,7 +196,7 @@ class UserWalletsDialog extends ConsumerWidget {
             itemCount: data.length,
             itemBuilder: (context, index) {
               return ListItem.text(
-                title: Text('${data[index].id}'),
+                title: Text(data[index].id),
                 value: data[index].network,
               );
             },
@@ -216,7 +215,7 @@ class _WalletsTab extends HookConsumerWidget {
     final ionClient = ref.watch(ionApiClientProvider);
 
     final walletNameController = useTextEditingController.fromValue(
-      TextEditingValue(text: 'My Wallet 1'),
+      const TextEditingValue(text: 'My Wallet 1'),
     );
 
     return ListView(
@@ -227,7 +226,7 @@ class _WalletsTab extends HookConsumerWidget {
         ),
         SizedBox(height: 16.0.s),
         Button(
-          label: Text('Create Wallet'),
+          label: const Text('Create Wallet'),
           onPressed: () async {
             await ionClient(username: 'testauth1@mail.com').wallets.createWallet(
                   network: 'EthereumSepolia',
@@ -248,7 +247,7 @@ class _RecoveryTab extends HookConsumerWidget {
     final ionClient = ref.watch(ionApiClientProvider);
 
     final keyNameController = useTextEditingController.fromValue(
-      TextEditingValue(text: 'Recovery Credential 1'),
+      const TextEditingValue(text: 'Recovery Credential 1'),
     );
 
     return ListView(
@@ -259,7 +258,7 @@ class _RecoveryTab extends HookConsumerWidget {
         ),
         SizedBox(height: 16.0.s),
         Button(
-          label: Text('Create Recovery Credentials'),
+          label: const Text('Create Recovery Credentials'),
           onPressed: () async {
             await ionClient(username: 'testauth1@mail.com').auth.createRecoveryCredentials();
           },

@@ -18,7 +18,7 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class NftDetailsPage extends ConsumerWidget {
-  const NftDetailsPage({super.key, required this.nft});
+  const NftDetailsPage({required this.nft, super.key});
 
   final NftData nft;
 
@@ -90,7 +90,8 @@ class NftDetailsPage extends ConsumerWidget {
                       onPressed: () {
                         ref
                             .read(
-                                sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier)
+                              sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier,
+                            )
                             .setNft(nft);
                         NftSendFormRoute().push<void>(context);
                       },

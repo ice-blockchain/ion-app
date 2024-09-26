@@ -13,7 +13,7 @@ Future<List<String>?> feedSearchUsers(
     return null;
   }
   await ref.debounce();
-  await Future<void>.delayed(Duration(milliseconds: 500));
+  await Future<void>.delayed(const Duration(milliseconds: 500));
 
   return mockedUserData.values
       .toList()

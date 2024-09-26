@@ -10,7 +10,7 @@ class UserFollowing extends _$UserFollowing {
   @override
   Future<Set<String>> build(String userId) async {
     await Future<void>.delayed(Duration(milliseconds: Random().nextInt(500) + 300));
-    return Set();
+    return {};
   }
 
   Future<void> toggleFollow(String userId) async {
@@ -28,6 +28,8 @@ class UserFollowing extends _$UserFollowing {
 @riverpod
 bool isCurrentUserFollowingSelector(IsCurrentUserFollowingSelectorRef ref, String userId) {
   final currentUserId = ref.watch(currentUserIdSelectorProvider);
-  return ref.watch(userFollowingProvider(currentUserId)
-      .select((state) => state.valueOrNull?.contains(userId) ?? false));
+  return ref.watch(
+    userFollowingProvider(currentUserId)
+        .select((state) => state.valueOrNull?.contains(userId) ?? false),
+  );
 }

@@ -32,7 +32,6 @@ class VisibilitySettingsToolbar extends ConsumerWidget {
         showSimpleBottomSheet<void>(
           context: context,
           child: const VisibilitySettingsModal(),
-          useRootNavigator: true,
         );
       },
     );

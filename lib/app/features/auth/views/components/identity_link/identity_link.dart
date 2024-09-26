@@ -24,8 +24,8 @@ class IdentityLink extends StatelessWidget {
             // Disabling text scaling to prevent multiple scaling
             //    when using this widget as a child of a WidgetSpan
             // https://github.com/flutter/flutter/issues/126962
-            textScaler: TextScaler.linear(1),
-          )
+            textScaler: TextScaler.noScaling,
+          ),
         ],
       ),
     );

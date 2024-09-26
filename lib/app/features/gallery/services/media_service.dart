@@ -14,7 +14,7 @@ class MediaService {
     final image = await picker.pickImage(source: ImageSource.camera);
 
     if (image != null) {
-      return await _saveCameraImage(File(image.path));
+      return _saveCameraImage(File(image.path));
     }
 
     return null;
@@ -52,7 +52,6 @@ class MediaService {
 
       final albums = await PhotoManager.getAssetPathList(
         type: RequestType.image,
-        hasAll: true,
       );
 
       if (albums.isEmpty) return [];
@@ -66,7 +65,6 @@ class MediaService {
         return MediaData(
           asset: asset,
           order: 0,
-          isFromCamera: false,
         );
       }).toList();
 

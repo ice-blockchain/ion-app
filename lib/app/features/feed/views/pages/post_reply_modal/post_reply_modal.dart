@@ -37,7 +37,7 @@ class PostReplyModal extends ConsumerWidget {
     final postData = ref.watch(postByIdSelectorProvider(postId: postId));
 
     if (postData == null) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     return SheetContent(
@@ -62,13 +62,13 @@ class PostReplyModal extends ConsumerWidget {
                     SizedBox(height: 8.0.s),
                     _PostBody(postData: postData),
                     SizedBox(height: 10.0.s),
-                    ExpandedReplyInputField(),
+                    const ExpandedReplyInputField(),
                   ],
                 ),
               ),
             ),
           ),
-          HorizontalSeparator(),
+          const HorizontalSeparator(),
           ScreenSideOffset.small(
             child: ActionsToolbar(
               actions: [
@@ -111,7 +111,6 @@ class _PostBody extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 15.0.s),
       child: DottedBorder(
-        borderType: BorderType.Rect,
         color: colors.onTerararyFill,
         dashPattern: [5.0.s, 5.0.s],
         customPath: (size) {

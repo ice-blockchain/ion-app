@@ -74,7 +74,7 @@ class TwoFaCodesRoute extends BaseRouteData {
 class TwoFaOptionsRoute extends BaseRouteData {
   TwoFaOptionsRoute()
       : super(
-          child: TwoFaOptionsPage(),
+          child: const TwoFaOptionsPage(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -82,7 +82,7 @@ class TwoFaOptionsRoute extends BaseRouteData {
 class TwoFaSuccessRoute extends BaseRouteData {
   TwoFaSuccessRoute()
       : super(
-          child: TwoFaSuccessPage(),
+          child: const TwoFaSuccessPage(),
           type: IceRouteType.bottomSheet,
         );
 }

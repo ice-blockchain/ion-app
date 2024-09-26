@@ -24,7 +24,7 @@ class FeedNavigation extends StatelessWidget {
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () => FeedSimpleSearchRoute().push<void>(context),
-              child: IgnorePointer(child: SearchInput()),
+              child: const IgnorePointer(child: SearchInput()),
             ),
           ),
           Padding(
@@ -38,7 +38,7 @@ class FeedNavigation extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(left: 12.0.s),
-            child: FeedFiltersMenuButton(),
+            child: const FeedFiltersMenuButton(),
           ),
         ],
       ),

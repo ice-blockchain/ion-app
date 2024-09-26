@@ -42,7 +42,7 @@ class AuthenticatorDeleteSuccessPage extends StatelessWidget {
               icon: Assets.svg.icon2faAuthsetup.icon(size: 36.0.s),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           ScreenSideOffset.medium(
             child: InfoCard(
               iconAsset: Assets.svg.actionWalletGoogleauth,
@@ -50,7 +50,7 @@ class AuthenticatorDeleteSuccessPage extends StatelessWidget {
               description: locale.authenticator_has_deleted,
             ),
           ),
-          Spacer(),
+          const Spacer(),
           ScreenSideOffset.large(
             child: Button(
               mainAxisSize: MainAxisSize.max,

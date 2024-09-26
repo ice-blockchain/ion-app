@@ -11,7 +11,7 @@ class PostNotFound extends StatelessWidget {
       appBar: NavigationAppBar.screen(
         title: Text(context.i18n.post_page_title),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Post not found'),
       ),
     );

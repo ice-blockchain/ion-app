@@ -73,7 +73,7 @@ class AuthFooter extends HookWidget {
                 ),
               ),
               WidgetSpan(child: SizedBox(width: 6.0.s)),
-              WidgetSpan(
+              const WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
                 child: IdentityLink(),
               ),

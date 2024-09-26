@@ -24,8 +24,8 @@ class MainTabNavigation extends HookWidget {
 
     return Scaffold(
       body: MainTabNavigationContainer(
-        child: shell,
         tabPressStream: tabPressStreamController.stream,
+        child: shell,
       ),
       bottomNavigationBar: Container(
         decoration: state.isMainModalOpen

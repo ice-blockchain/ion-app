@@ -20,9 +20,9 @@ class VisibilitySettingsModal extends StatelessWidget {
           title: Text(context.i18n.visibility_settings_title_video),
         ),
         SizedBox(height: 12.0.s),
-        HorizontalSeparator(),
-        VisibilitySettingsList(),
-        HorizontalSeparator(),
+        const HorizontalSeparator(),
+        const VisibilitySettingsList(),
+        const HorizontalSeparator(),
         ScreenBottomOffset(
           margin: 36.0.s,
         ),

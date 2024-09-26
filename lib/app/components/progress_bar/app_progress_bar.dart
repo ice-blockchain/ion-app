@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
 class AppProgressIndicator extends StatelessWidget {
-  final double progressValue;
-
   const AppProgressIndicator({
-    super.key,
     required this.progressValue,
+    super.key,
   });
+  final double progressValue;
 
   @override
   Widget build(BuildContext context) {

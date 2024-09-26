@@ -7,12 +7,11 @@ part 'auth_provider.freezed.dart';
 
 @Freezed(copyWith: true, equal: true)
 class AuthState with _$AuthState {
-  const AuthState._();
-
   const factory AuthState({
     required List<String> authenticatedUserIds,
     required String? currentUserId,
   }) = _AuthState;
+  const AuthState._();
 
   bool get hasAuthenticated {
     return authenticatedUserIds.isNotEmpty;
@@ -26,7 +25,7 @@ class Auth extends _$Auth {
 
   @override
   AsyncValue<AuthState> build() {
-    return AsyncLoading();
+    return const AsyncLoading();
   }
 
   /// Method to init the auth provider with the stored values.
@@ -36,7 +35,7 @@ class Auth extends _$Auth {
   /// e.g. when the local storage is already initialized.
   Future<void> rehydrate() async {
     final localStorage = ref.read(localStorageProvider);
-    await Future<void>.delayed(Duration(seconds: 1));
+    await Future<void>.delayed(const Duration(seconds: 1));
     final authenticatedUserIds = localStorage.getStringList(_authenticatedUserIdsKey) ?? [];
     final storedCurrentUserId = localStorage.getString(_currentUserIdKey);
     state = AsyncValue.data(
@@ -56,7 +55,7 @@ class Auth extends _$Auth {
   }
 
   Future<void> signIn({required String keyName}) async {
-    state = AsyncValue.loading();
+    state = const AsyncValue.loading();
 
     final localStorage = ref.read(localStorageProvider);
     final authenticatedUserIds = ['001', '002', '003'];
@@ -75,7 +74,7 @@ class Auth extends _$Auth {
   }
 
   Future<void> signOut() async {
-    state = AsyncValue.loading();
+    state = const AsyncValue.loading();
 
     await Future<void>.delayed(const Duration(seconds: 1));
 
@@ -86,7 +85,7 @@ class Auth extends _$Auth {
       localStorage.remove(_currentUserIdKey),
     ]);
 
-    state = AsyncData(AuthState(authenticatedUserIds: [], currentUserId: null));
+    state = const AsyncData(AuthState(authenticatedUserIds: [], currentUserId: null));
   }
 
   void setCurrentUser(String userId) {

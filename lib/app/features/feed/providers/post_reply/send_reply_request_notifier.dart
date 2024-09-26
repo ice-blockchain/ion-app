@@ -8,8 +8,8 @@ class SendReplyRequestNotifier extends _$SendReplyRequestNotifier {
   FutureOr<void> build() {}
 
   Future<void> sendReply() async {
-    state = AsyncValue.loading();
-    await Future<void>.delayed(Duration(seconds: 1));
-    state = AsyncValue.data(null);
+    state = const AsyncValue.loading();
+    await Future<void>.delayed(const Duration(seconds: 1));
+    state = const AsyncValue.data(null);
   }
 }

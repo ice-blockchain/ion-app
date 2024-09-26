@@ -5,6 +5,7 @@ import 'package:ice/app/components/shapes/shape.dart';
 class StoryColoredBorder extends StatelessWidget {
   const StoryColoredBorder({
     required this.size,
+    super.key,
     this.hexagon = false,
     this.color,
     this.gradient,

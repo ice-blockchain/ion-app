@@ -7,6 +7,7 @@ class LoadMoreBuilder extends HookWidget {
     required this.slivers,
     required this.onLoadMore,
     required this.hasMore,
+    super.key,
     this.loadMoreOffset = 300,
   });
 
@@ -40,7 +41,9 @@ class LoadMoreBuilder extends HookWidget {
         loading.value
             ? [
                 ...slivers,
-                SliverToBoxAdapter(child: Center(child: CircularProgressIndicator.adaptive()))
+                const SliverToBoxAdapter(
+                  child: Center(child: CircularProgressIndicator.adaptive()),
+                ),
               ]
             : slivers,
       ),

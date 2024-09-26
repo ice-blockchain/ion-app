@@ -15,7 +15,7 @@ class EmailSetupSuccessPage extends StatelessWidget {
 
     return Column(
       children: [
-        Spacer(),
+        const Spacer(),
         ScreenSideOffset.medium(
           child: InfoCard(
             iconAsset: Assets.svg.actionWalletConfirmemail,
@@ -23,7 +23,7 @@ class EmailSetupSuccessPage extends StatelessWidget {
             description: locale.email_success_description,
           ),
         ),
-        Spacer(),
+        const Spacer(),
         ScreenSideOffset.large(
           child: Button(
             mainAxisSize: MainAxisSize.max,

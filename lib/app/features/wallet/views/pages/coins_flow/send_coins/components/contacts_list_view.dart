@@ -18,9 +18,9 @@ enum ContactRouteAction {
 
 class ContactsListView extends ConsumerWidget {
   const ContactsListView({
-    super.key,
     required this.appBarTitle,
     required this.action,
+    super.key,
   });
 
   final String appBarTitle;

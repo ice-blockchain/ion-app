@@ -34,7 +34,7 @@ class AuthenticatorDeleteOptions extends _$AuthenticatorDeleteOptions {
     final newSelectedValues = List<TwoFaType?>.from(state.selectedValues);
     newSelectedValues[index] = newValue;
 
-    Set<TwoFaType> newAvailableOptions = state.availableOptions;
+    var newAvailableOptions = state.availableOptions;
     if (oldValue != null) {
       newAvailableOptions = newAvailableOptions.union({oldValue});
     }

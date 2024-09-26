@@ -15,7 +15,7 @@ class AccountsList extends ConsumerWidget {
     final authStateValue = ref.watch(authProvider).valueOrNull;
 
     if (authStateValue == null) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     return SeparatedColumn(

@@ -23,7 +23,7 @@ class TwoFaOptionsPage extends HookWidget {
     final optionsNumber = useState(get2FAOptionsNumber());
     final formKey = useRef(GlobalKey<FormState>());
     final selectedValues = {
-      for (int i = 0; i < optionsNumber.value; i++) i: useState<TwoFaType?>(null)
+      for (int i = 0; i < optionsNumber.value; i++) i: useState<TwoFaType?>(null),
     };
     final availableOptions = useState<Set<TwoFaType>>(TwoFaType.values.toSet());
 
@@ -53,7 +53,7 @@ class TwoFaOptionsPage extends HookWidget {
                               if (selectedValues[i]?.value != null) {
                                 availableOptions.value = {
                                   ...availableOptions.value,
-                                  selectedValues[i]!.value!
+                                  selectedValues[i]!.value!,
                                 };
                               }
                               selectedValues[i]?.value = value;
@@ -65,7 +65,7 @@ class TwoFaOptionsPage extends HookWidget {
                       Button(
                         onPressed: () {
                           if (formKey.value.currentState!.validate()) {
-                            final Set<TwoFaType> extra = selectedValues.values
+                            final extra = selectedValues.values
                                 .map((selectedValue) => selectedValue.value)
                                 .where((TwoFaType? value) => value != null)
                                 .cast<TwoFaType>()
@@ -80,7 +80,7 @@ class TwoFaOptionsPage extends HookWidget {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
           ScreenBottomOffset(

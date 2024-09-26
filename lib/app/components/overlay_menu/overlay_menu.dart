@@ -4,9 +4,9 @@ import 'package:ice/app/components/overlay_menu/hooks/use_hide_on_scroll.dart';
 
 class OverlayMenu extends HookWidget {
   const OverlayMenu({
-    super.key,
     required this.child,
     required this.menuBuilder,
+    super.key,
     this.offset = Offset.zero,
   });
 
@@ -16,15 +16,15 @@ class OverlayMenu extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final overlayPortalController = useMemoized(() => OverlayPortalController());
-    final followLink = useMemoized(() => LayerLink());
+    final overlayPortalController = useMemoized(OverlayPortalController.new);
+    final followLink = useMemoized(LayerLink.new);
 
     useHideOnScroll(context, overlayPortalController);
 
     return OverlayPortal(
       controller: overlayPortalController,
       overlayChildBuilder: (_) {
-        final renderBox = context.findRenderObject() as RenderBox;
+        final renderBox = context.findRenderObject()! as RenderBox;
 
         return GestureDetector(
           behavior: HitTestBehavior.translucent,

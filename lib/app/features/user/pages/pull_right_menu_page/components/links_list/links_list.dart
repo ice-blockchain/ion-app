@@ -21,7 +21,7 @@ class LinksList extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 30.0.s, vertical: 6.0.s),
       decoration: Decorations.borderBoxDecoration(context),
       child: SeparatedColumn(
-        separator: HorizontalSeparator(),
+        separator: const HorizontalSeparator(),
         children: [
           LinksListTile(
             iconAssetName: Assets.svg.iconProfileUser,

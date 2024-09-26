@@ -39,7 +39,7 @@ class AuthScrollContainer extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final positionNotifier = useMemoized(() => ValueNotifier(0.0));
+    final positionNotifier = useMemoized(() => ValueNotifier<double>(0));
     return NotificationListener(
       onNotification: (notification) {
         // When the scroll is changed due to keyboard open / close
@@ -84,11 +84,11 @@ class AuthScrollContainer extends HookWidget {
                   AuthHeader(
                     title: title,
                     description: description,
-                    titleStyle: titleStyle != null ? titleStyle : null,
-                    descriptionStyle: descriptionStyle != null ? descriptionStyle : null,
+                    titleStyle: titleStyle,
+                    descriptionStyle: descriptionStyle,
                     icon: icon != null ? AuthHeaderIcon(icon: icon) : icon,
                   ),
-                  ...children
+                  ...children,
                 ],
               ),
             ),

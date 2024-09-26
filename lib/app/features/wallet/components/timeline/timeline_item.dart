@@ -7,16 +7,15 @@ import 'package:ice/generated/assets.gen.dart';
 import 'package:intl/intl.dart';
 
 class TimelineItem extends StatelessWidget {
+  const TimelineItem({
+    required this.isLast,
+    required this.data,
+    super.key,
+    this.isNextDone = false,
+  });
   final bool isLast;
   final TimelineItemData data;
   final bool? isNextDone;
-
-  const TimelineItem({
-    Key? key,
-    required this.isLast,
-    required this.data,
-    this.isNextDone = false,
-  }) : super(key: key);
 
   static double get separatorWidth => 1.0.s;
   static double get separatorHeight => 9.0.s;
@@ -25,7 +24,6 @@ class TimelineItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Column(
           children: [

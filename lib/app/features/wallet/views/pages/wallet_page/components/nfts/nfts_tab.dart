@@ -54,7 +54,7 @@ class NftsTab extends HookConsumerWidget {
       );
     }
 
-    return nfts.length > 0
+    return nfts.isNotEmpty
         ? SliverList.separated(
             itemCount: nfts.length,
             separatorBuilder: (BuildContext context, int index) {
@@ -73,6 +73,6 @@ class NftsTab extends HookConsumerWidget {
               );
             },
           )
-        : SliverToBoxAdapter(child: const SizedBox.shrink());
+        : const SliverToBoxAdapter(child: SizedBox.shrink());
   }
 }

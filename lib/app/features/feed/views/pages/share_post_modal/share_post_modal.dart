@@ -5,15 +5,15 @@ import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/pages/share_post_modal/components/share_send_button.dart';
 import 'package:ice/app/features/feed/views/pages/share_post_modal/components/share_options.dart';
+import 'package:ice/app/features/feed/views/pages/share_post_modal/components/share_send_button.dart';
 import 'package:ice/app/features/feed/views/pages/share_post_modal/components/share_user_list.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class SharePostModal extends HookWidget {
-  const SharePostModal({super.key, required this.postId});
+  const SharePostModal({required this.postId, super.key});
 
   final String postId;
 
@@ -23,7 +23,7 @@ class SharePostModal extends HookWidget {
 
     final visibleUsers = useState([...users.value]);
 
-    final selectedUserIds = useState(Set<int>());
+    final selectedUserIds = useState(<int>{});
 
     void onUserPressed(int userId) {
       if (selectedUserIds.value.contains(userId)) {
@@ -60,10 +60,10 @@ class SharePostModal extends HookWidget {
               onUserPressed: onUserPressed,
             ),
           ),
-          HorizontalSeparator(),
+          const HorizontalSeparator(),
           SizedBox(
             height: 110.0.s,
-            child: selectedUserIds.value.isEmpty ? const ShareOptions() : ShareSendButton(),
+            child: selectedUserIds.value.isEmpty ? const ShareOptions() : const ShareSendButton(),
           ),
         ],
       ),

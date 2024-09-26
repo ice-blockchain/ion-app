@@ -4,7 +4,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results_list_item.dart';
 
 class FeedSearchResultsListItemShape extends StatelessWidget {
-  const FeedSearchResultsListItemShape();
+  const FeedSearchResultsListItemShape({super.key});
 
   @override
   Widget build(BuildContext context) {

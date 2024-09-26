@@ -6,7 +6,7 @@ import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/router/app_routes.dart';
 
 class ReplyListItem extends ConsumerWidget {
-  const ReplyListItem({required this.postId});
+  const ReplyListItem({required this.postId, super.key});
 
   final String postId;
 
@@ -14,11 +14,11 @@ class ReplyListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final post = ref.watch(postByIdSelectorProvider(postId: postId));
 
-    if (post == null) return SizedBox.shrink();
+    if (post == null) return const SizedBox.shrink();
 
     return GestureDetector(
       onTap: () => PostDetailsRoute(postId: postId).push<void>(context),
-      child: Post(header: PostHeader(), postData: post),
+      child: Post(header: const PostHeader(), postData: post),
     );
   }
 }

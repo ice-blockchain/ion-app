@@ -8,7 +8,7 @@ import 'package:ice/app/features/feed/views/components/list_separator/list_separ
 import 'package:ice/app/features/feed/views/components/post_list/post_list_skeleton.dart';
 
 class FeedAdvancedSearchUsers extends HookConsumerWidget {
-  const FeedAdvancedSearchUsers({super.key, required this.query});
+  const FeedAdvancedSearchUsers({required this.query, super.key});
 
   final String query;
 
@@ -21,7 +21,7 @@ class FeedAdvancedSearchUsers extends HookConsumerWidget {
     return usersSearchResults.maybeWhen(
       data: (userIds) {
         if (userIds == null || userIds.isEmpty) {
-          return NothingIsFound();
+          return const NothingIsFound();
         }
 
         return ListView.separated(
@@ -30,7 +30,7 @@ class FeedAdvancedSearchUsers extends HookConsumerWidget {
           separatorBuilder: (_, __) => FeedListSeparator(),
         );
       },
-      orElse: () => CustomScrollView(slivers: [PostListSkeleton()]),
+      orElse: () => const CustomScrollView(slivers: [PostListSkeleton()]),
     );
   }
 }

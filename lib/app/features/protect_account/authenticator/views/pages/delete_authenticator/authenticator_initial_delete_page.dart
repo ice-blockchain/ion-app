@@ -58,7 +58,7 @@ class AuthenticatorInitialDeletePage extends StatelessWidget {
               ),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           ScreenSideOffset.large(
             child: Button(
               type: ButtonType.outlined,

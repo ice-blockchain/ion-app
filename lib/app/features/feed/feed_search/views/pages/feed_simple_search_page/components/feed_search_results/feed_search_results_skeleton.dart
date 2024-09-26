@@ -20,7 +20,7 @@ class FeedSearchResultsSkeleton extends StatelessWidget {
             child: Column(
               children: List.generate(
                 numberOfItems,
-                (int i) => FeedSearchResultsListItemShape(),
+                (int i) => const FeedSearchResultsListItemShape(),
               ).toList(),
             ),
           ),

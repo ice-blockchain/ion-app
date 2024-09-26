@@ -6,8 +6,8 @@ import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
-import 'package:ice/app/features/protect_account/backup/views/components/recovery_key_input.dart';
 import 'package:ice/app/features/protect_account/backup/data/models/recovery_keys.dart';
+import 'package:ice/app/features/protect_account/backup/views/components/recovery_key_input.dart';
 import 'package:ice/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/utils/validators.dart';
@@ -67,7 +67,7 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
           ScreenBottomOffset(
@@ -76,7 +76,7 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
               child: Button(
                 onPressed: () {
                   if (formKey.value.currentState!.validate()) {
-                    ref.read(securityAccountControllerProvider.notifier).toggleBackup(true);
+                    ref.read(securityAccountControllerProvider.notifier).toggleBackup(value: true);
                     onContinuePressed();
                   }
                 },

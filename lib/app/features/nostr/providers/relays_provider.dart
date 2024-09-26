@@ -1,7 +1,7 @@
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:ice/app/extensions/extensions.dart';
 
 part 'relays_provider.g.dart';
 

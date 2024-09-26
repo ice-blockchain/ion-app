@@ -55,7 +55,6 @@ extension IconStringExtension on String {
       width: iconWidth,
       height: iconHeight,
       excludeFromSemantics: true,
-      fit: BoxFit.contain,
       colorFilter: colorFilter,
     );
   }

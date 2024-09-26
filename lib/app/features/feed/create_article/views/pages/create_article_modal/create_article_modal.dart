@@ -58,11 +58,11 @@ class CreateArticleModal extends HookWidget {
           ),
           Column(
             children: [
-              HorizontalSeparator(),
+              const HorizontalSeparator(),
               ScreenSideOffset.small(
-                child: VisibilitySettingsToolbar(),
+                child: const VisibilitySettingsToolbar(),
               ),
-              HorizontalSeparator(),
+              const HorizontalSeparator(),
               ScreenSideOffset.small(
                 child: ActionsToolbar(
                   actions: [

@@ -9,7 +9,7 @@ class SearchLoadingIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(12.0.s),
-      child: IceLoadingIndicator(
+      child: const IceLoadingIndicator(
         type: IndicatorType.dark,
       ),
     );

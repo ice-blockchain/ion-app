@@ -25,7 +25,7 @@ class FillProfile extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = useMemoized(() => GlobalKey<FormState>());
+    final formKey = useMemoized(GlobalKey<FormState>.new);
 
     final nameController = useTextEditingController();
     final nicknameController = useTextEditingController();
@@ -39,7 +39,7 @@ class FillProfile extends HookWidget {
           height: double.infinity,
           child: SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 children: [
                   AuthHeader(
@@ -132,7 +132,7 @@ class FillProfile extends HookWidget {
                                   color: context.theme.appColors.onPrimaryAccent,
                                 ),
                           onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
+                            if (formKey.currentState!.validate()) {
                               loading.value = true;
                               hideKeyboard(context);
                               await Future<void>.delayed(

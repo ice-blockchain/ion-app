@@ -22,11 +22,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
     );
   }
 
-  useEffect(() {
-    return () {
-      timer?.cancel();
-    };
-  }, []);
+  useEffect(
+    () {
+      return () {
+        timer?.cancel();
+      };
+    },
+    [],
+  );
 
   return (countdown: countdown, startCountdown: startCountdown);
 }

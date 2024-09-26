@@ -22,7 +22,7 @@ import 'package:ice/app/utils/num.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class DAppDetailsModal extends HookConsumerWidget {
-  DAppDetailsModal({
+  const DAppDetailsModal({
     required this.dappId,
     super.key,
   });
@@ -190,8 +190,8 @@ class DAppDetailsModal extends HookConsumerWidget {
               ),
             ),
           ),
-          HorizontalSeparator(),
-          LaunchDappButton()
+          const HorizontalSeparator(),
+          const LaunchDappButton(),
         ],
       ),
     );

@@ -9,8 +9,8 @@ import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
 class ImageCell extends ConsumerWidget {
   const ImageCell({
-    super.key,
     required this.mediaData,
+    super.key,
   });
 
   final MediaData mediaData;
@@ -34,7 +34,6 @@ class ImageCell extends ConsumerWidget {
             mediaData.asset,
             isOriginal: false,
             thumbnailSize: const ThumbnailSize.square(300),
-            thumbnailFormat: ThumbnailFormat.jpeg,
           ),
           fit: BoxFit.cover,
           frameBuilder: (_, Widget child, int? frame, bool wasSynchronouslyLoaded) {

@@ -15,7 +15,7 @@ class CreateStoryModal extends StatelessWidget {
           NavigationAppBar.modal(
             title: Text(context.i18n.create_story_nav_title),
           ),
-          Spacer(),
+          const Spacer(),
         ],
       ),
     );

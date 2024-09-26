@@ -29,7 +29,7 @@ class _ListItemUser extends ListItem {
                   ? Avatar(
                       size: avatarSize,
                       imageUrl: profilePicture,
-                      badge: showProfilePictureIceBadge ? _IceBadge() : null,
+                      badge: showProfilePictureIceBadge ? const _IceBadge() : null,
                       imageWidget: profilePictureWidget,
                       hexagon: ntfAvatar,
                     )

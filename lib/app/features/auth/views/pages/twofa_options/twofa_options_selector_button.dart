@@ -39,7 +39,7 @@ class TwoFaOptionsSelectorButton extends StatelessWidget {
         ),
         border: iconBorderSize,
       ),
-      label: Container(
+      label: SizedBox(
         width: double.infinity,
         child: Text(
           state.value?.getDisplayName(context) ?? context.i18n.two_fa_select(optionIndex),

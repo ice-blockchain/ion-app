@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
 
 TabBarTheme buildTabBarTheme() {
-  return TabBarTheme(overlayColor: WidgetStatePropertyAll<Color>(Colors.transparent));
+  return const TabBarTheme(overlayColor: WidgetStatePropertyAll<Color>(Colors.transparent));
 }

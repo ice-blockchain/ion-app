@@ -8,7 +8,7 @@ class PostReplyData with _$PostReplyData {
     required String text,
   }) = _PostReplyData;
 
-  factory PostReplyData.empty() => PostReplyData(
+  factory PostReplyData.empty() => const PostReplyData(
         text: '',
       );
 }

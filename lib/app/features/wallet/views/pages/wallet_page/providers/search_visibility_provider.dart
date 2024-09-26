@@ -8,5 +8,5 @@ class WalletSearchVisibility extends _$WalletSearchVisibility {
   @override
   bool build(WalletTabType tabType) => false;
 
-  void update({required bool isVisible}) => state = isVisible;
+  set isVisible(bool isVisible) => state = isVisible;
 }

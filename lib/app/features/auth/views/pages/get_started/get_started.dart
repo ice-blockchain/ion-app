@@ -75,7 +75,7 @@ class GetStartedPage extends HookWidget {
                 ],
               ),
             ),
-            ScreenBottomOffset(child: const AuthFooter())
+            ScreenBottomOffset(child: const AuthFooter()),
           ],
         ),
       ),

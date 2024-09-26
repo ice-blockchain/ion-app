@@ -18,7 +18,7 @@ import 'package:ice/app/services/browser/browser.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class TransactionDetailsPage extends ConsumerWidget {
-  const TransactionDetailsPage({super.key, required this.type});
+  const TransactionDetailsPage({required this.type, super.key});
 
   final CryptoAssetType type;
 
@@ -65,7 +65,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                       items: [
                         TimelineItemData(title: 'Pending', isDone: true, date: DateTime.now()),
                         TimelineItemData(title: 'In the process of execution', isDone: true),
-                        TimelineItemData(title: 'Transaction successful', isDone: false),
+                        TimelineItemData(title: 'Transaction successful'),
                       ],
                     ),
                     SizedBox(height: 16.0.s),

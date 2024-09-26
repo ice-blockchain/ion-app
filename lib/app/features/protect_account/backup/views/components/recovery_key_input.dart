@@ -27,16 +27,22 @@ class RecoveryKeyInput extends HookWidget {
   Widget build(BuildContext context) {
     final isValid = useState(false);
 
-    final validate = useCallback((String? value) {
-      final error = validator?.call(value);
-      isValid.value = value?.isNotEmpty == true && error == null;
-      return error;
-    }, [validator]);
+    final validate = useCallback(
+      (String? value) {
+        final error = validator?.call(value);
+        isValid.value = (value?.isNotEmpty ?? false) && error == null;
+        return error;
+      },
+      [validator],
+    );
 
-    useEffect(() {
-      validate(controller.text);
-      return null;
-    }, []);
+    useEffect(
+      () {
+        validate(controller.text);
+        return null;
+      },
+      [],
+    );
 
     return TextInput(
       controller: controller,

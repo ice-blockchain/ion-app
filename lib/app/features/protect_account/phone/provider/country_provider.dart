@@ -15,7 +15,7 @@ class SelectedCountry extends _$SelectedCountry {
     return countries[1];
   }
 
-  void setCountry(Country country) {
+  set country(Country country) {
     state = country;
   }
 }

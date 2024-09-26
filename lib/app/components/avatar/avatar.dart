@@ -46,12 +46,13 @@ class Avatar extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        hexagon
-            ? ClipPath(
-                clipper: ShapeClipper(HexagonShapeBuilder()),
-                child: image,
-              )
-            : ClipRRect(borderRadius: borderRadius, child: image),
+        if (hexagon)
+          ClipPath(
+            clipper: ShapeClipper(HexagonShapeBuilder()),
+            child: image,
+          )
+        else
+          ClipRRect(borderRadius: borderRadius, child: image),
         if (badge != null) badge!,
       ],
     );

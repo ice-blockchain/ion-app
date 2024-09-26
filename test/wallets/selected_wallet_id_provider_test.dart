@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ice/app/features/wallets/providers/selected_wallet_id_provider.dart';
 import 'package:ice/app/services/storage/local_storage.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:riverpod/riverpod.dart';
 
 import '../mocks.dart';
 import '../test_utils.dart';
@@ -68,8 +68,12 @@ void main() {
         'newWalletId',
       );
 
-      verify(() => mockLocalStorage.setString(
-          SelectedWalletIdNotifier.selectedWalletIdKey, 'newWalletId')).called(1);
+      verify(
+        () => mockLocalStorage.setString(
+          SelectedWalletIdNotifier.selectedWalletIdKey,
+          'newWalletId',
+        ),
+      ).called(1);
     });
 
     test('notifier reacts to changes in localStorage', () {
@@ -83,7 +87,7 @@ void main() {
 
       container.listen<String?>(
         selectedWalletIdNotifierProvider,
-        listener,
+        listener.call,
         fireImmediately: true,
       );
 

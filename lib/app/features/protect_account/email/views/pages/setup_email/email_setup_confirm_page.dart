@@ -6,14 +6,14 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/twofa_type.dart';
+import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
 import 'package:ice/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ice/app/features/protect_account/secure_account/providers/security_account_provider.dart';
-import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
 
 class EmailSetupConfirmPage extends HookConsumerWidget {
-  const EmailSetupConfirmPage({super.key, required this.email});
+  const EmailSetupConfirmPage({required this.email, super.key});
 
   final String email;
 
@@ -39,7 +39,7 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
                   style: theme.appTextThemes.body,
                 ),
                 if (isKeyboardVisible) SizedBox(height: 58.0.s),
-                Spacer(),
+                const Spacer(),
                 Padding(
                   padding: EdgeInsets.only(bottom: 22.0.s),
                   child: TwoFaCodeInput(
@@ -47,15 +47,17 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
                     twoFaType: TwoFaType.email,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   label: Text(locale.button_confirm),
                   onPressed: () {
-                    if (formKey.value.currentState?.validate() == true) {
+                    if (formKey.value.currentState?.validate() ?? false) {
                       hideKeyboardAndCallOnce(
                         callback: () {
-                          ref.read(securityAccountControllerProvider.notifier).toggleEmail(true);
+                          ref
+                              .read(securityAccountControllerProvider.notifier)
+                              .toggleEmail(value: true);
                           EmailSetupRoute(step: EmailSetupSteps.success).push<void>(context);
                         },
                       );
