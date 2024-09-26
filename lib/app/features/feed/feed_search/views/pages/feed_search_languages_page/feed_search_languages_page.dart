@@ -36,18 +36,19 @@ class FeedSearchLanguagesPage extends HookWidget {
           SizedBox(height: 14.0.s),
           Expanded(
             child: ListView.builder(
-                itemCount: languages.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final language = languages[index];
-                  return GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => toggleLanguageSelection(language.isoCode),
-                    child: FeedSearchLanguageListItem(
-                      language: language,
-                      selected: selectedLanguages.contains(language.isoCode),
-                    ),
-                  );
-                }),
+              itemCount: languages.length,
+              itemBuilder: (BuildContext context, int index) {
+                final language = languages[index];
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => toggleLanguageSelection(language.isoCode),
+                  child: FeedSearchLanguageListItem(
+                    language: language,
+                    selected: selectedLanguages.contains(language.isoCode),
+                  ),
+                );
+              },
+            ),
           ),
           if (selectedLanguages.isNotEmpty) ...[
             SizedBox(height: 10.0.s),
@@ -59,9 +60,7 @@ class FeedSearchLanguagesPage extends HookWidget {
                 child: Button(
                   label: Text(context.i18n.button_apply),
                   mainAxisSize: MainAxisSize.max,
-                  onPressed: () {
-                    context.pop(selectedLanguages);
-                  },
+                  onPressed: () => context.pop(selectedLanguages),
                 ),
               ),
             )
