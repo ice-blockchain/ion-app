@@ -54,12 +54,15 @@ class FeedSearchLanguagesPage extends HookWidget {
             HorizontalSeparator(),
             SizedBox(height: 16.0.s),
             ScreenSideOffset.small(
-              child: Button(
-                label: Text(context.i18n.button_continue),
-                mainAxisSize: MainAxisSize.max,
-                onPressed: () {
-                  context.pop(selectedLanguages.toList());
-                },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 28.0.s),
+                child: Button(
+                  label: Text(context.i18n.button_apply),
+                  mainAxisSize: MainAxisSize.max,
+                  onPressed: () {
+                    context.pop(selectedLanguages);
+                  },
+                ),
               ),
             )
           ],

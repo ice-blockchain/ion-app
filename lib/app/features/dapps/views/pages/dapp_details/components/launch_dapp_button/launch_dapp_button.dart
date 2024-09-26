@@ -13,7 +13,7 @@ class LaunchDappButton extends StatelessWidget {
     return ScreenSideOffset.small(
       child: Padding(
         padding: EdgeInsets.only(
-          top: 18.0.s,
+          top: 16.0.s,
           bottom: 36.0.s,
         ),
         child: Button(

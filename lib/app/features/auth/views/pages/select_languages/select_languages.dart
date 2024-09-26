@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
+import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
@@ -70,24 +72,22 @@ class SelectLanguages extends HookWidget {
               ],
             ),
           ),
-          if (mayContinue)
+          if (mayContinue) ...[
+            HorizontalSeparator(),
+            SizedBox(height: 16.0.s),
             ScreenSideOffset.small(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: 8.0.s,
-                  bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
-                ),
-                child: Button(
-                  label: Text(context.i18n.button_continue),
-                  mainAxisSize: MainAxisSize.max,
-                  onPressed: () {
-                    hideKeyboardAndCallOnce(
-                      callback: () => DiscoverCreatorsRoute().push<void>(context),
-                    );
-                  },
-                ),
+              child: Button(
+                label: Text(context.i18n.button_continue),
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  hideKeyboardAndCallOnce(
+                    callback: () => DiscoverCreatorsRoute().push<void>(context),
+                  );
+                },
               ),
             ),
+            ScreenBottomOffset(margin: 36.0.s),
+          ]
         ],
       ),
     );
