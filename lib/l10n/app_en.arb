@@ -319,5 +319,10 @@
   "create_story_nav_title": "Add a story",
   "create_video_nav_title": "Add video",
   "gallery_add_photo_title": "Add photo",
-  "camera": "Camera"
+  "camera": "Camera",
+  "visibility_settings_title_video": "Who can view this video",
+  "visibility_settings_everyone": "Everyone can reply",
+  "visibility_settings_followed_accounts": "Accounts you follow",
+  "visibility_settings_verified_accounts": "Verified accounts",
+  "visibility_settings_mentioned_accounts": "Only accounts you mention"
 }
