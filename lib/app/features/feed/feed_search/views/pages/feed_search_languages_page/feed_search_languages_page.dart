@@ -6,8 +6,8 @@ import 'package:ice/app/components/inputs/search_input/search_input.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
-import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/core/model/language.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_search_languages_page/feed_search_language_list_item.dart';
 import 'package:ice/app/hooks/use_languages.dart';
 import 'package:ice/app/hooks/use_selected_state.dart';
@@ -16,8 +16,8 @@ import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class FeedSearchLanguagesPage extends HookWidget {
   const FeedSearchLanguagesPage({
-    super.key,
     required this.defaultSelected,
+    super.key,
   });
 
   final List<Language> defaultSelected;
@@ -59,7 +59,7 @@ class FeedSearchLanguagesPage extends HookWidget {
           ),
           if (selectedLanguages.isNotEmpty) ...[
             SizedBox(height: 10.0.s),
-            HorizontalSeparator(),
+            const HorizontalSeparator(),
             SizedBox(height: 16.0.s),
             ScreenSideOffset.small(
               child: Padding(
@@ -70,7 +70,7 @@ class FeedSearchLanguagesPage extends HookWidget {
                   onPressed: () => context.pop(selectedLanguages),
                 ),
               ),
-            )
+            ),
           ],
           ScreenBottomOffset(margin: 36.0.s),
         ],

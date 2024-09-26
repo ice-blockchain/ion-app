@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/core/model/language.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class FeedSearchLanguageListItem extends StatelessWidget {
   const FeedSearchLanguageListItem({
-    super.key,
     required this.language,
     required this.selected,
+    super.key,
   });
 
   final Language language;

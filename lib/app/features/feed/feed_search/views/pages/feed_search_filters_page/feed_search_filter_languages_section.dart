@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/core/model/language.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class FeedSearchFilterLanguagesSection extends StatelessWidget {
   const FeedSearchFilterLanguagesSection({
-    super.key,
     required this.selectedLanguages,
     required this.onFilterChange,
+    super.key,
   });
 
   final List<Language> selectedLanguages;

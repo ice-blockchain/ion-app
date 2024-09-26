@@ -6,9 +6,9 @@ import 'package:ice/generated/assets.gen.dart';
 
 class FeedSearchFilterPeopleSection extends StatelessWidget {
   const FeedSearchFilterPeopleSection({
-    super.key,
     required this.selectedFilter,
     required this.onFilterChange,
+    super.key,
   });
 
   final FeedSearchFilterPeople selectedFilter;

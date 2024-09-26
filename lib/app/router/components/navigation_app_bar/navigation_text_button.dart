@@ -6,8 +6,8 @@ import 'package:ice/app/extensions/theme_data.dart';
 
 class NavigationTextButton extends StatelessWidget {
   const NavigationTextButton({
-    super.key,
     required this.label,
+    super.key,
     this.onPressed,
   });
 
@@ -18,6 +18,7 @@ class NavigationTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
+      onPressed: onPressed ?? () => context.pop(),
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Text(
@@ -27,7 +28,6 @@ class NavigationTextButton extends StatelessWidget {
           ),
         ),
       ),
-      onPressed: onPressed ?? () => context.pop(),
     );
   }
 }

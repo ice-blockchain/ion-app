@@ -73,7 +73,7 @@ class SelectLanguages extends HookWidget {
             ),
           ),
           if (mayContinue) ...[
-            HorizontalSeparator(),
+            const HorizontalSeparator(),
             SizedBox(height: 16.0.s),
             ScreenSideOffset.small(
               child: Button(
@@ -87,7 +87,7 @@ class SelectLanguages extends HookWidget {
               ),
             ),
             ScreenBottomOffset(margin: 36.0.s),
-          ]
+          ],
         ],
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/data/models/twofa_type.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/discover_creators.dart';
@@ -19,6 +18,7 @@ import 'package:ice/app/features/auth/views/pages/twofa_options/twofa_options_pa
 import 'package:ice/app/features/auth/views/pages/twofa_success/twofa_success_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
+import 'package:ice/app/features/core/model/language.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';

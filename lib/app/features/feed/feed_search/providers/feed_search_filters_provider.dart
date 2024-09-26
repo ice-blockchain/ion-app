@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/core/model/language.dart';
 import 'package:ice/app/features/feed/feed_search/model/feed_search_filter_people.dart';
 import 'package:ice/app/services/storage/user_preferences_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -16,7 +16,7 @@ class FeedSearchFiltersState with _$FeedSearchFiltersState {
   }) = _FeedSearchFiltersState;
 
   factory FeedSearchFiltersState.initial() {
-    return FeedSearchFiltersState(
+    return const FeedSearchFiltersState(
       people: FeedSearchFilterPeople.anyone,
       languages: [Language.english],
     );
@@ -55,11 +55,12 @@ class FeedSearchFilter extends _$FeedSearchFilter {
 
   void _saveState(FeedSearchFiltersState state) {
     final userId = ref.read(currentUserIdSelectorProvider);
-    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: userId));
-
-    userPreferencesService.setEnum(_feedSearchPeopleFilterKey, state.people);
-    userPreferencesService.setValue<List<String>>(
-        _feedSearchLanguagesFilterKey, state.languages.map((lang) => lang.isoCode).toList());
+    ref.read(userPreferencesServiceProvider(userId: userId))
+      ..setEnum(_feedSearchPeopleFilterKey, state.people)
+      ..setValue<List<String>>(
+        _feedSearchLanguagesFilterKey,
+        state.languages.map((lang) => lang.isoCode).toList(),
+      );
   }
 
   FeedSearchFiltersState _loadSavedState() {
