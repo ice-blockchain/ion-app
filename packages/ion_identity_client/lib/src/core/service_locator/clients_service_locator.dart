@@ -1,5 +1,7 @@
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/data_sources/data_sources.dart';
+import 'package:ion_identity_client/src/auth/data_sources/recover_user_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/services.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
 import 'package:ion_identity_client/src/ion_api_user_client.dart';
@@ -57,7 +59,12 @@ mixin _AuthClient {
       username: username,
       registerService: createRegisterService(username: username, config: config, signer: signer),
       loginService: createLoginService(username: username, config: config, signer: signer),
-      recoveryKeyService: createCreateRecoveryCredentialsService(
+      createRecoveryCredentialsService: createCreateRecoveryCredentialsService(
+        username: username,
+        config: config,
+        signer: signer,
+      ),
+      recoverUserService: createRecoverUserService(
         username: username,
         config: config,
         signer: signer,
@@ -130,6 +137,27 @@ mixin _AuthClient {
     return CreateRecoveryCredentialsDataSource(
       networkClient: IonServiceLocator.getNetworkClient(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
+    );
+  }
+
+  RecoverUserService createRecoverUserService({
+    required String username,
+    required IonClientConfig config,
+    required PasskeysSigner signer,
+  }) {
+    return RecoverUserService(
+      config: config,
+      username: username,
+      passkeySigner: signer,
+      dataSource: createRecoverUserDataSource(config: config),
+    );
+  }
+
+  RecoverUserDataSource createRecoverUserDataSource({
+    required IonClientConfig config,
+  }) {
+    return RecoverUserDataSource(
+      networkClient: IonServiceLocator.getNetworkClient(config: config),
     );
   }
 }

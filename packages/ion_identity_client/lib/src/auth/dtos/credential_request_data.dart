@@ -7,17 +7,19 @@ part 'credential_request_data.g.dart';
 @JsonSerializable()
 class CredentialRequestData {
   const CredentialRequestData({
-    required this.challengeIdentifier,
-    required this.credentialName,
     required this.credentialKind,
     required this.credentialInfo,
     required this.encryptedPrivateKey,
+    this.credentialName,
+    this.challengeIdentifier,
   });
 
   factory CredentialRequestData.fromJson(JsonObject json) => _$CredentialRequestDataFromJson(json);
 
-  final String challengeIdentifier;
-  final String credentialName;
+  @JsonKey(includeIfNull: false)
+  final String? challengeIdentifier;
+  @JsonKey(includeIfNull: false)
+  final String? credentialName;
   final String credentialKind;
   final CredentialInfo credentialInfo;
   final String encryptedPrivateKey;

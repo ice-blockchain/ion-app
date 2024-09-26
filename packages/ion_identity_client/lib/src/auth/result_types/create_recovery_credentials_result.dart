@@ -12,6 +12,11 @@ class CreateRecoveryCredentialsSuccess extends CreateRecoveryCredentialsResult {
   final String recoveryName;
   final String recoveryId;
   final String recoveryCode;
+
+  @override
+  String toString() {
+    return 'CreateRecoveryCredentialsSuccess(recoveryName: $recoveryName, recoveryId: $recoveryId, recoveryCode: $recoveryCode)';
+  }
 }
 
 class CreateRecoveryCredentialsFailure extends CreateRecoveryCredentialsResult {

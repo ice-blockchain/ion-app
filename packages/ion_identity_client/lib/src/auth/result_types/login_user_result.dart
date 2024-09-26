@@ -20,6 +20,9 @@ final class PasskeyValidationLoginUserFailure extends LoginUserFailure {
 
   final Object? error;
   final StackTrace? stackTrace;
+
+  @override
+  String toString() => 'PasskeyValidationLoginUserFailure(error: $error, stackTrace: $stackTrace)';
 }
 
 final class UnknownLoginUserFailure extends LoginUserFailure {
