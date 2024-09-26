@@ -17,6 +17,7 @@ class FeedRoutes {
         TypedGoRoute<CreateVideoRoute>(path: 'create-video'),
         TypedGoRoute<MediaPickerRoute>(path: 'media-picker'),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
+        TypedGoRoute<FeedSearchLanguagesRoute>(path: 'feed-search-languages'),
       ],
     ),
   ];
@@ -140,6 +141,14 @@ class FeedSearchFiltersRoute extends BaseRouteData {
   FeedSearchFiltersRoute()
       : super(
           child: const FeedSearchFiltersPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class FeedSearchLanguagesRoute extends BaseRouteData {
+  FeedSearchLanguagesRoute()
+      : super(
+          child: const FeedSearchLanguagesPage(),
           type: IceRouteType.bottomSheet,
         );
 }

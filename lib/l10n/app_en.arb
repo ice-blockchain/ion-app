@@ -233,6 +233,7 @@
   "feed_search_filter_people": "People",
   "feed_search_filter_languages": "Languages",
   "feed_search_filter_select_languages": "Select languages",
+  "feed_search_select_languages_title": "Select languages",
   "feed_advanced_search_category_top": "Top",
   "feed_advanced_search_category_latest": "Latest",
   "feed_advanced_search_category_people": "People",

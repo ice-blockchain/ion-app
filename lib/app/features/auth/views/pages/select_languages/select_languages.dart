@@ -9,6 +9,7 @@ import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_h
 import 'package:ice/app/features/auth/views/pages/select_languages/language_list_item.dart';
 import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
+import 'package:ice/app/hooks/use_selected_state.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -18,9 +19,8 @@ class SelectLanguages extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final (selectedLanguages, toggleLanguageSelection) = useSelectedState<Language>();
     final searchText = useState('');
-
-    final selectedLanguages = useState<Set<Language>>(<Language>{});
 
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
@@ -32,7 +32,7 @@ class SelectLanguages extends HookWidget {
             return nameLower.contains(searchLower);
           }).toList();
 
-    final mayContinue = selectedLanguages.value.isNotEmpty;
+    final mayContinue = selectedLanguages.isNotEmpty;
 
     return SheetContent(
       body: Column(
@@ -60,18 +60,11 @@ class SelectLanguages extends HookWidget {
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     final language = filteredLanguages[index];
-                    final isSelected = selectedLanguages.value.contains(language);
                     return LanguageListItem(
                       language: language,
-                      isSelected: isSelected,
+                      isSelected: selectedLanguages.contains(language),
                       onTap: () {
-                        final newSelectedLanguages = Set<Language>.from(selectedLanguages.value);
-                        if (isSelected) {
-                          newSelectedLanguages.remove(language);
-                        } else {
-                          newSelectedLanguages.add(language);
-                        }
-                        selectedLanguages.value = newSelectedLanguages;
+                        toggleLanguageSelection(language);
                       },
                     );
                   },

@@ -3,29 +3,19 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/data/models/article_category.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_row.dart';
+import 'package:ice/app/hooks/use_selected_state.dart';
 
 class ArticleCategoriesMenu extends HookWidget {
   const ArticleCategoriesMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final selectedItems = useState<Set<String>>({});
+    final (selectedItems, toggleSelection) = useSelectedState<String>();
     final items = mockedArticleCategories;
 
     final firstRowItemCount = (items.length / 2).ceil();
     final firstRowItems = items.sublist(0, firstRowItemCount);
     final secondRowItems = items.sublist(firstRowItemCount);
-
-    final toggleSelection = useCallback(
-      (String id) {
-        final newSelected = Set<String>.from(selectedItems.value);
-
-        newSelected.contains(id) ? newSelected.remove(id) : newSelected.add(id);
-
-        selectedItems.value = newSelected;
-      },
-      [selectedItems.value],
-    );
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -37,14 +27,14 @@ class ArticleCategoriesMenu extends HookWidget {
             SizedBox(width: 16.0.s),
             ArticleCategoriesRow(
               items: firstRowItems,
-              selectedItems: selectedItems.value,
+              selectedItems: selectedItems.toSet(),
               onToggle: toggleSelection,
               showAddButton: true,
             ),
             SizedBox(height: 10.0.s),
             ArticleCategoriesRow(
               items: secondRowItems,
-              selectedItems: selectedItems.value,
+              selectedItems: selectedItems.toSet(),
               onToggle: toggleSelection,
             ),
           ],

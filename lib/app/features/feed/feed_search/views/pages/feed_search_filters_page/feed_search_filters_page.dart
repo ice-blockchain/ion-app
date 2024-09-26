@@ -4,8 +4,10 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/constants/languages.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/feed_search/model/feed_search_filter.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_text_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -73,26 +75,33 @@ class FeedSearchFiltersPage extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 16.0.s),
-                ListItem(
-                  leading: Container(
-                    width: 30.0.s,
-                    height: 30.0.s,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: context.theme.appColors.onSecondaryBackground,
-                      borderRadius: BorderRadius.all(Radius.circular(8.0.s)),
-                      border: Border.all(
-                        width: 1.0.s,
-                        color: context.theme.appColors.onTerararyFill,
+                GestureDetector(
+                  onTap: () async {
+                    final languages =
+                        await FeedSearchLanguagesRoute().push<List<Language>>(context);
+                    print(languages);
+                  },
+                  child: ListItem(
+                    leading: Container(
+                      width: 30.0.s,
+                      height: 30.0.s,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: context.theme.appColors.onSecondaryBackground,
+                        borderRadius: BorderRadius.all(Radius.circular(8.0.s)),
+                        border: Border.all(
+                          width: 1.0.s,
+                          color: context.theme.appColors.onTerararyFill,
+                        ),
                       ),
+                      child: Assets.svg.iconSelectLanguage
+                          .icon(size: 20.0.s, color: context.theme.appColors.secondaryText),
                     ),
-                    child: Assets.svg.iconSelectLanguage
-                        .icon(size: 20.0.s, color: context.theme.appColors.secondaryText),
+                    title: Text(context.i18n.feed_search_filter_select_languages),
+                    trailing: Assets.svg.iconArrowRight.icon(),
+                    backgroundColor: context.theme.appColors.secondaryBackground,
+                    border: Border.all(color: context.theme.appColors.strokeElements),
                   ),
-                  title: Text(context.i18n.feed_search_filter_select_languages),
-                  trailing: Assets.svg.iconArrowRight.icon(),
-                  backgroundColor: context.theme.appColors.secondaryBackground,
-                  border: Border.all(color: context.theme.appColors.strokeElements),
                 ),
                 ListItem(
                   leading: Container(

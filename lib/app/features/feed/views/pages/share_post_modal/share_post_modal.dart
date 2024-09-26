@@ -8,6 +8,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/views/pages/share_post_modal/components/share_options.dart';
 import 'package:ice/app/features/feed/views/pages/share_post_modal/components/share_send_button.dart';
 import 'package:ice/app/features/feed/views/pages/share_post_modal/components/share_user_list.dart';
+import 'package:ice/app/hooks/use_selected_state.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -21,17 +22,9 @@ class SharePostModal extends HookWidget {
   Widget build(BuildContext context) {
     final users = useRef(List.generate(20, (index) => index));
 
+    final (selectedUserIds, toggleUserSelection) = useSelectedState<int>();
+
     final visibleUsers = useState([...users.value]);
-
-    final selectedUserIds = useState(<int>{});
-
-    void onUserPressed(int userId) {
-      if (selectedUserIds.value.contains(userId)) {
-        selectedUserIds.value = {...selectedUserIds.value}..remove(userId);
-      } else {
-        selectedUserIds.value = {...selectedUserIds.value}..add(userId);
-      }
-    }
 
     return SheetContent(
       body: Column(
@@ -56,14 +49,14 @@ class SharePostModal extends HookWidget {
           Flexible(
             child: ShareUserList(
               users: visibleUsers.value,
-              selectedUserIds: selectedUserIds.value,
-              onUserPressed: onUserPressed,
+              selectedUserIds: selectedUserIds.toSet(),
+              onUserPressed: toggleUserSelection,
             ),
           ),
           const HorizontalSeparator(),
           SizedBox(
             height: 110.0.s,
-            child: selectedUserIds.value.isEmpty ? const ShareOptions() : const ShareSendButton(),
+            child: selectedUserIds.isEmpty ? const ShareOptions() : const ShareSendButton(),
           ),
         ],
       ),
