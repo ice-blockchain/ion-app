@@ -131,6 +131,5 @@ class MediaPickerRoute extends BaseRouteData {
   MediaPickerRoute()
       : super(
           child: MediaPickerPage(),
-          type: IceRouteType.bottomSheet,
         );
 }
