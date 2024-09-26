@@ -33,7 +33,7 @@ class SelectLanguages extends HookWidget {
       body: Column(
         children: [
           AuthHeader(
-            title: context.i18n.select_languages_title,
+            title: context.i18n.common_select_languages,
             description: context.i18n.select_languages_description,
           ),
           Expanded(

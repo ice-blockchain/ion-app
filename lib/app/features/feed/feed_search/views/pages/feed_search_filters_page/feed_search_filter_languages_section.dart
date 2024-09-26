@@ -51,7 +51,7 @@ class FeedSearchFilterLanguagesSection extends StatelessWidget {
               child: Assets.svg.iconSelectLanguage
                   .icon(size: 20.0.s, color: context.theme.appColors.secondaryText),
             ),
-            title: Text(context.i18n.feed_search_filter_select_languages),
+            title: Text(context.i18n.common_select_languages),
             subtitle: Text(
               selectedLanguages.map((language) => language.name).join(', '),
               overflow: TextOverflow.visible,

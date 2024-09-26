@@ -33,7 +33,7 @@ class FeedSearchLanguagesPage extends HookWidget {
       body: Column(
         children: [
           NavigationAppBar.modal(
-            title: Text(context.i18n.feed_search_select_languages_title),
+            title: Text(context.i18n.common_select_languages),
           ),
           ScreenSideOffset.small(
             child: SearchInput(
