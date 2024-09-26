@@ -104,6 +104,7 @@ class PasskeysSigner {
   Future<Fido2Assertion> sign(UserActionChallenge challenge) async {
     final fido2Assertion = await PasskeyAuthenticator().authenticate(
       AuthenticateRequestType(
+        preferImmediatelyAvailableCredentials: false,
         relyingPartyId: challenge.rp.id,
         challenge: challenge.challenge,
         timeout: options.timeout,
@@ -134,6 +135,8 @@ class PasskeysSigner {
   }
 
   Future<bool> canAuthenticate() {
+    // ignoring because replacement is not available for all platforms
+    // ignore: deprecated_member_use
     return PasskeyAuthenticator().canAuthenticate();
   }
 }
