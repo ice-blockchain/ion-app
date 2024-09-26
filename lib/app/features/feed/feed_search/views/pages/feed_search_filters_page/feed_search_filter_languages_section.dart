@@ -29,36 +29,38 @@ class FeedSearchFilterLanguagesSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 16.0.s),
-        ListItem(
+        GestureDetector(
           onTap: () async {
             final languages = await FeedSearchLanguagesRoute(selectedLanguages: selectedLanguages)
                 .push<List<Language>>(context);
             if (languages != null) onFilterChange(languages);
           },
-          leading: Container(
-            width: 30.0.s,
-            height: 30.0.s,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: context.theme.appColors.onSecondaryBackground,
-              borderRadius: BorderRadius.all(Radius.circular(8.0.s)),
-              border: Border.all(
-                width: 1.0.s,
-                color: context.theme.appColors.onTerararyFill,
+          child: ListItem(
+            leading: Container(
+              width: 30.0.s,
+              height: 30.0.s,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: context.theme.appColors.onSecondaryBackground,
+                borderRadius: BorderRadius.all(Radius.circular(8.0.s)),
+                border: Border.all(
+                  width: 1.0.s,
+                  color: context.theme.appColors.onTerararyFill,
+                ),
               ),
+              child: Assets.svg.iconSelectLanguage
+                  .icon(size: 20.0.s, color: context.theme.appColors.secondaryText),
             ),
-            child: Assets.svg.iconSelectLanguage
-                .icon(size: 20.0.s, color: context.theme.appColors.secondaryText),
+            title: Text(context.i18n.feed_search_filter_select_languages),
+            subtitle: Text(
+              selectedLanguages.map((language) => language.name).join(', '),
+              overflow: TextOverflow.visible,
+            ),
+            switchTitleStyles: true,
+            trailing: Assets.svg.iconArrowRight.icon(),
+            backgroundColor: context.theme.appColors.secondaryBackground,
+            border: Border.all(color: context.theme.appColors.strokeElements),
           ),
-          title: Text(context.i18n.feed_search_filter_select_languages),
-          subtitle: Text(
-            selectedLanguages.map((language) => language.name).join(', '),
-            overflow: TextOverflow.visible,
-          ),
-          switchTitleStyles: true,
-          trailing: Assets.svg.iconArrowRight.icon(),
-          backgroundColor: context.theme.appColors.secondaryBackground,
-          border: Border.all(color: context.theme.appColors.strokeElements),
         ),
       ],
     );
