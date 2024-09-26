@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/data/models/visibility_settings_options.dart';
@@ -16,7 +15,7 @@ class VisibilitySettingsListItem extends ConsumerWidget {
 
   final VisibilitySettingsOptions option;
 
-  void selectOption(BuildContext context, WidgetRef ref) {
+  void _selectOption(BuildContext context, WidgetRef ref) {
     ref.read(selectedVisibilityOptionsProvider.notifier).selectedOption = option;
     context.pop();
   }
@@ -27,16 +26,22 @@ class VisibilitySettingsListItem extends ConsumerWidget {
     final isSelected = selectedOption == option;
 
     return ListItem(
-      onTap: () => selectOption(context, ref),
+      onTap: () => _selectOption(context, ref),
       title: Text(option.getTitle(context)),
       backgroundColor: context.theme.appColors.secondaryBackground,
-      leading: Button.icon(
-        onPressed: () => selectOption(context, ref),
-        icon: option.getIcon(context),
-        size: 36.0.s,
-        backgroundColor: context.theme.appColors.tertararyBackground,
-        borderColor: context.theme.appColors.onTerararyFill,
-        borderRadius: BorderRadius.circular(10.0.s),
+      leading: Container(
+        width: 36.0.s,
+        height: 36.0.s,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: context.theme.appColors.tertararyBackground,
+          borderRadius: BorderRadius.all(Radius.circular(10.0.s)),
+          border: Border.all(
+            width: 1.0.s,
+            color: context.theme.appColors.onTerararyFill,
+          ),
+        ),
+        child: option.getIcon(context),
       ),
       trailing: isSelected
           ? Assets.svg.iconBlockCheckboxOn.icon()
