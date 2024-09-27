@@ -9,7 +9,6 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
-import 'package:ice/app/features/core/providers/permissions_provider_selectors.dart';
 import 'package:ice/app/features/user/providers/mock_data.dart';
 import 'package:ice/app/features/user/providers/user_following_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
