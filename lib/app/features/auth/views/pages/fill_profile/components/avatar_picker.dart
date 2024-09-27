@@ -3,9 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/services/media/media.dart';
+import 'package:ice/app/services/media_service/media_service.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:image_cropper/image_cropper.dart';
 
 class AvatarPicker extends HookWidget {
   const AvatarPicker({super.key, this.onAvatarPicked});
@@ -14,7 +13,7 @@ class AvatarPicker extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final avatar = useState<CroppedFile?>(null);
+    final avatar = useState<MediaFile?>(null);
 
     Future<void> pickAvatar() async {
       final cameraImage = await MediaService.captureImageFromCamera();

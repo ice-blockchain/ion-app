@@ -2,7 +2,7 @@ import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ice/app/features/gallery/data/models/media_data.dart';
 import 'package:ice/app/features/gallery/providers/providers.dart';
 import 'package:ice/app/services/logger/logger.dart';
-import 'package:ice/app/services/media/media.dart';
+import 'package:ice/app/services/media_service/media_service.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

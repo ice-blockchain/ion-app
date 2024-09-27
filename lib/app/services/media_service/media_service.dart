@@ -7,7 +7,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-part 'media.freezed.dart';
+part 'media_service.freezed.dart';
 
 @freezed
 class MediaFile with _$MediaFile {
@@ -20,8 +20,6 @@ class MediaFile with _$MediaFile {
 }
 
 class MediaService {
-  MediaService._();
-
   static Future<MediaFile?> captureImageFromCamera({bool saveToGallery = false}) async {
     final image = await ImagePicker().pickImage(source: ImageSource.camera);
 
@@ -34,13 +32,13 @@ class MediaService {
     return _saveCameraImage(File(image.path));
   }
 
-  static Future<CroppedFile?> cropImage({
+  static Future<MediaFile?> cropImage({
     required BuildContext context,
     required String path,
     CropAspectRatio aspectRatio = const CropAspectRatio(ratioX: 1, ratioY: 1),
     List<CropAspectRatioPresetData> aspectRatioPresets = const [CropAspectRatioPreset.square],
   }) async {
-    return ImageCropper().cropImage(
+    final croppedFile = await ImageCropper().cropImage(
       sourcePath: path,
       aspectRatio: aspectRatio,
       uiSettings: [
@@ -60,6 +58,10 @@ class MediaService {
         WebUiSettings(context: context),
       ],
     );
+
+    if (croppedFile == null) return null;
+
+    return MediaFile(path: croppedFile.path);
   }
 
   static Future<MediaFile?> _saveCameraImage(File imageFile) async {
