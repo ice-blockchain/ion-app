@@ -2,26 +2,28 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/utils/image.dart';
+import 'package:ice/app/services/media_service/media_service.dart';
 import 'package:ice/generated/assets.gen.dart';
-import 'package:image_cropper/image_cropper.dart';
 
-class AvatarPicker extends HookWidget {
+class AvatarPicker extends HookConsumerWidget {
   const AvatarPicker({super.key, this.onAvatarPicked});
 
   final void Function(String)? onAvatarPicked;
 
   @override
-  Widget build(BuildContext context) {
-    final avatar = useState<CroppedFile?>(null);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mediaService = ref.watch(mediaServiceProvider);
+    final avatar = useState<MediaFile?>(null);
 
     Future<void> pickAvatar() async {
-      final croppedFile = await takePhoto();
-      if (croppedFile != null) {
-        avatar.value = croppedFile;
-        onAvatarPicked?.call(croppedFile.path);
-      }
+      final cameraImage = await mediaService.captureImageFromCamera();
+      if (cameraImage == null || !context.mounted) return;
+      final croppedImage = await mediaService.cropImage(context: context, path: cameraImage.path);
+      if (croppedImage == null) return;
+      avatar.value = croppedImage;
+      onAvatarPicked?.call(croppedImage.path);
     }
 
     return Stack(

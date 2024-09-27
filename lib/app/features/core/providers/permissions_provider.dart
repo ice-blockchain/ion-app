@@ -57,8 +57,13 @@ class Permissions extends _$Permissions {
 
     return permissionStatus;
   }
+}
 
-  PermissionStatus? getPermissionStatusForType(PermissionType type) {
-    return state[type];
-  }
+@riverpod
+bool hasPermissionSelector(HasPermissionSelectorRef ref, PermissionType permissionType) {
+  return ref.watch(
+    permissionsProvider.select(
+      (permissions) => permissions[permissionType] == PermissionStatus.granted,
+    ),
+  );
 }
