@@ -14,10 +14,7 @@ class TextEditorScheduleButton extends StatelessWidget {
       onPressed: () {
         showSimpleBottomSheet<void>(
           context: context,
-          child: ScheduleModal(
-            onDateScheduled: (value) {},
-            selectedDate: DateTime.now(),
-          ),
+          child: const ScheduleModal(),
         );
       },
     );

@@ -1,24 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/providers/schedule_posting_provider.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-class ScheduleModal extends StatelessWidget {
+class ScheduleModal extends ConsumerWidget {
   const ScheduleModal({
-    required this.onDateScheduled,
-    required this.selectedDate,
     super.key,
   });
 
-  final ValueChanged<DateTime> onDateScheduled;
-  final DateTime selectedDate;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var selectedDate = ref.watch(schedulePostingProvider);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -35,8 +34,7 @@ class ScheduleModal extends StatelessWidget {
               initialDateTime: selectedDate,
               use24hFormat: true,
               onDateTimeChanged: (DateTime newDateTime) {
-                onDateScheduled(newDateTime);
-                context.pop();
+                selectedDate = newDateTime;
               },
             ),
           ),
@@ -44,7 +42,7 @@ class ScheduleModal extends StatelessWidget {
         ScreenSideOffset.large(
           child: Button(
             onPressed: () {
-              onDateScheduled.call(selectedDate);
+              ref.read(schedulePostingProvider.notifier).selectedDate = selectedDate;
               context.pop();
             },
             mainAxisSize: MainAxisSize.max,
