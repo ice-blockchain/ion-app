@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ice/app/features/feed/create_article/views/pages/create_article_modal/create_article_modal.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
+import 'package:ice/app/features/feed/views/pages/schedule_modal/schedule_modal.dart';
 import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -14,7 +14,7 @@ class TextEditorScheduleButton extends StatelessWidget {
       onPressed: () => {
         showSimpleBottomSheet<void>(
           context: context,
-          child: const CreateArticleModal(),
+          child: const ScheduleModal(),
         ),
       },
     );
