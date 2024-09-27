@@ -61,9 +61,10 @@ class GalleryNotifier extends _$GalleryNotifier {
   }
 
   Future<void> captureImage() async {
+    final mediaService = ref.read(mediaServiceProvider);
     final mediaSelectionNotifier = ref.read(mediaSelectionNotifierProvider.notifier);
 
-    final mediaFile = await MediaService.captureImageFromCamera(saveToGallery: true);
+    final mediaFile = await mediaService.captureImageFromCamera(saveToGallery: true);
 
     if (mediaFile != null) {
       await refresh();

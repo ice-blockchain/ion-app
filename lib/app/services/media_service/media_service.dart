@@ -6,7 +6,9 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'media_service.g.dart';
 part 'media_service.freezed.dart';
 
 @freezed
@@ -20,7 +22,7 @@ class MediaFile with _$MediaFile {
 }
 
 class MediaService {
-  static Future<MediaFile?> captureImageFromCamera({bool saveToGallery = false}) async {
+  Future<MediaFile?> captureImageFromCamera({bool saveToGallery = false}) async {
     final image = await ImagePicker().pickImage(source: ImageSource.camera);
 
     if (image == null) return null;
@@ -32,7 +34,7 @@ class MediaService {
     return _saveCameraImage(File(image.path));
   }
 
-  static Future<MediaFile?> cropImage({
+  Future<MediaFile?> cropImage({
     required BuildContext context,
     required String path,
     CropAspectRatio aspectRatio = const CropAspectRatio(ratioX: 1, ratioY: 1),
@@ -64,7 +66,7 @@ class MediaService {
     return MediaFile(path: croppedFile.path);
   }
 
-  static Future<MediaFile?> _saveCameraImage(File imageFile) async {
+  Future<MediaFile?> _saveCameraImage(File imageFile) async {
     final asset = await PhotoManager.editor.saveImageWithPath(
       imageFile.path,
       title: 'Camera_${DateTime.now().millisecondsSinceEpoch}.jpg',
@@ -84,3 +86,6 @@ class MediaService {
     );
   }
 }
+
+@riverpod
+MediaService mediaService(MediaServiceRef ref) => MediaService();
