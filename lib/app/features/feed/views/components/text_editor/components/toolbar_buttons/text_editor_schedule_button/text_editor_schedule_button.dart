@@ -11,11 +11,14 @@ class TextEditorScheduleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
       icon: Assets.svg.iconCreatepostShedule,
-      onPressed: () => {
+      onPressed: () {
         showSimpleBottomSheet<void>(
           context: context,
-          child: const ScheduleModal(),
-        ),
+          child: ScheduleModal(
+            onDateScheduled: (value) {},
+            selectedDate: DateTime.now(),
+          ),
+        );
       },
     );
   }
