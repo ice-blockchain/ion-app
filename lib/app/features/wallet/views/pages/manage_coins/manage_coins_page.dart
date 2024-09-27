@@ -12,7 +12,7 @@ import 'package:ice/app/features/wallet/views/pages/manage_coins/providers/manag
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_done_button.dart';
+import 'package:ice/app/router/components/navigation_app_bar/navigation_text_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 
 class ManageCoinsPage extends HookConsumerWidget {
@@ -42,7 +42,7 @@ class ManageCoinsPage extends HookConsumerWidget {
           NavigationAppBar.modal(
             showBackButton: false,
             title: Text(context.i18n.wallet_manage_coins),
-            actions: const [NavigationDoneButton()],
+            actions: [NavigationTextButton(label: context.i18n.core_done)],
           ),
           Expanded(
             child: CustomScrollView(

@@ -32,7 +32,7 @@ class SignUpFixedFooter extends StatelessWidget {
               color: context.theme.appColors.secondaryBackground,
               alignment: Alignment.topCenter,
               padding: EdgeInsets.only(
-                top: 12.0.s,
+                top: 16.0.s,
                 left: ScreenSideOffset.defaultLargeMargin,
                 right: ScreenSideOffset.defaultLargeMargin,
               ),

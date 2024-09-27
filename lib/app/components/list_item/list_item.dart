@@ -4,7 +4,6 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 
-part './variants/list_item_checkbox.dart';
 part './variants/list_item_text_with_icon.dart';
 part './variants/list_item_user.dart';
 
@@ -32,22 +31,6 @@ class ListItem extends StatelessWidget {
         trailingPadding = trailingPadding ?? defaultTrailingPadding,
         switchTitleStyles = switchTitleStyles ?? false,
         constraints = constraints ?? defaultConstraints;
-
-  factory ListItem.checkbox({
-    required VoidCallback onTap,
-    required bool value,
-    Key? key,
-    Widget? leading,
-    Widget? title,
-    Widget? subtitle,
-    BoxBorder? border,
-    BorderRadius? borderRadius,
-    EdgeInsetsGeometry? contentPadding,
-    EdgeInsetsGeometry? leadingPadding,
-    EdgeInsetsGeometry? trailingPadding,
-    BoxConstraints? constraints,
-    Color? backgroundColor,
-  }) = _ListItemWithCheckbox;
 
   factory ListItem.user({
     required Widget title,
@@ -108,7 +91,7 @@ class ListItem extends StatelessWidget {
   static BorderRadius get defaultBorderRadius => BorderRadius.all(Radius.circular(16.0.s));
 
   static EdgeInsets get defaultContentPadding =>
-      EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 10.0.s);
+      EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 8.0.s);
 
   static EdgeInsets get defaultLeadingPadding => EdgeInsets.only(right: 10.0.s);
 

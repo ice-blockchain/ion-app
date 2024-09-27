@@ -52,10 +52,7 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
                     icon: step.headerImageAsset.icon(size: 36.0.s),
                   ),
                 ),
-                if (step == AuthenticatorSetupSteps.options)
-                  const SizedBox.shrink()
-                else
-                  SizedBox(height: 32.0.s),
+                if (step != AuthenticatorSetupSteps.options) SizedBox(height: 32.0.s),
                 Expanded(
                   child: switch (step) {
                     AuthenticatorSetupSteps.options => AuthenticatorOptionsPage(onTap: (type) {}),
@@ -66,7 +63,7 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
                     AuthenticatorSetupSteps.success => const AuthenticatorSuccessPage(),
                   },
                 ),
-                const HorizontalSeparator(),
+                if (step == AuthenticatorSetupSteps.options) const HorizontalSeparator(),
                 SizedBox(height: step == AuthenticatorSetupSteps.options ? 12.0.s : 22.0.s),
                 ScreenSideOffset.large(
                   child: Button(

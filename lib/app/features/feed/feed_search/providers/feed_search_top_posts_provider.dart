@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/feed_search/providers/feed_search_filters_provider.dart';
 import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,6 +15,7 @@ Future<List<String>?> feedSearchTopPosts(
   if (query.isEmpty) {
     return null;
   }
+  ref.watch(feedSearchFilterProvider);
   await ref.debounce();
   await Future<void>.delayed(const Duration(milliseconds: 500));
 

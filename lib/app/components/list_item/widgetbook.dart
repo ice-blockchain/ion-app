@@ -36,28 +36,6 @@ Widget regularListItemUseCase(BuildContext context) {
 }
 
 @widgetbook.UseCase(
-  name: 'checkbox',
-  type: ListItem,
-)
-Widget checkboxListItemUseCase(BuildContext context) {
-  return Scaffold(
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          ListItem.checkbox(
-            value: true,
-            title: const Text('With On Tap'),
-            subtitle: const Text('List Item!!'),
-            onTap: () {},
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-@widgetbook.UseCase(
   name: 'user',
   type: ListItem,
 )

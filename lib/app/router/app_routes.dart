@@ -18,6 +18,7 @@ import 'package:ice/app/features/auth/views/pages/twofa_options/twofa_options_pa
 import 'package:ice/app/features/auth/views/pages/twofa_success/twofa_success_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
+import 'package:ice/app/features/core/model/language.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
@@ -30,6 +31,8 @@ import 'package:ice/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ice/app/features/feed/create_story/views/pages/create_story_modal/create_story_modal.dart';
 import 'package:ice/app/features/feed/create_video/views/pages/create_video_modal/create_video_modal.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_search_page/feed_advanced_search_page.dart';
+import 'package:ice/app/features/feed/feed_search/views/pages/feed_search_filters_page/feed_search_filters_page.dart';
+import 'package:ice/app/features/feed/feed_search/views/pages/feed_search_languages_page/feed_search_languages_page.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/feed_simple_search_page.dart';
 import 'package:ice/app/features/feed/views/pages/comment_post_modal/comment_post_modal.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';

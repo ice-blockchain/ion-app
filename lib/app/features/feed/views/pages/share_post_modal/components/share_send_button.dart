@@ -14,7 +14,7 @@ class ShareSendButton extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: Padding(
         padding: EdgeInsets.only(
-          top: 22.0.s,
+          top: 16.0.s,
           left: 44.0.s,
           right: 44.0.s,
         ),
