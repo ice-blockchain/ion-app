@@ -7,6 +7,7 @@ import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/router/app_router_listenable.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/services/logger/config.dart';
+import 'package:ice/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'go_router_provider.g.dart';
@@ -27,6 +28,7 @@ GoRouter goRouter(GoRouterRef ref) {
       final hasAuthenticated = (authState.valueOrNull?.hasAuthenticated).falseOrValue;
 
       if (isInitError) {
+        Logger.log('Init error', error: initState.error);
         return ErrorRoute().location;
       }
 
