@@ -71,6 +71,7 @@ class GalleryNotifier extends _$GalleryNotifier {
     }
   }
 
+  // Temp method, will be reworked in ongoing PR
   // TODO: move to MediaService, use List<MediaFile> as return value
   // TODO: do not use photo_manager lib outside of the MediaService
   // TODO: handle permissions with permissionsProvider

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/services/logger/logger.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -57,33 +56,29 @@ class MediaService {
           cropStyle: CropStyle.circle,
           aspectRatioPresets: aspectRatioPresets,
         ),
+        // `WebUiSettings` is required for Web, `context` is also required
         WebUiSettings(context: context),
       ],
     );
   }
 
   static Future<MediaFile?> _saveCameraImage(File imageFile) async {
-    try {
-      final asset = await PhotoManager.editor.saveImageWithPath(
-        imageFile.path,
-        title: 'Camera_${DateTime.now().millisecondsSinceEpoch}.jpg',
-      );
+    final asset = await PhotoManager.editor.saveImageWithPath(
+      imageFile.path,
+      title: 'Camera_${DateTime.now().millisecondsSinceEpoch}.jpg',
+    );
 
-      if (asset == null) return null;
+    if (asset == null) return null;
 
-      final file = await asset.file;
+    final file = await asset.file;
 
-      if (file == null) return null;
+    if (file == null) return null;
 
-      return MediaFile(
-        path: file.path,
-        height: asset.height,
-        width: asset.width,
-        mimeType: asset.mimeType,
-      );
-    } catch (e) {
-      Logger.log('Error saving camera image: $e');
-      rethrow;
-    }
+    return MediaFile(
+      path: file.path,
+      height: asset.height,
+      width: asset.width,
+      mimeType: asset.mimeType,
+    );
   }
 }
