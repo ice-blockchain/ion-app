@@ -11,10 +11,12 @@ import 'package:ice/app/router/components/navigation_app_bar/navigation_close_bu
 class ScheduleModal extends HookWidget {
   const ScheduleModal({
     required this.initialDate,
+    this.minimumDate,
     super.key,
   });
 
   final DateTime initialDate;
+  final DateTime? minimumDate;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class ScheduleModal extends HookWidget {
               onDateTimeChanged: (DateTime newDateTime) {
                 selectedDate.value = newDateTime;
               },
-              minimumDate: DateTime.now(),
+              minimumDate: minimumDate,
             ),
           ),
         ),
