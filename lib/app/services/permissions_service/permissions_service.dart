@@ -17,12 +17,13 @@ enum PermissionStatus {
   blocked,
 
   /// This feature is not available (on this device / in this context)
-  unavailable
+  unavailable,
 }
 
 class PermissionsService {
   Future<PermissionStatus> check(Permission permission) async {
     if (kIsWeb && permission == Permission.contacts) {
+      // Otherwise it throws an exception
       return PermissionStatus.unavailable;
     }
     final status = await _getHandler(permission).status;
@@ -31,6 +32,9 @@ class PermissionsService {
 
   Future<PermissionStatus> request(Permission permission) async {
     final status = await _getHandler(permission).request();
+    if (status == handler.PermissionStatus.permanentlyDenied) {
+      await handler.openAppSettings();
+    }
     return _matchStatus(status);
   }
 
