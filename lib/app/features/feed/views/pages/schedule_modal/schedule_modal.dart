@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
@@ -8,7 +9,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-class ScheduleModal extends ConsumerStatefulWidget {
+class ScheduleModal extends HookConsumerWidget {
   const ScheduleModal({
     required this.initialDate,
     super.key,
@@ -17,20 +18,9 @@ class ScheduleModal extends ConsumerStatefulWidget {
   final DateTime initialDate;
 
   @override
-  ConsumerState<ScheduleModal> createState() => _ScheduleModalState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedDate = useState<DateTime>(initialDate);
 
-class _ScheduleModalState extends ConsumerState<ScheduleModal> {
-  late DateTime _selectedDate;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedDate = widget.initialDate;
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -44,20 +34,19 @@ class _ScheduleModalState extends ConsumerState<ScheduleModal> {
           child: SizedBox(
             height: 178.0.s,
             child: CupertinoDatePicker(
-              initialDateTime: _selectedDate,
+              initialDateTime: selectedDate.value,
               use24hFormat: true,
               onDateTimeChanged: (DateTime newDateTime) {
-                setState(() {
-                  _selectedDate = newDateTime;
-                });
+                selectedDate.value = newDateTime;
               },
+              minimumDate: DateTime.now(),
             ),
           ),
         ),
         ScreenSideOffset.large(
           child: Button(
             onPressed: () {
-              context.pop(_selectedDate);
+              context.pop(selectedDate.value);
             },
             mainAxisSize: MainAxisSize.max,
             label: Text(
