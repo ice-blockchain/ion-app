@@ -8,18 +8,21 @@ import 'package:ice/app/features/gallery/views/components/components.dart';
 class GalleryGridview extends StatelessWidget {
   const GalleryGridview({
     required this.galleryState,
+    this.withShimmer = false,
     super.key,
   });
 
   static const _offsetBetweenItems = 4.0;
   static const _itemsPerRow = 3;
+  static const _shimmerItemCount = 30;
 
   final GalleryState galleryState;
+  final bool withShimmer;
 
   @override
   Widget build(BuildContext context) {
-    // +1 for CameraCell
-    final totalItemCount = galleryState.mediaData.length + 1;
+    final totalItemCount =
+        withShimmer ? _shimmerItemCount : galleryState.mediaData.length + 1; // +1 for CameraCell
 
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -29,13 +32,15 @@ class GalleryGridview extends StatelessWidget {
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
+          if (withShimmer) return const ShimmerLoadingCell();
+
           if (index == 0) return const CameraCell();
 
           final mediaData = galleryState.mediaData[index - 1];
 
           return ImageCell(
-            key: ValueKey(mediaData.asset.id),
-            mediaData: mediaData,
+            key: ValueKey(mediaData.path),
+            mediaFile: mediaData,
           );
         },
         childCount: totalItemCount,
