@@ -24,6 +24,7 @@ import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
+import 'package:ice/app/services/permissions_service/permissions_service.dart';
 
 class WalletPage extends HookConsumerWidget {
   const WalletPage({super.key});
@@ -31,7 +32,7 @@ class WalletPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-    final hasContactsPermission = ref.watch(hasPermissionSelectorProvider(PermissionType.Contacts));
+    final hasContactsPermission = ref.watch(hasPermissionSelectorProvider(Permission.contacts));
 
     useOnInit(() {
       if (hasContactsPermission) {
