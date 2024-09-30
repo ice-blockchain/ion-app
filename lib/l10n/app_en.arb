@@ -22,6 +22,9 @@
   "button_add": "Add",
   "button_apply": "Apply",
   "button_schedule": "Schedule",
+  "button_go_to_settings": "Go to Settings",
+  "button_allow": "Allow",
+  "button_dont_allow": "Don't Allow",
   "common_show_more": "Show more",
   "common_show_less": "Show less",
   "common_identity_key_name": "Identity key name",
@@ -337,5 +340,15 @@
   "schedule_modal_nav_title": "Set date and time",
   "cancel_creation_post_title": "Cancel post?",
   "cancel_creation_description": "Are you sure you want to cancel your progress?",
-  "cancel_creation_article_title": "Cancel arcticle?"
+  "cancel_creation_article_title": "Cancel arcticle?",
+  "schedule_modal_nav_title": "Set date and time",
+  "visibility_settings_mentioned_accounts": "Only accounts you mention",
+  "photo_library_require_access_title": "\"Ice Mainnet app\" would like to access your photo library",
+  "photo_library_require_access_description": "This lets you share photos from your library and save photos to your camera roll.",
+  "camera_require_access_title": "\"Ice Mainnet app\" would like to access your camera",
+  "camera_require_access_description": "Ice Mainnet application would like to access the camera",
+  "gallery_permission_headline": "Gallery permission",
+  "gallery_no_access_title": "There is no access to your gallery",
+  "gallery_no_access_description": "To grant access, go to settings and enable the appropriate settings"
+
 }

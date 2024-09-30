@@ -16,8 +16,8 @@ import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_t
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/components/reply_author_header.dart';
-import 'package:ice/app/features/gallery/data/models/media_data.dart';
 import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/services/media_service/media_service.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class ReplyInputField extends HookConsumerWidget {
@@ -103,7 +103,7 @@ class ReplyInputField extends HookConsumerWidget {
               actions: [
                 ActionsToolbarButton(
                   icon: Assets.svg.iconGalleryOpen,
-                  onPressed: () => MediaPickerRoute().push<List<MediaData>>(context),
+                  onPressed: () => MediaPickerRoute().push<List<MediaFile>>(context),
                 ),
                 ActionsToolbarButton(
                   icon: Assets.svg.iconCameraOpen,
