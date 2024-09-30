@@ -2,6 +2,12 @@
 
 import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ice/app/features/gallery/data/models/media_data.dart';
+import 'dart:io';
+
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ice/app/features/core/providers/permissions_provider.dart';
+import 'package:ice/app/features/gallery/data/models/models.dart';
 import 'package:ice/app/features/gallery/providers/providers.dart';
 import 'package:ice/app/services/logger/logger.dart';
 import 'package:ice/app/services/media_service/media_service.dart';
@@ -11,12 +17,54 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'gallery_provider.g.dart';
 
 @riverpod
+CacheManager cacheManager(CacheManagerRef ref) {
+  return DefaultCacheManager();
+}
+
+@riverpod
+Future<File?> cachedFile(CachedFileRef ref, String path) async {
+  final cacheManager = ref.watch(cacheManagerProvider);
+  try {
+    final fileInfo = await cacheManager.getFileFromCache(path);
+    if (fileInfo != null) {
+      return fileInfo.file;
+    }
+    return await cacheManager.getSingleFile(path);
+  } catch (e) {
+    return null;
+  }
+}
+
+@riverpod
+Future<AssetEntity?> assetEntity(AssetEntityRef ref, String id) {
+  return AssetEntity.fromId(id);
+}
+
+@riverpod
 class GalleryNotifier extends _$GalleryNotifier {
   static const int _pageSize = 100;
 
   @override
   Future<GalleryState> build() async {
-    final mediaData = await _fetchGalleryMedia(page: 0, size: _pageSize);
+    final mediaService = ref.watch(mediaServiceProvider);
+    final permissionsNotifier = ref.watch(permissionsProvider.notifier);
+
+    await permissionsNotifier.checkPermission(AppPermissionType.photos);
+
+    if (!permissionsNotifier.hasPermission(AppPermissionType.photos)) {
+      await permissionsNotifier.requestPermission(AppPermissionType.photos);
+    }
+
+    if (!permissionsNotifier.hasPermission(AppPermissionType.photos)) {
+      Logger.log('Photos Permission denied');
+      return const GalleryState(
+        mediaData: [],
+        currentPage: 0,
+        hasMore: false,
+      );
+    }
+
+    final mediaData = await mediaService.fetchGalleryMedia(page: 0, size: _pageSize);
     final hasMore = mediaData.length == _pageSize;
 
     return GalleryState(
@@ -33,7 +81,8 @@ class GalleryNotifier extends _$GalleryNotifier {
     if (currentState == null) return;
 
     state = await AsyncValue.guard(() async {
-      final newMedia = await _fetchGalleryMedia(
+      final mediaService = ref.read(mediaServiceProvider);
+      final newMedia = await mediaService.fetchGalleryMedia(
         page: currentState.currentPage,
         size: _pageSize,
       );
@@ -48,67 +97,26 @@ class GalleryNotifier extends _$GalleryNotifier {
     });
   }
 
-  Future<void> refresh() async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final newMedia = await _fetchGalleryMedia(page: 0, size: _pageSize);
-      final hasMore = newMedia.length == _pageSize;
-
-      return GalleryState(
-        mediaData: newMedia,
-        currentPage: 1,
-        hasMore: hasMore,
-      );
-    });
-  }
-
   Future<void> captureImage() async {
+    final permissionsNotifier = ref.read(permissionsProvider.notifier);
+
+    if (!permissionsNotifier.hasPermission(AppPermissionType.camera)) {
+      await permissionsNotifier.requestPermission(AppPermissionType.camera);
+
+      if (!permissionsNotifier.hasPermission(AppPermissionType.camera)) {
+        Logger.log('Camera Permission denied');
+        return;
+      }
+    }
+
     final mediaService = ref.read(mediaServiceProvider);
     final mediaSelectionNotifier = ref.read(mediaSelectionNotifierProvider.notifier);
 
     final mediaFile = await mediaService.captureImageFromCamera(saveToGallery: true);
 
     if (mediaFile != null) {
-      await refresh();
+      ref.invalidateSelf();
       mediaSelectionNotifier.toggleSelection(mediaFile.path);
-    }
-  }
-
-  // Temp method, will be reworked in ongoing PR
-  // TODO: move to MediaService, use List<MediaFile> as return value
-  // TODO: do not use photo_manager lib outside of the MediaService
-  // TODO: handle permissions with permissionsProvider
-  Future<List<MediaData>> _fetchGalleryMedia({required int page, required int size}) async {
-    try {
-      final permission = await PhotoManager.requestPermissionExtend();
-
-      if (!permission.isAuth) {
-        await PhotoManager.openSetting();
-        return [];
-      }
-
-      final albums = await PhotoManager.getAssetPathList(
-        type: RequestType.image,
-      );
-
-      if (albums.isEmpty) return [];
-
-      final assets = await albums.first.getAssetListPaged(
-        page: page,
-        size: size,
-      );
-
-      final images = assets.map((asset) {
-        return MediaData(
-          asset: asset,
-          order: 0,
-        );
-      }).toList();
-
-      return images;
-    } catch (e) {
-      Logger.log('Error fetching gallery images: $e');
-      return [];
     }
   }
 }

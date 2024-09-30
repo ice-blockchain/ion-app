@@ -5,15 +5,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/services/logger/logger.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'media_service.g.dart';
 part 'media_service.freezed.dart';
+part 'media_service.g.dart';
 
-@freezed
+@Freezed(copyWith: true, equal: true)
 class MediaFile with _$MediaFile {
   const factory MediaFile({
     required String path,
@@ -34,6 +35,35 @@ class MediaService {
     }
 
     return _saveCameraImage(File(image.path));
+  }
+
+  Future<List<MediaFile>> fetchGalleryMedia({required int page, required int size}) async {
+    try {
+      final albums = await PhotoManager.getAssetPathList(
+        type: RequestType.image,
+      );
+
+      if (albums.isEmpty) return [];
+
+      final assets = await albums.first.getAssetListPaged(
+        page: page,
+        size: size,
+      );
+
+      final mediaFiles = assets.map((AssetEntity asset) {
+        return MediaFile(
+          path: asset.id,
+          height: asset.height,
+          width: asset.width,
+          mimeType: asset.mimeType,
+        );
+      }).toList();
+
+      return mediaFiles;
+    } catch (e) {
+      Logger.log('Error fetching gallery images: $e');
+      return [];
+    }
   }
 
   Future<MediaFile?> cropImage({
@@ -81,7 +111,7 @@ class MediaService {
     if (file == null) return null;
 
     return MediaFile(
-      path: file.path,
+      path: asset.id,
       height: asset.height,
       width: asset.width,
       mimeType: asset.mimeType,
