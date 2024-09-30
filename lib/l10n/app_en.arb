@@ -21,6 +21,7 @@
   "button_next": "Next",
   "button_add": "Add",
   "button_apply": "Apply",
+  "button_schedule": "Schedule",
   "common_show_more": "Show more",
   "common_show_less": "Show less",
   "common_identity_key_name": "Identity key name",
@@ -332,5 +333,6 @@
   "visibility_settings_everyone": "Everyone can reply",
   "visibility_settings_followed_accounts": "Accounts you follow",
   "visibility_settings_verified_accounts": "Verified accounts",
-  "visibility_settings_mentioned_accounts": "Only accounts you mention"
+  "visibility_settings_mentioned_accounts": "Only accounts you mention",
+  "schedule_modal_nav_title": "Set date and time"
 }
