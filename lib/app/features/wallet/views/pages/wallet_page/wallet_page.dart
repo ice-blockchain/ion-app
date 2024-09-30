@@ -32,16 +32,16 @@ class WalletPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-    final hasContactsPermission = ref.watch(hasPermissionSelectorProvider(Permission.contacts));
+    final contactsPermission = ref.watch(permissionSelectorProvider(Permission.contacts));
 
     useOnInit(() {
-      if (hasContactsPermission) {
+      if (contactsPermission == PermissionStatus.granted) {
         ref.read(contactsDataNotifierProvider.notifier).fetchContacts();
-      } else {
+      } else if (contactsPermission != PermissionStatus.unavailable) {
         AllowAccessRoute().go(context);
       }
-    }, <Object?>[
-      hasContactsPermission,
+    }, [
+      contactsPermission,
     ]);
 
     useScrollTopOnTabPress(context, scrollController: scrollController);

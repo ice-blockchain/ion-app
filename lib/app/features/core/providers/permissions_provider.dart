@@ -43,3 +43,11 @@ bool hasPermissionSelector(HasPermissionSelectorRef ref, Permission permission) 
     ),
   );
 }
+
+@riverpod
+PermissionStatus permissionSelector(PermissionSelectorRef ref, Permission permission) {
+  return ref.watch(
+    permissionsProvider
+        .select((permissions) => permissions[permission] ?? PermissionStatus.unavailable),
+  );
+}
