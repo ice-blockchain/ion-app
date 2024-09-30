@@ -1,53 +1,64 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:flutter/material.dart';
-import 'package:ice/app/services/permissions_service/permissions_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'permissions_provider.g.dart';
 
+enum PermissionType { Contacts, Notifications }
+
+typedef PermissionCallback = void Function();
+
 @Riverpod(keepAlive: true)
 class Permissions extends _$Permissions {
   @override
-  Map<Permission, PermissionStatus> build() {
-    final onResumeListener = AppLifecycleListener(onResume: checkAllPermissions);
-    ref.onDispose(onResumeListener.dispose);
-    return {};
+  Map<PermissionType, PermissionStatus> build() {
+    return Map<PermissionType, PermissionStatus>.unmodifiable(
+      <PermissionType, PermissionStatus>{},
+    );
   }
 
   Future<void> checkAllPermissions() async {
-    final permissionsService = ref.read(permissionsServiceProvider);
-    final permissions = <Permission, PermissionStatus>{};
-    await Future.wait(
-      Permission.values.map((permission) async {
-        permissions[permission] = await permissionsService.check(permission);
-      }),
-    );
-    state = permissions;
+    final permissions = <PermissionType, PermissionStatus>{};
+    try {
+      final contactsPermissionStatus = await Permission.contacts.status;
+      final notificationsPermissionStatus = await Permission.notification.status;
+      permissions
+        ..putIfAbsent(
+          PermissionType.Notifications,
+          () => notificationsPermissionStatus,
+        )
+        ..putIfAbsent(
+          PermissionType.Contacts,
+          () => contactsPermissionStatus,
+        );
+    } finally {
+      state = Map<PermissionType, PermissionStatus>.unmodifiable(permissions);
+    }
   }
 
-  Future<void> request(Permission permission) async {
-    final permissionsService = ref.read(permissionsServiceProvider);
-    state = {
-      ...state,
-      permission: await permissionsService.request(permission),
+  Future<PermissionStatus> requestPermission(
+    PermissionType permissionType,
+  ) async {
+    late final permission = switch (permissionType) {
+      PermissionType.Contacts => Permission.contacts,
+      PermissionType.Notifications => Permission.notification,
     };
+
+    final permissionStatus = await permission.request();
+
+    final newState = Map<PermissionType, PermissionStatus>.from(state)
+      ..update(
+        permissionType,
+        (_) => permissionStatus,
+        ifAbsent: () => permissionStatus,
+      );
+    state = Map<PermissionType, PermissionStatus>.unmodifiable(newState);
+
+    return permissionStatus;
   }
-}
 
-@riverpod
-bool hasPermissionSelector(HasPermissionSelectorRef ref, Permission permission) {
-  return ref.watch(
-    permissionsProvider.select(
-      (permissions) => permissions[permission] == PermissionStatus.granted,
-    ),
-  );
-}
-
-@riverpod
-PermissionStatus permissionSelector(PermissionSelectorRef ref, Permission permission) {
-  return ref.watch(
-    permissionsProvider
-        .select((permissions) => permissions[permission] ?? PermissionStatus.unavailable),
-  );
+  PermissionStatus? getPermissionStatusForType(PermissionType type) {
+    return state[type];
+  }
 }

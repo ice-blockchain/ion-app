@@ -9,7 +9,6 @@ import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/app/services/permissions_service/permissions_service.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class RequestContactAccessModal extends ConsumerWidget {
@@ -60,7 +59,10 @@ class RequestContactAccessModal extends ConsumerWidget {
                 context.i18n.contacts_allow_pop_up_action,
               ),
               onPressed: () {
-                ref.read(permissionsProvider.notifier).request(Permission.contacts).then((_) {
+                ref
+                    .read(permissionsProvider.notifier)
+                    .requestPermission(PermissionType.Contacts)
+                    .then((_) {
                   if (context.mounted) {
                     Navigator.of(context).pop();
                   }

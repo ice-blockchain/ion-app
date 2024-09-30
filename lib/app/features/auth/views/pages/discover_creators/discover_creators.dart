@@ -9,11 +9,11 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
+import 'package:ice/app/features/core/providers/permissions_provider_selectors.dart';
 import 'package:ice/app/features/user/providers/mock_data.dart';
 import 'package:ice/app/features/user/providers/user_following_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/app/services/permissions_service/permissions_service.dart';
 
 class DiscoverCreators extends ConsumerWidget {
   const DiscoverCreators({super.key});
@@ -26,7 +26,7 @@ class DiscoverCreators extends ConsumerWidget {
     final creatorIds = mockedUserData.values.toList().sublist(6).map((user) => user.id).toList();
 
     final hasNotificationsPermission = ref.watch(
-      hasPermissionSelectorProvider(Permission.notifications),
+      hasPermissionSelectorProvider(PermissionType.Notifications),
     );
 
     final mayContinue = followingIds.valueOrNull?.isNotEmpty ?? false;

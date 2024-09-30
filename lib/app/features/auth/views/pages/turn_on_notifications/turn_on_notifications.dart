@@ -11,7 +11,6 @@ import 'package:ice/app/features/auth/views/pages/turn_on_notifications/descript
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/notifications.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/app/services/permissions_service/permissions_service.dart';
 
 class TurnOnNotifications extends ConsumerWidget {
   const TurnOnNotifications({super.key});
@@ -54,7 +53,9 @@ class TurnOnNotifications extends ConsumerWidget {
                           onPressed: () {
                             ref
                                 .read(permissionsProvider.notifier)
-                                .request(Permission.notifications)
+                                .requestPermission(
+                                  PermissionType.Notifications,
+                                )
                                 .then((_) => handleSignIn(ref));
                           },
                         ),
