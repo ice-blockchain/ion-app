@@ -2,7 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'schedule_posting_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class SchedulePosting extends _$SchedulePosting {
   @override
   DateTime build() {
