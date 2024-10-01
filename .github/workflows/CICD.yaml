@@ -97,6 +97,11 @@ jobs:
         run: |
           cd main-repo
           melos run test
+      - name: Check license
+        id: check-license
+        run: |
+          cd main-repo
+          ./scripts/license_check.sh
       - uses: actions/cache@v3
         id: cache_all
         with:

@@ -73,6 +73,11 @@ jobs:
         run: |
           cd main-repo
           melos run analyze
+      - name: Check license
+        id: check-license
+        run: |
+          cd main-repo
+          ./scripts/license_check.sh
       - name: Run tests
         id: run-tests
         run: |
