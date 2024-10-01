@@ -19,7 +19,7 @@ class IonIdentityClientTestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const DefaultTabController(
-      length: 5,
+      length: 6,
       child: Scaffold(
         body: SafeArea(
           child: Column(
@@ -32,6 +32,7 @@ class IonIdentityClientTestPage extends StatelessWidget {
                   Tab(text: 'Users'),
                   Tab(text: 'Wallets'),
                   Tab(text: 'Recovery'),
+                  Tab(text: 'Recover User'),
                 ],
               ),
               Expanded(
@@ -42,6 +43,7 @@ class IonIdentityClientTestPage extends StatelessWidget {
                     _UsersTab(),
                     _WalletsTab(),
                     _RecoveryTab(),
+                    _RecoverUserTab(),
                   ],
                 ),
               ),
@@ -66,9 +68,7 @@ class _RegisterTab extends HookConsumerWidget {
     return Column(
       children: [
         SizedBox(height: 16.0.s),
-        TextInput(
-          controller: usernameController,
-        ),
+        TextInput(controller: usernameController),
         SizedBox(height: 16.0.s),
         if (registerResult.value != null) ...[
           Text('$registerResult'),
@@ -96,12 +96,10 @@ class _LoginTab extends HookConsumerWidget {
 
     final loginResult = useState<LoginUserResult?>(null);
 
-    return Column(
+    return ListView(
       children: [
         SizedBox(height: 16.0.s),
-        TextInput(
-          controller: usernameController,
-        ),
+        TextInput(controller: usernameController),
         SizedBox(height: 16.0.s),
         if (loginResult.value != null) ...[
           Text('$loginResult'),
@@ -221,9 +219,7 @@ class _WalletsTab extends HookConsumerWidget {
     return ListView(
       children: [
         SizedBox(height: 16.0.s),
-        TextInput(
-          controller: walletNameController,
-        ),
+        TextInput(controller: walletNameController),
         SizedBox(height: 16.0.s),
         Button(
           label: const Text('Create Wallet'),
@@ -246,23 +242,67 @@ class _RecoveryTab extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ionClient = ref.watch(ionApiClientProvider);
 
-    final keyNameController = useTextEditingController.fromValue(
-      const TextEditingValue(text: 'Recovery Credential 1'),
+    final usernameController = useTextEditingController.fromValue(
+      const TextEditingValue(text: 'testauth1@mail.com'),
     );
+
+    final resultState = useState<CreateRecoveryCredentialsResult?>(null);
 
     return ListView(
       children: [
         SizedBox(height: 16.0.s),
-        TextInput(
-          controller: keyNameController,
-        ),
+        TextInput(controller: usernameController),
         SizedBox(height: 16.0.s),
         Button(
           label: const Text('Create Recovery Credentials'),
           onPressed: () async {
-            await ionClient(username: 'testauth1@mail.com').auth.createRecoveryCredentials();
+            resultState.value =
+                await ionClient(username: usernameController.text).auth.createRecoveryCredentials();
           },
         ),
+        if (resultState.value != null) ...[
+          SizedBox(height: 16.0.s),
+          SelectableText('$resultState'),
+        ],
+      ],
+    );
+  }
+}
+
+class _RecoverUserTab extends HookConsumerWidget {
+  const _RecoverUserTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ionClient = ref.watch(ionApiClientProvider);
+
+    final usernameController = useTextEditingController.fromValue(
+      const TextEditingValue(text: 'my@mail.com'),
+    );
+    final credentialIdController = useTextEditingController();
+    final recoveryKeyController = useTextEditingController();
+
+    final resultState = useState<dynamic>(null);
+
+    return ListView(
+      children: [
+        SizedBox(height: 16.0.s),
+        TextInput(controller: usernameController, labelText: 'Username'),
+        SizedBox(height: 16.0.s),
+        TextInput(controller: credentialIdController, labelText: 'Credential ID'),
+        SizedBox(height: 16.0.s),
+        TextInput(controller: recoveryKeyController, labelText: 'Recovery Key'),
+        SizedBox(height: 16.0.s),
+        Button(
+          label: const Text('Recover User'),
+          onPressed: () async {
+            resultState.value = await ionClient(username: usernameController.text).auth.recoverUser(
+                  credentialId: credentialIdController.text,
+                  recoveryKey: recoveryKeyController.text,
+                );
+          },
+        ),
+        SelectableText('$resultState'),
       ],
     );
   }

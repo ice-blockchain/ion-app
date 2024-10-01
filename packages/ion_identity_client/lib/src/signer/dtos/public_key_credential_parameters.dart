@@ -1,17 +1,17 @@
 import 'package:ion_identity_client/src/core/types/types.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'public_key_credential_parameters.g.dart';
+
+@JsonSerializable()
 class PublicKeyCredentialParameters {
   PublicKeyCredentialParameters(
     this.type,
     this.alg,
   );
 
-  factory PublicKeyCredentialParameters.fromJson(JsonObject json) {
-    return PublicKeyCredentialParameters(
-      json['type'] as String,
-      json['alg'] as int,
-    );
-  }
+  factory PublicKeyCredentialParameters.fromJson(JsonObject json) =>
+      _$PublicKeyCredentialParametersFromJson(json);
 
   final String type;
   final int alg;

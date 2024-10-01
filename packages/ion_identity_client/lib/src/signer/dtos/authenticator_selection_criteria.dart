@@ -1,5 +1,9 @@
 import 'package:ion_identity_client/src/core/types/types.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'authenticator_selection_criteria.g.dart';
+
+@JsonSerializable()
 class AuthenticatorSelectionCriteria {
   AuthenticatorSelectionCriteria(
     this.authenticatorAttachment,
@@ -8,14 +12,8 @@ class AuthenticatorSelectionCriteria {
     this.userVerification,
   );
 
-  factory AuthenticatorSelectionCriteria.fromJson(JsonObject json) {
-    return AuthenticatorSelectionCriteria(
-      json['authenticatorAttachment'] as String?,
-      json['residentKey'] as String,
-      json['requireResidentKey'] as bool,
-      json['userVerification'] as String,
-    );
-  }
+  factory AuthenticatorSelectionCriteria.fromJson(JsonObject json) =>
+      _$AuthenticatorSelectionCriteriaFromJson(json);
 
   final String? authenticatorAttachment;
   final String residentKey;

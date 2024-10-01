@@ -1,13 +1,17 @@
-class UserInformation {
-  UserInformation(this.id, this.displayName, this.name);
+import 'package:ion_identity_client/src/core/types/types.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-  factory UserInformation.fromJson(dynamic json) {
-    return UserInformation(
-      json['id'] as String,
-      json['displayName'] as String,
-      json['name'] as String,
-    );
-  }
+part 'user_information.g.dart';
+
+@JsonSerializable()
+class UserInformation {
+  const UserInformation(
+    this.id,
+    this.displayName,
+    this.name,
+  );
+
+  factory UserInformation.fromJson(JsonObject json) => _$UserInformationFromJson(json);
 
   final String id;
   final String displayName;
