@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 class TrendingVideo {
   const TrendingVideo({
     required this.imageUrl,

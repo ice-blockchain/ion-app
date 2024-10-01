@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:email_validator/email_validator.dart';
 
 class Validators {

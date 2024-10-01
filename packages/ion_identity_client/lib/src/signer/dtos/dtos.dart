@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 export 'allow_credentials.dart';
 export 'authenticator_selection_criteria.dart';
 export 'fido_2_assertion.dart';

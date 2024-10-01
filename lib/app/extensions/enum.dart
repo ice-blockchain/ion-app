@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 extension EnumExtensions on Enum {
   String toShortString() => toString().split('.').last;
 

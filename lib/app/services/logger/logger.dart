@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:developer' as developer;
 
 class Logger {

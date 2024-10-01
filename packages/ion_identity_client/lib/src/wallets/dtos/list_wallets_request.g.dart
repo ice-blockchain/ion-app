@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'list_wallets_request.dart';

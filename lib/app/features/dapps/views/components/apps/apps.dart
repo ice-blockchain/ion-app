@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/section_header/section_header.dart';
 import 'package:ice/app/features/dapps/model/dapp_data.dart';

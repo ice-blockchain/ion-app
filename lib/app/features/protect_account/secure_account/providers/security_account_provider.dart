@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ice/app/features/protect_account/secure_account/data/models/security_methods.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

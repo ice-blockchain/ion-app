@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/features/wallet/model/wallet_data_with_loading_state.dart';

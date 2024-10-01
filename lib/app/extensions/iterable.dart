@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ice/app/utils/iterable.dart' as utils;
 
 extension IntersperseExtensions<T> on Iterable<T> {

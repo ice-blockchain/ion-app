@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/progress_bar/sliver_app_bar_with_progress.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';

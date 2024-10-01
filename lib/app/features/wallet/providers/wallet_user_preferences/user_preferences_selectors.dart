@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/wallet/model/nft_layout_type.dart';
 import 'package:ice/app/features/wallet/model/nft_sorting_type.dart';

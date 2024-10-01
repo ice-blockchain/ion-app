@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 library ion_identity_client;
 
 export 'src/auth/dtos/wallet.dart';

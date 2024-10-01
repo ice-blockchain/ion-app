@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 enum Language {
   english(name: 'English', flag: '🇬🇧', isoCode: 'en'),
   spanish(name: 'Spanish', flag: '🇪🇸', isoCode: 'es'),

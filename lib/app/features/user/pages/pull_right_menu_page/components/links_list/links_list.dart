@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/separated/separated_column.dart';
 import 'package:ice/app/components/separated/separator.dart';

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:convert';
 
 import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion.dart';

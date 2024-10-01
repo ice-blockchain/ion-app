@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'register_init_request.g.dart';

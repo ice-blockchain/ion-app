@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';

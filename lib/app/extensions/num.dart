@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 extension NumExtension on num? {

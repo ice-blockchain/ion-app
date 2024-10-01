@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ice/app/features/feed/data/models/visibility_settings_options.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

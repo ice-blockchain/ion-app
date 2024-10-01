@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion_identity_client/src/auth/result_types/create_recovery_credentials_result.dart';
 import 'package:ion_identity_client/src/auth/result_types/login_user_result.dart';
 import 'package:ion_identity_client/src/auth/result_types/recover_user_result.dart';

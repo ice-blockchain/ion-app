@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 /// A configuration class for the Ion API client, containing the necessary
 /// identifiers and origin information required to initialize the client.
 class IonClientConfig {

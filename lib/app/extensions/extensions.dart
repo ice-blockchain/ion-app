@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 export 'asset_gen_image.dart';
 export 'bool.dart';
 export 'build_context.dart';

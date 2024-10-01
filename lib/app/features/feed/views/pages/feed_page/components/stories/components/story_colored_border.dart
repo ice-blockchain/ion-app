@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/shapes/hexagon_path.dart';
 import 'package:ice/app/components/shapes/shape.dart';

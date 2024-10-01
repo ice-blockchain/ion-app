@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ice/generated/assets.gen.dart';
 
 enum NftLayoutType {

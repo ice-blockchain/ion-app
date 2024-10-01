@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:math';
 
 import 'package:ice/app/features/wallet/model/coin_transaction_data.dart';
