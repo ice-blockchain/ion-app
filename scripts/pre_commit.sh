@@ -34,7 +34,7 @@ printf '%s\n' "${avar}"
 
 # Check License
 printf "\e[33;1m%s\e[0m\n" '=== Check License ==='
-scripts/licence_check.sh
+scripts/license_check.sh
 if [ $? -ne 0 ]; then
   printf "\e[31;1m%s\e[0m\n" '=== Check License error ==='
   exit 1
