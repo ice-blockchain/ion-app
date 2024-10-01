@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';

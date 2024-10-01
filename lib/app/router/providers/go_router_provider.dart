@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';

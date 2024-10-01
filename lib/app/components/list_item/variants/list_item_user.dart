@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 part of '../list_item.dart';
 
 class _ListItemUser extends ListItem {

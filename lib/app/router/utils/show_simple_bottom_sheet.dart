@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_drag_handle.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_shape.dart';

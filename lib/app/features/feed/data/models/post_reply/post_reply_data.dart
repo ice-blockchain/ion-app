@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'post_reply_data.freezed.dart';

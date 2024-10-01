@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// A hook that manages a selection state of items of type T.

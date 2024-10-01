@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:collection/collection.dart';
 import 'package:ice/app/features/gallery/data/models/media_data.dart';
 import 'package:ice/app/features/gallery/data/models/media_selection_state.dart';

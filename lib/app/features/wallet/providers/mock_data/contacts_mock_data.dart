@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ice/app/features/wallet/model/contact_data.dart';
 
 String getIconUrl(String name) {

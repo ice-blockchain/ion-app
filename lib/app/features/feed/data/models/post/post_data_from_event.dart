@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 part of 'post_data.dart';
 
 class _PostDataFromEvent extends PostData {

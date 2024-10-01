@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 extension StringExtension on String? {
   String get emptyOrValue {
     return this ?? '';

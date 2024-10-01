@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/extensions/build_context.dart';

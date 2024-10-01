@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/card/rounded_card.dart';
 import 'package:ice/app/extensions/extensions.dart';

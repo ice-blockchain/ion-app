@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';

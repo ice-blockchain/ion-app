@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ice/app/extensions/extensions.dart';

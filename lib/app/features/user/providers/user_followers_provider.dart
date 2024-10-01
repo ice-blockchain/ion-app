@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:math';
 
 import 'package:ice/app/features/user/providers/mock_data.dart';

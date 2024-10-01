@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ice/app/features/user/model/user_data.dart';
 
 const Map<String, UserData> mockedUserData = {

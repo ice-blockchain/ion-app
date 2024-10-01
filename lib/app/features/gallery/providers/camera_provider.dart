@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:camera/camera.dart';
 import 'package:ice/app/services/logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';

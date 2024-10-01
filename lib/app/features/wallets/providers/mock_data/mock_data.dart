@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ice/app/features/wallet/model/wallet_data.dart';
 
 const String mockWalletIconUrl =

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:ice/app/features/wallet/model/coin_data.dart';

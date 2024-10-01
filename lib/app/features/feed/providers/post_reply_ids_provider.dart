@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:math';
 
 import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';

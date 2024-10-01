@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/components/post_list/components/post_list_item.dart';
