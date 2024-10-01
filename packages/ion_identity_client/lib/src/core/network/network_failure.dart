@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion_identity_client/src/core/types/types.dart';
 
 /// A sealed class representing different types of failures that can occur

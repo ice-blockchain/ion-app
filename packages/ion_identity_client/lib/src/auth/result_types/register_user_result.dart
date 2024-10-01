@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 sealed class RegisterUserResult {
   const RegisterUserResult();
 }

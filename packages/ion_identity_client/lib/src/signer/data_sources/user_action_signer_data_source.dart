@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion_identity_client/src/core/network/network.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/http_method.dart';

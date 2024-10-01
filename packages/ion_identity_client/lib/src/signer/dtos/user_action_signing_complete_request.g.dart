@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'user_action_signing_complete_request.dart';

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 class RequestHeaders {
   static const ionIdentityClientId = 'X-Client-ID';
   static const ionIdentityUserAction = 'X-Useraction';
