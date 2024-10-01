@@ -2,7 +2,7 @@
 
 printf "\e[33;1m%s\e[0m\n" 'Pre-Commit'
 
-# Generate Code
+# Format Code
 printf "\e[33;1m%s\e[0m\n" '=== Format Code ==='
 scripts/format_code.sh
 if [ $? -ne 0 ]; then
@@ -30,6 +30,16 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 printf "\e[33;1m%s\e[0m\n" 'Finished running Generate Locales'
+printf '%s\n' "${avar}"
+
+# Check License
+printf "\e[33;1m%s\e[0m\n" '=== Check License ==='
+scripts/licence_check.sh
+if [ $? -ne 0 ]; then
+  printf "\e[31;1m%s\e[0m\n" '=== Check License error ==='
+  exit 1
+fi
+printf "\e[33;1m%s\e[0m\n" 'Finished running Check License'
 printf '%s\n' "${avar}"
 
 # Flutter Analyzer
