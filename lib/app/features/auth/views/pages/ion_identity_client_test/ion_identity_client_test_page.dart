@@ -243,7 +243,7 @@ class _RecoveryTab extends HookConsumerWidget {
     final ionClient = ref.watch(ionApiClientProvider);
 
     final usernameController = useTextEditingController.fromValue(
-      TextEditingValue(text: 'testauth1@mail.com'),
+      const TextEditingValue(text: 'testauth1@mail.com'),
     );
 
     final resultState = useState<CreateRecoveryCredentialsResult?>(null);
@@ -254,11 +254,10 @@ class _RecoveryTab extends HookConsumerWidget {
         TextInput(controller: usernameController),
         SizedBox(height: 16.0.s),
         Button(
-          label: Text('Create Recovery Credentials'),
+          label: const Text('Create Recovery Credentials'),
           onPressed: () async {
             resultState.value =
                 await ionClient(username: usernameController.text).auth.createRecoveryCredentials();
-            print('\n${resultState.value}');
           },
         ),
         if (resultState.value != null) ...[
@@ -278,36 +277,32 @@ class _RecoverUserTab extends HookConsumerWidget {
     final ionClient = ref.watch(ionApiClientProvider);
 
     final usernameController = useTextEditingController.fromValue(
-      TextEditingValue(text: 'testauth2909@mail.com'),
+      const TextEditingValue(text: 'my@mail.com'),
     );
-    final credentialIdController = useTextEditingController.fromValue(
-      TextEditingValue(text: 'QXulhLYEQsKb-L038lu-khtbKi6wTNpbfbccvHDx1oA='),
-    );
-    final recoveryKeyController = useTextEditingController.fromValue(
-      TextEditingValue(text: 'D1-HACBN6-A9W8E-2QRAU-RRAAQ-JRWL4-PMV53M'),
-    );
+    final credentialIdController = useTextEditingController();
+    final recoveryKeyController = useTextEditingController();
 
     final resultState = useState<dynamic>(null);
 
     return ListView(
       children: [
         SizedBox(height: 16.0.s),
-        TextInput(controller: usernameController),
+        TextInput(controller: usernameController, labelText: 'Username'),
         SizedBox(height: 16.0.s),
-        TextInput(controller: credentialIdController),
+        TextInput(controller: credentialIdController, labelText: 'Credential ID'),
         SizedBox(height: 16.0.s),
-        TextInput(controller: recoveryKeyController),
+        TextInput(controller: recoveryKeyController, labelText: 'Recovery Key'),
         SizedBox(height: 16.0.s),
         Button(
-          label: Text('Recover User'),
+          label: const Text('Recover User'),
           onPressed: () async {
             resultState.value = await ionClient(username: usernameController.text).auth.recoverUser(
                   credentialId: credentialIdController.text,
                   recoveryKey: recoveryKeyController.text,
                 );
-            print('\n${resultState.value}');
           },
         ),
+        SelectableText('$resultState'),
       ],
     );
   }
