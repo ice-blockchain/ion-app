@@ -21,6 +21,7 @@ import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_tex
 import 'package:ice/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ice/app/features/feed/views/components/visibility_settings_toolbar/visibility_settings_toolbar.dart';
 import 'package:ice/app/features/feed/views/pages/schedule_modal/schedule_modal.dart';
+import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
@@ -42,6 +43,10 @@ class CreateArticleModal extends HookConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.create_article_nav_title),
+            onBackPress: () {
+              CancelCreationModalRoute(title: context.i18n.cancel_creation_article_title)
+                  .push<void>(context);
+            },
             actions: [
               Button(
                 type: ButtonType.secondary,

@@ -1,0 +1,90 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/generated/assets.gen.dart';
+
+class CancelCreationModal extends ConsumerWidget {
+  const CancelCreationModal({required this.title, super.key});
+
+  final String title;
+
+  static double get buttonsSize => 56.0.s;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final buttonMinimalSize = Size(buttonsSize, buttonsSize);
+
+    return SheetContent(
+      body: ScreenSideOffset.small(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 48.0.s, bottom: 10.0.s),
+              child: Assets.svg.actionCreatepostDeletepost.icon(size: 80.0.s),
+            ),
+            Text(
+              title,
+              style: context.theme.appTextThemes.title.copyWith(
+                color: context.theme.appColors.primaryText,
+              ),
+            ),
+            SizedBox(height: 8.0.s),
+            Text(
+              context.i18n.cancel_creation_description,
+              style: context.theme.appTextThemes.body2.copyWith(
+                color: context.theme.appColors.secondaryText,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 28.0.s),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Button.compact(
+                    type: ButtonType.outlined,
+                    label: Text(
+                      context.i18n.button_back,
+                    ),
+                    onPressed: () {
+                      context.pop();
+                    },
+                    minimumSize: buttonMinimalSize,
+                  ),
+                ),
+                SizedBox(
+                  width: 15.0.s,
+                ),
+                Expanded(
+                  child: Button.compact(
+                    label: Text(
+                      context.i18n.button_cancel,
+                    ),
+                    onPressed: () {
+                      final state = GoRouterState.of(context);
+                      context.go(state.currentTab.baseRouteLocation);
+                    },
+                    minimumSize: buttonMinimalSize,
+                    backgroundColor: context.theme.appColors.attentionRed,
+                  ),
+                ),
+              ],
+            ),
+            ScreenBottomOffset(
+              margin: 30.0.s,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
