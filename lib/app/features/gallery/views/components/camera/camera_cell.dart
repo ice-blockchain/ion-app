@@ -50,30 +50,6 @@ class CameraCell extends HookConsumerWidget {
       },
       orElse: () => const CameraPlaceholderWidget(),
     );
-
-    // return PermissionAwareWidget(
-    //   permissionType: AppPermissionType.camera,
-    //   buildWithoutPermission: (_) => const CameraPlaceholderWidget(),
-    //   buildWithPermission: (BuildContext context) {
-    //     return cameraControllerAsync.maybeWhen(
-    //       data: (controller) {
-    //         final isInitialized = controller?.value.isInitialized ?? false;
-
-    //         return GestureDetector(
-    //           onTap: () async => ref.read(galleryNotifierProvider.notifier).captureImage(),
-    //           child: SizedBox(
-    //             width: cellWidth,
-    //             height: cellHeight,
-    //             child: isInitialized && controller != null
-    //                 ? CameraPreviewWidget(controller: controller)
-    //                 : const CameraPlaceholderWidget(),
-    //           ),
-    //         );
-    //       },
-    //       orElse: () => const CameraPlaceholderWidget(),
-    //     );
-    //   },
-    // );
   }
 }
 

@@ -6,8 +6,8 @@ import 'package:ice/app/components/modal_sheets/simple_modal_sheet.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class GalleryRequestDialog extends StatelessWidget {
-  const GalleryRequestDialog({super.key});
+class RequestDialog extends StatelessWidget {
+  const RequestDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class GalleryRequestDialog extends StatelessWidget {
       description: context.i18n.photo_library_require_access_description,
       iconAsset: Assets.svg.iconGalleryOpen,
       button: Row(
-        mainAxisSize: MainAxisSize.min, // Изменяем на min
+        mainAxisSize: MainAxisSize.min,
         children: [
           Flexible(
             child: Button(

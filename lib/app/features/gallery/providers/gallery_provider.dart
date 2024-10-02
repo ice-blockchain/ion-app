@@ -1,8 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:io';
-
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
 import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
@@ -14,25 +11,6 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'gallery_provider.g.dart';
-
-@riverpod
-CacheManager cacheManager(CacheManagerRef ref) {
-  return DefaultCacheManager();
-}
-
-@riverpod
-Future<File?> cachedFile(CachedFileRef ref, String path) async {
-  final cacheManager = ref.watch(cacheManagerProvider);
-  try {
-    final fileInfo = await cacheManager.getFileFromCache(path);
-    if (fileInfo != null) {
-      return fileInfo.file;
-    }
-    return await cacheManager.getSingleFile(path);
-  } catch (e) {
-    return null;
-  }
-}
 
 @riverpod
 Future<AssetEntity?> assetEntity(AssetEntityRef ref, String id) {
@@ -47,12 +25,6 @@ class GalleryNotifier extends _$GalleryNotifier {
   Future<GalleryState> build() async {
     final mediaService = ref.watch(mediaServiceProvider);
     final permissionsNotifier = ref.watch(permissionsProvider.notifier);
-
-    // await permissionsNotifier.checkPermission(AppPermissionType.photos);
-
-    // if (!permissionsNotifier.hasPermission(AppPermissionType.photos)) {
-    //   await permissionsNotifier.requestPermission(AppPermissionType.photos);
-    // }
 
     if (!permissionsNotifier.hasPermission(AppPermissionType.photos)) {
       Logger.log('Photos Permission denied');
@@ -99,14 +71,10 @@ class GalleryNotifier extends _$GalleryNotifier {
   Future<void> captureImage() async {
     final permissionsNotifier = ref.read(permissionsProvider.notifier);
 
-    // if (!permissionsNotifier.hasPermission(AppPermissionType.camera)) {
-    //   await permissionsNotifier.requestPermission(AppPermissionType.camera);
-
     if (!permissionsNotifier.hasPermission(AppPermissionType.camera)) {
       Logger.log('Camera Permission denied');
       return;
     }
-    // }
 
     final mediaService = ref.read(mediaServiceProvider);
     final mediaSelectionNotifier = ref.read(mediaSelectionNotifierProvider.notifier);

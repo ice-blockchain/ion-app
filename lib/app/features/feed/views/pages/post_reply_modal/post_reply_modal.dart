@@ -15,8 +15,8 @@ import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
-import 'package:ice/app/features/feed/views/components/permission_dialogs/gallery_denied_dialog.dart';
-import 'package:ice/app/features/feed/views/components/permission_dialogs/gallery_request_dialog.dart';
+import 'package:ice/app/features/feed/views/components/permission_dialogs/denied_dialog.dart';
+import 'package:ice/app/features/feed/views/components/permission_dialogs/request_dialog.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ice/app/features/feed/views/components/post_replies/replying_to.dart';
 import 'package:ice/app/features/feed/views/pages/post_reply_modal/components/expanded_reply_input_field.dart';
@@ -50,8 +50,8 @@ class PostReplyModal extends HookConsumerWidget {
     final handlePhotoPermission = usePermissionHandler(
       ref,
       AppPermissionType.photos,
-      requestDialog: const GalleryRequestDialog(),
-      deniedDialog: const GalleryDeniedDialog(),
+      requestDialog: const RequestDialog(),
+      deniedDialog: const DeniedDialog(),
     );
 
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();

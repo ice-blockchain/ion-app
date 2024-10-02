@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-// ignore_for_file: constant_identifier_names
-
 import 'package:ice/app/features/core/permissions/data/models/models.dart';
 import 'package:ice/app/features/core/permissions/factories/permission_factory.dart';
 import 'package:ice/app/features/core/permissions/strategies/strategies.dart';

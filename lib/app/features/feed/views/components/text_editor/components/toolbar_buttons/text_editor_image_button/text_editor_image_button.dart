@@ -5,8 +5,8 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
-import 'package:ice/app/features/feed/views/components/permission_dialogs/gallery_denied_dialog.dart';
-import 'package:ice/app/features/feed/views/components/permission_dialogs/gallery_request_dialog.dart';
+import 'package:ice/app/features/feed/views/components/permission_dialogs/denied_dialog.dart';
+import 'package:ice/app/features/feed/views/components/permission_dialogs/request_dialog.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/hooks/use_permission_handler.dart';
@@ -23,8 +23,8 @@ class TextEditorImageButton extends HookConsumerWidget {
     final handlePhotoPermission = usePermissionHandler(
       ref,
       AppPermissionType.photos,
-      requestDialog: const GalleryRequestDialog(),
-      deniedDialog: const GalleryDeniedDialog(),
+      requestDialog: const RequestDialog(),
+      deniedDialog: const DeniedDialog(),
     );
 
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();

@@ -5,8 +5,8 @@ import 'package:ice/app/components/modal_sheets/simple_modal_sheet.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class GalleryDeniedDialog extends StatelessWidget {
-  const GalleryDeniedDialog({super.key});
+class DeniedDialog extends StatelessWidget {
+  const DeniedDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
