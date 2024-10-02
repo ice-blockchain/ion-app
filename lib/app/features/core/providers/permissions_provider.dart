@@ -6,15 +6,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:ice/app/features/core/permissions/data/models/models.dart';
 import 'package:ice/app/features/core/permissions/factories/permission_factory.dart';
 import 'package:ice/app/features/core/permissions/strategies/strategies.dart';
-import 'package:mutex/mutex.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'permissions_provider.g.dart';
-
-@riverpod
-Mutex mutex(MutexRef ref) {
-  return Mutex();
-}
 
 @riverpod
 PlatformPermissionFactory platformFactory(PlatformFactoryRef ref) {
@@ -31,10 +25,14 @@ PermissionStrategy permissionStrategy(PermissionStrategyRef ref, AppPermissionTy
 @Riverpod(keepAlive: true)
 class Permissions extends _$Permissions {
   @override
-  AsyncValue<PermissionsState> build() => const AsyncValue.data(PermissionsState());
+  PermissionsState build() => const PermissionsState();
 
   AppPermissionStatus getPermissionStatus(AppPermissionType type) {
-    return state.value?.permissions[type] ?? AppPermissionStatus.unknown;
+    return state.permissions[type] ?? AppPermissionStatus.unknown;
+  }
+
+  bool isPermanentlyDenied(AppPermissionType type) {
+    return getPermissionStatus(type) == AppPermissionStatus.permanentlyDenied;
   }
 
   bool hasPermission(AppPermissionType type) {
@@ -43,36 +41,27 @@ class Permissions extends _$Permissions {
     return status == AppPermissionStatus.granted || status == AppPermissionStatus.limited;
   }
 
-  Future<bool> checkAndRequestPermission(AppPermissionType type) async {
-    await checkPermission(type);
+  Future<void> openSettings(AppPermissionType type) async {
+    final permissionStrategy = ref.read(permissionStrategyProvider(type));
 
-    if (hasPermission(type)) return true;
-
-    await requestPermission(type);
-
-    return hasPermission(type);
+    await permissionStrategy.openSettings();
   }
 
   Future<void> requestPermission(AppPermissionType type) async {
-    final mutex = ref.read(mutexProvider);
+    final permissionStrategy = ref.read(permissionStrategyProvider(type));
 
-    await mutex.protect(() async {
-      if (hasPermission(type)) return;
+    final status = await permissionStrategy.requestPermission();
 
-      final permissionStrategy = ref.read(permissionStrategyProvider(type));
+    state = PermissionsState(
+      permissions: {
+        ...state.permissions,
+        type: status,
+      },
+    );
 
-      state = await AsyncValue.guard(() async {
-        final status = await permissionStrategy.requestPermission();
-        final currentPermissions = state.value?.permissions ?? {};
-
-        return PermissionsState(
-          permissions: {
-            ...currentPermissions,
-            type: status,
-          },
-        );
-      });
-    });
+    if (status == AppPermissionStatus.permanentlyDenied) {
+      await permissionStrategy.openSettings();
+    }
   }
 
   Future<void> checkAllPermissions() async {
@@ -84,16 +73,13 @@ class Permissions extends _$Permissions {
   Future<void> checkPermission(AppPermissionType type) async {
     final permissionStrategy = ref.read(permissionStrategyProvider(type));
 
-    state = await AsyncValue.guard(() async {
-      final status = await permissionStrategy.checkPermission();
-      final currentPermissions = state.value?.permissions ?? {};
+    final status = await permissionStrategy.checkPermission();
 
-      return PermissionsState(
-        permissions: {
-          ...currentPermissions,
-          type: status,
-        },
-      );
-    });
+    state = PermissionsState(
+      permissions: {
+        ...state.permissions,
+        type: status,
+      },
+    );
   }
 }

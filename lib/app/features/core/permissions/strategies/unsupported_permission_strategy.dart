@@ -11,4 +11,7 @@ class UnsupportedPermissionStrategy implements PermissionStrategy {
   Future<AppPermissionStatus> requestPermission() async {
     return Future.value(AppPermissionStatus.notAvailable);
   }
+
+  @override
+  Future<void>? openSettings() => null;
 }

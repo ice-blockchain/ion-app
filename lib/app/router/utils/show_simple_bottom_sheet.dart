@@ -26,3 +26,18 @@ Future<T?> showSimpleBottomSheet<T>({
     },
   );
 }
+
+Future<T?> showBaseBottomSheet<T>({
+  required BuildContext context,
+  required Widget child,
+  bool useRootNavigator = true,
+}) {
+  return showModalBottomSheet<T>(
+    useRootNavigator: useRootNavigator,
+    backgroundColor: Colors.transparent,
+    context: context,
+    builder: (context) {
+      return child;
+    },
+  );
+}

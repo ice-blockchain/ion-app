@@ -49,11 +49,11 @@ class GalleryNotifier extends _$GalleryNotifier {
     final mediaService = ref.watch(mediaServiceProvider);
     final permissionsNotifier = ref.watch(permissionsProvider.notifier);
 
-    await permissionsNotifier.checkPermission(AppPermissionType.photos);
+    // await permissionsNotifier.checkPermission(AppPermissionType.photos);
 
-    if (!permissionsNotifier.hasPermission(AppPermissionType.photos)) {
-      await permissionsNotifier.requestPermission(AppPermissionType.photos);
-    }
+    // if (!permissionsNotifier.hasPermission(AppPermissionType.photos)) {
+    //   await permissionsNotifier.requestPermission(AppPermissionType.photos);
+    // }
 
     if (!permissionsNotifier.hasPermission(AppPermissionType.photos)) {
       Logger.log('Photos Permission denied');
@@ -100,14 +100,14 @@ class GalleryNotifier extends _$GalleryNotifier {
   Future<void> captureImage() async {
     final permissionsNotifier = ref.read(permissionsProvider.notifier);
 
-    if (!permissionsNotifier.hasPermission(AppPermissionType.camera)) {
-      await permissionsNotifier.requestPermission(AppPermissionType.camera);
+    // if (!permissionsNotifier.hasPermission(AppPermissionType.camera)) {
+    //   await permissionsNotifier.requestPermission(AppPermissionType.camera);
 
-      if (!permissionsNotifier.hasPermission(AppPermissionType.camera)) {
-        Logger.log('Camera Permission denied');
-        return;
-      }
+    if (!permissionsNotifier.hasPermission(AppPermissionType.camera)) {
+      Logger.log('Camera Permission denied');
+      return;
     }
+    // }
 
     final mediaService = ref.read(mediaServiceProvider);
     final mediaSelectionNotifier = ref.read(mediaSelectionNotifierProvider.notifier);

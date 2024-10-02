@@ -3,4 +3,5 @@ import 'package:ice/app/features/core/permissions/data/models/permissions_types.
 abstract class PermissionStrategy {
   Future<AppPermissionStatus> checkPermission();
   Future<AppPermissionStatus> requestPermission();
+  Future<void>? openSettings();
 }

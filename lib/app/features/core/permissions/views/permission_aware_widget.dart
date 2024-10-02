@@ -1,82 +1,95 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/core/permissions/data/models/models.dart';
-import 'package:ice/app/features/core/providers/permissions_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_hooks/flutter_hooks.dart';
+// import 'package:hooks_riverpod/hooks_riverpod.dart';
+// import 'package:ice/app/features/core/permissions/data/models/models.dart';
+// import 'package:ice/app/features/core/providers/permissions_provider.dart';
 
-class PermissionAwareWidget extends HookConsumerWidget {
-  const PermissionAwareWidget({
-    required this.permissionType,
-    required this.buildWithPermission,
-    required this.buildWithoutPermission,
-    super.key,
-    this.onPermissionGranted,
-    this.onPermissionDenied,
-  });
+// class PermissionAwareWidget extends HookConsumerWidget {
+//   const PermissionAwareWidget({
+//     required this.permissionType,
+//     required this.buildWithPermission,
+//     required this.buildWithoutPermission,
+//     required this.alert,
+//     super.key,
+//     this.onPermissionGranted,
+//     this.onPermissionDenied,
+//   });
 
-  final AppPermissionType permissionType;
-  final WidgetBuilder buildWithPermission;
-  final WidgetBuilder buildWithoutPermission;
-  final VoidCallback? onPermissionGranted;
-  final VoidCallback? onPermissionDenied;
+//   final AppPermissionType permissionType;
+//   final WidgetBuilder buildWithPermission;
+//   final WidgetBuilder buildWithoutPermission;
+//   final VoidCallback? onPermissionGranted;
+//   final VoidCallback? onPermissionDenied;
+//   final Widget alert;
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final permissionsNotifier = ref.watch(permissionsProvider.notifier);
-    final hasPermission = useState(false);
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final permissionsNotifier = ref.watch(permissionsProvider.notifier);
+//     final hasPermission = useState(false);
 
-    useEffect(
-      () {
-        Future<void> checkPermission() async {
-          final isGranted = await permissionsNotifier.checkAndRequestPermission(permissionType);
-          hasPermission.value = isGranted;
+//     useEffect(
+//       () {
+//         Future<void> checkPermission() async {
+//           await permissionsNotifier.checkPermission(permissionType);
+//           final isGranted = permissionsNotifier.hasPermission(permissionType);
 
-          if (isGranted) {
-            onPermissionGranted?.call();
-          } else {
-            onPermissionDenied?.call();
+//           hasPermission.value = isGranted;
 
-            if (context.mounted) {
-              await _showPermissionDialog(context, ref);
-            }
-          }
-        }
+//           if (isGranted) {
+//             onPermissionGranted?.call();
+//           } else {
+//             onPermissionDenied?.call();
 
-        checkPermission();
-        return null;
-      },
-      [permissionType],
-    );
+//             // if (context.mounted) {
+//             //   await showSimpleBottomSheet<void>(
+//             //     context: context,
+//             //     child: SimpleModalSheet.alert(
+//             //       title: ,
+//             //       description: description,
+//             //       iconAsset: iconAsset,
 
-    return hasPermission.value ? buildWithPermission(context) : buildWithoutPermission(context);
-  }
+//             //     ),
+//             //   );
 
-  Future<void> _showPermissionDialog(BuildContext context, WidgetRef ref) async {
-    final shouldOpenSettings = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Permission required'),
-        content: const Text('Please allow the app to access the required permission.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Open settings'),
-          ),
-        ],
-      ),
-    );
+//             //   // await _showPermissionDialog(context, ref);
+//             // }
+//           }
+//         }
 
-    if (shouldOpenSettings ?? false) {
-      await openAppSettings();
-      final permissionsNotifier = ref.read(permissionsProvider.notifier);
-      if (await permissionsNotifier.checkAndRequestPermission(permissionType)) {
-        onPermissionGranted?.call();
-      }
-    }
-  }
-}
+//         checkPermission();
+//         return null;
+//       },
+//       [permissionType],
+//     );
+
+//     return hasPermission.value ? buildWithPermission(context) : buildWithoutPermission(context);
+//   }
+
+//   // Future<void> _showPermissionDialog(BuildContext context, WidgetRef ref) async {
+//   //   final shouldOpenSettings = await showDialog<bool>(
+//   //     context: context,
+//   //     builder: (context) => AlertDialog(
+//   //       title: const Text('Permission required'),
+//   //       content: const Text('Please allow the app to access the required permission.'),
+//   //       actions: [
+//   //         TextButton(
+//   //           onPressed: () => Navigator.of(context).pop(false),
+//   //           child: const Text('Cancel'),
+//   //         ),
+//   //         TextButton(
+//   //           onPressed: () => Navigator.of(context).pop(true),
+//   //           child: const Text('Open settings'),
+//   //         ),
+//   //       ],
+//   //     ),
+//   //   );
+
+//   //   if (shouldOpenSettings ?? false) {
+//   //     await openAppSettings();
+//   //     final permissionsNotifier = ref.read(permissionsProvider.notifier);
+//   //     if (isGranted) {
+//   //       onPermissionGranted?.call();
+//   //     }
+//   //   }
+//   // }
+// }

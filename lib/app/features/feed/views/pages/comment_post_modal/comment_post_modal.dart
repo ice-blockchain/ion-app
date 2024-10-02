@@ -1,27 +1,34 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/core/permissions/data/models/models.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
+import 'package:ice/app/features/feed/views/components/permission_dialogs/gallery_denied_dialog.dart';
+import 'package:ice/app/features/feed/views/components/permission_dialogs/gallery_request_dialog.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/pages/comment_post_modal/components/quote_post_comment_input.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
+import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
+import 'package:ice/app/hooks/use_permission_handler.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/services/media_service/media_service.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class CommentPostModal extends ConsumerWidget {
+class CommentPostModal extends HookConsumerWidget {
   const CommentPostModal({required this.postId, super.key});
 
   final String postId;
@@ -30,7 +37,18 @@ class CommentPostModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    log('CommentPostModal build');
+
     final post = ref.watch(postByIdSelectorProvider(postId: postId));
+
+    final handlePhotoPermission = usePermissionHandler(
+      ref,
+      AppPermissionType.photos,
+      requestDialog: const GalleryRequestDialog(),
+      deniedDialog: const GalleryDeniedDialog(),
+    );
+
+    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
     if (post == null) return const SizedBox.shrink();
 
@@ -81,7 +99,20 @@ class CommentPostModal extends ConsumerWidget {
               actions: [
                 ActionsToolbarButton(
                   icon: Assets.svg.iconGalleryOpen,
-                  onPressed: () => MediaPickerRoute().push<List<MediaFile>>(context),
+                  onPressed: () async {
+                    final hasPermission = await handlePhotoPermission();
+                    // if (hasPermission && context.mounted) {
+                    //   await MediaPickerRoute().push<List<MediaFile>>(context);
+                    // }
+
+                    hideKeyboardAndCallOnce(
+                      callback: () async {
+                        if (hasPermission && context.mounted) {
+                          await MediaPickerRoute().push<List<MediaFile>>(context);
+                        }
+                      },
+                    );
+                  },
                 ),
                 ActionsToolbarButton(
                   icon: Assets.svg.iconCameraOpen,
