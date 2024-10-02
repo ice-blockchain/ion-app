@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 

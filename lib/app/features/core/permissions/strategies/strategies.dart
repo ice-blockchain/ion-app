@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 export 'base_permission_strategy.dart';
 export 'camera_permission_strategy.dart';
 export 'contacts_permission_strategy.dart';

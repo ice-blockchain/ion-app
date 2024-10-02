@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
-import 'package:ice/app/features/gallery/data/models/media_data.dart';
 import 'dart:io';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ice/app/features/core/providers/permissions_provider.dart';
+import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ice/app/features/gallery/data/models/models.dart';
 import 'package:ice/app/features/gallery/providers/providers.dart';
 import 'package:ice/app/services/logger/logger.dart';
