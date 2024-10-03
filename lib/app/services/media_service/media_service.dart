@@ -5,13 +5,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/services/media_service/photo_compress_service.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'media_service.g.dart';
 part 'media_service.freezed.dart';
+part 'media_service.g.dart';
 
 @freezed
 class MediaFile with _$MediaFile {
@@ -24,13 +25,21 @@ class MediaFile with _$MediaFile {
 }
 
 class MediaService {
+  MediaService(this.photoCompressService);
+
+  final IPhotoCompressService photoCompressService;
+
   Future<MediaFile?> captureImageFromCamera({bool saveToGallery = false}) async {
     final image = await ImagePicker().pickImage(source: ImageSource.camera);
 
     if (image == null) return null;
 
+    final compressedImage = await photoCompressService.compressImage(
+      image,
+    );
+
     if (!saveToGallery) {
-      return MediaFile(path: image.path, mimeType: image.mimeType);
+      return MediaFile(path: compressedImage.path, mimeType: compressedImage.mimeType);
     }
 
     return _saveCameraImage(File(image.path));
@@ -71,7 +80,7 @@ class MediaService {
   Future<MediaFile?> _saveCameraImage(File imageFile) async {
     final asset = await PhotoManager.editor.saveImageWithPath(
       imageFile.path,
-      title: 'Camera_${DateTime.now().millisecondsSinceEpoch}.jpg',
+      title: 'Camera_${DateTime.now().millisecondsSinceEpoch}',
     );
 
     if (asset == null) return null;
@@ -90,4 +99,6 @@ class MediaService {
 }
 
 @riverpod
-MediaService mediaService(MediaServiceRef ref) => MediaService();
+MediaService mediaService(MediaServiceRef ref) => MediaService(
+      ref.read(photoCompressService),
+    );
