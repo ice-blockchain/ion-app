@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
+import 'package:ice/app/components/card/info_card.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
@@ -30,23 +31,11 @@ class CancelCreationModal extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: EdgeInsets.only(top: 48.0.s, bottom: 10.0.s),
-            child: Assets.svg.actionCreatepostDeletepost.icon(size: 80.0.s),
-          ),
-          Text(
-            title,
-            style: context.theme.appTextThemes.title.copyWith(
-              color: context.theme.appColors.primaryText,
-            ),
-          ),
-          SizedBox(height: 8.0.s),
-          Text(
-            context.i18n.cancel_creation_description,
-            style: context.theme.appTextThemes.body2.copyWith(
-              color: context.theme.appColors.secondaryText,
-            ),
-            textAlign: TextAlign.center,
+          SizedBox(height: 48.0.s),
+          InfoCard(
+            iconAsset: Assets.svg.actionCreatepostDeletepost,
+            title: title,
+            description: context.i18n.cancel_creation_description,
           ),
           SizedBox(height: 28.0.s),
           Row(
