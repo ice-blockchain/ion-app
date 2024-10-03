@@ -100,5 +100,5 @@ class MediaService {
 
 @riverpod
 MediaService mediaService(MediaServiceRef ref) => MediaService(
-      ref.read(photoCompressService),
+      ref.read(photoCompressServiceProvider),
     );

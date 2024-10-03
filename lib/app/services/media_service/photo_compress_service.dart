@@ -3,6 +3,8 @@
 import 'package:image_compression_flutter/image_compression_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'photo_compress_service.g.dart';
+
 abstract class IPhotoCompressService {
   Future<XFile> compressImage(XFile file, {int quality});
 
@@ -46,6 +48,4 @@ class PhotoCompressService extends IPhotoCompressService {
 }
 
 @riverpod
-final photoCompressService = Provider<IPhotoCompressService>((ref) {
-  return PhotoCompressService();
-});
+IPhotoCompressService photoCompressService(PhotoCompressServiceRef ref) => PhotoCompressService();
