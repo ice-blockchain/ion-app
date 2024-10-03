@@ -98,7 +98,9 @@ class SearchInput extends HookWidget {
                     (loading
                         ? const SearchLoadingIndicator()
                         : showClear.value
-                            ? SearchClearButton(onPressed: searchController.clear)
+                            ? TextFieldTapRegion(
+                                child: SearchClearButton(onPressed: searchController.clear),
+                              )
                             : null),
                 prefixIconConstraints: const BoxConstraints(),
                 filled: true,
@@ -111,11 +113,13 @@ class SearchInput extends HookWidget {
           ),
         ),
         if (focused.value)
-          SearchCancelButton(
-            onPressed: () {
-              onCancelSearch?.call();
-              focusNode.unfocus();
-            },
+          TextFieldTapRegion(
+            child: SearchCancelButton(
+              onPressed: () {
+                onCancelSearch?.call();
+                focusNode.unfocus();
+              },
+            ),
           ),
       ],
     );

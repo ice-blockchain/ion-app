@@ -16,16 +16,14 @@ import 'package:ice/generated/app_localizations.dart';
 void main() async {
   runApp(
     ProviderScope(
-      observers: <ProviderObserver>[
-        if (LoggerConfig.riverpodLogsEnabled) RiverpodLogger(),
-      ],
-      child: const IceApp(),
+      observers: [if (LoggerConfig.riverpodLogsEnabled) RiverpodLogger()],
+      child: const IonApp(),
     ),
   );
 }
 
-class IceApp extends ConsumerWidget {
-  const IceApp({super.key});
+class IonApp extends ConsumerWidget {
+  const IonApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

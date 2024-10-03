@@ -15,9 +15,8 @@ class MainTabButton extends StatelessWidget {
     final icon =
         state.isMainModalOpen ? Assets.images.logo.logoButtonClose : Assets.images.logo.logoButton;
 
-    return SizedBox(
-      width: 50,
-      height: 50,
+    return SizedBox.square(
+      dimension: 50.0.s,
       child: icon.icon(fit: BoxFit.contain),
     );
   }
