@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'fido_2_attestation.dart';
@@ -17,6 +15,6 @@ Fido2Attestation _$Fido2AttestationFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$Fido2AttestationToJson(Fido2Attestation instance) =>
     <String, dynamic>{
-      'credentialInfo': instance.credentialInfo,
+      'credentialInfo': instance.credentialInfo.toJson(),
       'credentialKind': instance.credentialKind,
     };

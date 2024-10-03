@@ -19,6 +19,8 @@ class UserInformation {
   final String displayName;
   final String name;
 
+  JsonObject toJson() => _$UserInformationToJson(this);
+
   @override
   String toString() => 'UserInformation(id: $id, displayName: $displayName, name: $name)';
 }

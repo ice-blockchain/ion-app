@@ -22,6 +22,8 @@ class AuthenticatorSelectionCriteria {
   final bool requireResidentKey;
   final String userVerification;
 
+  JsonObject toJson() => _$AuthenticatorSelectionCriteriaToJson(this);
+
   @override
   String toString() {
     return 'AuthenticatorSelectionCriteria(authenticatorAttachment: $authenticatorAttachment, residentKey: $residentKey, requireResidentKey: $requireResidentKey, userVerification: $userVerification)';

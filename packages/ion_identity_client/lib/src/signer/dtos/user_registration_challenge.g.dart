@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'user_registration_challenge.dart';
@@ -39,14 +37,17 @@ Map<String, dynamic> _$UserRegistrationChallengeToJson(
         UserRegistrationChallenge instance) =>
     <String, dynamic>{
       'temporaryAuthenticationToken': instance.temporaryAuthenticationToken,
-      'rp': instance.rp,
-      'user': instance.user,
-      'supportedCredentialKinds': instance.supportedCredentialKinds,
+      'rp': instance.rp.toJson(),
+      'user': instance.user.toJson(),
+      'supportedCredentialKinds': instance.supportedCredentialKinds.toJson(),
       'otpUrl': instance.otpUrl,
       'challenge': instance.challenge,
-      'authenticatorSelection': instance.authenticatorSelection,
+      'authenticatorSelection': instance.authenticatorSelection.toJson(),
       'attestation': instance.attestation,
-      'pubKeyCredParams': instance.pubKeyCredParams,
-      'excludeCredentials': instance.excludeCredentials,
-      'allowedRecoveryCredentials': instance.allowedRecoveryCredentials,
+      'pubKeyCredParams':
+          instance.pubKeyCredParams.map((e) => e.toJson()).toList(),
+      'excludeCredentials':
+          instance.excludeCredentials.map((e) => e.toJson()).toList(),
+      'allowedRecoveryCredentials':
+          instance.allowedRecoveryCredentials?.map((e) => e.toJson()).toList(),
     };

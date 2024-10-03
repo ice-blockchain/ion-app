@@ -20,4 +20,8 @@ class CredentialInfo {
   final String attestationData;
 
   JsonObject toJson() => _$CredentialInfoToJson(this);
+
+  @override
+  String toString() =>
+      'CredentialInfo(credId: $credId, clientData: $clientData, attestationData: $attestationData)';
 }

@@ -33,4 +33,6 @@ class AllowedRecoveryCredential {
 
   final String id;
   final String encryptedRecoveryKey;
+
+  JsonObject toJson() => _$AllowedRecoveryCredentialToJson(this);
 }

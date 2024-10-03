@@ -3,6 +3,7 @@
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/data_sources/data_sources.dart';
 import 'package:ion_identity_client/src/auth/data_sources/recover_user_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/services.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
@@ -130,6 +131,7 @@ mixin _AuthClient {
         config: config,
         signer: signer,
       ),
+      keyService: const KeyService(),
     );
   }
 
@@ -152,6 +154,7 @@ mixin _AuthClient {
       username: username,
       passkeySigner: signer,
       dataSource: createRecoverUserDataSource(config: config),
+      keyService: const KeyService(),
     );
   }
 
