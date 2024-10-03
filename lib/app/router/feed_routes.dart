@@ -20,7 +20,6 @@ class FeedRoutes {
         TypedGoRoute<MediaPickerRoute>(path: 'media-picker'),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
         TypedGoRoute<FeedSearchLanguagesRoute>(path: 'feed-search-languages'),
-        TypedGoRoute<CancelCreationModalRoute>(path: 'cancel-creation'),
       ],
     ),
   ];
@@ -156,14 +155,4 @@ class FeedSearchLanguagesRoute extends BaseRouteData {
         );
 
   final List<Language> selectedLanguages;
-}
-
-class CancelCreationModalRoute extends BaseRouteData {
-  CancelCreationModalRoute({this.title = ''})
-      : super(
-          child: CancelCreationModal(title: title),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final String title;
 }

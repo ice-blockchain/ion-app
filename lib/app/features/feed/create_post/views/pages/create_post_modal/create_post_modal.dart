@@ -17,9 +17,10 @@ import 'package:ice/app/features/feed/views/components/text_editor/components/to
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/text_editor.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ice/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ice/app/services/markdown_parser/markdown_parser.dart';
 
 class CreatePostModal extends HookWidget {
@@ -37,8 +38,13 @@ class CreatePostModal extends HookWidget {
           NavigationAppBar.modal(
             title: Text(context.i18n.create_post_modal_title),
             onBackPress: () {
-              CancelCreationModalRoute(title: context.i18n.cancel_creation_post_title)
-                  .push<void>(context);
+              showSimpleBottomSheet<void>(
+                context: context,
+                child: CancelCreationModal(
+                  title: context.i18n.cancel_creation_post_title,
+                  onCancel: () => Navigator.of(context).pop(),
+                ),
+              );
             },
           ),
           Expanded(

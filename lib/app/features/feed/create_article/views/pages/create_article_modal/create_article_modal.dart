@@ -20,8 +20,8 @@ import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_qui
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ice/app/features/feed/views/components/visibility_settings_toolbar/visibility_settings_toolbar.dart';
+import 'package:ice/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ice/app/features/feed/views/pages/schedule_modal/schedule_modal.dart';
-import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
@@ -44,8 +44,13 @@ class CreateArticleModal extends HookConsumerWidget {
           NavigationAppBar.modal(
             title: Text(context.i18n.create_article_nav_title),
             onBackPress: () {
-              CancelCreationModalRoute(title: context.i18n.cancel_creation_article_title)
-                  .push<void>(context);
+              showSimpleBottomSheet<void>(
+                context: context,
+                child: CancelCreationModal(
+                  title: context.i18n.cancel_creation_article_title,
+                  onCancel: () => Navigator.of(context).pop(),
+                ),
+              );
             },
             actions: [
               Button(
