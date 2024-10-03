@@ -12,3 +12,4 @@ export 'num.dart';
 export 'riverpod.dart';
 export 'string.dart';
 export 'theme_data.dart';
+export 'video_player_controller.dart';

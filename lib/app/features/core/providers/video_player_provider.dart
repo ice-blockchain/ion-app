@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_player/video_player.dart';
 
@@ -12,7 +13,7 @@ Raw<VideoPlayerController> videoController(
   bool autoPlay = false,
   bool looping = false,
 }) {
-  final controller = VideoPlayerController.asset(assetPath);
+  final controller = VideoPlayerControllerExtension.fromFile(assetPath);
 
   controller.initialize().then((_) {
     ref.notifyListeners();

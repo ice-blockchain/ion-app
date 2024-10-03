@@ -23,8 +23,8 @@ class Permissions extends _$Permissions {
   Future<void> checkAllPermissions() async {
     final permissions = <PermissionType, PermissionStatus>{};
     try {
-      final contactsPermissionStatus = await Permission.contacts.status;
-      final notificationsPermissionStatus = await Permission.notification.status;
+      const contactsPermissionStatus = PermissionStatus.permanentlyDenied;
+      const notificationsPermissionStatus = PermissionStatus.permanentlyDenied;
       permissions
         ..putIfAbsent(
           PermissionType.Notifications,

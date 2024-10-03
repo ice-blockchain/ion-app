@@ -1594,6 +1594,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  screen_retriever:
+    dependency: transitive
+    description:
+      name: screen_retriever
+      sha256: "6ee02c8a1158e6dae7ca430da79436e3b1c9563c8cf02f524af997c201ac2b90"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.9"
   share_plus:
     dependency: "direct main"
     description:
@@ -2023,6 +2031,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  video_player_win:
+    dependency: "direct main"
+    description:
+      name: video_player_win
+      sha256: e7b92ae1050086f9be3787eba1fbecbea278b59453cb3589263daa0c62772a88
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.11"
   vm_service:
     dependency: transitive
     description:
@@ -2095,6 +2111,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.5.3"
+  window_manager:
+    dependency: "direct main"
+    description:
+      name: window_manager
+      sha256: ab8b2a7f97543d3db2b506c9d875e637149d48ee0c6a5cb5f5fd6e0dac463792
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.2"
   xdg_directories:
     dependency: transitive
     description:
