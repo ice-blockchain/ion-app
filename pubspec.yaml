@@ -10,6 +10,7 @@ environment:
   flutter: "3.24.2"
 
 dependencies:
+  back_button_interceptor: ^7.0.3
   cached_network_image: ^3.3.1
   camera: ^0.11.0+2
   collection: ^1.18.0

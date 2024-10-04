@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/back_hardware_button_interceptor/back_hardware_button_interceptor.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
@@ -46,16 +47,9 @@ class CreateArticleModal extends HookConsumerWidget {
       );
     }
 
-    return PopScope<bool>(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) {
-          return;
-        }
-        final shouldPop = await showCancelCreationModal(context) ?? false;
-        if (context.mounted && shouldPop) {
-          Navigator.pop(context, result);
-        }
+    return BackHardwareButtonInterceptor(
+      onBackPress: (context) async {
+        await showCancelCreationModal(context);
       },
       child: SheetContent(
         bottomPadding: 0,
