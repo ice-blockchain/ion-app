@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
@@ -11,7 +12,6 @@ import 'package:ion_identity_client/src/auth/dtos/credential_request_data.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_response.dart';
 import 'package:ion_identity_client/src/auth/dtos/recovery_key_data.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
-import 'package:ion_identity_client/src/auth/utils/utils.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:uuid/uuid.dart';
 
@@ -222,5 +222,26 @@ class CreateRecoveryCredentialsService {
     return formattedStr.endsWith('-')
         ? formattedStr.substring(0, formattedStr.length - 1)
         : formattedStr;
+  }
+
+  String generateRecoveryCode() {
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    final random = Random.secure();
+
+    final codeUnits = List<int>.generate(30, (index) {
+      final randomByte = random.nextInt(alphabet.length);
+      return alphabet.codeUnitAt(randomByte);
+    });
+
+    final code = String.fromCharCodes(codeUnits);
+
+    // Format the code with dashes
+    return 'D1-'
+        '${code.substring(0, 6)}-'
+        '${code.substring(6, 11)}-'
+        '${code.substring(11, 16)}-'
+        '${code.substring(16, 21)}-'
+        '${code.substring(21, 26)}-'
+        '${code.substring(26)}';
   }
 }

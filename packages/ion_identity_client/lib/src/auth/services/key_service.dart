@@ -16,7 +16,7 @@ class KeyService {
     final publicKey = keyPairData.publicKey;
     final privateKeyBytes = await keyPairData.extractPrivateKeyBytes();
 
-    // Convert keys to PEM format if necessary
+    // Convert keys to PEM format
     final publicKeyPem = _encodeEd25519PublicKeyToPem(Uint8List.fromList(publicKey.bytes));
     final privateKeyPem = _encodeEd25519PrivateKeyToPem(Uint8List.fromList(privateKeyBytes));
 
@@ -37,7 +37,7 @@ class KeyService {
     // Derive a key from the recovery code and salt using PBKDF2
     final pbkdf2 = crypto.Pbkdf2(
       macAlgorithm: crypto.Hmac(crypto.Sha256()),
-      iterations: 100000, // Increase iterations for added security
+      iterations: 100000, // Increased iterations for added security
       bits: 256,
     );
     final secretKey = await pbkdf2.deriveKey(
