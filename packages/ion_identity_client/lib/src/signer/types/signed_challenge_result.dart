@@ -2,7 +2,12 @@
 
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 
-typedef SignedChallengeResult<F> = ({
+typedef SignedUserActionChallengeResult<F> = ({
   Fido2Assertion assertion,
   UserActionChallenge userActionChallenge,
+});
+
+typedef SignedUserRegistrationChallengeResult<F> = ({
+  Fido2Attestation attestation,
+  UserRegistrationChallenge userRegistrationChallenge,
 });

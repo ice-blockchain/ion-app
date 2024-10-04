@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart' as crypto;
 import 'package:ion_identity_client/ion_client.dart';
@@ -153,14 +154,12 @@ class CreateRecoveryCredentialsService {
     return jsonEncode(sortedFingerprintMap);
   }
 
-  // Signs the credential info fingerprint
   Future<String> signCredentialInfoFingerprint(
     String fingerprintData,
     crypto.SimpleKeyPairData privateKey,
   ) async {
     final algorithm = crypto.Ed25519();
 
-    // Sign the data
     final signature = await algorithm.sign(
       utf8.encode(fingerprintData),
       keyPair: privateKey,
@@ -187,11 +186,21 @@ class CreateRecoveryCredentialsService {
     return jsonEncode(sortedAttestationDataMap);
   }
 
-  // Generates a credential ID (credId)
-  String generateCredId(crypto.SimplePublicKey publicKey) {
-    final hash = sha256.convert(publicKey.bytes);
-    return base64UrlEncode(hash.bytes);
-  }
+  String generateCredentialName() => const Uuid().v4().toUpperCase();
 
-  String generateCredentialName() => const Uuid().v4();
+  String generateCredId(crypto.SimplePublicKey publicKey) {
+    final digest = sha256.convert(publicKey.bytes).bytes.sublist(0, 16);
+
+    final base36Str = BigInt.parse(hex.encode(digest), radix: 16)
+        .toRadixString(36)
+        .toUpperCase()
+        .padLeft(25, '0');
+
+    final formattedStr =
+        base36Str.replaceAllMapped(RegExp('.{5}'), (match) => '${match.group(0)}-');
+
+    return formattedStr.endsWith('-')
+        ? formattedStr.substring(0, formattedStr.length - 1)
+        : formattedStr;
+  }
 }
