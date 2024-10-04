@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
@@ -225,23 +224,21 @@ class CreateRecoveryCredentialsService {
   }
 
   String generateRecoveryCode() {
-    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    final random = Random.secure();
+    final uuid = const Uuid().v7();
 
-    final codeUnits = List<int>.generate(30, (index) {
-      final randomByte = random.nextInt(alphabet.length);
-      return alphabet.codeUnitAt(randomByte);
-    });
+    final digest = sha256.convert(utf8.encode(uuid));
+    final recoveryCode = digest.toString().substring(0, 32);
 
-    final code = String.fromCharCodes(codeUnits);
+    // Format the code with dashes for readability
+    final formattedCode = recoveryCode
+        .replaceAllMapped(
+          RegExp('.{8}'),
+          (match) => '${match.group(0)}-',
+        )
+        .trimRight();
 
-    // Format the code with dashes
-    return 'D1-'
-        '${code.substring(0, 6)}-'
-        '${code.substring(6, 11)}-'
-        '${code.substring(11, 16)}-'
-        '${code.substring(16, 21)}-'
-        '${code.substring(21, 26)}-'
-        '${code.substring(26)}';
+    return formattedCode.endsWith('-')
+        ? formattedCode.substring(0, formattedCode.length - 1)
+        : formattedCode;
   }
 }
