@@ -27,6 +27,16 @@ import 'package:ice/app/services/markdown_parser/markdown_parser.dart';
 class CreatePostModal extends HookWidget {
   const CreatePostModal({super.key});
 
+  Future<void> _showCancelCreationModal(BuildContext context) async {
+    await showSimpleBottomSheet<void>(
+      context: context,
+      child: CancelCreationModal(
+        title: context.i18n.cancel_creation_post_title,
+        onCancel: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final textEditorController = useQuillController();
@@ -34,13 +44,7 @@ class CreatePostModal extends HookWidget {
 
     return BackHardwareButtonInterceptor(
       onBackPress: (context) async {
-        await showSimpleBottomSheet<void>(
-          context: context,
-          child: CancelCreationModal(
-            title: context.i18n.cancel_creation_post_title,
-            onCancel: () => Navigator.of(context).pop(),
-          ),
-        );
+        await _showCancelCreationModal(context);
       },
       child: SheetContent(
         topPadding: 0,
@@ -48,14 +52,8 @@ class CreatePostModal extends HookWidget {
           children: [
             NavigationAppBar.modal(
               title: Text(context.i18n.create_post_modal_title),
-              onBackPress: () {
-                showSimpleBottomSheet<void>(
-                  context: context,
-                  child: CancelCreationModal(
-                    title: context.i18n.cancel_creation_post_title,
-                    onCancel: () => Navigator.of(context).pop(),
-                  ),
-                );
+              onBackPress: () async {
+                await _showCancelCreationModal(context);
               },
             ),
             Expanded(
