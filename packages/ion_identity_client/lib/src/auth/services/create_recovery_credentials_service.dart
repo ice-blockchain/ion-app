@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart' as crypto;
+import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/data_sources/create_recovery_credentials_data_source.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_info.dart';
@@ -30,32 +31,49 @@ class CreateRecoveryCredentialsService {
   final KeyService keyService;
 
   Future<CreateRecoveryCredentialsResult> createRecoveryCredentials() async {
-    final challengeResponse = await dataSource.createCredentialInit(username: username).run();
-    final credentialChallenge = challengeResponse.toNullable()!;
+    final result = await dataSource
+        .createCredentialInit(username: username)
+        .flatMap(
+          (credentialChallenge) =>
+              TaskEither<CreateRecoveryCredentialsFailure, RecoveryKeyData>.tryCatch(
+            () => createRecoveryKey(
+              challenge: credentialChallenge.challenge,
+              origin: config.origin,
+            ),
+            CreateRecoveryKeyCreateRecoveryCredentialsFailure.new,
+          ).flatMap(
+            (recoveryKeyData) {
+              final credentialRequestData = CredentialRequestData(
+                challengeIdentifier: credentialChallenge.challengeIdentifier,
+                credentialName: recoveryKeyData.name,
+                credentialKind: 'RecoveryKey',
+                credentialInfo: recoveryKeyData.credentialInfo,
+                encryptedPrivateKey: recoveryKeyData.encryptedPrivateKey,
+              );
 
-    final recoveryKeyData = await createRecoveryKey(
-      challenge: credentialChallenge.challenge,
-      origin: config.origin,
-    );
+              final request = dataSource.buildCreateCredentialSigningRequest(
+                username,
+                credentialRequestData,
+              );
 
-    final credentialRequestData = CredentialRequestData(
-      challengeIdentifier: credentialChallenge.challengeIdentifier,
-      credentialName: recoveryKeyData.name,
-      credentialKind: 'RecoveryKey',
-      credentialInfo: recoveryKeyData.credentialInfo,
-      encryptedPrivateKey: recoveryKeyData.encryptedPrivateKey,
-    );
-
-    final request = dataSource.buildCreateCredentialSigningRequest(username, credentialRequestData);
-    final result = await userActionSigner.execute(request, CredentialResponse.fromJson).run();
+              return userActionSigner
+                  .execute(request, CredentialResponse.fromJson)
+                  .mapLeft(CreateCredentialRequestCreateRecoveryCredentialsFailure.new)
+                  .map(
+                    (credentialResponse) => CreateRecoveryCredentialsSuccess(
+                      recoveryCode: recoveryKeyData.recoveryCode,
+                      recoveryName: credentialResponse.name,
+                      recoveryId: credentialResponse.credentialId,
+                    ),
+                  );
+            },
+          ),
+        )
+        .run();
 
     return result.fold(
-      (failure) => CreateRecoveryCredentialsFailure(failure, StackTrace.current),
-      (success) => CreateRecoveryCredentialsSuccess(
-        recoveryCode: recoveryKeyData.recoveryCode,
-        recoveryName: success.name,
-        recoveryId: success.credentialId,
-      ),
+      (failure) => failure,
+      (success) => success,
     );
   }
 
@@ -93,8 +111,10 @@ class CreateRecoveryCredentialsService {
     final credId = generateCredId(keyPair.publicKey);
 
     final recoveryCode = generateRecoveryCode();
-    final encryptedPrivateKey =
-        await keyService.encryptPrivateKey(keyPair.privateKeyPem, recoveryCode);
+    final encryptedPrivateKey = await keyService.encryptPrivateKey(
+      keyPair.privateKeyPem,
+      recoveryCode,
+    );
 
     final credentialInfo = CredentialInfo(
       credId: credId,
