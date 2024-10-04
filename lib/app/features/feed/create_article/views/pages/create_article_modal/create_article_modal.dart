@@ -36,91 +36,107 @@ class CreateArticleModal extends HookConsumerWidget {
     final hasContent = useTextEditorHasContent(textEditorController);
     final date = ref.watch(schedulePostingProvider);
 
-    return SheetContent(
-      bottomPadding: 0,
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          NavigationAppBar.modal(
-            title: Text(context.i18n.create_article_nav_title),
-            onBackPress: () {
-              showSimpleBottomSheet<void>(
-                context: context,
-                child: CancelCreationModal(
-                  title: context.i18n.cancel_creation_article_title,
-                  onCancel: () => Navigator.of(context).pop(),
-                ),
-              );
-            },
-            actions: [
-              Button(
-                type: ButtonType.secondary,
-                label: Text(
-                  context.i18n.button_next,
-                  style: context.theme.appTextThemes.body.copyWith(
-                    color: context.theme.appColors.primaryAccent,
+    Future<bool?> showCancelCreationModal(BuildContext context) {
+      return showSimpleBottomSheet<bool>(
+        context: context,
+        child: CancelCreationModal(
+          title: context.i18n.cancel_creation_article_title,
+          onCancel: () => Navigator.of(context).pop(true),
+        ),
+      );
+    }
+
+    return PopScope<bool>(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) {
+          return;
+        }
+        final shouldPop = await showCancelCreationModal(context) ?? false;
+        if (context.mounted && shouldPop) {
+          Navigator.pop(context, result);
+        }
+      },
+      child: SheetContent(
+        bottomPadding: 0,
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            NavigationAppBar.modal(
+              title: Text(context.i18n.create_article_nav_title),
+              onBackPress: () {
+                showCancelCreationModal(context);
+              },
+              actions: [
+                Button(
+                  type: ButtonType.secondary,
+                  label: Text(
+                    context.i18n.button_next,
+                      color: context.theme.appColors.primaryAccent,
+                    ),
                   ),
+                  backgroundColor: context.theme.appColors.secondaryBackground,
+                  borderColor: context.theme.appColors.secondaryBackground,
+                  onPressed: context.pop,
                 ),
-                backgroundColor: context.theme.appColors.secondaryBackground,
-                borderColor: context.theme.appColors.secondaryBackground,
-                onPressed: context.pop,
-              ),
-            ],
-          ),
-          Expanded(
-            child: ScreenSideOffset.small(
-              child: TextEditor(
-                textEditorController,
+              ],
+            ),
+            Expanded(
+              child: ScreenSideOffset.small(
+                child: TextEditor(
+                  textEditorController,
+                ),
               ),
             ),
-          ),
-          Column(
-            children: [
-              const HorizontalSeparator(),
-              ScreenSideOffset.small(
-                child: const VisibilitySettingsToolbar(),
-              ),
-              const HorizontalSeparator(),
-              ScreenSideOffset.small(
-                child: ActionsToolbar(
-                  actions: [
-                    TextEditorImageButton(textEditorController: textEditorController),
-                    TextEditorPollButton(textEditorController: textEditorController),
-                    TextEditorRegularButton(textEditorController: textEditorController),
-                    TextEditorItalicButton(textEditorController: textEditorController),
-                    TextEditorBoldButton(textEditorController: textEditorController),
-                  ],
-                  trailing: Row(
-                    children: [
-                      ActionsToolbarButton(
-                        icon: Assets.svg.iconCreatepostShedule,
-                        onPressed: () async {
-                          final selectedDate = await showSimpleBottomSheet<DateTime>(
-                            context: context,
-                            child: ScheduleModal(
-                              initialDate: date,
-                            ),
-                          );
-
-                          if (selectedDate != null) {
-                            ref.read(schedulePostingProvider.notifier).selectedDate = selectedDate;
-                          }
-                        },
-                      ),
-                      SizedBox(
-                        width: 16.0.s,
-                      ),
-                      ActionsToolbarButtonSend(
-                        enabled: hasContent,
-                        onPressed: () {},
-                      ),
+            Column(
+              children: [
+                const HorizontalSeparator(),
+                ScreenSideOffset.small(
+                  child: const VisibilitySettingsToolbar(),
+                ),
+                const HorizontalSeparator(),
+                ScreenSideOffset.small(
+                  child: ActionsToolbar(
+                    actions: [
+                      TextEditorImageButton(textEditorController: textEditorController),
+                      TextEditorPollButton(textEditorController: textEditorController),
+                      TextEditorRegularButton(textEditorController: textEditorController),
+                      TextEditorItalicButton(textEditorController: textEditorController),
+                      TextEditorBoldButton(textEditorController: textEditorController),
                     ],
+                    trailing: Row(
+                      children: [
+                        ActionsToolbarButton(
+                          icon: Assets.svg.iconCreatepostShedule,
+                          onPressed: () async {
+                            final selectedDate = await showSimpleBottomSheet<DateTime>(
+                              context: context,
+                              child: ScheduleModal(
+                                initialDate: date,
+                              ),
+                            );
+
+                            if (selectedDate != null) {
+                              ref.read(schedulePostingProvider.notifier).selectedDate =
+                                  selectedDate;
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          width: 16.0.s,
+                        ),
+                        ActionsToolbarButtonSend(
+                          enabled: hasContent,
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
