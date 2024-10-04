@@ -72,6 +72,7 @@ class CreateArticleModal extends HookConsumerWidget {
                   type: ButtonType.secondary,
                   label: Text(
                     context.i18n.button_next,
+                    style: context.theme.appTextThemes.body.copyWith(
                       color: context.theme.appColors.primaryAccent,
                     ),
                   ),
