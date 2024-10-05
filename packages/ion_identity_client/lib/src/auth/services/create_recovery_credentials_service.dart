@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
@@ -224,21 +225,34 @@ class CreateRecoveryCredentialsService {
   }
 
   String generateRecoveryCode() {
-    final uuid = const Uuid().v7();
+    const length = 32;
 
-    final digest = sha256.convert(utf8.encode(uuid));
-    final recoveryCode = digest.toString().substring(0, 32);
+    const digits = '0123456789';
+    const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+    const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const symbols = r'!@#$%^&*()-_=+[]{}|;:,.<>?/`~';
 
-    // Format the code with dashes for readability
-    final formattedCode = recoveryCode
-        .replaceAllMapped(
-          RegExp('.{8}'),
-          (match) => '${match.group(0)}-',
-        )
-        .trimRight();
+    // Combine all character sets
+    const allChars = digits + lowerCaseLetters + upperCaseLetters + symbols;
 
-    return formattedCode.endsWith('-')
-        ? formattedCode.substring(0, formattedCode.length - 1)
-        : formattedCode;
+    final rand = Random.secure();
+
+    // Ensure recovery code includes at least one character from each category
+    final recoveryCodeChars = <String>[
+      digits[rand.nextInt(digits.length)],
+      lowerCaseLetters[rand.nextInt(lowerCaseLetters.length)],
+      upperCaseLetters[rand.nextInt(upperCaseLetters.length)],
+      symbols[rand.nextInt(symbols.length)],
+    ];
+
+    // Fill the rest of the recovery code length with random characters from allChars
+    for (var i = 4; i < length; i++) {
+      recoveryCodeChars.add(allChars[rand.nextInt(allChars.length)]);
+    }
+
+    // Shuffle the list to prevent predictable sequences
+    recoveryCodeChars.shuffle(rand);
+
+    return recoveryCodeChars.join();
   }
 }
