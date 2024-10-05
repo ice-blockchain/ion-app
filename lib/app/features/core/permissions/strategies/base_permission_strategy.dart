@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ice/app/features/core/permissions/strategies/permission_strategy.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart' as ph;
 
 abstract class BasePermissionStrategy implements PermissionStrategy {
-  Future<Permission> get permission;
+  Future<ph.Permission> get permission;
 
   @override
-  Future<void> openSettings() async => openAppSettings();
+  Future<void> openSettings() async => ph.openAppSettings();
 
   @override
-  Future<AppPermissionStatus> checkPermission() async {
+  Future<PermissionStatus> checkPermission() async {
     final perm = await permission;
     final status = await perm.status;
 
@@ -19,19 +19,19 @@ abstract class BasePermissionStrategy implements PermissionStrategy {
   }
 
   @override
-  Future<AppPermissionStatus> requestPermission() async {
+  Future<PermissionStatus> requestPermission() async {
     final perm = await permission;
     final status = await perm.request();
 
     return _mapToAppPermission(status);
   }
 
-  AppPermissionStatus _mapToAppPermission(PermissionStatus status) => switch (status) {
-        PermissionStatus.granted => AppPermissionStatus.granted,
-        PermissionStatus.denied => AppPermissionStatus.denied,
-        PermissionStatus.restricted => AppPermissionStatus.restricted,
-        PermissionStatus.limited => AppPermissionStatus.limited,
-        PermissionStatus.permanentlyDenied => AppPermissionStatus.permanentlyDenied,
-        PermissionStatus.provisional => AppPermissionStatus.provisional,
+  PermissionStatus _mapToAppPermission(ph.PermissionStatus status) => switch (status) {
+        ph.PermissionStatus.granted => PermissionStatus.granted,
+        ph.PermissionStatus.denied => PermissionStatus.denied,
+        ph.PermissionStatus.restricted => PermissionStatus.restricted,
+        ph.PermissionStatus.limited => PermissionStatus.limited,
+        ph.PermissionStatus.permanentlyDenied => PermissionStatus.permanentlyDenied,
+        ph.PermissionStatus.provisional => PermissionStatus.provisional,
       };
 }

@@ -25,7 +25,7 @@ class GalleryNotifier extends _$GalleryNotifier {
   Future<GalleryState> build() async {
     final mediaService = ref.watch(mediaServiceProvider);
 
-    final hasPermission = ref.read(hasPermissionProvider(AppPermissionType.photos));
+    final hasPermission = ref.read(hasPermissionProvider(Permission.photos));
 
     if (!hasPermission) {
       Logger.log('Photos Permission denied');

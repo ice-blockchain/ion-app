@@ -14,7 +14,7 @@ class PermissionAwareWidget extends ConsumerWidget {
     super.key,
   });
 
-  final AppPermissionType permissionType;
+  final Permission permissionType;
   final Widget Function(BuildContext context, VoidCallback onPressed) builder;
   final VoidCallback onGranted;
   final Widget requestDialog;

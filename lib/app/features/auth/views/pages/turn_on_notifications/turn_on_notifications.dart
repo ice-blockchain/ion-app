@@ -57,7 +57,7 @@ class TurnOnNotifications extends ConsumerWidget {
                             ref
                                 .read(permissionsProvider.notifier)
                                 .requestPermission(
-                                  AppPermissionType.notifications,
+                                  Permission.notifications,
                                 )
                                 .then((_) => handleSignIn(ref));
                           },

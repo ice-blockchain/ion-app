@@ -8,34 +8,32 @@ import 'package:ice/app/features/core/permissions/strategies/strategies.dart';
 
 class MobilePermissionFactory implements PlatformPermissionFactory {
   @override
-  PermissionStrategy createPermission(AppPermissionType type) {
+  PermissionStrategy createPermission(Permission type) {
     return switch (type) {
-      AppPermissionType.camera => CameraPermissionStrategy(),
-      AppPermissionType.photos =>
+      Permission.camera => CameraPermissionStrategy(),
+      Permission.photos =>
         Platform.isAndroid ? AndroidGalleryPermissionStrategy() : IosGalleryPermissionStrategy(),
-      AppPermissionType.contacts => ContactsPermissionStrategy(),
-      AppPermissionType.notifications => NotificationsPermissionStrategy()
+      Permission.contacts => ContactsPermissionStrategy(),
+      Permission.notifications => NotificationsPermissionStrategy()
     };
   }
 }
 
 class DesktopPermissionFactory implements PlatformPermissionFactory {
   @override
-  PermissionStrategy createPermission(AppPermissionType type) {
+  PermissionStrategy createPermission(Permission type) {
     return switch (type) {
-      AppPermissionType.camera => CameraPermissionStrategy(),
-      AppPermissionType.photos => UnsupportedPermissionStrategy(),
-      AppPermissionType.contacts => ContactsPermissionStrategy(),
-      AppPermissionType.notifications => NotificationsPermissionStrategy()
+      Permission.camera => CameraPermissionStrategy(),
+      Permission.photos => UnsupportedPermissionStrategy(),
+      Permission.contacts => ContactsPermissionStrategy(),
+      Permission.notifications => NotificationsPermissionStrategy()
     };
   }
 }
 
 class WebPermissionFactory implements PlatformPermissionFactory {
   @override
-  PermissionStrategy createPermission(AppPermissionType type) {
-    return type == AppPermissionType.camera
-        ? CameraPermissionStrategy()
-        : UnsupportedPermissionStrategy();
+  PermissionStrategy createPermission(Permission type) {
+    return type == Permission.camera ? CameraPermissionStrategy() : UnsupportedPermissionStrategy();
   }
 }

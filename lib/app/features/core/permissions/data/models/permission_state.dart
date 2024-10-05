@@ -9,6 +9,6 @@ part 'permission_state.freezed.dart';
 @freezed
 class PermissionsState with _$PermissionsState {
   const factory PermissionsState({
-    @Default({}) Map<AppPermissionType, AppPermissionStatus> permissions,
+    @Default({}) Map<Permission, PermissionStatus> permissions,
   }) = _PermissionsState;
 }

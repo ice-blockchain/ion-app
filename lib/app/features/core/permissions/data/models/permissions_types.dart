@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
-enum AppPermissionType {
+enum Permission {
   contacts,
   notifications,
   camera,
   photos,
 }
 
-enum AppPermissionStatus {
+enum PermissionStatus {
   granted,
   denied,
   limited,

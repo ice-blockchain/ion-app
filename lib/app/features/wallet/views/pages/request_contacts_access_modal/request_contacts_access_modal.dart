@@ -62,9 +62,7 @@ class RequestContactAccessModal extends ConsumerWidget {
                 context.i18n.contacts_allow_pop_up_action,
               ),
               onPressed: () async {
-                await ref
-                    .read(permissionsProvider.notifier)
-                    .requestPermission(AppPermissionType.contacts);
+                await ref.read(permissionsProvider.notifier).requestPermission(Permission.contacts);
 
                 if (context.mounted) {
                   Navigator.of(context).pop();

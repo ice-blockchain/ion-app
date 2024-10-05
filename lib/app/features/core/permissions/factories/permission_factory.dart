@@ -18,5 +18,5 @@ abstract class PlatformPermissionFactory {
     }
   }
 
-  PermissionStrategy createPermission(AppPermissionType type);
+  PermissionStrategy createPermission(Permission type);
 }

@@ -19,7 +19,7 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       _cameraController?.dispose();
     });
 
-    final hasPermission = ref.watch(hasPermissionProvider(AppPermissionType.camera));
+    final hasPermission = ref.watch(hasPermissionProvider(Permission.camera));
 
     if (!hasPermission) {
       return null;
@@ -67,7 +67,7 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
   }
 
   Future<void> resumeCamera() async {
-    final hasPermission = ref.read(hasPermissionProvider(AppPermissionType.camera));
+    final hasPermission = ref.read(hasPermissionProvider(Permission.camera));
 
     if (!hasPermission) {
       return;

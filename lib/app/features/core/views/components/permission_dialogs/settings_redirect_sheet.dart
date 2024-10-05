@@ -25,9 +25,9 @@ class SettingsRedirectSheet extends StatelessWidget {
 
   factory SettingsRedirectSheet.fromType(
     BuildContext context,
-    AppPermissionType permissionType,
+    Permission permissionType,
   ) {
-    if (permissionType == AppPermissionType.photos) {
+    if (permissionType == Permission.photos) {
       return SettingsRedirectSheet(
         header: context.i18n.gallery_permission_headline,
         title: context.i18n.gallery_no_access_title,
@@ -35,7 +35,7 @@ class SettingsRedirectSheet extends StatelessWidget {
         headerIconAsset: Assets.svg.iconPostGallerypermission,
         iconAsset: Assets.svg.walletIconWalletNoaccess,
       );
-    } else if (permissionType == AppPermissionType.camera) {
+    } else if (permissionType == Permission.camera) {
       return SettingsRedirectSheet(
         header: context.i18n.camera_permission_headline,
         title: context.i18n.camera_no_access_title,

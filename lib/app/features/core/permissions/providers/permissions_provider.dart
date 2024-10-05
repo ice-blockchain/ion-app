@@ -13,7 +13,7 @@ PlatformPermissionFactory platformFactory(PlatformFactoryRef ref) {
 }
 
 @riverpod
-PermissionStrategy permissionStrategy(PermissionStrategyRef ref, AppPermissionType type) {
+PermissionStrategy permissionStrategy(PermissionStrategyRef ref, Permission type) {
   final factory = ref.read(platformFactoryProvider);
 
   return factory.createPermission(type);
@@ -24,7 +24,7 @@ class Permissions extends _$Permissions {
   @override
   PermissionsState build() => const PermissionsState();
 
-  Future<void> requestPermission(AppPermissionType type) async {
+  Future<void> requestPermission(Permission type) async {
     final permissionStrategy = ref.read(permissionStrategyProvider(type));
 
     final status = await permissionStrategy.requestPermission();
@@ -39,11 +39,11 @@ class Permissions extends _$Permissions {
 
   Future<void> checkAllPermissions() async {
     await Future.wait(
-      AppPermissionType.values.map(checkPermission),
+      Permission.values.map(checkPermission),
     );
   }
 
-  Future<void> checkPermission(AppPermissionType type) async {
+  Future<void> checkPermission(Permission type) async {
     final permissionStrategy = ref.read(permissionStrategyProvider(type));
 
     final status = await permissionStrategy.checkPermission();
@@ -58,25 +58,25 @@ class Permissions extends _$Permissions {
 }
 
 @riverpod
-AppPermissionStatus permissionStatus(PermissionStatusRef ref, AppPermissionType permissionType) {
+PermissionStatus permissionStatus(PermissionStatusRef ref, Permission permissionType) {
   return ref.watch(
     permissionsProvider.select(
-      (state) => state.permissions[permissionType] ?? AppPermissionStatus.unknown,
+      (state) => state.permissions[permissionType] ?? PermissionStatus.unknown,
     ),
   );
 }
 
 @riverpod
-bool hasPermission(HasPermissionRef ref, AppPermissionType permissionType) {
+bool hasPermission(HasPermissionRef ref, Permission permissionType) {
   final permissionStatus = ref.watch(permissionStatusProvider(permissionType));
 
-  return permissionStatus == AppPermissionStatus.granted ||
-      permissionStatus == AppPermissionStatus.limited;
+  return permissionStatus == PermissionStatus.granted ||
+      permissionStatus == PermissionStatus.limited;
 }
 
 @riverpod
-bool isPermanentlyDenied(IsPermanentlyDeniedRef ref, AppPermissionType permissionType) {
+bool isPermanentlyDenied(IsPermanentlyDeniedRef ref, Permission permissionType) {
   final permissionStatus = ref.watch(permissionStatusProvider(permissionType));
 
-  return permissionStatus == AppPermissionStatus.permanentlyDenied;
+  return permissionStatus == PermissionStatus.permanentlyDenied;
 }

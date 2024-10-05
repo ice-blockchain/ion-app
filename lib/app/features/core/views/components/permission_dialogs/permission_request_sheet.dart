@@ -19,15 +19,15 @@ class PermissionRequestSheet extends StatelessWidget {
 
   factory PermissionRequestSheet.fromType(
     BuildContext context,
-    AppPermissionType permissionType,
+    Permission permissionType,
   ) {
-    if (permissionType == AppPermissionType.photos) {
+    if (permissionType == Permission.photos) {
       return PermissionRequestSheet(
         title: context.i18n.photo_library_require_access_title,
         description: context.i18n.photo_library_require_access_description,
         iconAsset: Assets.svg.walletIconWalletGelleryperm,
       );
-    } else if (permissionType == AppPermissionType.camera) {
+    } else if (permissionType == Permission.camera) {
       return PermissionRequestSheet(
         title: context.i18n.camera_require_access_title,
         description: context.i18n.camera_require_access_description,

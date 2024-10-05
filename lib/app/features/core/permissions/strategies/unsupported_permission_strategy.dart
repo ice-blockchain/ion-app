@@ -5,13 +5,13 @@ import 'package:ice/app/features/core/permissions/strategies/permission_strategy
 
 class UnsupportedPermissionStrategy implements PermissionStrategy {
   @override
-  Future<AppPermissionStatus> checkPermission() async {
-    return Future.value(AppPermissionStatus.notAvailable);
+  Future<PermissionStatus> checkPermission() async {
+    return Future.value(PermissionStatus.notAvailable);
   }
 
   @override
-  Future<AppPermissionStatus> requestPermission() async {
-    return Future.value(AppPermissionStatus.notAvailable);
+  Future<PermissionStatus> requestPermission() async {
+    return Future.value(PermissionStatus.notAvailable);
   }
 
   @override

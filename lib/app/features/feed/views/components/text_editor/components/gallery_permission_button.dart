@@ -22,7 +22,7 @@ class GalleryPermissionButton extends HookConsumerWidget {
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
     return PermissionAwareWidget(
-      permissionType: AppPermissionType.photos,
+      permissionType: Permission.photos,
       onGranted: () {
         hideKeyboardAndCallOnce(
           callback: () async {
@@ -35,11 +35,11 @@ class GalleryPermissionButton extends HookConsumerWidget {
       },
       requestDialog: PermissionRequestSheet.fromType(
         context,
-        AppPermissionType.photos,
+        Permission.photos,
       ),
       settingsDialog: SettingsRedirectSheet.fromType(
         context,
-        AppPermissionType.photos,
+        Permission.photos,
       ),
       builder: (context, onPressed) {
         return ActionsToolbarButton(

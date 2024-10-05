@@ -19,7 +19,7 @@ class CameraCell extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasPermission = ref.watch(hasPermissionProvider(AppPermissionType.camera));
+    final hasPermission = ref.watch(hasPermissionProvider(Permission.camera));
     final cameraControllerNotifier = ref.read(cameraControllerNotifierProvider.notifier);
     final shouldOpenCamera = useState(false);
 
@@ -35,7 +35,7 @@ class CameraCell extends HookConsumerWidget {
 
     ref
       ..listen<bool>(
-        hasPermissionProvider(AppPermissionType.camera),
+        hasPermissionProvider(Permission.camera),
         (previous, next) {
           if (next) {
             cameraControllerNotifier.resumeCamera();
@@ -62,7 +62,7 @@ class CameraCell extends HookConsumerWidget {
       );
 
     return PermissionAwareWidget(
-      permissionType: AppPermissionType.camera,
+      permissionType: Permission.camera,
       onGranted: () async {
         final cameraControllerAsync = ref.read(cameraControllerNotifierProvider);
         final isInitialized = cameraControllerAsync.value?.value.isInitialized ?? false;
@@ -74,8 +74,8 @@ class CameraCell extends HookConsumerWidget {
           await cameraControllerNotifier.resumeCamera();
         }
       },
-      requestDialog: PermissionRequestSheet.fromType(context, AppPermissionType.camera),
-      settingsDialog: SettingsRedirectSheet.fromType(context, AppPermissionType.camera),
+      requestDialog: PermissionRequestSheet.fromType(context, Permission.camera),
+      settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
       builder: (context, onPressed) {
         return SizedBox(
           width: cellWidth,

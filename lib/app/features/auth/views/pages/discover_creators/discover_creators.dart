@@ -27,8 +27,7 @@ class DiscoverCreators extends ConsumerWidget {
     final followingIds = ref.watch(userFollowingProvider(currentUserId));
     final creatorIds = mockedUserData.values.toList().sublist(6).map((user) => user.id).toList();
 
-    final hasNotificationsPermission =
-        ref.watch(hasPermissionProvider(AppPermissionType.notifications));
+    final hasNotificationsPermission = ref.watch(hasPermissionProvider(Permission.notifications));
 
     final mayContinue = followingIds.valueOrNull?.isNotEmpty ?? false;
 
