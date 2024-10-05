@@ -41,7 +41,6 @@ dependencies:
   lottie: ^3.1.0
   markdown_quill: ^4.1.0
   mocktail: ^1.0.4
-  mutex: ^3.1.0
   nostr_dart:
     git: https://github.com/ice-blockchain/nostr-dart.git
   permission_handler: ^11.3.0
