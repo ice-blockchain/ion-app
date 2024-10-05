@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ice/app/features/core/views/components/permission_aware_widget.dart';
-import 'package:ice/app/features/core/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ice/app/features/core/permissions/views/components/permission_aware_widget.dart';
+import 'package:ice/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ice/app/router/app_routes.dart';
