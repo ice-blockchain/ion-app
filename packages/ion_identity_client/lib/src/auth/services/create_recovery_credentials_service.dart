@@ -232,7 +232,7 @@ class CreateRecoveryCredentialsService {
     const digits = '0123456789';
     const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
     const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const symbols = r'!@#$%^&*()-_=+[]{}|;:,.<>?/`~';
+    const symbols = r'@%!$#';
 
     // Combine all character sets
     const allChars = digits + lowerCaseLetters + upperCaseLetters + symbols;
