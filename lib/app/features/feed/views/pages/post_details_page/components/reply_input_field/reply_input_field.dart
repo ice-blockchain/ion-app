@@ -9,20 +9,15 @@ import 'package:ice/app/extensions/asset_gen_image.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/post_reply/reply_data_notifier.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
-import 'package:ice/app/features/feed/views/components/permission_dialogs/denied_dialog.dart';
-import 'package:ice/app/features/feed/views/components/permission_dialogs/request_dialog.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/components/reply_author_header.dart';
-import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
-import 'package:ice/app/hooks/use_permission_handler.dart';
 import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/services/media_service/media_service.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class ReplyInputField extends HookConsumerWidget {
@@ -45,15 +40,6 @@ class ReplyInputField extends HookConsumerWidget {
     final textController = useTextEditingController(
       text: ref.watch(replyDataNotifierProvider.select((data) => data.text)),
     );
-
-    final handlePhotoPermission = usePermissionHandler(
-      ref,
-      AppPermissionType.photos,
-      requestDialog: const RequestDialog(),
-      deniedDialog: const DeniedDialog(),
-    );
-
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
     return ScreenSideOffset.small(
       child: Column(
@@ -115,22 +101,11 @@ class ReplyInputField extends HookConsumerWidget {
           if (hasFocus.value)
             ActionsToolbar(
               actions: [
-                ActionsToolbarButton(
-                  icon: Assets.svg.iconGalleryOpen,
-                  // onPressed: () => MediaPickerRoute().push<List<MediaFile>>(context),
-                  onPressed: () async {
-                    final hasPermission = await handlePhotoPermission();
-                    // if (hasPermission && context.mounted) {
-                    //   await MediaPickerRoute().push<List<MediaFile>>(context);
-                    // }
-
-                    hideKeyboardAndCallOnce(
-                      callback: () async {
-                        if (hasPermission && context.mounted) {
-                          await MediaPickerRoute().push<List<MediaFile>>(context);
-                        }
-                      },
-                    );
+                GalleryPermissionButton(
+                  onMediaSelected: (mediaFiles) {
+                    if (mediaFiles != null && mediaFiles.isNotEmpty) {
+                      // TODO: handle media files
+                    }
                   },
                 ),
                 ActionsToolbarButton(

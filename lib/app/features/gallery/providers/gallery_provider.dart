@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ice/app/features/core/providers/permissions_provider.dart';
+import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ice/app/features/gallery/data/models/models.dart';
 import 'package:ice/app/features/gallery/providers/providers.dart';
@@ -24,9 +24,10 @@ class GalleryNotifier extends _$GalleryNotifier {
   @override
   Future<GalleryState> build() async {
     final mediaService = ref.watch(mediaServiceProvider);
-    final permissionsNotifier = ref.watch(permissionsProvider.notifier);
 
-    if (!permissionsNotifier.hasPermission(AppPermissionType.photos)) {
+    final hasPermission = ref.read(hasPermissionProvider(AppPermissionType.photos));
+
+    if (!hasPermission) {
       Logger.log('Photos Permission denied');
       return const GalleryState(
         mediaData: [],
@@ -69,20 +70,23 @@ class GalleryNotifier extends _$GalleryNotifier {
   }
 
   Future<void> captureImage() async {
-    final permissionsNotifier = ref.read(permissionsProvider.notifier);
-
-    if (!permissionsNotifier.hasPermission(AppPermissionType.camera)) {
-      Logger.log('Camera Permission denied');
-      return;
-    }
-
     final mediaService = ref.read(mediaServiceProvider);
     final mediaSelectionNotifier = ref.read(mediaSelectionNotifierProvider.notifier);
 
     final mediaFile = await mediaService.captureImageFromCamera(saveToGallery: true);
 
     if (mediaFile != null) {
-      ref.invalidateSelf();
+      state = await AsyncValue.guard(() async {
+        final currentState = state.value!;
+        final updatedMediaData = [mediaFile, ...currentState.mediaData];
+
+        return currentState.copyWith(
+          mediaData: updatedMediaData,
+          currentPage: currentState.currentPage,
+          hasMore: currentState.hasMore,
+        );
+      });
+
       mediaSelectionNotifier.toggleSelection(mediaFile.path);
     }
   }

@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/translations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/core/permissions/views/app_lifecycle_observer.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
+import 'package:ice/app/features/core/views/components/app_lifecycle_observer.dart';
 import 'package:ice/app/features/core/views/components/content_scaler.dart';
 import 'package:ice/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ice/app/router/providers/go_router_provider.dart';

@@ -2,7 +2,7 @@
 
 import 'package:camera/camera.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ice/app/features/core/providers/permissions_provider.dart';
+import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ice/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,22 +15,20 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
   @override
   Future<Raw<CameraController>?> build() async {
     ref.onDispose(() {
+      _cameraController?.removeListener(ref.notifyListeners);
       _cameraController?.dispose();
     });
+
+    final hasPermission = ref.watch(hasPermissionProvider(AppPermissionType.camera));
+
+    if (!hasPermission) {
+      return null;
+    }
 
     return _initializeCamera();
   }
 
   Future<Raw<CameraController>?> _initializeCamera() async {
-    final permissionsNotifier = ref.read(permissionsProvider.notifier);
-
-    await permissionsNotifier.requestPermission(AppPermissionType.camera);
-
-    if (!permissionsNotifier.hasPermission(AppPermissionType.camera)) {
-      Logger.log('Camera Permission denied');
-      return null;
-    }
-
     final cameras = await availableCameras();
     if (cameras.isEmpty) {
       Logger.log('No available cameras.');
@@ -46,27 +44,40 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
     );
 
     try {
-      await _cameraController!.initialize();
-      _cameraController!.addListener(ref.notifyListeners);
+      await _cameraController?.initialize();
+      _cameraController?.addListener(ref.notifyListeners);
       return _cameraController;
     } catch (e) {
       Logger.log('Camera initialization error: $e');
-      await _cameraController!.dispose();
+
+      _cameraController?.removeListener(ref.notifyListeners);
+      await _cameraController?.dispose();
       _cameraController = null;
       return null;
     }
   }
 
   Future<void> pauseCamera() async {
-    await _cameraController?.dispose();
-    _cameraController = null;
-    state = const AsyncValue.data(null);
+    if (_cameraController != null) {
+      _cameraController?.removeListener(ref.notifyListeners);
+      await _cameraController?.dispose();
+      _cameraController = null;
+      state = const AsyncValue.data(null);
+    }
   }
 
   Future<void> resumeCamera() async {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) {
-      final camera = await _initializeCamera();
-      state = AsyncValue.data(camera);
+    final hasPermission = ref.read(hasPermissionProvider(AppPermissionType.camera));
+
+    if (!hasPermission) {
+      return;
+    }
+
+    if (_cameraController == null) {
+      state = const AsyncValue.loading();
+      state = await AsyncValue.guard(() async {
+        return _initializeCamera();
+      });
     }
   }
 }

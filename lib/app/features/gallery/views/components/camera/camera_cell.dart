@@ -1,11 +1,15 @@
-// SPDX-License-Identifier: ice License 1.0
-
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
+import 'package:ice/app/features/core/views/components/permission_aware_widget.dart';
+import 'package:ice/app/features/core/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ice/app/features/gallery/providers/providers.dart';
 import 'package:ice/app/features/gallery/views/components/camera/camera.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class CameraCell extends HookConsumerWidget {
   const CameraCell({super.key});
@@ -15,58 +19,84 @@ class CameraCell extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cameraControllerNotifier = ref.watch(cameraControllerNotifierProvider.notifier);
-    final cameraControllerAsync = ref.watch(cameraControllerNotifierProvider);
+    final hasPermission = ref.watch(hasPermissionProvider(AppPermissionType.camera));
+    final cameraControllerNotifier = ref.read(cameraControllerNotifierProvider.notifier);
+    final shouldOpenCamera = useState(false);
 
-    useEffect(
-      () {
-        final observer = _CameraLifecycleObserver(
-          onResume: cameraControllerNotifier.resumeCamera,
-          onPause: cameraControllerNotifier.pauseCamera,
-        );
-        WidgetsBinding.instance.addObserver(observer);
+    useOnAppLifecycleStateChange((_, AppLifecycleState current) async {
+      if (current == AppLifecycleState.resumed && hasPermission) {
+        await cameraControllerNotifier.resumeCamera();
+      } else if (current == AppLifecycleState.inactive ||
+          current == AppLifecycleState.paused ||
+          current == AppLifecycleState.hidden) {
+        await cameraControllerNotifier.pauseCamera();
+      }
+    });
 
-        return () {
-          WidgetsBinding.instance.removeObserver(observer);
-        };
+    ref
+      ..listen<bool>(
+        hasPermissionProvider(AppPermissionType.camera),
+        (previous, next) {
+          if (next) {
+            cameraControllerNotifier.resumeCamera();
+            shouldOpenCamera.value = true;
+          } else {
+            cameraControllerNotifier.pauseCamera();
+          }
+        },
+      )
+      ..listen<AsyncValue<Raw<CameraController>?>>(
+        cameraControllerNotifierProvider,
+        (previous, next) {
+          next.maybeWhen(
+            data: (controller) async {
+              final isInitialized = controller?.value.isInitialized ?? false;
+              if (isInitialized && shouldOpenCamera.value) {
+                shouldOpenCamera.value = false;
+                await ref.read(galleryNotifierProvider.notifier).captureImage();
+              }
+            },
+            orElse: () {},
+          );
+        },
+      );
+
+    return PermissionAwareWidget(
+      permissionType: AppPermissionType.camera,
+      onGranted: () async {
+        final cameraControllerAsync = ref.read(cameraControllerNotifierProvider);
+        final isInitialized = cameraControllerAsync.value?.value.isInitialized ?? false;
+
+        if (isInitialized) {
+          await ref.read(galleryNotifierProvider.notifier).captureImage();
+        } else {
+          shouldOpenCamera.value = true;
+          await cameraControllerNotifier.resumeCamera();
+        }
       },
-      [],
-    );
+      requestDialog: PermissionRequestSheet.fromType(context, AppPermissionType.camera),
+      settingsDialog: SettingsRedirectSheet.fromType(context, AppPermissionType.camera),
+      builder: (context, onPressed) {
+        return SizedBox(
+          width: cellWidth,
+          height: cellHeight,
+          child: GestureDetector(
+            onTap: onPressed,
+            child: !hasPermission
+                ? const CameraPlaceholderWidget()
+                : ref.watch(cameraControllerNotifierProvider).maybeWhen(
+                      data: (controller) {
+                        final isInitialized = controller?.value.isInitialized ?? false;
 
-    return cameraControllerAsync.maybeWhen(
-      data: (controller) {
-        final isInitialized = controller?.value.isInitialized ?? false;
-
-        return GestureDetector(
-          onTap: () async => ref.read(galleryNotifierProvider.notifier).captureImage(),
-          child: SizedBox(
-            width: cellWidth,
-            height: cellHeight,
-            child: isInitialized && controller != null
-                ? CameraPreviewWidget(controller: controller)
-                : const CameraPlaceholderWidget(),
+                        return isInitialized && controller != null
+                            ? CameraPreviewWidget(controller: controller)
+                            : const CameraPlaceholderWidget();
+                      },
+                      orElse: () => const CameraPlaceholderWidget(),
+                    ),
           ),
         );
       },
-      orElse: () => const CameraPlaceholderWidget(),
     );
-  }
-}
-
-class _CameraLifecycleObserver extends WidgetsBindingObserver {
-  _CameraLifecycleObserver({required this.onResume, required this.onPause});
-  final VoidCallback onResume;
-  final VoidCallback onPause;
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    return switch (state) {
-      AppLifecycleState.hidden => null,
-      AppLifecycleState.resumed => onResume(),
-      AppLifecycleState.inactive ||
-      AppLifecycleState.paused ||
-      AppLifecycleState.detached =>
-        onPause()
-    };
   }
 }

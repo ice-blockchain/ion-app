@@ -36,6 +36,7 @@
   "common_step_3": "Step 3",
   "common_successfully": "Successfully",
   "common_select_languages": "Select languages",
+  "common_no_access_permission": "To grant access, go to settings and enable the appropriate settings",
   "common_crop_image": "Crop Image",
   "auth_secured_by": "Secured by",
   "auth_privacy": "By continuing, you are agreeing to our [[:link]]terms_of_service[[/:link]] & [[:link]]privacy_policy[[/:link]]",
@@ -349,6 +350,7 @@
   "camera_require_access_description": "Ice Mainnet application would like to access the camera",
   "gallery_permission_headline": "Gallery permission",
   "gallery_no_access_title": "There is no access to your gallery",
-  "gallery_no_access_description": "To grant access, go to settings and enable the appropriate settings"
-
+  "camera_permission_headline": "Camera permission",
+  "camera_no_access_title": "There is no access to your camera",
+  "camera_no_access_description": "To grant access, go to settings and enable the appropriate settings"
 }

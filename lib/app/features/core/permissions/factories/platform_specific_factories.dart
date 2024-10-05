@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ice/app/features/core/permissions/factories/permission_factory.dart';
 import 'package:ice/app/features/core/permissions/strategies/strategies.dart';
@@ -9,7 +11,8 @@ class MobilePermissionFactory implements PlatformPermissionFactory {
   PermissionStrategy createPermission(AppPermissionType type) {
     return switch (type) {
       AppPermissionType.camera => CameraPermissionStrategy(),
-      AppPermissionType.photos => MobileGalleryPermissionStrategy(),
+      AppPermissionType.photos =>
+        Platform.isAndroid ? AndroidGalleryPermissionStrategy() : IosGalleryPermissionStrategy(),
       AppPermissionType.contacts => ContactsPermissionStrategy(),
       AppPermissionType.notifications => NotificationsPermissionStrategy()
     };

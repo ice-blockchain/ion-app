@@ -1,25 +1,27 @@
-// SPDX-License-Identifier: ice License 1.0
+import 'dart:async';
 
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ice/app/features/core/permissions/strategies/permission_strategy.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 abstract class BasePermissionStrategy implements PermissionStrategy {
-  Permission get permission;
+  Future<Permission> get permission;
 
   @override
   Future<void> openSettings() async => openAppSettings();
 
   @override
   Future<AppPermissionStatus> checkPermission() async {
-    final status = await permission.status;
+    final perm = await permission;
+    final status = await perm.status;
 
     return _mapToAppPermission(status);
   }
 
   @override
   Future<AppPermissionStatus> requestPermission() async {
-    final status = await permission.request();
+    final perm = await permission;
+    final status = await perm.request();
 
     return _mapToAppPermission(status);
   }

@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ice/app/features/core/providers/permissions_provider.dart';
+import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ice/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
@@ -34,9 +34,7 @@ class WalletPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-    final hasContactsPermission = ref.watch(permissionsProvider.notifier).hasPermission(
-          AppPermissionType.contacts,
-        );
+    final hasContactsPermission = ref.watch(hasPermissionProvider(AppPermissionType.contacts));
 
     useOnInit(() {
       if (hasContactsPermission) {
