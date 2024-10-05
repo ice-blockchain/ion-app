@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
@@ -33,14 +35,8 @@ class GalleryPermissionButton extends HookConsumerWidget {
           },
         );
       },
-      requestDialog: PermissionRequestSheet.fromType(
-        context,
-        Permission.photos,
-      ),
-      settingsDialog: SettingsRedirectSheet.fromType(
-        context,
-        Permission.photos,
-      ),
+      requestDialog: PermissionRequestSheet.fromType(context, Permission.photos),
+      settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
       builder: (context, onPressed) {
         return ActionsToolbarButton(
           icon: Assets.svg.iconGalleryOpen,

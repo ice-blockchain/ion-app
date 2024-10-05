@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:async';
 
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
