@@ -34,6 +34,8 @@ class BackgroundPicture extends ConsumerWidget {
         width: imageWidth,
         height: imageHeight,
         fit: BoxFit.fitWidth,
+        alignment: Alignment.topCenter,
+        errorWidget: (context, url, error) => const SizedBox.shrink(),
       ),
     );
   }
