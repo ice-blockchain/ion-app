@@ -19,6 +19,7 @@ import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_qui
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ice/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
+import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/poll_length_time_modal.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
@@ -34,6 +35,13 @@ class CreatePostModal extends HookWidget {
         title: context.i18n.cancel_creation_post_title,
         onCancel: () => Navigator.of(context).pop(),
       ),
+    );
+  }
+
+  Future<void> _showPollLengthTimeModal(BuildContext context) async {
+    await showSimpleBottomSheet<void>(
+      context: context,
+      child: const PollLengthTimeModal(),
     );
   }
 
@@ -90,7 +98,12 @@ class CreatePostModal extends HookWidget {
                   child: ActionsToolbar(
                     actions: [
                       TextEditorImageButton(textEditorController: textEditorController),
-                      TextEditorPollButton(textEditorController: textEditorController),
+                      TextEditorPollButton(
+                        textEditorController: textEditorController,
+                        onPressed: () async {
+                          await _showPollLengthTimeModal(context);
+                        },
+                      ),
                       TextEditorRegularButton(textEditorController: textEditorController),
                       TextEditorItalicButton(textEditorController: textEditorController),
                       TextEditorBoldButton(textEditorController: textEditorController),

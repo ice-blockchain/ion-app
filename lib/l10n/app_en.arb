@@ -350,5 +350,6 @@
   "gallery_no_access_title": "There is no access to your gallery",
   "camera_permission_headline": "Camera permission",
   "camera_no_access_title": "There is no access to your camera",
-  "camera_no_access_description": "To grant access, go to settings and enable the appropriate settings"
+  "camera_no_access_description": "To grant access, go to settings and enable the appropriate settings",
+  "poll_length_modal_title": "Pool length time"
 }
