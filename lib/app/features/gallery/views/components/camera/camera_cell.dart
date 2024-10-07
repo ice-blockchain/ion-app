@@ -86,7 +86,10 @@ class CameraCell extends HookConsumerWidget {
                         final isInitialized = controller?.value.isInitialized ?? false;
 
                         return isInitialized && controller != null
-                            ? CameraPreviewWidget(controller: controller)
+                            ? CameraPreviewWidget(
+                                key: ValueKey(controller),
+                                controller: controller,
+                              )
                             : const CameraPlaceholderWidget();
                       },
                       orElse: () => const CameraPlaceholderWidget(),
