@@ -15,7 +15,6 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
   @override
   Future<Raw<CameraController>?> build() async {
     ref.onDispose(() {
-      _cameraController?.removeListener(ref.notifyListeners);
       _cameraController?.dispose();
     });
 

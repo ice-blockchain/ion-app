@@ -14,11 +14,11 @@ class MobilePermissionFactory implements PlatformPermissionFactory {
 class DesktopPermissionFactory implements PlatformPermissionFactory {
   @override
   PermissionStrategy createPermission(Permission type) {
-    if (type == Permission.photos) {
+    if (Platform.isMacOS || Platform.isLinux) {
       return UnsupportedPermissionStrategy();
     }
 
-    if (Platform.isMacOS || Platform.isLinux) {
+    if (type == Permission.photos) {
       return UnsupportedPermissionStrategy();
     }
 
