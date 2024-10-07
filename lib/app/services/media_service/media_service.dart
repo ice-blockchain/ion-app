@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:io';
+import 'dart:isolate';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/services/logger/logger.dart';
+import 'package:image/image.dart' as img;
+import 'package:image_compression_flutter/image_compression_flutter.dart' as compressor_package;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -116,6 +121,64 @@ class MediaService {
       width: asset.width,
       mimeType: asset.mimeType,
     );
+  }
+
+  Future<XFile> compressImage(
+    XFile file, {
+    required int quality,
+    required Size size,
+    bool keepAspectRatio = true,
+  }) async {
+    try {
+      final Uint8List resizedBytes;
+
+      if (kIsWeb) {
+        resizedBytes = await resizeImage(file, size, keepAspectRatio: keepAspectRatio);
+      } else {
+        resizedBytes = await Isolate.run<Uint8List>(() async {
+          return resizeImage(file, size, keepAspectRatio: keepAspectRatio);
+        });
+      }
+
+      if (resizedBytes.isEmpty) {
+        throw Exception('Failed to resize image.');
+      }
+
+      final config = compressor_package.ImageFileConfiguration(
+        input: compressor_package.ImageFile(
+          filePath: '', // File path left empty since we're using rawBytes
+          rawBytes: resizedBytes,
+        ),
+        config: compressor_package.Configuration(
+          quality: quality,
+        ),
+      );
+
+      final output = await compressor_package.compressor.compress(config);
+
+      return XFile.fromData(output.rawBytes, name: file.name, mimeType: file.mimeType);
+    } catch (e) {
+      Logger.log('Error during image compression: $e');
+      rethrow;
+    }
+  }
+
+  Future<Uint8List> resizeImage(XFile file, Size size, {bool keepAspectRatio = true}) async {
+    final originalBytes = await file.readAsBytes();
+    final decodedImage = img.decodeImage(originalBytes);
+
+    if (decodedImage == null) {
+      throw Exception('Failed to decode image.');
+    }
+
+    final resizedImage = img.copyResize(
+      decodedImage,
+      width: size.width.toInt(),
+      height: size.height.toInt(),
+      maintainAspect: keepAspectRatio,
+    );
+
+    return Uint8List.fromList(img.encodePng(resizedImage));
   }
 }
 
