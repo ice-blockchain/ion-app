@@ -2,11 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block.dart';
-import 'package:ice/app/features/gallery/data/models/media_data.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
 
 class TextEditorImageButton extends StatelessWidget {
   const TextEditorImageButton({required this.textEditorController, super.key});
@@ -14,11 +11,11 @@ class TextEditorImageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ActionsToolbarButton(
-      icon: Assets.svg.iconGalleryOpen,
-      onPressed: () {
-        MediaPickerRoute().push<List<MediaData>>(context);
-        addSingleImageBlock(textEditorController);
+    return GalleryPermissionButton(
+      onMediaSelected: (mediaFiles) {
+        if (mediaFiles != null && mediaFiles.isNotEmpty) {
+          addSingleImageBlock(textEditorController);
+        }
       },
     );
   }

@@ -15,8 +15,8 @@ import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_no
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/components/reply_author_header.dart';
-import 'package:ice/app/features/gallery/data/models/media_data.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -101,9 +101,12 @@ class ReplyInputField extends HookConsumerWidget {
           if (hasFocus.value)
             ActionsToolbar(
               actions: [
-                ActionsToolbarButton(
-                  icon: Assets.svg.iconGalleryOpen,
-                  onPressed: () => MediaPickerRoute().push<List<MediaData>>(context),
+                GalleryPermissionButton(
+                  onMediaSelected: (mediaFiles) {
+                    if (mediaFiles != null && mediaFiles.isNotEmpty) {
+                      // TODO: handle media files
+                    }
+                  },
                 ),
                 ActionsToolbarButton(
                   icon: Assets.svg.iconCameraOpen,
