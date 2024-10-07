@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ice/app/features/core/permissions/strategies/permission_strategy.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
@@ -47,7 +47,7 @@ class PermissionHandlerStrategy extends PermissionStrategy {
       };
 
   Future<ph.Permission> _getPermission() async {
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isAndroid && permissionType == Permission.photos) {
       final androidInfo = await DeviceInfoPlugin().androidInfo;
 
       return androidInfo.version.sdkInt <= 32 ? ph.Permission.storage : ph.Permission.photos;
