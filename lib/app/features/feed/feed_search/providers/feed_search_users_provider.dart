@@ -20,6 +20,6 @@ Future<List<String>?> feedSearchUsers(
   return mockedUserData.values
       .toList()
       .where((user) => user.name.toLowerCase().contains(query.toLowerCase()))
-      .map((user) => user.id)
+      .map((user) => user.pubkey)
       .toList();
 }

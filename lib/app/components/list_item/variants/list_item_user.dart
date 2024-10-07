@@ -138,3 +138,18 @@ class _IceBadge extends StatelessWidget {
     );
   }
 }
+
+class ListItemUserShape extends StatelessWidget {
+  const ListItemUserShape({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 36.0.s,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0.s),
+        color: Colors.white,
+      ),
+    );
+  }
+}

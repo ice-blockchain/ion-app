@@ -36,7 +36,7 @@ class CreatorListItem extends ConsumerWidget {
             backgroundColor: context.theme.appColors.tertararyBackground,
             contentPadding: EdgeInsets.all(12.0.s),
             borderRadius: BorderRadius.circular(16.0.s),
-            trailing: FollowUserButton(userId: userData.id),
+            trailing: FollowUserButton(userId: userData.pubkey),
             trailingPadding: EdgeInsets.only(left: 6.0.s),
           ),
         );

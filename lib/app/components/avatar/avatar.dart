@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/shapes/hexagon_path.dart';
 import 'package:ice/app/components/shapes/shape.dart';
+import 'package:ice/app/extensions/extensions.dart';
 
 class Avatar extends StatelessWidget {
   Avatar({
@@ -33,9 +34,8 @@ class Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = imageWidget != null
-        ? SizedBox(
-            width: size,
-            height: size,
+        ? SizedBox.square(
+            dimension: size,
             child: FittedBox(fit: fit, child: imageWidget),
           )
         : CachedNetworkImage(
@@ -43,6 +43,12 @@ class Avatar extends StatelessWidget {
             width: size,
             height: size,
             fit: fit,
+            errorWidget: (context, url, error) {
+              return SizedBox.square(
+                dimension: size,
+                child: ColoredBox(color: context.theme.appColors.primaryAccent),
+              );
+            },
           );
 
     return Stack(

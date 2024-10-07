@@ -10,5 +10,5 @@ part 'user_followers_provider.g.dart';
 @Riverpod(keepAlive: true)
 Future<List<String>> userFollowers(UserFollowersRef ref, String userId) async {
   await Future<void>.delayed(Duration(milliseconds: Random().nextInt(500) + 300));
-  return mockedUserData.values.toList().sublist(2).map((user) => user.id).toList();
+  return mockedUserData.values.toList().sublist(2).map((user) => user.pubkey).toList();
 }

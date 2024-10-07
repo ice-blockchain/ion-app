@@ -28,6 +28,7 @@ PostData generateFakePost() {
   final random = Random.secure();
   final post = PostData.fromRawContent(
     id: random.nextInt(10000000).toString(),
+    pubkey: 'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
     rawContent: _fakeFeedMessages.elementAt(random.nextInt(_fakeFeedMessages.length)),
   );
   return post;

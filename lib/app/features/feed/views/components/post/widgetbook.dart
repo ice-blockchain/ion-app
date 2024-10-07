@@ -21,6 +21,7 @@ Widget feedPostUseCase(BuildContext context) {
           Post(
             postData: PostData.fromRawContent(
               id: 'test_1',
+              pubkey: '',
               rawContent: '''
                 ⏰ We expect tomorrow to pre-release our ice app on Android.\n⏳ For iOS, we 
                 are still waiting on @Apple to approve our app. If, for some reason, Apple 
@@ -31,6 +32,7 @@ Widget feedPostUseCase(BuildContext context) {
           Post(
             postData: PostData.fromRawContent(
               id: 'test_2',
+              pubkey: '',
               rawContent:
                   'With one image from raw content https://image.nostr.build/33b1f85f04390349c3526cadc11eb1409b0f9c89bc7e1dbc0785361ed7382510.jpg',
             ),
@@ -38,6 +40,7 @@ Widget feedPostUseCase(BuildContext context) {
           Post(
             postData: PostData.fromRawContent(
               id: 'test_2',
+              pubkey: '',
               rawContent:
                   'With multiple images from raw content https://image.nostr.build/33b1f85f04390349c3526cadc11eb1409b0f9c89bc7e1dbc0785361ed7382510.jpg https://m.primal.net/JGZx.jpg https://image.nostr.build/dafdbe5118aa32fbc225f814b450a1d7e981dd5cb1fcff37280c206fef86a8b8.jpg',
             ),

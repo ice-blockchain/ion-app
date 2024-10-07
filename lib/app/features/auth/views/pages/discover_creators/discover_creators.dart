@@ -25,7 +25,8 @@ class DiscoverCreators extends ConsumerWidget {
     final authState = ref.watch(authProvider);
     final currentUserId = ref.watch(currentUserIdSelectorProvider);
     final followingIds = ref.watch(userFollowingProvider(currentUserId));
-    final creatorIds = mockedUserData.values.toList().sublist(6).map((user) => user.id).toList();
+    final creatorIds =
+        mockedUserData.values.toList().sublist(6).map((user) => user.pubkey).toList();
 
     final hasNotificationsPermission = ref.watch(hasPermissionProvider(Permission.notifications));
 

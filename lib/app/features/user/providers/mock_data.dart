@@ -3,8 +3,8 @@
 import 'package:ice/app/features/user/model/user_data.dart';
 
 const Map<String, UserData> mockedUserData = {
-  '001': UserData(
-    id: '001',
+  'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4': UserData(
+    pubkey: 'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
     name: 'johndoe',
     about: 'A tech enthusiast and developer based in San Francisco.',
     picture: 'https://i.pravatar.cc/150?u=john_doe',
@@ -13,8 +13,8 @@ const Map<String, UserData> mockedUserData = {
     banner: 'https://i.pravatar.cc/750?u=john_banner',
     verified: true,
   ),
-  '002': UserData(
-    id: '002',
+  '52d119f46298a8f7b08183b96d4e7ab54d6df0853303ad4a3c3941020f286129': UserData(
+    pubkey: '52d119f46298a8f7b08183b96d4e7ab54d6df0853303ad4a3c3941020f286129',
     name: 'janesmith',
     about: 'Designer and UX expert with a passion for creating user-friendly apps.',
     picture: 'https://i.pravatar.cc/150?u=jane_smith',
@@ -22,8 +22,8 @@ const Map<String, UserData> mockedUserData = {
     website: 'https://janesmith.com',
     nft: true,
   ),
-  '003': UserData(
-    id: '003',
+  '496bf22b76e63553b2cac70c44b53867368b4b7612053a2c78609f3144324807': UserData(
+    pubkey: '496bf22b76e63553b2cac70c44b53867368b4b7612053a2c78609f3144324807',
     name: 'tombrown',
     about: 'Freelance photographer capturing moments around the world.',
     picture: 'https://i.pravatar.cc/150?u=tom_brown',
@@ -31,14 +31,14 @@ const Map<String, UserData> mockedUserData = {
     banner: 'https://i.pravatar.cc/750?u=tom_banner',
     verified: true,
   ),
-  '004': UserData(
-    id: '004',
+  'b4403b2415a020c20691bb18c51ada5acb64b71d2f60966cb3c78ba683542d4e': UserData(
+    pubkey: 'b4403b2415a020c20691bb18c51ada5acb64b71d2f60966cb3c78ba683542d4e',
     name: 'emilyjohnson',
     about: 'Coffee lover, blogger, and content creator.',
     picture: 'https://i.pravatar.cc/150?u=emily_johnson',
   ),
-  '005': UserData(
-    id: '005',
+  '85035261ecddaf490e3fff9b9dc63cde7a9fb3243ba6bd1c4d89b372a457b1c1': UserData(
+    pubkey: '85035261ecddaf490e3fff9b9dc63cde7a9fb3243ba6bd1c4d89b372a457b1c1',
     name: 'michaellee',
     about: 'Data scientist exploring the world of machine learning and AI.',
     picture: 'https://i.pravatar.cc/150?u=michael_lee_11',
@@ -47,22 +47,22 @@ const Map<String, UserData> mockedUserData = {
     verified: true,
     nft: true,
   ),
-  '006': UserData(
-    id: '006',
+  '5f010febe730be42d18c3bf9bf3a135f90621dc572175b5c357119533ae9756b': UserData(
+    pubkey: '5f010febe730be42d18c3bf9bf3a135f90621dc572175b5c357119533ae9756b',
     name: 'alicegreen',
     about: 'Yoga instructor and wellness advocate.',
     picture: 'https://i.pravatar.cc/150?u=alice_green',
   ),
-  '007': UserData(
-    id: '007',
+  'e202c8e80569fc35caee8325e2b6353018c286c9afcb1569ebde635d689bdfd1': UserData(
+    pubkey: 'e202c8e80569fc35caee8325e2b6353018c286c9afcb1569ebde635d689bdfd1',
     name: 'robertwhite',
     about: 'Professional gamer and eSports coach.',
     picture: 'https://i.pravatar.cc/150?u=robert_white',
     displayName: 'R White Gamer',
     website: 'https://rwhitegaming.com',
   ),
-  '008': UserData(
-    id: '008',
+  '3dcdcda91d457338f64866268e2032b4d8a52698cac1046ad2009fbb6f4e08da': UserData(
+    pubkey: '3dcdcda91d457338f64866268e2032b4d8a52698cac1046ad2009fbb6f4e08da',
     name: 'sophieblack',
     about: 'Fashion blogger sharing the latest trends and style tips.',
     picture: 'https://i.pravatar.cc/150?u=sophie_black',
@@ -70,14 +70,14 @@ const Map<String, UserData> mockedUserData = {
     banner: 'https://i.pravatar.cc/750?u=sophie_banner',
     nft: true,
   ),
-  '009': UserData(
-    id: '009',
+  'ad9738030ab84c04ffaec64abadd6cc682cb3501d193a5ff1c94b90770915558': UserData(
+    pubkey: 'ad9738030ab84c04ffaec64abadd6cc682cb3501d193a5ff1c94b90770915558',
     name: 'danielharris',
     about: 'Full-stack developer working on cutting-edge web technologies.',
     picture: 'https://i.pravatar.cc/150?u=daniel_harris',
   ),
-  '010': UserData(
-    id: '010',
+  '77911886971fe579fe3e4f90d9dc7e91fcd74850dc2853681fff17654b218091': UserData(
+    pubkey: '77911886971fe579fe3e4f90d9dc7e91fcd74850dc2853681fff17654b218091',
     name: 'jessicadavis',
     about: 'Food critic and recipe developer.',
     picture: 'https://i.pravatar.cc/150?u=jessica_davis',
@@ -86,70 +86,70 @@ const Map<String, UserData> mockedUserData = {
     verified: true,
     nft: true,
   ),
-  '011': UserData(
-    id: '011',
+  '2ddc90c9145cb875a0f8e0676c1d564daeceff64a250243d1330101701549103': UserData(
+    pubkey: '2ddc90c9145cb875a0f8e0676c1d564daeceff64a250243d1330101701549103',
     name: 'oliverwilson',
     about: 'Travel blogger exploring hidden gems around the globe.',
     picture: 'https://i.pravatar.cc/150?u=oliver_wilson',
   ),
-  '012': UserData(
-    id: '012',
+  'db37243cf2357dfc096e07b5cb0c7f33a941e633df1ee6cf2d4c4e0af4ce1b83': UserData(
+    pubkey: 'db37243cf2357dfc096e07b5cb0c7f33a941e633df1ee6cf2d4c4e0af4ce1b83',
     name: 'liammartin',
     about: 'Marketing expert with a focus on digital strategy.',
     picture: 'https://i.pravatar.cc/150?u=liam_martin',
     displayName: 'Liam Digital',
     website: 'https://liammarketing.com',
   ),
-  '013': UserData(
-    id: '013',
+  'e439fc9640a02423d87002db9948adf37358fd61fa966ae874e42a19104e75ed': UserData(
+    pubkey: 'e439fc9640a02423d87002db9948adf37358fd61fa966ae874e42a19104e75ed',
     name: 'sophiawalker',
     about: 'Tech journalist covering the latest in startups and innovation.',
     picture: 'https://i.pravatar.cc/150?u=sophia_walker',
   ),
-  '014': UserData(
-    id: '014',
+  'c582af78dff442700ec59e21786532a7074c00be8b7b1eac989bbf62698069cc': UserData(
+    pubkey: 'c582af78dff442700ec59e21786532a7074c00be8b7b1eac989bbf62698069cc',
     name: 'elijahthompson',
     about: 'Musician and composer creating original soundtracks.',
     picture: 'https://i.pravatar.cc/150?u=elijah_thompson',
     displayName: 'Eli Composer',
     banner: 'https://i.pravatar.cc/750?u=elijah_banner',
   ),
-  '015': UserData(
-    id: '015',
+  '509547efe7eb4b32b37b27b1407af12b12f3037a8b937554f44884e9555ef439': UserData(
+    pubkey: '509547efe7eb4b32b37b27b1407af12b12f3037a8b937554f44884e9555ef439',
     name: 'miaclark',
     about: 'Startup founder building the next big thing in fintech.',
     picture: 'https://i.pravatar.cc/150?u=mia_clark',
   ),
-  '016': UserData(
-    id: '016',
+  'f8e6c64342f1e052480630e27e1016dce35fc3a614e60434fef4aa2503328ca9': UserData(
+    pubkey: 'f8e6c64342f1e052480630e27e1016dce35fc3a614e60434fef4aa2503328ca9',
     name: 'lucasadams',
     about: 'Fitness coach helping people achieve their health goals.',
     picture: 'https://i.pravatar.cc/150?u=lucas_adams',
   ),
-  '017': UserData(
-    id: '017',
+  'bef724f6f1f6cb54930c23aaa23f639b8bab67d12d4f37c53b48e8892930f78c': UserData(
+    pubkey: 'bef724f6f1f6cb54930c23aaa23f639b8bab67d12d4f37c53b48e8892930f78c',
     name: 'isabellahall',
     about: 'Artist and illustrator bringing stories to life through art.',
     picture: 'https://i.pravatar.cc/150?u=isabella_hall',
     displayName: 'Bella Art',
     banner: 'https://i.pravatar.cc/750?u=isabella_banner',
   ),
-  '018': UserData(
-    id: '018',
+  '0153d742cf537c94e2bef9541cf3b02140a8a3b3641efe813d418451a2d44479': UserData(
+    pubkey: '0153d742cf537c94e2bef9541cf3b02140a8a3b3641efe813d418451a2d44479',
     name: 'henryscott',
     about: 'Entrepreneur and investor passionate about tech startups.',
     picture: 'https://i.pravatar.cc/150?u=henry_scott',
     website: 'https://henryscottventures.com',
   ),
-  '019': UserData(
-    id: '019',
+  'c558c7cc69bbda3c271782b736babc64acd2da258b14f356dbca966cb0b7b89e': UserData(
+    pubkey: 'c558c7cc69bbda3c271782b736babc64acd2da258b14f356dbca966cb0b7b89e',
     name: 'graceyoung',
     about: 'Environmentalist working towards a sustainable future.',
     picture: 'https://i.pravatar.cc/150?u=grace_young',
     nft: true,
   ),
-  '020': UserData(
-    id: '020',
+  'c45d46f49982340a1a3808444ed31ab477cffc5c3be1a50b73d693bbf0deaa14': UserData(
+    pubkey: 'c45d46f49982340a1a3808444ed31ab477cffc5c3be1a50b73d693bbf0deaa14',
     name: 'ethanmiller',
     about: 'Podcaster discussing the intersection of culture and technology.',
     picture: 'https://i.pravatar.cc/150?u=ethan_miller',

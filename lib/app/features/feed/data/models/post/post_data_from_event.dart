@@ -7,6 +7,7 @@ class _PostDataFromEvent extends PostData {
     this.eventMessage,
   ) : super.fromRawContent(
           id: eventMessage.id,
+          pubkey: eventMessage.pubkey,
           rawContent: eventMessage.content,
         );
 
