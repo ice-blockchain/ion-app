@@ -26,24 +26,19 @@ class CameraCell extends HookConsumerWidget {
     final shouldOpenCamera = useState(false);
 
     useOnAppLifecycleStateChange((_, AppLifecycleState current) async {
-      if (current == AppLifecycleState.resumed && hasPermission) {
-        await cameraControllerNotifier.resumeCamera();
-      } else if (current == AppLifecycleState.inactive ||
-          current == AppLifecycleState.paused ||
-          current == AppLifecycleState.hidden) {
-        await cameraControllerNotifier.pauseCamera();
-      }
+      await cameraControllerNotifier.handleCameraLifecycleState(current);
     });
 
     ref
       ..listen<bool>(
         hasPermissionProvider(Permission.camera),
-        (previous, next) {
-          if (next) {
-            cameraControllerNotifier.resumeCamera();
+        (previous, next) async {
+          final wasResumed = await cameraControllerNotifier.handlePermissionChange(
+            hasPermission: next,
+          );
+
+          if (wasResumed) {
             shouldOpenCamera.value = true;
-          } else {
-            cameraControllerNotifier.pauseCamera();
           }
         },
       )

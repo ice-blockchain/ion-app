@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:ui';
+
 import 'package:ice/app/features/core/permissions/data/models/models.dart';
 import 'package:ice/app/features/core/permissions/factories/permission_factory.dart';
 import 'package:ice/app/features/core/permissions/strategies/strategies.dart';
@@ -35,6 +37,12 @@ class Permissions extends _$Permissions {
         type: status,
       },
     );
+  }
+
+  Future<void> checkPermissionsOnResume(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      await checkAllPermissions();
+    }
   }
 
   Future<void> checkAllPermissions() async {

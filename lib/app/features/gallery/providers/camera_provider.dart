@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:ui';
+
 import 'package:camera/camera.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
@@ -65,11 +67,11 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
     }
   }
 
-  Future<void> resumeCamera() async {
+  Future<bool> resumeCamera() async {
     final hasPermission = ref.read(hasPermissionProvider(Permission.camera));
 
     if (!hasPermission) {
-      return;
+      return false;
     }
 
     if (_cameraController == null) {
@@ -77,6 +79,29 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       state = await AsyncValue.guard(() async {
         return _initializeCamera();
       });
+      return state.value != null;
+    }
+    return true;
+  }
+
+  Future<bool> handlePermissionChange({required bool hasPermission}) async {
+    if (hasPermission) {
+      return resumeCamera();
+    } else {
+      await pauseCamera();
+      return false;
+    }
+  }
+
+  Future<void> handleCameraLifecycleState(AppLifecycleState state) async {
+    final hasPermission = ref.read(hasPermissionProvider(Permission.camera));
+
+    if (state == AppLifecycleState.resumed && hasPermission) {
+      await resumeCamera();
+    } else if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      await pauseCamera();
     }
   }
 }
