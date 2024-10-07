@@ -43,6 +43,8 @@ class UserRegistrationChallenge {
   final List<PublicKeyCredentialDescriptor> excludeCredentials;
   final List<AllowedRecoveryCredential>? allowedRecoveryCredentials;
 
+  JsonObject toJson() => _$UserRegistrationChallengeToJson(this);
+
   @override
   String toString() {
     return 'UserRegistrationChallenge(temporaryAuthenticationToken: $temporaryAuthenticationToken, rp: $rp, user: $user, supportedCredentialKinds: $supportedCredentialKinds, otpUrl: $otpUrl, challenge: $challenge, authenticatorSelection: $authenticatorSelection, attestation: $attestation, pubKeyCredParams: $pubKeyCredParams, excludeCredentials: $excludeCredentials)';

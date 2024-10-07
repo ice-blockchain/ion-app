@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'fido_2_attestation_data.dart';

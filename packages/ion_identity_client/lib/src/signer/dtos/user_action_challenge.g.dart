@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'user_action_challenge.dart';
@@ -32,7 +30,8 @@ Map<String, dynamic> _$UserActionChallengeToJson(
       'externalAuthenticationUrl': instance.externalAuthenticationUrl,
       'challenge': instance.challenge,
       'challengeIdentifier': instance.challengeIdentifier,
-      'rp': instance.rp,
-      'supportedCredentialKinds': instance.supportedCredentialKinds,
-      'allowCredentials': instance.allowCredentials,
+      'rp': instance.rp.toJson(),
+      'supportedCredentialKinds':
+          instance.supportedCredentialKinds.map((e) => e.toJson()).toList(),
+      'allowCredentials': instance.allowCredentials.toJson(),
     };

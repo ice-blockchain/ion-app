@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'recovery_challenge_response.dart';
@@ -26,7 +24,8 @@ Map<String, dynamic> _$RecoveryChallengeResponseToJson(
     <String, dynamic>{
       'temporaryAuthenticationToken': instance.temporaryAuthenticationToken,
       'challenge': instance.challenge,
-      'allowedRecoveryCredentials': instance.allowedRecoveryCredentials,
+      'allowedRecoveryCredentials':
+          instance.allowedRecoveryCredentials.map((e) => e.toJson()).toList(),
     };
 
 AllowedRecoveryCredential _$AllowedRecoveryCredentialFromJson(

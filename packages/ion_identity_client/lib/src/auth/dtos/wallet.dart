@@ -21,8 +21,6 @@ class Wallet {
   final String address;
   final String name;
 
-  JsonObject toJson() => _$WalletToJson(this);
-
   @override
   String toString() => 'Wallet(id: $id, network: $network, address: $address, name: $name)';
 }

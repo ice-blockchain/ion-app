@@ -18,6 +18,8 @@ class PublicKeyCredentialParameters {
   final String type;
   final int alg;
 
+  JsonObject toJson() => _$PublicKeyCredentialParametersToJson(this);
+
   @override
   String toString() => 'PublicKeyCredentialParameters(type: $type, alg: $alg)';
 }

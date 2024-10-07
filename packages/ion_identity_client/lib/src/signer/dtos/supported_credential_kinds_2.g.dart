@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'supported_credential_kinds_2.dart';

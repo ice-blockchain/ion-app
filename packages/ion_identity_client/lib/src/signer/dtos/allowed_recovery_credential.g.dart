@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'allowed_recovery_credential.dart';

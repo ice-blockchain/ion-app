@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'allow_credentials.dart';
@@ -22,6 +20,6 @@ AllowCredentials _$AllowCredentialsFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$AllowCredentialsToJson(AllowCredentials instance) =>
     <String, dynamic>{
-      'webauthn': instance.webauthn,
-      'key': instance.key,
+      'webauthn': instance.webauthn.map((e) => e.toJson()).toList(),
+      'key': instance.key.map((e) => e.toJson()).toList(),
     };

@@ -1,19 +1,21 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:math';
 
-import 'package:asn1lib/asn1lib.dart';
+import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart' as crypto;
+import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/data_sources/create_recovery_credentials_data_source.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_info.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_request_data.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_response.dart';
-import 'package:ion_identity_client/src/auth/dtos/key_pair_data.dart';
 import 'package:ion_identity_client/src/auth/dtos/recovery_key_data.dart';
+import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
+import 'package:uuid/uuid.dart';
 
 class CreateRecoveryCredentialsService {
   CreateRecoveryCredentialsService({
@@ -21,40 +23,59 @@ class CreateRecoveryCredentialsService {
     required this.config,
     required this.dataSource,
     required this.userActionSigner,
+    required this.keyService,
   });
 
   final String username;
   final IonClientConfig config;
   final CreateRecoveryCredentialsDataSource dataSource;
   final UserActionSigner userActionSigner;
+  final KeyService keyService;
 
   Future<CreateRecoveryCredentialsResult> createRecoveryCredentials() async {
-    final challengeResponse = await dataSource.createCredentialInit(username: username).run();
-    final credentialChallenge = challengeResponse.toNullable()!;
+    final result = await dataSource
+        .createCredentialInit(username: username)
+        .flatMap(
+          (credentialChallenge) =>
+              TaskEither<CreateRecoveryCredentialsFailure, RecoveryKeyData>.tryCatch(
+            () => createRecoveryKey(
+              challenge: credentialChallenge.challenge,
+              origin: config.origin,
+            ),
+            CreateRecoveryKeyCreateRecoveryCredentialsFailure.new,
+          ).flatMap(
+            (recoveryKeyData) {
+              final credentialRequestData = CredentialRequestData(
+                challengeIdentifier: credentialChallenge.challengeIdentifier,
+                credentialName: recoveryKeyData.name,
+                credentialKind: 'RecoveryKey',
+                credentialInfo: recoveryKeyData.credentialInfo,
+                encryptedPrivateKey: recoveryKeyData.encryptedPrivateKey,
+              );
 
-    final recoveryKeyData = await createRecoveryKey(
-      challenge: credentialChallenge.challenge,
-      origin: config.origin,
-    );
+              final request = dataSource.buildCreateCredentialSigningRequest(
+                username,
+                credentialRequestData,
+              );
 
-    final credentialRequestData = CredentialRequestData(
-      challengeIdentifier: credentialChallenge.challengeIdentifier,
-      credentialName: recoveryKeyData.name,
-      credentialKind: 'RecoveryKey',
-      credentialInfo: recoveryKeyData.credentialInfo,
-      encryptedPrivateKey: recoveryKeyData.encryptedPrivateKey,
-    );
-
-    final request = dataSource.buildCreateCredentialSigningRequest(username, credentialRequestData);
-    final result = await userActionSigner.execute(request, CredentialResponse.fromJson).run();
+              return userActionSigner
+                  .execute(request, CredentialResponse.fromJson)
+                  .mapLeft(CreateCredentialRequestCreateRecoveryCredentialsFailure.new)
+                  .map(
+                    (credentialResponse) => CreateRecoveryCredentialsSuccess(
+                      recoveryCode: recoveryKeyData.recoveryCode,
+                      recoveryName: credentialResponse.name,
+                      recoveryId: credentialResponse.credentialId,
+                    ),
+                  );
+            },
+          ),
+        )
+        .run();
 
     return result.fold(
-      (failure) => CreateRecoveryCredentialsFailure(failure, StackTrace.current),
-      (success) => CreateRecoveryCredentialsSuccess(
-        recoveryCode: recoveryKeyData.recoveryCode,
-        recoveryName: success.name,
-        recoveryId: success.credentialId,
-      ),
+      (failure) => failure,
+      (success) => success,
     );
   }
 
@@ -62,7 +83,7 @@ class CreateRecoveryCredentialsService {
     required String challenge,
     required String origin,
   }) async {
-    final keyPair = await generateKeyPair();
+    final keyPair = await keyService.generateKeyPair();
 
     final clientData = buildClientData(
       challenge: challenge,
@@ -91,7 +112,11 @@ class CreateRecoveryCredentialsService {
 
     final credId = generateCredId(keyPair.publicKey);
 
-    final encryptedPrivateKey = encryptPrivateKey(keyPair.privateKeyPem);
+    final recoveryCode = generateRecoveryCode();
+    final encryptedPrivateKey = await keyService.encryptPrivateKey(
+      keyPair.privateKeyPem,
+      recoveryCode,
+    );
 
     final credentialInfo = CredentialInfo(
       credId: credId,
@@ -99,35 +124,11 @@ class CreateRecoveryCredentialsService {
       attestationData: attestationDataBase64Url,
     );
 
-    // TODO: Implement recovery code generation
-    const recoveryCode = 'generateRecoveryCode(keyPair.privateKeyBytes)';
-
     return RecoveryKeyData(
       credentialInfo: credentialInfo,
       encryptedPrivateKey: encryptedPrivateKey,
       recoveryCode: recoveryCode,
       name: generateCredentialName(),
-    );
-  }
-
-  // Generates an Ed25519 key pair
-  Future<KeyPairData> generateKeyPair() async {
-    final algorithm = crypto.Ed25519();
-    final keyPair = await algorithm.newKeyPair();
-    final keyPairData = await keyPair.extract();
-    final publicKey = keyPairData.publicKey;
-    final privateKeyBytes = await keyPairData.extractPrivateKeyBytes();
-
-    // Convert keys to PEM format if necessary
-    final publicKeyPem = encodeEd25519PublicKeyToPem(Uint8List.fromList(publicKey.bytes));
-    final privateKeyPem = encodeEd25519PrivateKeyToPem(Uint8List.fromList(privateKeyBytes));
-
-    return KeyPairData(
-      keyPair: keyPairData,
-      publicKey: publicKey,
-      publicKeyPem: publicKeyPem,
-      privateKeyPem: privateKeyPem,
-      privateKeyBytes: privateKeyBytes,
     );
   }
 
@@ -175,14 +176,12 @@ class CreateRecoveryCredentialsService {
     return jsonEncode(sortedFingerprintMap);
   }
 
-  // Signs the credential info fingerprint
   Future<String> signCredentialInfoFingerprint(
     String fingerprintData,
     crypto.SimpleKeyPairData privateKey,
   ) async {
     final algorithm = crypto.Ed25519();
 
-    // Sign the data
     final signature = await algorithm.sign(
       utf8.encode(fingerprintData),
       keyPair: privateKey,
@@ -209,62 +208,53 @@ class CreateRecoveryCredentialsService {
     return jsonEncode(sortedAttestationDataMap);
   }
 
-  // Generates a credential ID (credId)
+  String generateCredentialName() => const Uuid().v4().toUpperCase();
+
   String generateCredId(crypto.SimplePublicKey publicKey) {
-    // For simplicity, use the SHA256 hash of the public key bytes
-    final hash = sha256.convert(publicKey.bytes);
-    return base64UrlEncode(hash.bytes);
+    final digest = sha256.convert(publicKey.bytes).bytes.sublist(0, 16);
+
+    final base36Str = BigInt.parse(hex.encode(digest), radix: 16)
+        .toRadixString(36)
+        .toUpperCase()
+        .padLeft(25, '0');
+
+    final formattedStr =
+        base36Str.replaceAllMapped(RegExp('.{5}'), (match) => '${match.group(0)}-');
+
+    return formattedStr.endsWith('-')
+        ? formattedStr.substring(0, formattedStr.length - 1)
+        : formattedStr;
   }
 
-  // Placeholder function to encrypt the private key
-  String encryptPrivateKey(String privateKeyPem) {
-    // TODO: Implement private key encryption
-    return base64UrlEncode(utf8.encode(privateKeyPem));
-  }
+  String generateRecoveryCode() {
+    const length = 32;
 
-  // Helper functions to encode keys to PEM format
-  String encodeEd25519PublicKeyToPem(Uint8List publicKeyBytes) {
-    // OID for Ed25519
-    final algorithmSeq = ASN1Sequence()
-      ..add(ASN1ObjectIdentifier.fromComponentString('1.3.101.112'));
+    const digits = '0123456789';
+    const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+    const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const symbols = r'@%!$#';
 
-    final publicKeyBitString = ASN1BitString(publicKeyBytes);
+    // Combine all character sets
+    const allChars = digits + lowerCaseLetters + upperCaseLetters + symbols;
 
-    final subjectPublicKeyInfo = ASN1Sequence()
-      ..add(algorithmSeq)
-      ..add(publicKeyBitString);
+    final rand = Random.secure();
 
-    final bytes = subjectPublicKeyInfo.encodedBytes;
-    final base64Str = base64.encode(bytes);
+    // Ensure recovery code includes at least one character from each category
+    final recoveryCodeChars = <String>[
+      digits[rand.nextInt(digits.length)],
+      lowerCaseLetters[rand.nextInt(lowerCaseLetters.length)],
+      upperCaseLetters[rand.nextInt(upperCaseLetters.length)],
+      symbols[rand.nextInt(symbols.length)],
+    ];
 
-    return '-----BEGIN PUBLIC KEY-----\n${chunk(base64Str)}-----END PUBLIC KEY-----';
-  }
-
-  String chunk(String str, [int size = 64]) {
-    final sb = StringBuffer();
-    for (var i = 0; i < str.length; i += size) {
-      sb.writeln(str.substring(i, i + size > str.length ? str.length : i + size));
+    // Fill the rest of the recovery code length with random characters from allChars
+    for (var i = 4; i < length; i++) {
+      recoveryCodeChars.add(allChars[rand.nextInt(allChars.length)]);
     }
-    return sb.toString();
+
+    // Shuffle the list to prevent predictable sequences
+    recoveryCodeChars.shuffle(rand);
+
+    return recoveryCodeChars.join();
   }
-
-  String encodeEd25519PrivateKeyToPem(Uint8List privateKeyBytes) {
-    // OID for Ed25519
-    final algorithmSeq = ASN1Sequence()
-      ..add(ASN1ObjectIdentifier.fromComponentString('1.3.101.112'));
-
-    final privateKeyOctetString = ASN1OctetString(privateKeyBytes);
-
-    final privateKeyInfoSeq = ASN1Sequence()
-      ..add(ASN1Integer(BigInt.zero)) // Version
-      ..add(algorithmSeq)
-      ..add(ASN1OctetString(privateKeyOctetString.encodedBytes));
-
-    final bytes = privateKeyInfoSeq.encodedBytes;
-    final base64Str = base64.encode(bytes);
-
-    return '-----BEGIN PRIVATE KEY-----\n${chunk(base64Str)}\n-----END PRIVATE KEY-----';
-  }
-
-  String generateCredentialName() => 'main';
 }

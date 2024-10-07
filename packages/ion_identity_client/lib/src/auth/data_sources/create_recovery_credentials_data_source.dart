@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_challenge.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_request_data.dart';
 import 'package:ion_identity_client/src/core/network/network.dart';
@@ -22,12 +23,16 @@ class CreateRecoveryCredentialsDataSource {
   final NetworkClient networkClient;
   final TokenStorage tokenStorage;
 
-  TaskEither<NetworkFailure, CredentialChallenge> createCredentialInit({
+  TaskEither<CreateRecoveryCredentialsFailure, CredentialChallenge> createCredentialInit({
     required String username,
   }) {
     final token = tokenStorage.getToken(username: username);
     if (token == null) {
-      return TaskEither.left(RequestExecutionNetworkFailure(401, StackTrace.current));
+      return TaskEither.left(
+        CreateCredentialInitCreateRecoveryCredentialsFailure(
+          RequestExecutionNetworkFailure(401, StackTrace.current),
+        ),
+      );
     }
 
     return networkClient
@@ -37,7 +42,7 @@ class CreateRecoveryCredentialsDataSource {
           decoder: CredentialChallenge.fromJson,
           headers: RequestHeaders.getAuthorizationHeader(token: token.token),
         )
-        .mapLeft((l) => l);
+        .mapLeft(CreateCredentialInitCreateRecoveryCredentialsFailure.new);
   }
 
   UserActionSigningRequest buildCreateCredentialSigningRequest(

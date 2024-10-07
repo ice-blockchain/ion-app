@@ -6,7 +6,7 @@ import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/signer/types/signed_challenge_result.dart';
 
 extension PasskeySignerExtensions on PasskeysSigner {
-  TaskEither<F, SignedChallengeResult<F>> signChallenge<F>(
+  TaskEither<F, SignedUserActionChallengeResult<F>> signChallenge<F>(
     TaskEither<F, UserActionChallenge> challengeTask,
     F Function(Object, StackTrace) onFailure,
   ) {
@@ -19,6 +19,25 @@ extension PasskeySignerExtensions on PasskeysSigner {
           (
             userActionChallenge: userActionChallenge,
             assertion: assertion,
+          ),
+        ),
+      ),
+    );
+  }
+
+  TaskEither<F, SignedUserRegistrationChallengeResult<F>> registerChallenge<F>(
+    TaskEither<F, UserRegistrationChallenge> challengeTask,
+    F Function(Object, StackTrace) onFailure,
+  ) {
+    return challengeTask.flatMap(
+      (userRegistrationChallenge) => TaskEither<F, Fido2Attestation>.tryCatch(
+        () => register(userRegistrationChallenge),
+        onFailure,
+      ).flatMap(
+        (attestation) => TaskEither.of(
+          (
+            userRegistrationChallenge: userRegistrationChallenge,
+            attestation: attestation,
           ),
         ),
       ),

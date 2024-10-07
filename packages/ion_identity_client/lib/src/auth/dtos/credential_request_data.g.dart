@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'credential_request_data.dart';
@@ -32,7 +30,7 @@ Map<String, dynamic> _$CredentialRequestDataToJson(
   writeNotNull('challengeIdentifier', instance.challengeIdentifier);
   writeNotNull('credentialName', instance.credentialName);
   val['credentialKind'] = instance.credentialKind;
-  val['credentialInfo'] = instance.credentialInfo;
+  val['credentialInfo'] = instance.credentialInfo.toJson();
   val['encryptedPrivateKey'] = instance.encryptedPrivateKey;
   return val;
 }
