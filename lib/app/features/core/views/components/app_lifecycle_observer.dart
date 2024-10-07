@@ -13,7 +13,9 @@ class AppLifecycleObserver extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useOnAppLifecycleStateChange((_, AppLifecycleState current) {
-      ref.read(permissionsProvider.notifier).checkPermissionsOnResume(current);
+      if (current == AppLifecycleState.resumed) {
+        ref.read(permissionsProvider.notifier).checkAllPermissions();
+      }
     });
 
     return child;
