@@ -26,7 +26,7 @@ class VisibilitySettingsModal extends StatelessWidget {
         const VisibilitySettingsList(),
         const HorizontalSeparator(),
         ScreenBottomOffset(
-          margin: 36.0.s,
+          margin: 0,
         ),
       ],
     );
