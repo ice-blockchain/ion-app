@@ -334,5 +334,8 @@
   "visibility_settings_followed_accounts": "Accounts you follow",
   "visibility_settings_verified_accounts": "Verified accounts",
   "visibility_settings_mentioned_accounts": "Only accounts you mention",
-  "schedule_modal_nav_title": "Set date and time"
+  "schedule_modal_nav_title": "Set date and time",
+  "cancel_creation_post_title": "Cancel post?",
+  "cancel_creation_description": "Are you sure you want to cancel your progress?",
+  "cancel_creation_article_title": "Cancel arcticle?"
 }

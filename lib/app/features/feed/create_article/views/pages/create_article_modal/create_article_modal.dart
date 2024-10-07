@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/back_hardware_button_interceptor/back_hardware_button_interceptor.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
@@ -20,6 +21,7 @@ import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_qui
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ice/app/features/feed/views/components/visibility_settings_toolbar/visibility_settings_toolbar.dart';
+import 'package:ice/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ice/app/features/feed/views/pages/schedule_modal/schedule_modal.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -35,82 +37,101 @@ class CreateArticleModal extends HookConsumerWidget {
     final hasContent = useTextEditorHasContent(textEditorController);
     final date = ref.watch(schedulePostingProvider);
 
-    return SheetContent(
-      bottomPadding: 0,
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          NavigationAppBar.modal(
-            title: Text(context.i18n.create_article_nav_title),
-            actions: [
-              Button(
-                type: ButtonType.secondary,
-                label: Text(
-                  context.i18n.button_next,
-                  style: context.theme.appTextThemes.body.copyWith(
-                    color: context.theme.appColors.primaryAccent,
+    Future<bool?> showCancelCreationModal(BuildContext context) {
+      return showSimpleBottomSheet<bool>(
+        context: context,
+        child: CancelCreationModal(
+          title: context.i18n.cancel_creation_article_title,
+          onCancel: () => Navigator.of(context).pop(true),
+        ),
+      );
+    }
+
+    return BackHardwareButtonInterceptor(
+      onBackPress: (context) async {
+        await showCancelCreationModal(context);
+      },
+      child: SheetContent(
+        bottomPadding: 0,
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            NavigationAppBar.modal(
+              title: Text(context.i18n.create_article_nav_title),
+              onBackPress: () {
+                showCancelCreationModal(context);
+              },
+              actions: [
+                Button(
+                  type: ButtonType.secondary,
+                  label: Text(
+                    context.i18n.button_next,
+                    style: context.theme.appTextThemes.body.copyWith(
+                      color: context.theme.appColors.primaryAccent,
+                    ),
                   ),
+                  backgroundColor: context.theme.appColors.secondaryBackground,
+                  borderColor: context.theme.appColors.secondaryBackground,
+                  onPressed: context.pop,
                 ),
-                backgroundColor: context.theme.appColors.secondaryBackground,
-                borderColor: context.theme.appColors.secondaryBackground,
-                onPressed: context.pop,
-              ),
-            ],
-          ),
-          Expanded(
-            child: ScreenSideOffset.small(
-              child: TextEditor(
-                textEditorController,
+              ],
+            ),
+            Expanded(
+              child: ScreenSideOffset.small(
+                child: TextEditor(
+                  textEditorController,
+                ),
               ),
             ),
-          ),
-          Column(
-            children: [
-              const HorizontalSeparator(),
-              ScreenSideOffset.small(
-                child: const VisibilitySettingsToolbar(),
-              ),
-              const HorizontalSeparator(),
-              ScreenSideOffset.small(
-                child: ActionsToolbar(
-                  actions: [
-                    TextEditorImageButton(textEditorController: textEditorController),
-                    TextEditorPollButton(textEditorController: textEditorController),
-                    TextEditorRegularButton(textEditorController: textEditorController),
-                    TextEditorItalicButton(textEditorController: textEditorController),
-                    TextEditorBoldButton(textEditorController: textEditorController),
-                  ],
-                  trailing: Row(
-                    children: [
-                      ActionsToolbarButton(
-                        icon: Assets.svg.iconCreatepostShedule,
-                        onPressed: () async {
-                          final selectedDate = await showSimpleBottomSheet<DateTime>(
-                            context: context,
-                            child: ScheduleModal(
-                              initialDate: date,
-                            ),
-                          );
-
-                          if (selectedDate != null) {
-                            ref.read(schedulePostingProvider.notifier).selectedDate = selectedDate;
-                          }
-                        },
-                      ),
-                      SizedBox(
-                        width: 16.0.s,
-                      ),
-                      ActionsToolbarButtonSend(
-                        enabled: hasContent,
-                        onPressed: () {},
-                      ),
+            Column(
+              children: [
+                const HorizontalSeparator(),
+                ScreenSideOffset.small(
+                  child: const VisibilitySettingsToolbar(),
+                ),
+                const HorizontalSeparator(),
+                ScreenSideOffset.small(
+                  child: ActionsToolbar(
+                    actions: [
+                      TextEditorImageButton(textEditorController: textEditorController),
+                      TextEditorPollButton(textEditorController: textEditorController),
+                      TextEditorRegularButton(textEditorController: textEditorController),
+                      TextEditorItalicButton(textEditorController: textEditorController),
+                      TextEditorBoldButton(textEditorController: textEditorController),
                     ],
+                    trailing: Row(
+                      children: [
+                        ActionsToolbarButton(
+                          icon: Assets.svg.iconCreatepostShedule,
+                          onPressed: () async {
+                            final selectedDate = await showSimpleBottomSheet<DateTime>(
+                              context: context,
+                              child: ScheduleModal(
+                                initialDate: date,
+                              ),
+                            );
+
+                            if (selectedDate != null) {
+                              ref.read(schedulePostingProvider.notifier).selectedDate =
+                                  selectedDate;
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          width: 16.0.s,
+                        ),
+                        ActionsToolbarButtonSend(
+                          enabled: hasContent,
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
