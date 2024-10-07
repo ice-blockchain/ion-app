@@ -14,7 +14,7 @@ PlatformPermissionFactory platformFactory(PlatformFactoryRef ref) {
 
 @riverpod
 PermissionStrategy permissionStrategy(PermissionStrategyRef ref, Permission type) {
-  final factory = ref.read(platformFactoryProvider);
+  final factory = ref.watch(platformFactoryProvider);
 
   return factory.createPermission(type);
 }
