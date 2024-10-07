@@ -24,17 +24,19 @@ class FeedSearchResultsListItem extends ConsumerWidget {
       padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),
       child: ScreenSideOffset.small(
         child: userData.maybeWhen(
-          data: (user) => GestureDetector(
+          data: (userData) => GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
-              ref.read(feedSearchHistoryProvider.notifier).addUserIdToTheHistory(user.pubkey);
+              ref.read(feedSearchHistoryProvider.notifier).addUserIdToTheHistory(userData.pubkey);
             },
             child: ListItem.user(
-              title: Text(user.displayName ?? user.name),
-              subtitle: Text(prefixUsername(username: user.name, context: context)),
-              profilePicture: user.picture,
-              verifiedBadge: user.verified,
-              ntfAvatar: user.nft,
+              title: Text(userData.displayName ?? userData.name ?? userData.pubkey),
+              subtitle: Text(
+                prefixUsername(username: userData.name ?? userData.pubkey, context: context),
+              ),
+              profilePicture: userData.picture,
+              verifiedBadge: userData.verified,
+              ntfAvatar: userData.nft,
             ),
           ),
           orElse: () => const Skeleton(child: ListItemUserShape()),

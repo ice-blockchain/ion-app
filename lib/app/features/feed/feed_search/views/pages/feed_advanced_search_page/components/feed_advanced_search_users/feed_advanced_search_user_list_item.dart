@@ -28,26 +28,35 @@ class FeedAdvancedSearchUserListItem extends ConsumerWidget {
       return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));
     }
 
+    final about = userDataValue.about;
+
     return ScreenSideOffset.small(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 12.0.s),
           ListItem.user(
-            title: Text(userDataValue.displayName ?? userDataValue.name),
-            subtitle: Text(prefixUsername(username: userDataValue.name, context: context)),
+            title: Text(userDataValue.displayName ?? userDataValue.name ?? userDataValue.pubkey),
+            subtitle: Text(
+              prefixUsername(
+                username: userDataValue.name ?? userDataValue.pubkey,
+                context: context,
+              ),
+            ),
             ntfAvatar: userDataValue.nft,
             profilePicture: userDataValue.picture,
             verifiedBadge: userDataValue.verified,
             trailing: FollowUserButton(userId: userId),
           ),
-          SizedBox(height: 10.0.s),
-          Text(
-            userDataValue.about,
-            style: context.theme.appTextThemes.body2.copyWith(
-              color: context.theme.appColors.sharkText,
+          if (about != null) ...[
+            SizedBox(height: 10.0.s),
+            Text(
+              about,
+              style: context.theme.appTextThemes.body2.copyWith(
+                color: context.theme.appColors.sharkText,
+              ),
             ),
-          ),
+          ],
           SizedBox(height: 12.0.s),
         ],
       ),

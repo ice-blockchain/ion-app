@@ -12,9 +12,9 @@ part 'user_data.g.dart';
 class UserData with _$UserData {
   const factory UserData({
     required String pubkey,
-    required String name,
-    required String about,
-    required String picture,
+    String? name,
+    String? about,
+    String? picture,
     String? displayName,
     String? website,
     String? banner,
@@ -24,7 +24,7 @@ class UserData with _$UserData {
   }) = _UserData;
 
   factory UserData.fromEventMessage(EventMessage eventMessage) {
-    final userDataContent = UserDataContent.fromJson(
+    final userDataContent = UserDataEventMessageContent.fromJson(
       json.decode(eventMessage.content) as Map<String, dynamic>,
     );
 
@@ -39,36 +39,28 @@ class UserData with _$UserData {
       bot: userDataContent.bot ?? false,
     );
   }
-
-  factory UserData.fromPubkeyOnly(String pubkey) {
-    return UserData(
-      pubkey: pubkey,
-      name: pubkey,
-      about: '',
-      picture: 'https://www.gravatar.com/avatar',
-    );
-  }
 }
 
 @JsonSerializable(createToJson: true)
-class UserDataContent {
-  UserDataContent({
-    required this.name,
-    required this.about,
-    required this.picture,
+class UserDataEventMessageContent {
+  UserDataEventMessageContent({
+    this.name,
+    this.about,
+    this.picture,
     this.displayName,
     this.website,
     this.banner,
     this.bot,
   });
 
-  factory UserDataContent.fromJson(Map<String, dynamic> json) => _$UserDataContentFromJson(json);
+  factory UserDataEventMessageContent.fromJson(Map<String, dynamic> json) =>
+      _$UserDataEventMessageContentFromJson(json);
 
-  final String name;
+  final String? name;
 
-  final String about;
+  final String? about;
 
-  final String picture;
+  final String? picture;
 
   @JsonKey(name: 'display_name')
   final String? displayName;
@@ -79,5 +71,5 @@ class UserDataContent {
 
   final bool? bot;
 
-  Map<String, dynamic> toJson() => _$UserDataContentToJson(this);
+  Map<String, dynamic> toJson() => _$UserDataEventMessageContentToJson(this);
 }

@@ -19,7 +19,7 @@ Future<UserData> userData(UserDataRef ref, String pubkey) async {
   if (events.isNotEmpty) {
     return UserData.fromEventMessage(events.first);
   }
-  return UserData.fromPubkeyOnly(pubkey);
+  return UserData(pubkey: pubkey);
 }
 
 @riverpod

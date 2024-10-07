@@ -31,7 +31,8 @@ class PostHeader extends ConsumerWidget {
         data: (userData) {
           return ListItem.user(
             title: Text(userData.displayName ?? userData.pubkey),
-            subtitle: Text(prefixUsername(username: userData.name, context: context)),
+            subtitle:
+                Text(prefixUsername(username: userData.name ?? userData.pubkey, context: context)),
             profilePicture: userData.picture,
             trailing: trailing,
             iceBadge: Random().nextBool(),

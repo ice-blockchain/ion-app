@@ -36,10 +36,10 @@ class AccountsTile extends ConsumerWidget {
         }
       },
       title: Text(
-        userDataValue.displayName ?? userDataValue.name,
+        userDataValue.displayName ?? userDataValue.name ?? userDataValue.pubkey,
       ),
       subtitle: Text(
-        prefixUsername(username: userDataValue.name, context: context),
+        prefixUsername(username: userDataValue.name ?? userDataValue.pubkey, context: context),
       ),
       profilePicture: userDataValue.picture,
       trailing: isCurrentUser == true

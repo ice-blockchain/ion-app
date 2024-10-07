@@ -42,7 +42,7 @@ class _UserListItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                user.displayName ?? user.name,
+                user.displayName ?? user.name ?? user.pubkey,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.theme.appTextThemes.caption3.copyWith(
@@ -50,7 +50,7 @@ class _UserListItem extends StatelessWidget {
                 ),
               ),
               Text(
-                prefixUsername(username: user.name, context: context),
+                prefixUsername(username: user.name ?? user.pubkey, context: context),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.theme.appTextThemes.caption3.copyWith(

@@ -28,8 +28,9 @@ class CreatorListItem extends ConsumerWidget {
       data: (userData) {
         return ScreenSideOffset.small(
           child: ListItem.user(
-            title: Text(userData.displayName ?? userData.name),
-            subtitle: Text(prefixUsername(username: userData.name, context: context)),
+            title: Text(userData.displayName ?? userData.name ?? userData.pubkey),
+            subtitle:
+                Text(prefixUsername(username: userData.name ?? userData.pubkey, context: context)),
             profilePicture: userData.picture,
             verifiedBadge: userData.verified,
             ntfAvatar: userData.nft,
