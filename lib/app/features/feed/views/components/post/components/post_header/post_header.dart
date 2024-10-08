@@ -30,9 +30,8 @@ class PostHeader extends ConsumerWidget {
       child: userData.maybeWhen(
         data: (userData) {
           return ListItem.user(
-            title: Text(userData.displayName ?? userData.pubkey),
-            subtitle:
-                Text(prefixUsername(username: userData.name ?? userData.pubkey, context: context)),
+            title: Text(userData.displayName),
+            subtitle: Text(prefixUsername(username: userData.name, context: context)),
             profilePicture: userData.picture,
             trailing: trailing,
             iceBadge: Random().nextBool(),

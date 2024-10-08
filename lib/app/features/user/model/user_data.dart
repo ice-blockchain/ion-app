@@ -12,10 +12,10 @@ part 'user_data.g.dart';
 class UserData with _$UserData {
   const factory UserData({
     required String pubkey,
-    String? name,
+    @Default('') String name,
+    @Default('') String displayName,
     String? about,
     String? picture,
-    String? displayName,
     String? website,
     String? banner,
     @Default(false) bool bot,
@@ -30,10 +30,10 @@ class UserData with _$UserData {
 
     return UserData(
       pubkey: eventMessage.pubkey,
-      name: userDataContent.name,
+      name: userDataContent.name ?? '',
+      displayName: userDataContent.displayName ?? '',
       about: userDataContent.about,
       picture: userDataContent.picture,
-      displayName: userDataContent.displayName,
       website: userDataContent.website,
       banner: userDataContent.banner,
       bot: userDataContent.bot ?? false,

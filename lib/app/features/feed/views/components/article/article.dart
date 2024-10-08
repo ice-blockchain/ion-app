@@ -37,8 +37,8 @@ class Article extends StatelessWidget {
     return Column(
       children: [
         ListItem.user(
-          title: Text(user.displayName ?? user.name ?? user.pubkey),
-          subtitle: Text(prefixUsername(username: user.name ?? user.pubkey, context: context)),
+          title: Text(user.displayName),
+          subtitle: Text(prefixUsername(username: user.name, context: context)),
           profilePicture: user.picture,
           verifiedBadge: user.verified,
           ntfAvatar: user.nft,

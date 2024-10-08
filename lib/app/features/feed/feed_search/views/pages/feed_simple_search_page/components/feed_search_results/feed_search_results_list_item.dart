@@ -30,9 +30,9 @@ class FeedSearchResultsListItem extends ConsumerWidget {
               ref.read(feedSearchHistoryProvider.notifier).addUserIdToTheHistory(userData.pubkey);
             },
             child: ListItem.user(
-              title: Text(userData.displayName ?? userData.name ?? userData.pubkey),
+              title: Text(userData.displayName),
               subtitle: Text(
-                prefixUsername(username: userData.name ?? userData.pubkey, context: context),
+                prefixUsername(username: userData.name, context: context),
               ),
               profilePicture: userData.picture,
               verifiedBadge: userData.verified,

@@ -39,7 +39,7 @@ class ProfileDetails extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      userDataValue.displayName ?? userDataValue.name ?? userDataValue.pubkey,
+                      userDataValue.displayName,
                       style: context.theme.appTextThemes.title.copyWith(
                         color: context.theme.appColors.primaryText,
                       ),
@@ -52,10 +52,7 @@ class ProfileDetails extends ConsumerWidget {
                 ),
                 SizedBox(height: 3.0.s),
                 Text(
-                  prefixUsername(
-                    username: userDataValue.name ?? userDataValue.pubkey,
-                    context: context,
-                  ),
+                  prefixUsername(username: userDataValue.name, context: context),
                   style: context.theme.appTextThemes.caption.copyWith(
                     color: context.theme.appColors.secondaryText,
                   ),

@@ -35,12 +35,8 @@ class AccountsTile extends ConsumerWidget {
           ref.read(authProvider.notifier).setCurrentUser(userId);
         }
       },
-      title: Text(
-        userDataValue.displayName ?? userDataValue.name ?? userDataValue.pubkey,
-      ),
-      subtitle: Text(
-        prefixUsername(username: userDataValue.name ?? userDataValue.pubkey, context: context),
-      ),
+      title: Text(userDataValue.displayName),
+      subtitle: Text(prefixUsername(username: userDataValue.name, context: context)),
       profilePicture: userDataValue.picture,
       trailing: isCurrentUser == true
           ? Assets.svg.iconBlockCheckboxOnblue.icon(color: context.theme.appColors.onPrimaryAccent)

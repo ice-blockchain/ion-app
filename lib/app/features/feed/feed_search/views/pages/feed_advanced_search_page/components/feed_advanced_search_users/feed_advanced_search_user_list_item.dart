@@ -36,10 +36,10 @@ class FeedAdvancedSearchUserListItem extends ConsumerWidget {
         children: [
           SizedBox(height: 12.0.s),
           ListItem.user(
-            title: Text(userDataValue.displayName ?? userDataValue.name ?? userDataValue.pubkey),
+            title: Text(userDataValue.displayName),
             subtitle: Text(
               prefixUsername(
-                username: userDataValue.name ?? userDataValue.pubkey,
+                username: userDataValue.name,
                 context: context,
               ),
             ),
