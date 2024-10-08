@@ -7,6 +7,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/components/poll_picker_column/poll_picker_column.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:intl/intl.dart';
@@ -24,10 +25,8 @@ class PollLengthTimeModal extends HookWidget {
     final selectedDay = useState(0);
     final selectedHour = useState(3);
 
-    final dayScrollController =
-        useMemoized(() => FixedExtentScrollController(initialItem: selectedDay.value));
-    final hourScrollController =
-        useMemoized(() => FixedExtentScrollController(initialItem: selectedHour.value));
+    final dayScrollController = FixedExtentScrollController(initialItem: selectedDay.value);
+    final hourScrollController = FixedExtentScrollController(initialItem: selectedHour.value);
 
     return SingleChildScrollView(
       child: Column(
@@ -60,98 +59,31 @@ class PollLengthTimeModal extends HookWidget {
               ),
               Row(
                 children: [
-                  SizedBox(
-                    width: 45.0.s,
-                  ),
+                  SizedBox(width: 45.0.s),
                   Flexible(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          height: 178.0.s,
-                          width: 40.0.s,
-                          child: CupertinoPicker(
-                            itemExtent: 34.0.s,
-                            scrollController: dayScrollController,
-                            onSelectedItemChanged: (int index) {
-                              selectedDay.value = index;
-                            },
-                            selectionOverlay: Container(),
-                            children: List<Widget>.generate(maxDaysCount, (int index) {
-                              return Center(
-                                child: Text(
-                                  index.toString(),
-                                  style: context.theme.appTextThemes.body2.copyWith(
-                                    color: context.theme.appColors.primaryText,
-                                    fontSize: 23.0.s,
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 70.0.s,
-                          child: Text(
-                            Intl.plural(
-                              selectedDay.value,
-                              one: context.i18n.day(1),
-                              other: context.i18n.day(selectedDay.value),
-                            ),
-                            textAlign: TextAlign.left,
-                            style: context.theme.appTextThemes.body2.copyWith(
-                              color: context.theme.appColors.primaryText,
-                              fontSize: 23.0.s,
-                            ),
-                          ),
-                        ),
-                      ],
+                    child: PollPickerColumn(
+                      maxCount: maxDaysCount,
+                      alignment: MainAxisAlignment.end,
+                      controller: dayScrollController,
+                      selectedValue: selectedDay,
+                      labelBuilder: (value) => Intl.plural(
+                        value,
+                        one: context.i18n.day(1),
+                        other: context.i18n.day(value),
+                      ),
                     ),
                   ),
-                  SizedBox(
-                    width: 5.0.s,
-                  ),
+                  SizedBox(width: 5.0.s),
                   Flexible(
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          height: 178.0.s,
-                          width: 40.0.s,
-                          child: CupertinoPicker(
-                            itemExtent: 34.0.s,
-                            scrollController: hourScrollController,
-                            onSelectedItemChanged: (int index) {
-                              selectedHour.value = index;
-                            },
-                            selectionOverlay: Container(),
-                            children: List<Widget>.generate(maxHoursCount, (int index) {
-                              return Center(
-                                child: Text(
-                                  index.toString(),
-                                  style: context.theme.appTextThemes.body2.copyWith(
-                                    color: context.theme.appColors.primaryText,
-                                    fontSize: 23.0.s,
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 70.0.s,
-                          child: Text(
-                            Intl.plural(
-                              selectedHour.value,
-                              one: context.i18n.hour(1),
-                              other: context.i18n.hour(selectedHour.value),
-                            ),
-                            style: context.theme.appTextThemes.body2.copyWith(
-                              color: context.theme.appColors.primaryText,
-                              fontSize: 23.0.s,
-                            ),
-                          ),
-                        ),
-                      ],
+                    child: PollPickerColumn(
+                      maxCount: maxHoursCount,
+                      controller: hourScrollController,
+                      selectedValue: selectedHour,
+                      labelBuilder: (value) => Intl.plural(
+                        value,
+                        one: context.i18n.hour(1),
+                        other: context.i18n.hour(value),
+                      ),
                     ),
                   ),
                 ],
