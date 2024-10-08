@@ -1,5 +1,7 @@
 {
   "@@locale": "en",
+  "day": "{count, plural, =1{day} other{days}}",
+  "hour": "{count, plural, =1{hour} other{hours}}",
   "button_continue": "Continue",
   "button_follow": "Follow",
   "button_following": "Following",
