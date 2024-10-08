@@ -22,7 +22,7 @@ class AccountsList extends ConsumerWidget {
 
     return SeparatedColumn(
       separator: SizedBox(height: 16.0.s),
-      children: authStateValue.authenticatedUserIds
+      children: authStateValue.authenticatedIdentityKeyNames
           .map((userId) => AccountsTile(userId: userId))
           .toList(),
     );

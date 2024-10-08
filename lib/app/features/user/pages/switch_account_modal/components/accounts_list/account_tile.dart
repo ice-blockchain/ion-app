@@ -32,7 +32,7 @@ class AccountsTile extends ConsumerWidget {
       isSelected: isCurrentUser,
       onTap: () {
         if (!isCurrentUser) {
-          ref.read(authProvider.notifier).setCurrentUser(userId);
+          ref.read(authProvider.notifier).selectUser(userId);
         }
       },
       title: Text(userMetadataValue.displayName),

@@ -8,26 +8,27 @@ import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
-import 'package:ice/app/features/protect_account/backup/data/models/recovery_keys.dart';
+import 'package:ice/app/features/protect_account/backup/data/models/recovery_key_property.dart';
 import 'package:ice/app/features/protect_account/backup/views/components/recovery_key_input.dart';
 import 'package:ice/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/app/utils/validators.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class RecoveryKeysInputContainer extends HookConsumerWidget {
   const RecoveryKeysInputContainer({
+    required this.validator,
     required this.onContinuePressed,
     super.key,
   });
 
-  final VoidCallback onContinuePressed;
+  final String? Function(String?, RecoveryKeyProperty) validator;
+  final void Function(String name, String id, String code) onContinuePressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useRef(GlobalKey<FormState>());
     final controllers = {
-      for (final key in RecoveryKeys.values) key: useTextEditingController(),
+      for (final key in RecoveryKeyProperty.values) key: useTextEditingController(),
     };
 
     return SheetContent(
@@ -48,7 +49,7 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
                   child: Column(
                     children: [
                       SizedBox(height: 16.0.s),
-                      ...RecoveryKeys.values.map(
+                      ...RecoveryKeyProperty.values.map(
                         (key) => Padding(
                           padding: EdgeInsets.only(bottom: 16.0.s),
                           child: RecoveryKeyInput(
@@ -56,11 +57,8 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
                             labelText: key.getDisplayName(context),
                             prefixIcon:
                                 key.iconAsset.icon(color: context.theme.appColors.secondaryText),
-                            validator: (value) {
-                              if (Validators.isEmpty(value)) return '';
-                              return null;
-                            },
-                            textInputAction: key == RecoveryKeys.recoveryCode
+                            validator: (value) => validator(value, key),
+                            textInputAction: key == RecoveryKeyProperty.recoveryCode
                                 ? TextInputAction.done
                                 : TextInputAction.next,
                           ),
@@ -79,7 +77,11 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
                 onPressed: () {
                   if (formKey.value.currentState!.validate()) {
                     ref.read(securityAccountControllerProvider.notifier).toggleBackup(value: true);
-                    onContinuePressed();
+                    onContinuePressed(
+                      controllers[RecoveryKeyProperty.identityKeyName]!.text,
+                      controllers[RecoveryKeyProperty.recoveryKeyId]!.text,
+                      controllers[RecoveryKeyProperty.recoveryCode]!.text,
+                    );
                   }
                 },
                 label: Text(context.i18n.button_continue),

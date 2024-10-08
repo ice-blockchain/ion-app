@@ -9,8 +9,8 @@ class ProtectAccountRoutes {
     TypedGoRoute<SecureAccountErrorRoute>(path: '/secure-account-error'),
     TypedGoRoute<BackupOptionsRoute>(path: '/backup-options'),
     TypedGoRoute<BackupRecoveryKeysRoute>(path: '/backup-recovery-keys'),
-    TypedGoRoute<RecoveryKeysSaveRoute>(path: '/recovery-keys-save'),
-    TypedGoRoute<RecoveryKeysInputRoute>(path: '/recovery-keys-input'),
+    TypedGoRoute<CreateRecoveryKeyRoute>(path: '/recovery-keys-save'),
+    TypedGoRoute<ValidateRecoveryKeyRoute>(path: '/recovery-keys-input'),
     TypedGoRoute<RecoveryKeysSuccessRoute>(path: '/recovery-keys-success'),
     TypedGoRoute<ScreenshotSecurityAlertRoute>(path: '/screenshot-security-alert'),
     TypedGoRoute<RecoveryKeysErrorAlertRoute>(path: '/recovery-keys-error-alert'),
@@ -64,18 +64,18 @@ class BackupRecoveryKeysRoute extends BaseRouteData {
         );
 }
 
-class RecoveryKeysSaveRoute extends BaseRouteData {
-  RecoveryKeysSaveRoute()
+class CreateRecoveryKeyRoute extends BaseRouteData {
+  CreateRecoveryKeyRoute()
       : super(
-          child: const RecoveryKeysSavePage(),
+          child: const CreateRecoveryKeyPage(),
           type: IceRouteType.bottomSheet,
         );
 }
 
-class RecoveryKeysInputRoute extends BaseRouteData {
-  RecoveryKeysInputRoute()
+class ValidateRecoveryKeyRoute extends BaseRouteData {
+  ValidateRecoveryKeyRoute()
       : super(
-          child: const RecoveryKeysInputPage(),
+          child: const ValidateRecoveryKeyPage(),
           type: IceRouteType.bottomSheet,
         );
 }

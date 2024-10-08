@@ -54,9 +54,9 @@ import 'package:ice/app/features/protect_account/backup/views/components/errors/
 import 'package:ice/app/features/protect_account/backup/views/components/errors/secure_account_error_alert.dart';
 import 'package:ice/app/features/protect_account/backup/views/pages/backup_options_page.dart';
 import 'package:ice/app/features/protect_account/backup/views/pages/backup_recovery_keys_modal.dart';
-import 'package:ice/app/features/protect_account/backup/views/pages/recovery_keys_input_page.dart';
-import 'package:ice/app/features/protect_account/backup/views/pages/recovery_keys_save_page.dart';
+import 'package:ice/app/features/protect_account/backup/views/pages/create_recovery_keys_page.dart';
 import 'package:ice/app/features/protect_account/backup/views/pages/recovery_keys_success_page.dart';
+import 'package:ice/app/features/protect_account/backup/views/pages/validate_recovery_key_page.dart';
 import 'package:ice/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ice/app/features/protect_account/email/views/pages/setup_email/email_setup_page.dart';
 import 'package:ice/app/features/protect_account/phone/models/phone_steps.dart';

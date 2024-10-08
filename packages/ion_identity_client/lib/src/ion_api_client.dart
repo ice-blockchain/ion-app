@@ -39,6 +39,14 @@ class IonApiClient {
     );
   }
 
+  Future<void> init() async {
+    await _tokenStorage.init();
+  }
+
+  void dispose() {
+    _tokenStorage.dispose();
+  }
+
   /// Returns a user-specific API client for the given [username].
   /// This allows the caller to perform actions on behalf of the specified user.
   IonApiUserClient call({

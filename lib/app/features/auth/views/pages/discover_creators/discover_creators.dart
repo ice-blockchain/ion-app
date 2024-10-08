@@ -8,6 +8,7 @@ import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/auth/providers/login_action_notifier.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
@@ -21,7 +22,7 @@ class DiscoverCreators extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authProvider);
+    final loginActionState = ref.watch(loginActionNotifierProvider);
     final currentUserId = ref.watch(currentUserIdSelectorProvider);
     final followingIds = ref.watch(userFollowingProvider(currentUserId));
     final creatorIds = [
@@ -74,13 +75,13 @@ class DiscoverCreators extends ConsumerWidget {
                   bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
                 ),
                 child: Button(
-                  disabled: authState.isLoading,
-                  trailingIcon: authState.isLoading ? const IceLoadingIndicator() : null,
+                  disabled: loginActionState.isLoading,
+                  trailingIcon: loginActionState.isLoading ? const IceLoadingIndicator() : null,
                   label: Text(context.i18n.button_continue),
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
                     if (hasNotificationsPermission) {
-                      ref.read(authProvider.notifier).signIn(keyName: '123');
+                      ref.read(loginActionNotifierProvider.notifier).signIn(keyName: '123');
                     } else {
                       NotificationsRoute().go(context);
                     }

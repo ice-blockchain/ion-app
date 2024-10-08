@@ -53,8 +53,8 @@ class IonAuth {
         recoveryKey: recoveryKey,
       );
 
-  void logOut() {
+  Future<void> logOut() async {
     // TODO: implement logout request
-    tokenStorage.removeToken(username: username);
+    return tokenStorage.removeToken(username: username);
   }
 }

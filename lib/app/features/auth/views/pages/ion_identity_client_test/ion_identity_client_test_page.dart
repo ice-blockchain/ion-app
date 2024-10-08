@@ -13,13 +13,20 @@ import 'package:ice/app/services/ion_identity_client/ion_identity_client_provide
 import 'package:ice/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_client.dart';
 
-class IonIdentityClientTestPage extends StatelessWidget {
+class IonIdentityClientTestPage extends ConsumerWidget {
   const IonIdentityClientTestPage({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ionClient = ref.watch(ionApiClientProvider).valueOrNull;
+    if (ionClient == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return const DefaultTabController(
       length: 6,
       child: Scaffold(
@@ -62,7 +69,7 @@ class _RegisterTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
     final usernameController = useTextEditingController(text: 'testauth1@mail.com');
 
     final registerResult = useState<RegisterUserResult?>(null);
@@ -93,7 +100,7 @@ class _LoginTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
     final usernameController = useTextEditingController(text: 'testauth1@mail.com');
 
     final loginResult = useState<LoginUserResult?>(null);
@@ -123,7 +130,7 @@ class _UsersTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
 
     return StreamBuilder(
       stream: ionClient.authorizedUsers,
@@ -172,7 +179,7 @@ class UserWalletsDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
 
     return SheetContent(
       body: FutureBuilder(
@@ -212,7 +219,7 @@ class _WalletsTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
 
     final walletNameController = useTextEditingController.fromValue(
       const TextEditingValue(text: 'My Wallet 1'),
@@ -242,7 +249,7 @@ class _RecoveryTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
 
     final usernameController = useTextEditingController.fromValue(
       const TextEditingValue(text: 'testauth1@mail.com'),
@@ -276,7 +283,7 @@ class _RecoverUserTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
 
     final usernameController = useTextEditingController.fromValue(
       const TextEditingValue(text: 'my@mail.com'),

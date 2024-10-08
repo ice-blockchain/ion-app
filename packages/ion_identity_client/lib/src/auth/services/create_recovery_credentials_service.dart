@@ -63,9 +63,9 @@ class CreateRecoveryCredentialsService {
                   .mapLeft(CreateCredentialRequestCreateRecoveryCredentialsFailure.new)
                   .map(
                     (credentialResponse) => CreateRecoveryCredentialsSuccess(
+                      identityKeyName: username,
                       recoveryCode: recoveryKeyData.recoveryCode,
-                      recoveryName: credentialResponse.name,
-                      recoveryId: credentialResponse.credentialId,
+                      recoveryKeyId: credentialResponse.credentialId,
                     ),
                   );
             },

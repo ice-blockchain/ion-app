@@ -7,7 +7,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/auth/providers/login_action_notifier.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/descriptions.dart';
 import 'package:ice/app/features/auth/views/pages/turn_on_notifications/notifications.dart';
@@ -19,7 +19,7 @@ class TurnOnNotifications extends ConsumerWidget {
   const TurnOnNotifications({super.key});
 
   void handleSignIn(WidgetRef ref) {
-    ref.read(authProvider.notifier).signIn(keyName: '123');
+    ref.read(loginActionNotifierProvider.notifier).signIn(keyName: '123');
   }
 
   @override

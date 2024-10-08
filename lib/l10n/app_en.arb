@@ -288,6 +288,7 @@
   "protect_account_description_secure_account": "Securing your account ensures you never lose access to your data and funds",
   "protect_account_button": "Protect account",
   "protect_account_description_secure_account_2fa": "To secure your account, back it up and enable at least one 2FA option",
+  "protect_account_create_recovery_error": "An error occurred while uploading the data. Try again later.",
   "backup_title": "Select backup",
   "backup_description": "Backups enable you to restore your data and wallet if something goes wrong",
   "backup_option_with_google_drive_title": "Backup with Google Drive",
