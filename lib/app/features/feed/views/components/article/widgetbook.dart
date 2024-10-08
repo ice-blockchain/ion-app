@@ -34,7 +34,7 @@ Widget feedPostUseCase(BuildContext context) {
               label: 'Minutes to read',
               initialValue: 7,
             ),
-            user: UserMetadata(
+            userMetadata: UserMetadata(
               pubkey: '1',
               name: context.knobs.string(
                 label: 'Name',

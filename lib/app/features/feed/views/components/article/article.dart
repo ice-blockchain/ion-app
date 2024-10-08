@@ -12,7 +12,7 @@ import 'package:ice/app/utils/username.dart';
 class Article extends StatelessWidget {
   const Article({
     required this.id,
-    required this.user,
+    required this.userMetadata,
     required this.publishedAt,
     required this.imageUrl,
     required this.minutesToRead,
@@ -22,7 +22,7 @@ class Article extends StatelessWidget {
 
   final String id;
 
-  final UserMetadata user;
+  final UserMetadata userMetadata;
 
   final DateTime publishedAt;
 
@@ -37,11 +37,11 @@ class Article extends StatelessWidget {
     return Column(
       children: [
         ListItem.user(
-          title: Text(user.displayName),
-          subtitle: Text(prefixUsername(username: user.name, context: context)),
-          profilePicture: user.picture,
-          verifiedBadge: user.verified,
-          ntfAvatar: user.nft,
+          title: Text(userMetadata.displayName),
+          subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
+          profilePicture: userMetadata.picture,
+          verifiedBadge: userMetadata.verified,
+          ntfAvatar: userMetadata.nft,
           timeago: publishedAt,
           onTap: () {},
           trailing: const BookmarkButton(id: 'test_article_id'),

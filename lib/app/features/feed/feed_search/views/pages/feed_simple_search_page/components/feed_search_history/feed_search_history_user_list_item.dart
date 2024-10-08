@@ -18,16 +18,16 @@ class FeedSearchHistoryUserListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadata = ref.watch(userMetadataProvider(userId));
     return userMetadata.maybeWhen(
-      data: (data) => data != null ? _UserListItem(user: data) : const SizedBox.shrink(),
+      data: (data) => data != null ? _UserListItem(userMetadata: data) : const SizedBox.shrink(),
       orElse: _UserListItemLoading.new,
     );
   }
 }
 
 class _UserListItem extends StatelessWidget {
-  const _UserListItem({required this.user});
+  const _UserListItem({required this.userMetadata});
 
-  final UserMetadata user;
+  final UserMetadata userMetadata;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +37,12 @@ class _UserListItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Avatar(size: 65.0.s, imageUrl: user.picture, hexagon: user.nft),
+          Avatar(size: 65.0.s, imageUrl: userMetadata.picture, hexagon: userMetadata.nft),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                user.displayName,
+                userMetadata.displayName,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.theme.appTextThemes.caption3.copyWith(
@@ -50,7 +50,7 @@ class _UserListItem extends StatelessWidget {
                 ),
               ),
               Text(
-                prefixUsername(username: user.name, context: context),
+                prefixUsername(username: userMetadata.name, context: context),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.theme.appTextThemes.caption3.copyWith(
