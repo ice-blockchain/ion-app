@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/user/model/user_data.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/user/model/user_metadata.dart';
+import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ice/app/utils/username.dart';
 
 class FeedSearchHistoryUserListItem extends ConsumerWidget {
@@ -16,9 +16,9 @@ class FeedSearchHistoryUserListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(userDataProvider(userId));
-    return userData.maybeWhen(
-      data: (data) => _UserListItem(user: data),
+    final userMetadata = ref.watch(userMetadataProvider(userId));
+    return userMetadata.maybeWhen(
+      data: (data) => data != null ? _UserListItem(user: data) : const SizedBox.shrink(),
       orElse: _UserListItemLoading.new,
     );
   }
@@ -27,7 +27,7 @@ class FeedSearchHistoryUserListItem extends ConsumerWidget {
 class _UserListItem extends StatelessWidget {
   const _UserListItem({required this.user});
 
-  final UserData user;
+  final UserMetadata user;
 
   @override
   Widget build(BuildContext context) {

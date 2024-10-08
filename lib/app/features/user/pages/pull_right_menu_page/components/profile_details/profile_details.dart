@@ -6,9 +6,9 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
 import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_details/profile_details_cell.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
 import 'package:ice/app/features/user/providers/user_followers_provider.dart';
 import 'package:ice/app/features/user/providers/user_following_provider.dart';
+import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ice/app/utils/username.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -22,7 +22,7 @@ class ProfileDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUserId = ref.watch(currentUserIdSelectorProvider);
-    final userDataValue = ref.watch(currentUserDataProvider).valueOrNull;
+    final userMetadataValue = ref.watch(currentUserMetadataProvider).valueOrNull;
     final userFollowers = ref.watch(userFollowersProvider(currentUserId));
     final userFollowing = ref.watch(userFollowingProvider(currentUserId));
 
@@ -31,7 +31,7 @@ class ProfileDetails extends ConsumerWidget {
       margin: EdgeInsets.symmetric(horizontal: 40.0.s),
       height: 164.0.s,
       decoration: Decorations.borderBoxDecoration(context),
-      child: userDataValue != null
+      child: userMetadataValue != null
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -39,12 +39,12 @@ class ProfileDetails extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      userDataValue.displayName,
+                      userMetadataValue.displayName,
                       style: context.theme.appTextThemes.title.copyWith(
                         color: context.theme.appColors.primaryText,
                       ),
                     ),
-                    if (userDataValue.verified) ...[
+                    if (userMetadataValue.verified) ...[
                       SizedBox(width: 6.0.s),
                       Assets.svg.iconBadgeVerify.icon(size: verifiedIconSize),
                     ],
@@ -52,7 +52,7 @@ class ProfileDetails extends ConsumerWidget {
                 ),
                 SizedBox(height: 3.0.s),
                 Text(
-                  prefixUsername(username: userDataValue.name, context: context),
+                  prefixUsername(username: userMetadataValue.name, context: context),
                   style: context.theme.appTextThemes.caption.copyWith(
                     color: context.theme.appColors.secondaryText,
                   ),

@@ -5,12 +5,12 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-part 'user_data.freezed.dart';
-part 'user_data.g.dart';
+part 'user_metadata.freezed.dart';
+part 'user_metadata.g.dart';
 
 @Freezed(copyWith: true)
-class UserData with _$UserData {
-  const factory UserData({
+class UserMetadata with _$UserMetadata {
+  const factory UserMetadata({
     required String pubkey,
     @Default('') String name,
     @Default('') String displayName,
@@ -21,14 +21,14 @@ class UserData with _$UserData {
     @Default(false) bool bot,
     @Default(false) bool verified,
     @Default(false) bool nft,
-  }) = _UserData;
+  }) = _UserMetadata;
 
-  factory UserData.fromEventMessage(EventMessage eventMessage) {
+  factory UserMetadata.fromEventMessage(EventMessage eventMessage) {
     final userDataContent = UserDataEventMessageContent.fromJson(
       json.decode(eventMessage.content) as Map<String, dynamic>,
     );
 
-    return UserData(
+    return UserMetadata(
       pubkey: eventMessage.pubkey,
       name: userDataContent.name ?? '',
       displayName: userDataContent.displayName ?? '',

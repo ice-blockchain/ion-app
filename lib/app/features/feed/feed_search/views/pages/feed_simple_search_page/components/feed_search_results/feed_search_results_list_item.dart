@@ -7,7 +7,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/feed_search/providers/feed_search_history_provider.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ice/app/utils/username.dart';
 
 class FeedSearchResultsListItem extends ConsumerWidget {
@@ -19,26 +19,34 @@ class FeedSearchResultsListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(userDataProvider(userId));
+    final userMetadata = ref.watch(userMetadataProvider(userId));
     return Padding(
       padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),
       child: ScreenSideOffset.small(
-        child: userData.maybeWhen(
-          data: (userData) => GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              ref.read(feedSearchHistoryProvider.notifier).addUserIdToTheHistory(userData.pubkey);
-            },
-            child: ListItem.user(
-              title: Text(userData.displayName),
-              subtitle: Text(
-                prefixUsername(username: userData.name, context: context),
+        child: userMetadata.maybeWhen(
+          data: (userMetadata) {
+            if (userMetadata == null) {
+              return const SizedBox.shrink();
+            }
+
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                ref
+                    .read(feedSearchHistoryProvider.notifier)
+                    .addUserIdToTheHistory(userMetadata.pubkey);
+              },
+              child: ListItem.user(
+                title: Text(userMetadata.displayName),
+                subtitle: Text(
+                  prefixUsername(username: userMetadata.name, context: context),
+                ),
+                profilePicture: userMetadata.picture,
+                verifiedBadge: userMetadata.verified,
+                ntfAvatar: userMetadata.nft,
               ),
-              profilePicture: userData.picture,
-              verifiedBadge: userData.verified,
-              ntfAvatar: userData.nft,
-            ),
-          ),
+            );
+          },
           orElse: () => const Skeleton(child: ListItemUserShape()),
         ),
       ),

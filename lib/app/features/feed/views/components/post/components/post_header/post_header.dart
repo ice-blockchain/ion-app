@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ice/app/utils/username.dart';
 
 class PostHeader extends ConsumerWidget {
@@ -23,16 +23,19 @@ class PostHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(userDataProvider(pubkey));
+    final userMetadata = ref.watch(userMetadataProvider(pubkey));
 
     return Padding(
       padding: EdgeInsets.only(top: 12.0.s, bottom: 10.0.s),
-      child: userData.maybeWhen(
-        data: (userData) {
+      child: userMetadata.maybeWhen(
+        data: (userMetadata) {
+          if (userMetadata == null) {
+            return const SizedBox.shrink();
+          }
           return ListItem.user(
-            title: Text(userData.displayName),
-            subtitle: Text(prefixUsername(username: userData.name, context: context)),
-            profilePicture: userData.picture,
+            title: Text(userMetadata.displayName),
+            subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
+            profilePicture: userMetadata.picture,
             trailing: trailing,
             iceBadge: Random().nextBool(),
             verifiedBadge: Random().nextBool(),

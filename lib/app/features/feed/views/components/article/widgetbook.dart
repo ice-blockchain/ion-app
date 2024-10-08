@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/features/feed/views/components/article/article.dart';
-import 'package:ice/app/features/user/model/user_data.dart';
+import 'package:ice/app/features/user/model/user_metadata.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -34,7 +34,7 @@ Widget feedPostUseCase(BuildContext context) {
               label: 'Minutes to read',
               initialValue: 7,
             ),
-            user: UserData(
+            user: UserMetadata(
               pubkey: '1',
               name: context.knobs.string(
                 label: 'Name',

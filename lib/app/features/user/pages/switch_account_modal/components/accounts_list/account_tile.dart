@@ -6,7 +6,7 @@ import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ice/app/utils/username.dart';
 import 'package:ice/generated/assets.gen.dart';
 
@@ -21,10 +21,10 @@ class AccountsTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUserId = ref.watch(currentUserIdSelectorProvider);
-    final userDataValue = ref.watch(userDataProvider(userId)).valueOrNull;
+    final userMetadataValue = ref.watch(userMetadataProvider(userId)).valueOrNull;
     final isCurrentUser = userId == currentUserId;
 
-    if (userDataValue == null) {
+    if (userMetadataValue == null) {
       return Skeleton(child: ListItem());
     }
 
@@ -35,9 +35,9 @@ class AccountsTile extends ConsumerWidget {
           ref.read(authProvider.notifier).setCurrentUser(userId);
         }
       },
-      title: Text(userDataValue.displayName),
-      subtitle: Text(prefixUsername(username: userDataValue.name, context: context)),
-      profilePicture: userDataValue.picture,
+      title: Text(userMetadataValue.displayName),
+      subtitle: Text(prefixUsername(username: userMetadataValue.name, context: context)),
+      profilePicture: userMetadataValue.picture,
       trailing: isCurrentUser == true
           ? Assets.svg.iconBlockCheckboxOnblue.icon(color: context.theme.appColors.onPrimaryAccent)
           : null,

@@ -9,7 +9,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/num.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/components/follow_user_button/follow_user_button.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ice/app/utils/username.dart';
 
 class CreatorListItem extends ConsumerWidget {
@@ -22,21 +22,24 @@ class CreatorListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(userDataProvider(userId));
+    final userMetadata = ref.watch(userMetadataProvider(userId));
 
-    return userData.maybeWhen(
-      data: (userData) {
+    return userMetadata.maybeWhen(
+      data: (userMetadata) {
+        if (userMetadata == null) {
+          return const SizedBox.shrink();
+        }
         return ScreenSideOffset.small(
           child: ListItem.user(
-            title: Text(userData.displayName),
-            subtitle: Text(prefixUsername(username: userData.name, context: context)),
-            profilePicture: userData.picture,
-            verifiedBadge: userData.verified,
-            ntfAvatar: userData.nft,
+            title: Text(userMetadata.displayName),
+            subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
+            profilePicture: userMetadata.picture,
+            verifiedBadge: userMetadata.verified,
+            ntfAvatar: userMetadata.nft,
             backgroundColor: context.theme.appColors.tertararyBackground,
             contentPadding: EdgeInsets.all(12.0.s),
             borderRadius: BorderRadius.circular(16.0.s),
-            trailing: FollowUserButton(userId: userData.pubkey),
+            trailing: FollowUserButton(userId: userMetadata.pubkey),
             trailingPadding: EdgeInsets.only(left: 6.0.s),
           ),
         );

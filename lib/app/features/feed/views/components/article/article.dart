@@ -6,7 +6,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/views/components/article/components/article_header/article_header.dart';
 import 'package:ice/app/features/feed/views/components/article/components/article_image/article_image.dart';
 import 'package:ice/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
-import 'package:ice/app/features/user/model/user_data.dart';
+import 'package:ice/app/features/user/model/user_metadata.dart';
 import 'package:ice/app/utils/username.dart';
 
 class Article extends StatelessWidget {
@@ -22,7 +22,7 @@ class Article extends StatelessWidget {
 
   final String id;
 
-  final UserData user;
+  final UserMetadata user;
 
   final DateTime publishedAt;
 
