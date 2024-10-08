@@ -10,15 +10,43 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_metadata_provider.g.dart';
 
 @Riverpod(keepAlive: true)
+class UserMetadataStorage extends _$UserMetadataStorage {
+  @override
+  Map<String, UserMetadata> build() {
+    return {};
+  }
+
+  void storeAll(List<UserMetadata> usersMetadata) {
+    state = {...state, for (final userMetadata in usersMetadata) userMetadata.pubkey: userMetadata};
+  }
+
+  void store(UserMetadata userMetadata) {
+    state = {...state, userMetadata.pubkey: userMetadata};
+  }
+
+  Future<void> publish(UserMetadata userMetadata) async {
+    throw Exception('Not implemented yet');
+  }
+}
+
+@Riverpod(keepAlive: true)
 Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
+  final userMetadata = ref.watch(userMetadataStorageProvider.select((state) => state[pubkey]));
+  if (userMetadata != null) {
+    return userMetadata;
+  }
+
   final relay = await ref.read(relaysProvider.notifier).getOrCreate(mainRelay);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [0], authors: [pubkey], limit: 1));
   final events = await requestEvents(requestMessage, relay);
 
   if (events.isNotEmpty) {
-    return UserMetadata.fromEventMessage(events.first);
+    final userMetadata = UserMetadata.fromEventMessage(events.first);
+    ref.read(userMetadataStorageProvider.notifier).store(userMetadata);
+    return userMetadata;
   }
+
   return null;
 }
 
