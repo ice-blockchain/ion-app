@@ -24,7 +24,7 @@ class FeedSearchResultsSkeleton extends StatelessWidget {
             child: Column(
               children: List.generate(
                 numberOfItems,
-                (int i) => ScreenSideOffset.small(
+                (_) => ScreenSideOffset.small(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       vertical: FeedSearchResultsListItem.itemVerticalOffset,

@@ -22,7 +22,7 @@ class PostListSkeleton extends StatelessWidget {
           separator: FeedListSeparator(),
           children: List.generate(
             numberOfItems,
-            (int i) => ScreenSideOffset.small(child: const PostSkeleton()),
+            (_) => ScreenSideOffset.small(child: const PostSkeleton()),
           ).toList(),
         ),
       ),

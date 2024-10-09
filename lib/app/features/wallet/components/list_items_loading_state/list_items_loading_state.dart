@@ -26,7 +26,7 @@ class ListItemsLoadingState extends StatelessWidget {
             ),
             children: List.generate(
               itemCount,
-              (int i) => ScreenSideOffset.small(child: ListItem()),
+              (_) => ScreenSideOffset.small(child: ListItem()),
             ).toList(),
           ),
         ),
