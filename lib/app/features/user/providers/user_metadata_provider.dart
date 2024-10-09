@@ -36,7 +36,7 @@ Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
     return userMetadata;
   }
 
-  final relay = await ref.read(relaysProvider.notifier).getOrCreate(mainRelay);
+  final relay = await ref.watch(relayProvider(mainRelay).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [0], authors: [pubkey], limit: 1));
   final events = await requestEvents(requestMessage, relay);

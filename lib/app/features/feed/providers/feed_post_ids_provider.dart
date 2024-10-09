@@ -18,7 +18,7 @@ class FeedPostIds extends _$FeedPostIds {
   }
 
   Future<void> fetchPosts() async {
-    final relay = await ref.read(relaysProvider.notifier).getOrCreate(mainRelay);
+    final relay = await ref.watch(relayProvider(mainRelay).future);
     final requestMessage = RequestMessage()
       ..addFilter(const RequestFilter(kinds: <int>[1], limit: 20));
     final events = await requestEvents(requestMessage, relay);
