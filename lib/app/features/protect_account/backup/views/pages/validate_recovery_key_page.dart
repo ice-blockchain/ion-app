@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/features/auth/views/components/recovery_keys_input_container/recovery_keys_input_container.dart';
 import 'package:ice/app/features/protect_account/backup/data/models/recovery_key_property.dart';
-import 'package:ice/app/features/protect_account/backup/providers/create_recovery_creds_action_notifier.dart';
+import 'package:ice/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ion_identity_client/ion_client.dart';
 
@@ -13,10 +13,10 @@ class ValidateRecoveryKeyPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recoveryResult = ref.watch(createRecoveryCredsActionNotifierProvider).requireValue!;
+    final recoveryResult = ref.watch(createRecoveryKeyActionNotifierProvider).requireValue;
 
     return RecoveryKeysInputContainer(
-      validator: (value, property) => _validateProperty(value, property, recoveryResult),
+      validator: (value, property) => _validateProperty(value, property, recoveryResult!),
       onContinuePressed: (_, __, ___) => RecoveryKeysSuccessRoute().push<void>(context),
     );
   }
@@ -24,13 +24,8 @@ class ValidateRecoveryKeyPage extends ConsumerWidget {
   String? _validateProperty(
     String? inputValue,
     RecoveryKeyProperty property,
-    CreateRecoveryCredentialsResult recoveryResult,
+    CreateRecoveryCredentialsSuccess recoveryData,
   ) {
-    final recoveryData = switch (recoveryResult) {
-      CreateRecoveryCredentialsSuccess() => recoveryResult,
-      CreateRecoveryCredentialsFailure() => throw Exception(recoveryResult),
-    };
-
     final propertyValue = switch (property) {
       RecoveryKeyProperty.identityKeyName => recoveryData.identityKeyName,
       RecoveryKeyProperty.recoveryKeyId => recoveryData.recoveryKeyId,

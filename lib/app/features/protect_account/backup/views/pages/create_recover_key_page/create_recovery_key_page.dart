@@ -5,10 +5,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ice/app/features/protect_account/backup/providers/create_recovery_creds_action_notifier.dart';
-import 'package:ice/app/features/protect_account/backup/views/components/recovery_key_save/recovery_keys_save_error_state.dart';
-import 'package:ice/app/features/protect_account/backup/views/components/recovery_key_save/recovery_keys_save_loading_state.dart';
-import 'package:ice/app/features/protect_account/backup/views/components/recovery_key_save/recovery_keys_save_success_state.dart';
+import 'package:ice/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
+import 'package:ice/app/features/protect_account/backup/views/pages/create_recover_key_page/components/create_recovery_key_error_state.dart';
+import 'package:ice/app/features/protect_account/backup/views/pages/create_recover_key_page/components/create_recovery_key_loading_state.dart';
+import 'package:ice/app/features/protect_account/backup/views/pages/create_recover_key_page/components/create_recovery_key_success_state.dart';
+import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -72,23 +73,27 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _Body extends ConsumerWidget {
+class _Body extends HookConsumerWidget {
   const _Body();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recoveryData = ref.watch(createRecoveryCredsActionNotifierProvider);
+    final recoveryData = ref.watch(createRecoveryKeyActionNotifierProvider);
 
-    if (recoveryData.isLoading) {
-      return const RecoveryKeysSaveLoadingState();
+    useOnInit(() {
+      ref.read(createRecoveryKeyActionNotifierProvider.notifier).createRecoveryCredentials();
+    });
+
+    if (recoveryData.isLoading || recoveryData.valueOrNull == null) {
+      return const CreateRecoveryKeyLoadingState();
     }
     if (recoveryData.hasError) {
-      return const RecoveryKeysSaveErrorState();
+      return const CreateRecoveryKeyErrorState();
     }
     if (recoveryData.hasValue) {
-      return RecoveryKeysSaveSuccessState(recoveryData: recoveryData.requireValue!);
+      return CreateRecoveryKeySuccessState(recoveryData: recoveryData.requireValue!);
     }
 
-    return const RecoveryKeysSaveLoadingState();
+    return const CreateRecoveryKeyLoadingState();
   }
 }

@@ -9,7 +9,7 @@ import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
-import 'package:ice/app/features/protect_account/backup/providers/create_recovery_creds_action_notifier.dart';
+import 'package:ice/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
 import 'package:ice/app/features/protect_account/backup/providers/recover_user_action_notifier.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
@@ -255,7 +255,7 @@ class _CreateRecoveryCredsTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final createRecoveryCredsState = ref.watch(createRecoveryCredsActionNotifierProvider);
+    final createRecoveryKeyState = ref.watch(createRecoveryKeyActionNotifierProvider);
 
     final usernameController = useTextEditingController.fromValue(
       const TextEditingValue(text: 'user'),
@@ -269,14 +269,12 @@ class _CreateRecoveryCredsTab extends HookConsumerWidget {
         Button(
           label: const Text('Create Recovery Credentials'),
           onPressed: () {
-            ref
-                .read(createRecoveryCredsActionNotifierProvider.notifier)
-                .createRecoveryCredentials();
+            ref.read(createRecoveryKeyActionNotifierProvider.notifier).createRecoveryCredentials();
           },
         ),
-        if (createRecoveryCredsState.value != null) ...[
+        if (createRecoveryKeyState.value != null) ...[
           SizedBox(height: 16.0.s),
-          SelectableText('$createRecoveryCredsState'),
+          SelectableText('$createRecoveryKeyState'),
         ],
       ],
     );

@@ -11,8 +11,8 @@ import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_client.dart';
 
-class RecoveryKeysSaveSuccessState extends StatelessWidget {
-  const RecoveryKeysSaveSuccessState({required this.recoveryData, super.key});
+class CreateRecoveryKeySuccessState extends StatelessWidget {
+  const CreateRecoveryKeySuccessState({required this.recoveryData, super.key});
 
   final CreateRecoveryCredentialsSuccess recoveryData;
 

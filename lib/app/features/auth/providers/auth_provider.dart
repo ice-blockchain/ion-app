@@ -26,7 +26,7 @@ class Auth extends _$Auth {
   @override
   Future<AuthState> build() async {
     final authorizedUsers = await ref.watch(authenticatedIdentityKeyNamesStreamProvider.future);
-    final savedSelectedUser = await ref.watch(selectedIdentityKeyNameStoreProvider.future);
+    final savedSelectedUser = await ref.watch(currentIdentityKeyNameStoreProvider.future);
 
     final fakeUsers = authorizedUsers.isEmpty
         ? <String>[]
@@ -57,12 +57,14 @@ class Auth extends _$Auth {
   }
 
   void setCurrentUser(String identityKeyName) {
-    ref.read(selectedIdentityKeyNameStoreProvider.notifier).selectIdentityKeyName(identityKeyName);
+    ref
+        .read(currentIdentityKeyNameStoreProvider.notifier)
+        .setCurrentIdentityKeyName(identityKeyName);
   }
 }
 
 @riverpod
-String currentIdentityKeyNameSelector(CurrentIdentityKeyNameSelectorRef ref) {
+String currentUserIdSelector(CurrentUserIdSelectorRef ref) {
   return ref.watch(
     authProvider.select((state) => state.valueOrNull?.currentIdentityKeyName ?? ''),
   );
@@ -78,7 +80,7 @@ Stream<Iterable<String>> authenticatedIdentityKeyNamesStream(
 }
 
 @Riverpod(keepAlive: true)
-class SelectedIdentityKeyNameStore extends _$SelectedIdentityKeyNameStore {
+class CurrentIdentityKeyNameStore extends _$CurrentIdentityKeyNameStore {
   static const String _currentIdentityKeyNameKey = 'Auth:currentIdentityKeyName';
 
   @override
@@ -91,7 +93,7 @@ class SelectedIdentityKeyNameStore extends _$SelectedIdentityKeyNameStore {
     return localStorage.getString(_currentIdentityKeyNameKey);
   }
 
-  Future<void> selectIdentityKeyName(String identityKeyName) async {
+  Future<void> setCurrentIdentityKeyName(String identityKeyName) async {
     final localStorage = ref.read(localStorageProvider);
     await localStorage.setString(_currentIdentityKeyNameKey, identityKeyName);
     state = AsyncData(identityKeyName);

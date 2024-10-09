@@ -18,9 +18,11 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
   const RecoveryKeysInputContainer({
     required this.validator,
     required this.onContinuePressed,
+    this.isLoading = false,
     super.key,
   });
 
+  final bool isLoading;
   final String? Function(String?, RecoveryKeyProperty) validator;
   final void Function(String name, String id, String code) onContinuePressed;
 
@@ -74,6 +76,9 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
             margin: 36.0.s,
             child: ScreenSideOffset.large(
               child: Button(
+                label: Text(context.i18n.button_continue),
+                mainAxisSize: MainAxisSize.max,
+                disabled: isLoading,
                 onPressed: () {
                   if (formKey.value.currentState!.validate()) {
                     ref.read(securityAccountControllerProvider.notifier).toggleBackup(value: true);
@@ -84,8 +89,6 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
                     );
                   }
                 },
-                label: Text(context.i18n.button_continue),
-                mainAxisSize: MainAxisSize.max,
               ),
             ),
           ),

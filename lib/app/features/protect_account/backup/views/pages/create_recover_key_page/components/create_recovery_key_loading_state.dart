@@ -5,8 +5,8 @@ import 'package:ice/app/components/card/rounded_card.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
-class RecoveryKeysSaveLoadingState extends StatelessWidget {
-  const RecoveryKeysSaveLoadingState({super.key});
+class CreateRecoveryKeyLoadingState extends StatelessWidget {
+  const CreateRecoveryKeyLoadingState({super.key});
 
   @override
   Widget build(BuildContext context) {

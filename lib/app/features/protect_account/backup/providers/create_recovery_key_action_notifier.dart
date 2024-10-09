@@ -5,10 +5,10 @@ import 'package:ice/app/services/ion_identity_client/ion_identity_client_provide
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'create_recovery_creds_action_notifier.g.dart';
+part 'create_recovery_key_action_notifier.g.dart';
 
 @riverpod
-class CreateRecoveryCredsActionNotifier extends _$CreateRecoveryCredsActionNotifier {
+class CreateRecoveryKeyActionNotifier extends _$CreateRecoveryKeyActionNotifier {
   @override
   FutureOr<CreateRecoveryCredentialsSuccess?> build() {
     return null;
@@ -18,7 +18,7 @@ class CreateRecoveryCredsActionNotifier extends _$CreateRecoveryCredsActionNotif
     state = const AsyncValue.loading();
 
     try {
-      final selectedUser = ref.read(authProvider).valueOrNull?.selectedIdentityKeyName;
+      final selectedUser = ref.read(authProvider).valueOrNull?.currentIdentityKeyName;
       if (selectedUser == null) {
         throw Exception('No selected user');
       }
