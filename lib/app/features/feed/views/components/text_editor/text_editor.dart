@@ -3,12 +3,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block.dart';
+import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/poll_length_time_modal.dart';
+import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 
 class TextEditor extends StatelessWidget {
-  const TextEditor(this.controller, {super.key, this.placeholder});
+  const TextEditor(
+    this.controller, {
+    super.key,
+    this.placeholder,
+  });
   final QuillController controller;
   final String? placeholder;
+
+  Future<void> _showPollLengthTimeModal(BuildContext context) async {
+    return showSimpleBottomSheet<void>(
+      context: context,
+      child: const PollLengthTimeModal(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +33,11 @@ class TextEditor extends StatelessWidget {
           configurations: QuillEditorConfigurations(
             embedBuilders: [
               TextEditorSingleImageBuilder(),
+              TextEditorPollBuilder(
+                onPollLengthPress: () {
+                  _showPollLengthTimeModal(context);
+                },
+              ),
             ],
             autoFocus: true,
             placeholder: placeholder,
