@@ -7,8 +7,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/feed_search/providers/feed_search_history_provider.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results_list_item_shape.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ice/app/utils/username.dart';
 
 class FeedSearchResultsListItem extends ConsumerWidget {
@@ -20,27 +19,37 @@ class FeedSearchResultsListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(userDataProvider(userId));
-    return userData.maybeWhen(
-      data: (user) => GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () {
-          ref.read(feedSearchHistoryProvider.notifier).addUserIdToTheHistory(user.id);
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),
-          child: ScreenSideOffset.small(
-            child: ListItem.user(
-              title: Text(user.displayName ?? user.name),
-              subtitle: Text(prefixUsername(username: user.name, context: context)),
-              profilePicture: user.picture,
-              verifiedBadge: user.verified,
-              ntfAvatar: user.nft,
-            ),
-          ),
+    final userMetadata = ref.watch(userMetadataProvider(userId));
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),
+      child: ScreenSideOffset.small(
+        child: userMetadata.maybeWhen(
+          data: (userMetadata) {
+            if (userMetadata == null) {
+              return const SizedBox.shrink();
+            }
+
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                ref
+                    .read(feedSearchHistoryProvider.notifier)
+                    .addUserIdToTheHistory(userMetadata.pubkey);
+              },
+              child: ListItem.user(
+                title: Text(userMetadata.displayName),
+                subtitle: Text(
+                  prefixUsername(username: userMetadata.name, context: context),
+                ),
+                profilePicture: userMetadata.picture,
+                verifiedBadge: userMetadata.verified,
+                ntfAvatar: userMetadata.nft,
+              ),
+            );
+          },
+          orElse: () => const Skeleton(child: ListItemUserShape()),
         ),
       ),
-      orElse: () => const Skeleton(child: FeedSearchResultsListItemShape()),
     );
   }
 }

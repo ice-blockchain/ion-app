@@ -63,7 +63,7 @@ class CommentPostModal extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(16.0.s),
                         ),
                         child: Post(
-                          header: const PostHeader(),
+                          header: PostHeader(pubkey: post.pubkey),
                           footer: const SizedBox.shrink(),
                           postData: post,
                         ),

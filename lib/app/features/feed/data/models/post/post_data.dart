@@ -14,17 +14,21 @@ part 'post_data_from_event.dart';
 class PostData {
   PostData({
     required this.id,
+    required this.pubkey,
     required this.content,
   });
 
   PostData.fromRawContent({
     required this.id,
+    required this.pubkey,
     required String rawContent,
   }) : content = TextParser(matchers: [const UrlMatcher()]).parse(rawContent);
 
   factory PostData.fromEventMessage(EventMessage eventMessage) = _PostDataFromEvent;
 
   final String id;
+
+  final String pubkey;
 
   final List<TextMatch> content;
 

@@ -9,7 +9,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/user/pages/switch_account_modal/components/accounts_list/accounts_list.dart';
 import 'package:ice/app/features/user/pages/switch_account_modal/components/action_button/action_button.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -21,7 +21,7 @@ class SwitchAccountModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userDataValue = ref.watch(currentUserDataProvider).valueOrNull;
+    final userMetadataValue = ref.watch(currentUserMetadataProvider).valueOrNull;
 
     return SheetContent(
       body: ScreenSideOffset.small(
@@ -47,7 +47,7 @@ class SwitchAccountModal extends ConsumerWidget {
               ActionButton(
                 icon: Assets.svg.iconMenuLogout.icon(size: 24.0.s),
                 label: context.i18n.profile_log_out(
-                  prefixUsername(username: userDataValue?.name, context: context),
+                  prefixUsername(username: userMetadataValue?.name, context: context),
                 ),
                 onTap: () {
                   ref.read(authProvider.notifier).signOut();

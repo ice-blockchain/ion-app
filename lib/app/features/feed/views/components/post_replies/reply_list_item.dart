@@ -20,7 +20,7 @@ class ReplyListItem extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () => PostDetailsRoute(postId: postId).push<void>(context),
-      child: Post(header: const PostHeader(), postData: post),
+      child: Post(header: PostHeader(pubkey: post.pubkey), postData: post),
     );
   }
 }

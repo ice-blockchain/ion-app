@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 
 class BackgroundPicture extends ConsumerWidget {
   const BackgroundPicture({
@@ -15,7 +15,7 @@ class BackgroundPicture extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final banner = ref.watch(currentUserDataProvider).valueOrNull?.banner;
+    final banner = ref.watch(currentUserMetadataProvider).valueOrNull?.banner;
 
     final imageWidth = MediaQuery.of(context).size.width;
     final imageHeight = imageWidth / aspectRatio;
@@ -34,6 +34,8 @@ class BackgroundPicture extends ConsumerWidget {
         width: imageWidth,
         height: imageHeight,
         fit: BoxFit.fitWidth,
+        alignment: Alignment.topCenter,
+        errorWidget: (context, url, error) => const SizedBox.shrink(),
       ),
     );
   }

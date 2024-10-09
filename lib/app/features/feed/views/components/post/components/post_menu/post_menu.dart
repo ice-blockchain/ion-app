@@ -52,18 +52,8 @@ class PostMenu extends StatelessWidget {
           ),
         ],
       ),
-      child: SizedBox(
-        width: 48.0.s,
-        height: 48.0.s,
-        child: Transform(
-          transform: Matrix4.translationValues(12.0.s, 0, 0),
-          child: IconButton(
-            onPressed: null,
-            icon: Assets.svg.iconMorePopup.icon(
-              color: context.theme.appColors.onTertararyBackground,
-            ),
-          ),
-        ),
+      child: Assets.svg.iconMorePopup.icon(
+        color: context.theme.appColors.onTertararyBackground,
       ),
     );
   }

@@ -12,7 +12,6 @@ import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_h
 import 'package:ice/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
-import 'package:ice/app/features/user/providers/mock_data.dart';
 import 'package:ice/app/features/user/providers/user_following_provider.dart';
 import 'package:ice/app/router/app_routes.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -25,7 +24,12 @@ class DiscoverCreators extends ConsumerWidget {
     final authState = ref.watch(authProvider);
     final currentUserId = ref.watch(currentUserIdSelectorProvider);
     final followingIds = ref.watch(userFollowingProvider(currentUserId));
-    final creatorIds = mockedUserData.values.toList().sublist(6).map((user) => user.id).toList();
+    final creatorIds = [
+      'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
+      '52d119f46298a8f7b08183b96d4e7ab54d6df0853303ad4a3c3941020f286129',
+      '496bf22b76e63553b2cac70c44b53867368b4b7612053a2c78609f3144324807',
+      '85035261ecddaf490e3fff9b9dc63cde7a9fb3243ba6bd1c4d89b372a457b1c1',
+    ];
 
     final hasNotificationsPermission = ref.watch(hasPermissionProvider(Permission.notifications));
 

@@ -8,7 +8,7 @@ import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/components/follow_user_button/follow_user_button.dart';
 import 'package:ice/app/features/feed/views/components/post/post_skeleton.dart';
-import 'package:ice/app/features/user/providers/user_data_provider.dart';
+import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ice/app/utils/username.dart';
 
 class FeedAdvancedSearchUserListItem extends ConsumerWidget {
@@ -21,12 +21,13 @@ class FeedAdvancedSearchUserListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(userDataProvider(userId));
-    final userDataValue = userData.valueOrNull;
+    final userMetadataValue = ref.watch(userMetadataProvider(userId)).valueOrNull;
 
-    if (userDataValue == null) {
+    if (userMetadataValue == null) {
       return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));
     }
+
+    final about = userMetadataValue.about;
 
     return ScreenSideOffset.small(
       child: Column(
@@ -34,20 +35,24 @@ class FeedAdvancedSearchUserListItem extends ConsumerWidget {
         children: [
           SizedBox(height: 12.0.s),
           ListItem.user(
-            title: Text(userDataValue.displayName ?? userDataValue.name),
-            subtitle: Text(prefixUsername(username: userDataValue.name, context: context)),
-            ntfAvatar: userDataValue.nft,
-            profilePicture: userDataValue.picture,
-            verifiedBadge: userDataValue.verified,
+            title: Text(userMetadataValue.displayName),
+            subtitle: Text(
+              prefixUsername(username: userMetadataValue.name, context: context),
+            ),
+            ntfAvatar: userMetadataValue.nft,
+            profilePicture: userMetadataValue.picture,
+            verifiedBadge: userMetadataValue.verified,
             trailing: FollowUserButton(userId: userId),
           ),
-          SizedBox(height: 10.0.s),
-          Text(
-            userDataValue.about,
-            style: context.theme.appTextThemes.body2.copyWith(
-              color: context.theme.appColors.sharkText,
+          if (about != null) ...[
+            SizedBox(height: 10.0.s),
+            Text(
+              about,
+              style: context.theme.appTextThemes.body2.copyWith(
+                color: context.theme.appColors.sharkText,
+              ),
             ),
-          ),
+          ],
           SizedBox(height: 12.0.s),
         ],
       ),

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/num.dart';
 
 class PostSkeleton extends StatelessWidget {
@@ -13,19 +14,9 @@ class PostSkeleton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 14.5.s,
-              bottom: 10.5.s,
-            ),
-            child: Container(
-              height: 32.0.s,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0.s),
-                color: Colors.white,
-              ),
-            ),
-          ),
+          SizedBox(height: 12.0.s),
+          const ListItemUserShape(),
+          SizedBox(height: 10.0.s),
           const _PostSkeletonText(widthFactor: 0.8),
           const _PostSkeletonText(),
           const _PostSkeletonText(),

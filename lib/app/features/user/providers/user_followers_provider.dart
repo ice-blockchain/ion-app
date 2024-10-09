@@ -2,7 +2,6 @@
 
 import 'dart:math';
 
-import 'package:ice/app/features/user/providers/mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_followers_provider.g.dart';
@@ -10,5 +9,8 @@ part 'user_followers_provider.g.dart';
 @Riverpod(keepAlive: true)
 Future<List<String>> userFollowers(UserFollowersRef ref, String userId) async {
   await Future<void>.delayed(Duration(milliseconds: Random().nextInt(500) + 300));
-  return mockedUserData.values.toList().sublist(2).map((user) => user.id).toList();
+  return [
+    'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
+    '52d119f46298a8f7b08183b96d4e7ab54d6df0853303ad4a3c3941020f286129',
+  ];
 }
