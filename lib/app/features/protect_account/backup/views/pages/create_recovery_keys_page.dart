@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ice/app/features/protect_account/backup/data/providers/recovery_key_data_provider.dart';
+import 'package:ice/app/features/protect_account/backup/providers/create_recovery_creds_action_notifier.dart';
 import 'package:ice/app/features/protect_account/backup/views/components/recovery_key_save/recovery_keys_save_error_state.dart';
 import 'package:ice/app/features/protect_account/backup/views/components/recovery_key_save/recovery_keys_save_loading_state.dart';
 import 'package:ice/app/features/protect_account/backup/views/components/recovery_key_save/recovery_keys_save_success_state.dart';
@@ -77,7 +77,7 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recoveryData = ref.watch(recoveryKeyDataProvider);
+    final recoveryData = ref.watch(createRecoveryCredsActionNotifierProvider);
 
     if (recoveryData.isLoading) {
       return const RecoveryKeysSaveLoadingState();
@@ -86,7 +86,7 @@ class _Body extends ConsumerWidget {
       return const RecoveryKeysSaveErrorState();
     }
     if (recoveryData.hasValue) {
-      return RecoveryKeysSaveSuccessState(recoveryData: recoveryData.requireValue);
+      return RecoveryKeysSaveSuccessState(recoveryData: recoveryData.requireValue!);
     }
 
     return const RecoveryKeysSaveLoadingState();

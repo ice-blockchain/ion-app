@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/protect_account/backup/data/providers/recovery_key_data_provider.dart';
+import 'package:ice/app/features/protect_account/backup/providers/create_recovery_creds_action_notifier.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class RecoveryKeysSaveErrorState extends ConsumerWidget {
@@ -52,7 +52,9 @@ class RecoveryKeysSaveErrorState extends ConsumerWidget {
             Button(
               mainAxisSize: MainAxisSize.max,
               label: Text(locale.button_retry),
-              onPressed: () => ref.invalidate(recoveryKeyDataProvider),
+              onPressed: () => ref
+                  .read(createRecoveryCredsActionNotifierProvider.notifier)
+                  .createRecoveryCredentials(),
             ),
             SizedBox(height: 16.0.s),
           ],

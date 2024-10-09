@@ -31,10 +31,10 @@ class Auth extends _$Auth {
     final fakeUsers = authorizedUsers.isEmpty
         ? <String>[]
         : [
-            ...authorizedUsers,
             'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
             '52d119f46298a8f7b08183b96d4e7ab54d6df0853303ad4a3c3941020f286129',
             '496bf22b76e63553b2cac70c44b53867368b4b7612053a2c78609f3144324807',
+            ...authorizedUsers,
           ];
 
     final selectedUser =
