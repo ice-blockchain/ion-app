@@ -3,7 +3,7 @@
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_metadata.dart';
-import 'package:ice/app/features/user/providers/user_indexers_provider.dart';
+import 'package:ice/app/features/user/providers/current_user_indexers_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -36,7 +36,7 @@ Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
     return userMetadata;
   }
 
-  final relayUrl = await ref.read(userIndexerPickerProvider.notifier).getNext();
+  final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
   final relay = await ref.read(relayProvider(relayUrl).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [0], authors: [pubkey], limit: 1));

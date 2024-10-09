@@ -4,10 +4,10 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/user/model/user_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_identity_provider.g.dart';
+part 'current_user_identity_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<UserIdentity?> userIdentity(UserIdentityRef ref) async {
+Future<UserIdentity?> currentUserIdentity(CurrentUserIdentityRef ref) async {
   final currentUserId = ref.watch(currentUserIdSelectorProvider);
   if (currentUserId.isNotEmpty) {
     //TODO: Add indentity.io `getUser` request here
