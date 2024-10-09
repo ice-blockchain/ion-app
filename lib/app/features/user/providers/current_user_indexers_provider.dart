@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/user/providers/user_identity_provider.dart';
+import 'package:ice/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_indexers_provider.g.dart';
+part 'current_user_indexers_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class UserIndexers extends _$UserIndexers {
+class CurrentUserIndexers extends _$CurrentUserIndexers {
   @override
   Future<List<String>?> build() async {
-    final userIdentity = await ref.watch(userIdentityProvider.future);
+    final userIdentity = await ref.watch(currentUserIdentityProvider.future);
     if (userIdentity != null) {
       return userIdentity.ionConnectIndexerRelays;
     }
@@ -18,15 +18,15 @@ class UserIndexers extends _$UserIndexers {
 }
 
 @Riverpod(keepAlive: true)
-class UserIndexerPicker extends _$UserIndexerPicker {
+class IndexerPicker extends _$IndexerPicker {
   @override
   int build() {
-    ref.watch(userIndexersProvider);
+    ref.watch(currentUserIndexersProvider);
     return 0;
   }
 
   Future<String> getNext() async {
-    final indexers = await ref.read(userIndexersProvider.future);
+    final indexers = await ref.read(currentUserIndexersProvider.future);
 
     if (indexers == null) {
       throw Exception("User's indexer list is not found");
