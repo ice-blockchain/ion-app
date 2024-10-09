@@ -49,15 +49,11 @@ class FeedMainModalPage extends StatelessWidget {
   }
 
   String _getCreateFlowRouteLocation(FeedType type) {
-    switch (type) {
-      case FeedType.post:
-        return CreatePostRoute().location;
-      case FeedType.story:
-        return CreateStoryRoute().location;
-      case FeedType.video:
-        return CreateVideoRoute().location;
-      case FeedType.article:
-        return CreateArticleRoute().location;
-    }
+    return switch (type) {
+      FeedType.post => CreatePostRoute().location,
+      FeedType.story => CreateStoryRoute().location,
+      FeedType.video => CreateVideoRoute().location,
+      FeedType.article => CreateArticleRoute().location
+    };
   }
 }

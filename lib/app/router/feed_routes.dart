@@ -156,3 +156,10 @@ class FeedSearchLanguagesRoute extends BaseRouteData {
 
   final List<Language> selectedLanguages;
 }
+
+@TypedGoRoute<StoryCameraRoute>(
+  path: '/story-camera',
+)
+class StoryCameraRoute extends BaseRouteData {
+  StoryCameraRoute() : super(child: const StoryCameraWidget());
+}
