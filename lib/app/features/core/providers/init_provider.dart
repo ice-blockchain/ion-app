@@ -4,7 +4,6 @@ import 'package:ice/app/features/core/permissions/providers/permissions_provider
 import 'package:ice/app/features/core/providers/env_provider.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
 import 'package:ice/app/features/core/providers/window_manager_provider.dart';
-import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/services/nostr/nostr.dart';
 import 'package:ice/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -21,6 +20,5 @@ Future<void> initApp(InitAppRef ref) async {
     ref.read(appTemplateProvider.future),
   ]);
 
-  ref.watch(relaysProvider.notifier);
   await ref.read(permissionsProvider.notifier).checkAllPermissions();
 }
