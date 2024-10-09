@@ -12,7 +12,7 @@ part 'auth_provider.g.dart';
 class AuthState with _$AuthState {
   const factory AuthState({
     required List<String> authenticatedIdentityKeyNames,
-    required String? selectedIdentityKeyName,
+    required String? currentIdentityKeyName,
   }) = _AuthState;
   const AuthState._();
 
@@ -42,29 +42,29 @@ class Auth extends _$Auth {
 
     return AuthState(
       authenticatedIdentityKeyNames: authorizedUsers.toList(),
-      selectedIdentityKeyName: selectedUser,
+      currentIdentityKeyName: selectedUser,
     );
   }
 
   Future<void> signOut() async {
     state = const AsyncValue.loading();
 
-    final currentUser = state.valueOrNull?.selectedIdentityKeyName;
+    final currentUser = state.valueOrNull?.currentIdentityKeyName;
     if (currentUser == null) return;
 
     final ionClient = await ref.read(ionApiClientProvider.future);
     await ionClient(username: currentUser).auth.logOut();
   }
 
-  void selectUser(String identityKeyName) {
+  void setCurrentUser(String identityKeyName) {
     ref.read(selectedIdentityKeyNameStoreProvider.notifier).selectIdentityKeyName(identityKeyName);
   }
 }
 
 @riverpod
-String currentUserIdSelector(CurrentUserIdSelectorRef ref) {
+String currentIdentityKeyNameSelector(CurrentIdentityKeyNameSelectorRef ref) {
   return ref.watch(
-    authProvider.select((state) => state.valueOrNull?.selectedIdentityKeyName ?? ''),
+    authProvider.select((state) => state.valueOrNull?.currentIdentityKeyName ?? ''),
   );
 }
 
@@ -79,7 +79,7 @@ Stream<Iterable<String>> authenticatedIdentityKeyNamesStream(
 
 @Riverpod(keepAlive: true)
 class SelectedIdentityKeyNameStore extends _$SelectedIdentityKeyNameStore {
-  static const String _currentUserIdKey = 'Auth:currentUserId';
+  static const String _currentIdentityKeyNameKey = 'Auth:currentIdentityKeyName';
 
   @override
   Future<String?> build() async {
@@ -88,12 +88,12 @@ class SelectedIdentityKeyNameStore extends _$SelectedIdentityKeyNameStore {
 
     final localStorage = ref.watch(localStorageProvider);
 
-    return localStorage.getString(_currentUserIdKey);
+    return localStorage.getString(_currentIdentityKeyNameKey);
   }
 
   Future<void> selectIdentityKeyName(String identityKeyName) async {
     final localStorage = ref.read(localStorageProvider);
-    await localStorage.setString(_currentUserIdKey, identityKeyName);
+    await localStorage.setString(_currentIdentityKeyNameKey, identityKeyName);
     state = AsyncData(identityKeyName);
   }
 }
