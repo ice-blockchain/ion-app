@@ -27,7 +27,7 @@ class SortingButton extends ConsumerWidget {
           color: context.theme.appColors.primaryAccent,
         ),
         onPressed: () {
-          final userId = ref.read(currentUserIdSelectorProvider);
+          final userId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
           ref
               .read(walletUserPreferencesNotifierProvider(userId: userId).notifier)
               .setNftSortingType(sortingType);

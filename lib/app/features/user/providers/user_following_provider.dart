@@ -29,7 +29,7 @@ class UserFollowing extends _$UserFollowing {
 
 @riverpod
 bool isCurrentUserFollowingSelector(IsCurrentUserFollowingSelectorRef ref, String userId) {
-  final currentUserId = ref.watch(currentUserIdSelectorProvider);
+  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
   return ref.watch(
     userFollowingProvider(currentUserId)
         .select((state) => state.valueOrNull?.contains(userId) ?? false),

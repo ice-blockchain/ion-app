@@ -41,7 +41,7 @@ class Auth extends _$Auth {
         fakeUsers.contains(savedSelectedUser) ? savedSelectedUser : authorizedUsers.lastOrNull;
 
     return AuthState(
-      authenticatedIdentityKeyNames: authorizedUsers.toList(),
+      authenticatedIdentityKeyNames: fakeUsers.toList(),
       currentIdentityKeyName: selectedUser,
     );
   }
@@ -64,9 +64,9 @@ class Auth extends _$Auth {
 }
 
 @riverpod
-String currentUserIdSelector(CurrentUserIdSelectorRef ref) {
+String? currentIdentityKeyNameSelector(CurrentIdentityKeyNameSelectorRef ref) {
   return ref.watch(
-    authProvider.select((state) => state.valueOrNull?.currentIdentityKeyName ?? ''),
+    authProvider.select((state) => state.valueOrNull?.currentIdentityKeyName),
   );
 }
 

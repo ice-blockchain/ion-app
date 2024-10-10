@@ -17,7 +17,7 @@ class FollowUserButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserId = ref.watch(currentUserIdSelectorProvider);
+    final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
     final following = ref.watch(isCurrentUserFollowingSelectorProvider(userId));
     return Button(
       onPressed: () {

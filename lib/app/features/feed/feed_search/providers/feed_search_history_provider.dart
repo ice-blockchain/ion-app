@@ -5,8 +5,8 @@ import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/services/storage/user_preferences_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'feed_search_history_provider.g.dart';
 part 'feed_search_history_provider.freezed.dart';
+part 'feed_search_history_provider.g.dart';
 
 @Freezed(copyWith: true, equal: true)
 class FeedSearchHistoryState with _$FeedSearchHistoryState {
@@ -23,7 +23,7 @@ class FeedSearchHistory extends _$FeedSearchHistory {
 
   @override
   FeedSearchHistoryState build() {
-    final userId = ref.watch(currentUserIdSelectorProvider);
+    final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
     final userPreferencesService = ref.watch(userPreferencesServiceProvider(userId: userId));
 
     final storedUserIds = userPreferencesService.getValue<List<String>>(_userIdsStoreKey) ?? [];
@@ -36,7 +36,7 @@ class FeedSearchHistory extends _$FeedSearchHistory {
     if (!state.userIds.contains(userId)) {
       final newUserIds = [userId, ...state.userIds];
 
-      final currentUserId = ref.read(currentUserIdSelectorProvider);
+      final currentUserId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
       final userPreferencesService =
           ref.read(userPreferencesServiceProvider(userId: currentUserId));
       await userPreferencesService.setValue<List<String>>(_userIdsStoreKey, newUserIds);
@@ -49,7 +49,7 @@ class FeedSearchHistory extends _$FeedSearchHistory {
     if (!state.queries.contains(query)) {
       final newQueries = [query, ...state.queries];
 
-      final currentUserId = ref.read(currentUserIdSelectorProvider);
+      final currentUserId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
       final userPreferencesService =
           ref.read(userPreferencesServiceProvider(userId: currentUserId));
       await userPreferencesService.setValue<List<String>>(_queriesStoreKey, newQueries);
@@ -59,7 +59,7 @@ class FeedSearchHistory extends _$FeedSearchHistory {
   }
 
   Future<void> clear() async {
-    final currentUserId = ref.read(currentUserIdSelectorProvider);
+    final currentUserId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
     final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: currentUserId));
     await Future.wait([
       userPreferencesService.remove(_userIdsStoreKey),

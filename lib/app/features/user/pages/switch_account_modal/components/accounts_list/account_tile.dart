@@ -20,7 +20,7 @@ class AccountsTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserId = ref.watch(currentUserIdSelectorProvider);
+    final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
     final userMetadataValue = ref.watch(userMetadataProvider(userId)).valueOrNull;
     final isCurrentUser = userId == currentUserId;
 
