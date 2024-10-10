@@ -49,9 +49,9 @@ Future<UserDelegation?> userDelegation(UserDelegationRef ref, String pubkey) asy
 
 @riverpod
 AsyncValue<UserDelegation?> currentUserDelegation(CurrentUserDelegationRef ref) {
-  final currentUserId = ref.watch(currentUserIdSelectorProvider);
-  if (currentUserId.isEmpty) {
+  final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
+  if (currentIdentityKeyName == null) {
     return const AsyncData(null);
   }
-  return ref.watch(userDelegationProvider(currentUserId));
+  return ref.watch(userDelegationProvider(currentIdentityKeyName));
 }
