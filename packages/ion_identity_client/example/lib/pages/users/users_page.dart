@@ -3,7 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ion_client_example/pages/login/login_page.dart';
 import 'package:ion_client_example/pages/register/register_page.dart';
+import 'package:ion_client_example/pages/user_details/user_details_page.dart';
 import 'package:ion_client_example/pages/users/providers/users_provider.dart';
+import 'package:ion_client_example/providers/current_username_notifier.dart';
 
 class UsersPage extends ConsumerWidget {
   const UsersPage({super.key});
@@ -80,6 +82,14 @@ class _Body extends ConsumerWidget {
                 for (final user in users)
                   ListTile(
                     title: Text(user),
+                    onTap: () {
+                      ref.read(currentUsernameNotifierProvider.notifier).setUsername(user);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const UserDetailsPage(),
+                        ),
+                      );
+                    },
                   ),
               ],
             ),
