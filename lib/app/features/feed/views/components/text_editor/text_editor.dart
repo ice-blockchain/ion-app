@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/poll_length_time_modal.dart';
 import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 
