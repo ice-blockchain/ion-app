@@ -52,10 +52,10 @@ Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
 }
 
 @riverpod
-AsyncValue<UserMetadata?> currentUserMetadata(CurrentUserMetadataRef ref) {
+Future<UserMetadata?> currentUserMetadata(CurrentUserMetadataRef ref) async {
   final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
   if (currentUserId.isEmpty) {
-    return const AsyncData(null);
+    return null;
   }
-  return ref.watch(userMetadataProvider(currentUserId));
+  return ref.watch(userMetadataProvider(currentUserId).future);
 }
