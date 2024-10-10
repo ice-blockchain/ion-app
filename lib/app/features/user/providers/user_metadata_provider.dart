@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/nostr/constants.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_metadata.dart';
+import 'package:ice/app/features/user/providers/current_user_indexers_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_metadata_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class UserMetadataStorage extends _$UserMetadataStorage {
+class UsersMetadataStorage extends _$UsersMetadataStorage {
   @override
   Map<String, UserMetadata> build() {
     return {};
@@ -31,19 +31,20 @@ class UserMetadataStorage extends _$UserMetadataStorage {
 
 @Riverpod(keepAlive: true)
 Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
-  final userMetadata = ref.watch(userMetadataStorageProvider.select((state) => state[pubkey]));
+  final userMetadata = ref.watch(usersMetadataStorageProvider.select((state) => state[pubkey]));
   if (userMetadata != null) {
     return userMetadata;
   }
 
-  final relay = await ref.read(relaysProvider.notifier).getOrCreate(mainRelay);
+  final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
+  final relay = await ref.read(relayProvider(relayUrl).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [0], authors: [pubkey], limit: 1));
   final events = await requestEvents(requestMessage, relay);
 
   if (events.isNotEmpty) {
     final userMetadata = UserMetadata.fromEventMessage(events.first);
-    ref.read(userMetadataStorageProvider.notifier).store(userMetadata);
+    ref.read(usersMetadataStorageProvider.notifier).store(userMetadata);
     return userMetadata;
   }
 
@@ -51,10 +52,10 @@ Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
 }
 
 @riverpod
-AsyncValue<UserMetadata?> currentUserMetadata(CurrentUserMetadataRef ref) {
+Future<UserMetadata?> currentUserMetadata(CurrentUserMetadataRef ref) async {
   final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
   if (currentUserId.isEmpty) {
-    return const AsyncData(null);
+    return null;
   }
-  return ref.watch(userMetadataProvider(currentUserId));
+  return ref.watch(userMetadataProvider(currentUserId).future);
 }
