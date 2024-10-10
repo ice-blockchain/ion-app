@@ -24,6 +24,8 @@ class TextEditor extends StatelessWidget {
     );
   }
 
+  void _removePoll(Embed node) {}
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,6 +39,7 @@ class TextEditor extends StatelessWidget {
                 onPollLengthPress: () {
                   _showPollLengthTimeModal(context);
                 },
+                onRemovePollPress: _removePoll,
               ),
             ],
             autoFocus: true,
