@@ -63,7 +63,7 @@ class Auth extends _$Auth {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 String? currentIdentityKeyNameSelector(CurrentIdentityKeyNameSelectorRef ref) {
   return ref.watch(
     authProvider.select((state) => state.valueOrNull?.currentIdentityKeyName),

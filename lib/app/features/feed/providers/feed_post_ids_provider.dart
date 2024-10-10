@@ -3,8 +3,8 @@
 import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
-import 'package:ice/app/features/nostr/constants.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
+import 'package:ice/app/features/user/providers/user_indexers_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,7 +18,8 @@ class FeedPostIds extends _$FeedPostIds {
   }
 
   Future<void> fetchPosts() async {
-    final relay = await ref.watch(relayProvider(mainRelay).future);
+    final relayUrl = await ref.read(userIndexerPickerProvider.notifier).getNext();
+    final relay = await ref.read(relayProvider(relayUrl).future);
     final requestMessage = RequestMessage()
       ..addFilter(const RequestFilter(kinds: <int>[1], limit: 20));
     final events = await requestEvents(requestMessage, relay);
