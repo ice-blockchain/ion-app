@@ -13,7 +13,9 @@ part 'camera_provider.g.dart';
 @riverpod
 class CameraControllerNotifier extends _$CameraControllerNotifier {
   CameraController? _cameraController;
-  List<CameraDescription>? _cameras;
+  late List<CameraDescription>? _cameras;
+  CameraDescription? _frontCamera;
+  CameraDescription? _backCamera;
 
   @override
   Future<Raw<CameraController>?> build() async {
@@ -32,17 +34,25 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
 
   Future<Raw<CameraController>?> _initializeCamera() async {
     _cameras = await availableCameras();
-    if (_cameras!.isEmpty) {
-      Logger.log('No available cameras.');
+
+    _backCamera = _cameras!.firstWhere(
+      (camera) => camera.lensDirection == CameraLensDirection.back,
+    );
+
+    _frontCamera = _cameras!.firstWhere(
+      (camera) => camera.lensDirection == CameraLensDirection.front,
+    );
+
+    final initialCamera = _backCamera ?? _frontCamera;
+
+    if (initialCamera == null) {
+      Logger.log('Camera not found');
       return null;
     }
 
-    final camera = _cameras!.first;
-
     _cameraController = CameraController(
-      camera,
-      ResolutionPreset.medium,
-      enableAudio: false,
+      initialCamera,
+      ResolutionPreset.high,
     );
 
     try {
@@ -50,8 +60,7 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       _cameraController?.addListener(ref.notifyListeners);
       return _cameraController;
     } catch (e) {
-      Logger.log('Camera initialization error: $e');
-
+      Logger.log('Error initializing camera: $e');
       _cameraController?.removeListener(ref.notifyListeners);
       await _cameraController?.dispose();
       _cameraController = null;
@@ -107,16 +116,24 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
   }
 
   Future<void> switchCamera() async {
-    if (_cameras == null || _cameras!.length < 2) return;
+    if (_cameraController == null) return;
 
-    final currentIndex = _cameras!.indexOf(_cameraController!.description);
-    final newIndex = (currentIndex + 1) % _cameras!.length;
+    final currentCamera = _cameraController!.description;
+    late CameraDescription newCamera;
+
+    if (currentCamera.lensDirection == CameraLensDirection.back && _frontCamera != null) {
+      newCamera = _frontCamera!;
+    } else if (currentCamera.lensDirection == CameraLensDirection.front && _backCamera != null) {
+      newCamera = _backCamera!;
+    } else {
+      return;
+    }
 
     await pauseCamera();
     state = const AsyncValue.loading();
 
     _cameraController = CameraController(
-      _cameras![newIndex],
+      newCamera,
       ResolutionPreset.medium,
       enableAudio: false,
     );
@@ -126,7 +143,7 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       _cameraController!.addListener(ref.notifyListeners);
       state = AsyncValue.data(_cameraController);
     } catch (e) {
-      Logger.log('Camera switch error: $e');
+      Logger.log('Error switching camera: $e');
       state = AsyncValue.error(e, StackTrace.current);
     }
   }
