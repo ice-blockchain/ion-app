@@ -1,111 +1,101 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:ice/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'auth_provider.g.dart';
 part 'auth_provider.freezed.dart';
+part 'auth_provider.g.dart';
 
 @Freezed(copyWith: true, equal: true)
 class AuthState with _$AuthState {
   const factory AuthState({
-    required List<String> authenticatedUserIds,
-    required String? currentUserId,
+    required List<String> authenticatedIdentityKeyNames,
+    required String? currentIdentityKeyName,
   }) = _AuthState;
   const AuthState._();
 
   bool get hasAuthenticated {
-    return authenticatedUserIds.isNotEmpty;
+    return authenticatedIdentityKeyNames.isNotEmpty;
   }
 }
 
 @Riverpod(keepAlive: true)
 class Auth extends _$Auth {
-  static const String _authenticatedUserIdsKey = 'Auth:authenticatedUserIds';
-  static const String _currentUserIdKey = 'Auth:currentUserId';
-
   @override
-  AsyncValue<AuthState> build() {
-    return const AsyncLoading();
-  }
+  Future<AuthState> build() async {
+    final authorizedUsers = await ref.watch(authenticatedIdentityKeyNamesStreamProvider.future);
+    final savedSelectedUser = await ref.watch(currentIdentityKeyNameStoreProvider.future);
 
-  /// Method to init the auth provider with the stored values.
-  ///
-  /// Using a separate method instead of doing so in the `build` method
-  /// to be able to run it only when some conditions are met:
-  /// e.g. when the local storage is already initialized.
-  Future<void> rehydrate() async {
-    final localStorage = ref.read(localStorageProvider);
-    await Future<void>.delayed(const Duration(seconds: 1));
-    final authenticatedUserIds = localStorage.getStringList(_authenticatedUserIdsKey) ?? [];
-    final storedCurrentUserId = localStorage.getString(_currentUserIdKey);
-    state = AsyncValue.data(
-      AuthState(
-        authenticatedUserIds: authenticatedUserIds,
-        currentUserId: authenticatedUserIds.contains(storedCurrentUserId)
-            ? storedCurrentUserId
-            : authenticatedUserIds.isNotEmpty
-                ? authenticatedUserIds.last
-                : null,
-      ),
-    );
-  }
+    final fakeUsers = authorizedUsers.isEmpty
+        ? <String>[]
+        : [
+            'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
+            '52d119f46298a8f7b08183b96d4e7ab54d6df0853303ad4a3c3941020f286129',
+            '496bf22b76e63553b2cac70c44b53867368b4b7612053a2c78609f3144324807',
+            ...authorizedUsers,
+          ];
 
-  Future<void> signUp({required String keyName}) async {
-    return signIn(keyName: keyName);
-  }
+    final selectedUser =
+        fakeUsers.contains(savedSelectedUser) ? savedSelectedUser : authorizedUsers.lastOrNull;
 
-  Future<void> signIn({required String keyName}) async {
-    state = const AsyncValue.loading();
-
-    final localStorage = ref.read(localStorageProvider);
-    final authenticatedUserIds = [
-      'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
-      '52d119f46298a8f7b08183b96d4e7ab54d6df0853303ad4a3c3941020f286129',
-      '496bf22b76e63553b2cac70c44b53867368b4b7612053a2c78609f3144324807',
-    ];
-    final currentUserId = authenticatedUserIds.first;
-
-    await Future<void>.delayed(const Duration(seconds: 1));
-
-    await Future.wait([
-      localStorage.setStringList(_authenticatedUserIdsKey, authenticatedUserIds),
-      localStorage.setString(_currentUserIdKey, currentUserId),
-    ]);
-
-    state = AsyncData(
-      AuthState(authenticatedUserIds: authenticatedUserIds, currentUserId: currentUserId),
+    return AuthState(
+      authenticatedIdentityKeyNames: authorizedUsers.toList(),
+      currentIdentityKeyName: selectedUser,
     );
   }
 
   Future<void> signOut() async {
     state = const AsyncValue.loading();
 
-    await Future<void>.delayed(const Duration(seconds: 1));
+    final currentUser = state.valueOrNull?.currentIdentityKeyName;
+    if (currentUser == null) return;
 
-    final localStorage = ref.read(localStorageProvider);
-
-    await Future.wait([
-      localStorage.remove(_authenticatedUserIdsKey),
-      localStorage.remove(_currentUserIdKey),
-    ]);
-
-    state = const AsyncData(AuthState(authenticatedUserIds: [], currentUserId: null));
+    final ionClient = await ref.read(ionApiClientProvider.future);
+    await ionClient(username: currentUser).auth.logOut();
   }
 
-  void setCurrentUser(String userId) {
-    final stateValue = state.valueOrNull;
-    if (stateValue == null) return;
-
-    if (stateValue.authenticatedUserIds.contains(userId)) {
-      ref.read(localStorageProvider).setString(_currentUserIdKey, userId);
-      state = AsyncData(stateValue.copyWith(currentUserId: userId));
-    }
+  void setCurrentUser(String identityKeyName) {
+    ref
+        .read(currentIdentityKeyNameStoreProvider.notifier)
+        .setCurrentIdentityKeyName(identityKeyName);
   }
 }
 
 @riverpod
 String currentUserIdSelector(CurrentUserIdSelectorRef ref) {
-  return ref.watch(authProvider.select((state) => state.valueOrNull?.currentUserId)) ?? '';
+  return ref.watch(
+    authProvider.select((state) => state.valueOrNull?.currentIdentityKeyName ?? ''),
+  );
+}
+
+@Riverpod(keepAlive: true)
+Stream<Iterable<String>> authenticatedIdentityKeyNamesStream(
+  AuthenticatedIdentityKeyNamesStreamRef ref,
+) async* {
+  final ionClient = await ref.watch(ionApiClientProvider.future);
+
+  yield* ionClient.authorizedUsers;
+}
+
+@Riverpod(keepAlive: true)
+class CurrentIdentityKeyNameStore extends _$CurrentIdentityKeyNameStore {
+  static const String _currentIdentityKeyNameKey = 'Auth:currentIdentityKeyName';
+
+  @override
+  Future<String?> build() async {
+    // Watch prefs to be sure LocalStorage is initialized
+    await ref.watch(sharedPreferencesProvider.future);
+
+    final localStorage = ref.watch(localStorageProvider);
+
+    return localStorage.getString(_currentIdentityKeyNameKey);
+  }
+
+  Future<void> setCurrentIdentityKeyName(String identityKeyName) async {
+    final localStorage = ref.read(localStorageProvider);
+    await localStorage.setString(_currentIdentityKeyNameKey, identityKeyName);
+    state = AsyncData(identityKeyName);
+  }
 }

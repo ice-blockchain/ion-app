@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ice/app/features/core/providers/env_provider.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
@@ -20,7 +19,6 @@ Future<void> initApp(InitAppRef ref) async {
   await ref.watch(sharedPreferencesProvider.future);
   await Future.wait([
     ref.read(appTemplateProvider.future),
-    ref.read(authProvider.notifier).rehydrate(),
   ]);
 
   ref.watch(relaysProvider.notifier);

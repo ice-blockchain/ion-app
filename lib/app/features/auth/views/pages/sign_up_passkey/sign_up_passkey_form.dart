@@ -7,6 +7,7 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/auth/providers/register_action_notifier.dart';
 import 'package:ice/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
 
@@ -18,7 +19,9 @@ class SignUpPasskeyForm extends HookConsumerWidget {
     final identityKeyNameController = useTextEditingController();
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final formKey = useRef(GlobalKey<FormState>());
+
     final authState = ref.watch(authProvider);
+    final registerActionState = ref.watch(registerActionNotifierProvider);
 
     return Form(
       key: formKey.value,
@@ -27,16 +30,16 @@ class SignUpPasskeyForm extends HookConsumerWidget {
           IdentityKeyNameInput(controller: identityKeyNameController),
           SizedBox(height: 16.0.s),
           Button(
-            disabled: authState.isLoading,
-            trailingIcon:
-                authState.isLoading || (authState.valueOrNull?.hasAuthenticated).falseOrValue
-                    ? const IceLoadingIndicator()
-                    : const SizedBox.shrink(),
+            disabled: registerActionState.isLoading,
+            trailingIcon: registerActionState.isLoading ||
+                    (authState.valueOrNull?.hasAuthenticated).falseOrValue
+                ? const IceLoadingIndicator()
+                : const SizedBox.shrink(),
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
                 hideKeyboardAndCallOnce(
                   callback: () => ref
-                      .read(authProvider.notifier)
+                      .read(registerActionNotifierProvider.notifier)
                       .signUp(keyName: identityKeyNameController.text),
                 );
               }

@@ -124,7 +124,7 @@ class NotificationsRoute extends BaseRouteData {
 class RestoreRecoveryKeysRoute extends BaseRouteData {
   RestoreRecoveryKeysRoute()
       : super(
-          child: const RestoreRecoveryKeysPage(),
+          child: const RecoverUserPage(),
           type: IceRouteType.bottomSheet,
         );
 }

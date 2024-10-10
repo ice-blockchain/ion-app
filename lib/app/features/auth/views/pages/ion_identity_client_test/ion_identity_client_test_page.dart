@@ -7,19 +7,29 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/text_input/text_input.dart';
 import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
+import 'package:ice/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
+import 'package:ice/app/features/protect_account/backup/providers/recover_user_action_notifier.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_client.dart';
 
-class IonIdentityClientTestPage extends StatelessWidget {
+class IonIdentityClientTestPage extends ConsumerWidget {
   const IonIdentityClientTestPage({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ionClient = ref.watch(ionApiClientProvider).valueOrNull;
+    if (ionClient == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return const DefaultTabController(
       length: 6,
       child: Scaffold(
@@ -33,7 +43,7 @@ class IonIdentityClientTestPage extends StatelessWidget {
                   Tab(text: 'Login'),
                   Tab(text: 'Users'),
                   Tab(text: 'Wallets'),
-                  Tab(text: 'Recovery'),
+                  Tab(text: 'Create Recovery Credentials'),
                   Tab(text: 'Recover User'),
                 ],
               ),
@@ -44,7 +54,7 @@ class IonIdentityClientTestPage extends StatelessWidget {
                     _LoginTab(),
                     _UsersTab(),
                     _WalletsTab(),
-                    _RecoveryTab(),
+                    _CreateRecoveryCredsTab(),
                     _RecoverUserTab(),
                   ],
                 ),
@@ -62,7 +72,7 @@ class _RegisterTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
     final usernameController = useTextEditingController(text: 'testauth1@mail.com');
 
     final registerResult = useState<RegisterUserResult?>(null);
@@ -93,7 +103,7 @@ class _LoginTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
     final usernameController = useTextEditingController(text: 'testauth1@mail.com');
 
     final loginResult = useState<LoginUserResult?>(null);
@@ -123,39 +133,42 @@ class _UsersTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
 
-    return StreamBuilder(
-      stream: ionClient.authorizedUsers,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+    final names = ref.watch(authenticatedIdentityKeyNamesStreamProvider);
 
-        final users = snapshot.data!.toList();
+    if (names.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
-        return ListView.separated(
-          itemCount: users.length,
-          separatorBuilder: (_, __) => FeedListSeparator(),
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () => showModalBottomSheet<void>(
-                context: context,
-                builder: (context) => UserWalletsDialog(username: users[index]),
-              ),
-              child: ListItem.textWithIcon(
-                title: Text(users[index]),
-                icon: GestureDetector(
-                  onTap: () {
-                    ionClient(username: users[index]).auth.logOut();
-                  },
-                  child: Assets.svg.iconMenuLogout.icon(),
-                ),
-              ),
-            );
-          },
+    if (names.hasError) {
+      return const Center(
+        child: Text('Error'),
+      );
+    }
+
+    final users = names.requireValue.toList();
+
+    return ListView.separated(
+      itemCount: users.length,
+      separatorBuilder: (_, __) => FeedListSeparator(),
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () => showModalBottomSheet<void>(
+            context: context,
+            builder: (context) => UserWalletsDialog(username: users[index]),
+          ),
+          child: ListItem.textWithIcon(
+            title: Text(users[index]),
+            icon: GestureDetector(
+              onTap: () {
+                ionClient(username: users[index]).auth.logOut();
+              },
+              child: Assets.svg.iconMenuLogout.icon(),
+            ),
+          ),
         );
       },
     );
@@ -172,7 +185,7 @@ class UserWalletsDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
 
     return SheetContent(
       body: FutureBuilder(
@@ -212,7 +225,7 @@ class _WalletsTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final ionClient = ref.watch(ionApiClientProvider).requireValue;
 
     final walletNameController = useTextEditingController.fromValue(
       const TextEditingValue(text: 'My Wallet 1'),
@@ -237,18 +250,16 @@ class _WalletsTab extends HookConsumerWidget {
   }
 }
 
-class _RecoveryTab extends HookConsumerWidget {
-  const _RecoveryTab();
+class _CreateRecoveryCredsTab extends HookConsumerWidget {
+  const _CreateRecoveryCredsTab();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final createRecoveryKeyState = ref.watch(createRecoveryKeyActionNotifierProvider);
 
     final usernameController = useTextEditingController.fromValue(
-      const TextEditingValue(text: 'testauth1@mail.com'),
+      const TextEditingValue(text: 'user'),
     );
-
-    final resultState = useState<CreateRecoveryCredentialsResult?>(null);
 
     return ListView(
       children: [
@@ -257,14 +268,13 @@ class _RecoveryTab extends HookConsumerWidget {
         SizedBox(height: 16.0.s),
         Button(
           label: const Text('Create Recovery Credentials'),
-          onPressed: () async {
-            resultState.value =
-                await ionClient(username: usernameController.text).auth.createRecoveryCredentials();
+          onPressed: () {
+            ref.read(createRecoveryKeyActionNotifierProvider.notifier).createRecoveryCredentials();
           },
         ),
-        if (resultState.value != null) ...[
+        if (createRecoveryKeyState.value != null) ...[
           SizedBox(height: 16.0.s),
-          SelectableText('$resultState'),
+          SelectableText('$createRecoveryKeyState'),
         ],
       ],
     );
@@ -276,15 +286,13 @@ class _RecoverUserTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionClient = ref.watch(ionApiClientProvider);
+    final recoverState = ref.watch(recoverUserActionNotifierProvider);
 
     final usernameController = useTextEditingController.fromValue(
-      const TextEditingValue(text: 'my@mail.com'),
+      const TextEditingValue(text: 'user'),
     );
     final credentialIdController = useTextEditingController();
     final recoveryKeyController = useTextEditingController();
-
-    final resultState = useState<dynamic>(null);
 
     return ListView(
       children: [
@@ -297,14 +305,15 @@ class _RecoverUserTab extends HookConsumerWidget {
         SizedBox(height: 16.0.s),
         Button(
           label: const Text('Recover User'),
-          onPressed: () async {
-            resultState.value = await ionClient(username: usernameController.text).auth.recoverUser(
+          onPressed: () {
+            ref.read(recoverUserActionNotifierProvider.notifier).recoverUser(
+                  username: usernameController.text,
                   credentialId: credentialIdController.text,
                   recoveryKey: recoveryKeyController.text,
                 );
           },
         ),
-        SelectableText('$resultState'),
+        SelectableText('$recoverState'),
       ],
     );
   }

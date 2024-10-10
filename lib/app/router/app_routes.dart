@@ -8,9 +8,9 @@ import 'package:ice/app/features/auth/views/pages/discover_creators/discover_cre
 import 'package:ice/app/features/auth/views/pages/fill_profile/fill_profile.dart';
 import 'package:ice/app/features/auth/views/pages/get_started/get_started.dart';
 import 'package:ice/app/features/auth/views/pages/intro_page/intro_page.dart';
+import 'package:ice/app/features/auth/views/pages/recover_user_page/recover_user_page.dart';
 import 'package:ice/app/features/auth/views/pages/restore_creds/restore_creds.dart';
 import 'package:ice/app/features/auth/views/pages/restore_menu/restore_menu.dart';
-import 'package:ice/app/features/auth/views/pages/restore_recovery_keys/restore_recovery_keys_page.dart';
 import 'package:ice/app/features/auth/views/pages/select_languages/select_languages.dart';
 import 'package:ice/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey.dart';
 import 'package:ice/app/features/auth/views/pages/sign_up_password/sign_up_password.dart';
@@ -54,9 +54,9 @@ import 'package:ice/app/features/protect_account/backup/views/components/errors/
 import 'package:ice/app/features/protect_account/backup/views/components/errors/secure_account_error_alert.dart';
 import 'package:ice/app/features/protect_account/backup/views/pages/backup_options_page.dart';
 import 'package:ice/app/features/protect_account/backup/views/pages/backup_recovery_keys_modal.dart';
-import 'package:ice/app/features/protect_account/backup/views/pages/recovery_keys_input_page.dart';
-import 'package:ice/app/features/protect_account/backup/views/pages/recovery_keys_save_page.dart';
+import 'package:ice/app/features/protect_account/backup/views/pages/create_recover_key_page/create_recovery_key_page.dart';
 import 'package:ice/app/features/protect_account/backup/views/pages/recovery_keys_success_page.dart';
+import 'package:ice/app/features/protect_account/backup/views/pages/validate_recovery_key_page.dart';
 import 'package:ice/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ice/app/features/protect_account/email/views/pages/setup_email/email_setup_page.dart';
 import 'package:ice/app/features/protect_account/phone/models/phone_steps.dart';

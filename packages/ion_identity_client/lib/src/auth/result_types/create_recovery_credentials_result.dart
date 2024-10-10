@@ -3,25 +3,20 @@
 import 'package:ion_identity_client/src/core/network/network_failure.dart';
 import 'package:ion_identity_client/src/signer/types/user_action_signer_result.dart';
 
-abstract class CreateRecoveryCredentialsResult {
+sealed class CreateRecoveryCredentialsResult {
   const CreateRecoveryCredentialsResult();
 }
 
 class CreateRecoveryCredentialsSuccess extends CreateRecoveryCredentialsResult {
   const CreateRecoveryCredentialsSuccess({
-    required this.recoveryName,
-    required this.recoveryId,
+    required this.identityKeyName,
+    required this.recoveryKeyId,
     required this.recoveryCode,
   });
 
-  final String recoveryName;
-  final String recoveryId;
+  final String identityKeyName;
+  final String recoveryKeyId;
   final String recoveryCode;
-
-  @override
-  String toString() {
-    return 'CreateRecoveryCredentialsSuccess(recoveryName: $recoveryName, recoveryId: $recoveryId, recoveryCode: $recoveryCode)';
-  }
 }
 
 sealed class CreateRecoveryCredentialsFailure extends CreateRecoveryCredentialsResult {

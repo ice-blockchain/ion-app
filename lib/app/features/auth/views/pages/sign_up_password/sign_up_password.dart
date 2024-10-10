@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/auth/providers/register_action_notifier.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ice/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ice/app/features/auth/views/components/sign_up_list_item/sign_up_list_item.dart';
@@ -97,8 +97,8 @@ class SignUpPasswordPage extends HookConsumerWidget {
                   if (valid) {
                     hideKeyboardAndCallOnce(
                       callback: () => ref
-                          .read(authProvider.notifier)
-                          .signIn(keyName: identityKeyNameController.text),
+                          .read(registerActionNotifierProvider.notifier)
+                          .signUp(keyName: identityKeyNameController.text),
                     );
                   }
                 } else {

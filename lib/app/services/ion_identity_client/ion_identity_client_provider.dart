@@ -9,7 +9,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'ion_identity_client_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-IonApiClient ionApiClient(IonApiClientRef ref) {
+Future<Raw<IonApiClient>> ionApiClient(IonApiClientRef ref) async {
+  await ref.watch(envProvider.future);
   final envController = ref.watch(envProvider.notifier);
 
   final appId = envController
@@ -21,6 +22,9 @@ IonApiClient ionApiClient(IonApiClientRef ref) {
   );
 
   final ionClient = IonApiClient.createDefault(config: config);
+  await ionClient.init();
+
+  ref.onDispose(ionClient.dispose);
 
   return ionClient;
 }

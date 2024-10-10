@@ -18,12 +18,7 @@ class TokenStorage {
   /// broadcasting token updates.
   TokenStorage({
     required FlutterSecureStorage secureStorage,
-  }) : _secureStorage = secureStorage {
-    _loadTokensFromStorage();
-    _userTokensStreamController.onListen = () {
-      _userTokensStreamController.add(_tokensAsList());
-    };
-  }
+  }) : _secureStorage = secureStorage;
 
   final FlutterSecureStorage _secureStorage;
   final StreamController<List<UserToken>> _userTokensStreamController =
@@ -37,6 +32,13 @@ class TokenStorage {
 
   /// The key used to store the tokens in secure storage.
   static const userTokensKey = 'ion_identity_client_user_tokens_key';
+
+  Future<void> init() async {
+    await _loadTokensFromStorage();
+    _userTokensStreamController.onListen = () {
+      _userTokensStreamController.add(_tokensAsList());
+    };
+  }
 
   /// Retrieves the [UserToken] for the specified [username] from the cache.
   /// Returns `null` if no token is found for the given username.

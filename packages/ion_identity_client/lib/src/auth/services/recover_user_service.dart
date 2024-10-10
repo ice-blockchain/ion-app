@@ -6,7 +6,6 @@ import 'package:cryptography/cryptography.dart' as cryptography;
 import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/data_sources/recover_user_data_source.dart';
-import 'package:ion_identity_client/src/auth/result_types/recover_user_result.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
 import 'package:ion_identity_client/src/signer/extensions/passkey_signer_extentions.dart';
