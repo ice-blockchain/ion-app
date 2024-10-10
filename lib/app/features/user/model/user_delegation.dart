@@ -14,14 +14,53 @@ class UserDelegation with _$UserDelegation {
     required Map<String, UserDelegate> delegates,
   }) = _UserDelegation;
 
+  const UserDelegation._();
+
   factory UserDelegation.fromEventMessage(EventMessage eventMessage) {
-    //TODO:implement
-    // final foo = eventMessage.tags
+    final delegates = eventMessage.tags.fold(<String, UserDelegate>{}, (delegates, tag) {
+      if (tag[0] != 'p') {
+        return delegates;
+      }
+
+      /// "p", <pubkey>, <main relay URL>, <attestation string>
+      final [_, pubkey, relay, attestationString] = tag;
+
+      /// `inactive` and `revoked` attestations invalidate all previous `active` attestations,
+      /// and subsequent `active` attestations are considered invalid as well
+      if (delegates[pubkey]?.status == DelegationStatus.inactive ||
+          delegates[pubkey]?.status == DelegationStatus.revoked) {
+        return delegates;
+      }
+
+      /// active:<timestamp>:<kinds comma separated list, optional>
+      final attestation = attestationString.split(':');
+      final statusName = attestation[0];
+      final timestamp = attestation[1];
+      final kindsString = (attestation.length > 2) ? attestation[2] : null;
+
+      final status = DelegationStatus.values.byName(statusName);
+      final time = DateTime.fromMicrosecondsSinceEpoch(int.parse(timestamp));
+      final kinds = kindsString?.split(',').map(int.parse).toList();
+
+      delegates[pubkey] = UserDelegate(pubkey: pubkey, status: status, time: time, kinds: kinds);
+
+      return delegates;
+    });
 
     return UserDelegation(
       pubkey: eventMessage.pubkey,
-      delegates: {},
+      delegates: delegates,
     );
+  }
+
+  bool validate(EventMessage message) {
+    final delegate = delegates[message.pubkey];
+    if (delegate != null) {
+      final kinds = delegate.kinds;
+      return delegate.status == DelegationStatus.active &&
+          (kinds == null || kinds.contains(message.kind));
+    }
+    return false;
   }
 }
 
@@ -29,8 +68,8 @@ class UserDelegation with _$UserDelegation {
 class UserDelegate with _$UserDelegate {
   const factory UserDelegate({
     required String pubkey,
-    required DateTime timestamp,
+    required DateTime time,
     required DelegationStatus status,
-    List<String>? kinds,
+    List<int>? kinds,
   }) = _UserDelegate;
 }
