@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_add_answer_button/poll_add_answer_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_answers_list_view/poll_answers_list_view.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_close_button/poll_close_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_length_button/poll_length_button.dart';
 
@@ -20,6 +21,7 @@ class TextEditorPollEmbed extends CustomBlockEmbed {
 ///
 /// Embed builder for [TextEditorPollBuilder].
 ///
+
 class TextEditorPollBuilder extends EmbedBuilder {
   TextEditorPollBuilder({this.onPollLengthPress, this.onRemovePollPress});
   final VoidCallback? onPollLengthPress;
@@ -57,22 +59,7 @@ class TextEditorPollBuilder extends EmbedBuilder {
                   child: Column(
                     children: [
                       SizedBox(height: 10.0.s),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        separatorBuilder: (BuildContext context, int index) =>
-                            SizedBox(height: 10.0.s),
-                        itemCount: 3,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            height: 36.0.s,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: context.theme.appColors.onSecondaryBackground,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          );
-                        },
-                      ),
+                      const PollAnswersListView(),
                       PollAddAnswerButton(
                         onAddAnswerPress: () {},
                       ),
