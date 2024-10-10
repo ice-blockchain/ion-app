@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion_client_example/pages/wallet_assets/providers/wallet_assets_provider.dart';
 
 class WalletAssetsPage extends HookConsumerWidget {
   const WalletAssetsPage({
@@ -29,43 +30,44 @@ class _Body extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Implement wallet assets provider
-    // final assetsResult = ref.watch(walletAssetsProvider(walletId));
+    final assetsResult = ref.watch(walletAssetsProvider(walletId));
 
-    // Stub implementation
-    return Center(
-      child: Text('Wallet Assets for wallet ID: $walletId'),
+    final child = assetsResult.when(
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stack) => Center(
+        child: Text(error.toString()),
+      ),
+      data: (assets) {
+        return assets.when(
+          success: (walletAssets) => ListView.builder(
+            itemCount: walletAssets.assets.length,
+            itemBuilder: (context, index) {
+              final asset = walletAssets.assets[index];
+              return ListTile(
+                title: Text('symbol: ${asset.symbol}'),
+                subtitle: Text('balance: ${asset.balance}'),
+              );
+            },
+          ),
+          failure: (error) => Center(
+            child: Text(error.toString()),
+          ),
+        );
+      },
     );
 
-    // TODO: Implement proper UI with loading, error, and success states
-    // if (assetsResult.isLoading) {
-    //   return const Center(child: CircularProgressIndicator());
-    // }
-
-    // if (assetsResult.hasError) {
-    //   return Center(
-    //     child: SelectableText.rich(
-    //       TextSpan(
-    //         text: 'Error: ',
-    //         style: TextStyle(color: Colors.red),
-    //         children: [
-    //           TextSpan(text: assetsResult.error.toString()),
-    //         ],
-    //       ),
-    //     ),
-    //   );
-    // }
-
-    // final assets = assetsResult.requireValue;
-    // return ListView.builder(
-    //   itemCount: assets.length,
-    //   itemBuilder: (context, index) {
-    //     final asset = assets[index];
-    //     return ListTile(
-    //       title: Text(asset.name),
-    //       subtitle: Text('Balance: ${asset.balance}'),
-    //     );
-    //   },
-    // );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ListTile(
+          title: Text('Wallet Assets for wallet ID: $walletId'),
+        ),
+        Expanded(
+          child: child,
+        ),
+      ],
+    );
   }
 }
