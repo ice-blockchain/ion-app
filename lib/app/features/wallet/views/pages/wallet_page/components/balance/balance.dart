@@ -52,7 +52,7 @@ class Balance extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () {
-                    final userId = ref.read(currentUserIdSelectorProvider);
+                    final userId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
                     ref
                         .read(walletUserPreferencesNotifierProvider(userId: userId).notifier)
                         .switchBalanceVisibility();

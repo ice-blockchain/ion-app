@@ -56,7 +56,7 @@ class FeedSearchFilter extends _$FeedSearchFilter {
   }
 
   void _saveState(FeedSearchFiltersState state) {
-    final userId = ref.read(currentUserIdSelectorProvider);
+    final userId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
     ref.read(userPreferencesServiceProvider(userId: userId))
       ..setEnum(_feedSearchPeopleFilterKey, state.people)
       ..setValue<List<String>>(
@@ -66,7 +66,7 @@ class FeedSearchFilter extends _$FeedSearchFilter {
   }
 
   FeedSearchFiltersState _loadSavedState() {
-    final userId = ref.watch(currentUserIdSelectorProvider);
+    final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
     final userPreferencesService = ref.watch(userPreferencesServiceProvider(userId: userId));
 
     final people =

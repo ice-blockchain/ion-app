@@ -23,7 +23,7 @@ class DiscoverCreators extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loginActionState = ref.watch(loginActionNotifierProvider);
-    final currentUserId = ref.watch(currentUserIdSelectorProvider);
+    final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
     final followingIds = ref.watch(userFollowingProvider(currentUserId));
     final creatorIds = [
       'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
