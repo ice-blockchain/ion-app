@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';

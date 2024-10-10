@@ -12,3 +12,4 @@ analyzer:
     - custom_lint
   exclude:
     - '**/*.g.dart'
+    - 'example/**'
