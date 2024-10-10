@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_metadata_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class UserMetadataStorage extends _$UserMetadataStorage {
+class UsersMetadataStorage extends _$UsersMetadataStorage {
   @override
   Map<String, UserMetadata> build() {
     return {};
@@ -31,7 +31,7 @@ class UserMetadataStorage extends _$UserMetadataStorage {
 
 @Riverpod(keepAlive: true)
 Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
-  final userMetadata = ref.watch(userMetadataStorageProvider.select((state) => state[pubkey]));
+  final userMetadata = ref.watch(usersMetadataStorageProvider.select((state) => state[pubkey]));
   if (userMetadata != null) {
     return userMetadata;
   }
@@ -44,7 +44,7 @@ Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
 
   if (events.isNotEmpty) {
     final userMetadata = UserMetadata.fromEventMessage(events.first);
-    ref.read(userMetadataStorageProvider.notifier).store(userMetadata);
+    ref.read(usersMetadataStorageProvider.notifier).store(userMetadata);
     return userMetadata;
   }
 
