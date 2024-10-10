@@ -8,8 +8,8 @@ part 'current_user_identity_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<UserIdentity?> currentUserIdentity(CurrentUserIdentityRef ref) async {
-  final currentUserId = ref.watch(currentUserIdSelectorProvider);
-  if (currentUserId.isNotEmpty) {
+  final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
+  if (currentIdentityKeyName != null) {
     //TODO: Add indentity.io `getUser` request here
     await Future<void>.delayed(const Duration(seconds: 1));
     return const UserIdentity(
