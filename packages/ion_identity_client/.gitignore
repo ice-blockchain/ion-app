@@ -29,3 +29,4 @@ migrate_working_dir/
 build/
 
 !lib/src/**/*.g.dart
+!lib/src/**/*.freezed.dart

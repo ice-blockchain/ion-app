@@ -53,3 +53,6 @@ fastlane/keys
 
 # Ruby
 /vendor/bundle/
+
+# Third-party tools
+.cursorrules
