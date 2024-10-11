@@ -23,7 +23,12 @@ class UserMetadata with _$UserMetadata {
     @Default(false) bool nft,
   }) = _UserMetadata;
 
+  /// https://github.com/nostr-protocol/nips/blob/master/01.md#kinds
   factory UserMetadata.fromEventMessage(EventMessage eventMessage) {
+    if (eventMessage.kind != kind) {
+      throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
+    }
+
     final userDataContent = UserDataEventMessageContent.fromJson(
       json.decode(eventMessage.content) as Map<String, dynamic>,
     );
@@ -39,6 +44,8 @@ class UserMetadata with _$UserMetadata {
       bot: userDataContent.bot ?? false,
     );
   }
+
+  static const int kind = 0;
 }
 
 @JsonSerializable(createToJson: true)

@@ -39,7 +39,7 @@ Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
   final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
   final relay = await ref.read(relayProvider(relayUrl).future);
   final requestMessage = RequestMessage()
-    ..addFilter(RequestFilter(kinds: const [0], authors: [pubkey], limit: 1));
+    ..addFilter(RequestFilter(kinds: const [UserMetadata.kind], authors: [pubkey], limit: 1));
   final events = await requestEvents(requestMessage, relay);
 
   if (events.isNotEmpty) {

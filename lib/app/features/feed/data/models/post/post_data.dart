@@ -18,13 +18,15 @@ class PostData {
     required this.content,
   });
 
+  factory PostData.fromEventMessage(EventMessage eventMessage) = _PostDataFromEvent;
+
   PostData.fromRawContent({
     required this.id,
     required this.pubkey,
     required String rawContent,
   }) : content = TextParser(matchers: [const UrlMatcher()]).parse(rawContent);
 
-  factory PostData.fromEventMessage(EventMessage eventMessage) = _PostDataFromEvent;
+  static const kind = 1;
 
   final String id;
 

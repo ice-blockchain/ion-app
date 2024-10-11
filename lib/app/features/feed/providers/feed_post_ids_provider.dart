@@ -21,7 +21,7 @@ class FeedPostIds extends _$FeedPostIds {
     final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
     final relay = await ref.read(relayProvider(relayUrl).future);
     final requestMessage = RequestMessage()
-      ..addFilter(const RequestFilter(kinds: <int>[1], limit: 20));
+      ..addFilter(const RequestFilter(kinds: [PostData.kind], limit: 20));
     final events = await requestEvents(requestMessage, relay);
 
     final posts = events.map(PostData.fromEventMessage).toList();

@@ -16,7 +16,12 @@ class UserDelegation with _$UserDelegation {
 
   const UserDelegation._();
 
+  /// https://github.com/nostr-protocol/nips/pull/1482/files
   factory UserDelegation.fromEventMessage(EventMessage eventMessage) {
+    if (eventMessage.kind != kind) {
+      throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
+    }
+
     final delegates = eventMessage.tags.fold(<String, UserDelegate>{}, (delegates, tag) {
       if (tag[0] != 'p') {
         return delegates;
@@ -62,6 +67,8 @@ class UserDelegation with _$UserDelegation {
     }
     return false;
   }
+
+  static const int kind = 10100;
 }
 
 @Freezed(copyWith: true, equal: true)
