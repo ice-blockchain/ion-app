@@ -29,6 +29,7 @@ class LoginForm extends HookConsumerWidget {
       child: Column(
         children: [
           IdentityKeyNameInput(
+            errorText: loginActionState.error?.toString(),
             controller: identityKeyNameController,
             scrollPadding: EdgeInsets.only(bottom: 190.0.s),
           ),

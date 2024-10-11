@@ -14,10 +14,11 @@ import 'package:ice/generated/assets.gen.dart';
 class IdentityKeyNameInput extends HookWidget {
   const IdentityKeyNameInput({
     this.textInputAction = TextInputAction.done,
-    super.key,
     this.controller,
     this.scrollPadding,
     this.notShowInfoIcon = false,
+    this.errorText,
+    super.key,
   });
 
   final TextEditingController? controller;
@@ -26,6 +27,8 @@ class IdentityKeyNameInput extends HookWidget {
 
   final EdgeInsets? scrollPadding;
   final bool notShowInfoIcon;
+
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +70,7 @@ class IdentityKeyNameInput extends HookWidget {
       },
       textInputAction: textInputAction,
       scrollPadding: scrollPadding ?? EdgeInsets.only(bottom: 100.0.s),
+      errorText: errorText,
     );
   }
 }

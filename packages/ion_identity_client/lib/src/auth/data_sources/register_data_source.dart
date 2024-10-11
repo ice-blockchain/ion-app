@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:dio/dio.dart';
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/auth/result_types/register_user_result.dart';
 import 'package:ion_identity_client/src/core/network/network.dart';
@@ -29,8 +30,9 @@ class RegisterDataSource {
         )
         .mapLeft(
           (l) => switch (l) {
-            ResponseFormatNetworkFailure() => UserAlreadyExistsRegisterUserFailure(),
-            _ => const UnknownRegisterUserFailure(),
+            RequestExecutionNetworkFailure(:final error) =>
+              _handleRequestExecutionNetworkFailure(error),
+            _ => UnknownRegisterUserFailure(l),
           },
         );
   }
@@ -39,19 +41,30 @@ class RegisterDataSource {
     required Fido2Attestation attestation,
     required String temporaryAuthenticationToken,
   }) {
-    return networkClient.post(
-      registerCompletePath,
-      data: SignedChallenge(firstFactorCredential: attestation).toJson(),
-      decoder: RegistrationCompleteResponse.fromJson,
-      headers: {
-        ...RequestHeaders.getAuthorizationHeader(token: temporaryAuthenticationToken),
-      },
-    ).mapLeft(
-      // TODO: find a complete list of user registration failures
-      (l) => switch (l) {
-        ResponseFormatNetworkFailure() => UserAlreadyExistsRegisterUserFailure(),
-        _ => const UnknownRegisterUserFailure(),
-      },
-    );
+    return networkClient
+        .post(
+          registerCompletePath,
+          data: SignedChallenge(firstFactorCredential: attestation).toJson(),
+          decoder: RegistrationCompleteResponse.fromJson,
+          headers: RequestHeaders.getAuthorizationHeader(token: temporaryAuthenticationToken),
+        )
+        .mapLeft(
+          (l) => switch (l) {
+            RequestExecutionNetworkFailure(:final error) =>
+              _handleRequestExecutionNetworkFailure(error),
+            _ => UnknownRegisterUserFailure(l),
+          },
+        );
+  }
+
+  RegisterUserFailure _handleRequestExecutionNetworkFailure(Object error) {
+    switch (error) {
+      case DioException(:final response) when response?.statusCode == 400:
+        return RegistrationCodeExpiredRegisterUserFailure();
+      case DioException(:final response) when response?.statusCode == 401:
+        return UserAlreadyExistsRegisterUserFailure();
+      default:
+        return const UnknownRegisterUserFailure();
+    }
   }
 }

@@ -27,7 +27,10 @@ class SignUpPasskeyForm extends HookConsumerWidget {
       key: formKey.value,
       child: Column(
         children: [
-          IdentityKeyNameInput(controller: identityKeyNameController),
+          IdentityKeyNameInput(
+            errorText: registerActionState.error?.toString(),
+            controller: identityKeyNameController,
+          ),
           SizedBox(height: 16.0.s),
           Button(
             disabled: registerActionState.isLoading,

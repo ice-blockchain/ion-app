@@ -12,6 +12,9 @@ sealed class LoginUserFailure extends LoginUserResult {
 
 final class PasskeyNotAvailableLoginUserFailure extends LoginUserFailure {
   const PasskeyNotAvailableLoginUserFailure();
+
+  @override
+  String toString() => 'Passkey not available';
 }
 
 final class PasskeyValidationLoginUserFailure extends LoginUserFailure {
@@ -24,7 +27,28 @@ final class PasskeyValidationLoginUserFailure extends LoginUserFailure {
   final StackTrace? stackTrace;
 
   @override
-  String toString() => 'PasskeyValidationLoginUserFailure(error: $error, stackTrace: $stackTrace)';
+  String toString() => 'Passkey validation failed: $error';
+}
+
+final class InvalidCodeLoginUserFailure extends LoginUserFailure {
+  const InvalidCodeLoginUserFailure();
+
+  @override
+  String toString() => 'Invalid code';
+}
+
+final class NoCredentialsLoginUserFailure extends LoginUserFailure {
+  const NoCredentialsLoginUserFailure();
+
+  @override
+  String toString() => 'No credentials found for this user';
+}
+
+final class AccountDeactivatedLoginUserFailure extends LoginUserFailure {
+  const AccountDeactivatedLoginUserFailure();
+
+  @override
+  String toString() => 'Account has been deactivated';
 }
 
 final class UnknownLoginUserFailure extends LoginUserFailure {

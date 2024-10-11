@@ -10,10 +10,21 @@ sealed class RegisterUserFailure extends RegisterUserResult {
   const RegisterUserFailure();
 }
 
-final class UserAlreadyExistsRegisterUserFailure extends RegisterUserFailure {}
+final class UserAlreadyExistsRegisterUserFailure extends RegisterUserFailure {
+  @override
+  String toString() => 'User already exists';
+}
+
+final class RegistrationCodeExpiredRegisterUserFailure extends RegisterUserFailure {
+  @override
+  String toString() => 'Registration code expired';
+}
 
 final class PasskeyNotAvailableRegisterUserFailure extends RegisterUserFailure {
   const PasskeyNotAvailableRegisterUserFailure();
+
+  @override
+  String toString() => 'Passkey not available';
 }
 
 final class PasskeyValidationRegisterUserFailure extends RegisterUserFailure {
@@ -26,8 +37,7 @@ final class PasskeyValidationRegisterUserFailure extends RegisterUserFailure {
   final StackTrace? stackTrace;
 
   @override
-  String toString() =>
-      'PasskeyValidationRegisterUserFailure(error: $error, stackTrace: $stackTrace)';
+  String toString() => 'Passkey validation failed: $error';
 }
 
 final class UnknownRegisterUserFailure extends RegisterUserFailure {
@@ -40,5 +50,5 @@ final class UnknownRegisterUserFailure extends RegisterUserFailure {
   final StackTrace? stackTrace;
 
   @override
-  String toString() => 'UnknownRegisterUserFailure(error: $error, stackTrace: $stackTrace)';
+  String toString() => 'Unknown error: $error';
 }
