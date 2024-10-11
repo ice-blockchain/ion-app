@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
@@ -21,15 +22,22 @@ class StoryCameraWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cameraControllerAsync = ref.watch(cameraControllerNotifierProvider);
     final storyCameraState = ref.watch(storyCameraControllerProvider);
-    final storyCameraNotifier = ref.read(storyCameraControllerProvider.notifier);
+    final storyCameraNotifier = ref.watch(storyCameraControllerProvider.notifier);
 
     final (recordingDuration, recordingProgress) = useRecordingController(
       ref,
       isRecording: storyCameraState.isRecording,
     );
 
-    Future<void> startRecording() async => storyCameraNotifier.startVideoRecording();
-    Future<void> stopRecording() async => storyCameraNotifier.stopVideoRecording();
+    final startRecording = useCallback(
+      () async => storyCameraNotifier.startVideoRecording(),
+      [storyCameraNotifier],
+    );
+
+    final stopRecording = useCallback(
+      () async => storyCameraNotifier.stopVideoRecording(),
+      [storyCameraNotifier],
+    );
 
     return Scaffold(
       backgroundColor: context.theme.appColors.primaryText,
