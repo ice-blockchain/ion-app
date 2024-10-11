@@ -13,6 +13,8 @@ import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/data_sources/get_wallet_assets_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
 
 class ClientsServiceLocator with _IonClient, _AuthClient, _WalletsClient, _UserActionSigner {
   factory ClientsServiceLocator() {
@@ -175,12 +177,14 @@ mixin _WalletsClient {
   }) {
     return IonWallets(
       username: username,
-      config: config,
-      signer: signer,
       dataSource: createWalletsDataSource(config: config),
       userActionSigner: ClientsServiceLocator().createUserActionSigner(
         config: config,
         signer: signer,
+      ),
+      getWalletAssetsService: createGetWalletAssetsService(
+        username: username,
+        config: config,
       ),
     );
   }
@@ -194,6 +198,25 @@ mixin _WalletsClient {
       config: config,
       networkClient: networkClient,
       tokenStorage: IonServiceLocator.getTokenStorage(),
+    );
+  }
+
+  GetWalletAssetsService createGetWalletAssetsService({
+    required String username,
+    required IonClientConfig config,
+  }) {
+    return GetWalletAssetsService(
+      username,
+      createGetWalletAssetsDataSource(config: config),
+    );
+  }
+
+  GetWalletAssetsDataSource createGetWalletAssetsDataSource({
+    required IonClientConfig config,
+  }) {
+    return GetWalletAssetsDataSource(
+      IonServiceLocator.getNetworkClient(config: config),
+      IonServiceLocator.getTokenStorage(),
     );
   }
 }
