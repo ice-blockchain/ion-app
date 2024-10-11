@@ -1,10 +1,10 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ice/app/extensions/extensions.dart';
 
 class InnerCaptureCircle extends StatelessWidget {
-  const InnerCaptureCircle({
-    super.key,
-  });
+  const InnerCaptureCircle({super.key});
 
   @override
   Widget build(BuildContext context) {

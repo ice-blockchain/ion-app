@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,7 +14,7 @@ class IdleCameraPreview extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyCameraNotifier = ref.read(storyCameraNotifierProvider.notifier);
+    final storyCameraNotifier = ref.read(storyCameraControllerProvider.notifier);
 
     return Stack(
       children: [
@@ -40,6 +42,7 @@ class IdleCameraPreview extends ConsumerWidget {
             onPressed: () => ref.read(cameraControllerNotifierProvider.notifier).switchCamera(),
           ),
         ),
+        // TODO: Implement the open gallery button
         Positioned(
           bottom: 30.0.s,
           left: 16.0.s,

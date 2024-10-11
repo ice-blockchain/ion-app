@@ -1,8 +1,10 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/create_story/views/components/circular_recording_indicator.dart';
 import 'package:ice/app/features/feed/create_story/views/components/inner_capture_circle.dart';
-import 'package:ice/app/features/feed/create_story/views/components/recording_progress_indicator.dart';
 
 class CaptureButton extends StatelessWidget {
   const CaptureButton({
@@ -39,7 +41,7 @@ class CaptureButton extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             if (isRecording)
-              RecordingProgressIndicator(
+              CircularRecordingIndicator(
                 progress: recordingProgress,
               ),
             const InnerCaptureCircle(),

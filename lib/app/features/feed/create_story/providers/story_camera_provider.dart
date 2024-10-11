@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'dart:async';
 
 import 'package:camera/camera.dart';
@@ -9,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'story_camera_provider.g.dart';
 
 @riverpod
-class StoryCameraNotifier extends _$StoryCameraNotifier {
+class StoryCameraController extends _$StoryCameraController {
   @override
   StoryCameraState build() => const StoryCameraState();
 
@@ -28,9 +30,7 @@ class StoryCameraNotifier extends _$StoryCameraNotifier {
         await ref.read(mediaServiceProvider).saveVideoToGallery(video.path);
       }
 
-      state = state.copyWith(
-        isRecording: false,
-      );
+      state = state.copyWith(isRecording: false);
     }
   }
 
