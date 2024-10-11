@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
@@ -22,21 +21,10 @@ class StoryCameraWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cameraControllerAsync = ref.watch(cameraControllerNotifierProvider);
     final storyCameraState = ref.watch(storyCameraControllerProvider);
-    final storyCameraNotifier = ref.watch(storyCameraControllerProvider.notifier);
 
     final (recordingDuration, recordingProgress) = useRecordingController(
       ref,
       isRecording: storyCameraState.isRecording,
-    );
-
-    final startRecording = useCallback(
-      () async => storyCameraNotifier.startVideoRecording(),
-      [storyCameraNotifier],
-    );
-
-    final stopRecording = useCallback(
-      () async => storyCameraNotifier.stopVideoRecording(),
-      [storyCameraNotifier],
     );
 
     return Scaffold(
@@ -62,8 +50,10 @@ class StoryCameraWidget extends HookConsumerWidget {
                 child: CaptureButton(
                   isRecording: storyCameraState.isRecording,
                   recordingProgress: recordingProgress,
-                  onRecordingStart: startRecording,
-                  onRecordingStop: stopRecording,
+                  onRecordingStart: () async =>
+                      ref.read(storyCameraControllerProvider.notifier).startVideoRecording(),
+                  onRecordingStop: () async =>
+                      ref.read(storyCameraControllerProvider.notifier).stopVideoRecording(),
                 ),
               ),
             ),
