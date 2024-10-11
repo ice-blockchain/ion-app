@@ -180,6 +180,26 @@ class MediaService {
 
     return Uint8List.fromList(img.encodePng(resizedImage));
   }
+
+  Future<MediaFile?> _saveCameraVideo(File videoFile) async {
+    final asset = await PhotoManager.editor.saveVideo(
+      videoFile,
+      title: 'Camera_${DateTime.now().millisecondsSinceEpoch}',
+    );
+
+    if (asset == null) return null;
+
+    final file = await asset.file;
+
+    if (file == null) return null;
+
+    return MediaFile(
+      path: asset.id,
+      mimeType: asset.mimeType,
+    );
+  }
+
+  Future<void> saveVideoToGallery(String videoPath) async => _saveCameraVideo(File(videoPath));
 }
 
 @riverpod

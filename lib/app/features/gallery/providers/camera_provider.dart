@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:ui';
-
 import 'package:camera/camera.dart';
+import 'package:collection/collection.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ice/app/services/logger/logger.dart';
@@ -13,6 +12,9 @@ part 'camera_provider.g.dart';
 @riverpod
 class CameraControllerNotifier extends _$CameraControllerNotifier {
   CameraController? _cameraController;
+  List<CameraDescription>? _cameras;
+  CameraDescription? _frontCamera;
+  CameraDescription? _backCamera;
 
   @override
   Future<Raw<CameraController>?> build() async {
@@ -30,18 +32,30 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
   }
 
   Future<Raw<CameraController>?> _initializeCamera() async {
-    final cameras = await availableCameras();
-    if (cameras.isEmpty) {
-      Logger.log('No available cameras.');
+    _cameras = await availableCameras();
+
+    _backCamera = _cameras?.firstWhereOrNull(
+      (camera) => camera.lensDirection == CameraLensDirection.back,
+    );
+
+    _frontCamera = _cameras?.firstWhereOrNull(
+      (camera) => camera.lensDirection == CameraLensDirection.front,
+    );
+
+    final initialCamera = _backCamera ?? _frontCamera;
+
+    if (initialCamera == null) {
+      Logger.log('Camera not found');
       return null;
     }
 
-    final camera = cameras.first;
+    return _createCameraController(initialCamera);
+  }
 
+  Future<Raw<CameraController>?> _createCameraController(CameraDescription camera) async {
     _cameraController = CameraController(
       camera,
-      ResolutionPreset.medium,
-      enableAudio: false,
+      ResolutionPreset.high,
     );
 
     try {
@@ -74,14 +88,11 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       return false;
     }
 
-    if (_cameraController == null) {
-      state = const AsyncValue.loading();
-      state = await AsyncValue.guard(() async {
-        return _initializeCamera();
-      });
-      return state.value != null;
-    }
-    return true;
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      return _initializeCamera();
+    });
+    return state.value != null;
   }
 
   Future<bool> handlePermissionChange({required bool hasPermission}) async {
@@ -93,15 +104,54 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
     }
   }
 
-  Future<void> handleCameraLifecycleState(AppLifecycleState state) async {
-    final hasPermission = ref.read(hasPermissionProvider(Permission.camera));
+  Future<void> switchCamera() async {
+    if (_cameraController == null) return;
 
-    if (state == AppLifecycleState.resumed && hasPermission) {
-      await resumeCamera();
-    } else if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused ||
-        state == AppLifecycleState.hidden) {
-      await pauseCamera();
+    final currentCamera = _cameraController!.description;
+    final newCamera =
+        currentCamera.lensDirection == CameraLensDirection.back ? _frontCamera : _backCamera;
+
+    if (newCamera == null) return;
+
+    await pauseCamera();
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      return _createCameraController(newCamera);
+    });
+  }
+
+  Future<void> setFlashMode(FlashMode mode) async {
+    if (_cameraController?.value.isInitialized ?? false) {
+      try {
+        await _cameraController?.setFlashMode(mode);
+        ref.notifyListeners();
+      } catch (e) {
+        Logger.log('Error setting flash mode: $e');
+      }
     }
+  }
+
+  Future<void> startVideoRecording() async {
+    if (_cameraController?.value.isInitialized ?? false) {
+      try {
+        await _cameraController?.startVideoRecording();
+        ref.notifyListeners();
+      } catch (e) {
+        Logger.log('Error starting video recording: $e');
+      }
+    }
+  }
+
+  Future<XFile?> stopVideoRecording() async {
+    if (_cameraController?.value.isRecordingVideo ?? false) {
+      try {
+        final file = await _cameraController?.stopVideoRecording();
+        ref.notifyListeners();
+        return file;
+      } catch (e) {
+        Logger.log('Error stopping video recording: $e');
+      }
+    }
+    return null;
   }
 }

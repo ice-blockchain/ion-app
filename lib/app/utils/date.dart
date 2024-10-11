@@ -50,3 +50,21 @@ String toTimeDisplayValue(int timestamp) {
   final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
   return DateFormat('HH:mm').format(date);
 }
+
+/// Formats a duration into a string in the format 'mm:ss'.
+///
+/// This method takes a Duration object and formats it into a string showing
+/// only the minutes and seconds of the duration.
+///
+/// Parameters:
+///  - `duration`: The Duration object that will be converted into a time string.
+///
+/// Returns: A string representing the duration in 'mm:ss' format.
+String formatDuration(Duration duration) {
+  String twoDigits(int n) => n.toString().padLeft(2, '0');
+
+  final minutes = twoDigits(duration.inMinutes.remainder(60));
+  final seconds = twoDigits(duration.inSeconds.remainder(60));
+
+  return '$minutes:$seconds';
+}

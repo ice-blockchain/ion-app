@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ice/app/features/core/permissions/views/components/permission_aware_widget.dart';
+import 'package:ice/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ice/app/features/feed/views/pages/feed_main_modal/components/feed_modal_item.dart';
 import 'package:ice/app/features/wallet/model/feed_type.dart';
 import 'package:ice/app/router/app_routes.dart';
@@ -32,6 +35,20 @@ class FeedMainModalPage extends StatelessWidget {
             itemCount: feedTypeValues.length,
             itemBuilder: (BuildContext context, int index) {
               final type = feedTypeValues[index];
+
+              if (type == FeedType.story) {
+                return PermissionAwareWidget(
+                  permissionType: Permission.camera,
+                  builder: (_, onPressed) => FeedModalItem(
+                    feedType: type,
+                    onTap: onPressed,
+                  ),
+                  onGranted: () => StoryCameraRoute().push<void>(context),
+                  requestDialog: PermissionRequestSheet.fromType(context, Permission.camera),
+                  settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
+                );
+              }
+
               return FeedModalItem(
                 feedType: type,
                 onTap: () {
@@ -49,15 +66,11 @@ class FeedMainModalPage extends StatelessWidget {
   }
 
   String _getCreateFlowRouteLocation(FeedType type) {
-    switch (type) {
-      case FeedType.post:
-        return CreatePostRoute().location;
-      case FeedType.story:
-        return CreateStoryRoute().location;
-      case FeedType.video:
-        return CreateVideoRoute().location;
-      case FeedType.article:
-        return CreateArticleRoute().location;
-    }
+    return switch (type) {
+      FeedType.post => CreatePostRoute().location,
+      FeedType.video => CreateVideoRoute().location,
+      FeedType.article => CreateArticleRoute().location,
+      _ => throw UnimplementedError(),
+    };
   }
 }
