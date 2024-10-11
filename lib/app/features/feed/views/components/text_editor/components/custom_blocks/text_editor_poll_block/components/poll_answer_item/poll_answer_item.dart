@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ice/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/providers/poll/poll_answers_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -18,9 +19,14 @@ class PollAnswerItem extends HookConsumerWidget {
     final textThemes = context.theme.appTextThemes;
 
     final inputContainerKey = useRef(UniqueKey());
+    final focusNode = useFocusNode();
+    final hasFocus = useNodeFocused(focusNode);
 
     final answer = ref.watch(pollAnswersNotifierProvider)[index];
     final textController = useTextEditingController(text: answer.text);
+
+    const characterLimit = 25;
+    final remainingCharacters = characterLimit - textController.text.length;
 
     useEffect(
       () {
@@ -40,22 +46,44 @@ class PollAnswerItem extends HookConsumerWidget {
               decoration: BoxDecoration(
                 color: colors.onSecondaryBackground,
                 borderRadius: BorderRadius.circular(12.0.s),
+                border: Border.all(
+                  color: remainingCharacters < 0
+                      ? colors.attentionRed
+                      : (hasFocus.value ? colors.primaryAccent : Colors.transparent),
+                ),
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12.0.s),
-                child: TextField(
-                  controller: textController,
-                  onChanged: (value) =>
-                      ref.read(pollAnswersNotifierProvider.notifier).updateAnswer(index, value),
-                  style: textThemes.body2,
-                  decoration: InputDecoration(
-                    hintText: context.i18n.poll_choice_placeholder(index + 1),
-                    hintStyle: textThemes.caption,
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.only(bottom: 10),
-                  ),
-                  cursorColor: colors.primaryAccent,
-                  cursorHeight: 22.0.s,
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: TextField(
+                        controller: textController,
+                        focusNode: focusNode,
+                        onChanged: (value) {
+                          ref.read(pollAnswersNotifierProvider.notifier).updateAnswer(index, value);
+                        },
+                        style: textThemes.body2,
+                        decoration: InputDecoration(
+                          hintText: context.i18n.poll_choice_placeholder(index + 1),
+                          hintStyle: textThemes.caption,
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.only(bottom: 10),
+                        ),
+                        cursorColor: colors.primaryAccent,
+                        cursorHeight: 22.0.s,
+                      ),
+                    ),
+                    if (hasFocus.value || remainingCharacters < 0) SizedBox(width: 4.0.s),
+                    if (hasFocus.value || remainingCharacters < 0)
+                      Text(
+                        remainingCharacters.toString(),
+                        style: textThemes.caption2.copyWith(
+                          color:
+                              remainingCharacters < 0 ? colors.attentionRed : colors.tertararyText,
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
