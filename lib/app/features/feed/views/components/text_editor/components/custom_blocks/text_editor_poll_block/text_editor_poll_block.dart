@@ -60,9 +60,7 @@ class TextEditorPollBuilder extends EmbedBuilder {
                     children: [
                       SizedBox(height: 10.0.s),
                       const PollAnswersListView(),
-                      PollAddAnswerButton(
-                        onAddAnswerPress: () {},
-                      ),
+                      const PollAddAnswerButton(),
                     ],
                   ),
                 ),

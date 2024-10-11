@@ -1,17 +1,23 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/providers/poll/poll_answers_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class PollAddAnswerButton extends StatelessWidget {
-  const PollAddAnswerButton({required this.onAddAnswerPress, super.key});
-
-  final VoidCallback onAddAnswerPress;
+class PollAddAnswerButton extends ConsumerWidget {
+  const PollAddAnswerButton({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final answers = ref.watch(pollAnswersNotifierProvider);
+
+    if (answers.length == 4) {
+      return SizedBox(height: 10.0.s);
+    }
+
     return Align(
       alignment: Alignment.centerLeft,
       child: Button(
@@ -30,7 +36,9 @@ class PollAddAnswerButton extends StatelessWidget {
         leadingIcon:
             Assets.svg.iconPostAddanswer.icon(color: context.theme.appColors.primaryAccent),
         leadingIconOffset: 0,
-        onPressed: onAddAnswerPress,
+        onPressed: () {
+          ref.read(pollAnswersNotifierProvider.notifier).addAnswer();
+        },
       ),
     );
   }

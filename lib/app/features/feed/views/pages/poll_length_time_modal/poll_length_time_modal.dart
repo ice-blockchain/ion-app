@@ -22,8 +22,8 @@ class PollLengthTimeModal extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedDay = useState(0);
-    final selectedHour = useState(3);
+    final selectedDay = useState(1);
+    final selectedHour = useState(0);
 
     final dayScrollController = FixedExtentScrollController(initialItem: selectedDay.value);
     final hourScrollController = FixedExtentScrollController(initialItem: selectedHour.value);
