@@ -366,5 +366,6 @@
   "poll_length_modal_title": "Pool length time",
   "poll_length_button_title": "Poll length",
   "poll_add_answer_button_title": "Add answer",
-  "poll_choice_placeholder": "Choice {number}"
+  "poll_choice_placeholder": "Choice {number}",
+  "poll_title_placeholder": "Write a question for the poll"
 }

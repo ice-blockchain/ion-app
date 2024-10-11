@@ -7,6 +7,7 @@ import 'package:ice/app/features/feed/views/components/text_editor/components/cu
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_answers_list_view/poll_answers_list_view.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_close_button/poll_close_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_length_button/poll_length_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_title/poll_title.dart';
 
 const textEditorPollKey = 'text-editor-poll';
 
@@ -56,11 +57,11 @@ class TextEditorPollBuilder extends EmbedBuilder {
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.0.s),
-                  child: Column(
+                  child: const Column(
                     children: [
-                      SizedBox(height: 10.0.s),
-                      const PollAnswersListView(),
-                      const PollAddAnswerButton(),
+                      PollTitle(),
+                      PollAnswersListView(),
+                      PollAddAnswerButton(),
                     ],
                   ),
                 ),
