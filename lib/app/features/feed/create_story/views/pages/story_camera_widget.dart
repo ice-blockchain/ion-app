@@ -32,7 +32,7 @@ class StoryCameraWidget extends HookConsumerWidget {
     Future<void> stopRecording() async => storyCameraNotifier.stopVideoRecording();
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: context.theme.appColors.primaryText,
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,

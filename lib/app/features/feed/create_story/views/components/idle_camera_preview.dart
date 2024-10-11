@@ -22,7 +22,7 @@ class IdleCameraPreview extends ConsumerWidget {
           top: 10.0.s,
           left: 10.0.s,
           child: CameraControlButton(
-            icon: Assets.svg.iconSheetClose.icon(color: Colors.white),
+            icon: Assets.svg.iconSheetClose.icon(color: context.theme.appColors.onPrimaryAccent),
             onPressed: () => context.pop(),
           ),
         ),

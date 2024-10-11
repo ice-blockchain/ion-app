@@ -19,7 +19,7 @@ class CameraControlButton extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0.s),
-          color: Colors.black.withOpacity(0.5),
+          color: context.theme.appColors.primaryText.withOpacity(0.5),
         ),
         child: Padding(
           padding: EdgeInsets.all(6.0.s),

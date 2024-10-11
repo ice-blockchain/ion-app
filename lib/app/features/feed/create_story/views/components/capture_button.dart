@@ -33,7 +33,7 @@ class CaptureButton extends StatelessWidget {
           shape: BoxShape.circle,
           color: isRecording ? Colors.white.withOpacity(0.5) : Colors.transparent,
           border: Border.all(
-            color: Colors.white,
+            color: context.theme.appColors.onPrimaryAccent,
             width: isRecording ? 0.0.s : 4.0.s,
           ),
         ),

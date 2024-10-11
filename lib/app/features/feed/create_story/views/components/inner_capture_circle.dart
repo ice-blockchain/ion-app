@@ -10,10 +10,10 @@ class InnerCaptureCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox.square(
       dimension: 54.0.s,
-      child: const DecoratedBox(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white,
+          color: context.theme.appColors.onPrimaryAccent,
         ),
       ),
     );
