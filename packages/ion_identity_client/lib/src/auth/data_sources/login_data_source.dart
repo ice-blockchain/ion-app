@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:dio/dio.dart';
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/auth/result_types/login_user_result.dart';
 import 'package:ion_identity_client/src/core/network/network.dart';
@@ -28,7 +29,11 @@ class LoginDataSource {
           decoder: UserActionChallenge.fromJson,
         )
         .mapLeft(
-          (l) => const UnknownLoginUserFailure(),
+          (l) => switch (l) {
+            RequestExecutionNetworkFailure(:final error) =>
+              _handleRequestExecutionNetworkFailure(error),
+            _ => UnknownLoginUserFailure(l),
+          },
         );
   }
 
@@ -48,7 +53,24 @@ class LoginDataSource {
           decoder: Authentication.fromJson,
         )
         .mapLeft(
-          (l) => const UnknownLoginUserFailure(),
+          (l) => switch (l) {
+            RequestExecutionNetworkFailure(:final error) =>
+              _handleRequestExecutionNetworkFailure(error),
+            _ => UnknownLoginUserFailure(l),
+          },
         );
+  }
+
+  LoginUserFailure _handleRequestExecutionNetworkFailure(Object error) {
+    switch (error) {
+      case DioException(:final response) when response?.statusCode == 400:
+        return const AccountDeactivatedLoginUserFailure();
+      case DioException(:final response) when response?.statusCode == 401:
+        return const NoCredentialsLoginUserFailure();
+      case DioException(:final response) when response?.statusCode == 403:
+        return const InvalidCodeLoginUserFailure();
+      default:
+        return const UnknownLoginUserFailure();
+    }
   }
 }
