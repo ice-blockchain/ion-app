@@ -6,7 +6,6 @@ part 'story_camera_state.freezed.dart';
 class StoryCameraState with _$StoryCameraState {
   const factory StoryCameraState({
     @Default(false) bool isRecording,
-    @Default(Duration.zero) Duration recordingDuration,
     @Default(false) bool isFlashOn,
   }) = _StoryCameraState;
 }

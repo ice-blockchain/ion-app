@@ -14,7 +14,7 @@ class CameraControlButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0.s),
           color: Colors.black.withOpacity(0.5),
