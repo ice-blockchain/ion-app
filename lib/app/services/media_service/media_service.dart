@@ -184,7 +184,7 @@ class MediaService {
   Future<MediaFile?> _saveCameraVideo(File videoFile) async {
     final asset = await PhotoManager.editor.saveVideo(
       videoFile,
-      title: 'Camera_${DateTime.now().millisecondsSinceEpoch}.mp4',
+      title: 'Camera_${DateTime.now().millisecondsSinceEpoch}',
     );
 
     if (asset == null) return null;
@@ -199,9 +199,7 @@ class MediaService {
     );
   }
 
-  Future<void> saveVideoToGallery(String videoPath) async {
-    await _saveCameraVideo(File(videoPath));
-  }
+  Future<void> saveVideoToGallery(String videoPath) async => _saveCameraVideo(File(videoPath));
 }
 
 @riverpod

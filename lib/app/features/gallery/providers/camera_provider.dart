@@ -56,7 +56,6 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
     _cameraController = CameraController(
       camera,
       ResolutionPreset.high,
-      enableAudio: false,
     );
 
     try {
@@ -64,19 +63,12 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       _cameraController?.addListener(ref.notifyListeners);
       return _cameraController;
     } catch (e) {
-      Logger.log('Error initializing camera: $e');
+      Logger.log('Camera initialization error: $e');
+
+      _cameraController?.removeListener(ref.notifyListeners);
       await _cameraController?.dispose();
       _cameraController = null;
       return null;
-    }
-  }
-
-  Future<bool> handlePermissionChange({required bool hasPermission}) async {
-    if (hasPermission) {
-      return resumeCamera();
-    } else {
-      await pauseCamera();
-      return false;
     }
   }
 
@@ -101,6 +93,15 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       return _initializeCamera();
     });
     return state.value != null;
+  }
+
+  Future<bool> handlePermissionChange({required bool hasPermission}) async {
+    if (hasPermission) {
+      return resumeCamera();
+    } else {
+      await pauseCamera();
+      return false;
+    }
   }
 
   Future<void> switchCamera() async {
