@@ -1,0 +1,11 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:ion_identity_client/src/core/types/ion_exception.dart';
+
+sealed class GetWalletNftsException extends IonException {
+  const GetWalletNftsException([super.message]);
+}
+
+class UnknownWalletNftsException extends GetWalletNftsException {
+  const UnknownWalletNftsException() : super('Unknown error');
+}

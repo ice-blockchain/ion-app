@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/types/wallet_asset.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/models/wallet_asset.dart';
 
 part 'wallet_assets.freezed.dart';
 part 'wallet_assets.g.dart';
