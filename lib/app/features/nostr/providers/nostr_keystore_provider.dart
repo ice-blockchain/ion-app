@@ -19,11 +19,12 @@ class NostrKeyStore extends _$NostrKeyStore {
     return null;
   }
 
-  Future<void> generate() async {
+  Future<KeyStore> generate() async {
     final keyStore = KeyStore.generate();
     final storage = ref.read(secureStorageProvider);
     await storage.setString(key: _storageKey, value: keyStore.privateKey);
     state = AsyncData(keyStore);
+    return keyStore;
   }
 
   Future<void> delete() async {

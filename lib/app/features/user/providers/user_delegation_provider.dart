@@ -48,7 +48,7 @@ class UsersDelegationStorage extends _$UsersDelegationStorage {
       content: '',
     );
     // TODO: use identity ton waller signing request here when implemented
-    // and add prefix to the signature with '${wallet.signingKey.scheme}_${wallet.signingKey.curve}:'
+    // and add prefix to the signature with '${wallet.signingKey.scheme}/${wallet.signingKey.curve}:'
     final sig = mockedTonWalletKeystore.sign(message: eventId);
     final event = EventMessage(
       id: eventId,
@@ -74,7 +74,7 @@ Future<UserDelegation?> userDelegation(UserDelegationRef ref, String pubkey) asy
   final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
   final relay = await ref.read(relayProvider(relayUrl).future);
   final requestMessage = RequestMessage()
-    ..addFilter(RequestFilter(kinds: const [UserDelegation.kind], limit: 1, p: [pubkey]));
+    ..addFilter(RequestFilter(kinds: const [UserDelegation.kind], limit: 1, authors: [pubkey]));
   final events = await requestEvents(requestMessage, relay);
 
   if (events.isNotEmpty) {
