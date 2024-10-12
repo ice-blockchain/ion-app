@@ -3,19 +3,19 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
 
-part 'wallet_asset_dto.freezed.dart';
-part 'wallet_asset_dto.g.dart';
+part 'wallet_asset.freezed.dart';
+part 'wallet_asset.g.dart';
 
 @freezed
-class WalletAssetDto with _$WalletAssetDto {
-  factory WalletAssetDto({
+class WalletAsset with _$WalletAsset {
+  factory WalletAsset({
     required String? name,
     required String? contract,
     required String symbol,
     required int decimals,
     required String balance,
     required bool verified,
-  }) = _WalletAssetDto;
+  }) = _WalletAsset;
 
-  factory WalletAssetDto.fromJson(JsonObject json) => _$WalletAssetDtoFromJson(json);
+  factory WalletAsset.fromJson(JsonObject json) => _$WalletAssetFromJson(json);
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/data_sources/get_wallet_assets_data_source.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/result_types/get_wallet_assets_result.dart';
 
 class GetWalletAssetsService {
   const GetWalletAssetsService(
@@ -12,12 +12,7 @@ class GetWalletAssetsService {
   final String username;
   final GetWalletAssetsDataSource _getWalletAssetsDataSource;
 
-  Future<GetWalletAssetsResult> getWalletAssets(String walletId) async {
-    final response = await _getWalletAssetsDataSource.getWalletAssets(username, walletId).run();
-
-    return response.fold(
-      GetWalletAssetsResult.failure,
-      GetWalletAssetsResult.success,
-    );
+  Future<WalletAssets> getWalletAssets(String walletId) async {
+    return _getWalletAssetsDataSource.getWalletAssets(username, walletId);
   }
 }

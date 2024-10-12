@@ -207,15 +207,13 @@ mixin _WalletsClient {
   }) {
     return GetWalletAssetsService(
       username,
-      createGetWalletAssetsDataSource(config: config),
+      createGetWalletAssetsDataSource(config),
     );
   }
 
-  GetWalletAssetsDataSource createGetWalletAssetsDataSource({
-    required IonClientConfig config,
-  }) {
+  GetWalletAssetsDataSource createGetWalletAssetsDataSource(IonClientConfig config) {
     return GetWalletAssetsDataSource(
-      IonServiceLocator.getNetworkClient(config: config),
+      IonServiceLocator.getNetworkClient2(config: config),
       IonServiceLocator.getTokenStorage(),
     );
   }

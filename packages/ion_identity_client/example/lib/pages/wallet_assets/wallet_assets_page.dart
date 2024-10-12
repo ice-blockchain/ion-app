@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_client_example/pages/wallet_assets/providers/wallet_assets_provider.dart';
+import 'package:ion_identity_client/ion_client.dart';
 
 class WalletAssetsPage extends HookConsumerWidget {
   const WalletAssetsPage({
@@ -39,25 +40,18 @@ class _Body extends HookConsumerWidget {
         child: CircularProgressIndicator(),
       ),
       error: (error, stack) => Center(
-        child: Text(error.toString()),
+        child: Text(_getErrorMessage(context, error)),
       ),
-      data: (assets) {
-        return assets.when(
-          success: (walletAssets) => ListView.builder(
-            itemCount: walletAssets.assets.length,
-            itemBuilder: (context, index) {
-              final asset = walletAssets.assets[index];
-              return ListTile(
-                title: Text('symbol: ${asset.symbol}'),
-                subtitle: Text('balance: ${asset.balance}'),
-              );
-            },
-          ),
-          failure: (error) => Center(
-            child: Text(error.toString()),
-          ),
-        );
-      },
+      data: (walletAssets) => ListView.builder(
+        itemCount: walletAssets.assets.length,
+        itemBuilder: (context, index) {
+          final asset = walletAssets.assets[index];
+          return ListTile(
+            title: Text('symbol: ${asset.symbol}'),
+            subtitle: Text('balance: ${asset.balance}'),
+          );
+        },
+      ),
     );
 
     return Column(
@@ -66,10 +60,16 @@ class _Body extends HookConsumerWidget {
         ListTile(
           title: Text('Wallet Assets for wallet ID: $walletId'),
         ),
-        Expanded(
-          child: child,
-        ),
+        Expanded(child: child),
       ],
     );
+  }
+
+  String _getErrorMessage(BuildContext context, Object error) {
+    return switch (error) {
+          IonException(:final message) => message,
+          _ => null,
+        } ??
+        'Unknown error';
   }
 }
