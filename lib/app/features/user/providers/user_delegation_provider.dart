@@ -38,7 +38,7 @@ Future<UserDelegation?> userDelegation(UserDelegationRef ref, String pubkey) asy
   final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
   final relay = await ref.read(relayProvider(relayUrl).future);
   final requestMessage = RequestMessage()
-    ..addFilter(RequestFilter(kinds: const [10100], limit: 1, p: [pubkey]));
+    ..addFilter(RequestFilter(kinds: const [UserDelegation.kind], limit: 1, p: [pubkey]));
   final events = await requestEvents(requestMessage, relay);
 
   if (events.isNotEmpty) {
