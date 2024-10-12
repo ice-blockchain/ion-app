@@ -33,7 +33,7 @@ class NostrKeyStore extends _$NostrKeyStore {
   String get _storageKey => '${identityKeyName}_nostr_key_store';
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<KeyStore?> currentUserNostrKeyStore(CurrentUserNostrKeyStoreRef ref) async {
   final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
   if (currentIdentityKeyName == null) {

@@ -53,6 +53,10 @@ class UserDelegation with _$UserDelegation {
     return false;
   }
 
+  bool hasDelegateFor({required String pubkey}) {
+    return delegates.any((delegate) => delegate.pubkey == pubkey);
+  }
+
   List<List<String>> get tags {
     return delegates.map((delegate) => delegate.toTag()).toList();
   }
