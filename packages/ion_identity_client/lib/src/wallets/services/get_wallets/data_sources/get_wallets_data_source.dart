@@ -6,8 +6,8 @@ import 'package:ion_identity_client/src/core/network2/network_client2.dart';
 import 'package:ion_identity_client/src/core/network2/network_exception.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallets/data_sources/exceptions/exceptions.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallets/data_sources/models/get_wallets_response.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallets/exceptions/exceptions.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallets/models/get_wallets_response.dart';
 
 class GetWalletsDataSource {
   const GetWalletsDataSource(
