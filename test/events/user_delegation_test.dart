@@ -23,7 +23,7 @@ void main() {
       final userDelegation = UserDelegation.fromEventMessage(delegationEvent);
 
       expect(userDelegation, isA<UserDelegation>());
-      expect(userDelegation.delegates[pubkey]?.kinds?.length, 2);
+      expect(userDelegation.delegates.first.kinds?.length, 2);
     });
 
     test('UserDelegation.fromEventMessage should work when kinds are not set', () {
@@ -41,29 +41,8 @@ void main() {
       final userDelegation = UserDelegation.fromEventMessage(delegationEvent);
 
       expect(
-        userDelegation.delegates[pubkey]?.kinds,
+        userDelegation.delegates.first.kinds,
         isNull,
-      );
-    });
-
-    test('UserDelegation revoked attestations should invalidate active attestations', () {
-      final keyStore = KeyStore.generate();
-
-      final delegationEvent = EventMessage.fromData(
-        keyStore: keyStore,
-        kind: 10100,
-        tags: const [
-          ['p', pubkey, '', 'active:1674834236'],
-          ['p', pubkey, '', 'revoked:1684834236'],
-        ],
-        content: '',
-      );
-
-      final userDelegation = UserDelegation.fromEventMessage(delegationEvent);
-
-      expect(
-        userDelegation.delegates[pubkey]?.status,
-        DelegationStatus.revoked,
       );
     });
 
@@ -147,6 +126,32 @@ void main() {
         userDelegation.validate(event),
         isFalse,
       );
+    });
+
+    test('UserDelegation adding new Delegates work', () {
+      final masterKeyStore = KeyStore.generate();
+      final subKeyStore = KeyStore.generate();
+
+      final initialTags = [
+        ['p', subKeyStore.publicKey, '', 'active:1674834236:0,7'],
+        ['p', subKeyStore.publicKey, '', 'inactive:1684834236'],
+      ];
+
+      final newTag = ['p', subKeyStore.publicKey, '', 'active:1674834236:7'];
+
+      final delegationEvent = EventMessage.fromData(
+        keyStore: masterKeyStore,
+        kind: UserDelegation.kind,
+        tags: initialTags,
+        content: '',
+      );
+
+      final initialUserDelegation = UserDelegation.fromEventMessage(delegationEvent);
+
+      final newUserDelegation = initialUserDelegation
+          .copyWith(delegates: [...initialUserDelegation.delegates, UserDelegate.fromTag(newTag)]);
+
+      expect(newUserDelegation.tags, [...initialTags, newTag]);
     });
   });
 }
