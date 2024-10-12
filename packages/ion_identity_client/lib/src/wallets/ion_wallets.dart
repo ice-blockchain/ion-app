@@ -65,6 +65,6 @@ class IonWallets {
     );
   }
 
-  Future<WalletAssets> walletAssets(String walletId) =>
+  Future<WalletAssets> getWalletAssets(String walletId) =>
       _getWalletAssetsService.getWalletAssets(walletId);
 }

@@ -12,5 +12,5 @@ Future<WalletAssets> walletAssets(WalletAssetsRef ref, String walletId) async {
   final username = ref.watch(currentUsernameNotifierProvider) ?? 'ERROR';
   final ionClient = await ref.watch(ionClientProvider.future);
 
-  return ionClient(username: username).wallets.walletAssets(walletId);
+  return ionClient(username: username).wallets.getWalletAssets(walletId);
 }
