@@ -15,4 +15,3 @@ export 'register_complete_wallet.dart';
 export 'register_init_request.dart';
 export 'signed_challenge.dart';
 export 'user.dart';
-export 'wallet.dart';

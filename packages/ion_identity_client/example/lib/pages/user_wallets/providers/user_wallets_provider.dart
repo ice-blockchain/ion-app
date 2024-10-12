@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_wallets_provider.g.dart';
 
 @riverpod
-Future<ListWalletsResult> userWallets(UserWalletsRef ref, String username) async {
+Future<List<Wallet>> userWallets(UserWalletsRef ref, String username) async {
   final ionClient = await ref.watch(ionClientProvider.future);
-  return ionClient(username: username).wallets.listWallets();
+  return ionClient(username: username).wallets.getWallets();
 }
