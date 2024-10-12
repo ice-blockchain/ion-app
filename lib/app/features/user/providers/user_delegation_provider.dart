@@ -6,6 +6,7 @@ import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_delegation.dart';
 import 'package:ice/app/features/user/providers/current_user_indexers_provider.dart';
 import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
+import 'package:ice/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,7 +25,32 @@ class UsersDelegationStorage extends _$UsersDelegationStorage {
   }
 
   Future<void> publish(UserDelegation userDelegation) async {
-    throw Exception('Not implemented yet');
+    final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
+    final relay = await ref.read(relayProvider(relayUrl).future);
+    final tags = userDelegation.tags;
+    final createdAt = DateTime.now();
+    const kind = UserDelegation.kind;
+    final eventId = EventMessage.calculateEventId(
+      publicKey: userDelegation.pubkey,
+      createdAt: createdAt,
+      kind: kind,
+      tags: tags,
+      content: '',
+    );
+    // TODO: use identity ton waller signing request here when implemented
+    // and add prefix to the signature with '${wallet.signingKey.scheme}_${wallet.signingKey.curve}:'
+    final sig = mockedTonWalletKeystore.sign(message: eventId);
+    final event = EventMessage(
+      id: eventId,
+      pubkey: userDelegation.pubkey,
+      createdAt: createdAt,
+      kind: kind,
+      tags: tags,
+      content: '',
+      sig: sig,
+    );
+    await relay.sendEvent(event);
+    store(userDelegation);
   }
 }
 
@@ -56,6 +82,7 @@ Future<UserDelegation?> currentUserDelegation(CurrentUserDelegationRef ref) asyn
   if (currentIdentityKeyName == null) {
     return null;
   }
+  // TODO: take from walletsDataNotifierProvider when connected to ionClient
   final ionClient = await ref.read(ionApiClientProvider.future);
   final listWalletResult = await ionClient(username: currentIdentityKeyName).wallets.listWallets();
   if (listWalletResult is ListWalletsSuccess) {
@@ -63,7 +90,9 @@ Future<UserDelegation?> currentUserDelegation(CurrentUserDelegationRef ref) asyn
     if (mainWallet == null) {
       throw Exception('Main wallet is not found');
     }
-    return ref.watch(userDelegationProvider(mainWallet.signingKey.publicKey).future);
+    //TODO: take `mainWallet.signingKey.publicKey` when remote signing is implemented
+    final mainWalletPubkey = mockedTonWalletKeystore.publicKey;
+    return ref.watch(userDelegationProvider(mainWalletPubkey).future);
   } else {
     throw Exception(listWalletResult.toString());
   }
