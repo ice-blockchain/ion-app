@@ -3,7 +3,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/auth/providers/onboarding_provider.dart';
+import 'package:ice/app/features/auth/providers/onboarding_complete_provider.dart';
 import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';

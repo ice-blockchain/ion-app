@@ -9,7 +9,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/providers/login_action_notifier.dart';
-import 'package:ice/app/features/auth/providers/onboarding_provider.dart';
+import 'package:ice/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
@@ -80,12 +80,14 @@ class DiscoverCreators extends ConsumerWidget {
                   trailingIcon: loginActionState.isLoading ? const IceLoadingIndicator() : null,
                   label: Text(context.i18n.button_continue),
                   mainAxisSize: MainAxisSize.max,
-                  onPressed: () {
-                    ref.read(onboardingDataProvider.notifier).finish();
-                    if (hasNotificationsPermission) {
-                      ref.read(loginActionNotifierProvider.notifier).signIn(keyName: '123');
-                    } else {
-                      NotificationsRoute().go(context);
+                  onPressed: () async {
+                    await ref.read(onboardingDataProvider.notifier).finish();
+                    if (context.mounted) {
+                      if (hasNotificationsPermission) {
+                        FeedRoute().go(context);
+                      } else {
+                        NotificationsRoute().go(context);
+                      }
                     }
                   },
                 ),

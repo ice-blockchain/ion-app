@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_metadata.dart';
 import 'package:ice/app/features/user/providers/current_user_indexers_provider.dart';
@@ -25,7 +26,21 @@ class UsersMetadataStorage extends _$UsersMetadataStorage {
   }
 
   Future<void> publish(UserMetadata userMetadata) async {
-    throw Exception('Not implemented yet');
+    final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
+
+    if (keyStore == null) {
+      throw Exception('Current user keystore is null');
+    }
+
+    final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
+    final relay = await ref.read(relayProvider(relayUrl).future);
+    final event = EventMessage.fromData(
+      keyStore: keyStore,
+      kind: UserMetadata.kind,
+      content: userMetadata.content,
+    );
+    await relay.sendEvent(event);
+    store(userMetadata);
   }
 }
 
