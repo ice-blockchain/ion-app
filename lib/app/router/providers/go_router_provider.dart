@@ -55,23 +55,16 @@ FutureOr<String?> _mainRedirect({
   final hasAuthenticated = (ref.read(authProvider).valueOrNull?.hasAuthenticated).falseOrValue;
   final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
 
-  final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
   final isOnOnboarding = location.contains('/${AuthRoutes.onboardingPrefix}/');
-  final isInAuthenticatedZone = !isOnAuth && !isOnOnboarding && !isOnSplash;
 
   if (!hasAuthenticated && !isOnAuth) {
     return IntroRoute().location;
   }
 
-  if (hasAuthenticated && onboardingComplete != null) {
-    if (onboardingComplete && !isInAuthenticatedZone) {
-      return FeedRoute().location;
-    }
-
-    if (!onboardingComplete && !isOnOnboarding) {
-      return FillProfileRoute().location;
-    }
+  if (hasAuthenticated && onboardingComplete != null && !onboardingComplete && !isOnOnboarding) {
+    return FillProfileRoute().location;
   }
+
   return null;
 }
