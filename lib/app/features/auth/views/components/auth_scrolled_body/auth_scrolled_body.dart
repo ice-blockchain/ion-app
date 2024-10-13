@@ -95,9 +95,7 @@ class AuthScrollContainer extends HookWidget {
                 hasScrollBody: false,
                 child: Column(
                   mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.spaceBetween,
-                  children: [
-                    ...children,
-                  ],
+                  children: children,
                 ),
               ),
             ...slivers,
