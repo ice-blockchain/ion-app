@@ -8,7 +8,6 @@ import 'package:ice/app/features/user/model/user_identity.dart';
 import 'package:ice/app/features/user/model/user_metadata.dart';
 import 'package:ice/app/features/user/model/user_relays.dart';
 import 'package:ice/app/features/user/providers/current_user_identity_provider.dart';
-// import 'package:ice/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ice/app/features/user/providers/user_delegation_provider.dart';
 import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ice/app/features/user/providers/user_relays_provider.dart';
