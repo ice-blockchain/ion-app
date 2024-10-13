@@ -13,7 +13,7 @@ void main() {
 
       final delegationEvent = EventMessage.fromData(
         keyStore: keyStore,
-        kind: 10100,
+        kind: UserDelegation.kind,
         tags: const [
           ['p', pubkey, '', 'active:1674834236:1,7'],
         ],
@@ -31,7 +31,7 @@ void main() {
 
       final delegationEvent = EventMessage.fromData(
         keyStore: keyStore,
-        kind: 10100,
+        kind: UserDelegation.kind,
         tags: const [
           ['p', pubkey, '', 'active:1674834236'],
         ],
@@ -52,7 +52,7 @@ void main() {
 
       final delegationEvent = EventMessage.fromData(
         keyStore: masterKeyStore,
-        kind: 10100,
+        kind: UserDelegation.kind,
         tags: [
           ['p', subKeyStore.publicKey, '', 'active:1674834236'],
         ],
@@ -79,7 +79,7 @@ void main() {
 
       final delegationEvent = EventMessage.fromData(
         keyStore: masterKeyStore,
-        kind: 10100,
+        kind: UserDelegation.kind,
         tags: [
           ['p', subKeyStore.publicKey, '', 'active:1674834236'],
           ['p', subKeyStore.publicKey, '', 'inactive:1684834236'],
@@ -107,7 +107,7 @@ void main() {
 
       final delegationEvent = EventMessage.fromData(
         keyStore: masterKeyStore,
-        kind: 10100,
+        kind: UserDelegation.kind,
         tags: [
           ['p', subKeyStore.publicKey, '', 'active:1674834236:0,7'],
         ],
