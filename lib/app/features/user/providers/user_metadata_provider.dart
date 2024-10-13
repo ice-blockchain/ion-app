@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_metadata.dart';
@@ -68,9 +67,9 @@ Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
 
 @Riverpod(keepAlive: true)
 Future<UserMetadata?> currentUserMetadata(CurrentUserMetadataRef ref) async {
-  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
-  if (currentUserId.isEmpty) {
+  final currentUserNostrKey = await ref.watch(currentUserNostrKeyStoreProvider.future);
+  if (currentUserNostrKey == null) {
     return null;
   }
-  return ref.watch(userMetadataProvider(currentUserId).future);
+  return ref.watch(userMetadataProvider(currentUserNostrKey.publicKey).future);
 }

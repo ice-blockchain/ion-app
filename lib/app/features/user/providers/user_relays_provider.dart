@@ -65,8 +65,8 @@ Future<UserRelays?> userRelays(UserRelaysRef ref, String pubkey) async {
 
 @riverpod
 Future<UserRelays?> currentUserRelays(CurrentUserRelaysRef ref) async {
-  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
-  if (currentUserId.isEmpty) {
+  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider);
+  if (currentUserId == null) {
     return null;
   }
   return ref.watch(userRelaysProvider(currentUserId).future);

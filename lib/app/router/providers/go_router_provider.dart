@@ -64,7 +64,7 @@ FutureOr<String?> _mainRedirect({
   }
 
   if (hasAuthenticated && onboardingComplete != null) {
-    if (onboardingComplete && isOnSplash) {
+    if (onboardingComplete && (isOnSplash || isOnAuth)) {
       return FeedRoute().location;
     }
 
