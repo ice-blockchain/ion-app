@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/inputs/search_input/search_input.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/build_context.dart';
@@ -95,7 +94,7 @@ class SelectLanguages extends HookConsumerWidget {
                 },
               ),
             ),
-            ScreenBottomOffset(margin: 36.0.s),
+            SizedBox(height: 8.0.s + MediaQuery.paddingOf(context).bottom),
           ],
         ],
       ),

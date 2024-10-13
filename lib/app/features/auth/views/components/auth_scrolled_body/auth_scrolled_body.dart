@@ -81,22 +81,25 @@ class AuthScrollContainer extends HookWidget {
               toolbarHeight: NavigationAppBar.modalHeaderHeight,
               pinned: true,
             ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Column(
-                mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.spaceBetween,
-                children: [
-                  AuthHeader(
-                    title: title,
-                    description: description,
-                    titleStyle: titleStyle,
-                    descriptionStyle: descriptionStyle,
-                    icon: icon != null ? AuthHeaderIcon(icon: icon) : icon,
-                  ),
-                  ...children,
-                ],
+            SliverToBoxAdapter(
+              child: AuthHeader(
+                title: title,
+                description: description,
+                titleStyle: titleStyle,
+                descriptionStyle: descriptionStyle,
+                icon: icon != null ? AuthHeaderIcon(icon: icon) : icon,
               ),
             ),
+            if (children.isNotEmpty)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+                  mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.spaceBetween,
+                  children: [
+                    ...children,
+                  ],
+                ),
+              ),
             ...slivers,
           ],
         ),
