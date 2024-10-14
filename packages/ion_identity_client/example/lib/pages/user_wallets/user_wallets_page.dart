@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_client_example/pages/user_wallets/providers/user_wallets_provider.dart';
 import 'package:ion_client_example/pages/wallet_assets/wallet_assets_page.dart';
 import 'package:ion_client_example/providers/current_username_notifier.dart';
-import 'package:ion_identity_client/src/wallets/types/list_wallets_result.dart';
+import 'package:ion_identity_client/ion_client.dart';
 
 class UserWalletsPage extends HookConsumerWidget {
   const UserWalletsPage({

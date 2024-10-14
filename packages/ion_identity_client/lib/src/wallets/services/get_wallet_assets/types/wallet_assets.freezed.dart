@@ -1,11 +1,9 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'wallet_assets_dto.dart';
+part of 'wallet_assets.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -16,46 +14,46 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-WalletAssetsDto _$WalletAssetsDtoFromJson(Map<String, dynamic> json) {
-  return _WalletAssetsDto.fromJson(json);
+WalletAssets _$WalletAssetsFromJson(Map<String, dynamic> json) {
+  return _WalletAssets.fromJson(json);
 }
 
 /// @nodoc
-mixin _$WalletAssetsDto {
+mixin _$WalletAssets {
   String get walletId => throw _privateConstructorUsedError;
   String get network => throw _privateConstructorUsedError;
-  List<WalletAssetDto> get assets => throw _privateConstructorUsedError;
+  List<WalletAsset> get assets => throw _privateConstructorUsedError;
 
-  /// Serializes this WalletAssetsDto to a JSON map.
+  /// Serializes this WalletAssets to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of WalletAssetsDto
+  /// Create a copy of WalletAssets
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $WalletAssetsDtoCopyWith<WalletAssetsDto> get copyWith =>
+  $WalletAssetsCopyWith<WalletAssets> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $WalletAssetsDtoCopyWith<$Res> {
-  factory $WalletAssetsDtoCopyWith(
-          WalletAssetsDto value, $Res Function(WalletAssetsDto) then) =
-      _$WalletAssetsDtoCopyWithImpl<$Res, WalletAssetsDto>;
+abstract class $WalletAssetsCopyWith<$Res> {
+  factory $WalletAssetsCopyWith(
+          WalletAssets value, $Res Function(WalletAssets) then) =
+      _$WalletAssetsCopyWithImpl<$Res, WalletAssets>;
   @useResult
-  $Res call({String walletId, String network, List<WalletAssetDto> assets});
+  $Res call({String walletId, String network, List<WalletAsset> assets});
 }
 
 /// @nodoc
-class _$WalletAssetsDtoCopyWithImpl<$Res, $Val extends WalletAssetsDto>
-    implements $WalletAssetsDtoCopyWith<$Res> {
-  _$WalletAssetsDtoCopyWithImpl(this._value, this._then);
+class _$WalletAssetsCopyWithImpl<$Res, $Val extends WalletAssets>
+    implements $WalletAssetsCopyWith<$Res> {
+  _$WalletAssetsCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of WalletAssetsDto
+  /// Create a copy of WalletAssets
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -76,31 +74,31 @@ class _$WalletAssetsDtoCopyWithImpl<$Res, $Val extends WalletAssetsDto>
       assets: null == assets
           ? _value.assets
           : assets // ignore: cast_nullable_to_non_nullable
-              as List<WalletAssetDto>,
+              as List<WalletAsset>,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$WalletAssetsDtoImplCopyWith<$Res>
-    implements $WalletAssetsDtoCopyWith<$Res> {
-  factory _$$WalletAssetsDtoImplCopyWith(_$WalletAssetsDtoImpl value,
-          $Res Function(_$WalletAssetsDtoImpl) then) =
-      __$$WalletAssetsDtoImplCopyWithImpl<$Res>;
+abstract class _$$WalletAssetsImplCopyWith<$Res>
+    implements $WalletAssetsCopyWith<$Res> {
+  factory _$$WalletAssetsImplCopyWith(
+          _$WalletAssetsImpl value, $Res Function(_$WalletAssetsImpl) then) =
+      __$$WalletAssetsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String walletId, String network, List<WalletAssetDto> assets});
+  $Res call({String walletId, String network, List<WalletAsset> assets});
 }
 
 /// @nodoc
-class __$$WalletAssetsDtoImplCopyWithImpl<$Res>
-    extends _$WalletAssetsDtoCopyWithImpl<$Res, _$WalletAssetsDtoImpl>
-    implements _$$WalletAssetsDtoImplCopyWith<$Res> {
-  __$$WalletAssetsDtoImplCopyWithImpl(
-      _$WalletAssetsDtoImpl _value, $Res Function(_$WalletAssetsDtoImpl) _then)
+class __$$WalletAssetsImplCopyWithImpl<$Res>
+    extends _$WalletAssetsCopyWithImpl<$Res, _$WalletAssetsImpl>
+    implements _$$WalletAssetsImplCopyWith<$Res> {
+  __$$WalletAssetsImplCopyWithImpl(
+      _$WalletAssetsImpl _value, $Res Function(_$WalletAssetsImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of WalletAssetsDto
+  /// Create a copy of WalletAssets
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -109,7 +107,7 @@ class __$$WalletAssetsDtoImplCopyWithImpl<$Res>
     Object? network = null,
     Object? assets = null,
   }) {
-    return _then(_$WalletAssetsDtoImpl(
+    return _then(_$WalletAssetsImpl(
       walletId: null == walletId
           ? _value.walletId
           : walletId // ignore: cast_nullable_to_non_nullable
@@ -121,30 +119,30 @@ class __$$WalletAssetsDtoImplCopyWithImpl<$Res>
       assets: null == assets
           ? _value._assets
           : assets // ignore: cast_nullable_to_non_nullable
-              as List<WalletAssetDto>,
+              as List<WalletAsset>,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$WalletAssetsDtoImpl implements _WalletAssetsDto {
-  _$WalletAssetsDtoImpl(
+class _$WalletAssetsImpl implements _WalletAssets {
+  _$WalletAssetsImpl(
       {required this.walletId,
       required this.network,
-      required final List<WalletAssetDto> assets})
+      required final List<WalletAsset> assets})
       : _assets = assets;
 
-  factory _$WalletAssetsDtoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$WalletAssetsDtoImplFromJson(json);
+  factory _$WalletAssetsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$WalletAssetsImplFromJson(json);
 
   @override
   final String walletId;
   @override
   final String network;
-  final List<WalletAssetDto> _assets;
+  final List<WalletAsset> _assets;
   @override
-  List<WalletAssetDto> get assets {
+  List<WalletAsset> get assets {
     if (_assets is EqualUnmodifiableListView) return _assets;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_assets);
@@ -152,14 +150,14 @@ class _$WalletAssetsDtoImpl implements _WalletAssetsDto {
 
   @override
   String toString() {
-    return 'WalletAssetsDto(walletId: $walletId, network: $network, assets: $assets)';
+    return 'WalletAssets(walletId: $walletId, network: $network, assets: $assets)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$WalletAssetsDtoImpl &&
+            other is _$WalletAssetsImpl &&
             (identical(other.walletId, walletId) ||
                 other.walletId == walletId) &&
             (identical(other.network, network) || other.network == network) &&
@@ -171,43 +169,42 @@ class _$WalletAssetsDtoImpl implements _WalletAssetsDto {
   int get hashCode => Object.hash(runtimeType, walletId, network,
       const DeepCollectionEquality().hash(_assets));
 
-  /// Create a copy of WalletAssetsDto
+  /// Create a copy of WalletAssets
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$WalletAssetsDtoImplCopyWith<_$WalletAssetsDtoImpl> get copyWith =>
-      __$$WalletAssetsDtoImplCopyWithImpl<_$WalletAssetsDtoImpl>(
-          this, _$identity);
+  _$$WalletAssetsImplCopyWith<_$WalletAssetsImpl> get copyWith =>
+      __$$WalletAssetsImplCopyWithImpl<_$WalletAssetsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$WalletAssetsDtoImplToJson(
+    return _$$WalletAssetsImplToJson(
       this,
     );
   }
 }
 
-abstract class _WalletAssetsDto implements WalletAssetsDto {
-  factory _WalletAssetsDto(
+abstract class _WalletAssets implements WalletAssets {
+  factory _WalletAssets(
       {required final String walletId,
       required final String network,
-      required final List<WalletAssetDto> assets}) = _$WalletAssetsDtoImpl;
+      required final List<WalletAsset> assets}) = _$WalletAssetsImpl;
 
-  factory _WalletAssetsDto.fromJson(Map<String, dynamic> json) =
-      _$WalletAssetsDtoImpl.fromJson;
+  factory _WalletAssets.fromJson(Map<String, dynamic> json) =
+      _$WalletAssetsImpl.fromJson;
 
   @override
   String get walletId;
   @override
   String get network;
   @override
-  List<WalletAssetDto> get assets;
+  List<WalletAsset> get assets;
 
-  /// Create a copy of WalletAssetsDto
+  /// Create a copy of WalletAssets
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$WalletAssetsDtoImplCopyWith<_$WalletAssetsDtoImpl> get copyWith =>
+  _$$WalletAssetsImplCopyWith<_$WalletAssetsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

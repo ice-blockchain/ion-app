@@ -1,11 +1,9 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'wallet_asset_dto.dart';
+part of 'wallet_asset.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -16,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-WalletAssetDto _$WalletAssetDtoFromJson(Map<String, dynamic> json) {
-  return _WalletAssetDto.fromJson(json);
+WalletAsset _$WalletAssetFromJson(Map<String, dynamic> json) {
+  return _WalletAsset.fromJson(json);
 }
 
 /// @nodoc
-mixin _$WalletAssetDto {
+mixin _$WalletAsset {
   String? get name => throw _privateConstructorUsedError;
   String? get contract => throw _privateConstructorUsedError;
   String get symbol => throw _privateConstructorUsedError;
@@ -29,21 +27,21 @@ mixin _$WalletAssetDto {
   String get balance => throw _privateConstructorUsedError;
   bool get verified => throw _privateConstructorUsedError;
 
-  /// Serializes this WalletAssetDto to a JSON map.
+  /// Serializes this WalletAsset to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of WalletAssetDto
+  /// Create a copy of WalletAsset
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $WalletAssetDtoCopyWith<WalletAssetDto> get copyWith =>
+  $WalletAssetCopyWith<WalletAsset> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $WalletAssetDtoCopyWith<$Res> {
-  factory $WalletAssetDtoCopyWith(
-          WalletAssetDto value, $Res Function(WalletAssetDto) then) =
-      _$WalletAssetDtoCopyWithImpl<$Res, WalletAssetDto>;
+abstract class $WalletAssetCopyWith<$Res> {
+  factory $WalletAssetCopyWith(
+          WalletAsset value, $Res Function(WalletAsset) then) =
+      _$WalletAssetCopyWithImpl<$Res, WalletAsset>;
   @useResult
   $Res call(
       {String? name,
@@ -55,16 +53,16 @@ abstract class $WalletAssetDtoCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$WalletAssetDtoCopyWithImpl<$Res, $Val extends WalletAssetDto>
-    implements $WalletAssetDtoCopyWith<$Res> {
-  _$WalletAssetDtoCopyWithImpl(this._value, this._then);
+class _$WalletAssetCopyWithImpl<$Res, $Val extends WalletAsset>
+    implements $WalletAssetCopyWith<$Res> {
+  _$WalletAssetCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of WalletAssetDto
+  /// Create a copy of WalletAsset
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -106,11 +104,11 @@ class _$WalletAssetDtoCopyWithImpl<$Res, $Val extends WalletAssetDto>
 }
 
 /// @nodoc
-abstract class _$$WalletAssetDtoImplCopyWith<$Res>
-    implements $WalletAssetDtoCopyWith<$Res> {
-  factory _$$WalletAssetDtoImplCopyWith(_$WalletAssetDtoImpl value,
-          $Res Function(_$WalletAssetDtoImpl) then) =
-      __$$WalletAssetDtoImplCopyWithImpl<$Res>;
+abstract class _$$WalletAssetImplCopyWith<$Res>
+    implements $WalletAssetCopyWith<$Res> {
+  factory _$$WalletAssetImplCopyWith(
+          _$WalletAssetImpl value, $Res Function(_$WalletAssetImpl) then) =
+      __$$WalletAssetImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -123,14 +121,14 @@ abstract class _$$WalletAssetDtoImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$WalletAssetDtoImplCopyWithImpl<$Res>
-    extends _$WalletAssetDtoCopyWithImpl<$Res, _$WalletAssetDtoImpl>
-    implements _$$WalletAssetDtoImplCopyWith<$Res> {
-  __$$WalletAssetDtoImplCopyWithImpl(
-      _$WalletAssetDtoImpl _value, $Res Function(_$WalletAssetDtoImpl) _then)
+class __$$WalletAssetImplCopyWithImpl<$Res>
+    extends _$WalletAssetCopyWithImpl<$Res, _$WalletAssetImpl>
+    implements _$$WalletAssetImplCopyWith<$Res> {
+  __$$WalletAssetImplCopyWithImpl(
+      _$WalletAssetImpl _value, $Res Function(_$WalletAssetImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of WalletAssetDto
+  /// Create a copy of WalletAsset
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -142,7 +140,7 @@ class __$$WalletAssetDtoImplCopyWithImpl<$Res>
     Object? balance = null,
     Object? verified = null,
   }) {
-    return _then(_$WalletAssetDtoImpl(
+    return _then(_$WalletAssetImpl(
       name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -173,8 +171,8 @@ class __$$WalletAssetDtoImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$WalletAssetDtoImpl implements _WalletAssetDto {
-  _$WalletAssetDtoImpl(
+class _$WalletAssetImpl implements _WalletAsset {
+  _$WalletAssetImpl(
       {required this.name,
       required this.contract,
       required this.symbol,
@@ -182,8 +180,8 @@ class _$WalletAssetDtoImpl implements _WalletAssetDto {
       required this.balance,
       required this.verified});
 
-  factory _$WalletAssetDtoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$WalletAssetDtoImplFromJson(json);
+  factory _$WalletAssetImpl.fromJson(Map<String, dynamic> json) =>
+      _$$WalletAssetImplFromJson(json);
 
   @override
   final String? name;
@@ -200,14 +198,14 @@ class _$WalletAssetDtoImpl implements _WalletAssetDto {
 
   @override
   String toString() {
-    return 'WalletAssetDto(name: $name, contract: $contract, symbol: $symbol, decimals: $decimals, balance: $balance, verified: $verified)';
+    return 'WalletAsset(name: $name, contract: $contract, symbol: $symbol, decimals: $decimals, balance: $balance, verified: $verified)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$WalletAssetDtoImpl &&
+            other is _$WalletAssetImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.contract, contract) ||
                 other.contract == contract) &&
@@ -224,34 +222,33 @@ class _$WalletAssetDtoImpl implements _WalletAssetDto {
   int get hashCode => Object.hash(
       runtimeType, name, contract, symbol, decimals, balance, verified);
 
-  /// Create a copy of WalletAssetDto
+  /// Create a copy of WalletAsset
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$WalletAssetDtoImplCopyWith<_$WalletAssetDtoImpl> get copyWith =>
-      __$$WalletAssetDtoImplCopyWithImpl<_$WalletAssetDtoImpl>(
-          this, _$identity);
+  _$$WalletAssetImplCopyWith<_$WalletAssetImpl> get copyWith =>
+      __$$WalletAssetImplCopyWithImpl<_$WalletAssetImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$WalletAssetDtoImplToJson(
+    return _$$WalletAssetImplToJson(
       this,
     );
   }
 }
 
-abstract class _WalletAssetDto implements WalletAssetDto {
-  factory _WalletAssetDto(
+abstract class _WalletAsset implements WalletAsset {
+  factory _WalletAsset(
       {required final String? name,
       required final String? contract,
       required final String symbol,
       required final int decimals,
       required final String balance,
-      required final bool verified}) = _$WalletAssetDtoImpl;
+      required final bool verified}) = _$WalletAssetImpl;
 
-  factory _WalletAssetDto.fromJson(Map<String, dynamic> json) =
-      _$WalletAssetDtoImpl.fromJson;
+  factory _WalletAsset.fromJson(Map<String, dynamic> json) =
+      _$WalletAssetImpl.fromJson;
 
   @override
   String? get name;
@@ -266,10 +263,10 @@ abstract class _WalletAssetDto implements WalletAssetDto {
   @override
   bool get verified;
 
-  /// Create a copy of WalletAssetDto
+  /// Create a copy of WalletAsset
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$WalletAssetDtoImplCopyWith<_$WalletAssetDtoImpl> get copyWith =>
+  _$$WalletAssetImplCopyWith<_$WalletAssetImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

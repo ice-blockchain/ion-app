@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'wallet_asset_dto.dart';
+part of 'wallet_asset.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$WalletAssetDtoImpl _$$WalletAssetDtoImplFromJson(Map<String, dynamic> json) =>
-    _$WalletAssetDtoImpl(
+_$WalletAssetImpl _$$WalletAssetImplFromJson(Map<String, dynamic> json) =>
+    _$WalletAssetImpl(
       name: json['name'] as String?,
       contract: json['contract'] as String?,
       symbol: json['symbol'] as String,
@@ -16,8 +16,7 @@ _$WalletAssetDtoImpl _$$WalletAssetDtoImplFromJson(Map<String, dynamic> json) =>
       verified: json['verified'] as bool,
     );
 
-Map<String, dynamic> _$$WalletAssetDtoImplToJson(
-        _$WalletAssetDtoImpl instance) =>
+Map<String, dynamic> _$$WalletAssetImplToJson(_$WalletAssetImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'contract': instance.contract,

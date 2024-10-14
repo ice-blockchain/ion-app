@@ -4,7 +4,6 @@ import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/result_types/get_wallet_assets_result.dart';
 import 'package:ion_identity_client/src/wallets/types/create_wallet_result.dart';
 
 /// A class that handles operations related to user wallets, such as listing the wallets
@@ -66,6 +65,6 @@ class IonWallets {
     );
   }
 
-  Future<GetWalletAssetsResult> walletAssets(String walletId) =>
+  Future<WalletAssets> getWalletAssets(String walletId) =>
       _getWalletAssetsService.getWalletAssets(walletId);
 }

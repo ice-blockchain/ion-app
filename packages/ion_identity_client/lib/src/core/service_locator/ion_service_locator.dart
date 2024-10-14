@@ -2,6 +2,7 @@
 
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
+import 'package:ion_identity_client/src/core/network2/network_client2.dart';
 import 'package:ion_identity_client/src/core/service_locator/clients_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/network_service_locator.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
@@ -13,6 +14,11 @@ class IonServiceLocator {
     required IonClientConfig config,
   }) =>
       NetworkServiceLocator().getNetworkClient(config: config);
+
+  static NetworkClient2 getNetworkClient2({
+    required IonClientConfig config,
+  }) =>
+      NetworkServiceLocator().getNetworkClient2(config: config);
 
   static TokenStorage getTokenStorage() => NetworkServiceLocator().getTokenStorage();
 
