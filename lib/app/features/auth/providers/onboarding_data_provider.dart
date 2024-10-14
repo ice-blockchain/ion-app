@@ -96,15 +96,25 @@ class OnboardingData extends _$OnboardingData {
 
     final (:name, :displayName, :languages, :followees) = requireValues();
 
-    final relayUrls = await _assignUserRelays(userIdentity: userIdentity, followees: followees);
-    final nostrKeyStore = await _generateNostrKeyStore(identityKeyName: currentIdentityKeyName);
-    await _updateUserRelays(nostrKeyStore: nostrKeyStore, relayUrls: relayUrls);
-    await Future.wait([
+    final (relayUrls, nostrKeyStore) = await (
+      _assignUserRelays(userIdentity: userIdentity, followees: followees),
+      _generateNostrKeyStore(identityKeyName: currentIdentityKeyName),
+    ).wait;
+
+    final userRelays = UserRelays(
+      pubkey: nostrKeyStore.publicKey,
+      list: relayUrls.map((url) => UserRelay(url: url)).toList(),
+    );
+
+    ref.read(usersRelaysStorageProvider.notifier).store(userRelays);
+
+    await (
+      _updateUserRelays(nostrKeyStore: nostrKeyStore, userRelays: userRelays),
       _updateMetadata(nostrKeyStore: nostrKeyStore, name: name, displayName: displayName),
       _updateLanguages(languages: languages),
       _updateFollowees(followees: followees),
-    ]);
-    await _updateDelegation(nostrKeyStore: nostrKeyStore);
+      _updateDelegation(nostrKeyStore: nostrKeyStore)
+    ).wait;
   }
 
   Future<List<String>> _assignUserRelays({
@@ -126,12 +136,8 @@ class OnboardingData extends _$OnboardingData {
 
   Future<void> _updateUserRelays({
     required KeyStore nostrKeyStore,
-    required List<String> relayUrls,
+    required UserRelays userRelays,
   }) async {
-    final userRelays = UserRelays(
-      pubkey: nostrKeyStore.publicKey,
-      list: relayUrls.map((url) => UserRelay(url: url, read: true, write: true)).toList(),
-    );
     await ref.read(usersRelaysStorageProvider.notifier).publish(userRelays);
   }
 

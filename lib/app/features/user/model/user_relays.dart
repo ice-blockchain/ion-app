@@ -9,8 +9,8 @@ part 'user_relays.freezed.dart';
 class UserRelay with _$UserRelay {
   const factory UserRelay({
     required String url,
-    required bool read,
-    required bool write,
+    @Default(true) bool read,
+    @Default(true) bool write,
   }) = _UserRelay;
 
   const UserRelay._();
