@@ -8,7 +8,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'user_metadata.freezed.dart';
 part 'user_metadata.g.dart';
 
-@Freezed(copyWith: true)
+@Freezed(copyWith: true, equal: true)
 class UserMetadata with _$UserMetadata {
   const factory UserMetadata({
     required String pubkey,
@@ -23,7 +23,14 @@ class UserMetadata with _$UserMetadata {
     @Default(false) bool nft,
   }) = _UserMetadata;
 
+  const UserMetadata._();
+
+  /// https://github.com/nostr-protocol/nips/blob/master/01.md#kinds
   factory UserMetadata.fromEventMessage(EventMessage eventMessage) {
+    if (eventMessage.kind != kind) {
+      throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
+    }
+
     final userDataContent = UserDataEventMessageContent.fromJson(
       json.decode(eventMessage.content) as Map<String, dynamic>,
     );
@@ -39,6 +46,22 @@ class UserMetadata with _$UserMetadata {
       bot: userDataContent.bot ?? false,
     );
   }
+
+  String get content {
+    return jsonEncode(
+      UserDataEventMessageContent(
+        name: name,
+        about: about,
+        picture: picture,
+        displayName: displayName,
+        website: website,
+        banner: banner,
+        bot: bot,
+      ).toJson(),
+    );
+  }
+
+  static const int kind = 0;
 }
 
 @JsonSerializable(createToJson: true)

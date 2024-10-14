@@ -13,6 +13,10 @@ class Validators {
     return isEmpty(value) || !EmailValidator.validate(value!);
   }
 
+  static bool isInvalidName(String? value) {
+    return isEmpty(value) || !RegExp(r'^[a-zA-Z0-9.]+$').hasMatch(value!);
+  }
+
   static bool isInvalidLength(String? value, {int? minLength, int? maxLength}) {
     assert(
       minLength != null || maxLength != null,

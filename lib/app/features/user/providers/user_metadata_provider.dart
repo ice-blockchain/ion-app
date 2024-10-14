@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/nostr/constants.dart';
+import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_metadata.dart';
+import 'package:ice/app/features/user/providers/user_relays_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_metadata_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class UserMetadataStorage extends _$UserMetadataStorage {
+class UsersMetadataStorage extends _$UsersMetadataStorage {
   @override
   Map<String, UserMetadata> build() {
     return {};
@@ -25,36 +26,61 @@ class UserMetadataStorage extends _$UserMetadataStorage {
   }
 
   Future<void> publish(UserMetadata userMetadata) async {
-    throw Exception('Not implemented yet');
+    final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
+
+    if (keyStore == null) {
+      throw Exception('Current user keystore is null');
+    }
+
+    final userRelays = await ref.read(currentUserRelaysProvider.future);
+
+    if (userRelays == null) {
+      throw Exception('User relays are not found');
+    }
+
+    final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
+    final event = EventMessage.fromData(
+      keyStore: keyStore,
+      kind: UserMetadata.kind,
+      content: userMetadata.content,
+    );
+    await relay.sendEvent(event);
+    store(userMetadata);
   }
 }
 
 @Riverpod(keepAlive: true)
 Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
-  final userMetadata = ref.watch(userMetadataStorageProvider.select((state) => state[pubkey]));
+  final userMetadata = ref.watch(usersMetadataStorageProvider.select((state) => state[pubkey]));
   if (userMetadata != null) {
     return userMetadata;
   }
 
-  final relay = await ref.read(relaysProvider.notifier).getOrCreate(mainRelay);
+  final userRelays = await ref.watch(userRelaysProvider(pubkey).future);
+
+  if (userRelays == null) {
+    throw Exception('User indexers are not found');
+  }
+
+  final relay = await ref.watch(relayProvider(userRelays.list.random.url).future);
   final requestMessage = RequestMessage()
-    ..addFilter(RequestFilter(kinds: const [0], authors: [pubkey], limit: 1));
+    ..addFilter(RequestFilter(kinds: const [UserMetadata.kind], authors: [pubkey], limit: 1));
   final events = await requestEvents(requestMessage, relay);
 
   if (events.isNotEmpty) {
     final userMetadata = UserMetadata.fromEventMessage(events.first);
-    ref.read(userMetadataStorageProvider.notifier).store(userMetadata);
+    ref.read(usersMetadataStorageProvider.notifier).store(userMetadata);
     return userMetadata;
   }
 
   return null;
 }
 
-@riverpod
-AsyncValue<UserMetadata?> currentUserMetadata(CurrentUserMetadataRef ref) {
-  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
-  if (currentUserId.isEmpty) {
-    return const AsyncData(null);
+@Riverpod(keepAlive: true)
+Future<UserMetadata?> currentUserMetadata(CurrentUserMetadataRef ref) async {
+  final currentUserNostrKey = await ref.watch(currentUserNostrKeyStoreProvider.future);
+  if (currentUserNostrKey == null) {
+    return null;
   }
-  return ref.watch(userMetadataProvider(currentUserId));
+  return ref.watch(userMetadataProvider(currentUserNostrKey.publicKey).future);
 }

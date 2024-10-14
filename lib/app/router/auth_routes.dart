@@ -3,22 +3,26 @@
 part of 'app_routes.dart';
 
 class AuthRoutes {
+  static const authPrefix = 'auth';
+
+  static const onboardingPrefix = 'onboarding';
+
   static const routes = <TypedRoute<RouteData>>[
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<GetStartedRoute>(path: 'get-started'),
-        TypedGoRoute<SignUpPasskeyRoute>(path: 'sign-up-passkey'),
-        TypedGoRoute<SignUpPasswordRoute>(path: 'sign-up-password'),
-        TypedGoRoute<RestoreMenuRoute>(path: 'restore-menu'),
-        TypedGoRoute<RestoreCredsRoute>(path: 'restore-creds'),
-        TypedGoRoute<RestoreRecoveryKeysRoute>(path: 'recovery-keys'),
-        TypedGoRoute<TwoFaCodesRoute>(path: 'twofa-codes'),
-        TypedGoRoute<TwoFaOptionsRoute>(path: 'twofa-options'),
-        TypedGoRoute<TwoFaSuccessRoute>(path: 'twofa-success'),
-        TypedGoRoute<SelectLanguagesRoute>(path: 'select-languages'),
-        TypedGoRoute<FillProfileRoute>(path: 'fill-profile'),
-        TypedGoRoute<DiscoverCreatorsRoute>(path: 'discover-creators'),
-        TypedGoRoute<NotificationsRoute>(path: 'notifications'),
+        TypedGoRoute<GetStartedRoute>(path: '$authPrefix/get-started'),
+        TypedGoRoute<SignUpPasskeyRoute>(path: '$authPrefix/sign-up-passkey'),
+        TypedGoRoute<SignUpPasswordRoute>(path: '$authPrefix/sign-up-password'),
+        TypedGoRoute<RestoreMenuRoute>(path: '$authPrefix/restore-menu'),
+        TypedGoRoute<RestoreCredsRoute>(path: '$authPrefix/restore-creds'),
+        TypedGoRoute<RestoreRecoveryKeysRoute>(path: '$authPrefix/recovery-keys'),
+        TypedGoRoute<TwoFaCodesRoute>(path: '$authPrefix/twofa-codes'),
+        TypedGoRoute<TwoFaOptionsRoute>(path: '$authPrefix/twofa-options'),
+        TypedGoRoute<TwoFaSuccessRoute>(path: '$authPrefix/twofa-success'),
+        TypedGoRoute<SelectLanguagesRoute>(path: '$onboardingPrefix/select-languages'),
+        TypedGoRoute<FillProfileRoute>(path: '$onboardingPrefix/fill-profile'),
+        TypedGoRoute<DiscoverCreatorsRoute>(path: '$onboardingPrefix/discover-creators'),
+        TypedGoRoute<NotificationsRoute>(path: '$onboardingPrefix/notifications'),
       ],
     ),
   ];

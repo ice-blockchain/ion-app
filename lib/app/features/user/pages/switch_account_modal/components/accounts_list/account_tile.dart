@@ -6,23 +6,30 @@ import 'package:ice/app/components/list_item/list_item.dart';
 import 'package:ice/app/components/skeleton/skeleton.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ice/app/utils/username.dart';
 import 'package:ice/generated/assets.gen.dart';
 
 class AccountsTile extends ConsumerWidget {
   const AccountsTile({
-    required this.userId,
+    required this.identityKeyName,
     super.key,
   });
 
-  final String userId;
+  final String identityKeyName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
-    final userMetadataValue = ref.watch(userMetadataProvider(userId)).valueOrNull;
-    final isCurrentUser = userId == currentUserId;
+    final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider);
+    final keyStore = ref.watch(nostrKeyStoreProvider(identityKeyName)).valueOrNull;
+
+    if (keyStore == null) {
+      return Skeleton(child: ListItem());
+    }
+
+    final userMetadataValue = ref.watch(userMetadataProvider(keyStore.publicKey)).valueOrNull;
+    final isCurrentUser = identityKeyName == currentUserId;
 
     if (userMetadataValue == null) {
       return Skeleton(child: ListItem());
@@ -32,7 +39,7 @@ class AccountsTile extends ConsumerWidget {
       isSelected: isCurrentUser,
       onTap: () {
         if (!isCurrentUser) {
-          ref.read(authProvider.notifier).setCurrentUser(userId);
+          ref.read(authProvider.notifier).setCurrentUser(identityKeyName);
         }
       },
       title: Text(userMetadataValue.displayName),

@@ -15,6 +15,7 @@ class AuthScrollContainer extends HookWidget {
     this.description,
     this.icon,
     this.children = const [],
+    this.slivers = const [],
     this.showBackButton = true,
     this.actions,
     this.titleStyle,
@@ -23,6 +24,8 @@ class AuthScrollContainer extends HookWidget {
   });
 
   final List<Widget> children;
+
+  final List<Widget> slivers;
 
   final String? title;
 
@@ -78,22 +81,24 @@ class AuthScrollContainer extends HookWidget {
               toolbarHeight: NavigationAppBar.modalHeaderHeight,
               pinned: true,
             ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Column(
-                mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.spaceBetween,
-                children: [
-                  AuthHeader(
-                    title: title,
-                    description: description,
-                    titleStyle: titleStyle,
-                    descriptionStyle: descriptionStyle,
-                    icon: icon != null ? AuthHeaderIcon(icon: icon) : icon,
-                  ),
-                  ...children,
-                ],
+            SliverToBoxAdapter(
+              child: AuthHeader(
+                title: title,
+                description: description,
+                titleStyle: titleStyle,
+                descriptionStyle: descriptionStyle,
+                icon: icon != null ? AuthHeaderIcon(icon: icon) : icon,
               ),
             ),
+            if (children.isNotEmpty)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+                  mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.spaceBetween,
+                  children: children,
+                ),
+              ),
+            ...slivers,
           ],
         ),
       ),
