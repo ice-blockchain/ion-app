@@ -14,10 +14,8 @@ class PollTitle extends HookConsumerWidget {
     final textThemes = context.theme.appTextThemes;
     final title = ref.watch(pollTitleNotifierProvider).text;
 
-    // Use a TextEditingController and set up only when the widget initializes
     final textController = useTextEditingController(text: title);
 
-    // Keep the controller text in sync with the provider state
     useEffect(
       () {
         if (textController.text != title) {
@@ -33,7 +31,6 @@ class PollTitle extends HookConsumerWidget {
       child: TextField(
         controller: textController,
         onChanged: (value) {
-          // Update the title using the provider
           ref.read(pollTitleNotifierProvider.notifier).onTextChanged(value);
         },
         cursorColor: context.theme.appColors.primaryAccent,
@@ -47,7 +44,7 @@ class PollTitle extends HookConsumerWidget {
           hintStyle: textThemes.body2.copyWith(
             color: context.theme.appColors.quaternaryText,
           ),
-          contentPadding: EdgeInsets.zero, // Remove any extra padding
+          contentPadding: EdgeInsets.zero,
         ),
       ),
     );

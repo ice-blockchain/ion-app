@@ -19,4 +19,8 @@ class PollTitleNotifier extends _$PollTitleNotifier {
   void clear() {
     state = PollTitleData.empty();
   }
+
+  bool validate() {
+    return state.text.trim().isNotEmpty;
+  }
 }

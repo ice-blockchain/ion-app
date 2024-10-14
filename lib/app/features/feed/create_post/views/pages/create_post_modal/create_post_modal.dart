@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +12,7 @@ import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_bold_button/text_editor_bold_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_image_button/text_editor_image_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_italic_button/text_editor_italic_button.dart';
@@ -22,6 +25,7 @@ import 'package:ice/app/features/feed/views/pages/cancel_creation_modal/cancel_c
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ice/app/services/logger/logger.dart';
 import 'package:ice/app/services/markdown_parser/markdown_parser.dart';
 
 class CreatePostModal extends HookWidget {
@@ -41,6 +45,53 @@ class CreatePostModal extends HookWidget {
   Widget build(BuildContext context) {
     final textEditorController = useQuillController();
     final hasContent = useTextEditorHasContent(textEditorController);
+    final hasPoll = useState(false);
+
+    useEffect(
+      () {
+        void checkPoll() {
+          final delta = textEditorController.document.toDelta();
+          var pollExists = false;
+
+          for (final operation in delta.operations) {
+            if (operation.isInsert && operation.data is Map<String, dynamic>) {
+              final data = operation.data! as Map<String, dynamic>;
+              if (data.containsKey('custom')) {
+                final customData = data['custom'];
+                if (customData is Map<String, dynamic> &&
+                    customData.containsKey(textEditorPollKey)) {
+                  pollExists = true;
+                  break;
+                }
+                if (customData is String) {
+                  try {
+                    final parsedData = jsonDecode(customData);
+                    if (parsedData is Map<String, dynamic> &&
+                        parsedData.containsKey(textEditorPollKey)) {
+                      pollExists = true;
+                      break;
+                    }
+                  } catch (e) {
+                    Logger.log('Failed to parse custom data as JSON: $e');
+                  }
+                }
+              }
+            }
+          }
+
+          hasPoll.value = pollExists;
+        }
+
+        textEditorController.addListener(checkPoll);
+
+        checkPoll();
+
+        return () {
+          textEditorController.removeListener(checkPoll);
+        };
+      },
+      [textEditorController],
+    );
 
     return BackHardwareButtonInterceptor(
       onBackPress: (context) async {
@@ -90,9 +141,10 @@ class CreatePostModal extends HookWidget {
                   child: ActionsToolbar(
                     actions: [
                       TextEditorImageButton(textEditorController: textEditorController),
-                      TextEditorPollButton(
-                        textEditorController: textEditorController,
-                      ),
+                      if (!hasPoll.value)
+                        TextEditorPollButton(
+                          textEditorController: textEditorController,
+                        ),
                       TextEditorRegularButton(textEditorController: textEditorController),
                       TextEditorItalicButton(textEditorController: textEditorController),
                       TextEditorBoldButton(textEditorController: textEditorController),

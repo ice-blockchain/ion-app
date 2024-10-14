@@ -33,4 +33,11 @@ class PollAnswersNotifier extends _$PollAnswersNotifier {
       ];
     }
   }
+
+  bool validate() {
+    return state.length >= 2 &&
+        state.every(
+          (answer) => answer.text.trim().isNotEmpty && answer.text.trim().length <= 25,
+        );
+  }
 }
