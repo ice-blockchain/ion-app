@@ -55,7 +55,7 @@ Future<UserRelays?> userRelays(UserRelaysRef ref, String pubkey) async {
 
   final relay = await ref.read(relayProvider(currentUserIndexers.random).future);
   final requestMessage = RequestMessage()
-    ..addFilter(RequestFilter(kinds: const [UserRelays.kind], p: [pubkey], limit: 1));
+    ..addFilter(RequestFilter(kinds: const [UserRelays.kind], authors: [pubkey], limit: 1));
   final events = await requestEvents(requestMessage, relay);
 
   if (events.isNotEmpty) {
@@ -67,11 +67,11 @@ Future<UserRelays?> userRelays(UserRelaysRef ref, String pubkey) async {
   return null;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<UserRelays?> currentUserRelays(CurrentUserRelaysRef ref) async {
   final keyStore = await ref.watch(currentUserNostrKeyStoreProvider.future);
   if (keyStore == null) {
     return null;
   }
-  return ref.watch(userRelaysProvider(keyStore.publicKey).future);
+  return await ref.watch(userRelaysProvider(keyStore.publicKey).future);
 }

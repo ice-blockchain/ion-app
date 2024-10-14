@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/auth/providers/onboarding_complete_provider.dart';
 import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ice/app/features/core/providers/env_provider.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
@@ -26,4 +27,6 @@ Future<void> initApp(InitAppRef ref) async {
     ref.read(authProvider.future),
     ref.read(permissionsProvider.notifier).checkAllPermissions(),
   ]);
+
+  await ref.read(onboardingCompleteProvider.future);
 }
