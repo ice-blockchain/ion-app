@@ -16,7 +16,7 @@ Future<Wallet?> mainWallet(MainWalletRef ref) async {
     return null;
   }
   // TODO: take the list from walletsDataNotifierProvider when connected to ionClient
-  final ionClient = await ref.read(ionApiClientProvider.future);
+  final ionClient = await ref.watch(ionApiClientProvider.future);
   final wallets = await ionClient(username: currentIdentityKeyName).wallets.getWallets();
   final mainWallet = wallets.firstWhereOrNull((wallet) => wallet.name == 'main');
   if (mainWallet == null) {
