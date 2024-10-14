@@ -25,7 +25,7 @@ mixin _$WalletAsset {
   String get symbol => throw _privateConstructorUsedError;
   int get decimals => throw _privateConstructorUsedError;
   String get balance => throw _privateConstructorUsedError;
-  bool get verified => throw _privateConstructorUsedError;
+  bool? get verified => throw _privateConstructorUsedError;
 
   /// Serializes this WalletAsset to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,7 +49,7 @@ abstract class $WalletAssetCopyWith<$Res> {
       String symbol,
       int decimals,
       String balance,
-      bool verified});
+      bool? verified});
 }
 
 /// @nodoc
@@ -72,7 +72,7 @@ class _$WalletAssetCopyWithImpl<$Res, $Val extends WalletAsset>
     Object? symbol = null,
     Object? decimals = null,
     Object? balance = null,
-    Object? verified = null,
+    Object? verified = freezed,
   }) {
     return _then(_value.copyWith(
       name: freezed == name
@@ -95,10 +95,10 @@ class _$WalletAssetCopyWithImpl<$Res, $Val extends WalletAsset>
           ? _value.balance
           : balance // ignore: cast_nullable_to_non_nullable
               as String,
-      verified: null == verified
+      verified: freezed == verified
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
     ) as $Val);
   }
 }
@@ -117,7 +117,7 @@ abstract class _$$WalletAssetImplCopyWith<$Res>
       String symbol,
       int decimals,
       String balance,
-      bool verified});
+      bool? verified});
 }
 
 /// @nodoc
@@ -138,7 +138,7 @@ class __$$WalletAssetImplCopyWithImpl<$Res>
     Object? symbol = null,
     Object? decimals = null,
     Object? balance = null,
-    Object? verified = null,
+    Object? verified = freezed,
   }) {
     return _then(_$WalletAssetImpl(
       name: freezed == name
@@ -161,10 +161,10 @@ class __$$WalletAssetImplCopyWithImpl<$Res>
           ? _value.balance
           : balance // ignore: cast_nullable_to_non_nullable
               as String,
-      verified: null == verified
+      verified: freezed == verified
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
     ));
   }
 }
@@ -194,7 +194,7 @@ class _$WalletAssetImpl implements _WalletAsset {
   @override
   final String balance;
   @override
-  final bool verified;
+  final bool? verified;
 
   @override
   String toString() {
@@ -245,7 +245,7 @@ abstract class _WalletAsset implements WalletAsset {
       required final String symbol,
       required final int decimals,
       required final String balance,
-      required final bool verified}) = _$WalletAssetImpl;
+      required final bool? verified}) = _$WalletAssetImpl;
 
   factory _WalletAsset.fromJson(Map<String, dynamic> json) =
       _$WalletAssetImpl.fromJson;
@@ -261,7 +261,7 @@ abstract class _WalletAsset implements WalletAsset {
   @override
   String get balance;
   @override
-  bool get verified;
+  bool? get verified;
 
   /// Create a copy of WalletAsset
   /// with the given fields replaced by the non-null parameter values.

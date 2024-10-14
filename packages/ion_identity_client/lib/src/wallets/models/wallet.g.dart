@@ -10,14 +10,12 @@ _$WalletImpl _$$WalletImplFromJson(Map<String, dynamic> json) => _$WalletImpl(
       id: json['id'] as String,
       network: json['network'] as String,
       status: json['status'] as String,
-      signingKey:
-          WalletSigningKey.fromJson(json['signingKey'] as Map<String, dynamic>),
+      signingKey: WalletSigningKey.fromJson(json['signingKey'] as Map<String, dynamic>),
       address: json['address'] as String,
       name: json['name'] as String,
     );
 
-Map<String, dynamic> _$$WalletImplToJson(_$WalletImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$WalletImplToJson(_$WalletImpl instance) => <String, dynamic>{
       'id': instance.id,
       'network': instance.network,
       'status': instance.status,

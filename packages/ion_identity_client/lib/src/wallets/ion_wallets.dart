@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_client.dart';
-import 'package:ion_identity_client/src/signer/user_action_signer.dart';
-import 'package:ion_identity_client/src/wallets/ion_wallets_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/get_wallet_nfts_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
-import 'package:ion_identity_client/src/wallets/types/create_wallet_result.dart';
 
 /// A class that handles operations related to user wallets, such as listing the wallets
 /// associated with a specific user.
@@ -20,41 +18,27 @@ class IonWallets {
   /// - [signer]: The passkey signer used for handling cryptographic operations, if needed.
   IonWallets({
     required this.username,
-    required IonWalletsDataSource dataSource,
-    required UserActionSigner userActionSigner,
+    required CreateWalletService createWalletService,
     required GetWalletsService getWalletsService,
     required GetWalletAssetsService getWalletAssetsService,
     required GetWalletNftsService getWalletNftsService,
-  })  : _dataSource = dataSource,
-        _userActionSigner = userActionSigner,
+  })  : _createWalletService = createWalletService,
         _getWalletsService = getWalletsService,
         _getWalletAssetsService = getWalletAssetsService,
         _getWalletNftsService = getWalletNftsService;
 
   final String username;
-  final IonWalletsDataSource _dataSource;
-  final UserActionSigner _userActionSigner;
 
+  final CreateWalletService _createWalletService;
   final GetWalletsService _getWalletsService;
   final GetWalletAssetsService _getWalletAssetsService;
   final GetWalletNftsService _getWalletNftsService;
-  Future<CreateWalletResult> createWallet({
+
+  Future<Wallet> createWallet({
     required String network,
     required String name,
-  }) async {
-    final request = _dataSource.buildCreateWalletSigningRequest(
-      username: username,
-      network: network,
-      name: name,
-    );
-
-    final result = await _userActionSigner.execute(request, Wallet.fromJson).run();
-
-    return result.fold(
-      (l) => UnknownCreateWalletFailure(l, StackTrace.current),
-      (wallet) => CreateWalletSuccess(wallet: wallet),
-    );
-  }
+  }) =>
+      _createWalletService.createWallet(network: network, name: name);
 
   /// Lists the wallets associated with the current user by making an API request.
   ///
