@@ -3,6 +3,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/auth/providers/onboarding_provider.dart';
 import 'package:ice/app/features/core/providers/init_provider.dart';
 import 'package:ice/app/features/core/providers/splash_provider.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
@@ -20,14 +21,12 @@ GoRouter goRouter(GoRouterRef ref) {
 
   return GoRouter(
     refreshListenable: AppRouterNotifier(ref),
-    redirect: (context, state) {
-      final authState = ref.read(authProvider);
+    redirect: (context, state) async {
       final initState = ref.read(initAppProvider);
       final isSplashAnimationCompleted = ref.read(splashProvider);
 
       final isInitInProgress = initState.isLoading;
       final isInitError = initState.hasError;
-      final hasAuthenticated = (authState.valueOrNull?.hasAuthenticated).falseOrValue;
 
       if (isInitError) {
         Logger.log('Init error', error: initState.error);
@@ -39,19 +38,7 @@ GoRouter goRouter(GoRouterRef ref) {
         return SplashRoute().location;
       }
 
-      if (state.matchedLocation.startsWith(SplashRoute().location)) {
-        // Redirect after app init complete
-        return hasAuthenticated ? FeedRoute().location : IntroRoute().location;
-      }
-
-      // Redirects when user log in / out
-      if (hasAuthenticated && state.matchedLocation.startsWith(IntroRoute().location)) {
-        return FeedRoute().location;
-      } else if (!hasAuthenticated && !state.matchedLocation.startsWith(IntroRoute().location)) {
-        return IntroRoute().location;
-      }
-
-      return null;
+      return _mainRedirect(location: state.matchedLocation, ref: ref);
     },
     routes: $appRoutes,
     errorBuilder: (context, state) => ErrorPage(error: state.error ?? Exception('Unknown error')),
@@ -59,4 +46,32 @@ GoRouter goRouter(GoRouterRef ref) {
     debugLogDiagnostics: LoggerConfig.routerLogsEnabled,
     navigatorKey: rootNavigatorKey,
   );
+}
+
+FutureOr<String?> _mainRedirect({
+  required String location,
+  required ProviderRef<GoRouter> ref,
+}) {
+  final hasAuthenticated = (ref.read(authProvider).valueOrNull?.hasAuthenticated).falseOrValue;
+  final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
+
+  final isOnSplash = location.startsWith(SplashRoute().location);
+  final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
+  final isOnOnboarding = location.contains('/${AuthRoutes.onboardingPrefix}/');
+  final isInAuthenticatedZone = !isOnAuth && !isOnOnboarding && !isOnSplash;
+
+  if (!hasAuthenticated && !isOnAuth) {
+    return IntroRoute().location;
+  }
+
+  if (hasAuthenticated && onboardingComplete != null) {
+    if (onboardingComplete && !isInAuthenticatedZone) {
+      return FeedRoute().location;
+    }
+
+    if (!onboardingComplete && !isOnOnboarding) {
+      return FillProfileRoute().location;
+    }
+  }
+  return null;
 }

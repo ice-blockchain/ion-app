@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ice/app/features/core/providers/env_provider.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
@@ -12,13 +13,17 @@ part 'init_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<void> initApp(InitAppRef ref) async {
-  await ref.read(windowManagerProvider.notifier).show();
   Nostr.initialize();
-  await ref.read(envProvider.future);
-  await ref.watch(sharedPreferencesProvider.future);
+
   await Future.wait([
-    ref.read(appTemplateProvider.future),
+    ref.read(windowManagerProvider.notifier).show(),
+    ref.read(envProvider.future),
+    ref.read(sharedPreferencesProvider.future),
   ]);
 
-  await ref.read(permissionsProvider.notifier).checkAllPermissions();
+  await Future.wait([
+    ref.read(appTemplateProvider.future),
+    ref.read(authProvider.future),
+    ref.read(permissionsProvider.notifier).checkAllPermissions(),
+  ]);
 }

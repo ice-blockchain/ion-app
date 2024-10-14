@@ -23,6 +23,7 @@ Future<UserIdentity?> currentUserIdentity(CurrentUserIdentityRef ref) async {
         'wss://relay.damus.io',
         'wss://relay.damus.io',
       ],
+      masterPubkey: 'some_key',
     );
   }
   return null;

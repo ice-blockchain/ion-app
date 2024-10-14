@@ -9,5 +9,6 @@ class UserIdentity with _$UserIdentity {
   const factory UserIdentity({
     required List<String> ionConnectRelays,
     required List<String> ionConnectIndexerRelays,
+    required String? masterPubkey,
   }) = _UserIdentity;
 }
