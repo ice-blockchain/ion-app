@@ -20,6 +20,10 @@ dependencies:
   dotted_border: ^2.1.0
   email_validator: ^2.1.16
   extended_text: ^14.1.0
+  ffmpeg_helper: ^1.0.1
+  ffmpeg_wasm: ^1.0.3
+  file_picker: ^8.1.2
+  file_saver: ^0.2.12
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.0
@@ -48,6 +52,8 @@ dependencies:
   mocktail: ^1.0.4
   nostr_dart:
     git: https://github.com/ice-blockchain/nostr-dart.git
+  path: ^1.9.0
+  path_provider: ^2.1.4
   permission_handler: ^11.3.0
   photo_manager: ^3.3.0
   photo_manager_image_provider: ^2.1.1

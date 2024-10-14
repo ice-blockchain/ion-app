@@ -526,6 +526,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  ffmpeg_helper:
+    dependency: "direct main"
+    description:
+      name: ffmpeg_helper
+      sha256: "9652adb5aa14ef014a677a85a55ceef2fdbe07c3cffe04ebab0b73f979eca952"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  ffmpeg_kit_flutter_min_gpl:
+    dependency: transitive
+    description:
+      name: ffmpeg_kit_flutter_min_gpl
+      sha256: ca3dc2330c176c8ef96fb512e7a1a37ab369e15685d2e72a52ec1d50726360a0
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
+  ffmpeg_kit_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: ffmpeg_kit_flutter_platform_interface
+      sha256: addf046ae44e190ad0101b2fde2ad909a3cd08a2a109f6106d2f7048b7abedee
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
+  ffmpeg_wasm:
+    dependency: "direct main"
+    description:
+      name: ffmpeg_wasm
+      sha256: "28beaac9be301be5246156b544d2f5845dad8f78eda464dee02a75ee1f83c411"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   file:
     dependency: transitive
     description:
@@ -534,6 +566,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      sha256: "167bb619cdddaa10ef2907609feb8a79c16dfa479d3afaf960f8e223f754bf12"
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.1.2"
+  file_saver:
+    dependency: "direct main"
+    description:
+      name: file_saver
+      sha256: bdebc720e17b3e01aba59da69b6d47020a7e5ba7d5c75bd9194f9618d5f16ef4
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.12"
   file_selector_linux:
     dependency: transitive
     description:
@@ -1330,6 +1378,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  package_info_plus:
+    dependency: transitive
+    description:
+      name: package_info_plus
+      sha256: "7e76fad405b3e4016cd39d08f455a4eb5199723cf594cd1b8916d47140d93017"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
+  package_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: package_info_plus_platform_interface
+      sha256: "9bc8ba46813a4cc42c66ab781470711781940780fd8beddd0c3da62506d3a6c6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   passkeys:
     dependency: transitive
     description:
@@ -1371,7 +1435,7 @@ packages:
     source: hosted
     version: "2.1.0"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       sha256: "087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af"
@@ -1395,7 +1459,7 @@ packages:
     source: hosted
     version: "1.0.1"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       sha256: fec0d61223fba3154d87759e3cc27fe2c8dc498f6386c6d6fc80d1afdd1bf378
@@ -2167,22 +2231,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  web_socket:
+    dependency: transitive
+    description:
+      name: web_socket
+      sha256: "3c12d96c0c9a4eec095246debcea7b86c0324f22df69893d538fcc6f1b8cce83"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.6"
   web_socket_channel:
     dependency: transitive
     description:
       name: web_socket_channel
-      sha256: d88238e5eac9a42bb43ca4e721edba3c08c6354d4a53063afaa568516217621b
+      sha256: "9f187088ed104edd8662ca07af4b124465893caf063ba29758f97af57e61da8f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.0"
+    version: "3.0.1"
   web_socket_client:
     dependency: transitive
     description:
       name: web_socket_client
-      sha256: de52c9b3acf1f9fafb2951aa2764dd67c7d99d70be70c7c1fd791fae8f632f98
+      sha256: "0ec5230852349191188c013112e4d2be03e3fc83dbe80139ead9bf3a136e53b5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.5"
   widgetbook:
     dependency: "direct main"
     description:

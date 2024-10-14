@@ -29,6 +29,7 @@ import 'package:ice/app/features/dapps/views/pages/dapps.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ice/app/features/dapps/views/pages/dapps_main_modal/dapps_main_modal_page.dart';
 import 'package:ice/app/features/feed/create_article/views/pages/create_article_modal/create_article_modal.dart';
+import 'package:ice/app/features/feed/create_post/views/pages/compress_test_page.dart';
 import 'package:ice/app/features/feed/create_post/views/pages/create_post_modal/create_post_modal.dart';
 import 'package:ice/app/features/feed/create_story/create_story_modal.dart';
 import 'package:ice/app/features/feed/create_story/views/pages/story_camera_widget.dart';
@@ -327,4 +328,9 @@ class SwitchAccountRoute extends BaseRouteData {
           child: const SwitchAccountModal(),
           type: IceRouteType.bottomSheet,
         );
+}
+
+@TypedGoRoute<CompressTestRoute>(path: '/compress-test')
+class CompressTestRoute extends BaseRouteData {
+  CompressTestRoute() : super(child: const CompressTestPage());
 }
