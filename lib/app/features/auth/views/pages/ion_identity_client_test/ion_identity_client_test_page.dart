@@ -189,7 +189,7 @@ class UserWalletsDialog extends ConsumerWidget {
 
     return SheetContent(
       body: FutureBuilder(
-        future: ionClient(username: username).wallets.listWallets(),
+        future: ionClient(username: username).wallets.getWallets(),
         builder: (context, snapshot) {
           final isLoading = !snapshot.hasData;
 
@@ -199,10 +199,7 @@ class UserWalletsDialog extends ConsumerWidget {
             );
           }
 
-          final data = switch (snapshot.data) {
-            ListWalletsSuccess(wallets: final wallets) => wallets,
-            _ => <Wallet>[],
-          };
+          final data = snapshot.data ?? [];
 
           return ListView.builder(
             shrinkWrap: true,

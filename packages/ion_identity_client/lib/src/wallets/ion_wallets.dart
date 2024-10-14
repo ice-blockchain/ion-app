@@ -4,6 +4,7 @@ import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
 import 'package:ion_identity_client/src/wallets/types/create_wallet_result.dart';
 
 /// A class that handles operations related to user wallets, such as listing the wallets
@@ -20,32 +21,19 @@ class IonWallets {
     required this.username,
     required IonWalletsDataSource dataSource,
     required UserActionSigner userActionSigner,
+    required GetWalletsService getWalletsService,
     required GetWalletAssetsService getWalletAssetsService,
   })  : _dataSource = dataSource,
         _userActionSigner = userActionSigner,
+        _getWalletsService = getWalletsService,
         _getWalletAssetsService = getWalletAssetsService;
 
   final String username;
   final IonWalletsDataSource _dataSource;
   final UserActionSigner _userActionSigner;
 
+  final GetWalletsService _getWalletsService;
   final GetWalletAssetsService _getWalletAssetsService;
-
-  /// Lists the wallets associated with the current user by making an API request.
-  ///
-  /// Returns a [ListWalletsResult], which can either be a [ListWalletsSuccess]
-  /// with the list of wallets on success or a specific failure type on error.
-  Future<ListWalletsResult> listWallets() async {
-    // TODO: add pagination
-    final response = await _dataSource.listWallets(username: username).run();
-
-    return response.fold(
-      (l) => l,
-      (r) => ListWalletsSuccess(
-        wallets: r.items,
-      ),
-    );
-  }
 
   Future<CreateWalletResult> createWallet({
     required String network,
@@ -64,6 +52,12 @@ class IonWallets {
       (wallet) => CreateWalletSuccess(wallet: wallet),
     );
   }
+
+  /// Lists the wallets associated with the current user by making an API request.
+  ///
+  /// Returns a [Future] that resolves to a [List<Wallet>] containing the user's wallets.
+  /// If an error occurs during the API request or processing, it will be thrown as an exception.
+  Future<List<Wallet>> getWallets() => _getWalletsService.getWallets();
 
   Future<WalletAssets> getWalletAssets(String walletId) =>
       _getWalletAssetsService.getWalletAssets(walletId);

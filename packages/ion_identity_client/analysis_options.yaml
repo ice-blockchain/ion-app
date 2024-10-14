@@ -8,6 +8,7 @@ analyzer:
     lines_longer_than_80_chars: ignore
     public_member_api_docs: ignore
     unnecessary_library_directive: ignore
+    invalid_annotation_target: ignore
   plugins:
     - custom_lint
   exclude:

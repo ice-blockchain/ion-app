@@ -33,68 +33,73 @@ class _Body extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final username = ref.watch(currentUsernameNotifierProvider) ?? 'ERROR';
 
+    final walletsResult = ref.watch(userWalletsProvider(username));
+
+    return walletsResult.when(
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stack) => Center(
+        child: Text(error.toString()),
+      ),
+      data: (wallets) => _SuccessState(
+        wallets: wallets,
+      ),
+    );
+  }
+}
+
+class _SuccessState extends HookWidget {
+  const _SuccessState({
+    required this.wallets,
+  });
+
+  final List<Wallet> wallets;
+
+  @override
+  Widget build(BuildContext context) {
     final expandedWallets = useState(<int, bool>{});
 
-    final walletsResult = ref.watch(userWalletsProvider(username));
-    if (walletsResult.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+    return SingleChildScrollView(
+      child: ExpansionPanelList(
+        expandedHeaderPadding: EdgeInsets.zero,
+        expansionCallback: (panelIndex, isExpanded) {
+          expandedWallets.value = {
+            ...expandedWallets.value,
+            panelIndex: isExpanded,
+          };
+        },
+        children: wallets.indexed.map(
+          (e) {
+            final index = e.$1;
+            final wallet = e.$2;
 
-    if (walletsResult.hasError) {
-      return Center(
-        child: Text(walletsResult.error.toString()),
-      );
-    }
-
-    final wallets = walletsResult.requireValue;
-
-    return switch (wallets) {
-      ListWalletsSuccess(:final wallets) => SingleChildScrollView(
-          child: ExpansionPanelList(
-            expandedHeaderPadding: EdgeInsets.zero,
-            expansionCallback: (panelIndex, isExpanded) {
-              expandedWallets.value = {
-                ...expandedWallets.value,
-                panelIndex: isExpanded,
-              };
-            },
-            children: wallets.indexed.map(
-              (e) {
-                final index = e.$1;
-                final wallet = e.$2;
-
-                return ExpansionPanel(
-                  isExpanded: expandedWallets.value[index] ?? false,
-                  headerBuilder: (context, isExpanded) => ListTile(
-                    title: Text('name: ${wallet.name}'),
-                    subtitle: Text('network: ${wallet.network}'),
-                  ),
-                  body: ListTile(
-                    title: Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => WalletAssetsPage(walletId: wallet.id),
-                              ),
-                            );
-                          },
-                          child: const Text('Assets'),
-                        ),
-                      ],
+            return ExpansionPanel(
+              isExpanded: expandedWallets.value[index] ?? false,
+              headerBuilder: (context, isExpanded) => ListTile(
+                title: Text('name: ${wallet.name}'),
+                subtitle: Text('network: ${wallet.network}'),
+              ),
+              body: ListTile(
+                title: Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => WalletAssetsPage(walletId: wallet.id),
+                          ),
+                        );
+                      },
+                      child: const Text('Assets'),
                     ),
-                  ),
-                );
-              },
-            ).toList(),
-          ),
-        ),
-      _ => Center(
-          child: Text(walletsResult.error.toString()),
-        ),
-    };
+                  ],
+                ),
+              ),
+            );
+          },
+        ).toList(),
+      ),
+    );
   }
 }
