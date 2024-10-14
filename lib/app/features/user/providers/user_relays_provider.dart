@@ -47,13 +47,13 @@ Future<UserRelays?> userRelays(UserRelaysRef ref, String pubkey) async {
     return userRelays;
   }
 
-  final currentUserIndexers = await ref.read(currentUserIndexersProvider.future);
+  final currentUserIndexers = await ref.watch(currentUserIndexersProvider.future);
 
   if (currentUserIndexers == null) {
     throw Exception('Current user indexers are not found');
   }
 
-  final relay = await ref.read(relayProvider(currentUserIndexers.random).future);
+  final relay = await ref.watch(relayProvider(currentUserIndexers.random).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserRelays.kind], authors: [pubkey], limit: 1));
   final events = await requestEvents(requestMessage, relay);
