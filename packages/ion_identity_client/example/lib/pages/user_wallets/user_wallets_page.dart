@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion_client_example/pages/user_wallets/providers/create_wallet_notifier.dart';
 import 'package:ion_client_example/pages/user_wallets/providers/user_wallets_provider.dart';
 import 'package:ion_client_example/pages/wallet_assets/wallet_assets_page.dart';
 import 'package:ion_client_example/pages/wallet_nfts/wallet_nfts_page.dart';
@@ -21,8 +22,35 @@ class UserWalletsPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('$username\'s Wallets'),
+        actions: const [
+          _CreateWalletAction(),
+        ],
       ),
       body: const _Body(),
+    );
+  }
+}
+
+class _CreateWalletAction extends ConsumerWidget {
+  const _CreateWalletAction({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(createWalletNotifierProvider, (previous, next) {
+      if (next.valueOrNull != null) {
+        final username = ref.read(currentUsernameNotifierProvider) ?? 'ERROR';
+        ref.invalidate(userWalletsProvider(username));
+      }
+    });
+
+    final createWalletState = ref.watch(createWalletNotifierProvider);
+    final isLoading = createWalletState.isLoading;
+
+    return IconButton(
+      onPressed: () {
+        ref.read(createWalletNotifierProvider.notifier).createWallet();
+      },
+      icon: isLoading ? const CircularProgressIndicator() : const Icon(Icons.add),
     );
   }
 }

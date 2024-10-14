@@ -9,10 +9,13 @@ import 'package:ion_identity_client/src/auth/services/services.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
 import 'package:ion_identity_client/src/ion_api_user_client.dart';
 import 'package:ion_identity_client/src/signer/data_sources/user_action_signer_data_source.dart';
+import 'package:ion_identity_client/src/signer/data_sources/user_action_signer_data_source2.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
+import 'package:ion_identity_client/src/signer/user_action_signer2.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets.dart';
-import 'package:ion_identity_client/src/wallets/ion_wallets_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
+import 'package:ion_identity_client/src/wallets/services/create_wallet/data_sources/create_wallet_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/data_sources/get_wallet_assets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/data_sources/get_wallet_nfts_data_source.dart';
@@ -181,8 +184,8 @@ mixin _WalletsClient {
   }) {
     return IonWallets(
       username: username,
-      dataSource: createWalletsDataSource(config: config),
-      userActionSigner: ClientsServiceLocator().createUserActionSigner(
+      createWalletService: createCreateWalletService(
+        username: username,
         config: config,
         signer: signer,
       ),
@@ -192,15 +195,18 @@ mixin _WalletsClient {
     );
   }
 
-  IonWalletsDataSource createWalletsDataSource({
+  CreateWalletService createCreateWalletService({
+    required String username,
     required IonClientConfig config,
+    required PasskeysSigner signer,
   }) {
-    final networkClient = IonServiceLocator.getNetworkClient(config: config);
-
-    return IonWalletsDataSource(
-      config: config,
-      networkClient: networkClient,
-      tokenStorage: IonServiceLocator.getTokenStorage(),
+    return CreateWalletService(
+      username: username,
+      dataSource: const CreateWalletDataSource(),
+      userActionSigner: ClientsServiceLocator().createUserActionSigner2(
+        config: config,
+        signer: signer,
+      ),
     );
   }
 
@@ -274,6 +280,25 @@ mixin _UserActionSigner {
   }) {
     return UserActionSignerDataSource(
       networkClient: IonServiceLocator.getNetworkClient(config: config),
+      tokenStorage: IonServiceLocator.getTokenStorage(),
+    );
+  }
+
+  UserActionSigner2 createUserActionSigner2({
+    required IonClientConfig config,
+    required PasskeysSigner signer,
+  }) {
+    return UserActionSigner2(
+      dataSource: createUserActionSignerDataSource2(config: config),
+      passkeysSigner: signer,
+    );
+  }
+
+  UserActionSignerDataSource2 createUserActionSignerDataSource2({
+    required IonClientConfig config,
+  }) {
+    return UserActionSignerDataSource2(
+      networkClient: IonServiceLocator.getNetworkClient2(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
     );
   }

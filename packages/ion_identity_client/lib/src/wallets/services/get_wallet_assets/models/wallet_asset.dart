@@ -14,7 +14,7 @@ class WalletAsset with _$WalletAsset {
     required String symbol,
     required int decimals,
     required String balance,
-    required bool verified,
+    required bool? verified,
   }) = _WalletAsset;
 
   factory WalletAsset.fromJson(JsonObject json) => _$WalletAssetFromJson(json);

@@ -13,7 +13,7 @@ _$WalletAssetImpl _$$WalletAssetImplFromJson(Map<String, dynamic> json) =>
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
       balance: json['balance'] as String,
-      verified: json['verified'] as bool,
+      verified: json['verified'] as bool?,
     );
 
 Map<String, dynamic> _$$WalletAssetImplToJson(_$WalletAssetImpl instance) =>
