@@ -10,6 +10,7 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/auth/providers/onboarding_complete_notifier.dart';
 import 'package:ice/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ice/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
@@ -78,7 +79,7 @@ class DiscoverCreators extends HookConsumerWidget {
                       try {
                         loading.value = true;
                         ref.read(onboardingDataProvider.notifier).followees = creatorIds;
-                        await ref.read(onboardingDataProvider.notifier).finish();
+                        await ref.read(onboardingCompleteNotifierProvider.notifier).finish();
                         if (context.mounted) {
                           if (hasNotificationsPermission) {
                             FeedRoute().go(context);
