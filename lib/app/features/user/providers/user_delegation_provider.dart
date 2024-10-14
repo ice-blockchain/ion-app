@@ -23,7 +23,7 @@ class UsersDelegationStorage extends _$UsersDelegationStorage {
   }
 
   Future<void> publish(UserDelegation userDelegation) async {
-    final mainWallet = await ref.watch(mainWalletProvider.future);
+    final mainWallet = await ref.read(mainWalletProvider.future);
 
     if (mainWallet == null) {
       throw Exception('Current user main wallet is null');
