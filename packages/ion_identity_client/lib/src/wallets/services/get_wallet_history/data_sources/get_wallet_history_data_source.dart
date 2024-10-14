@@ -6,10 +6,12 @@ import 'package:ion_identity_client/src/core/network2/network_client2.dart';
 import 'package:ion_identity_client/src/core/network2/network_exception.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallets/models/get_wallets_response.dart';
+import 'package:ion_identity_client/src/wallets/exceptions/wallets_exceptions.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_history/models/get_wallet_history_request_params.dart';
+import 'package:sprintf/sprintf.dart';
 
-class GetWalletsDataSource {
-  const GetWalletsDataSource(
+class GetWalletHistoryDataSource {
+  const GetWalletHistoryDataSource(
     this._networkClient,
     this._tokenStorage,
   );
@@ -17,26 +19,37 @@ class GetWalletsDataSource {
   final NetworkClient2 _networkClient;
   final TokenStorage _tokenStorage;
 
-  static const walletsPath = '/wallets';
+  static const walletHistoryPath = '/wallets/%s/history';
 
-  Future<List<Wallet>> getWallets(String username) async {
+  Future<WalletHistory> getWalletHistory(
+    String username,
+    String walletId, {
+    String? pageToken,
+    int? pageSize,
+  }) async {
     final token = _tokenStorage.getToken(username: username);
     if (token == null) {
       throw const UnauthenticatedException();
     }
 
     try {
-      final response = await _networkClient.get(
-        walletsPath,
+      return await _networkClient.get(
+        sprintf(walletHistoryPath, [walletId]),
         headers: RequestHeaders.getAuthorizationHeader(token: token.token),
-        decoder: GetWalletsResponse.fromJson,
+        queryParams: GetWalletHistoryRequestParams(
+          limit: pageSize,
+          paginationToken: pageToken,
+        ).toJson(),
+        decoder: WalletHistory.fromJson,
       );
-      return response.items;
     } on NetworkException catch (e) {
       if (e is RequestExecutionException && e.error is DioException) {
         final dioError = e.error as DioException;
         if (dioError.response?.statusCode == 401) {
           throw const UnauthenticatedException();
+        }
+        if (dioError.response?.statusCode == 404) {
+          throw const WalletNotFoundException();
         }
       }
       throw const UnknownIonException();

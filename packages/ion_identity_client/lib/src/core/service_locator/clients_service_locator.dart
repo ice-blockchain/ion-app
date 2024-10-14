@@ -18,6 +18,8 @@ import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wa
 import 'package:ion_identity_client/src/wallets/services/create_wallet/data_sources/create_wallet_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/data_sources/get_wallet_assets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_history/data_sources/get_wallet_history_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_history/get_wallet_history_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/data_sources/get_wallet_nfts_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/get_wallet_nfts_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/data_sources/get_wallets_data_source.dart';
@@ -192,6 +194,7 @@ mixin _WalletsClient {
       getWalletsService: createGetWalletsService(username: username, config: config),
       getWalletAssetsService: createGetWalletAssetsService(username: username, config: config),
       getWalletNftsService: createGetWalletNftsService(username: username, config: config),
+      getWalletHistoryService: createGetWalletHistoryService(username: username, config: config),
     );
   }
 
@@ -258,6 +261,23 @@ mixin _WalletsClient {
 
   GetWalletNftsDataSource createGetWalletNftsDataSource(IonClientConfig config) {
     return GetWalletNftsDataSource(
+      IonServiceLocator.getNetworkClient2(config: config),
+      IonServiceLocator.getTokenStorage(),
+    );
+  }
+
+  GetWalletHistoryService createGetWalletHistoryService({
+    required String username,
+    required IonClientConfig config,
+  }) {
+    return GetWalletHistoryService(
+      username,
+      createGetWalletHistoryDataSource(config),
+    );
+  }
+
+  GetWalletHistoryDataSource createGetWalletHistoryDataSource(IonClientConfig config) {
+    return GetWalletHistoryDataSource(
       IonServiceLocator.getNetworkClient2(config: config),
       IonServiceLocator.getTokenStorage(),
     );

@@ -7,7 +7,6 @@ import 'package:ion_identity_client/src/core/network2/network_exception.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/wallets/exceptions/wallets_exceptions.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/exceptions/get_wallet_nfts_exception.dart';
 import 'package:sprintf/sprintf.dart';
 
 class GetWalletNftsDataSource {
@@ -46,7 +45,7 @@ class GetWalletNftsDataSource {
           throw const WalletNotFoundException();
         }
       }
-      throw const UnknownWalletNftsException();
+      throw const UnknownIonException();
     }
   }
 }

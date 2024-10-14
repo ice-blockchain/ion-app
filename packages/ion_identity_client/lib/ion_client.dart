@@ -11,4 +11,5 @@ export 'src/wallets/models/wallet.dart';
 export 'src/wallets/models/wallet_signing_key.dart';
 export 'src/wallets/services/get_wallet_assets/exceptions/get_wallet_assets_exception.dart';
 export 'src/wallets/services/get_wallet_assets/models/wallet_assets.dart';
+export 'src/wallets/services/get_wallet_history/models/wallet_history.dart';
 export 'src/wallets/services/get_wallet_nfts/models/wallet_nfts.dart';

@@ -3,6 +3,7 @@
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_history/get_wallet_history_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/get_wallet_nfts_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
 
@@ -22,10 +23,12 @@ class IonWallets {
     required GetWalletsService getWalletsService,
     required GetWalletAssetsService getWalletAssetsService,
     required GetWalletNftsService getWalletNftsService,
+    required GetWalletHistoryService getWalletHistoryService,
   })  : _createWalletService = createWalletService,
         _getWalletsService = getWalletsService,
         _getWalletAssetsService = getWalletAssetsService,
-        _getWalletNftsService = getWalletNftsService;
+        _getWalletNftsService = getWalletNftsService,
+        _getWalletHistoryService = getWalletHistoryService;
 
   final String username;
 
@@ -33,6 +36,7 @@ class IonWallets {
   final GetWalletsService _getWalletsService;
   final GetWalletAssetsService _getWalletAssetsService;
   final GetWalletNftsService _getWalletNftsService;
+  final GetWalletHistoryService _getWalletHistoryService;
 
   Future<Wallet> createWallet({
     required String network,
@@ -51,4 +55,11 @@ class IonWallets {
 
   Future<WalletNfts> getWalletNfts(String walletId) =>
       _getWalletNftsService.getWalletNfts(walletId);
+
+  Future<WalletHistory> getWalletHistory(
+    String walletId, {
+    String? pageToken,
+    int? pageSize,
+  }) =>
+      _getWalletHistoryService.getWalletHistory(walletId, pageToken: pageToken, pageSize: pageSize);
 }
