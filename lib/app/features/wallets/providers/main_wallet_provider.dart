@@ -17,26 +17,23 @@ Future<Wallet?> mainWallet(MainWalletRef ref) async {
   }
   // TODO: take the list from walletsDataNotifierProvider when connected to ionClient
   final ionClient = await ref.read(ionApiClientProvider.future);
-  final listWalletResult = await ionClient(username: currentIdentityKeyName).wallets.listWallets();
-  if (listWalletResult is ListWalletsSuccess) {
-    final mainWallet = listWalletResult.wallets.firstWhereOrNull((wallet) => wallet.name == 'main');
-    if (mainWallet == null) {
-      throw Exception('Main wallet is not found');
-    }
-    //TODO::return `mainWallet` as is when remote signing with identity is implemented
-    // currently replace mainWallet's pubkey with a mocked one to be able to sign on behalf of this wallet
-    return Wallet(
-      id: mainWallet.id,
-      network: mainWallet.network,
-      address: mainWallet.address,
-      name: mainWallet.name,
-      signingKey: WalletSigningKey(
-        scheme: mainWallet.signingKey.scheme,
-        curve: mainWallet.signingKey.curve,
-        publicKey: mockedTonWalletKeystore.publicKey,
-      ),
-    );
-  } else {
-    throw Exception(listWalletResult.toString());
+  final wallets = await ionClient(username: currentIdentityKeyName).wallets.getWallets();
+  final mainWallet = wallets.firstWhereOrNull((wallet) => wallet.name == 'main');
+  if (mainWallet == null) {
+    throw Exception('Main wallet is not found');
   }
+  //TODO::return `mainWallet` as is when remote signing with identity is implemented
+  // currently replace mainWallet's pubkey with a mocked one to be able to sign on behalf of this wallet
+  return Wallet(
+    id: mainWallet.id,
+    network: mainWallet.network,
+    address: mainWallet.address,
+    name: mainWallet.name,
+    status: mainWallet.status,
+    signingKey: WalletSigningKey(
+      scheme: mainWallet.signingKey.scheme,
+      curve: mainWallet.signingKey.curve,
+      publicKey: mockedTonWalletKeystore.publicKey,
+    ),
+  );
 }

@@ -14,8 +14,6 @@ _$WalletImpl _$$WalletImplFromJson(Map<String, dynamic> json) => _$WalletImpl(
           WalletSigningKey.fromJson(json['signingKey'] as Map<String, dynamic>),
       address: json['address'] as String,
       name: json['name'] as String,
-      signingKey:
-          WalletSigningKey.fromJson(json['signingKey'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$WalletImplToJson(_$WalletImpl instance) =>
@@ -26,19 +24,4 @@ Map<String, dynamic> _$$WalletImplToJson(_$WalletImpl instance) =>
       'signingKey': instance.signingKey.toJson(),
       'address': instance.address,
       'name': instance.name,
-      'signingKey': instance.signingKey.toJson(),
-    };
-
-WalletSigningKey _$WalletSigningKeyFromJson(Map<String, dynamic> json) =>
-    WalletSigningKey(
-      scheme: json['scheme'] as String,
-      curve: json['curve'] as String,
-      publicKey: json['publicKey'] as String,
-    );
-
-Map<String, dynamic> _$WalletSigningKeyToJson(WalletSigningKey instance) =>
-    <String, dynamic>{
-      'scheme': instance.scheme,
-      'curve': instance.curve,
-      'publicKey': instance.publicKey,
     };
