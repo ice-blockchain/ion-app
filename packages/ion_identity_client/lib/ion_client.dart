@@ -13,3 +13,5 @@ export 'src/wallets/services/get_wallet_assets/exceptions/get_wallet_assets_exce
 export 'src/wallets/services/get_wallet_assets/models/wallet_assets.dart';
 export 'src/wallets/services/get_wallet_history/models/wallet_history.dart';
 export 'src/wallets/services/get_wallet_nfts/models/wallet_nfts.dart';
+export 'src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_request.dart';
+export 'src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_requests.dart';

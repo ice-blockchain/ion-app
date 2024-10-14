@@ -22,6 +22,8 @@ import 'package:ion_identity_client/src/wallets/services/get_wallet_history/data
 import 'package:ion_identity_client/src/wallets/services/get_wallet_history/get_wallet_history_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/data_sources/get_wallet_nfts_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/get_wallet_nfts_service.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/data_sources/get_wallet_transfer_requests_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/get_wallet_transfer_requests_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/data_sources/get_wallets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
 
@@ -195,6 +197,10 @@ mixin _WalletsClient {
       getWalletAssetsService: createGetWalletAssetsService(username: username, config: config),
       getWalletNftsService: createGetWalletNftsService(username: username, config: config),
       getWalletHistoryService: createGetWalletHistoryService(username: username, config: config),
+      getWalletTransferRequestsService: createGetWalletTransferRequestsService(
+        username: username,
+        config: config,
+      ),
     );
   }
 
@@ -278,6 +284,25 @@ mixin _WalletsClient {
 
   GetWalletHistoryDataSource createGetWalletHistoryDataSource(IonClientConfig config) {
     return GetWalletHistoryDataSource(
+      IonServiceLocator.getNetworkClient2(config: config),
+      IonServiceLocator.getTokenStorage(),
+    );
+  }
+
+  GetWalletTransferRequestsService createGetWalletTransferRequestsService({
+    required String username,
+    required IonClientConfig config,
+  }) {
+    return GetWalletTransferRequestsService(
+      username,
+      createGetWalletTransferRequestsDataSource(config),
+    );
+  }
+
+  GetWalletTransferRequestsDataSource createGetWalletTransferRequestsDataSource(
+    IonClientConfig config,
+  ) {
+    return GetWalletTransferRequestsDataSource(
       IonServiceLocator.getNetworkClient2(config: config),
       IonServiceLocator.getTokenStorage(),
     );

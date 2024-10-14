@@ -8,6 +8,7 @@ import 'package:ion_client_example/pages/user_wallets/providers/user_wallets_pro
 import 'package:ion_client_example/pages/wallet_assets/wallet_assets_page.dart';
 import 'package:ion_client_example/pages/wallet_history/wallet_history_page.dart';
 import 'package:ion_client_example/pages/wallet_nfts/wallet_nfts_page.dart';
+import 'package:ion_client_example/pages/wallet_transfer_requests/wallet_transfer_requests_page.dart';
 import 'package:ion_client_example/providers/current_username_notifier.dart';
 import 'package:ion_identity_client/ion_client.dart';
 
@@ -111,14 +112,19 @@ class _SuccessState extends HookWidget {
                 subtitle: Text('network: ${wallet.network}'),
               ),
               body: ListTile(
-                title: Row(
-                  children: [
-                    _AssetsButton(walletId: wallet.id),
-                    const SizedBox(width: 8),
-                    _NftsButton(walletId: wallet.id),
-                    const SizedBox(width: 8),
-                    _HistoryButton(walletId: wallet.id),
-                  ],
+                title: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _AssetsButton(walletId: wallet.id),
+                      const SizedBox(width: 8),
+                      _NftsButton(walletId: wallet.id),
+                      const SizedBox(width: 8),
+                      _HistoryButton(walletId: wallet.id),
+                      const SizedBox(width: 8),
+                      _TransferRequestsButton(walletId: wallet.id),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -187,6 +193,26 @@ class _HistoryButton extends StatelessWidget {
       onPressed: () {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => WalletHistoryPage(walletId: walletId)),
+        );
+      },
+    );
+  }
+}
+
+class _TransferRequestsButton extends StatelessWidget {
+  const _TransferRequestsButton({
+    required this.walletId,
+  });
+
+  final String walletId;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      child: const Text('Transfer Requests'),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => WalletTransferRequestsPage(walletId: walletId)),
         );
       },
     );
