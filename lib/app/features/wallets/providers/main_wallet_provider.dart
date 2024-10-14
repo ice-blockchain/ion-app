@@ -24,16 +24,8 @@ Future<Wallet?> mainWallet(MainWalletRef ref) async {
   }
   //TODO::return `mainWallet` as is when remote signing with identity is implemented
   // currently replace mainWallet's pubkey with a mocked one to be able to sign on behalf of this wallet
-  return Wallet(
-    id: mainWallet.id,
-    network: mainWallet.network,
-    address: mainWallet.address,
-    name: mainWallet.name,
-    status: mainWallet.status,
-    signingKey: WalletSigningKey(
-      scheme: mainWallet.signingKey.scheme,
-      curve: mainWallet.signingKey.curve,
-      publicKey: mockedTonWalletKeystore.publicKey,
-    ),
+  final signingKey = mainWallet.signingKey;
+  return mainWallet.copyWith(
+    signingKey: signingKey.copyWith(publicKey: mockedTonWalletKeystore.publicKey),
   );
 }
