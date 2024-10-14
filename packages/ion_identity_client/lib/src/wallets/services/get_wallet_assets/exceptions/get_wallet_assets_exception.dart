@@ -5,7 +5,3 @@ import 'package:ion_identity_client/src/core/types/ion_exception.dart';
 sealed class GetWalletAssetsException extends IonException {
   const GetWalletAssetsException([super.message]);
 }
-
-class UnknownWalletAssetsException extends GetWalletAssetsException {
-  const UnknownWalletAssetsException() : super('Unknown error');
-}

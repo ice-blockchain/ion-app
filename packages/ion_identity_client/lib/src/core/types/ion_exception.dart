@@ -9,3 +9,7 @@ abstract class IonException implements Exception {
 class UnauthenticatedException extends IonException {
   const UnauthenticatedException() : super('User is not authenticated');
 }
+
+class UnknownIonException extends IonException {
+  const UnknownIonException([super.message]);
+}

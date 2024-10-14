@@ -45,7 +45,7 @@ class GetWalletAssetsDataSource {
           throw const WalletNotFoundException();
         }
       }
-      throw const UnknownWalletAssetsException();
+      throw const UnknownIonException();
     }
   }
 }

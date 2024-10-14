@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_client_example/pages/user_wallets/providers/create_wallet_notifier.dart';
 import 'package:ion_client_example/pages/user_wallets/providers/user_wallets_provider.dart';
 import 'package:ion_client_example/pages/wallet_assets/wallet_assets_page.dart';
+import 'package:ion_client_example/pages/wallet_history/wallet_history_page.dart';
 import 'package:ion_client_example/pages/wallet_nfts/wallet_nfts_page.dart';
 import 'package:ion_client_example/providers/current_username_notifier.dart';
 import 'package:ion_identity_client/ion_client.dart';
@@ -115,6 +116,8 @@ class _SuccessState extends HookWidget {
                     _AssetsButton(walletId: wallet.id),
                     const SizedBox(width: 8),
                     _NftsButton(walletId: wallet.id),
+                    const SizedBox(width: 8),
+                    _HistoryButton(walletId: wallet.id),
                   ],
                 ),
               ),
@@ -166,6 +169,26 @@ class _NftsButton extends StatelessWidget {
         );
       },
       child: const Text('NFTs'),
+    );
+  }
+}
+
+class _HistoryButton extends StatelessWidget {
+  const _HistoryButton({
+    required this.walletId,
+  });
+
+  final String walletId;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      child: const Text('History'),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => WalletHistoryPage(walletId: walletId)),
+        );
+      },
     );
   }
 }
