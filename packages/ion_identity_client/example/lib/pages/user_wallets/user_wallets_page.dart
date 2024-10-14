@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_client_example/pages/user_wallets/providers/user_wallets_provider.dart';
 import 'package:ion_client_example/pages/wallet_assets/wallet_assets_page.dart';
+import 'package:ion_client_example/pages/wallet_nfts/wallet_nfts_page.dart';
 import 'package:ion_client_example/providers/current_username_notifier.dart';
 import 'package:ion_identity_client/ion_client.dart';
 
@@ -83,16 +84,9 @@ class _SuccessState extends HookWidget {
               body: ListTile(
                 title: Row(
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => WalletAssetsPage(walletId: wallet.id),
-                          ),
-                        );
-                      },
-                      child: const Text('Assets'),
-                    ),
+                    _AssetsButton(walletId: wallet.id),
+                    const SizedBox(width: 8),
+                    _NftsButton(walletId: wallet.id),
                   ],
                 ),
               ),
@@ -100,6 +94,50 @@ class _SuccessState extends HookWidget {
           },
         ).toList(),
       ),
+    );
+  }
+}
+
+class _AssetsButton extends StatelessWidget {
+  const _AssetsButton({
+    required this.walletId,
+  });
+
+  final String walletId;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => WalletAssetsPage(walletId: walletId),
+          ),
+        );
+      },
+      child: const Text('Assets'),
+    );
+  }
+}
+
+class _NftsButton extends StatelessWidget {
+  const _NftsButton({
+    required this.walletId,
+  });
+
+  final String walletId;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => WalletNftsPage(walletId: walletId),
+          ),
+        );
+      },
+      child: const Text('NFTs'),
     );
   }
 }

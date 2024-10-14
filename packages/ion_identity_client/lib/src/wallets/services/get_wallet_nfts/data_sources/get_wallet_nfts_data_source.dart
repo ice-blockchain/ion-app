@@ -7,10 +7,11 @@ import 'package:ion_identity_client/src/core/network2/network_exception.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/wallets/exceptions/wallets_exceptions.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/exceptions/get_wallet_nfts_exception.dart';
 import 'package:sprintf/sprintf.dart';
 
-class GetWalletAssetsDataSource {
-  const GetWalletAssetsDataSource(
+class GetWalletNftsDataSource {
+  const GetWalletNftsDataSource(
     this._networkClient,
     this._tokenStorage,
   );
@@ -18,9 +19,9 @@ class GetWalletAssetsDataSource {
   final NetworkClient2 _networkClient;
   final TokenStorage _tokenStorage;
 
-  static const walletAssetsPath = '/wallets/%s/assets';
+  static const walletNftsPath = '/wallets/%s/nfts';
 
-  Future<WalletAssets> getWalletAssets(
+  Future<WalletNfts> getWalletNfts(
     String username,
     String walletId,
   ) async {
@@ -31,9 +32,9 @@ class GetWalletAssetsDataSource {
 
     try {
       return await _networkClient.get(
-        sprintf(walletAssetsPath, [walletId]),
+        sprintf(walletNftsPath, [walletId]),
         headers: RequestHeaders.getAuthorizationHeader(token: token.token),
-        decoder: WalletAssets.fromJson,
+        decoder: WalletNfts.fromJson,
       );
     } on NetworkException catch (e) {
       if (e is RequestExecutionException && e.error is DioException) {
@@ -45,7 +46,7 @@ class GetWalletAssetsDataSource {
           throw const WalletNotFoundException();
         }
       }
-      throw const UnknownWalletAssetsException();
+      throw const UnknownWalletNftsException();
     }
   }
 }

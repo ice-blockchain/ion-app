@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion_identity_client/src/wallets/types/wallet_signing_key.dart';
+import 'package:ion_identity_client/src/wallets/models/wallet_signing_key.dart';
 
 part 'wallet.freezed.dart';
 part 'wallet.g.dart';

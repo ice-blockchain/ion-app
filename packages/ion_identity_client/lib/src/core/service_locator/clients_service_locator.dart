@@ -15,6 +15,8 @@ import 'package:ion_identity_client/src/wallets/ion_wallets.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/data_sources/get_wallet_assets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/data_sources/get_wallet_nfts_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/get_wallet_nfts_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/data_sources/get_wallets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
 
@@ -185,10 +187,8 @@ mixin _WalletsClient {
         signer: signer,
       ),
       getWalletsService: createGetWalletsService(username: username, config: config),
-      getWalletAssetsService: createGetWalletAssetsService(
-        username: username,
-        config: config,
-      ),
+      getWalletAssetsService: createGetWalletAssetsService(username: username, config: config),
+      getWalletNftsService: createGetWalletNftsService(username: username, config: config),
     );
   }
 
@@ -235,6 +235,23 @@ mixin _WalletsClient {
 
   GetWalletAssetsDataSource createGetWalletAssetsDataSource(IonClientConfig config) {
     return GetWalletAssetsDataSource(
+      IonServiceLocator.getNetworkClient2(config: config),
+      IonServiceLocator.getTokenStorage(),
+    );
+  }
+
+  GetWalletNftsService createGetWalletNftsService({
+    required String username,
+    required IonClientConfig config,
+  }) {
+    return GetWalletNftsService(
+      username,
+      createGetWalletNftsDataSource(config),
+    );
+  }
+
+  GetWalletNftsDataSource createGetWalletNftsDataSource(IonClientConfig config) {
+    return GetWalletNftsDataSource(
       IonServiceLocator.getNetworkClient2(config: config),
       IonServiceLocator.getTokenStorage(),
     );
