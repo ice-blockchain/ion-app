@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_relays.dart';
@@ -28,8 +28,7 @@ class UsersRelaysStorage extends _$UsersRelaysStorage {
       throw Exception('Current user keystore is null');
     }
 
-    final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
-    final relay = await ref.read(relayProvider(relayUrl).future);
+    final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
     final event = EventMessage.fromData(
       keyStore: keyStore,
       kind: UserRelays.kind,
@@ -48,8 +47,13 @@ Future<UserRelays?> userRelays(UserRelaysRef ref, String pubkey) async {
     return userRelays;
   }
 
-  final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
-  final relay = await ref.read(relayProvider(relayUrl).future);
+  final currentUserIndexers = await ref.read(currentUserIndexersProvider.future);
+
+  if (currentUserIndexers == null) {
+    throw Exception('Current user indexers are not found');
+  }
+
+  final relay = await ref.read(relayProvider(currentUserIndexers.random).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserRelays.kind], p: [pubkey], limit: 1));
   final events = await requestEvents(requestMessage, relay);
@@ -65,9 +69,9 @@ Future<UserRelays?> userRelays(UserRelaysRef ref, String pubkey) async {
 
 @riverpod
 Future<UserRelays?> currentUserRelays(CurrentUserRelaysRef ref) async {
-  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider);
-  if (currentUserId == null) {
+  final keyStore = await ref.watch(currentUserNostrKeyStoreProvider.future);
+  if (keyStore == null) {
     return null;
   }
-  return ref.watch(userRelaysProvider(currentUserId).future);
+  return ref.watch(userRelaysProvider(keyStore.publicKey).future);
 }

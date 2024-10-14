@@ -16,28 +16,3 @@ class CurrentUserIndexers extends _$CurrentUserIndexers {
     return null;
   }
 }
-
-@Riverpod(keepAlive: true)
-class IndexerPicker extends _$IndexerPicker {
-  @override
-  int build() {
-    ref.watch(currentUserIndexersProvider);
-    return 0;
-  }
-
-  Future<String> getNext() async {
-    final indexers = await ref.read(currentUserIndexersProvider.future);
-
-    if (indexers == null) {
-      throw Exception("User's indexer list is not found");
-    }
-
-    if (indexers.isEmpty) {
-      throw Exception("User's indexer list is empty");
-    }
-
-    final indexerUrl = indexers[state];
-    state = (state + 1) % indexers.length;
-    return indexerUrl;
-  }
-}

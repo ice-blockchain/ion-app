@@ -99,9 +99,11 @@ class OnboardingData extends _$OnboardingData {
     final relayUrls = await _assignUserRelays(userIdentity: userIdentity, followees: followees);
     final nostrKeyStore = await _generateNostrKeyStore(identityKeyName: currentIdentityKeyName);
     await _updateUserRelays(nostrKeyStore: nostrKeyStore, relayUrls: relayUrls);
-    await _updateMetadata(nostrKeyStore: nostrKeyStore, name: name, displayName: displayName);
-    await _updateLanguages(languages: languages);
-    await _updateFollowees(followees: followees);
+    await Future.wait([
+      _updateMetadata(nostrKeyStore: nostrKeyStore, name: name, displayName: displayName),
+      _updateLanguages(languages: languages),
+      _updateFollowees(followees: followees),
+    ]);
     await _updateDelegation(nostrKeyStore: nostrKeyStore);
   }
 

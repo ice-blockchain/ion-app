@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_delegation.dart';
 import 'package:ice/app/features/user/providers/current_user_indexers_provider.dart';
+import 'package:ice/app/features/user/providers/user_relays_provider.dart';
 import 'package:ice/app/features/wallets/providers/main_wallet_provider.dart';
 import 'package:ice/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -34,8 +36,13 @@ class UsersDelegationStorage extends _$UsersDelegationStorage {
       );
     }
 
-    final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
-    final relay = await ref.read(relayProvider(relayUrl).future);
+    final userRelays = await ref.read(currentUserRelaysProvider.future);
+
+    if (userRelays == null) {
+      throw Exception('User relays are not found');
+    }
+
+    final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
     final tags = userDelegation.tags;
     final createdAt = DateTime.now();
     const kind = UserDelegation.kind;
@@ -71,8 +78,13 @@ Future<UserDelegation?> userDelegation(UserDelegationRef ref, String pubkey) asy
     return userDelegation;
   }
 
-  final relayUrl = await ref.read(indexerPickerProvider.notifier).getNext();
-  final relay = await ref.read(relayProvider(relayUrl).future);
+  final currentUserIndexers = await ref.read(currentUserIndexersProvider.future);
+
+  if (currentUserIndexers == null) {
+    throw Exception('Current user indexers are not found');
+  }
+
+  final relay = await ref.read(relayProvider(currentUserIndexers.random).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserDelegation.kind], limit: 1, authors: [pubkey]));
   final events = await requestEvents(requestMessage, relay);
