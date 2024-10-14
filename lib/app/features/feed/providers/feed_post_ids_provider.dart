@@ -5,7 +5,7 @@ import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
-import 'package:ice/app/features/user/providers/current_user_indexers_provider.dart';
+import 'package:ice/app/features/user/providers/user_relays_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,13 +19,13 @@ class FeedPostIds extends _$FeedPostIds {
   }
 
   Future<void> fetchPosts() async {
-    final currentUserIndexers = await ref.read(currentUserIndexersProvider.future);
+    final userRelays = await ref.read(currentUserRelaysProvider.future);
 
-    if (currentUserIndexers == null) {
-      throw Exception('Current user indexers are not found');
+    if (userRelays == null) {
+      throw Exception('User relays are not found');
     }
 
-    final relay = await ref.read(relayProvider(currentUserIndexers.random).future);
+    final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
     final requestMessage = RequestMessage()
       ..addFilter(const RequestFilter(kinds: [PostData.kind], limit: 20));
     final events = await requestEvents(requestMessage, relay);
