@@ -10,7 +10,5 @@ class PollTitleData with _$PollTitleData {
     required String text,
   }) = _PollTitleData;
 
-  factory PollTitleData.empty() => const PollTitleData(
-        text: '',
-      );
+  factory PollTitleData.empty() => const PollTitleData(text: '');
 }

@@ -5,11 +5,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/components/back_hardware_button_interceptor/back_hardware_button_interceptor.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/providers/poll/poll_answers_provider.dart';
+import 'package:ice/app/features/feed/providers/poll/poll_title_notifier.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
@@ -28,7 +31,7 @@ import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ice/app/services/logger/logger.dart';
 import 'package:ice/app/services/markdown_parser/markdown_parser.dart';
 
-class CreatePostModal extends HookWidget {
+class CreatePostModal extends HookConsumerWidget {
   const CreatePostModal({super.key});
 
   Future<void> _showCancelCreationModal(BuildContext context) async {
@@ -42,7 +45,7 @@ class CreatePostModal extends HookWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController();
     final hasContent = useTextEditorHasContent(textEditorController);
     final hasPoll = useState(false);
@@ -92,6 +95,25 @@ class CreatePostModal extends HookWidget {
       },
       [textEditorController],
     );
+
+    bool isPollValid() {
+      final pollTitle = ref.watch(pollTitleNotifierProvider);
+      final pollAnswers = ref.watch(pollAnswersNotifierProvider);
+
+      return pollTitle.text.trim().isNotEmpty &&
+          pollAnswers.length >= 2 &&
+          pollAnswers.every(
+            (answer) => answer.text.trim().isNotEmpty && answer.text.trim().length <= 25,
+          );
+    }
+
+    bool isSendButtonEnabled() {
+      if (hasPoll.value) {
+        return isPollValid();
+      } else {
+        return hasContent;
+      }
+    }
 
     return BackHardwareButtonInterceptor(
       onBackPress: (context) async {
@@ -150,7 +172,7 @@ class CreatePostModal extends HookWidget {
                       TextEditorBoldButton(textEditorController: textEditorController),
                     ],
                     trailing: ActionsToolbarButtonSend(
-                      enabled: hasContent,
+                      enabled: isSendButtonEnabled(),
                       onPressed: () {
                         generateMarkdownFromDelta(textEditorController.document.toDelta());
                         context.pop();
