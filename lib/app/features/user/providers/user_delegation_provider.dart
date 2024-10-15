@@ -80,7 +80,7 @@ Future<UserDelegation?> userDelegation(UserDelegationRef ref, String pubkey) asy
   final userRelays = await ref.read(currentUserRelaysProvider.future);
 
   if (userRelays == null) {
-    throw Exception('User relays are not found');
+    return null;
   }
 
   final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
