@@ -5,6 +5,7 @@ import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wa
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_history/get_wallet_history_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/get_wallet_nfts_service.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/get_wallet_transfer_requests_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
 
 /// A class that handles operations related to user wallets, such as listing the wallets
@@ -24,11 +25,13 @@ class IonWallets {
     required GetWalletAssetsService getWalletAssetsService,
     required GetWalletNftsService getWalletNftsService,
     required GetWalletHistoryService getWalletHistoryService,
+    required GetWalletTransferRequestsService getWalletTransferRequestsService,
   })  : _createWalletService = createWalletService,
         _getWalletsService = getWalletsService,
         _getWalletAssetsService = getWalletAssetsService,
         _getWalletNftsService = getWalletNftsService,
-        _getWalletHistoryService = getWalletHistoryService;
+        _getWalletHistoryService = getWalletHistoryService,
+        _getWalletTransferRequestsService = getWalletTransferRequestsService;
 
   final String username;
 
@@ -37,6 +40,7 @@ class IonWallets {
   final GetWalletAssetsService _getWalletAssetsService;
   final GetWalletNftsService _getWalletNftsService;
   final GetWalletHistoryService _getWalletHistoryService;
+  final GetWalletTransferRequestsService _getWalletTransferRequestsService;
 
   Future<Wallet> createWallet({
     required String network,
@@ -62,4 +66,13 @@ class IonWallets {
     int? pageSize,
   }) =>
       _getWalletHistoryService.getWalletHistory(walletId, pageToken: pageToken, pageSize: pageSize);
+
+  Future<WalletTransferRequests> getWalletTransferRequests(
+    String walletId, {
+    String? pageToken,
+  }) =>
+      _getWalletTransferRequestsService.getWalletTransferRequests(
+        walletId,
+        pageToken: pageToken,
+      );
 }
