@@ -5,7 +5,7 @@ import 'package:ice/app/services/media_service/media_service.dart';
 
 part 'media_selection_state.freezed.dart';
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class MediaSelectionState with _$MediaSelectionState {
   const factory MediaSelectionState({
     required List<MediaFile> selectedMedia,

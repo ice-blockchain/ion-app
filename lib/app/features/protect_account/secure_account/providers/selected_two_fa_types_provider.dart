@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'selected_two_fa_types_provider.freezed.dart';
 part 'selected_two_fa_types_provider.g.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class AuthenticatorDeleteState with _$AuthenticatorDeleteState {
   factory AuthenticatorDeleteState({
     required int optionsAmount,

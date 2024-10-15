@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_current_filter_provider.freezed.dart';
 part 'feed_current_filter_provider.g.dart';
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class FeedFiltersState with _$FeedFiltersState {
   const factory FeedFiltersState({
     required FeedCategory category,

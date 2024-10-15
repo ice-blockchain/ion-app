@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'auth_provider.freezed.dart';
 part 'auth_provider.g.dart';
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class AuthState with _$AuthState {
   const factory AuthState({
     required List<String> authenticatedIdentityKeyNames,

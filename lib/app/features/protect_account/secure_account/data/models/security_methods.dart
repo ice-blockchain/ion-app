@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'security_methods.freezed.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class SecurityMethods with _$SecurityMethods {
   const factory SecurityMethods({
     @Default(false) bool isBackupEnabled,

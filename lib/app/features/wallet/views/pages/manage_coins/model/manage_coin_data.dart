@@ -5,7 +5,7 @@ import 'package:ice/app/features/wallet/model/coin_data.dart';
 
 part 'manage_coin_data.freezed.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class ManageCoinData with _$ManageCoinData {
   const factory ManageCoinData({
     required CoinData coinData,

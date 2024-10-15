@@ -8,7 +8,7 @@ part 'user_delegation.freezed.dart';
 
 enum DelegationStatus { active, inactive, revoked }
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class UserDelegation with _$UserDelegation {
   const factory UserDelegation({
     required String pubkey,
@@ -64,7 +64,7 @@ class UserDelegation with _$UserDelegation {
   static const int kind = 10100;
 }
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class UserDelegate with _$UserDelegate {
   const factory UserDelegate({
     required String pubkey,

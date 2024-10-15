@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'contact_data.freezed.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class ContactData with _$ContactData {
   const factory ContactData({
     required String id,

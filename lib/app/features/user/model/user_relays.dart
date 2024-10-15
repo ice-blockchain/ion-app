@@ -5,7 +5,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'user_relays.freezed.dart';
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class UserRelay with _$UserRelay {
   const factory UserRelay({
     required String url,
@@ -34,7 +34,7 @@ class UserRelay with _$UserRelay {
   }
 }
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class UserRelays with _$UserRelays {
   const factory UserRelays({
     required String pubkey,

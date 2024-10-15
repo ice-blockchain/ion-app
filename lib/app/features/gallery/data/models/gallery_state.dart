@@ -5,7 +5,7 @@ import 'package:ice/app/services/media_service/media_service.dart';
 
 part 'gallery_state.freezed.dart';
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class GalleryState with _$GalleryState {
   const factory GalleryState({
     required List<MediaFile> mediaData,

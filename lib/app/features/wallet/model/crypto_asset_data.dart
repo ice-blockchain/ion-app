@@ -9,7 +9,7 @@ import 'package:ice/app/features/wallet/model/wallet_data.dart';
 
 part 'crypto_asset_data.freezed.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class CryptoAssetData with _$CryptoAssetData {
   const factory CryptoAssetData({
     required WalletData wallet,

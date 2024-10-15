@@ -6,7 +6,7 @@ import 'package:ice/app/features/wallet/model/network_type.dart';
 
 part 'coin_receive_modal_data.freezed.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class CoinReceiveModalData with _$CoinReceiveModalData {
   const factory CoinReceiveModalData({
     required CoinData coinData,

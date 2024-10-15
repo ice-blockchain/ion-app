@@ -6,7 +6,7 @@ import 'package:ice/app/features/wallet/model/nft_sorting_type.dart';
 
 part 'user_preferences.freezed.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class UserPreferences with _$UserPreferences {
   const factory UserPreferences({
     required bool isBalanceVisible,
