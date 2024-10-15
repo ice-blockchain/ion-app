@@ -21,53 +21,6 @@ class UsersDelegationStorage extends _$UsersDelegationStorage {
   void store(UserDelegation userDelegation) {
     state = {...state, userDelegation.pubkey: userDelegation};
   }
-
-  Future<void> publish(UserDelegation userDelegation) async {
-    final mainWallet = await ref.read(mainWalletProvider.future);
-
-    if (mainWallet == null) {
-      throw Exception('Current user main wallet is null');
-    }
-
-    if (mainWallet.signingKey.publicKey != userDelegation.pubkey) {
-      throw Exception(
-        'Published user delegation event should have the same pubkey as the current user main wallet',
-      );
-    }
-
-    final userRelays = await ref.read(currentUserRelaysProvider.future);
-
-    if (userRelays == null) {
-      throw Exception('User relays are not found');
-    }
-
-    final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
-    final tags = userDelegation.tags;
-    final createdAt = DateTime.now();
-    const kind = UserDelegation.kind;
-    final pubkey = mainWallet.signingKey.publicKey;
-    final eventId = EventMessage.calculateEventId(
-      publicKey: pubkey,
-      createdAt: createdAt,
-      kind: kind,
-      tags: tags,
-      content: '',
-    );
-    // TODO: use identity ton waller signing request here when implemented
-    // and add prefix to the signature with '${wallet.signingKey.scheme}/${wallet.signingKey.curve}:'
-    final sig = mockedTonWalletKeystore.sign(message: eventId);
-    final event = EventMessage(
-      id: eventId,
-      pubkey: pubkey,
-      createdAt: createdAt,
-      kind: kind,
-      tags: tags,
-      content: '',
-      sig: sig,
-    );
-    await relay.sendEvent(event);
-    store(userDelegation);
-  }
 }
 
 @Riverpod(keepAlive: true)
@@ -104,4 +57,59 @@ Future<UserDelegation?> currentUserDelegation(CurrentUserDelegationRef ref) asyn
     return null;
   }
   return ref.watch(userDelegationProvider(mainWallet.signingKey.publicKey).future);
+}
+
+@riverpod
+class UserDelegationManager extends _$UserDelegationManager {
+  @override
+  FutureOr<void> build() {}
+
+  Future<UserDelegation> buildCurrentUserDelegationWith({required String pubkey}) async {
+    final mainWallet = (await ref.read(mainWalletProvider.future))!;
+
+    final delegation = (await ref.read(currentUserDelegationProvider.future)) ??
+        UserDelegation(
+          pubkey: mainWallet.signingKey.publicKey,
+          delegates: [],
+        );
+
+    return delegation.copyWith(
+      delegates: [
+        ...delegation.delegates,
+        UserDelegate(
+          pubkey: pubkey,
+          time: DateTime.now(),
+          status: DelegationStatus.active,
+        ),
+      ],
+    );
+  }
+
+  Future<EventMessage> buildDelegationEventFrom(UserDelegation userDelegation) async {
+    final mainWallet = (await ref.read(mainWalletProvider.future))!;
+    final tags = userDelegation.tags;
+    final createdAt = DateTime.now();
+    const kind = UserDelegation.kind;
+    final masterPubkey = mainWallet.signingKey.publicKey;
+
+    final eventId = EventMessage.calculateEventId(
+      publicKey: masterPubkey,
+      createdAt: createdAt,
+      kind: kind,
+      tags: tags,
+      content: '',
+    );
+    // TODO: use identity ton waller signing request here when implemented
+    // and add prefix to the signature with '${wallet.signingKey.scheme}/${wallet.signingKey.curve}:'
+    final sig = mockedTonWalletKeystore.sign(message: eventId);
+    return EventMessage(
+      id: eventId,
+      pubkey: masterPubkey,
+      createdAt: createdAt,
+      kind: kind,
+      tags: tags,
+      content: '',
+      sig: sig,
+    );
+  }
 }

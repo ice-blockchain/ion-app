@@ -20,24 +20,6 @@ class UsersRelaysStorage extends _$UsersRelaysStorage {
   void store(UserRelays userRelays) {
     state = {...state, userRelays.pubkey: userRelays};
   }
-
-  Future<void> publish(UserRelays userRelays) async {
-    final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
-
-    if (keyStore == null) {
-      throw Exception('Current user keystore is null');
-    }
-
-    final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
-    final event = EventMessage.fromData(
-      keyStore: keyStore,
-      kind: UserRelays.kind,
-      content: '',
-      tags: userRelays.tags,
-    );
-    await relay.sendEvent(event);
-    store(userRelays);
-  }
 }
 
 @Riverpod(keepAlive: true)
