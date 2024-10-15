@@ -954,6 +954,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  get_it:
+    dependency: transitive
+    description:
+      name: get_it
+      sha256: d85128a5dae4ea777324730dc65edd9c9f43155c109d5cc0a69cab74139fbac1
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.7.0"
   glob:
     dependency: transitive
     description:
@@ -1357,11 +1365,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: c7a58483730ee43b89bf94e7908cd2f838d4fc35
+      ref: "0.0.2"
+      resolved-ref: bacc0168a0c1ca9d9de78b3869eee3c9686ea57e
       url: "https://github.com/ice-blockchain/nostr-dart.git"
     source: git
-    version: "0.0.1"
+    version: "0.0.2"
   octo_image:
     dependency: transitive
     description:

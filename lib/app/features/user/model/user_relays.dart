@@ -57,7 +57,7 @@ class UserRelays with _$UserRelays {
 
   EventMessage toEventMessage(KeyStore keyStore) {
     return EventMessage.fromData(
-      keyStore: keyStore,
+      signer: keyStore,
       kind: kind,
       tags: list.map((relay) => relay.toTag()).toList(),
       content: '',

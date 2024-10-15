@@ -49,7 +49,7 @@ class UserMetadata with _$UserMetadata {
 
   EventMessage toEventMessage(KeyStore keyStore) {
     return EventMessage.fromData(
-      keyStore: keyStore,
+      signer: keyStore,
       kind: kind,
       content: jsonEncode(
         UserDataEventMessageContent(

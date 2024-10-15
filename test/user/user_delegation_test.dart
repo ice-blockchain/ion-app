@@ -6,13 +6,14 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 void main() {
   const pubkey = '477318cfb5427b9cfc66a9fa376150c1ddbc62115ae27cef72417eb959691396';
+  NostrDart.configure(logLevel: NostrLogLevel.ALL);
 
   group('UserDelegation Tests', () {
     test('UserDelegation.fromEventMessage should work when all data is there', () {
       final keyStore = KeyStore.generate();
 
       final delegationEvent = EventMessage.fromData(
-        keyStore: keyStore,
+        signer: keyStore,
         kind: UserDelegation.kind,
         tags: const [
           ['p', pubkey, '', 'active:1674834236:1,7'],
@@ -30,7 +31,7 @@ void main() {
       final keyStore = KeyStore.generate();
 
       final delegationEvent = EventMessage.fromData(
-        keyStore: keyStore,
+        signer: keyStore,
         kind: UserDelegation.kind,
         tags: const [
           ['p', pubkey, '', 'active:1674834236'],
@@ -51,7 +52,7 @@ void main() {
       final subKeyStore = KeyStore.generate();
 
       final delegationEvent = EventMessage.fromData(
-        keyStore: masterKeyStore,
+        signer: masterKeyStore,
         kind: UserDelegation.kind,
         tags: [
           ['p', subKeyStore.publicKey, '', 'active:1674834236'],
@@ -60,7 +61,7 @@ void main() {
       );
 
       final event = EventMessage.fromData(
-        keyStore: subKeyStore,
+        signer: subKeyStore,
         kind: 1,
         content: 'test event',
       );
@@ -78,7 +79,7 @@ void main() {
       final subKeyStore = KeyStore.generate();
 
       final delegationEvent = EventMessage.fromData(
-        keyStore: masterKeyStore,
+        signer: masterKeyStore,
         kind: UserDelegation.kind,
         tags: [
           ['p', subKeyStore.publicKey, '', 'active:1674834236'],
@@ -88,7 +89,7 @@ void main() {
       );
 
       final event = EventMessage.fromData(
-        keyStore: subKeyStore,
+        signer: subKeyStore,
         kind: 1,
         content: 'test event',
       );
@@ -106,7 +107,7 @@ void main() {
       final subKeyStore = KeyStore.generate();
 
       final delegationEvent = EventMessage.fromData(
-        keyStore: masterKeyStore,
+        signer: masterKeyStore,
         kind: UserDelegation.kind,
         tags: [
           ['p', subKeyStore.publicKey, '', 'active:1674834236:0,7'],
@@ -115,7 +116,7 @@ void main() {
       );
 
       final event = EventMessage.fromData(
-        keyStore: subKeyStore,
+        signer: subKeyStore,
         kind: 1,
         content: 'test event',
       );
@@ -140,7 +141,7 @@ void main() {
       final newTag = ['p', subKeyStore.publicKey, '', 'active:1674834236:7'];
 
       final delegationEvent = EventMessage.fromData(
-        keyStore: masterKeyStore,
+        signer: masterKeyStore,
         kind: UserDelegation.kind,
         tags: initialTags,
         content: '',

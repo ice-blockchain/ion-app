@@ -22,11 +22,9 @@ class NostrNotifier extends _$NostrNotifier {
       throw Exception('User relays are null');
     }
 
-    // ignore: unused_local_variable
     final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
 
-    //TODO:impl
-    // await relay.sendEvents(events);
+    await relay.sendEvents(events);
   }
 
   Future<void> sendEvent(EventMessage event, {String? pubkey}) async {
