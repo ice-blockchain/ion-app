@@ -29,12 +29,6 @@ class TextEditorPollButton extends StatelessWidget {
         );
 
         textEditorController.moveCursorToPosition(index + 1);
-
-        QuillEditorConfigurations(
-          embedBuilders: [
-            TextEditorPollBuilder(),
-          ],
-        );
       },
     );
   }
