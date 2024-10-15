@@ -9,13 +9,16 @@ class PollPickerColumn extends StatelessWidget {
     required this.controller,
     required this.selectedValue,
     required this.labelBuilder,
+    required this.onSelectedItemChanged,
     this.alignment = MainAxisAlignment.start,
     super.key,
   });
+
   final int maxCount;
   final FixedExtentScrollController controller;
   final ValueNotifier<int> selectedValue;
   final String Function(int) labelBuilder;
+  final ValueChanged<int> onSelectedItemChanged;
   final MainAxisAlignment alignment;
 
   @override
@@ -31,6 +34,7 @@ class PollPickerColumn extends StatelessWidget {
             scrollController: controller,
             onSelectedItemChanged: (int index) {
               selectedValue.value = index;
+              onSelectedItemChanged(index);
             },
             selectionOverlay: Container(),
             children: List<Widget>.generate(maxCount, (int index) {

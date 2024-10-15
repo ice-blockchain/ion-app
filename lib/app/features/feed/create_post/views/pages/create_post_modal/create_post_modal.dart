@@ -61,22 +61,10 @@ class CreatePostModal extends HookConsumerWidget {
               final data = operation.data! as Map<String, dynamic>;
               if (data.containsKey('custom')) {
                 final customData = data['custom'];
-                if (customData is Map<String, dynamic> &&
-                    customData.containsKey(textEditorPollKey)) {
+
+                if (_containsPollKey(customData)) {
                   pollExists = true;
                   break;
-                }
-                if (customData is String) {
-                  try {
-                    final parsedData = jsonDecode(customData);
-                    if (parsedData is Map<String, dynamic> &&
-                        parsedData.containsKey(textEditorPollKey)) {
-                      pollExists = true;
-                      break;
-                    }
-                  } catch (e) {
-                    Logger.log('Failed to parse custom data as JSON: $e');
-                  }
                 }
               }
             }
@@ -97,8 +85,8 @@ class CreatePostModal extends HookConsumerWidget {
     );
 
     bool isPollValid() {
-      final pollTitle = ref.watch(pollTitleNotifierProvider);
-      final pollAnswers = ref.watch(pollAnswersNotifierProvider);
+      final pollTitle = ref.read(pollTitleNotifierProvider);
+      final pollAnswers = ref.read(pollAnswersNotifierProvider);
 
       return pollTitle.text.trim().isNotEmpty &&
           pollAnswers.length >= 2 &&
@@ -186,5 +174,21 @@ class CreatePostModal extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  bool _containsPollKey(dynamic customData) {
+    Map<String, dynamic>? parsedData;
+
+    if (customData is Map<String, dynamic>) {
+      parsedData = customData;
+    } else if (customData is String) {
+      try {
+        parsedData = jsonDecode(customData) as Map<String, dynamic>?;
+      } catch (e) {
+        Logger.log('Failed to parse custom data as JSON: $e');
+      }
+    }
+
+    return parsedData != null && parsedData.containsKey(textEditorPollKey);
   }
 }

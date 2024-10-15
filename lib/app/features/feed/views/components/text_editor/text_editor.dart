@@ -59,22 +59,11 @@ class TextEditor extends StatelessWidget {
 
         if (data.containsKey('custom')) {
           final customData = data['custom'];
-          if (customData is Map<String, dynamic> && customData.containsKey(textEditorPollKey)) {
+
+          if (_containsPollKey(customData)) {
             pollIndex = currentIndex;
             pollLength = length;
             break;
-          }
-          if (customData is String) {
-            try {
-              final parsedData = jsonDecode(customData);
-              if (parsedData is Map<String, dynamic> && parsedData.containsKey(textEditorPollKey)) {
-                pollIndex = currentIndex;
-                pollLength = length;
-                break;
-              }
-            } catch (e) {
-              Logger.log('Failed to parse custom data as JSON: $e');
-            }
           }
         }
       }
@@ -94,6 +83,22 @@ class TextEditor extends StatelessWidget {
     } else {
       Logger.log('Poll not found in the document.');
     }
+  }
+
+  bool _containsPollKey(dynamic customData) {
+    Map<String, dynamic>? parsedData;
+
+    if (customData is Map<String, dynamic>) {
+      parsedData = customData;
+    } else if (customData is String) {
+      try {
+        parsedData = jsonDecode(customData) as Map<String, dynamic>?;
+      } catch (e) {
+        Logger.log('Failed to parse custom data as JSON: $e');
+      }
+    }
+
+    return parsedData != null && parsedData.containsKey(textEditorPollKey);
   }
 
   @override

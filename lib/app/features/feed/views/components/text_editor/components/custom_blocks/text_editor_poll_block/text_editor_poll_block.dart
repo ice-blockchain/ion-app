@@ -24,7 +24,10 @@ class TextEditorPollEmbed extends CustomBlockEmbed {
 ///
 
 class TextEditorPollBuilder extends EmbedBuilder {
-  TextEditorPollBuilder({this.onPollLengthPress, this.onRemovePollPress});
+  TextEditorPollBuilder({
+    this.onPollLengthPress,
+    this.onRemovePollPress,
+  });
   final VoidCallback? onPollLengthPress;
   final ValueChanged<Embed>? onRemovePollPress;
 

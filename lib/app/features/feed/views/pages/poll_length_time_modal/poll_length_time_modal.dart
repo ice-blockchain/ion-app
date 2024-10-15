@@ -7,13 +7,9 @@ import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/components/poll_picker_column/poll_picker_column.dart';
+import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/components/poll_picker_item/poll_picker_item.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:intl/intl.dart';
-
-const maxDaysCount = 8;
-const maxHoursCount = 24;
 
 class PollLengthTimeModal extends HookWidget {
   const PollLengthTimeModal({
@@ -57,36 +53,13 @@ class PollLengthTimeModal extends HookWidget {
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  SizedBox(width: 45.0.s),
-                  Flexible(
-                    child: PollPickerColumn(
-                      maxCount: maxDaysCount,
-                      alignment: MainAxisAlignment.end,
-                      controller: dayScrollController,
-                      selectedValue: selectedDay,
-                      labelBuilder: (value) => Intl.plural(
-                        value,
-                        one: context.i18n.day(1),
-                        other: context.i18n.day(value),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5.0.s),
-                  Flexible(
-                    child: PollPickerColumn(
-                      maxCount: maxHoursCount,
-                      controller: hourScrollController,
-                      selectedValue: selectedHour,
-                      labelBuilder: (value) => Intl.plural(
-                        value,
-                        one: context.i18n.hour(1),
-                        other: context.i18n.hour(value),
-                      ),
-                    ),
-                  ),
-                ],
+              PollPickerItem(
+                selectedDay: selectedDay.value,
+                selectedHour: selectedHour.value,
+                onDayChanged: (value) => selectedDay.value = value,
+                onHourChanged: (value) => selectedHour.value = value,
+                dayScrollController: dayScrollController,
+                hourScrollController: hourScrollController,
               ),
             ],
           ),
