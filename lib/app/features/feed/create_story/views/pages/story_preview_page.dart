@@ -48,6 +48,7 @@ class StoryPreviewPage extends ConsumerWidget {
             SizedBox(height: 22.0.s),
             ShareStoryButton(
               onPressed: () {
+                // TODO: change logic of VisibilitySettingsModal to handle a share action
                 showSimpleBottomSheet<void>(
                   context: context,
                   child: const VisibilitySettingsModal(),
