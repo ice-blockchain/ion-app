@@ -24,7 +24,7 @@ mixin _$Wallet {
   String get network => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   WalletSigningKey get signingKey => throw _privateConstructorUsedError;
-  String get address => throw _privateConstructorUsedError;
+  String? get address => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
   /// Serializes this Wallet to a JSON map.
@@ -46,7 +46,7 @@ abstract class $WalletCopyWith<$Res> {
       String network,
       String status,
       WalletSigningKey signingKey,
-      String address,
+      String? address,
       String name});
 
   $WalletSigningKeyCopyWith<$Res> get signingKey;
@@ -71,7 +71,7 @@ class _$WalletCopyWithImpl<$Res, $Val extends Wallet>
     Object? network = null,
     Object? status = null,
     Object? signingKey = null,
-    Object? address = null,
+    Object? address = freezed,
     Object? name = null,
   }) {
     return _then(_value.copyWith(
@@ -91,10 +91,10 @@ class _$WalletCopyWithImpl<$Res, $Val extends Wallet>
           ? _value.signingKey
           : signingKey // ignore: cast_nullable_to_non_nullable
               as WalletSigningKey,
-      address: null == address
+      address: freezed == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -125,7 +125,7 @@ abstract class _$$WalletImplCopyWith<$Res> implements $WalletCopyWith<$Res> {
       String network,
       String status,
       WalletSigningKey signingKey,
-      String address,
+      String? address,
       String name});
 
   @override
@@ -149,7 +149,7 @@ class __$$WalletImplCopyWithImpl<$Res>
     Object? network = null,
     Object? status = null,
     Object? signingKey = null,
-    Object? address = null,
+    Object? address = freezed,
     Object? name = null,
   }) {
     return _then(_$WalletImpl(
@@ -169,10 +169,10 @@ class __$$WalletImplCopyWithImpl<$Res>
           ? _value.signingKey
           : signingKey // ignore: cast_nullable_to_non_nullable
               as WalletSigningKey,
-      address: null == address
+      address: freezed == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -204,7 +204,7 @@ class _$WalletImpl implements _Wallet {
   @override
   final WalletSigningKey signingKey;
   @override
-  final String address;
+  final String? address;
   @override
   final String name;
 
@@ -254,7 +254,7 @@ abstract class _Wallet implements Wallet {
       required final String network,
       required final String status,
       required final WalletSigningKey signingKey,
-      required final String address,
+      required final String? address,
       required final String name}) = _$WalletImpl;
 
   factory _Wallet.fromJson(Map<String, dynamic> json) = _$WalletImpl.fromJson;
@@ -268,7 +268,7 @@ abstract class _Wallet implements Wallet {
   @override
   WalletSigningKey get signingKey;
   @override
-  String get address;
+  String? get address;
   @override
   String get name;
 

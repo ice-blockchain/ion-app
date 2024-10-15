@@ -26,6 +26,8 @@ import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_req
 import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/get_wallet_transfer_requests_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/data_sources/get_wallets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
+import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/data_sources/pseudo_network_generate_signature_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/pseudo_network_generate_signature_service.dart';
 
 class ClientsServiceLocator with _IonClient, _AuthClient, _WalletsClient, _UserActionSigner {
   factory ClientsServiceLocator() {
@@ -201,6 +203,11 @@ mixin _WalletsClient {
         username: username,
         config: config,
       ),
+      generateSignatureService: createGenerateSignatureService(
+        username: username,
+        config: config,
+        signer: signer,
+      ),
     );
   }
 
@@ -306,6 +313,25 @@ mixin _WalletsClient {
       IonServiceLocator.getNetworkClient2(config: config),
       IonServiceLocator.getTokenStorage(),
     );
+  }
+
+  PseudoNetworkGenerateSignatureService createGenerateSignatureService({
+    required String username,
+    required IonClientConfig config,
+    required PasskeysSigner signer,
+  }) {
+    return PseudoNetworkGenerateSignatureService(
+      username: username,
+      dataSource: createGenerateSignatureDataSource(),
+      userActionSigner: ClientsServiceLocator().createUserActionSigner2(
+        config: config,
+        signer: signer,
+      ),
+    );
+  }
+
+  PseudoNetworkGenerateSignatureDataSource createGenerateSignatureDataSource() {
+    return const PseudoNetworkGenerateSignatureDataSource();
   }
 }
 

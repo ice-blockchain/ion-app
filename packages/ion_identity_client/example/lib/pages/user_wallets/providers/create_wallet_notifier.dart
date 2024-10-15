@@ -25,7 +25,7 @@ class CreateWalletNotifier extends _$CreateWalletNotifier {
         final ionClient = await ref.read(ionClientProvider.future);
         return ionClient(username: username)
             .wallets
-            .createWallet(network: 'EthereumSepolia', name: 'ETH(t) ${Random().nextInt(1000000)}');
+            .createWallet(network: 'KeyEdDSA', name: 'KeyEdDSA ${Random().nextInt(1000000)}');
       },
     );
   }

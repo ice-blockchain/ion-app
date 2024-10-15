@@ -12,7 +12,7 @@ _$WalletImpl _$$WalletImplFromJson(Map<String, dynamic> json) => _$WalletImpl(
       status: json['status'] as String,
       signingKey:
           WalletSigningKey.fromJson(json['signingKey'] as Map<String, dynamic>),
-      address: json['address'] as String,
+      address: json['address'] as String?,
       name: json['name'] as String,
     );
 

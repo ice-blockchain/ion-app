@@ -7,6 +7,7 @@ import 'package:ion_identity_client/src/wallets/services/get_wallet_history/get_
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/get_wallet_nfts_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/get_wallet_transfer_requests_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
+import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/pseudo_network_generate_signature_service.dart';
 
 /// A class that handles operations related to user wallets, such as listing the wallets
 /// associated with a specific user.
@@ -26,12 +27,14 @@ class IonWallets {
     required GetWalletNftsService getWalletNftsService,
     required GetWalletHistoryService getWalletHistoryService,
     required GetWalletTransferRequestsService getWalletTransferRequestsService,
+    required PseudoNetworkGenerateSignatureService generateSignatureService,
   })  : _createWalletService = createWalletService,
         _getWalletsService = getWalletsService,
         _getWalletAssetsService = getWalletAssetsService,
         _getWalletNftsService = getWalletNftsService,
         _getWalletHistoryService = getWalletHistoryService,
-        _getWalletTransferRequestsService = getWalletTransferRequestsService;
+        _getWalletTransferRequestsService = getWalletTransferRequestsService,
+        _generateSignatureService = generateSignatureService;
 
   final String username;
 
@@ -41,7 +44,7 @@ class IonWallets {
   final GetWalletNftsService _getWalletNftsService;
   final GetWalletHistoryService _getWalletHistoryService;
   final GetWalletTransferRequestsService _getWalletTransferRequestsService;
-
+  final PseudoNetworkGenerateSignatureService _generateSignatureService;
   Future<Wallet> createWallet({
     required String network,
     required String name,
@@ -74,5 +77,14 @@ class IonWallets {
       _getWalletTransferRequestsService.getWalletTransferRequests(
         walletId,
         pageToken: pageToken,
+      );
+
+  Future<PseudoNetworkSignatureResponse> generateSignature(
+    String walletId,
+    String message,
+  ) =>
+      _generateSignatureService.generateMessageSignature(
+        walletId: walletId,
+        message: message,
       );
 }
