@@ -30,13 +30,13 @@ Future<UserDelegation?> userDelegation(UserDelegationRef ref, String pubkey) asy
     return userDelegation;
   }
 
-  final userRelays = await ref.read(currentUserRelaysProvider.future);
+  final userRelays = await ref.watch(currentUserRelaysProvider.future);
 
   if (userRelays == null) {
     return null;
   }
 
-  final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
+  final relay = await ref.watch(relayProvider(userRelays.list.random.url).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserDelegation.kind], limit: 1, authors: [pubkey]));
   final events = await requestEvents(requestMessage, relay);
