@@ -15,7 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'media_service.freezed.dart';
 part 'media_service.g.dart';
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class MediaFile with _$MediaFile {
   const factory MediaFile({
     required String path,

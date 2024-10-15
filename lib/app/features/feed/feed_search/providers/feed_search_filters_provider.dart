@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'feed_search_filters_provider.freezed.dart';
 part 'feed_search_filters_provider.g.dart';
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class FeedSearchFiltersState with _$FeedSearchFiltersState {
   const factory FeedSearchFiltersState({
     required List<Language> languages,

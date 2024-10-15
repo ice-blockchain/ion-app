@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'dapp_data.freezed.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class DAppData with _$DAppData {
   const factory DAppData({
     required String iconImage,

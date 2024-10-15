@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'nft_data.freezed.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class NftData with _$NftData {
   const factory NftData({
     required String collectionName,

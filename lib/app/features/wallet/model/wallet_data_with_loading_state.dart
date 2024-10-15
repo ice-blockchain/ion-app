@@ -8,7 +8,7 @@ part 'wallet_data_with_loading_state.freezed.dart';
 
 enum WalletAssetType { nft, coin }
 
-@Freezed(copyWith: true)
+@freezed
 class WalletDataWithLoadingState with _$WalletDataWithLoadingState {
   const factory WalletDataWithLoadingState({
     required WalletData walletData,

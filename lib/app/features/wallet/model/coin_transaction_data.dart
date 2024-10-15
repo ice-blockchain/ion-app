@@ -6,7 +6,7 @@ import 'package:ice/app/features/wallet/model/transaction_type.dart';
 
 part 'coin_transaction_data.freezed.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class CoinTransactionData with _$CoinTransactionData {
   const factory CoinTransactionData({
     required NetworkType networkType,

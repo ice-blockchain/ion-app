@@ -5,7 +5,7 @@ import 'package:ice/generated/assets.gen.dart';
 
 part 'coin_data.freezed.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class CoinData with _$CoinData {
   const factory CoinData({
     required String abbreviation,

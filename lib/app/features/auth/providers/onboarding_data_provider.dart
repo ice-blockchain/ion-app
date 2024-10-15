@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'onboarding_data_provider.freezed.dart';
 part 'onboarding_data_provider.g.dart';
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class OnboardingState with _$OnboardingState {
   const factory OnboardingState({
     String? name,

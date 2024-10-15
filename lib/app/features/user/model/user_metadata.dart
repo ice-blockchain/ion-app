@@ -8,7 +8,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'user_metadata.freezed.dart';
 part 'user_metadata.g.dart';
 
-@Freezed(copyWith: true, equal: true)
+@freezed
 class UserMetadata with _$UserMetadata {
   const factory UserMetadata({
     required String pubkey,

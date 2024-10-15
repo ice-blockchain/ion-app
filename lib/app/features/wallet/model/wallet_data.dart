@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'wallet_data.freezed.dart';
 
-@Freezed(copyWith: true)
+@freezed
 class WalletData with _$WalletData {
   const factory WalletData({
     required String id,
