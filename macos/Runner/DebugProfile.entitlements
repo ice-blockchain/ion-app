@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>com.apple.security.app-sandbox</key>
-	<true/>
+	<false/>
 	<key>com.apple.security.cs.allow-jit</key>
 	<true/>
 	<key>com.apple.security.network.server</key>
@@ -13,5 +13,13 @@
 	<!-- https://pub.dev/packages/flutter_secure_storage#configure-macos-version -->
 	<key>keychain-access-groups</key>
 	<array/>
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
+	<key>com.apple.security.files.downloads.read-write</key>
+	<true/>
+	<key>com.apple.security.files.documents.read-write</key>
+	<true/>
+	<key>com.apple.security.files.desktop.read-write</key>
+	<true/>
 </dict>
 </plist>

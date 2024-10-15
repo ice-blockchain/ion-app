@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/extensions/extensions.dart';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_player/video_player.dart';
 
@@ -9,11 +11,11 @@ part 'video_player_provider.g.dart';
 @riverpod
 Raw<VideoPlayerController> videoController(
   VideoControllerRef ref,
-  String assetPath, {
+  String sourcePath, {
   bool autoPlay = false,
   bool looping = false,
 }) {
-  final controller = VideoPlayerControllerExtension.fromFile(assetPath);
+  final controller = ref.read(videoPlayerControllerFactoryProvider).createController(sourcePath);
 
   controller.initialize().then((_) {
     ref.notifyListeners();
@@ -26,4 +28,28 @@ Raw<VideoPlayerController> videoController(
   ref.onDispose(controller.dispose);
 
   return controller;
+}
+
+class VideoPlayerControllerFactory {
+  VideoPlayerController createController(String sourcePath) {
+    if (_isNetworkSource(sourcePath)) {
+      return VideoPlayerController.networkUrl(Uri.parse(sourcePath));
+    } else if (_isLocalFile(sourcePath)) {
+      return VideoPlayerController.file(File(sourcePath));
+    }
+    return VideoPlayerController.asset(sourcePath);
+  }
+
+  bool _isNetworkSource(String path) {
+    return path.startsWith('http://') || path.startsWith('https://');
+  }
+
+  bool _isLocalFile(String path) {
+    return !kIsWeb && File(path).existsSync();
+  }
+}
+
+@riverpod
+VideoPlayerControllerFactory videoPlayerControllerFactory(VideoPlayerControllerFactoryRef ref) {
+  return VideoPlayerControllerFactory();
 }

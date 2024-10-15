@@ -6,6 +6,7 @@ import 'package:ice/app/extensions/build_context.dart';
 import 'package:ice/app/extensions/theme_data.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/views/pages/ion_identity_client_test/ion_identity_client_test_page.dart';
+import 'package:ice/app/router/app_routes.dart';
 
 class ChatPage extends ConsumerWidget {
   const ChatPage({super.key});
@@ -42,6 +43,12 @@ class ChatPage extends ConsumerWidget {
                   );
                 },
                 child: const Text('ion-identity-client'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  CompressTestRoute().push<void>(context);
+                },
+                child: const Text('Compress Test'),
               ),
             ],
           ),
