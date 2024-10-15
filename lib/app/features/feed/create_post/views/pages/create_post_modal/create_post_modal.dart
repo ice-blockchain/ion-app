@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
@@ -11,11 +8,11 @@ import 'package:ice/app/components/back_hardware_button_interceptor/back_hardwar
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
 import 'package:ice/app/features/feed/providers/poll/poll_answers_provider.dart';
 import 'package:ice/app/features/feed/providers/poll/poll_title_notifier.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_bold_button/text_editor_bold_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_image_button/text_editor_image_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_italic_button/text_editor_italic_button.dart';
@@ -28,7 +25,6 @@ import 'package:ice/app/features/feed/views/pages/cancel_creation_modal/cancel_c
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ice/app/services/logger/logger.dart';
 import 'package:ice/app/services/markdown_parser/markdown_parser.dart';
 
 class CreatePostModal extends HookConsumerWidget {
@@ -48,41 +44,7 @@ class CreatePostModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController();
     final hasContent = useTextEditorHasContent(textEditorController);
-    final hasPoll = useState(false);
-
-    useEffect(
-      () {
-        void checkPoll() {
-          final delta = textEditorController.document.toDelta();
-          var pollExists = false;
-
-          for (final operation in delta.operations) {
-            if (operation.isInsert && operation.data is Map<String, dynamic>) {
-              final data = operation.data! as Map<String, dynamic>;
-              if (data.containsKey('custom')) {
-                final customData = data['custom'];
-
-                if (_containsPollKey(customData)) {
-                  pollExists = true;
-                  break;
-                }
-              }
-            }
-          }
-
-          hasPoll.value = pollExists;
-        }
-
-        textEditorController.addListener(checkPoll);
-
-        checkPoll();
-
-        return () {
-          textEditorController.removeListener(checkPoll);
-        };
-      },
-      [textEditorController],
-    );
+    final hasPoll = useHasPoll(textEditorController); // Use the custom hook here
 
     bool isPollValid() {
       final pollTitle = ref.read(pollTitleNotifierProvider);
@@ -96,7 +58,7 @@ class CreatePostModal extends HookConsumerWidget {
     }
 
     bool isSendButtonEnabled() {
-      if (hasPoll.value) {
+      if (hasPoll) {
         return isPollValid();
       } else {
         return hasContent;
@@ -151,7 +113,7 @@ class CreatePostModal extends HookConsumerWidget {
                   child: ActionsToolbar(
                     actions: [
                       TextEditorImageButton(textEditorController: textEditorController),
-                      if (!hasPoll.value)
+                      if (!hasPoll)
                         TextEditorPollButton(
                           textEditorController: textEditorController,
                         ),
@@ -174,21 +136,5 @@ class CreatePostModal extends HookConsumerWidget {
         ),
       ),
     );
-  }
-
-  bool _containsPollKey(dynamic customData) {
-    Map<String, dynamic>? parsedData;
-
-    if (customData is Map<String, dynamic>) {
-      parsedData = customData;
-    } else if (customData is String) {
-      try {
-        parsedData = jsonDecode(customData) as Map<String, dynamic>?;
-      } catch (e) {
-        Logger.log('Failed to parse custom data as JSON: $e');
-      }
-    }
-
-    return parsedData != null && parsedData.containsKey(textEditorPollKey);
   }
 }
