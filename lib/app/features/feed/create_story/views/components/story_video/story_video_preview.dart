@@ -32,6 +32,7 @@ class StoryVideoPreview extends ConsumerWidget {
                   videoControllerProvider(
                     filePath,
                     autoPlay: true,
+                    looping: true,
                   ),
                 );
 
