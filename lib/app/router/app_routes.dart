@@ -18,6 +18,7 @@ import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_
 import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_codes_page.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_options/twofa_options_page.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_success/twofa_success_page.dart';
+import 'package:ice/app/features/chat/views/pages/app_test_page/app_test_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
 import 'package:ice/app/features/core/model/language.dart';
@@ -33,7 +34,6 @@ import 'package:ice/app/features/feed/create_post/views/pages/compress_test_page
 import 'package:ice/app/features/feed/create_post/views/pages/create_post_modal/create_post_modal.dart';
 import 'package:ice/app/features/feed/create_story/create_story_modal.dart';
 import 'package:ice/app/features/feed/create_story/views/pages/story_camera_widget.dart';
-import 'package:ice/app/features/feed/create_story/views/pages/story_preview_page.dart';
 import 'package:ice/app/features/feed/create_video/views/pages/create_video_modal/create_video_modal.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_advanced_search_page/feed_advanced_search_page.dart';
 import 'package:ice/app/features/feed/feed_search/views/pages/feed_search_filters_page/feed_search_filters_page.dart';
@@ -132,6 +132,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
           path: '/chat',
           routes: [
             TypedGoRoute<ChatMainModalRoute>(path: 'main-modal'),
+            TypedGoRoute<AppTestRoute>(path: 'app-test'),
           ],
         ),
       ],
@@ -218,6 +219,10 @@ class FeedRoute extends BaseRouteData {
 
 class ChatRoute extends BaseRouteData {
   ChatRoute() : super(child: const ChatPage());
+}
+
+class AppTestRoute extends BaseRouteData {
+  AppTestRoute() : super(child: const AppTestPage());
 }
 
 class WalletRoute extends BaseRouteData {

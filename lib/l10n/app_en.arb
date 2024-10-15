@@ -6,6 +6,7 @@
   "button_save": "Save",
   "button_cancel": "Cancel",
   "button_delete": "Delete",
+  "button_edit": "Edit",
   "button_close": "Close",
   "button_register": "Register",
   "button_send": "Send",
@@ -355,5 +356,8 @@
   "camera_no_access_description": "To grant access, go to settings and enable the appropriate settings",
   "story_preview_title": "Story preview",
   "story_settings_title": "Who can reply this story",
-  "story_has_been_posted": "Your story has been published"
+  "story_has_been_posted": "Your story has been published",
+  "chat_title": "Chats",
+  "chat_empty_description": "You have no conversations yet",
+  "chat_new_message_button": "New message"
 }
