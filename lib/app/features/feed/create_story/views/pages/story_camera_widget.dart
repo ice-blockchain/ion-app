@@ -8,8 +8,9 @@ import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/create_story/hooks/use_recording_controller.dart';
 import 'package:ice/app/features/feed/create_story/providers/story_camera_provider.dart';
-import 'package:ice/app/features/feed/create_story/views/components/components.dart';
+import 'package:ice/app/features/feed/create_story/views/components/story_camera/components.dart';
 import 'package:ice/app/features/gallery/providers/camera_provider.dart';
+import 'package:ice/app/router/app_routes.dart';
 
 // TODO implement listening of app lifecycle state change
 class StoryCameraWidget extends HookConsumerWidget {
@@ -52,8 +53,14 @@ class StoryCameraWidget extends HookConsumerWidget {
                   recordingProgress: recordingProgress,
                   onRecordingStart: () async =>
                       ref.read(storyCameraControllerProvider.notifier).startVideoRecording(),
-                  onRecordingStop: () async =>
-                      ref.read(storyCameraControllerProvider.notifier).stopVideoRecording(),
+                  onRecordingStop: () async {
+                    final videoPath =
+                        await ref.read(storyCameraControllerProvider.notifier).stopVideoRecording();
+
+                    if (videoPath != null && context.mounted) {
+                      await StoryPreviewRoute(videoPath: videoPath).push<void>(context);
+                    }
+                  },
                 ),
               ),
             ),

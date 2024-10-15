@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/create_story/views/components/circular_recording_indicator.dart';
-import 'package:ice/app/features/feed/create_story/views/components/inner_capture_circle.dart';
+import 'package:ice/app/features/feed/create_story/views/components/story_camera/circular_recording_indicator.dart';
+import 'package:ice/app/features/feed/create_story/views/components/story_camera/inner_capture_circle.dart';
 
 class CaptureButton extends StatelessWidget {
   const CaptureButton({
