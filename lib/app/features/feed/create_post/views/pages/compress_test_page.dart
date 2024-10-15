@@ -57,6 +57,7 @@ class VideoCompressTab extends HookConsumerWidget {
     final isCompressing = useState<bool>(false);
     final originalSize = useState<String>('');
     final compressedSize = useState<String>('');
+    final thumbnail = useState<Uint8List?>(null);
 
     Future<void> pickAndCompressVideo() async {
       final pickedFile = await FilePicker.platform.pickFiles(
@@ -65,6 +66,11 @@ class VideoCompressTab extends HookConsumerWidget {
       );
 
       if (pickedFile != null) {
+        thumbnail.value = await (await ref
+                .read(mediaCompressServiceProvider)
+                .getThumbnail(pickedFile.xFiles.first))
+            .readAsBytes();
+
         await compressedVideoController.value?.dispose();
         compressedVideoController.value = null;
         compressedSize.value = '';
@@ -97,6 +103,18 @@ class VideoCompressTab extends HookConsumerWidget {
         if (isCompressing.value) const CircularProgressIndicator(),
         if (originalSize.value.isNotEmpty) Text('Original Size: ${originalSize.value}'),
         if (compressedSize.value.isNotEmpty) Text('Compressed Size: ${compressedSize.value}'),
+        if (thumbnail.value != null)
+          Column(
+            children: <Widget>[
+              Image.memory(
+                thumbnail.value!,
+                height: 200,
+                width: 300,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         if (compressedVideoController.value != null)
           Expanded(
             child: AspectRatio(

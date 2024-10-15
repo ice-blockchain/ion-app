@@ -37,27 +37,36 @@ class MediaCompressionService {
     FfmpegAudioBitrateArg audioBitrate = FfmpegAudioBitrateArg.low,
     bool overwrite = true,
   }) async {
-    final args = [
-      const CustomArgument(['-threads', '0']),
-      if (overwrite) const CustomArgument(['-y']),
-      CustomArgument(['-codec:v', videoCodec.codec]),
-      CustomArgument(['-preset', preset.value]),
-      CustomArgument(['-b:v', videoBitrate.bitrate]),
-      CustomArgument(['-maxrate', maxRate.bitrate]),
-      CustomArgument(['-bufsize', bufSize.bitrate]),
-      CustomArgument(['-vf', 'scale=${scale.resolution},fps=$fps']),
-      CustomArgument(['-codec:a', audioCodec.codec]),
-      CustomArgument(['-b:a', audioBitrate.bitrate]),
-    ];
+    try {
+      final args = [
+        const CustomArgument(['-threads', '0']),
+        if (overwrite) const CustomArgument(['-y']),
+        CustomArgument(['-codec:v', videoCodec.codec]),
+        CustomArgument(['-preset', preset.value]),
+        CustomArgument(['-b:v', videoBitrate.bitrate]),
+        CustomArgument(['-maxrate', maxRate.bitrate]),
+        CustomArgument(['-bufsize', bufSize.bitrate]),
+        CustomArgument(['-vf', 'scale=${scale.resolution},fps=$fps']),
+        CustomArgument(['-codec:a', audioCodec.codec]),
+        CustomArgument(['-b:a', audioBitrate.bitrate]),
+      ];
 
-    if (kIsWeb) {
-      return _compressVideoForWeb(inputFile, args);
+      if (kIsWeb) {
+        return _compressVideoForWeb(inputFile, args);
+      }
+
+      if (Platform.isWindows) {
+        await _initWindowsPackage();
+      }
+
+      return await _defaultVideoCompress(inputFile, args);
+    } catch (error, stackTrace) {
+      Logger.log('Error during video compression!', error: error, stackTrace: stackTrace);
+      throw Exception('Failed to compress video.');
     }
+  }
 
-    if (Platform.isWindows) {
-      await _initWindowsPackage();
-    }
-
+  Future<XFile> _defaultVideoCompress(XFile inputFile, List<CustomArgument> args) async {
     final output = await _generateOutputPath();
     final savedFilePath = await FileSaver.instance
         .saveFile(name: path.basename(output), bytes: await inputFile.readAsBytes());
@@ -78,14 +87,25 @@ class MediaCompressionService {
     XFile inputFile, {
     Duration duration = const Duration(seconds: 1),
   }) async {
-    final outputPath = await _generateOutputPath(isThumbnail: true);
-    final file = await FFMpegHelper.instance.getThumbnailFileSync(
-      videoPath: inputFile.path,
-      fromDuration: duration,
-      outputPath: outputPath,
-    );
+    try {
+      final outputPath = await _generateOutputPath(isThumbnail: true);
+      final file = await FFMpegHelper.instance.getThumbnailFileSync(
+        videoPath: inputFile.path,
+        fromDuration: duration,
+        outputPath: outputPath,
+      );
 
-    return XFile.fromData(file!.readAsBytesSync());
+      final compressedImage = await compressImage(
+        XFile(file!.path),
+        quality: 100,
+        size: const Size(200, 200),
+      );
+
+      return compressedImage;
+    } catch (error, stackTrace) {
+      Logger.log('Error during thumbnail extraction!', error: error, stackTrace: stackTrace);
+      throw Exception('Failed to extract thumbnail.');
+    }
   }
 
   Future<void> _initWindowsPackage() async {
@@ -145,29 +165,38 @@ class MediaCompressionService {
 
       final output = await compressor_package.compressor.compress(config);
 
-      return XFile.fromData(output.rawBytes, name: file.name, mimeType: file.mimeType);
-    } catch (e) {
-      Logger.log('Error during image compression: $e');
+      return XFile.fromData(
+        output.rawBytes,
+        name: file.name,
+        mimeType: file.mimeType,
+      );
+    } catch (error, stackTrace) {
+      Logger.log('Error during image compression!', error: error, stackTrace: stackTrace);
       rethrow;
     }
   }
 
   Future<Uint8List> resizeImage(XFile file, Size size, {bool keepAspectRatio = true}) async {
-    final originalBytes = await file.readAsBytes();
-    final decodedImage = img.decodeImage(originalBytes);
+    try {
+      final originalBytes = await file.readAsBytes();
+      final decodedImage = img.decodeImage(originalBytes);
 
-    if (decodedImage == null) {
-      throw Exception('Failed to decode image.');
+      if (decodedImage == null) {
+        throw Exception('Failed to decode image.');
+      }
+
+      final resizedImage = img.copyResize(
+        decodedImage,
+        width: size.width.toInt(),
+        height: size.height.toInt(),
+        maintainAspect: keepAspectRatio,
+      );
+
+      return Uint8List.fromList(img.encodePng(resizedImage));
+    } catch (error, stackTrace) {
+      Logger.log('Error during image resizing!', error: error, stackTrace: stackTrace);
+      rethrow;
     }
-
-    final resizedImage = img.copyResize(
-      decodedImage,
-      width: size.width.toInt(),
-      height: size.height.toInt(),
-      maintainAspect: keepAspectRatio,
-    );
-
-    return Uint8List.fromList(img.encodePng(resizedImage));
   }
 
   Future<String> _generateOutputPath({bool isThumbnail = false}) async {
