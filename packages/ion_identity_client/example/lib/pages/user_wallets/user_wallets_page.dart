@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_client_example/pages/user_wallets/providers/create_wallet_notifier.dart';
 import 'package:ion_client_example/pages/user_wallets/providers/user_wallets_provider.dart';
 import 'package:ion_client_example/pages/wallet_assets/wallet_assets_page.dart';
+import 'package:ion_client_example/pages/wallet_generate_signature/wallet_generate_signature_page.dart';
 import 'package:ion_client_example/pages/wallet_history/wallet_history_page.dart';
 import 'package:ion_client_example/pages/wallet_nfts/wallet_nfts_page.dart';
 import 'package:ion_client_example/pages/wallet_transfer_requests/wallet_transfer_requests_page.dart';
@@ -26,6 +27,7 @@ class UserWalletsPage extends HookConsumerWidget {
         title: Text('$username\'s Wallets'),
         actions: const [
           _CreateWalletAction(),
+          _GenerateSignatureButton(),
         ],
       ),
       body: const _Body(),
@@ -53,6 +55,22 @@ class _CreateWalletAction extends ConsumerWidget {
         ref.read(createWalletNotifierProvider.notifier).createWallet();
       },
       icon: isLoading ? const CircularProgressIndicator() : const Icon(Icons.add),
+    );
+  }
+}
+
+class _GenerateSignatureButton extends StatelessWidget {
+  const _GenerateSignatureButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const WalletGenerateSignaturePage()),
+        );
+      },
+      icon: const Icon(Icons.fingerprint),
     );
   }
 }

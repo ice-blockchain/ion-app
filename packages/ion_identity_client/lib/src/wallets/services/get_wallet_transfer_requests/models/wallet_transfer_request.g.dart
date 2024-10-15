@@ -12,8 +12,7 @@ _$WalletTransferRequestImpl _$$WalletTransferRequestImplFromJson(
       id: json['id'] as String,
       walletId: json['walletId'] as String,
       network: json['network'] as String,
-      requester:
-          TransferRequester.fromJson(json['requester'] as Map<String, dynamic>),
+      requester: Requester.fromJson(json['requester'] as Map<String, dynamic>),
       requestBody: TransferRequestBody.fromJson(
           json['requestBody'] as Map<String, dynamic>),
       status: json['status'] as String,

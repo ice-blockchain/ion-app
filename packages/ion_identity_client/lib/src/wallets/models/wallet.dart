@@ -13,7 +13,7 @@ class Wallet with _$Wallet {
     required String network,
     required String status,
     required WalletSigningKey signingKey,
-    required String address,
+    required String? address,
     required String name,
   }) = _Wallet;
 

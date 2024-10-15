@@ -1,21 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'transfer_requester.dart';
+part of 'requester.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$TransferRequesterImpl _$$TransferRequesterImplFromJson(
-        Map<String, dynamic> json) =>
-    _$TransferRequesterImpl(
+_$RequesterImpl _$$RequesterImplFromJson(Map<String, dynamic> json) =>
+    _$RequesterImpl(
       userId: json['userId'] as String,
-      tokenId: json['tokenId'] as String,
+      tokenId: json['tokenId'] as String?,
       appId: json['appId'] as String,
     );
 
-Map<String, dynamic> _$$TransferRequesterImplToJson(
-        _$TransferRequesterImpl instance) =>
+Map<String, dynamic> _$$RequesterImplToJson(_$RequesterImpl instance) =>
     <String, dynamic>{
       'userId': instance.userId,
       'tokenId': instance.tokenId,

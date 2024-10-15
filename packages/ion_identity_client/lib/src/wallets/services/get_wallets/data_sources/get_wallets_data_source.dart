@@ -39,7 +39,7 @@ class GetWalletsDataSource {
           throw const UnauthenticatedException();
         }
       }
-      throw const UnknownIonException();
+      rethrow;
     }
   }
 }

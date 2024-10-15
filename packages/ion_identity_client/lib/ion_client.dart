@@ -15,3 +15,4 @@ export 'src/wallets/services/get_wallet_history/models/wallet_history.dart';
 export 'src/wallets/services/get_wallet_nfts/models/wallet_nfts.dart';
 export 'src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_request.dart';
 export 'src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_requests.dart';
+export 'src/wallets/services/pseudo_network_generate_signature/models/pseudo_network_signature_response.dart';
