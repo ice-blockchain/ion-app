@@ -19,18 +19,19 @@ class NostrSignatureVerifier extends SchnorrSignatureVerifier {
     if (signatureParts.length == 2) {
       final [prefix, signatureBody] = signatureParts;
       if (prefix == 'eddsa/ed25519') {
-        return _verifyEddsaCurve25519Signature(
+        return _verifyEddsaEd25519Signature(
           signature: signatureBody,
           message: message,
           publicKey: publicKey,
         );
       }
+      //TODO: impl a general fallback here
       throw UnimplementedError('Signature verification for $prefix is not implemented');
     }
     return super.verify(signature: signature, message: message, publicKey: publicKey);
   }
 
-  Future<bool> _verifyEddsaCurve25519Signature({
+  Future<bool> _verifyEddsaEd25519Signature({
     required String signature,
     required String message,
     required String publicKey,
@@ -43,11 +44,6 @@ class NostrSignatureVerifier extends SchnorrSignatureVerifier {
       publicKey: SimplePublicKey(publicKeyBytes, type: KeyPairType.ed25519),
     );
 
-    final algorithm = Ed25519();
-
-    return algorithm.verifyString(
-      message,
-      signature: signatureObject,
-    );
+    return Ed25519().verifyString(message, signature: signatureObject);
   }
 }
