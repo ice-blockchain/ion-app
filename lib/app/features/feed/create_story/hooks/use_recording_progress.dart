@@ -12,19 +12,7 @@ typedef RecordingProgressResult = (
   double recordingProgress,
 );
 
-/// A hook that manages the recording progress for a video recording feature.
-///
-/// This hook returns a tuple containing the current recording duration and the recording progress.
-/// It uses an animation controller to track the recording progress and updates the recording
-/// duration accordingly. When the recording is completed, it stops the video recording using
-/// the provided `storyCameraControllerProvider`.
-///
-/// Parameters:
-/// - ref: WidgetRef for accessing providers
-/// - isRecording: A boolean indicating whether recording is in progress
-///
-/// Returns:
-/// - A tuple containing the current recording duration and the recording progress.
+/// Tracks recording progress and automatically stops recording when time runs out.
 RecordingProgressResult useRecordingProgress(
   WidgetRef ref, {
   required bool isRecording,

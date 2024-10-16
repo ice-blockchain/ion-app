@@ -37,25 +37,27 @@ class StoryPreviewPage extends ConsumerWidget {
                 child: Column(
                   children: [
                     Flexible(
-                      child: StoryVideoPreview(
-                        videoPath: videoPath,
-                      ),
+                      child: StoryVideoPreview(videoPath: videoPath),
                     ),
                     SizedBox(height: 8.0.s),
                     const VerifiedAccountListItem(),
-                    SizedBox(height: 22.0.s),
-                    ShareStoryButton(
-                      onPressed: () {
-                        showSimpleBottomSheet<void>(
-                          context: context,
-                          child: const VisibilitySettingsModal(),
-                        );
-                      },
-                    ),
-                    ScreenBottomOffset(margin: 36.0.s),
                   ],
                 ),
               ),
+            ),
+            Column(
+              children: [
+                SizedBox(height: 16.0.s),
+                ShareStoryButton(
+                  onPressed: () {
+                    showSimpleBottomSheet<void>(
+                      context: context,
+                      child: const VisibilitySettingsModal(),
+                    );
+                  },
+                ),
+                ScreenBottomOffset(margin: 36.0.s),
+              ],
             ),
           ],
         ),
