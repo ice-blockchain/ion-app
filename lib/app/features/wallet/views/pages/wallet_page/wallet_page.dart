@@ -9,8 +9,8 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/wallet/providers/contacts_data_provider.dart';
-import 'package:ion/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
-import 'package:ion/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
+import 'package:ion/app/features/wallet/providers/filtered_wallet_coins_provider.dart';
+import 'package:ion/app/features/wallet/providers/filtered_wallet_nfts_provider.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
@@ -49,10 +49,10 @@ class WalletPage extends HookConsumerWidget {
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
-    final coinsResult = useFilteredWalletCoins(ref);
-    final nftsResult = useFilteredWalletNfts(ref);
+    final coinsState = ref.watch(filteredWalletCoinsProvider);
+    final nftsState = ref.watch(filteredWalletNftsProvider);
 
-    final isLoading = coinsResult.isLoading || nftsResult.isLoading;
+    final isLoading = coinsState.isLoading || nftsState.isLoading;
 
     List<Widget> getActiveTabContent() {
       if (isLoading) {

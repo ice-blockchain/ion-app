@@ -13,18 +13,22 @@ class ManageWalletsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletsData = ref.watch(walletsDataNotifierProvider);
+    final walletsData = ref.watch(walletsDataNotifierProvider).valueOrNull;
+
+    // TODO: add loading and error states
+    if (walletsData == null) {
+      return const SizedBox.shrink();
+    }
 
     return Padding(
       padding: EdgeInsets.only(top: 6.0.s),
       child: Column(
-        children: walletsData
-            .map(
-              (walletData) => ManageWalletTile(
-                walletId: walletData.id,
-              ),
-            )
-            .toList(),
+        children: [
+          for (final walletData in walletsData)
+            ManageWalletTile(
+              walletId: walletData.id,
+            ),
+        ],
       ),
     );
   }

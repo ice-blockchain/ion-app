@@ -29,8 +29,8 @@ class CoinDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinData = ref.watch(coinByIdProvider(coinId: coinId));
-    final walletId = ref.watch(currentWalletIdProvider);
+    final coinData = ref.watch(coinByIdProvider(coinId: coinId)).valueOrNull;
+    final walletId = ref.watch(currentWalletIdProvider).valueOrNull;
     final scrollController = useScrollController();
     final coinTransactionsMap = useTransactionsByDate(context, ref);
     final isLoading = ref.watch(
@@ -40,7 +40,7 @@ class CoinDetailsPage extends HookConsumerWidget {
 
     useOnInit(
       () {
-        if (walletId.isNotEmpty && coinId.isNotEmpty) {
+        if (walletId != null && walletId.isNotEmpty && coinId.isNotEmpty) {
           ref.read(coinTransactionsNotifierProvider.notifier).fetch(
                 walletId: walletId,
                 coinId: coinId,
@@ -50,6 +50,16 @@ class CoinDetailsPage extends HookConsumerWidget {
       },
       <Object?>[walletId, coinId, activeNetworkType.value],
     );
+
+    // TODO: add proper loading and error handling
+    if (coinData == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: NavigationAppBar.screen(
         title: Row(

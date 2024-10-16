@@ -27,7 +27,12 @@ class EditWalletModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletData = ref.watch(walletByIdProvider(id: walletId));
+    final walletData = ref.watch(walletByIdProvider(id: walletId)).valueOrNull;
+
+    // TODO: add loading and error states
+    if (walletData == null) {
+      return const SizedBox.shrink();
+    }
 
     final walletName = useState(walletData.name);
     final controller = useTextEditingController(text: walletName.value);
@@ -65,10 +70,7 @@ class EditWalletModal extends HookConsumerWidget {
               child: isNameChanged
                   ? Button(
                       onPressed: () {
-                        ref
-                            .read(walletsDataNotifierProvider.notifier)
-                            .updateWallet(walletData.copyWith(name: walletName.value));
-
+                        // TODO: update wallet
                         context.pop();
                       },
                       label: Text(context.i18n.button_save),

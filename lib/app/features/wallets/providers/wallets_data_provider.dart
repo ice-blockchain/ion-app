@@ -1,36 +1,35 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallet/model/wallet_data.dart';
-import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
+import 'package:ion/app/features/wallets/providers/current_user_wallets_provider.dart';
 import 'package:ion/app/features/wallets/providers/selected_wallet_id_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallets_data_provider.g.dart';
 
-@riverpod
-String currentWalletId(Ref ref) {
-  final selectedWalletId = ref.watch(selectedWalletIdNotifierProvider);
-  final walletsData = ref.watch(walletsDataNotifierProvider);
+@Riverpod(keepAlive: true)
+Future<String> currentWalletId(Ref ref) async {
+  final savedSelectedWalletId = ref.watch(selectedWalletIdNotifierProvider);
+  final walletsData = await ref.watch(walletsDataNotifierProvider.future);
 
-  if (walletsData.any((wallet) => wallet.id == selectedWalletId)) {
-    return selectedWalletId!;
-  }
-
-  return walletsData.isNotEmpty ? walletsData.first.id : '';
+  final selectedWallet =
+      walletsData.firstWhereOrNull((wallet) => wallet.id == savedSelectedWalletId);
+  return selectedWallet?.id ?? walletsData.first.id;
 }
 
 @riverpod
-WalletData currentWalletData(Ref ref) {
-  final currentWalletId = ref.watch(currentWalletIdProvider);
-  final walletsData = ref.watch(walletsDataNotifierProvider);
+Future<WalletData> currentWalletData(Ref ref) async {
+  final currentWalletId = await ref.watch(currentWalletIdProvider.future);
+  final walletsData = await ref.watch(walletsDataNotifierProvider.future);
 
   return walletsData.firstWhere((wallet) => wallet.id == currentWalletId);
 }
 
 @riverpod
-WalletData walletById(Ref ref, {required String id}) {
-  final wallets = ref.read(walletsDataNotifierProvider);
+Future<WalletData> walletById(Ref ref, {required String id}) async {
+  final wallets = await ref.watch(walletsDataNotifierProvider.future);
 
   return wallets.firstWhere((wallet) => wallet.id == id);
 }
@@ -38,31 +37,17 @@ WalletData walletById(Ref ref, {required String id}) {
 @Riverpod(keepAlive: true)
 class WalletsDataNotifier extends _$WalletsDataNotifier {
   @override
-  List<WalletData> build() {
-    return List.from(mockedWalletDataArray);
-  }
+  Future<List<WalletData>> build() async {
+    final wallets = await ref.watch(currentUserWalletsProvider.future);
 
-  void addWallet(WalletData newData) {
-    if (state.any((wallet) => wallet.id == newData.id)) {
-      throw Exception('Wallet with id ${newData.id} already exists');
-    }
-
-    state = [...state, newData];
-  }
-
-  void updateWallet(WalletData updatedData) {
-    final walletExists = state.any((wallet) => wallet.id == updatedData.id);
-
-    if (!walletExists) {
-      throw Exception('Wallet with id ${updatedData.id} does not exist');
-    }
-
-    state = state.map((wallet) {
-      return wallet.id == updatedData.id ? updatedData : wallet;
-    }).toList();
-  }
-
-  void deleteWallet(String walletId) {
-    state = state.where((wallet) => wallet.id != walletId).toList();
+    return [
+      for (final (_, wallet) in wallets.indexed)
+        WalletData(
+          id: wallet.id,
+          name: wallet.name,
+          icon: 'NULL',
+          balance: -100,
+        ),
+    ];
   }
 }

@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/wallet/model/nft_layout_type.dart';
-import 'package:ion/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
+import 'package:ion/app/features/wallet/providers/filtered_wallet_nfts_provider.dart';
 import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
@@ -14,7 +14,7 @@ import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/
 import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ion/app/router/app_routes.dart';
 
-class NftsTab extends HookConsumerWidget {
+class NftsTab extends ConsumerWidget {
   const NftsTab({
     super.key,
   });
@@ -23,9 +23,10 @@ class NftsTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nfts = useFilteredWalletNfts(ref).nfts;
+    final nfts = ref.watch(filteredWalletNftsProvider).valueOrNull ?? [];
     final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
 
+    // TODO: add loading state
     if (nfts.isEmpty) {
       return const EmptyState(
         tabType: tabType,
