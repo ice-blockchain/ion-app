@@ -24,7 +24,6 @@ class StoryPreviewPage extends ConsumerWidget {
     return Scaffold(
       body: SafeArea(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
             NavigationAppBar.modal(
               title: Text(
@@ -36,26 +35,28 @@ class StoryPreviewPage extends ConsumerWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 28.0.s),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    StoryVideoPreview(videoPath: videoPath),
+                    Flexible(
+                      child: StoryVideoPreview(
+                        videoPath: videoPath,
+                      ),
+                    ),
                     SizedBox(height: 8.0.s),
                     const VerifiedAccountListItem(),
+                    SizedBox(height: 22.0.s),
+                    ShareStoryButton(
+                      onPressed: () {
+                        showSimpleBottomSheet<void>(
+                          context: context,
+                          child: const VisibilitySettingsModal(),
+                        );
+                      },
+                    ),
+                    ScreenBottomOffset(margin: 36.0.s),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 22.0.s),
-            ShareStoryButton(
-              onPressed: () {
-                // TODO: change logic of VisibilitySettingsModal to handle a share action
-                showSimpleBottomSheet<void>(
-                  context: context,
-                  child: const VisibilitySettingsModal(),
-                );
-              },
-            ),
-            ScreenBottomOffset(margin: 36.0.s),
           ],
         ),
       ),

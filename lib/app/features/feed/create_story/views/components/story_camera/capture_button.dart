@@ -17,21 +17,23 @@ class CaptureButton extends StatelessWidget {
 
   final bool isRecording;
   final double recordingProgress;
-  final VoidCallback onRecordingStart;
-  final VoidCallback onRecordingStop;
+  final Future<void> Function()? onRecordingStart;
+  final Future<void> Function()? onRecordingStop;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: onRecordingStart,
-      onLongPressUp: onRecordingStop,
+      onLongPress: onRecordingStart != null ? () async => onRecordingStart!() : null,
+      onLongPressUp: onRecordingStop != null ? () async => onRecordingStop!() : null,
       child: AnimatedContainer(
         duration: 150.milliseconds,
         width: isRecording ? 100.0.s : 65.0.s,
         height: isRecording ? 100.0.s : 65.0.s,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isRecording ? Colors.white.withOpacity(0.5) : Colors.transparent,
+          color: onRecordingStart == null
+              ? Colors.transparent
+              : (isRecording ? Colors.white.withOpacity(0.5) : Colors.transparent),
           border: Border.all(
             color: context.theme.appColors.onPrimaryAccent,
             width: isRecording ? 0.0.s : 4.0.s,

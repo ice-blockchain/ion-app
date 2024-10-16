@@ -18,8 +18,11 @@ class StoryCameraController extends _$StoryCameraController {
 
   Future<void> startVideoRecording() async {
     if (!state.isRecording) {
-      await ref.read(cameraControllerNotifierProvider.notifier).startVideoRecording();
-      state = state.copyWith(isRecording: true);
+      final cameraController = ref.read(cameraControllerNotifierProvider).value;
+      if (cameraController != null && cameraController.value.isInitialized) {
+        await ref.read(cameraControllerNotifierProvider.notifier).startVideoRecording();
+        state = state.copyWith(isRecording: true);
+      }
     }
   }
 

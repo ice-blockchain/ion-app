@@ -119,8 +119,6 @@ class MediaService {
     );
   }
 
-  Future<void> saveVideoToGallery(String videoPath) async => _saveCameraVideo(File(videoPath));
-
   Future<MediaFile?> saveVideoToGallery(String videoPath) async {
     final videoFile = File(videoPath);
 
