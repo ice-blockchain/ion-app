@@ -18,6 +18,7 @@ import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_
 import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_codes_page.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_options/twofa_options_page.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_success/twofa_success_page.dart';
+import 'package:ice/app/features/chat/views/pages/app_test_page/app_test_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
 import 'package:ice/app/features/core/model/language.dart';
@@ -132,6 +133,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
           path: '/chat',
           routes: [
             TypedGoRoute<ChatMainModalRoute>(path: 'main-modal'),
+            TypedGoRoute<AppTestRoute>(path: 'app-test'),
           ],
         ),
       ],
@@ -218,6 +220,10 @@ class FeedRoute extends BaseRouteData {
 
 class ChatRoute extends BaseRouteData {
   ChatRoute() : super(child: const ChatPage());
+}
+
+class AppTestRoute extends BaseRouteData {
+  AppTestRoute() : super(child: const AppTestPage());
 }
 
 class WalletRoute extends BaseRouteData {

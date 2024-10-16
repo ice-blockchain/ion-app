@@ -11,11 +11,14 @@ class NavigationTextButton extends StatelessWidget {
     required this.label,
     super.key,
     this.onPressed,
+    this.textStyle,
   });
 
   final String label;
 
   final VoidCallback? onPressed;
+
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,7 @@ class NavigationTextButton extends StatelessWidget {
         padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Text(
           label,
-          style: context.theme.appTextThemes.body.copyWith(
+          style: (textStyle ?? context.theme.appTextThemes.body).copyWith(
             color: context.theme.appColors.primaryAccent,
           ),
         ),

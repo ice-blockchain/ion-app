@@ -27,6 +27,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     bool showBackButton = true,
     VoidCallback? onBackPress,
     List<Widget>? actions,
+    Widget? leading,
     Key? key,
   }) =>
       NavigationAppBar(
@@ -35,6 +36,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
         onBackPress: onBackPress,
         actions: actions,
         useScreenTopOffset: true,
+        leading: leading,
         key: key,
       );
 
