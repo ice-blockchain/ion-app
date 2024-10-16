@@ -17,7 +17,7 @@ class PollLengthButton extends StatelessWidget {
       child: Button(
         type: ButtonType.secondary,
         style: const ButtonStyle(
-          padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.zero),
+          padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.symmetric(horizontal: 1)),
         ),
         label: Text(
           context.i18n.poll_length_button_title,
