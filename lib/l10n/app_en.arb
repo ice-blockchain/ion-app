@@ -29,6 +29,7 @@
   "button_allow": "Allow",
   "button_dont_allow": "Don't Allow",
   "button_share_story": "Share story",
+  "button_add_answer": "Add answer",
   "common_show_more": "Show more",
   "common_show_less": "Show less",
   "common_identity_key_name": "Identity key name",
@@ -362,5 +363,7 @@
   "chat_title": "Chats",
   "chat_empty_description": "You have no conversations yet",
   "chat_new_message_button": "New message",
-  "poll_length_modal_title": "Pool length time"
+  "poll_length_modal_title": "Pool length time",
+  "poll_length_button_title": "Poll length",
+  "poll_add_answer_button_title": "Add answer"
 }

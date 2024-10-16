@@ -96,7 +96,6 @@ class CreateArticleModal extends HookConsumerWidget {
                       TextEditorImageButton(textEditorController: textEditorController),
                       TextEditorPollButton(
                         textEditorController: textEditorController,
-                        onPressed: () {},
                       ),
                       TextEditorRegularButton(textEditorController: textEditorController),
                       TextEditorItalicButton(textEditorController: textEditorController),
