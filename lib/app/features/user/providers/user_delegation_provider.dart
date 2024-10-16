@@ -7,6 +7,7 @@ import 'package:ice/app/features/user/model/user_delegation.dart';
 import 'package:ice/app/features/user/providers/user_relays_provider.dart';
 import 'package:ice/app/features/wallets/providers/main_wallet_provider.dart';
 import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
+import 'package:ice/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -112,7 +113,11 @@ class UserDelegationManager extends _$UserDelegationManager {
         '${mainWallet.signingKey.scheme}/${mainWallet.signingKey.curve}'.toLowerCase();
     final signatureBody =
         '${signResponse.signature['r']}${signResponse.signature['s']}'.replaceAll('0x', '');
+    // ignore: unused_local_variable
     final signature = '$signaturePrefix:$signatureBody';
+
+    // TODO:still using mock because damus do not accept this kind of signatures
+    final fakeSignature = mockedTonWalletKeystore.sign(message: eventId);
 
     return EventMessage(
       id: eventId,
@@ -121,7 +126,7 @@ class UserDelegationManager extends _$UserDelegationManager {
       kind: kind,
       tags: tags,
       content: '',
-      sig: signature,
+      sig: fakeSignature,
     );
   }
 }
