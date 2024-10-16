@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/providers/poll/poll_length_time_provider.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/poll_length_time_modal.dart';
 import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ice/app/services/logger/logger.dart';
 
-class TextEditor extends StatelessWidget {
+class TextEditor extends ConsumerWidget {
   const TextEditor(
     this.controller, {
     super.key,
@@ -21,35 +20,39 @@ class TextEditor extends StatelessWidget {
   final QuillController controller;
   final String? placeholder;
 
-  Future<void> _showPollLengthTimeModal(BuildContext context) async {
+  Future<void> _showPollLengthTimeModal(
+    BuildContext context,
+    int selectedDay,
+    int selectedHour,
+    void Function(int, int) onApply,
+  ) async {
     return showSimpleBottomSheet<void>(
       context: context,
-      child: const PollLengthTimeModal(),
+      child: PollLengthTimeModal(
+        selectedDay: selectedDay,
+        selectedHour: selectedHour,
+        onApply: (newDay, newHour) {
+          onApply(newDay, newHour);
+        },
+      ),
     );
   }
 
   void _removePoll(Embed node) {
     final delta = controller.document.toDelta();
-
-    var currentIndex = 0;
     var pollIndex = -1;
     var pollLength = 0;
+    var currentIndex = 0;
 
-    for (var i = 0; i < delta.operations.length; i++) {
-      final operation = delta.operations[i];
+    for (final operation in delta.operations) {
       final length = operation.length ?? 1;
 
       if (operation.isInsert && operation.data is Map<String, dynamic>) {
         final data = operation.data! as Map<String, dynamic>;
-
         if (data.containsKey('custom')) {
-          final customData = data['custom'];
-
-          if (_containsPollKey(customData)) {
-            pollIndex = currentIndex;
-            pollLength = length;
-            break;
-          }
+          pollIndex = currentIndex;
+          pollLength = length;
+          break;
         }
       }
       currentIndex += length;
@@ -65,29 +68,14 @@ class TextEditor extends StatelessWidget {
         TextSelection.collapsed(offset: pollIndex),
         ChangeSource.local,
       );
-    } else {
-      Logger.log('Poll not found in the document.');
     }
-  }
-
-  bool _containsPollKey(dynamic customData) {
-    Map<String, dynamic>? parsedData;
-
-    if (customData is Map<String, dynamic>) {
-      parsedData = customData;
-    } else if (customData is String) {
-      try {
-        parsedData = jsonDecode(customData) as Map<String, dynamic>?;
-      } catch (e) {
-        Logger.log('Failed to parse custom data as JSON: $e');
-      }
-    }
-
-    return parsedData != null && parsedData.containsKey(textEditorPollKey);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedDay = ref.watch(selectedDayNotifierProvider);
+    final selectedHour = ref.watch(selectedHourNotifierProvider);
+
     return Column(
       children: [
         QuillEditor.basic(
@@ -97,7 +85,15 @@ class TextEditor extends StatelessWidget {
               TextEditorSingleImageBuilder(),
               TextEditorPollBuilder(
                 onPollLengthPress: () {
-                  _showPollLengthTimeModal(context);
+                  _showPollLengthTimeModal(
+                    context,
+                    selectedDay,
+                    selectedHour,
+                    (newDay, newHour) {
+                      ref.read(selectedDayNotifierProvider.notifier).day = newDay;
+                      ref.read(selectedHourNotifierProvider.notifier).hour = newHour;
+                    },
+                  );
                 },
                 onRemovePollPress: _removePoll,
               ),

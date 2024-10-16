@@ -1,29 +1,36 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/providers/poll/poll_length_time_provider.dart';
 import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/components/poll_picker_item/poll_picker_item.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-class PollLengthTimeModal extends ConsumerWidget {
+class PollLengthTimeModal extends HookConsumerWidget {
   const PollLengthTimeModal({
+    required this.selectedDay,
+    required this.selectedHour,
+    required this.onApply,
     super.key,
   });
 
+  final int selectedDay;
+  final int selectedHour;
+  final void Function(int, int) onApply;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedDay = ref.watch(selectedDayNotifierProvider);
-    final selectedHour = ref.watch(selectedHourNotifierProvider);
+    final tempSelectedDay = useState(selectedDay);
+    final tempSelectedHour = useState(selectedHour);
 
-    final dayScrollController = FixedExtentScrollController(initialItem: selectedDay);
-    final hourScrollController = FixedExtentScrollController(initialItem: selectedHour);
+    final dayScrollController = FixedExtentScrollController(initialItem: tempSelectedDay.value);
+    final hourScrollController = FixedExtentScrollController(initialItem: tempSelectedHour.value);
 
     return SingleChildScrollView(
       child: Column(
@@ -41,10 +48,10 @@ class PollLengthTimeModal extends ConsumerWidget {
           ),
           SizedBox(height: 25.0.s),
           PollPickerItem(
-            selectedDay: selectedDay,
-            selectedHour: selectedHour,
-            onDayChanged: (value) => ref.read(selectedDayNotifierProvider.notifier).day = value,
-            onHourChanged: (value) => ref.read(selectedHourNotifierProvider.notifier).hour = value,
+            selectedDay: tempSelectedDay.value,
+            selectedHour: tempSelectedHour.value,
+            onDayChanged: (value) => tempSelectedDay.value = value,
+            onHourChanged: (value) => tempSelectedHour.value = value,
             dayScrollController: dayScrollController,
             hourScrollController: hourScrollController,
           ),
@@ -52,6 +59,7 @@ class PollLengthTimeModal extends ConsumerWidget {
           ScreenSideOffset.large(
             child: Button(
               onPressed: () {
+                onApply(tempSelectedDay.value, tempSelectedHour.value);
                 context.pop();
               },
               mainAxisSize: MainAxisSize.max,
