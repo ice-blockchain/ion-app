@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:cryptography/cryptography.dart';
-import 'package:cryptography/dart.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 class NostrSignatureVerifier extends SchnorrSignatureVerifier {
@@ -44,7 +43,7 @@ class NostrSignatureVerifier extends SchnorrSignatureVerifier {
       publicKey: SimplePublicKey(publicKeyBytes, type: KeyPairType.ed25519),
     );
 
-    final algorithm = DartEd25519();
+    final algorithm = Ed25519();
 
     return algorithm.verifyString(
       message,
