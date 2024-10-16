@@ -25,7 +25,7 @@ class NostrNotifier extends _$NostrNotifier {
     final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
 
     // await relay.sendEvents(events);
-    // TODO: commented until relays support it
+    // TODO: commented until relays implement it
     await Future.wait(events.map(relay.sendEvent).toList());
   }
 

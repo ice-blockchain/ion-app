@@ -15,6 +15,7 @@ dependencies:
   camera: ^0.11.0+2
   collection: ^1.18.0
   cross_file: ^0.3.4+2
+  cryptography: ^2.7.0
   cupertino_icons: ^1.0.6
   device_info_plus: ^10.1.2
   dotted_border: ^2.1.0
@@ -53,12 +54,13 @@ dependencies:
   nostr_dart:
     git:
       url: https://github.com/ice-blockchain/nostr-dart.git
-      ref: 0.0.2
+      ref: 0.0.3
   path: ^1.9.0
   path_provider: ^2.1.4
   permission_handler: ^11.3.0
   photo_manager: ^3.3.0
   photo_manager_image_provider: ^2.1.1
+  pointycastle: ^3.9.1
   qr_code_scanner: ^1.0.1
   qr_flutter: ^4.1.0
   riverpod_annotation: ^2.3.5

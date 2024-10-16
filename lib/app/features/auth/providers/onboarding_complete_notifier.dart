@@ -21,41 +21,49 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   FutureOr<void> build() {}
 
   Future<void> finish() async {
-    final (:name, :displayName, :languages, :followees) =
-        ref.read(onboardingDataProvider.notifier).requireValues();
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () async {
+        final (:name, :displayName, :languages, :followees) =
+            ref.read(onboardingDataProvider.notifier).requireValues();
 
-    final (relayUrls, nostrKeyStore) = await (
-      _assignUserRelays(followees: followees),
-      _generateNostrKeyStore(),
-    ).wait;
+        final (relayUrls, nostrKeyStore) = await (
+          _assignUserRelays(followees: followees),
+          _generateNostrKeyStore(),
+        ).wait;
 
-    final userRelays = UserRelays(
-      pubkey: nostrKeyStore.publicKey,
-      list: relayUrls.map((url) => UserRelay(url: url)).toList(),
+        final userRelays = UserRelays(
+          pubkey: nostrKeyStore.publicKey,
+          list: relayUrls.map((url) => UserRelay(url: url)).toList(),
+        );
+
+        final userMetadata = UserMetadata(
+          pubkey: nostrKeyStore.publicKey,
+          name: name,
+          displayName: displayName,
+        );
+
+        final userDelegation = await ref
+            .read(userDelegationManagerProvider.notifier)
+            .buildCurrentUserDelegationWith(pubkey: nostrKeyStore.publicKey);
+
+        final userDelegationEvent = await ref
+            .read(userDelegationManagerProvider.notifier)
+            .buildDelegationEventFrom(userDelegation);
+
+        ref.read(usersRelaysStorageProvider.notifier).store(userRelays);
+
+        await ref.read(nostrNotifierProvider.notifier).sendEvents([
+          //TODO:add langs and folowees here
+          userRelays.toEventMessage(nostrKeyStore),
+          userMetadata.toEventMessage(nostrKeyStore),
+          userDelegationEvent,
+        ]);
+
+        ref.read(usersMetadataStorageProvider.notifier).store(userMetadata);
+        ref.read(usersDelegationStorageProvider.notifier).store(userDelegation);
+      },
     );
-
-    final userMetadata = UserMetadata(
-      pubkey: nostrKeyStore.publicKey,
-      name: name,
-      displayName: displayName,
-    );
-
-    final userDelegation = await ref
-        .read(userDelegationManagerProvider.notifier)
-        .buildCurrentUserDelegationWith(pubkey: nostrKeyStore.publicKey);
-
-    await ref.read(nostrNotifierProvider.notifier).sendEvents([
-      //TODO:add langs and folowees here
-      userRelays.toEventMessage(nostrKeyStore),
-      userMetadata.toEventMessage(nostrKeyStore),
-      await ref
-          .read(userDelegationManagerProvider.notifier)
-          .buildDelegationEventFrom(userDelegation),
-    ]);
-
-    ref.read(usersRelaysStorageProvider.notifier).store(userRelays);
-    ref.read(usersMetadataStorageProvider.notifier).store(userMetadata);
-    ref.read(usersDelegationStorageProvider.notifier).store(userDelegation);
   }
 
   Future<List<String>> _assignUserRelays({required List<String> followees}) async {

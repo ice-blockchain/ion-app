@@ -3,7 +3,6 @@
 import 'package:collection/collection.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
-import 'package:ice/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -22,10 +21,11 @@ Future<Wallet?> mainWallet(MainWalletRef ref) async {
   if (mainWallet == null) {
     throw Exception('Main wallet is not found');
   }
-  //TODO::return `mainWallet` as is when remote signing with identity is implemented
-  // currently replace mainWallet's pubkey with a mocked one to be able to sign on behalf of this wallet
-  final signingKey = mainWallet.signingKey;
-  return mainWallet.copyWith(
-    signingKey: signingKey.copyWith(publicKey: mockedTonWalletKeystore.publicKey),
-  );
+
+  // TODO:take `mainWallet` when signing with TON is implemented and remove this 'temp-main'
+  final tempMainWallet = wallets.firstWhereOrNull((wallet) => wallet.name == 'temp-main');
+  return tempMainWallet ??
+      await ionClient(username: currentIdentityKeyName)
+          .wallets
+          .createWallet(network: 'KeyEdDSA', name: 'temp-main');
 }

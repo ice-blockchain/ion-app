@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_delegation.dart';
 import 'package:ice/app/features/user/providers/user_relays_provider.dart';
 import 'package:ice/app/features/wallets/providers/main_wallet_provider.dart';
-import 'package:ice/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
+import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -86,7 +87,10 @@ class UserDelegationManager extends _$UserDelegationManager {
   }
 
   Future<EventMessage> buildDelegationEventFrom(UserDelegation userDelegation) async {
+    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
     final mainWallet = (await ref.read(mainWalletProvider.future))!;
+    final ionClient = await ref.read(ionApiClientProvider.future);
+
     final tags = userDelegation.tags;
     final createdAt = DateTime.now();
     const kind = UserDelegation.kind;
@@ -99,9 +103,17 @@ class UserDelegationManager extends _$UserDelegationManager {
       tags: tags,
       content: '',
     );
-    // TODO: use identity ton waller signing request here when implemented
-    // and add prefix to the signature with '${wallet.signingKey.scheme}/${wallet.signingKey.curve}:'
-    final sig = mockedTonWalletKeystore.sign(message: eventId);
+
+    final signResponse = await ionClient(username: currentIdentityKeyName)
+        .wallets
+        .generateSignature(mainWallet.id, eventId);
+
+    final signaturePrefix =
+        '${mainWallet.signingKey.scheme}/${mainWallet.signingKey.curve}'.toLowerCase();
+    final signatureBody =
+        '${signResponse.signature['r']}${signResponse.signature['s']}'.replaceAll('0x', '');
+    final signature = '$signaturePrefix:$signatureBody';
+
     return EventMessage(
       id: eventId,
       pubkey: masterPubkey,
@@ -109,7 +121,7 @@ class UserDelegationManager extends _$UserDelegationManager {
       kind: kind,
       tags: tags,
       content: '',
-      sig: sig,
+      sig: signature,
     );
   }
 }
