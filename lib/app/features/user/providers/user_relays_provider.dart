@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_relays.dart';
@@ -11,20 +12,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_relays_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class UsersRelaysStorage extends _$UsersRelaysStorage {
-  @override
-  Map<String, UserRelays> build() {
-    return {};
-  }
-
-  void store(UserRelays userRelays) {
-    state = {...state, userRelays.pubkey: userRelays};
-  }
-}
-
-@Riverpod(keepAlive: true)
 Future<UserRelays?> userRelays(UserRelaysRef ref, String pubkey) async {
-  final userRelays = ref.watch(usersRelaysStorageProvider.select((state) => state[pubkey]));
+  final userRelays = ref.watch(nostrCache<UserRelays>(pubkey));
   if (userRelays != null) {
     return userRelays;
   }
@@ -42,7 +31,7 @@ Future<UserRelays?> userRelays(UserRelaysRef ref, String pubkey) async {
 
   if (events.isNotEmpty) {
     final userRelays = UserRelays.fromEventMessage(events.first);
-    ref.read(usersRelaysStorageProvider.notifier).store(userRelays);
+    ref.read(nostrCacheProvider.notifier).cache(userRelays);
     return userRelays;
   }
 

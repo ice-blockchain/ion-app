@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_metadata.dart';
@@ -11,24 +12,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_metadata_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class UsersMetadataStorage extends _$UsersMetadataStorage {
-  @override
-  Map<String, UserMetadata> build() {
-    return {};
-  }
-
-  void storeAll(List<UserMetadata> usersMetadata) {
-    state = {...state, for (final userMetadata in usersMetadata) userMetadata.pubkey: userMetadata};
-  }
-
-  void store(UserMetadata userMetadata) {
-    state = {...state, userMetadata.pubkey: userMetadata};
-  }
-}
-
-@Riverpod(keepAlive: true)
 Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
-  final userMetadata = ref.watch(usersMetadataStorageProvider.select((state) => state[pubkey]));
+  final userMetadata = ref.watch(nostrCache<UserMetadata>(pubkey));
   if (userMetadata != null) {
     return userMetadata;
   }
@@ -46,7 +31,7 @@ Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
 
   if (events.isNotEmpty) {
     final userMetadata = UserMetadata.fromEventMessage(events.first);
-    ref.read(usersMetadataStorageProvider.notifier).store(userMetadata);
+    ref.read(nostrCacheProvider.notifier).cache(userMetadata);
     return userMetadata;
   }
 

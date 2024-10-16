@@ -2,6 +2,7 @@
 
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/model/user_delegation.dart';
 import 'package:ice/app/features/user/providers/user_relays_provider.dart';
@@ -14,20 +15,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_delegation_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class UsersDelegationStorage extends _$UsersDelegationStorage {
-  @override
-  Map<String, UserDelegation> build() {
-    return {};
-  }
-
-  void store(UserDelegation userDelegation) {
-    state = {...state, userDelegation.pubkey: userDelegation};
-  }
-}
-
-@Riverpod(keepAlive: true)
 Future<UserDelegation?> userDelegation(UserDelegationRef ref, String pubkey) async {
-  final userDelegation = ref.watch(usersDelegationStorageProvider.select((state) => state[pubkey]));
+  final userDelegation = ref.watch(nostrCache<UserDelegation>(pubkey));
   if (userDelegation != null) {
     return userDelegation;
   }
@@ -45,7 +34,7 @@ Future<UserDelegation?> userDelegation(UserDelegationRef ref, String pubkey) asy
 
   if (events.isNotEmpty) {
     final userDelegation = UserDelegation.fromEventMessage(events.first);
-    ref.read(usersDelegationStorageProvider.notifier).store(userDelegation);
+    ref.read(nostrCacheProvider.notifier).cache(userDelegation);
     return userDelegation;
   }
 

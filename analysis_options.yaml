@@ -21,3 +21,7 @@ linter:
     avoid_setters_without_getters: false
     lines_longer_than_80_chars: false
     one_member_abstracts: false
+
+custom_lint:
+  rules:
+    - avoid_manual_providers_as_generated_provider_dependency: false

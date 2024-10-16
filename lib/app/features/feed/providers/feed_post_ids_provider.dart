@@ -3,7 +3,7 @@
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
-import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/features/nostr/providers/relays_provider.dart';
 import 'package:ice/app/features/user/providers/user_relays_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -30,10 +30,9 @@ class FeedPostIds extends _$FeedPostIds {
       ..addFilter(const RequestFilter(kinds: [PostData.kind], limit: 20));
     final events = await requestEvents(requestMessage, relay);
 
-    final posts = events.map(PostData.fromEventMessage).toList();
+    final posts = events.map(PostData.fromEventMessage).toList()
+      ..forEach(ref.read(nostrCacheProvider.notifier).cache);
 
     state = [...state, ...posts.map((post) => post.id)];
-
-    ref.read(postsStorageProvider.notifier).store(posts: posts);
   }
 }
