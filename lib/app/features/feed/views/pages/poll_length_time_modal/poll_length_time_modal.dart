@@ -1,28 +1,29 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/button/button.dart';
 import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/providers/poll/poll_length_time_provider.dart';
 import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/components/poll_picker_item/poll_picker_item.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-class PollLengthTimeModal extends HookWidget {
+class PollLengthTimeModal extends ConsumerWidget {
   const PollLengthTimeModal({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final selectedDay = useState(1);
-    final selectedHour = useState(0);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedDay = ref.watch(selectedDayNotifierProvider);
+    final selectedHour = ref.watch(selectedHourNotifierProvider);
 
-    final dayScrollController = FixedExtentScrollController(initialItem: selectedDay.value);
-    final hourScrollController = FixedExtentScrollController(initialItem: selectedHour.value);
+    final dayScrollController = FixedExtentScrollController(initialItem: selectedDay);
+    final hourScrollController = FixedExtentScrollController(initialItem: selectedHour);
 
     return SingleChildScrollView(
       child: Column(
@@ -39,29 +40,13 @@ class PollLengthTimeModal extends HookWidget {
             ],
           ),
           SizedBox(height: 25.0.s),
-          Stack(
-            children: [
-              Positioned.fill(
-                child: Align(
-                  child: Container(
-                    height: 34.0.s,
-                    margin: EdgeInsets.symmetric(horizontal: 9.0.s),
-                    decoration: BoxDecoration(
-                      color: context.theme.appColors.onSecondaryBackground,
-                      borderRadius: BorderRadius.circular(8.0.s),
-                    ),
-                  ),
-                ),
-              ),
-              PollPickerItem(
-                selectedDay: selectedDay.value,
-                selectedHour: selectedHour.value,
-                onDayChanged: (value) => selectedDay.value = value,
-                onHourChanged: (value) => selectedHour.value = value,
-                dayScrollController: dayScrollController,
-                hourScrollController: hourScrollController,
-              ),
-            ],
+          PollPickerItem(
+            selectedDay: selectedDay,
+            selectedHour: selectedHour,
+            onDayChanged: (value) => ref.read(selectedDayNotifierProvider.notifier).day = value,
+            onHourChanged: (value) => ref.read(selectedHourNotifierProvider.notifier).hour = value,
+            dayScrollController: dayScrollController,
+            hourScrollController: hourScrollController,
           ),
           SizedBox(height: 25.0.s),
           ScreenSideOffset.large(
