@@ -359,5 +359,6 @@
   "story_has_been_posted": "Your story has been published",
   "chat_title": "Chats",
   "chat_empty_description": "You have no conversations yet",
-  "chat_new_message_button": "New message"
+  "chat_new_message_button": "New message",
+  "poll_length_modal_title": "Pool length time"
 }

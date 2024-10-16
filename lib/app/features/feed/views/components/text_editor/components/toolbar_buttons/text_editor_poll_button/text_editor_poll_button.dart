@@ -6,14 +6,20 @@ import 'package:ice/app/features/feed/views/components/actions_toolbar_button/ac
 import 'package:ice/generated/assets.gen.dart';
 
 class TextEditorPollButton extends StatelessWidget {
-  const TextEditorPollButton({required this.textEditorController, super.key});
+  const TextEditorPollButton({
+    required this.textEditorController,
+    required this.onPressed,
+    super.key,
+  });
+
   final QuillController textEditorController;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
       icon: Assets.svg.iconPostPoll,
-      onPressed: () => {},
+      onPressed: onPressed,
     );
   }
 }
