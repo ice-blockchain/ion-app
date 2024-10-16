@@ -73,5 +73,12 @@ Future<UserRelays?> currentUserRelays(CurrentUserRelaysRef ref) async {
   if (keyStore == null) {
     return null;
   }
+
+  return UserRelays(
+    pubkey: keyStore.publicKey,
+    list: [const UserRelay(url: 'wss://relay.damus.io')],
+  );
+
+  // ignore: dead_code
   return await ref.watch(userRelaysProvider(keyStore.publicKey).future);
 }
