@@ -13,6 +13,7 @@ import 'package:ice/app/features/feed/views/components/text_editor/components/cu
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_title.dart';
 import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/poll_length_time_modal.dart';
 import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:intl/intl.dart';
 
 const textEditorPollKey = 'text-editor-poll';
 
@@ -53,11 +54,11 @@ class TextEditorPollBuilder extends EmbedBuilder {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 23.0.s),
-              child: Container(
+        Padding(
+          padding: EdgeInsets.only(right: 23.0.s),
+          child: Column(
+            children: [
+              Container(
                 decoration: BoxDecoration(
                   color: context.theme.appColors.onPrimaryAccent,
                   borderRadius: BorderRadius.circular(16),
@@ -76,21 +77,32 @@ class TextEditorPollBuilder extends EmbedBuilder {
                   ),
                 ),
               ),
-            ),
-            PollLengthButton(
-              onPollLengthPress: () {
-                _showPollLengthTimeModal(
-                  context,
-                  selectedDay,
-                  selectedHour,
-                  (newDay, newHour) {
-                    ref.read(selectedDayNotifierProvider.notifier).day = newDay;
-                    ref.read(selectedHourNotifierProvider.notifier).hour = newHour;
-                  },
-                );
-              },
-            ),
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  PollLengthButton(
+                    onPollLengthPress: () {
+                      _showPollLengthTimeModal(
+                        context,
+                        selectedDay,
+                        selectedHour,
+                        (newDay, newHour) {
+                          ref.read(selectedDayNotifierProvider.notifier).day = newDay;
+                          ref.read(selectedHourNotifierProvider.notifier).hour = newHour;
+                        },
+                      );
+                    },
+                  ),
+                  Text(
+                    getFormattedPollLength(context, selectedDay, selectedHour),
+                    style: context.theme.appTextThemes.caption.copyWith(
+                      color: context.theme.appColors.primaryAccent,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
         PollCloseButton(
           onClosePress: () => _removePoll(node),
@@ -147,4 +159,32 @@ class TextEditorPollBuilder extends EmbedBuilder {
       );
     }
   }
+}
+
+String getFormattedPollLength(BuildContext context, int days, int hours) {
+  if (days > 0 && hours > 0) {
+    return '$days ${Intl.plural(
+      days,
+      one: context.i18n.day(1),
+      other: context.i18n.day(days),
+    )} $hours ${Intl.plural(
+      hours,
+      one: context.i18n.hour(1),
+      other: context.i18n.hour(hours),
+    )}';
+  } else if (days > 0) {
+    return '$days ${Intl.plural(
+      days,
+      one: context.i18n.day(1),
+      other: context.i18n.day(days),
+    )}';
+  } else if (hours > 0) {
+    return '$hours ${Intl.plural(
+      hours,
+      one: context.i18n.hour(1),
+      other: context.i18n.hour(hours),
+    )}';
+  }
+
+  return '';
 }
