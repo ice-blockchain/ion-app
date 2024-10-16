@@ -24,29 +24,6 @@ class UsersMetadataStorage extends _$UsersMetadataStorage {
   void store(UserMetadata userMetadata) {
     state = {...state, userMetadata.pubkey: userMetadata};
   }
-
-  Future<void> publish(UserMetadata userMetadata) async {
-    final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
-
-    if (keyStore == null) {
-      throw Exception('Current user keystore is null');
-    }
-
-    final userRelays = await ref.read(currentUserRelaysProvider.future);
-
-    if (userRelays == null) {
-      throw Exception('User relays are not found');
-    }
-
-    final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
-    final event = EventMessage.fromData(
-      keyStore: keyStore,
-      kind: UserMetadata.kind,
-      content: userMetadata.content,
-    );
-    await relay.sendEvent(event);
-    store(userMetadata);
-  }
 }
 
 @Riverpod(keepAlive: true)

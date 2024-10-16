@@ -22,10 +22,14 @@ Future<Wallet?> mainWallet(MainWalletRef ref) async {
   if (mainWallet == null) {
     throw Exception('Main wallet is not found');
   }
-  //TODO::return `mainWallet` as is when remote signing with identity is implemented
-  // currently replace mainWallet's pubkey with a mocked one to be able to sign on behalf of this wallet
-  final signingKey = mainWallet.signingKey;
-  return mainWallet.copyWith(
-    signingKey: signingKey.copyWith(publicKey: mockedTonWalletKeystore.publicKey),
+
+  // TODO:take `mainWallet` when signing with TON is implemented and remove this 'temp-main'
+  var tempMainWallet = wallets.firstWhereOrNull((wallet) => wallet.name == 'temp-main');
+  tempMainWallet ??= await ionClient(username: currentIdentityKeyName)
+      .wallets
+      .createWallet(network: 'KeyEdDSA', name: 'temp-main');
+  // TODO: still using mocked wallet because damus do not accept non default signatures
+  return tempMainWallet.copyWith(
+    signingKey: tempMainWallet.signingKey.copyWith(publicKey: mockedTonWalletKeystore.publicKey),
   );
 }

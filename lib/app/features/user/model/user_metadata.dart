@@ -23,8 +23,6 @@ class UserMetadata with _$UserMetadata {
     @Default(false) bool nft,
   }) = _UserMetadata;
 
-  const UserMetadata._();
-
   /// https://github.com/nostr-protocol/nips/blob/master/01.md#kinds
   factory UserMetadata.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
@@ -47,17 +45,23 @@ class UserMetadata with _$UserMetadata {
     );
   }
 
-  String get content {
-    return jsonEncode(
-      UserDataEventMessageContent(
-        name: name,
-        about: about,
-        picture: picture,
-        displayName: displayName,
-        website: website,
-        banner: banner,
-        bot: bot,
-      ).toJson(),
+  const UserMetadata._();
+
+  EventMessage toEventMessage(KeyStore keyStore) {
+    return EventMessage.fromData(
+      signer: keyStore,
+      kind: kind,
+      content: jsonEncode(
+        UserDataEventMessageContent(
+          name: name,
+          about: about,
+          picture: picture,
+          displayName: displayName,
+          website: website,
+          banner: banner,
+          bot: bot,
+        ).toJson(),
+      ),
     );
   }
 

@@ -41,8 +41,6 @@ class UserRelays with _$UserRelays {
     required List<UserRelay> list,
   }) = _UserRelays;
 
-  const UserRelays._();
-
   /// https://github.com/nostr-protocol/nips/blob/master/65.md
   factory UserRelays.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
@@ -55,8 +53,15 @@ class UserRelays with _$UserRelays {
     );
   }
 
-  List<List<String>> get tags {
-    return list.map((relay) => relay.toTag()).toList();
+  const UserRelays._();
+
+  EventMessage toEventMessage(KeyStore keyStore) {
+    return EventMessage.fromData(
+      signer: keyStore,
+      kind: kind,
+      tags: list.map((relay) => relay.toTag()).toList(),
+      content: '',
+    );
   }
 
   static const int kind = 10002;

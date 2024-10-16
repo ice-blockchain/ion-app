@@ -319,13 +319,13 @@ packages:
     source: hosted
     version: "0.6.0+1"
   convert:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: convert
-      sha256: "0f08b14755d163f6e2134cb58222dd25ea2a2ee8a195e53983d57c075324d592"
+      sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.1"
+    version: "3.1.2"
   cross_file:
     dependency: "direct main"
     description:
@@ -351,7 +351,7 @@ packages:
     source: hosted
     version: "0.3.0+1"
   cryptography:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cryptography
       sha256: d146b76d33d94548cf035233fbc2f4338c1242fa119013bead807d033fc4ae05
@@ -954,6 +954,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  get_it:
+    dependency: transitive
+    description:
+      name: get_it
+      sha256: d85128a5dae4ea777324730dc65edd9c9f43155c109d5cc0a69cab74139fbac1
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.7.0"
   glob:
     dependency: transitive
     description:
@@ -1357,11 +1365,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: c7a58483730ee43b89bf94e7908cd2f838d4fc35
+      ref: "0.0.3"
+      resolved-ref: "38d3ee4876952be1d7149d367c831203d4da5271"
       url: "https://github.com/ice-blockchain/nostr-dart.git"
     source: git
-    version: "0.0.1"
+    version: "0.0.3"
   octo_image:
     dependency: transitive
     description:
@@ -1595,7 +1603,7 @@ packages:
     source: hosted
     version: "2.1.8"
   pointycastle:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: pointycastle
       sha256: "4be0097fcf3fd3e8449e53730c631200ebc7b88016acecab2b0da2f0149222fe"
