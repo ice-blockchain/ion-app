@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_add_answer_button/poll_add_answer_button.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_answers_list_view/poll_answers_list_view.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_close_button/poll_close_button.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_length_button/poll_length_button.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/components/poll_title/poll_title.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_add_answer_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_answers_list_view.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_close_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_length_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_title.dart';
 
 const textEditorPollKey = 'text-editor-poll';
 
