@@ -12,21 +12,6 @@ import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/poll_le
 import 'package:ice/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ice/app/services/logger/logger.dart';
 
-extension DeltaPollExtension on Delta {
-  void removePoll(String embedKey) {
-    final index = operations.indexWhere((operation) {
-      return operation.isInsert &&
-          operation.data is Map<String, dynamic> &&
-          (operation.data! as Map<String, dynamic>).containsKey(embedKey);
-    });
-
-    if (index != -1) {
-      final length = operations[index].length ?? 1;
-      delete(length);
-    }
-  }
-}
-
 class TextEditor extends StatelessWidget {
   const TextEditor(
     this.controller, {
