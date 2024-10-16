@@ -44,11 +44,11 @@ class CreatePostModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController();
     final hasContent = useTextEditorHasContent(textEditorController);
-    final hasPoll = useHasPoll(textEditorController); // Use the custom hook here
+    final hasPoll = useHasPoll(textEditorController);
 
     bool isPollValid() {
-      final pollTitle = ref.read(pollTitleNotifierProvider);
-      final pollAnswers = ref.read(pollAnswersNotifierProvider);
+      final pollTitle = ref.watch(pollTitleNotifierProvider);
+      final pollAnswers = ref.watch(pollAnswersNotifierProvider);
 
       return pollTitle.text.trim().isNotEmpty &&
           pollAnswers.length >= 2 &&

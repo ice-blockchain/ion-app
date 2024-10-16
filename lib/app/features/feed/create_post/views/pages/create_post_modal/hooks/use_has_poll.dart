@@ -4,9 +4,9 @@ import 'dart:convert';
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
 import 'package:ice/app/services/logger/logger.dart';
 
-// This hook will check for poll existence in the editor's content
 bool useHasPoll(QuillController textEditorController) {
   final hasPoll = useState(false);
 
@@ -19,6 +19,7 @@ bool useHasPoll(QuillController textEditorController) {
         for (final operation in delta.operations) {
           if (operation.isInsert && operation.data is Map<String, dynamic>) {
             final data = operation.data! as Map<String, dynamic>;
+
             if (data.containsKey('custom')) {
               final customData = data['custom'];
 
@@ -30,11 +31,12 @@ bool useHasPoll(QuillController textEditorController) {
           }
         }
 
-        hasPoll.value = pollExists;
+        if (hasPoll.value != pollExists) {
+          hasPoll.value = pollExists;
+        }
       }
 
       textEditorController.addListener(checkPoll);
-
       checkPoll();
 
       return () {
@@ -56,9 +58,9 @@ bool _containsPollKey(dynamic customData) {
     try {
       parsedData = jsonDecode(customData) as Map<String, dynamic>?;
     } catch (e) {
-      Logger.log('Failed to parse custom data as JSON: $e');
+      Logger.log('Failed to parse custom data: $e');
     }
   }
 
-  return parsedData != null && parsedData.containsKey('poll');
+  return parsedData != null && parsedData.containsKey(textEditorPollKey);
 }
