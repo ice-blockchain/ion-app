@@ -42,7 +42,7 @@ class ChatPage extends StatelessWidget {
       ),
       body: ScreenSideOffset.small(
         child: const Column(
-          children: <Widget>[
+          children: [
             SearchInput(),
             ChatEmptyView(),
           ],

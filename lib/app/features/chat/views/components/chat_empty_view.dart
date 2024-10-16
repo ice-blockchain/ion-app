@@ -15,7 +15,7 @@ class ChatEmptyView extends StatelessWidget {
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
+        children: [
           Assets.svg.walletChatEmptystate.icon(
             size: 48.0.s,
           ),
