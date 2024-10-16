@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/create_story/providers/story_camera_provider.dart';
-import 'package:ice/app/features/feed/create_story/views/components/camera_control_button.dart';
+import 'package:ice/app/features/feed/create_story/views/components/story_camera/camera_control_button.dart';
 import 'package:ice/app/features/gallery/providers/camera_provider.dart';
 import 'package:ice/generated/assets.gen.dart';
 

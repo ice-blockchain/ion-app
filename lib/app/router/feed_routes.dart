@@ -159,7 +159,20 @@ class FeedSearchLanguagesRoute extends BaseRouteData {
 
 @TypedGoRoute<StoryCameraRoute>(
   path: '/story-camera',
+  routes: [
+    TypedGoRoute<StoryPreviewRoute>(path: 'story-preview/:videoPath'),
+  ],
 )
 class StoryCameraRoute extends BaseRouteData {
   StoryCameraRoute() : super(child: const StoryCameraWidget());
+}
+
+class StoryPreviewRoute extends BaseRouteData {
+  StoryPreviewRoute({required this.videoPath})
+      : super(
+          child: StoryPreviewPage(videoPath: videoPath),
+          type: IceRouteType.slideFromLeft,
+        );
+
+  final String videoPath;
 }

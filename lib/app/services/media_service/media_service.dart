@@ -119,9 +119,9 @@ class MediaService {
     );
   }
 
-  Future<void> saveVideoToGallery(String videoPath) async => _saveCameraVideo(File(videoPath));
+  Future<MediaFile?> saveVideoToGallery(String videoPath) async {
+    final videoFile = File(videoPath);
 
-  Future<MediaFile?> _saveCameraVideo(File videoFile) async {
     final asset = await PhotoManager.editor.saveVideo(
       videoFile,
       title: 'Camera_${DateTime.now().millisecondsSinceEpoch}',
@@ -137,6 +137,16 @@ class MediaService {
       path: asset.id,
       mimeType: asset.mimeType,
     );
+  }
+
+  Future<File?> selectVideoFromGallery() async {
+    final results = await ImagePicker().pickVideo(source: ImageSource.gallery);
+
+    if (results != null) {
+      return File(results.path);
+    }
+
+    return null;
   }
 }
 
