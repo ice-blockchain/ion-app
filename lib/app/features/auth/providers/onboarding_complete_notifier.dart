@@ -52,7 +52,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
         ref.read(nostrCacheProvider.notifier).cache(userRelays);
 
-        await ref.read(nostrNotifierProvider.notifier).sendEvents([
+        await ref.read(nostrNotifierProvider.notifier).send([
           //TODO:add langs and folowees here
           userRelays.toEventMessage(nostrKeyStore),
           userMetadata.toEventMessage(nostrKeyStore),

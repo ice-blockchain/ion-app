@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/nostr/model/action_source.dart';
 import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
-import 'package:ice/app/features/nostr/providers/relays_provider.dart';
+import 'package:ice/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ice/app/features/user/model/user_relays.dart';
-import 'package:ice/app/features/user/providers/current_user_indexers_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,19 +17,14 @@ Future<UserRelays?> userRelays(UserRelaysRef ref, String pubkey) async {
     return userRelays;
   }
 
-  final currentUserIndexers = await ref.watch(currentUserIndexersProvider.future);
-
-  if (currentUserIndexers == null) {
-    throw Exception('Current user indexers are not found');
-  }
-
-  final relay = await ref.watch(relayProvider(currentUserIndexers.random).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserRelays.kind], authors: [pubkey], limit: 1));
-  final events = await requestEvents(requestMessage, relay).toList();
-
-  if (events.isNotEmpty) {
-    final userRelays = UserRelays.fromEventMessage(events.first);
+  final event = await ref.read(nostrNotifierProvider.notifier).requestOne(
+        requestMessage,
+        actionSource: const ActionSourceIndexers(),
+      );
+  if (event != null) {
+    final userRelays = UserRelays.fromEventMessage(event);
     ref.read(nostrCacheProvider.notifier).cache(userRelays);
     return userRelays;
   }

@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ice/app/features/nostr/providers/relays_provider.dart';
+import 'package:ice/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ice/app/features/user/model/user_delegation.dart';
-import 'package:ice/app/features/user/providers/user_relays_provider.dart';
 import 'package:ice/app/features/wallets/providers/main_wallet_provider.dart';
 import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:ice/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
@@ -21,19 +19,13 @@ Future<UserDelegation?> userDelegation(UserDelegationRef ref, String pubkey) asy
     return userDelegation;
   }
 
-  final userRelays = await ref.watch(currentUserRelaysProvider.future);
-
-  if (userRelays == null) {
-    return null;
-  }
-
-  final relay = await ref.watch(relayProvider(userRelays.list.random.url).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserDelegation.kind], limit: 1, authors: [pubkey]));
-  final events = await requestEvents(requestMessage, relay).toList();
 
-  if (events.isNotEmpty) {
-    final userDelegation = UserDelegation.fromEventMessage(events.first);
+  final event = await ref.read(nostrNotifierProvider.notifier).requestOne(requestMessage);
+
+  if (event != null) {
+    final userDelegation = UserDelegation.fromEventMessage(event);
     ref.read(nostrCacheProvider.notifier).cache(userDelegation);
     return userDelegation;
   }
