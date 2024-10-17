@@ -2,6 +2,7 @@
 
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ice/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ice/app/features/user/model/user_delegation.dart';
 import 'package:ice/app/features/wallets/providers/main_wallet_provider.dart';
@@ -39,7 +40,15 @@ Future<UserDelegation?> currentUserDelegation(CurrentUserDelegationRef ref) asyn
   if (mainWallet == null) {
     return null;
   }
-  return ref.watch(userDelegationProvider(mainWallet.signingKey.publicKey).future);
+  final currentUserNostrKeyStore = await ref.watch(currentUserNostrKeyStoreProvider.future);
+  if (currentUserNostrKeyStore == null) {
+    return null;
+  }
+  try {
+    return ref.watch(userDelegationProvider(mainWallet.signingKey.publicKey).future);
+  } on UserRelaysNotFoundException catch (_) {
+    return null;
+  }
 }
 
 @riverpod

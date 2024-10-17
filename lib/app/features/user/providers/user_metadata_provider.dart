@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ice/app/features/nostr/model/action_source.dart';
 import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ice/app/features/nostr/providers/nostr_notifier.dart';
@@ -18,7 +19,11 @@ Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
 
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserMetadata.kind], authors: [pubkey], limit: 1));
-  final event = await ref.read(nostrNotifierProvider.notifier).requestOne(requestMessage);
+  final event = await ref.read(nostrNotifierProvider.notifier).requestOne(
+        requestMessage,
+        actionSource: ActionSourceUser(pubkey),
+      );
+
   if (event != null) {
     final userMetadata = UserMetadata.fromEventMessage(event);
     ref.read(nostrCacheProvider.notifier).cache(userMetadata);
