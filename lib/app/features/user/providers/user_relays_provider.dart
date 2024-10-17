@@ -27,7 +27,7 @@ Future<UserRelays?> userRelays(UserRelaysRef ref, String pubkey) async {
   final relay = await ref.watch(relayProvider(currentUserIndexers.random).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserRelays.kind], authors: [pubkey], limit: 1));
-  final events = await requestEvents(requestMessage, relay);
+  final events = await requestEvents(requestMessage, relay).toList();
 
   if (events.isNotEmpty) {
     final userRelays = UserRelays.fromEventMessage(events.first);

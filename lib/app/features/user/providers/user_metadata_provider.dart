@@ -27,7 +27,7 @@ Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
   final relay = await ref.watch(relayProvider(userRelays.list.random.url).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserMetadata.kind], authors: [pubkey], limit: 1));
-  final events = await requestEvents(requestMessage, relay);
+  final events = await requestEvents(requestMessage, relay).toList();
 
   if (events.isNotEmpty) {
     final userMetadata = UserMetadata.fromEventMessage(events.first);

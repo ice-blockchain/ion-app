@@ -28,11 +28,10 @@ class FeedPostIds extends _$FeedPostIds {
     final relay = await ref.read(relayProvider(userRelays.list.random.url).future);
     final requestMessage = RequestMessage()
       ..addFilter(const RequestFilter(kinds: [PostData.kind], limit: 20));
-    final events = await requestEvents(requestMessage, relay);
-
-    final posts = events.map(PostData.fromEventMessage).toList()
-      ..forEach(ref.read(nostrCacheProvider.notifier).cache);
-
-    state = [...state, ...posts.map((post) => post.id)];
+    await for (final event in requestEvents(requestMessage, relay)) {
+      final postData = PostData.fromEventMessage(event);
+      ref.read(nostrCacheProvider.notifier).cache(postData);
+      state = [...state, postData.id];
+    }
   }
 }
