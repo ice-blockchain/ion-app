@@ -7,8 +7,8 @@ import 'package:ice/app/features/feed/views/components/actions_toolbar_button/ac
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_text_editor_font_style.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class TextEditorItalicButton extends HookWidget {
-  const TextEditorItalicButton({required this.textEditorController, super.key});
+class ToolbarBoldButton extends HookWidget {
+  const ToolbarBoldButton({required this.textEditorController, super.key});
   final QuillController textEditorController;
 
   @override
@@ -16,14 +16,14 @@ class TextEditorItalicButton extends HookWidget {
     final fontType = useTextEditorFontStyle(textEditorController);
 
     return ActionsToolbarButton(
-      icon: Assets.svg.iconPostItalictextOff,
-      iconSelected: Assets.svg.iconPostItalictextOn,
+      icon: Assets.svg.iconPostBoldtextOff,
+      iconSelected: Assets.svg.iconPostBoldtextOn,
       onPressed: () {
         textEditorController
-          ..formatSelection(Attribute.clone(Attribute.bold, null))
-          ..formatSelection(Attribute.italic);
+          ..formatSelection(Attribute.clone(Attribute.italic, null))
+          ..formatSelection(Attribute.bold);
       },
-      selected: fontType == FontType.italic,
+      selected: fontType == FontType.bold,
     );
   }
 }
