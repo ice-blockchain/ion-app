@@ -3,26 +3,6 @@
 import 'dart:math';
 
 import 'package:ice/app/features/feed/data/models/post/post_data.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'posts_storage_provider.g.dart';
-
-@Riverpod(keepAlive: true)
-class PostsStorage extends _$PostsStorage {
-  @override
-  Map<String, PostData> build() {
-    return {};
-  }
-
-  void store({required List<PostData> posts}) {
-    state = {...state, for (final post in posts) post.id: post};
-  }
-}
-
-@riverpod
-PostData? postByIdSelector(PostByIdSelectorRef ref, {required String postId}) {
-  return ref.watch(postsStorageProvider.select((state) => state[postId]));
-}
 
 PostData generateFakePost() {
   final random = Random.secure();

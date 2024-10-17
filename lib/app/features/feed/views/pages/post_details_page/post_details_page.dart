@@ -7,9 +7,9 @@ import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/async_value_listener.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ice/app/features/feed/providers/post_reply_ids_provider.dart';
-import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_details_footer.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
@@ -17,6 +17,7 @@ import 'package:ice/app/features/feed/views/components/post_list/post_list.dart'
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/post_not_found/post_not_found.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_input_field/reply_input_field.dart';
 import 'package:ice/app/features/feed/views/pages/post_details_page/components/reply_sent_notification/reply_sent_notification.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/hooks/use_on_init.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -31,7 +32,7 @@ class PostDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(postByIdSelectorProvider(postId: postId));
+    final postData = ref.watch(nostrCacheProvider.select(cacheSelector<PostData>(postId)));
     final replyIds = ref.watch(postReplyIdsSelectorProvider(postId: postId));
 
     useOnInit(() {

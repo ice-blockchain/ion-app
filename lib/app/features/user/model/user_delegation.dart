@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'user_delegation.freezed.dart';
@@ -9,7 +10,7 @@ part 'user_delegation.freezed.dart';
 enum DelegationStatus { active, inactive, revoked }
 
 @freezed
-class UserDelegation with _$UserDelegation {
+class UserDelegation with _$UserDelegation, CacheableEvent {
   const factory UserDelegation({
     required String pubkey,
     required List<UserDelegate> delegates,
@@ -60,6 +61,12 @@ class UserDelegation with _$UserDelegation {
   List<List<String>> get tags {
     return delegates.map((delegate) => delegate.toTag()).toList();
   }
+
+  @override
+  String get cacheKey => pubkey;
+
+  @override
+  Type get cacheType => UserDelegation;
 
   static const int kind = 10100;
 }

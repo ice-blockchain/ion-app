@@ -10,7 +10,6 @@ import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
-import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
@@ -18,6 +17,7 @@ import 'package:ice/app/features/feed/views/components/post/components/post_body
 import 'package:ice/app/features/feed/views/components/post_replies/replying_to.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
 import 'package:ice/app/features/feed/views/pages/post_reply_modal/components/expanded_reply_input_field.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ice/generated/assets.gen.dart';
@@ -35,7 +35,7 @@ class PostReplyModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(postByIdSelectorProvider(postId: postId));
+    final postData = ref.watch(nostrCacheProvider.select(cacheSelector<PostData>(postId)));
 
     if (postData == null) {
       return const SizedBox.shrink();

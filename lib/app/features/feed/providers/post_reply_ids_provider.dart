@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'post_reply_ids_provider.g.dart';
@@ -19,9 +20,8 @@ class PostReplyIds extends _$PostReplyIds {
       return;
     }
 
-    final posts = List.generate(Random().nextInt(10) + 1, (_) => generateFakePost());
-
-    ref.read(postsStorageProvider.notifier).store(posts: posts);
+    final posts = List.generate(Random().nextInt(10) + 1, (_) => generateFakePost())
+      ..forEach(ref.read(nostrCacheProvider.notifier).cache);
 
     state = {...state, postId: posts.map((post) => post.id).toList()};
   }

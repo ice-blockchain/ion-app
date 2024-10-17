@@ -2,14 +2,13 @@
 
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/providers/onboarding_data_provider.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ice/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ice/app/features/user/model/user_metadata.dart';
 import 'package:ice/app/features/user/model/user_relays.dart';
 import 'package:ice/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ice/app/features/user/providers/user_delegation_provider.dart';
-import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ice/app/features/user/providers/user_relays_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -51,17 +50,16 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
             .read(userDelegationManagerProvider.notifier)
             .buildDelegationEventFrom(userDelegation);
 
-        ref.read(usersRelaysStorageProvider.notifier).store(userRelays);
+        ref.read(nostrCacheProvider.notifier).cache(userRelays);
 
-        await ref.read(nostrNotifierProvider.notifier).sendEvents([
+        await ref.read(nostrNotifierProvider.notifier).send([
           //TODO:add langs and folowees here
           userRelays.toEventMessage(nostrKeyStore),
           userMetadata.toEventMessage(nostrKeyStore),
           userDelegationEvent,
         ]);
 
-        ref.read(usersMetadataStorageProvider.notifier).store(userMetadata);
-        ref.read(usersDelegationStorageProvider.notifier).store(userDelegation);
+        [userMetadata, userDelegation].forEach(ref.read(nostrCacheProvider.notifier).cache);
       },
     );
   }

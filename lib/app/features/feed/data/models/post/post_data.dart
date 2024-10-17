@@ -4,6 +4,7 @@ import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/core/model/media_type.dart';
 import 'package:ice/app/features/feed/data/models/post/post_media_data.dart';
 import 'package:ice/app/features/feed/data/models/post/post_metadata.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/services/text_parser/matchers/url_matcher.dart';
 import 'package:ice/app/services/text_parser/text_match.dart';
 import 'package:ice/app/services/text_parser/text_parser.dart';
@@ -11,7 +12,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'post_data_from_event.dart';
 
-class PostData {
+class PostData with CacheableEvent {
   PostData({
     required this.id,
     required this.pubkey,
@@ -25,8 +26,6 @@ class PostData {
     required this.pubkey,
     required String rawContent,
   }) : content = TextParser(matchers: [const UrlMatcher()]).parse(rawContent);
-
-  static const kind = 1;
 
   final String id;
 
@@ -55,4 +54,12 @@ class PostData {
 
   @override
   String toString() => 'PostData(id: $id, content: $content, metadata: $metadata)';
+
+  @override
+  String get cacheKey => id;
+
+  @override
+  Type get cacheType => PostData;
+
+  static const kind = 1;
 }
