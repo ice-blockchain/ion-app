@@ -35,7 +35,7 @@ class PostReplyModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(nostrCache<PostData>(postId));
+    final postData = ref.watch(nostrCacheProvider.select(cacheSelector<PostData>(postId)));
 
     if (postData == null) {
       return const SizedBox.shrink();

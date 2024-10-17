@@ -21,11 +21,3 @@ linter:
     avoid_setters_without_getters: false
     lines_longer_than_80_chars: false
     one_member_abstracts: false
-
-custom_lint:
-  rules:
-    # TODO:
-    # Move to a generic family provider instead of current `nostrCache` function when riverpod_generator v3 is released
-    # And remove this lint rule
-    # https://pub.dev/packages/riverpod_generator/versions/3.0.0-dev.11/changelog#300-dev7---2023-10-29
-    - avoid_manual_providers_as_generated_provider_dependency: false

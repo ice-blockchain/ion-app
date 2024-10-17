@@ -18,7 +18,7 @@ class PostListItem extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(nostrCache<PostData>(postId));
+    final post = ref.watch(nostrCacheProvider.select(cacheSelector<PostData>(postId)));
     final replyIds = ref.watch(postReplyIdsSelectorProvider(postId: postId));
 
     useOnInit(() {

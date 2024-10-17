@@ -19,7 +19,7 @@ class FeedPostIds extends _$FeedPostIds {
   Future<void> fetchPosts() async {
     final requestMessage = RequestMessage()
       ..addFilter(const RequestFilter(kinds: [PostData.kind], limit: 20));
-    final eventsStream = await ref.read(nostrNotifierProvider.notifier).request(requestMessage);
+    final eventsStream = ref.read(nostrNotifierProvider.notifier).request(requestMessage);
     await for (final event in eventsStream) {
       final postData = PostData.fromEventMessage(event);
       ref.read(nostrCacheProvider.notifier).cache(postData);

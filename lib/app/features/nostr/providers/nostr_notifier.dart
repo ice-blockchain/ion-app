@@ -34,19 +34,19 @@ class NostrNotifier extends _$NostrNotifier {
     return send([event], actionSource: actionSource);
   }
 
-  Future<Stream<EventMessage>> request(
+  Stream<EventMessage> request(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
-  }) async {
+  }) async* {
     final relay = await _getRelay(actionSource);
-    return requestEvents(requestMessage, relay);
+    yield* requestEvents(requestMessage, relay);
   }
 
   Future<EventMessage?> requestOne(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    final eventsStream = await request(requestMessage, actionSource: actionSource);
+    final eventsStream = request(requestMessage, actionSource: actionSource);
     final events = await eventsStream.toList();
     return events.isNotEmpty ? events.first : null;
   }
@@ -79,7 +79,7 @@ class NostrNotifier extends _$NostrNotifier {
   }
 
   Future<UserRelays> _getUserRelays(String pubkey) async {
-    final cached = ref.read(nostrCache<UserRelays>(pubkey));
+    final cached = ref.read(nostrCacheProvider.select(cacheSelector<UserRelays>(pubkey)));
     if (cached != null) {
       return cached;
     }
