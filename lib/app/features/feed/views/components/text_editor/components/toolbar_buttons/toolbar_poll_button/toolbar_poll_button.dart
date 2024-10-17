@@ -6,8 +6,8 @@ import 'package:ice/app/features/feed/views/components/actions_toolbar_button/ac
 import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class TextEditorPollButton extends StatelessWidget {
-  const TextEditorPollButton({
+class ToolbarPollButton extends StatelessWidget {
+  const ToolbarPollButton({
     required this.textEditorController,
     super.key,
   });

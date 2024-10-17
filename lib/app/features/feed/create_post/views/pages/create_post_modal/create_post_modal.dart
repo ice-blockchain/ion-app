@@ -13,11 +13,11 @@ import 'package:ice/app/features/feed/providers/poll/poll_answers_provider.dart'
 import 'package:ice/app/features/feed/providers/poll/poll_title_notifier.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_bold_button/text_editor_bold_button.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_image_button/text_editor_image_button.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_italic_button/text_editor_italic_button.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_poll_button/text_editor_poll_button.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/text_editor_regular_button/text_editor_regular_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_bold_button/toolbar_bold_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_image_button/toolbar_image_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_italic_button/toolbar_italic_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_poll_button/toolbar_poll_button.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_regular_button/toolbar_regular_button.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/text_editor.dart';
@@ -112,14 +112,14 @@ class CreatePostModal extends HookConsumerWidget {
                 ScreenSideOffset.small(
                   child: ActionsToolbar(
                     actions: [
-                      TextEditorImageButton(textEditorController: textEditorController),
+                      ToolbarImageButton(textEditorController: textEditorController),
                       if (!hasPoll)
-                        TextEditorPollButton(
+                        ToolbarPollButton(
                           textEditorController: textEditorController,
                         ),
-                      TextEditorRegularButton(textEditorController: textEditorController),
-                      TextEditorItalicButton(textEditorController: textEditorController),
-                      TextEditorBoldButton(textEditorController: textEditorController),
+                      ToolbarRegularButton(textEditorController: textEditorController),
+                      ToolbarItalicButton(textEditorController: textEditorController),
+                      ToolbarBoldButton(textEditorController: textEditorController),
                     ],
                     trailing: ActionsToolbarButtonSend(
                       enabled: isSendButtonEnabled(),
