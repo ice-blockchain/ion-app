@@ -5,7 +5,7 @@ class Conversation {
 
   final ConversationSender sender;
   final int unreadMessageCount;
-  final ConversationMessageAbstract message;
+  final ConversationMessage message;
 }
 
 class ConversationSender {
@@ -17,46 +17,53 @@ class ConversationSender {
   final bool isIceUser;
 }
 
-sealed class ConversationMessageAbstract {
-  ConversationMessageAbstract(this.time);
+sealed class ConversationMessage {
+  ConversationMessage(this.time);
 
   final DateTime time;
 }
 
-//text message
-class ConversationTextMessage extends ConversationMessageAbstract {
+class ConversationTextMessage extends ConversationMessage {
   ConversationTextMessage(this.text, DateTime time) : super(time);
   final String text;
 }
 
-class ConversationPhotoMessage extends ConversationMessageAbstract {
+class ConversationPhotoMessage extends ConversationMessage {
   ConversationPhotoMessage(super.time);
 }
 
-final mockConversationData = [
-  Conversation(
-    ConversationSender(
-      'Mike Planton',
-      'https://i.pravatar.cc/150?u=@john',
-      isApproved: true,
-      isIceUser: true,
-    ),
-    1,
-    ConversationTextMessage(
-      'Meta has introduced the Movie Gen I -model for video generation',
-      DateTime.now(),
-    ),
-  ),
-  Conversation(
-    ConversationSender(
-      'Alicia Wernet',
-      'https://i.pravatar.cc/150?u=@alicia',
-      isApproved: true,
-      isIceUser: true,
-    ),
-    1,
-    ConversationPhotoMessage(
-      DateTime.now().subtract(const Duration(minutes: 5)),
-    ),
-  ),
-];
+class ConversationVoiceMessage extends ConversationMessage {
+  ConversationVoiceMessage(super.time);
+}
+
+class ConversationReplayMessage extends ConversationMessage {
+  ConversationReplayMessage(this.text, DateTime time) : super(time);
+  final String text;
+}
+
+class ConversationVideoMessage extends ConversationMessage {
+  ConversationVideoMessage(super.time);
+}
+
+class ConversationDocumentMessage extends ConversationMessage {
+  ConversationDocumentMessage(this.fileName, DateTime time) : super(time);
+  final String fileName;
+}
+
+class ConversationLinkMessage extends ConversationMessage {
+  ConversationLinkMessage(this.link, DateTime time) : super(time);
+  final String link;
+}
+
+class ConversationProfileShareMessage extends ConversationMessage {
+  ConversationProfileShareMessage(this.displayName, DateTime time) : super(time);
+  final String displayName;
+}
+
+class ConversationPollMessage extends ConversationMessage {
+  ConversationPollMessage(super.time);
+}
+
+class ConversationMoneyRequestMessage extends ConversationMessage {
+  ConversationMoneyRequestMessage(super.time);
+}
