@@ -94,7 +94,9 @@ class CreateArticleModal extends HookConsumerWidget {
                   child: ActionsToolbar(
                     actions: [
                       TextEditorImageButton(textEditorController: textEditorController),
-                      TextEditorPollButton(textEditorController: textEditorController),
+                      TextEditorPollButton(
+                        textEditorController: textEditorController,
+                      ),
                       TextEditorRegularButton(textEditorController: textEditorController),
                       TextEditorItalicButton(textEditorController: textEditorController),
                       TextEditorBoldButton(textEditorController: textEditorController),

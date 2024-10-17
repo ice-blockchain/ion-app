@@ -2,16 +2,22 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
+import 'package:ice/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 
-class TextEditor extends StatelessWidget {
-  const TextEditor(this.controller, {super.key, this.placeholder});
+class TextEditor extends ConsumerWidget {
+  const TextEditor(
+    this.controller, {
+    super.key,
+    this.placeholder,
+  });
   final QuillController controller;
   final String? placeholder;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         QuillEditor.basic(
@@ -19,6 +25,10 @@ class TextEditor extends StatelessWidget {
           configurations: QuillEditorConfigurations(
             embedBuilders: [
               TextEditorSingleImageBuilder(),
+              TextEditorPollBuilder(
+                controller: controller,
+                ref: ref,
+              ),
             ],
             autoFocus: true,
             placeholder: placeholder,

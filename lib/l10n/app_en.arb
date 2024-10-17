@@ -1,5 +1,7 @@
 {
   "@@locale": "en",
+  "day": "{count, plural, =1{day} other{days}}",
+  "hour": "{count, plural, =1{hour} other{hours}}",
   "button_continue": "Continue",
   "button_follow": "Follow",
   "button_following": "Following",
@@ -27,6 +29,7 @@
   "button_allow": "Allow",
   "button_dont_allow": "Don't Allow",
   "button_share_story": "Share story",
+  "button_add_answer": "Add answer",
   "common_show_more": "Show more",
   "common_show_less": "Show less",
   "common_identity_key_name": "Identity key name",
@@ -359,5 +362,10 @@
   "story_has_been_posted": "Your story has been published",
   "chat_title": "Chats",
   "chat_empty_description": "You have no conversations yet",
-  "chat_new_message_button": "New message"
+  "chat_new_message_button": "New message",
+  "poll_length_modal_title": "Pool length time",
+  "poll_length_button_title": "Poll length",
+  "poll_add_answer_button_title": "Add answer",
+  "poll_choice_placeholder": "Choice {number}",
+  "poll_title_placeholder": "Write a question for the poll"
 }
