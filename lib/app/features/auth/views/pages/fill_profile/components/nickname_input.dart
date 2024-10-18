@@ -17,7 +17,7 @@ class NicknameInput extends StatelessWidget {
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
-        icons: [Assets.svg.iconFieldNickname.icon()],
+        icons: [Assets.svg.iconFieldNickname.icon(color: context.theme.appColors.secondaryText)],
       ),
       labelText: context.i18n.fill_profile_input_nickname,
       controller: controller,

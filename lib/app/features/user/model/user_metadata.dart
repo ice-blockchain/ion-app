@@ -3,13 +3,14 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'user_metadata.freezed.dart';
 part 'user_metadata.g.dart';
 
 @freezed
-class UserMetadata with _$UserMetadata {
+class UserMetadata with _$UserMetadata, CacheableEvent {
   const factory UserMetadata({
     required String pubkey,
     @Default('') String name,
@@ -64,6 +65,12 @@ class UserMetadata with _$UserMetadata {
       ),
     );
   }
+
+  @override
+  String get cacheKey => pubkey;
+
+  @override
+  Type get cacheType => UserMetadata;
 
   static const int kind = 0;
 }

@@ -2,9 +2,10 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
+import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ice/app/features/feed/views/components/post/post.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/router/app_routes.dart';
 
 class ReplyListItem extends ConsumerWidget {
@@ -14,7 +15,7 @@ class ReplyListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(postByIdSelectorProvider(postId: postId));
+    final post = ref.watch(nostrCacheProvider.select(cacheSelector<PostData>(postId)));
 
     if (post == null) return const SizedBox.shrink();
 

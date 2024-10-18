@@ -1,52 +1,32 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/nostr/model/action_source.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
-import 'package:ice/app/features/nostr/providers/relays_provider.dart';
+import 'package:ice/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ice/app/features/user/model/user_metadata.dart';
-import 'package:ice/app/features/user/providers/user_relays_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_metadata_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class UsersMetadataStorage extends _$UsersMetadataStorage {
-  @override
-  Map<String, UserMetadata> build() {
-    return {};
-  }
-
-  void storeAll(List<UserMetadata> usersMetadata) {
-    state = {...state, for (final userMetadata in usersMetadata) userMetadata.pubkey: userMetadata};
-  }
-
-  void store(UserMetadata userMetadata) {
-    state = {...state, userMetadata.pubkey: userMetadata};
-  }
-}
-
-@Riverpod(keepAlive: true)
 Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
-  final userMetadata = ref.watch(usersMetadataStorageProvider.select((state) => state[pubkey]));
+  final userMetadata = ref.watch(nostrCacheProvider.select(cacheSelector<UserMetadata>(pubkey)));
   if (userMetadata != null) {
     return userMetadata;
   }
 
-  final userRelays = await ref.watch(userRelaysProvider(pubkey).future);
-
-  if (userRelays == null) {
-    throw Exception('User indexers are not found');
-  }
-
-  final relay = await ref.watch(relayProvider(userRelays.list.random.url).future);
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserMetadata.kind], authors: [pubkey], limit: 1));
-  final events = await requestEvents(requestMessage, relay);
+  final event = await ref.read(nostrNotifierProvider.notifier).requestOne(
+        requestMessage,
+        actionSource: ActionSourceUser(pubkey),
+      );
 
-  if (events.isNotEmpty) {
-    final userMetadata = UserMetadata.fromEventMessage(events.first);
-    ref.read(usersMetadataStorageProvider.notifier).store(userMetadata);
+  if (event != null) {
+    final userMetadata = UserMetadata.fromEventMessage(event);
+    ref.read(nostrCacheProvider.notifier).cache(userMetadata);
     return userMetadata;
   }
 

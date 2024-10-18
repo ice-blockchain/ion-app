@@ -6,8 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ice/app/components/separated/separator.dart';
 import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/features/feed/data/models/post/post_data.dart';
 import 'package:ice/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
-import 'package:ice/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ice/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
@@ -15,6 +15,7 @@ import 'package:ice/app/features/feed/views/components/post/components/post_head
 import 'package:ice/app/features/feed/views/components/post/post.dart';
 import 'package:ice/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
 import 'package:ice/app/features/feed/views/pages/comment_post_modal/components/quote_post_comment_input.dart';
+import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ice/app/features/wallet/model/network_type.dart';
 import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
@@ -29,7 +30,7 @@ class CommentPostModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(postByIdSelectorProvider(postId: postId));
+    final post = ref.watch(nostrCacheProvider.select(cacheSelector<PostData>(postId)));
 
     if (post == null) return const SizedBox.shrink();
 
