@@ -2,8 +2,8 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results_list_item.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results_list_item.dart';
 
 class FeedSearchResults extends ConsumerWidget {
   const FeedSearchResults({

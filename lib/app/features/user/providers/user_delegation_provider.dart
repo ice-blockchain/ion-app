@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
-import 'package:ice/app/features/nostr/providers/nostr_notifier.dart';
-import 'package:ice/app/features/user/model/user_delegation.dart';
-import 'package:ice/app/features/wallets/providers/main_wallet_provider.dart';
-import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
-import 'package:ice/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
+import 'package:ion/app/features/user/model/user_delegation.dart';
+import 'package:ion/app/features/wallets/providers/main_wallet_provider.dart';
+import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
+import 'package:ion/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

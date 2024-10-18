@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/components/article/components/article_header/article_header.dart';
-import 'package:ice/app/features/feed/views/components/article/components/article_image/article_image.dart';
-import 'package:ice/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
-import 'package:ice/app/features/user/model/user_metadata.dart';
-import 'package:ice/app/utils/username.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/views/components/article/components/article_header/article_header.dart';
+import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
+import 'package:ion/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
+import 'package:ion/app/features/user/model/user_metadata.dart';
+import 'package:ion/app/utils/username.dart';
 
 class Article extends StatelessWidget {
   const Article({

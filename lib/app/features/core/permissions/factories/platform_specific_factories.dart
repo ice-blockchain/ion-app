@@ -2,9 +2,9 @@
 
 import 'dart:io';
 
-import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ice/app/features/core/permissions/factories/permission_factory.dart';
-import 'package:ice/app/features/core/permissions/strategies/strategies.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/factories/permission_factory.dart';
+import 'package:ion/app/features/core/permissions/strategies/strategies.dart';
 
 class MobilePermissionFactory implements PlatformPermissionFactory {
   @override

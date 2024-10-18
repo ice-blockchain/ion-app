@@ -2,8 +2,8 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/feed/views/components/article/components/article_image/read_time_tile.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/feed/views/components/article/components/article_image/read_time_tile.dart';
 
 class ArticleImage extends StatelessWidget {
   const ArticleImage({

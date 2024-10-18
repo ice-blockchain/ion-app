@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/components/slider/slider.dart';
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ion/app/components/slider/slider.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class AppSlider extends HookWidget {
   const AppSlider({

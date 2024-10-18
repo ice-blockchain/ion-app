@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/user/providers/user_following_provider.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/user/providers/user_following_provider.dart';
 
 class FollowUserButton extends ConsumerWidget {
   const FollowUserButton({

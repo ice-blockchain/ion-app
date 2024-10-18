@@ -2,16 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
-import 'package:ice/app/features/feed/feed_search/providers/feed_search_history_provider.dart'
+import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ion/app/features/feed/feed_search/providers/feed_search_history_provider.dart'
     show feedSearchHistoryProvider;
-import 'package:ice/app/features/feed/feed_search/providers/feed_search_users_provider.dart';
-import 'package:ice/app/features/feed/feed_search/views/components/nothing_is_found.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history_empty/feed_search_history_empty.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_navigation/feed_search_navigation.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results_skeleton.dart';
+import 'package:ion/app/features/feed/feed_search/providers/feed_search_users_provider.dart';
+import 'package:ion/app/features/feed/feed_search/views/components/nothing_is_found.dart';
+import 'package:ion/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history.dart';
+import 'package:ion/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history_empty/feed_search_history_empty.dart';
+import 'package:ion/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_navigation/feed_search_navigation.dart';
+import 'package:ion/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results.dart';
+import 'package:ion/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_results/feed_search_results_skeleton.dart';
 
 class FeedSimpleSearchPage extends ConsumerWidget {
   const FeedSimpleSearchPage({required this.query, super.key});

@@ -2,15 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/skeleton/skeleton.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/components/follow_user_button/follow_user_button.dart';
-import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ice/app/utils/username.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/skeleton/skeleton.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/components/follow_user_button/follow_user_button.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/utils/username.dart';
 
 class CreatorListItem extends ConsumerWidget {
   const CreatorListItem({

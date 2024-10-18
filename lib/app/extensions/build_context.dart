@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/generated/app_localizations.dart';
+import 'package:ion/generated/app_localizations.dart';
 
 extension ThemeGetter on BuildContext {
   /// Usage example: `context.theme`

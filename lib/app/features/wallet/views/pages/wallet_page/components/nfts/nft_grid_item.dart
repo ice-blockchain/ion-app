@@ -2,14 +2,14 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/model/nft_data.dart';
-import 'package:ice/app/features/wallet/model/nft_layout_type.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_price.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallet/model/nft_data.dart';
+import 'package:ion/app/features/wallet/model/nft_layout_type.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_price.dart';
 
 class NftGridItem extends StatelessWidget {
   const NftGridItem({

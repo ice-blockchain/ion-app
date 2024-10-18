@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/feed_search/model/feed_advanced_search_category.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/feed_search/model/feed_advanced_search_category.dart';
 
 class FeedAdvancedSearchTab extends StatelessWidget {
   const FeedAdvancedSearchTab({required this.category, super.key});

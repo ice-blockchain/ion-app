@@ -2,8 +2,8 @@
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/feed/create_story/providers/story_camera_provider.dart';
-import 'package:ice/app/features/gallery/providers/camera_provider.dart';
+import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
+import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 
 typedef RecordingHandlers = (
   bool isCameraReady,

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/protect_account/authenticator/data/model/authenticator_type.dart';
-import 'package:ice/app/features/protect_account/components/secure_account_option.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_type.dart';
+import 'package:ion/app/features/protect_account/components/secure_account_option.dart';
 
 class AuthenticatorOptionsPage extends StatelessWidget {
   const AuthenticatorOptionsPage({

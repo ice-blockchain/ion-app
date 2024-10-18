@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/drop_down_menu/drop_down_menu.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/data/models/twofa_type.dart';
-import 'package:ice/app/features/auth/views/pages/twofa_options/twofa_options_selector_button.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/drop_down_menu/drop_down_menu.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/data/models/twofa_type.dart';
+import 'package:ion/app/features/auth/views/pages/twofa_options/twofa_options_selector_button.dart';
 
 class TwoFaOptionSelector extends HookWidget {
   const TwoFaOptionSelector({

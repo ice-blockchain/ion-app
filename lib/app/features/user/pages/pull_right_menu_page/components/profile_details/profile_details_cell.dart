@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/theme_data.dart';
+import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/theme_data.dart';
 
 class ProfileDetailsCell extends StatelessWidget {
   const ProfileDetailsCell({

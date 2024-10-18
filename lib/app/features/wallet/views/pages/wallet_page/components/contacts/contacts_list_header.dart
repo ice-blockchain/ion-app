@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/constants/ui.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/model/contact_data.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/send_coins/components/contacts_list_view.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/constants/ui.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallet/model/contact_data.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/contacts_list_view.dart';
+import 'package:ion/app/router/app_routes.dart';
 
 class ContactListHeader extends StatelessWidget {
   const ContactListHeader({super.key});

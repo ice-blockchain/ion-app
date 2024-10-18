@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/feed_search/providers/feed_search_filters_provider.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_search_filters_page/feed_search_filter_languages_section.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_search_filters_page/feed_search_filter_people_section.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_text_button.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/feed_search/providers/feed_search_filters_provider.dart';
+import 'package:ion/app/features/feed/feed_search/views/pages/feed_search_filters_page/feed_search_filter_languages_section.dart';
+import 'package:ion/app/features/feed/feed_search/views/pages/feed_search_filters_page/feed_search_filter_people_section.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_text_button.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class FeedSearchFiltersPage extends HookConsumerWidget {
   const FeedSearchFiltersPage({super.key});

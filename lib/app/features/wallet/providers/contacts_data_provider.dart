@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/wallet/model/contact_data.dart';
-import 'package:ice/app/features/wallet/providers/mock_data/contacts_mock_data.dart';
+import 'package:ion/app/features/wallet/model/contact_data.dart';
+import 'package:ion/app/features/wallet/providers/mock_data/contacts_mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'contacts_data_provider.g.dart';

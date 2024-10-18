@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/core/permissions/data/models/models.dart';
-import 'package:ice/app/features/core/permissions/factories/permission_factory.dart';
-import 'package:ice/app/features/core/permissions/strategies/strategies.dart';
+import 'package:ion/app/features/core/permissions/data/models/models.dart';
+import 'package:ion/app/features/core/permissions/factories/permission_factory.dart';
+import 'package:ion/app/features/core/permissions/strategies/strategies.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'permissions_provider.g.dart';

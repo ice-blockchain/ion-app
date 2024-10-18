@@ -2,9 +2,9 @@
 
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:ice/app/features/wallet/model/coin_data.dart';
-import 'package:ice/app/features/wallet/model/nft_data.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/features/wallet/model/coin_data.dart';
+import 'package:ion/app/features/wallet/model/nft_data.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 List<CoinData> mockedCoinsDataArray = <CoinData>[
   CoinData(

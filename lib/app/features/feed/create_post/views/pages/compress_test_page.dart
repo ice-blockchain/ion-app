@@ -8,10 +8,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/core/providers/video_player_provider.dart';
-import 'package:ice/app/hooks/use_on_init.dart';
-import 'package:ice/app/services/media_service/media_compress_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ion/app/features/core/providers/video_player_provider.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/services/media_service/media_compress_service.dart';
 import 'package:video_player/video_player.dart';
 
 Timer? debounce;

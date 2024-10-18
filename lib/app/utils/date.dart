@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/cupertino.dart';
-import 'package:ice/app/extensions/build_context.dart';
 import 'package:intl/intl.dart';
+
+import 'package:ion/app/extensions/build_context.dart';
 
 /// Converts a timestamp to a more readable date string, with special handling
 /// for dates that represent "today" and "yesterday".

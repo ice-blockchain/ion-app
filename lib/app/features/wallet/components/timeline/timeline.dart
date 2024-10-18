@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/components/timeline/timeline_item.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/components/timeline/timeline_item.dart';
 
 class Timeline extends StatelessWidget {
   const Timeline({

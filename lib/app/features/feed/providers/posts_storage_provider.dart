@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:ice/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/data/models/post/post_data.dart';
 
 PostData generateFakePost() {
   final random = Random.secure();

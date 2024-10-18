@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/separated/separated_column.dart';
-import 'package:ice/app/components/separated/separator.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
-import 'package:ice/app/features/user/pages/pull_right_menu_page/components/links_list/links_list_tile.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/separated/separated_column.dart';
+import 'package:ion/app/components/separated/separator.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
+import 'package:ion/app/features/user/pages/pull_right_menu_page/components/links_list/links_list_tile.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class LinksList extends StatelessWidget {
   const LinksList({

@@ -4,15 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class DeleteWalletModal extends ConsumerWidget {
   const DeleteWalletModal({required this.walletId, super.key});

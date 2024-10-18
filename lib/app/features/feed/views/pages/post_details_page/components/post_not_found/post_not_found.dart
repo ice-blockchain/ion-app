@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class PostNotFound extends StatelessWidget {
   const PostNotFound({super.key});

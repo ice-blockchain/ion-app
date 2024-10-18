@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_following_provider.g.dart';

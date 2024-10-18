@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/router/main_tabs/components/components.dart';
+import 'package:ion/app/router/main_tabs/components/components.dart';
 
 typedef TabPressSteamData = ({TabItem current, TabItem pressed});
 

@@ -2,15 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/dapps/model/dapp_data.dart';
-import 'package:ice/app/features/dapps/views/components/favourite_icon/favorite_icon.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/utils/num.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/dapps/model/dapp_data.dart';
+import 'package:ion/app/features/dapps/views/components/favourite_icon/favorite_icon.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/utils/num.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class GridItem extends HookWidget {
   const GridItem({

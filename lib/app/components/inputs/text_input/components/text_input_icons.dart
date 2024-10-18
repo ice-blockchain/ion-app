@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/inputs/text_input/components/text_input_icons_divider.dart';
-import 'package:ice/app/extensions/num.dart';
+import 'package:ion/app/components/inputs/text_input/components/text_input_icons_divider.dart';
+import 'package:ion/app/extensions/num.dart';
 
 class TextInputIcons extends StatelessWidget {
   const TextInputIcons({

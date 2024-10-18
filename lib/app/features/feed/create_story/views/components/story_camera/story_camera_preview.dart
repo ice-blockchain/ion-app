@@ -2,8 +2,8 @@
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class StoryCameraPreview extends StatelessWidget {
   const StoryCameraPreview({

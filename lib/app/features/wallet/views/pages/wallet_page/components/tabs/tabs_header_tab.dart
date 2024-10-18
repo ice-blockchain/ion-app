@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/constants/ui.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
+import 'package:ion/app/constants/ui.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
 class WalletTabsHeaderTab extends StatelessWidget {
   const WalletTabsHeaderTab({

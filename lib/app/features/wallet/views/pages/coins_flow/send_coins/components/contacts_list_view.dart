@@ -3,15 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/inputs/search_input/search_input.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/providers/contacts_provider.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/contacts/providers/contacts_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 enum ContactRouteAction {
   navigate,

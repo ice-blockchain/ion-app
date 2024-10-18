@@ -3,14 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.dart';
-import 'package:ice/app/utils/address.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.dart';
+import 'package:ion/app/utils/address.dart';
+import 'package:ion/generated/assets.gen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class ReceiveInfoCard extends HookConsumerWidget {

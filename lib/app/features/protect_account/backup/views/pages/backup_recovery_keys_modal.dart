@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/modal_sheets/simple_modal_sheet.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/modal_sheets/simple_modal_sheet.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class BackupRecoveryKeysModal extends StatelessWidget {
   const BackupRecoveryKeysModal({super.key});

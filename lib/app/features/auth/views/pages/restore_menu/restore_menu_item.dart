@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/card/rounded_card.dart';
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ion/app/components/card/rounded_card.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class RestoreMenuItem extends StatelessWidget {
   const RestoreMenuItem({

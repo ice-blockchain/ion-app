@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/features/feed/data/models/trending_videos_overlay.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_item.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_separator.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/trending_videos/mock.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/features/feed/data/models/trending_videos_overlay.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_item.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_separator.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/mock.dart';
 
 class TrendingVideosList extends StatelessWidget {
   const TrendingVideosList({

@@ -2,17 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/views/pages/contact_modal_page/components/contact_item.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/providers/contacts_provider.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/app/services/share/share.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/views/pages/contact_modal_page/components/contact_item.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/contacts/providers/contacts_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/services/share/share.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class ContactPage extends ConsumerWidget {
   const ContactPage({required this.contactId, super.key});

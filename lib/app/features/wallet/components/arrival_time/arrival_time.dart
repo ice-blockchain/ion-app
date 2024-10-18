@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/components/arrival_time/arrival_time_indicator.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallet/components/arrival_time/arrival_time_indicator.dart';
 
 class ArrivalTime extends StatelessWidget {
   const ArrivalTime({super.key});

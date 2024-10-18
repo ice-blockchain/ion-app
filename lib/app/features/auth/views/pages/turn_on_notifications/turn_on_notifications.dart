@@ -3,18 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/auth/providers/login_action_notifier.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
-import 'package:ice/app/features/auth/views/pages/turn_on_notifications/descriptions.dart';
-import 'package:ice/app/features/auth/views/pages/turn_on_notifications/notifications.dart';
-import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/auth/providers/login_action_notifier.dart';
+import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
+import 'package:ion/app/features/auth/views/pages/turn_on_notifications/descriptions.dart';
+import 'package:ion/app/features/auth/views/pages/turn_on_notifications/notifications.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class TurnOnNotifications extends ConsumerWidget {
   const TurnOnNotifications({super.key});

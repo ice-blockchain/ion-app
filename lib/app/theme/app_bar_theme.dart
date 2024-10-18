@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/templates/template.dart';
-import 'package:ice/app/theme/app_colors.dart';
-import 'package:ice/app/theme/app_text_themes.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/templates/template.dart';
+import 'package:ion/app/theme/app_colors.dart';
+import 'package:ion/app/theme/app_text_themes.dart';
 
 AppBarTheme _buildBaseAppBarTheme(
   TemplateTheme templateTheme,

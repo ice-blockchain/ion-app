@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/nostr/model/action_source.dart';
-import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ice/app/features/nostr/providers/nostr_keystore_provider.dart';
-import 'package:ice/app/features/nostr/providers/nostr_notifier.dart';
-import 'package:ice/app/features/user/model/user_metadata.dart';
+import 'package:ion/app/features/nostr/model/action_source.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
+import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

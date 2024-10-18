@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/empty_list/empty_list.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/features/wallet/providers/filtered_assets_provider.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/empty_list/empty_list.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/features/wallet/providers/filtered_assets_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class EmptyState extends ConsumerWidget {
   const EmptyState({

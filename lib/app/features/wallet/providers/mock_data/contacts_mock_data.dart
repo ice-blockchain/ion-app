@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/wallet/model/contact_data.dart';
+import 'package:ion/app/features/wallet/model/contact_data.dart';
 
 String getIconUrl(String name) {
   return 'https://i.pravatar.cc/100?u=@$name';

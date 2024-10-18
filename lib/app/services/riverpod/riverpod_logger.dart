@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/services/logger/logger.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 class RiverpodLogger extends ProviderObserver {
   static const String tag = 'Riverpod';

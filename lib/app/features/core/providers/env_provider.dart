@@ -3,7 +3,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/generated/assets.gen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'env_provider.g.dart';

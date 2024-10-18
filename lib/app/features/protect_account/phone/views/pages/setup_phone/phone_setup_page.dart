@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/progress_bar/sliver_app_bar_with_progress.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ice/app/features/protect_account/phone/models/phone_steps.dart';
-import 'package:ice/app/features/protect_account/phone/views/pages/setup_phone/step_pages.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/progress_bar/sliver_app_bar_with_progress.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
+import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
+import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
+import 'package:ion/app/features/protect_account/phone/views/pages/setup_phone/step_pages.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class PhoneSetupPage extends StatelessWidget {
   const PhoneSetupPage(this.step, this.phone, {super.key});

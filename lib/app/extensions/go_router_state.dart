@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/main_tabs/components/tab_item.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/main_tabs/components/tab_item.dart';
 
 extension GoRouterStateExtension on GoRouterState {
   bool get isMainModalOpen => matchedLocation.endsWith('/main-modal');

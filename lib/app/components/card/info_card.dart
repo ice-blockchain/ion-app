@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class InfoCard extends StatelessWidget {
   const InfoCard({

@@ -2,11 +2,11 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/feed/data/models/post/post_data.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
-import 'package:ice/app/features/feed/views/components/post/post.dart';
-import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_header/post_header.dart';
+import 'package:ion/app/features/feed/views/components/post/post.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ion/app/router/app_routes.dart';
 
 class ReplyListItem extends ConsumerWidget {
   const ReplyListItem({required this.postId, super.key});

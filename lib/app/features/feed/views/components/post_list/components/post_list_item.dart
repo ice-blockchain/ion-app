@@ -2,14 +2,14 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/feed/data/models/post/post_data.dart';
-import 'package:ice/app/features/feed/providers/post_reply_ids_provider.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
-import 'package:ice/app/features/feed/views/components/post/post.dart';
-import 'package:ice/app/features/feed/views/components/post_replies/post_replies.dart';
-import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ice/app/hooks/use_on_init.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/providers/post_reply_ids_provider.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
+import 'package:ion/app/features/feed/views/components/post/post.dart';
+import 'package:ion/app/features/feed/views/components/post_replies/post_replies.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/router/app_routes.dart';
 
 class PostListItem extends HookConsumerWidget {
   const PostListItem({required this.postId, super.key});

@@ -2,9 +2,9 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/shapes/hexagon_path.dart';
-import 'package:ice/app/components/shapes/shape.dart';
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ion/app/components/shapes/hexagon_path.dart';
+import 'package:ion/app/components/shapes/shape.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class Avatar extends StatelessWidget {
   Avatar({

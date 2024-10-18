@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
-import 'package:ice/app/components/inputs/text_input/text_input.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
+import 'package:ion/app/components/inputs/text_input/text_input.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class RecoveryKeyInput extends HookWidget {
   const RecoveryKeyInput({

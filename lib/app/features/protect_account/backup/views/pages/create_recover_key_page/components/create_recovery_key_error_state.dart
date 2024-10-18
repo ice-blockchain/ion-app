@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class CreateRecoveryKeyErrorState extends ConsumerWidget {
   const CreateRecoveryKeyErrorState({super.key});

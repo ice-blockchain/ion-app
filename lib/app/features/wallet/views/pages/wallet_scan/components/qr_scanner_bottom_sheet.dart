@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRScannerBottomSheet extends HookConsumerWidget {

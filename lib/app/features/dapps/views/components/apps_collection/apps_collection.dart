@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/dapps/model/dapp_data.dart';
-import 'package:ice/app/features/dapps/views/components/grid_item/grid_item.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/dapps/model/dapp_data.dart';
+import 'package:ion/app/features/dapps/views/components/grid_item/grid_item.dart';
 
 class AppsCollection extends StatelessWidget {
   const AppsCollection({super.key, this.items});

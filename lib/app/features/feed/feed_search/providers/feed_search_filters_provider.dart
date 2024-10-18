@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/core/model/language.dart';
-import 'package:ice/app/features/feed/feed_search/model/feed_search_filter_people.dart';
-import 'package:ice/app/services/storage/user_preferences_service.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/core/model/language.dart';
+import 'package:ion/app/features/feed/feed_search/model/feed_search_filter_people.dart';
+import 'package:ion/app/services/storage/user_preferences_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_search_filters_provider.freezed.dart';

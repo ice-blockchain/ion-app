@@ -2,19 +2,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ice/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
-import 'package:ice/app/features/protect_account/backup/views/pages/create_recover_key_page/components/create_recovery_key_error_state.dart';
-import 'package:ice/app/features/protect_account/backup/views/pages/create_recover_key_page/components/create_recovery_key_loading_state.dart';
-import 'package:ice/app/features/protect_account/backup/views/pages/create_recover_key_page/components/create_recovery_key_success_state.dart';
-import 'package:ice/app/hooks/use_on_init.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
+import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
+import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
+import 'package:ion/app/features/protect_account/backup/views/pages/create_recover_key_page/components/create_recovery_key_error_state.dart';
+import 'package:ion/app/features/protect_account/backup/views/pages/create_recover_key_page/components/create_recovery_key_loading_state.dart';
+import 'package:ion/app/features/protect_account/backup/views/pages/create_recover_key_page/components/create_recovery_key_success_state.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class CreateRecoveryKeyPage extends StatelessWidget {
   const CreateRecoveryKeyPage({super.key});

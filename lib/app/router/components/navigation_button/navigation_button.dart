@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/extensions/num.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/extensions/num.dart';
 
 class NavigationButton extends StatelessWidget {
   const NavigationButton({

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/inputs/search_input/search_input.dart';
-import 'package:ice/app/features/chat/providers/mock.dart';
-import 'package:ice/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
-import 'package:ice/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
+import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/features/chat/providers/mock.dart';
+import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
+import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 
 class RecentChatsTimelinePage extends StatelessWidget {
   const RecentChatsTimelinePage({super.key});

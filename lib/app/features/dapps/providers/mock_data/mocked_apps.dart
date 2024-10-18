@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/dapps/model/dapp_data.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/features/dapps/model/dapp_data.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 const _description =
     '''A decentralized application (dApp) leveraging blockchain technology to provide secure, transparent, and user-driven services without the need for intermediaries. It operates autonomously with smart contracts, ensuring trustless interactions and data integrity. The dApp is designed for scalability, offering a seamless user experience, and supporting various use cases like finance, gaming, and supply chain management.''';

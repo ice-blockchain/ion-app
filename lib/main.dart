@@ -3,16 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/translations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/core/providers/template_provider.dart';
-import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
-import 'package:ice/app/features/core/views/components/app_lifecycle_observer.dart';
-import 'package:ice/app/features/core/views/components/content_scaler.dart';
-import 'package:ice/app/router/components/modal_wrapper/sheet_scope.dart';
-import 'package:ice/app/router/providers/go_router_provider.dart';
-import 'package:ice/app/services/logger/config.dart';
-import 'package:ice/app/services/riverpod/riverpod_logger.dart';
-import 'package:ice/app/theme/theme.dart';
-import 'package:ice/generated/app_localizations.dart';
+import 'package:ion/app/features/core/providers/template_provider.dart';
+import 'package:ion/app/features/core/providers/theme_mode_provider.dart';
+import 'package:ion/app/features/core/views/components/app_lifecycle_observer.dart';
+import 'package:ion/app/features/core/views/components/content_scaler.dart';
+import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
+import 'package:ion/app/router/providers/go_router_provider.dart';
+import 'package:ion/app/services/logger/config.dart';
+import 'package:ion/app/services/riverpod/riverpod_logger.dart';
+import 'package:ion/app/theme/theme.dart';
+import 'package:ion/generated/app_localizations.dart';
 
 void main() async {
   runApp(

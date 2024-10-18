@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/feed/data/models/post/post_data.dart';
-import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
-import 'package:ice/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ice/app/features/nostr/providers/nostr_notifier.dart';
+import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

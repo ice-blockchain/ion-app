@@ -3,17 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/inputs/text_input/text_input.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
-import 'package:ice/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
-import 'package:ice/app/features/protect_account/backup/providers/recover_user_action_notifier.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/inputs/text_input/text_input.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
+import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
+import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
+import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_client.dart';
 
 class IonIdentityClientTestPage extends ConsumerWidget {

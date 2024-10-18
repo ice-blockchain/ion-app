@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class ModalWrapper extends StatelessWidget {

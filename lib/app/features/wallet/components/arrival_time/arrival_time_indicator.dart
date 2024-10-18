@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class ArrivalTimeIndicator extends ConsumerWidget {
   const ArrivalTimeIndicator({super.key});

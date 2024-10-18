@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/avatar/avatar.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/generated/assets.gen.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(

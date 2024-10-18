@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ice/app/features/core/permissions/views/components/permission_aware_widget.dart';
-import 'package:ice/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
-import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/services/media_service/media_service.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
+import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class GalleryPermissionButton extends HookConsumerWidget {
   const GalleryPermissionButton({

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/utils/username.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/username.dart';
 
 class ReplyingTo extends StatelessWidget {
   const ReplyingTo({

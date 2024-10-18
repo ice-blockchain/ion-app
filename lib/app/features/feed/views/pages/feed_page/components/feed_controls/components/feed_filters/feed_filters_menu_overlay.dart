@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/overlay_menu/overlay_menu_container.dart';
-import 'package:ice/app/components/separated/separator.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/data/models/feed_category.dart';
-import 'package:ice/app/features/feed/data/models/feed_filter.dart';
-import 'package:ice/app/features/feed/providers/feed_current_filter_provider.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_filters_menu_item.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
+import 'package:ion/app/components/separated/separator.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/feed_category.dart';
+import 'package:ion/app/features/feed/data/models/feed_filter.dart';
+import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_filters_menu_item.dart';
 
 class FeedFiltersMenuOverlay extends StatelessWidget {
   const FeedFiltersMenuOverlay({

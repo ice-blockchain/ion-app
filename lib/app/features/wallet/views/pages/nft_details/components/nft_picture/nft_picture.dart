@@ -2,7 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/num.dart';
+import 'package:ion/app/extensions/num.dart';
 
 class NftPicture extends StatelessWidget {
   const NftPicture({

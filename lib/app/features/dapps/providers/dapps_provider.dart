@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/dapps/model/dapp_data.dart';
-import 'package:ice/app/features/dapps/providers/mock_data/mocked_apps.dart';
+import 'package:ion/app/features/dapps/model/dapp_data.dart';
+import 'package:ion/app/features/dapps/providers/mock_data/mocked_apps.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dapps_provider.g.dart';

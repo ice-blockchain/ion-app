@@ -5,9 +5,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/services/media_service/media_service.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class AvatarPicker extends HookConsumerWidget {
   const AvatarPicker({super.key, this.onAvatarPicked});

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ice/app/templates/converters.dart';
+import 'package:ion/app/templates/converters.dart';
 
 part 'template.freezed.dart';
 part 'template.g.dart';

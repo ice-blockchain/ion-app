@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
-import 'package:ice/app/features/gallery/data/models/gallery_state.dart';
-import 'package:ice/app/features/gallery/data/models/models.dart';
-import 'package:ice/app/features/gallery/providers/providers.dart';
-import 'package:ice/app/services/logger/logger.dart';
-import 'package:ice/app/services/media_service/media_service.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
+import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
+import 'package:ion/app/features/gallery/data/models/models.dart';
+import 'package:ion/app/features/gallery/providers/providers.dart';
+import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

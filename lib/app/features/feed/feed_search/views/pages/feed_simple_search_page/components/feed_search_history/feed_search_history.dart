@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/widgets.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history_header.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history_query_list_item.dart';
-import 'package:ice/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history_user_list_item.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history_header.dart';
+import 'package:ion/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history_query_list_item.dart';
+import 'package:ion/app/features/feed/feed_search/views/pages/feed_simple_search_page/components/feed_search_history/feed_search_history_user_list_item.dart';
 
 class FeedSearchHistory extends StatelessWidget {
   const FeedSearchHistory({

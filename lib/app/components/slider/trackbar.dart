@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/num.dart';
+import 'package:ion/app/extensions/num.dart';
 
 class TrackBar extends StatelessWidget {
   const TrackBar.active({

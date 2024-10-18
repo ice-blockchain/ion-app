@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/fade_on_scroll.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
+import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
+import 'package:ion/app/features/auth/views/components/auth_scrolled_body/fade_on_scroll.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class AuthScrollContainer extends HookWidget {
   const AuthScrollContainer({

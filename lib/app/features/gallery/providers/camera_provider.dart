@@ -2,9 +2,9 @@
 
 import 'package:camera/camera.dart';
 import 'package:collection/collection.dart';
-import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
-import 'package:ice/app/services/logger/logger.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'camera_provider.g.dart';
