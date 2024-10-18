@@ -19,49 +19,46 @@ class RecentChatTile extends ConsumerWidget {
 
     return Row(
       children: [
-        //TODO: Animation for visibility
-        if (isEditMode)
-          Padding(
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: isEditMode ? 40.0.s : 0,
+          child: Padding(
             padding: EdgeInsets.only(right: 10.0.s),
             child: Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
           ),
-        //TODO: Animation for scale
+        ),
         Flexible(
-          child: AnimatedContainer(
-            curve: Curves.easeInOut,
-            duration: const Duration(milliseconds: 200),
-            child: Row(
-              children: <Widget>[
-                Avatar(
-                  imageUrl: chat.sender.imageUrl,
-                  size: 40.0.s,
+          child: Row(
+            children: [
+              Avatar(
+                imageUrl: chat.sender.imageUrl,
+                size: 40.0.s,
+              ),
+              SizedBox(width: 12.0.s),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SenderSummary(chat: chat),
+                        ChatTimestamp(chat: chat),
+                      ],
+                    ),
+                    SizedBox(height: 2.0.s),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ChatPreview(chat: chat),
+                        UnreadCountBadge(unreadCount: chat.unreadMessageCount),
+                      ],
+                    ),
+                  ],
                 ),
-                SizedBox(width: 12.0.s),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          SenderSummary(chat: chat),
-                          ChatTimestamp(chat: chat),
-                        ],
-                      ),
-                      SizedBox(height: 2.0.s),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ChatPreview(chat: chat),
-                          UnreadCountBadge(unreadCount: chat.unreadMessageCount),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],
@@ -140,30 +137,19 @@ class ChatPreview extends StatelessWidget {
     );
   }
 
-  String _getMessageContentText(RecentChatMessage message, BuildContext context) {
-    switch (message) {
-      case final TextRecentChatMessage textMessage:
-        return textMessage.text;
-      case final ReplayRecentChatMessage replayMessage:
-        return replayMessage.text;
-      case final DocumentRecentChatMessage documentMessage:
-        return documentMessage.fileName;
-      case final LinkRecentChatMessage linkMessage:
-        return linkMessage.link;
-      case final ProfileShareRecentChatMessage profileShareMessage:
-        return profileShareMessage.displayName;
-      case final MoneyRequestRecentChatMessage _:
-        return context.i18n.chat_recents_money_request_message;
-      case final PhotoRecentChatMessage _:
-        return context.i18n.common_photo;
-      case final VoiceRecentChatMessage _:
-        return context.i18n.common_voice_message;
-      case final VideoRecentChatMessage _:
-        return context.i18n.common_video;
-      case final PollRecentChatMessage _:
-        return context.i18n.common_poll;
-    }
-  }
+  String _getMessageContentText(RecentChatMessage message, BuildContext context) =>
+      switch (message) {
+        final TextRecentChatMessage textMessage => textMessage.text,
+        final ReplayRecentChatMessage replayMessage => replayMessage.text,
+        final DocumentRecentChatMessage documentMessage => documentMessage.fileName,
+        final LinkRecentChatMessage linkMessage => linkMessage.link,
+        final ProfileShareRecentChatMessage profileShareMessage => profileShareMessage.displayName,
+        MoneyRequestRecentChatMessage _ => context.i18n.chat_recents_money_request_message,
+        PhotoRecentChatMessage _ => context.i18n.common_photo,
+        VoiceRecentChatMessage _ => context.i18n.common_voice_message,
+        VideoRecentChatMessage _ => context.i18n.common_video,
+        PollRecentChatMessage _ => context.i18n.common_poll,
+      };
 }
 
 class RecentChatMessageIcon extends StatelessWidget {
@@ -177,38 +163,28 @@ class RecentChatMessageIcon extends StatelessWidget {
     if (messageIconPath != null) {
       return Padding(
         padding: EdgeInsets.only(right: 2.0.s),
-        child: messageIconPath.icon(size: 16.0.s),
+        child: messageIconPath.icon(
+          size: 16.0.s,
+          color: context.theme.appColors.onTertararyBackground,
+        ),
       );
     }
     return const SizedBox.shrink();
   }
 
-  String? _getMessageIcon() {
-    switch (message) {
-      case final TextRecentChatMessage _:
-        return null;
-      case final PhotoRecentChatMessage _:
-        return Assets.svg.iconProfileCamera;
-      case final VoiceRecentChatMessage _:
-        // TODO add voice message icon when design is ready
-        return Assets.svg.iconProfileCamera;
-      case final ReplayRecentChatMessage _:
-        // TODO add replay message icon when design is ready
-        return Assets.svg.iconProfileCamera;
-      case final VideoRecentChatMessage _:
-        return Assets.svg.iconFeedVideos;
-      case final DocumentRecentChatMessage _:
-        return Assets.svg.iconChatFile;
-      case final LinkRecentChatMessage _:
-        return Assets.svg.iconArticleLink;
-      case final ProfileShareRecentChatMessage _:
-        return Assets.svg.iconProfileUsertab;
-      case final PollRecentChatMessage _:
-        return Assets.svg.iconPostPoll;
-      case final MoneyRequestRecentChatMessage _:
-        return Assets.svg.iconProfileTips;
-    }
-  }
+  String? _getMessageIcon() => switch (message) {
+        TextRecentChatMessage _ => null,
+        VideoRecentChatMessage _ => Assets.svg.iconFeedVideos,
+        DocumentRecentChatMessage _ => Assets.svg.iconChatFile,
+        LinkRecentChatMessage _ => Assets.svg.iconArticleLink,
+        ProfileShareRecentChatMessage _ => Assets.svg.iconProfileUsertab,
+        PollRecentChatMessage _ => Assets.svg.iconPostPoll,
+        MoneyRequestRecentChatMessage _ => Assets.svg.iconProfileTips,
+        PhotoRecentChatMessage _ => Assets.svg.iconLoginCamera,
+        VoiceRecentChatMessage _ => Assets.svg.iconLoginCamera, // TODO: Update when design is ready
+        ReplayRecentChatMessage _ =>
+          Assets.svg.iconLoginCamera, // TODO: Update when design is ready
+      };
 }
 
 class UnreadCountBadge extends StatelessWidget {
