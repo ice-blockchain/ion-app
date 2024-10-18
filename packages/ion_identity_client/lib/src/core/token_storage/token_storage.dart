@@ -5,7 +5,6 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
 import 'package:ion_identity_client/src/core/types/user_token.dart';
 
@@ -57,26 +56,24 @@ class TokenStorage {
   }
 
   /// Sets a new token for the specified [username] and updates the cache.
-  /// If [newToken] is `null`, the existing token is removed. The [onError]
-  /// callback is used to handle any errors that occur during the operation.
-  /// Returns a [TaskEither] that either contains an error of type [E] or
-  /// a unit value indicating success.
-  TaskEither<E, Unit> setToken<E>({
+  /// If [newToken] is `null`, the existing token is removed.
+  /// This method also updates the secure storage and notifies listeners
+  /// of the token stream about the change.
+  ///
+  /// Parameters:
+  ///   [username]: The username associated with the token.
+  ///   [newToken]: The new token to be set. If null, the token is removed.
+  ///
+  /// Returns a [Future] that completes when the operation is finished.
+  Future<void> setToken({
     required String username,
     required String? newToken,
-    required E Function(Object?, StackTrace?) onError,
-  }) {
-    return TaskEither<E, Unit>.tryCatch(
-      () async {
-        _userTokensCache[username] = newToken;
-        await _saveTokensToStorage();
+  }) async {
+    _userTokensCache[username] = newToken;
+    await _saveTokensToStorage();
 
-        final streamState = _tokensAsList();
-        _userTokensStreamController.add(streamState);
-        return unit;
-      },
-      onError,
-    );
+    final streamState = _tokensAsList();
+    _userTokensStreamController.add(streamState);
   }
 
   /// Removes the token associated with the specified [username] from the cache
