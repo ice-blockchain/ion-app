@@ -18,10 +18,10 @@ import 'package:ice/app/features/auth/views/pages/turn_on_notifications/turn_on_
 import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_codes_page.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_options/twofa_options_page.dart';
 import 'package:ice/app/features/auth/views/pages/twofa_success/twofa_success_page.dart';
-import 'package:ice/app/features/chat/views/pages/app_test_page/app_test_page.dart';
 import 'package:ice/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
-import 'package:ice/app/features/chat/views/pages/chat_page/chat_page.dart';
+import 'package:ice/app/features/chat/views/pages/chat_main_page/chat_main_page.dart';
 import 'package:ice/app/features/core/model/language.dart';
+import 'package:ice/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ice/app/features/core/views/pages/error_page.dart';
 import 'package:ice/app/features/core/views/pages/splash_page.dart';
 import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
@@ -219,7 +219,7 @@ class FeedRoute extends BaseRouteData {
 }
 
 class ChatRoute extends BaseRouteData {
-  ChatRoute() : super(child: const ChatPage());
+  ChatRoute() : super(child: const ChatMainPage());
 }
 
 class AppTestRoute extends BaseRouteData {
