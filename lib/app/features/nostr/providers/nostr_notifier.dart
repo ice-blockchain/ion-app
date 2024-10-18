@@ -102,6 +102,12 @@ class NostrNotifier extends _$NostrNotifier {
       ref.read(nostrCacheProvider.notifier).cache(userRelays);
       return userRelays;
     }
+    //TODO:
+    // else
+    // request to identity->get-user for the provided `pubkey` when implemented
+    // and return them here if found:
+    // ref.read(nostrCacheProvider.notifier).cache(userRelays);
+    // return ...
 
     throw UserRelaysNotFoundException();
   }
