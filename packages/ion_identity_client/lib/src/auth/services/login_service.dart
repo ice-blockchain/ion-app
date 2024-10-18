@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/src/auth/data_sources/login_data_source.dart';
 import 'package:ion_identity_client/src/auth/result_types/login_user_result.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
@@ -42,11 +43,13 @@ class LoginService {
           ),
         )
         .flatMap(
-          (r) => tokenStorage.setToken(
-            username: username,
-            newToken: r.token,
-            onError: UnknownLoginUserFailure.new,
-          ),
+          (r) => TaskEither.tryCatch(
+            () => tokenStorage.setTokens(
+              username: username,
+              newTokens: r,
+            ),
+            (e, _) => UnknownLoginUserFailure(e.toString()),
+          ).map((_) => r),
         )
         .run();
 

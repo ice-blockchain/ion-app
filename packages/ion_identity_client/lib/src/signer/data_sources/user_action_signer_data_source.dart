@@ -42,9 +42,10 @@ class UserActionSignerDataSource {
         .post(
           initPath,
           data: request.toJson(),
-          headers: {
-            ...RequestHeaders.getAuthorizationHeader(token: token.token),
-          },
+          headers: RequestHeaders.getAuthorizationHeaders(
+            token: token.token,
+            username: username,
+          ),
           decoder: UserActionChallenge.fromJson,
         )
         .mapLeft(
@@ -76,9 +77,10 @@ class UserActionSignerDataSource {
         .post(
           completePath,
           data: requestData.toJson(),
-          headers: {
-            ...RequestHeaders.getAuthorizationHeader(token: token.token),
-          },
+          headers: RequestHeaders.getAuthorizationHeaders(
+            token: token.token,
+            username: username,
+          ),
           decoder: (response) => response['userAction'] as String,
         )
         .mapLeft(
@@ -103,7 +105,10 @@ class UserActionSignerDataSource {
     }
 
     final headers = {
-      ...RequestHeaders.getAuthorizationHeader(token: token.token),
+      ...RequestHeaders.getAuthorizationHeaders(
+        token: token.token,
+        username: username,
+      ),
       RequestHeaders.ionIdentityUserAction: signature,
     };
 

@@ -40,7 +40,10 @@ class CreateRecoveryCredentialsDataSource {
           createCredentialInitPath,
           data: recoveryKeyBody,
           decoder: CredentialChallenge.fromJson,
-          headers: RequestHeaders.getAuthorizationHeader(token: token.token),
+          headers: RequestHeaders.getAuthorizationHeaders(
+            token: token.token,
+            username: username,
+          ),
         )
         .mapLeft(CreateCredentialInitCreateRecoveryCredentialsFailure.new);
   }

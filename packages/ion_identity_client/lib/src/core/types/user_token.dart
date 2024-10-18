@@ -2,58 +2,41 @@
 
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-import 'package:ion_identity_client/src/core/types/types.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-class UserToken {
-  const UserToken({
-    required this.username,
-    required this.token,
-  });
+part 'user_token.freezed.dart';
+part 'user_token.g.dart';
 
-  factory UserToken.fromJson(JsonObject map) {
-    return UserToken(
-      username: map['username'] as String,
-      token: map['token'] as String,
-    );
+@freezed
+class UserToken with _$UserToken {
+  const factory UserToken({
+    required String username,
+    required String token,
+    required String refreshToken,
+  }) = _UserToken;
+
+  const UserToken._();
+
+  factory UserToken.fromJson(Map<String, dynamic> json) => _$UserTokenFromJson(json);
+
+  bool get isExpired {
+    return DateTime.now().isAfter(expiresAt);
   }
 
-  factory UserToken.fromJsonString(String source) =>
-      UserToken.fromJson(json.decode(source) as JsonObject);
+  DateTime get expiresAt {
+    final parts = token.split('.');
+    if (parts.length != 3) {
+      throw const FormatException('Invalid token');
+    }
 
-  final String username;
-  final String token;
+    final payload = json.decode(
+      utf8.decode(
+        base64Url.decode(
+          base64Url.normalize(parts[1]),
+        ),
+      ),
+    ) as Map<String, dynamic>;
 
-  UserToken copyWith({
-    String? username,
-    String? token,
-  }) {
-    return UserToken(
-      username: username ?? this.username,
-      token: token ?? this.token,
-    );
+    return DateTime.fromMillisecondsSinceEpoch((payload['exp'] as int) * 1000);
   }
-
-  JsonObject toJson() {
-    return {
-      'username': username,
-      'token': token,
-    };
-  }
-
-  String toJsonString() => json.encode(toJson());
-
-  @override
-  String toString() => 'UserToken(username: $username, token: $token)';
-
-  @override
-  bool operator ==(covariant UserToken other) {
-    if (identical(this, other)) return true;
-
-    return other.username == username && other.token == token;
-  }
-
-  @override
-  int get hashCode => username.hashCode ^ token.hashCode;
 }

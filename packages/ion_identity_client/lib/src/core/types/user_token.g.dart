@@ -1,20 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'authentication.dart';
+part of 'user_token.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AuthenticationImpl _$$AuthenticationImplFromJson(Map<String, dynamic> json) =>
-    _$AuthenticationImpl(
+_$UserTokenImpl _$$UserTokenImplFromJson(Map<String, dynamic> json) =>
+    _$UserTokenImpl(
+      username: json['username'] as String,
       token: json['token'] as String,
       refreshToken: json['refreshToken'] as String,
     );
 
-Map<String, dynamic> _$$AuthenticationImplToJson(
-        _$AuthenticationImpl instance) =>
+Map<String, dynamic> _$$UserTokenImplToJson(_$UserTokenImpl instance) =>
     <String, dynamic>{
+      'username': instance.username,
       'token': instance.token,
       'refreshToken': instance.refreshToken,
     };

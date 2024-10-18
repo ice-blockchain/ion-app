@@ -46,7 +46,7 @@ class RegisterDataSource {
           registerCompletePath,
           data: SignedChallenge(firstFactorCredential: attestation).toJson(),
           decoder: RegistrationCompleteResponse.fromJson,
-          headers: RequestHeaders.getAuthorizationHeader(token: temporaryAuthenticationToken),
+          headers: RequestHeaders.getTokenHeader(token: temporaryAuthenticationToken),
         )
         .mapLeft(
           (l) => switch (l) {

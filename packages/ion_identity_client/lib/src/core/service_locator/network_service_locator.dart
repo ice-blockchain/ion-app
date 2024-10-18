@@ -3,8 +3,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/src/core/network/auth_interceptor.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network2/network_client2.dart';
+import 'package:ion_identity_client/src/core/service_locator/clients_service_locator.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -29,6 +31,15 @@ mixin _Dio {
       return _dioInstance!;
     }
 
+    _dioInstance = _createDefaultDio(config);
+
+    final interceptors = NetworkServiceLocator().getInterceptors(config: config).toList();
+    _dioInstance!.interceptors.addAll(interceptors);
+
+    return _dioInstance!;
+  }
+
+  Dio _createDefaultDio(IonClientConfig config) {
     final dioOptions = BaseOptions(
       baseUrl: config.origin,
       headers: {
@@ -37,21 +48,45 @@ mixin _Dio {
     );
     final dio = Dio(dioOptions);
 
-    dio.interceptors.addAll(NetworkServiceLocator().getInterceptors());
+    return dio;
+  }
 
-    _dioInstance = dio;
+  Dio _createRefreshTokenDio(
+    IonClientConfig config,
+  ) {
+    final dioOptions = BaseOptions(
+      baseUrl: config.origin,
+      headers: {
+        RequestHeaders.ionIdentityClientId: config.appId,
+      },
+    );
+    final dio = Dio(dioOptions);
+
+    final interceptors = NetworkServiceLocator().getLoggerInterceptor();
+    dio.interceptors.add(interceptors);
 
     return dio;
   }
 }
 
 mixin _Interceptors {
-  Iterable<Interceptor> getInterceptors() {
-    final interceptors = <Interceptor>[
+  Iterable<Interceptor> getInterceptors({
+    required IonClientConfig config,
+  }) {
+    final authInterceptor = getAuthInterceptor(config: config);
+    return <Interceptor>[
       getLoggerInterceptor(),
+      authInterceptor,
     ];
+  }
 
-    return interceptors;
+  AuthInterceptor getAuthInterceptor({
+    required IonClientConfig config,
+  }) {
+    return AuthInterceptor(
+      dio: NetworkServiceLocator()._createRefreshTokenDio(config),
+      delegatedLoginService: ClientsServiceLocator().createDelegatedLoginService(config: config),
+    );
   }
 
   Interceptor getLoggerInterceptor() {

@@ -41,7 +41,7 @@ class RecoverUserDataSource {
         .post(
           recoverUserPath,
           data: recoveryData,
-          headers: RequestHeaders.getAuthorizationHeader(token: temporaryAuthenticationToken),
+          headers: RequestHeaders.getTokenHeader(token: temporaryAuthenticationToken),
           decoder: (json) => json,
         )
         .mapLeft(RecoverUserRequestRecoverUserFailure.new);

@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ion_client_example/pages/login/login_page.dart';
-import 'package:ion_client_example/pages/register/register_page.dart';
 import 'package:ion_client_example/pages/user_details/user_details_page.dart';
+import 'package:ion_client_example/pages/users/components/users_menu.dart';
 import 'package:ion_client_example/pages/users/providers/users_provider.dart';
 import 'package:ion_client_example/providers/current_username_notifier.dart';
 
@@ -17,52 +15,9 @@ class UsersPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Users'),
-        actions: const [
-          _UsersMenu(),
-        ],
+        actions: const [UsersMenu()],
       ),
       body: const _Body(),
-    );
-  }
-}
-
-class _UsersMenu extends HookWidget {
-  const _UsersMenu();
-
-  @override
-  Widget build(BuildContext context) {
-    final menuController = useRef(MenuController());
-
-    return IconButton(
-      onPressed: () {
-        menuController.value.open();
-      },
-      icon: MenuAnchor(
-        controller: menuController.value,
-        menuChildren: [
-          MenuItemButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const RegisterPage(),
-                ),
-              );
-            },
-            child: const Text('Register'),
-          ),
-          MenuItemButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                ),
-              );
-            },
-            child: const Text('Login'),
-          ),
-        ],
-        child: const Icon(Icons.person),
-      ),
     );
   }
 }

@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/src/auth/result_types/create_recovery_credentials_result.dart';
-import 'package:ion_identity_client/src/auth/result_types/login_user_result.dart';
-import 'package:ion_identity_client/src/auth/result_types/recover_user_result.dart';
-import 'package:ion_identity_client/src/auth/result_types/register_user_result.dart';
+import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/services/create_recovery_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
 import 'package:ion_identity_client/src/auth/services/login_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/register_service.dart';
@@ -27,12 +25,14 @@ class IonAuth {
     required this.tokenStorage,
     required this.createRecoveryCredentialsService,
     required this.recoverUserService,
+    required this.delegatedLoginService,
   });
 
   final RegisterService registerService;
   final LoginService loginService;
   final CreateRecoveryCredentialsService createRecoveryCredentialsService;
   final RecoverUserService recoverUserService;
+  final DelegatedLoginService delegatedLoginService;
 
   final String username;
   final TokenStorage tokenStorage;
@@ -57,4 +57,7 @@ class IonAuth {
     // TODO: implement logout request
     return tokenStorage.removeToken(username: username);
   }
+
+  Future<UserToken> delegatedLogin() async =>
+      delegatedLoginService.delegatedLogin(username: username);
 }

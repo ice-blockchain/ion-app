@@ -32,7 +32,10 @@ class GetWalletAssetsDataSource {
     try {
       return await _networkClient.get(
         sprintf(walletAssetsPath, [walletId]),
-        headers: RequestHeaders.getAuthorizationHeader(token: token.token),
+        headers: RequestHeaders.getAuthorizationHeaders(
+          token: token.token,
+          username: username,
+        ),
         decoder: WalletAssets.fromJson,
       );
     } on NetworkException catch (e) {
