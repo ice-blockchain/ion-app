@@ -39,7 +39,9 @@ class NostrNotifier extends _$NostrNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
     final relay = await _getRelay(actionSource);
-    yield* requestEvents(requestMessage, relay);
+    await for (final event in requestEvents(requestMessage, relay)) {
+      yield event;
+    }
   }
 
   Future<EventMessage?> requestOne(

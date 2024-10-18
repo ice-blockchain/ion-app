@@ -46,7 +46,7 @@ Future<UserDelegation?> currentUserDelegation(CurrentUserDelegationRef ref) asyn
     return null;
   }
   try {
-    return ref.watch(userDelegationProvider(mainWallet.signingKey.publicKey).future);
+    return await ref.watch(userDelegationProvider(mainWallet.signingKey.publicKey).future);
   } on UserRelaysNotFoundException catch (_) {
     return null;
   }

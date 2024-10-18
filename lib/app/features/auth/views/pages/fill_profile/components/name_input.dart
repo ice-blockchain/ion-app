@@ -17,7 +17,7 @@ class NameInput extends StatelessWidget {
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
-        icons: [Assets.svg.iconFieldName.icon()],
+        icons: [Assets.svg.iconFieldName.icon(color: context.theme.appColors.secondaryText)],
       ),
       labelText: context.i18n.fill_profile_input_name,
       controller: controller,
