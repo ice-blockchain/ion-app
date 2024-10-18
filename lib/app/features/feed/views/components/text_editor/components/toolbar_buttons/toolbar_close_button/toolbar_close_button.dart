@@ -5,8 +5,8 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ToolbarTypographyButton extends StatelessWidget {
-  const ToolbarTypographyButton({
+class ToolbarCloseButton extends StatelessWidget {
+  const ToolbarCloseButton({
     required this.textEditorController,
     required this.onPressed,
     super.key,
@@ -17,7 +17,7 @@ class ToolbarTypographyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
-      icon: Assets.svg.iconArticleTextformat,
+      icon: Assets.svg.iconSheetClose,
       onPressed: onPressed,
     );
   }

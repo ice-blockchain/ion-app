@@ -372,8 +372,5 @@
   "poll_add_answer_button_title": "Add answer",
   "poll_choice_placeholder": "Choice {number}",
   "poll_title_placeholder": "Write a question for the poll",
-  "chat_title": "Chats",
-  "chat_empty_description": "You have no conversations yet",
-  "chat_new_message_button": "New message",
   "chat_recents_money_request_message": "Money requested"
 }
