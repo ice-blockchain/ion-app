@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/auth/providers/onboarding_complete_provider.dart';
-import 'package:ice/app/features/core/providers/init_provider.dart';
-import 'package:ice/app/features/core/providers/splash_provider.dart';
-import 'package:ice/app/features/core/views/pages/error_page.dart';
-import 'package:ice/app/router/app_router_listenable.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/services/logger/config.dart';
-import 'package:ice/app/services/logger/logger.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/auth/providers/onboarding_complete_provider.dart';
+import 'package:ion/app/features/core/providers/init_provider.dart';
+import 'package:ion/app/features/core/providers/splash_provider.dart';
+import 'package:ion/app/features/core/views/pages/error_page.dart';
+import 'package:ion/app/router/app_router_listenable.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/services/logger/config.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'go_router_provider.g.dart';

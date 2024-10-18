@@ -3,8 +3,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/features/feed/data/models/post/post_data.dart';
-import 'package:ice/app/features/feed/views/components/post/post.dart';
+import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 

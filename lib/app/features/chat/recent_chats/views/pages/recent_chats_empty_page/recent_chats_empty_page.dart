@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/inputs/search_input/search_input.dart';
-import 'package:ice/app/constants/ui.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/constants/ui.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatsEmptyPage extends StatelessWidget {
   const RecentChatsEmptyPage({

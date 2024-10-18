@@ -2,8 +2,8 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 extension IconExtension on AssetGenImage {
   Widget icon({Color? color, double? size, BoxFit? fit}) {

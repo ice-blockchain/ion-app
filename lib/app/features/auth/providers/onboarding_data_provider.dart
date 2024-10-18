@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_data_provider.freezed.dart';

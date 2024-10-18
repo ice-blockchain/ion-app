@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/avatar/avatar.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallets/providers/wallets_data_provider.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
 
 class WalletSwitcher extends ConsumerWidget {
   const WalletSwitcher({

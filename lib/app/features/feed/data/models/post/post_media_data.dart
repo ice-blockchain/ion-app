@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/core/model/media_type.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 
 class PostMediaData {
   PostMediaData({

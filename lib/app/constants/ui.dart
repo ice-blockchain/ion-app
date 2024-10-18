@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/extensions/num.dart';
+import 'package:ion/app/extensions/num.dart';
 
 class UiConstants {
   UiConstants._();

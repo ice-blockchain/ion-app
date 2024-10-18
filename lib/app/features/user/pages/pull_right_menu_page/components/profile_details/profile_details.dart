@@ -2,15 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
-import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_details/profile_details_cell.dart';
-import 'package:ice/app/features/user/providers/user_followers_provider.dart';
-import 'package:ice/app/features/user/providers/user_following_provider.dart';
-import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ice/app/utils/username.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
+import 'package:ion/app/features/user/pages/pull_right_menu_page/components/profile_details/profile_details_cell.dart';
+import 'package:ion/app/features/user/providers/user_followers_provider.dart';
+import 'package:ion/app/features/user/providers/user_following_provider.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/utils/username.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class ProfileDetails extends ConsumerWidget {
   const ProfileDetails({

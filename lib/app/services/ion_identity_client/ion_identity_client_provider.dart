@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-import 'package:ice/app/features/core/providers/env_provider.dart';
+import 'package:ion/app/features/core/providers/env_provider.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

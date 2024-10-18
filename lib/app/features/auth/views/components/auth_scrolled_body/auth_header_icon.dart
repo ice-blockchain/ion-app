@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class AuthHeaderIcon extends StatelessWidget {
   AuthHeaderIcon({

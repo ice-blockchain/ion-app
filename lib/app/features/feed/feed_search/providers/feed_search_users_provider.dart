@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_search_users_provider.g.dart';

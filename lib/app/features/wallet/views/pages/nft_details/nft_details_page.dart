@@ -2,22 +2,22 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/card/rounded_card.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/components/read_more_text/read_more_text.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/model/nft_data.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
-import 'package:ice/app/features/wallet/views/pages/nft_details/components/nft_name/nft_name.dart';
-import 'package:ice/app/features/wallet/views/pages/nft_details/components/nft_picture/nft_picture.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/card/rounded_card.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/read_more_text/read_more_text.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/model/nft_data.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/nft_details/components/nft_name/nft_name.dart';
+import 'package:ion/app/features/wallet/views/pages/nft_details/components/nft_picture/nft_picture.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class NftDetailsPage extends ConsumerWidget {
   const NftDetailsPage({required this.nft, super.key});

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/feed_search/model/feed_search_filter_people.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/feed_search/model/feed_search_filter_people.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class FeedSearchFilterPeopleSection extends StatelessWidget {
   const FeedSearchFilterPeopleSection({

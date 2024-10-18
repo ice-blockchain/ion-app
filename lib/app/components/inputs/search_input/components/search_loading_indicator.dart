@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/widgets.dart';
-import 'package:ice/app/components/progress_bar/ice_loading_indicator.dart';
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class SearchLoadingIndicator extends StatelessWidget {
   const SearchLoadingIndicator({super.key});

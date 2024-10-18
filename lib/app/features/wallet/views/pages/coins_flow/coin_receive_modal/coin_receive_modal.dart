@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/model/network_type.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/components/coin_address_tile/coin_address_tile.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallet/model/network_type.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_receive_modal/components/coin_address_tile/coin_address_tile.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class CoinReceiveModal extends StatelessWidget {
   const CoinReceiveModal({required this.payload, super.key});

@@ -2,7 +2,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/services/keyboard/keyboard.dart';
+import 'package:ion/app/services/keyboard/keyboard.dart';
 
 /// Returns a function that hides keyboard and ignores subsequent calls
 /// during hiding.

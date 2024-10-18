@@ -2,17 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/wallet/model/nft_layout_type.dart';
-import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
-import 'package:ice/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/empty_state/empty_state.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nft_grid_item.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nft_list_item.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/wallet/model/nft_layout_type.dart';
+import 'package:ion/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
+import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/empty_state/empty_state.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nft_grid_item.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nft_list_item.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
+import 'package:ion/app/router/app_routes.dart';
 
 class NftsTab extends HookConsumerWidget {
   const NftsTab({

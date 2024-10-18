@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/components/story_list_separator.dart';
-import 'package:ice/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_separator.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
 
 class StoryList extends StatelessWidget {
   const StoryList({

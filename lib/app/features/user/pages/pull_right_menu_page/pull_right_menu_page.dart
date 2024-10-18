@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/components/screen_offset/screen_top_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/user/pages/pull_right_menu_page/components/background_picture/background_picture.dart';
-import 'package:ice/app/features/user/pages/pull_right_menu_page/components/footer/footer.dart';
-import 'package:ice/app/features/user/pages/pull_right_menu_page/components/header/header.dart';
-import 'package:ice/app/features/user/pages/pull_right_menu_page/components/links_list/links_list.dart';
-import 'package:ice/app/features/user/pages/pull_right_menu_page/components/profile_details/profile_details.dart';
+import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/user/pages/pull_right_menu_page/components/background_picture/background_picture.dart';
+import 'package:ion/app/features/user/pages/pull_right_menu_page/components/footer/footer.dart';
+import 'package:ion/app/features/user/pages/pull_right_menu_page/components/header/header.dart';
+import 'package:ion/app/features/user/pages/pull_right_menu_page/components/links_list/links_list.dart';
+import 'package:ion/app/features/user/pages/pull_right_menu_page/components/profile_details/profile_details.dart';
 
 class PullRightMenuPage extends StatelessWidget {
   const PullRightMenuPage({super.key});

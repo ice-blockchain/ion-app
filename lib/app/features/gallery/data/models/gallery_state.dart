@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ice/app/services/media_service/media_service.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 
 part 'gallery_state.freezed.dart';
 

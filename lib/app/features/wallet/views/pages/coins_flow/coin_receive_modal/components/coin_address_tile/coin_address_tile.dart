@@ -3,15 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/tooltip/copied_tooltip.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/model/coin_data.dart';
-import 'package:ice/app/router/components/navigation_button/navigation_button.dart';
-import 'package:ice/app/utils/address.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/tooltip/copied_tooltip.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallet/model/coin_data.dart';
+import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
+import 'package:ion/app/utils/address.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class CoinAddressTile extends HookConsumerWidget {
   const CoinAddressTile({

@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/components/timeline/timeline.dart';
-import 'package:ice/app/features/wallet/components/timeline/timeline_separator.dart';
-import 'package:ice/generated/assets.gen.dart';
 import 'package:intl/intl.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/components/timeline/timeline.dart';
+import 'package:ion/app/features/wallet/components/timeline/timeline_separator.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class TimelineItem extends StatelessWidget {
   const TimelineItem({

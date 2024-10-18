@@ -2,8 +2,8 @@
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class CameraPreviewWidget extends StatelessWidget {
   const CameraPreviewWidget({

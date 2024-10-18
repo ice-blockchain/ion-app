@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/wallet/model/coin_data.dart';
-import 'package:ice/app/features/wallet/model/network_type.dart';
-import 'package:ice/app/features/wallet/model/receive_coins_data.dart';
-import 'package:ice/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
+import 'package:ion/app/features/wallet/model/coin_data.dart';
+import 'package:ion/app/features/wallet/model/network_type.dart';
+import 'package:ion/app/features/wallet/model/receive_coins_data.dart';
+import 'package:ion/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'receive_coins_form_provider.g.dart';

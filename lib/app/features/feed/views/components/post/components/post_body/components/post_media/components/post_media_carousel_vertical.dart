@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/data/models/post/post_media_data.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/post/post_media_data.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 
 class PostMediaCarouselVertical extends StatelessWidget {
   const PostMediaCarouselVertical({

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/iterable.dart';
+import 'package:ion/app/extensions/iterable.dart';
 
 class SeparatedRow extends Row {
   SeparatedRow({

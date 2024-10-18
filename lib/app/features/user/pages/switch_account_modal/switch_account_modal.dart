@@ -3,18 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/user/pages/switch_account_modal/components/accounts_list/accounts_list.dart';
-import 'package:ice/app/features/user/pages/switch_account_modal/components/action_button/action_button.dart';
-import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/app/utils/username.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/user/pages/switch_account_modal/components/accounts_list/accounts_list.dart';
+import 'package:ion/app/features/user/pages/switch_account_modal/components/action_button/action_button.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/utils/username.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class SwitchAccountModal extends ConsumerWidget {
   const SwitchAccountModal({super.key});

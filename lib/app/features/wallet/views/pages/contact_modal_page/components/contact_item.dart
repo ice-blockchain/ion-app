@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/model/contact_data.dart';
-import 'package:ice/app/features/wallet/views/pages/contact_modal_page/components/contact_item_avatar.dart';
-import 'package:ice/app/features/wallet/views/pages/contact_modal_page/components/contact_item_name.dart';
-import 'package:ice/app/utils/username.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallet/model/contact_data.dart';
+import 'package:ion/app/features/wallet/views/pages/contact_modal_page/components/contact_item_avatar.dart';
+import 'package:ion/app/features/wallet/views/pages/contact_modal_page/components/contact_item_name.dart';
+import 'package:ion/app/utils/username.dart';
 
 class ContactItem extends StatelessWidget {
   const ContactItem({

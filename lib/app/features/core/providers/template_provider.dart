@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:ice/app/templates/template.dart';
+import 'package:ion/app/templates/template.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'template_provider.g.dart';

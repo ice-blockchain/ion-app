@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/l10n/i10n.dart';
+import 'package:ion/l10n/i10n.dart';
 
 String prefixUsername({
   required String? username,

@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:ice/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class ToolbarListNumbersButton extends StatelessWidget {
   const ToolbarListNumbersButton({required this.textEditorController, super.key});

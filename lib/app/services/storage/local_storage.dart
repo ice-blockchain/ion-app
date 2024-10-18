@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:ice/app/extensions/enum.dart';
+import 'package:ion/app/extensions/enum.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

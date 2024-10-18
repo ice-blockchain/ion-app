@@ -2,16 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ice/app/components/separated/separator.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ice/app/features/core/permissions/views/components/permission_aware_widget.dart';
-import 'package:ice/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ice/app/features/feed/views/pages/feed_main_modal/components/feed_modal_item.dart';
-import 'package:ice/app/features/wallet/model/feed_type.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/components/separated/separator.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/feed/views/pages/feed_main_modal/components/feed_modal_item.dart';
+import 'package:ion/app/features/wallet/model/feed_type.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class FeedMainModalPage extends StatelessWidget {
   const FeedMainModalPage({super.key});

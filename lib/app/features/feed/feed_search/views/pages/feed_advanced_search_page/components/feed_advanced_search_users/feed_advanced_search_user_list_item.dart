@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/skeleton/skeleton.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/components/follow_user_button/follow_user_button.dart';
-import 'package:ice/app/features/feed/views/components/post/post_skeleton.dart';
-import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ice/app/utils/username.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/skeleton/skeleton.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/follow_user_button/follow_user_button.dart';
+import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/utils/username.dart';
 
 class FeedAdvancedSearchUserListItem extends ConsumerWidget {
   const FeedAdvancedSearchUserListItem({

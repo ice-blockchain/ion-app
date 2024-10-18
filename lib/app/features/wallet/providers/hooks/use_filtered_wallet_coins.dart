@@ -2,9 +2,9 @@
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/wallet/model/coin_data.dart';
-import 'package:ice/app/features/wallet/providers/filtered_assets_provider.dart';
-import 'package:ice/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
+import 'package:ion/app/features/wallet/model/coin_data.dart';
+import 'package:ion/app/features/wallet/providers/filtered_assets_provider.dart';
+import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
 
 typedef FilteredCoinsResult = ({List<CoinData> coins, bool isLoading});
 

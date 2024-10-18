@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/avatar/avatar.dart';
-import 'package:ice/app/components/skeleton/skeleton.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/user/model/user_metadata.dart';
-import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ice/app/utils/username.dart';
+import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/components/skeleton/skeleton.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/user/model/user_metadata.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/utils/username.dart';
 
 class FeedSearchHistoryUserListItem extends ConsumerWidget {
   const FeedSearchHistoryUserListItem({required this.userId, super.key});

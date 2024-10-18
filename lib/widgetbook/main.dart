@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/core/providers/init_provider.dart';
-import 'package:ice/app/features/core/providers/template_provider.dart';
-import 'package:ice/app/features/core/providers/theme_mode_provider.dart';
-import 'package:ice/app/features/core/views/components/content_scaler.dart';
-import 'package:ice/app/templates/template.dart';
-import 'package:ice/app/theme/theme.dart';
-import 'package:ice/generated/app_localizations.dart';
-import 'package:ice/widgetbook/main.directories.g.dart';
+import 'package:ion/app/features/core/providers/init_provider.dart';
+import 'package:ion/app/features/core/providers/template_provider.dart';
+import 'package:ion/app/features/core/providers/theme_mode_provider.dart';
+import 'package:ion/app/features/core/views/components/content_scaler.dart';
+import 'package:ion/app/templates/template.dart';
+import 'package:ion/app/theme/theme.dart';
+import 'package:ion/generated/app_localizations.dart';
+import 'package:ion/widgetbook/main.directories.g.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 

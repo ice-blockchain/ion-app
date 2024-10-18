@@ -2,20 +2,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/card/info_card.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
-import 'package:ice/app/features/protect_account/components/secure_account_option.dart';
-import 'package:ice/app/features/protect_account/email/data/model/email_steps.dart';
-import 'package:ice/app/features/protect_account/phone/models/phone_steps.dart';
-import 'package:ice/app/features/protect_account/secure_account/providers/security_account_provider.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/card/info_card.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
+import 'package:ion/app/features/protect_account/components/secure_account_option.dart';
+import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
+import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class SecureAccountOptionsPage extends ConsumerWidget {
   const SecureAccountOptionsPage({super.key});

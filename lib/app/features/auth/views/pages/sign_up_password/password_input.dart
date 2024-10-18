@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/inputs/text_input/components/text_input_icons.dart';
-import 'package:ice/app/components/inputs/text_input/text_input.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/utils/validators.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
+import 'package:ion/app/components/inputs/text_input/text_input.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/validators.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class PasswordInput extends StatelessWidget {
   const PasswordInput({required this.controller, super.key});

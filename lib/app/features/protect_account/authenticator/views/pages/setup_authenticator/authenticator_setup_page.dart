@@ -3,20 +3,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/progress_bar/sliver_app_bar_with_progress.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/separated/separator.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ice/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
-import 'package:ice/app/features/protect_account/authenticator/views/pages/setup_authenticator/step_pages.dart';
-import 'package:ice/app/features/protect_account/secure_account/providers/security_account_provider.dart';
-import 'package:ice/app/hooks/use_hide_keyboard_and_call_once.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/sliver_app_bar_with_progress.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/separated/separator.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
+import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
+import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
+import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/step_pages.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
+import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class AuthenticatorSetupPage extends HookConsumerWidget {
   const AuthenticatorSetupPage(this.step, {super.key});

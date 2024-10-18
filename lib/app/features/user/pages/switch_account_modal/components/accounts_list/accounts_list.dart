@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/separated/separated_column.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/providers/auth_provider.dart';
-import 'package:ice/app/features/user/pages/switch_account_modal/components/accounts_list/account_tile.dart';
+import 'package:ion/app/components/separated/separated_column.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/user/pages/switch_account_modal/components/accounts_list/account_tile.dart';
 
 class AccountsList extends ConsumerWidget {
   const AccountsList({

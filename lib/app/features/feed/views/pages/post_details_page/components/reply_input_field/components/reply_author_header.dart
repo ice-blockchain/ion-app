@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/data/models/post/post_data.dart';
-import 'package:ice/app/features/feed/views/components/post_replies/replying_to.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/views/components/post_replies/replying_to.dart';
 
 class ReplyAuthorHeader extends StatelessWidget {
   const ReplyAuthorHeader({

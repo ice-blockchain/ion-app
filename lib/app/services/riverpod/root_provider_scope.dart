@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/services/logger/config.dart';
-import 'package:ice/app/services/riverpod/riverpod_logger.dart';
+import 'package:ion/app/services/logger/config.dart';
+import 'package:ion/app/services/riverpod/riverpod_logger.dart';
 
 class RiverpodRootProviderScope extends StatelessWidget {
   const RiverpodRootProviderScope({

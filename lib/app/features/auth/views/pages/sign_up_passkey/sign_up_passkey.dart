@@ -2,16 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/asset_gen_image.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
-import 'package:ice/app/features/auth/views/components/sign_up_list_item/sign_up_list_item.dart';
-import 'package:ice/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey_form.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
+import 'package:ion/app/features/auth/views/components/sign_up_list_item/sign_up_list_item.dart';
+import 'package:ion/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey_form.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class SignUpPasskeyPage extends StatelessWidget {
   const SignUpPasskeyPage({super.key});

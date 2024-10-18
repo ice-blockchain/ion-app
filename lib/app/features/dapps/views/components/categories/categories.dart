@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/section_header/section_header.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/features/dapps/views/components/categories_collection/categories_collection.dart';
+import 'package:ion/app/components/section_header/section_header.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/features/dapps/views/components/categories_collection/categories_collection.dart';
 
 class Categories extends StatelessWidget {
   const Categories({super.key});

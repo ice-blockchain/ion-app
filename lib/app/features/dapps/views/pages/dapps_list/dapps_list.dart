@@ -3,17 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/empty_list/empty_list.dart';
-import 'package:ice/app/components/inputs/search_input/search_input.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/dapps/model/dapp_data.dart';
-import 'package:ice/app/features/dapps/providers/dapps_provider.dart';
-import 'package:ice/app/features/dapps/views/categories/apps/apps.dart';
-import 'package:ice/app/features/dapps/views/components/grid_item/grid_item.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/empty_list/empty_list.dart';
+import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/dapps/model/dapp_data.dart';
+import 'package:ion/app/features/dapps/providers/dapps_provider.dart';
+import 'package:ion/app/features/dapps/views/categories/apps/apps.dart';
+import 'package:ion/app/features/dapps/views/components/grid_item/grid_item.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class DAppsList extends HookConsumerWidget {
   const DAppsList({required this.payload, super.key});

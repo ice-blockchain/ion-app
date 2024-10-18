@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/features/user/providers/current_user_identity_provider.dart';
+import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_user_indexers_provider.g.dart';

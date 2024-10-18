@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/components/separated/separated_column.dart';
-import 'package:ice/app/components/skeleton/skeleton.dart';
-import 'package:ice/app/features/feed/views/components/list_separator/list_separator.dart';
-import 'package:ice/app/features/feed/views/components/post/post_skeleton.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/separated/separated_column.dart';
+import 'package:ion/app/components/skeleton/skeleton.dart';
+import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
+import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 
 class PostListSkeleton extends StatelessWidget {
   const PostListSkeleton({

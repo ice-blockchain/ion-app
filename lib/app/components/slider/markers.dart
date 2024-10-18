@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class Markers extends HookWidget {
   const Markers({

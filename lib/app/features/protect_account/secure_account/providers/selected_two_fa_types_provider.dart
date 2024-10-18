@@ -3,7 +3,7 @@
 import 'dart:math';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ice/app/features/auth/data/models/twofa_type.dart';
+import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_two_fa_types_provider.freezed.dart';

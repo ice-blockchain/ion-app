@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/avatar/avatar.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/chat/providers/mock.dart';
-import 'package:ice/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.dart';
-import 'package:ice/app/utils/date.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/mock.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.dart';
+import 'package:ion/app/utils/date.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends ConsumerWidget {
   const RecentChatTile(this.chat, {super.key});

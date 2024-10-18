@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/services/logger/config.dart';
-import 'package:ice/app/services/nostr/nostr_signature_verifier.dart';
+import 'package:ion/app/services/logger/config.dart';
+import 'package:ion/app/services/nostr/nostr_signature_verifier.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 class Nostr {

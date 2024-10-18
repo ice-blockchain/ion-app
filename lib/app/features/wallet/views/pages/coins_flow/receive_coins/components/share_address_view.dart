@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/button/button.dart';
-import 'package:ice/app/components/screen_offset/screen_bottom_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/model/network_type.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/components/info_card.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/receive_coins/components/receive_info_card.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ice/app/router/components/navigation_app_bar/navigation_close_button.dart';
-import 'package:ice/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/model/network_type.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/components/info_card.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/components/receive_info_card.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class ShareAddressView extends StatelessWidget {
   const ShareAddressView({super.key});

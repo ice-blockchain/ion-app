@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/auth/data/models/twofa_type.dart';
-import 'package:ice/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/data/models/twofa_type.dart';
+import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
 
 class TwoFaCodeInputList extends HookWidget {
   const TwoFaCodeInputList({

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/wallet/model/coin_data.dart';
-import 'package:ice/app/features/wallet/model/coin_transaction_data.dart';
-import 'package:ice/app/features/wallet/model/transaction_type.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_item_leading_icon.dart';
-import 'package:ice/app/utils/date.dart';
-import 'package:ice/app/utils/num.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/model/coin_data.dart';
+import 'package:ion/app/features/wallet/model/coin_transaction_data.dart';
+import 'package:ion/app/features/wallet/model/transaction_type.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_item_leading_icon.dart';
+import 'package:ion/app/utils/date.dart';
+import 'package:ion/app/utils/num.dart';
 
 class TransactionListItem extends StatelessWidget {
   const TransactionListItem({

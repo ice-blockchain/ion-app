@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/data/models/post/post_data.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_body/post_body.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_header/post_header.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_menu/post_menu.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_header/post_header.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_menu/post_menu.dart';
 
 class Post extends StatelessWidget {
   const Post({

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/services/logger/logger.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future<bool> openUrl(

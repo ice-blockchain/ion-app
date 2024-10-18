@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/inputs/search_input/search_input.dart';
-import 'package:ice/app/features/wallet/providers/filtered_assets_provider.dart';
-import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
-import 'package:ice/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/tab_type.dart';
+import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/features/wallet/providers/filtered_assets_provider.dart';
+import 'package:ion/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
+import 'package:ion/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
 class WalletSearchBar extends HookConsumerWidget {
   const WalletSearchBar({

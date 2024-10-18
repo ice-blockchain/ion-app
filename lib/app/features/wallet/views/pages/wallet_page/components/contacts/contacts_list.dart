@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/wallet/providers/contacts_data_provider.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list_header.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list_item.dart';
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/app/utils/username.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/wallet/providers/contacts_data_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list_header.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list_item.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/utils/username.dart';
 
 class ContactsList extends ConsumerWidget {
   const ContactsList({super.key});

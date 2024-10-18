@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/shapes/shape.dart';
+import 'package:ion/app/components/shapes/shape.dart';
 
 class HexagonShapeBuilder extends ShapeBuilder {
   HexagonShapeBuilder();

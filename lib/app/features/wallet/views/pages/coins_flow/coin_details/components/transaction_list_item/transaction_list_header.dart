@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/features/wallet/model/network_type.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/constants.dart';
-import 'package:ice/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header_item.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/wallet/model/network_type.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/constants.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header_item.dart';
 
 class TransactionListHeader extends StatelessWidget {
   const TransactionListHeader({

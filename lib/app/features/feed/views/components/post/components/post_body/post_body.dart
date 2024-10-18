@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/data/models/post/post_data.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
-import 'package:ice/app/features/feed/views/components/post/components/post_body/hooks/use_post_media.dart';
-import 'package:ice/app/services/text_parser/matchers/url_matcher.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_body/hooks/use_post_media.dart';
+import 'package:ion/app/services/text_parser/matchers/url_matcher.dart';
 
 class PostBody extends ConsumerWidget {
   const PostBody({

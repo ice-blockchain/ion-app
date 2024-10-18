@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 part 'article_category.freezed.dart';
 

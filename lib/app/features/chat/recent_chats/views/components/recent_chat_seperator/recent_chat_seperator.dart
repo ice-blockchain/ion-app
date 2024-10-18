@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/separated/separator.dart';
-import 'package:ice/app/extensions/extensions.dart';
+import 'package:ion/app/components/separated/separator.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class RecentChatSeparator extends StatelessWidget {
   const RecentChatSeparator({this.isAtTop = false, super.key});

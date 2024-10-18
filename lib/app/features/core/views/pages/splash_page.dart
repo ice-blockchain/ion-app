@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/features/core/providers/splash_provider.dart';
-import 'package:ice/app/features/core/providers/video_player_provider.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/features/core/providers/splash_provider.dart';
+import 'package:ion/app/features/core/providers/video_player_provider.dart';
+import 'package:ion/generated/assets.gen.dart';
 import 'package:video_player/video_player.dart';
 
 class SplashPage extends ConsumerWidget {

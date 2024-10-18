@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/templates/template.dart';
-import 'package:ice/app/theme/app_bar_theme.dart';
-import 'package:ice/app/theme/app_colors.dart';
-import 'package:ice/app/theme/app_text_themes.dart';
-import 'package:ice/app/theme/bottom_sheet_theme.dart';
-import 'package:ice/app/theme/elevated_button_theme.dart';
-import 'package:ice/app/theme/icon_button_theme.dart';
-import 'package:ice/app/theme/icon_theme.dart';
-import 'package:ice/app/theme/menu_button_theme.dart';
-import 'package:ice/app/theme/menu_theme.dart';
-import 'package:ice/app/theme/outline_button_theme.dart';
-import 'package:ice/app/theme/tab_bar_theme.dart';
-import 'package:ice/app/theme/text_button_theme.dart';
+import 'package:ion/app/templates/template.dart';
+import 'package:ion/app/theme/app_bar_theme.dart';
+import 'package:ion/app/theme/app_colors.dart';
+import 'package:ion/app/theme/app_text_themes.dart';
+import 'package:ion/app/theme/bottom_sheet_theme.dart';
+import 'package:ion/app/theme/elevated_button_theme.dart';
+import 'package:ion/app/theme/icon_button_theme.dart';
+import 'package:ion/app/theme/icon_theme.dart';
+import 'package:ion/app/theme/menu_button_theme.dart';
+import 'package:ion/app/theme/menu_theme.dart';
+import 'package:ion/app/theme/outline_button_theme.dart';
+import 'package:ion/app/theme/tab_bar_theme.dart';
+import 'package:ion/app/theme/text_button_theme.dart';
 
 ThemeData buildLightTheme(TemplateTheme templateTheme) {
   final colors = AppColorsExtension.fromTemplate(templateTheme.colors.light);

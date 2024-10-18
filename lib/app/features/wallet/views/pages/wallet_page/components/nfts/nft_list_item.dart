@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/components/avatar/avatar.dart';
-import 'package:ice/app/components/list_item/list_item.dart';
-import 'package:ice/app/extensions/build_context.dart';
-import 'package:ice/app/extensions/num.dart';
-import 'package:ice/app/extensions/theme_data.dart';
-import 'package:ice/app/features/wallet/model/nft_data.dart';
-import 'package:ice/app/features/wallet/model/nft_layout_type.dart';
-import 'package:ice/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_price.dart';
+import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallet/model/nft_data.dart';
+import 'package:ion/app/features/wallet/model/nft_layout_type.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_price.dart';
 
 class NftListItem extends StatelessWidget {
   const NftListItem({

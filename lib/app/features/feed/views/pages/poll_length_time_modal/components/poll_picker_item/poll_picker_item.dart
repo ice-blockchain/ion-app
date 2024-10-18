@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/views/pages/poll_length_time_modal/components/poll_picker_column/poll_picker_column.dart';
 import 'package:intl/intl.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/views/pages/poll_length_time_modal/components/poll_picker_column/poll_picker_column.dart';
 
 const maxDaysCount = 8;
 const maxHoursCount = 24;

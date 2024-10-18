@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ice/app/router/app_routes.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 enum TabItem {
   feed,

@@ -4,8 +4,8 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:ice/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ice/app/features/core/permissions/strategies/permission_strategy.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/strategies/permission_strategy.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 
 /// A base class responsible for handling permissions using the `permission_handler` package.

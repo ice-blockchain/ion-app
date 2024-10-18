@@ -3,10 +3,10 @@
 import 'dart:async';
 
 import 'package:camera/camera.dart';
-import 'package:ice/app/features/feed/create_story/data/models/story_camera_state.dart';
-import 'package:ice/app/features/gallery/providers/camera_provider.dart';
-import 'package:ice/app/features/gallery/providers/gallery_provider.dart';
-import 'package:ice/app/services/media_service/media_service.dart';
+import 'package:ion/app/features/feed/create_story/data/models/story_camera_state.dart';
+import 'package:ion/app/features/gallery/providers/camera_provider.dart';
+import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_camera_provider.g.dart';
