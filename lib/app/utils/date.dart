@@ -68,3 +68,45 @@ String formatDuration(Duration duration) {
 
   return '$minutes:$seconds';
 }
+
+/// Formats a timestamp into a human-readable string.
+///
+/// This method takes a [DateTime] object and formats it into a string that
+/// represents the date in a human-readable format. The format of the string
+/// depends on how far in the past the date is:
+///
+/// - If the timestamp is from today, it returns the time in "HH:mm" format.
+/// - If the timestamp is from the current week, it returns the day of the week (e.g., "Mon").
+/// - If the timestamp is from the current year but not the current week, it returns the date in "dd/MM" format.
+/// - If the timestamp is from a previous year, it returns the date in "dd/MM/yyyy" format.
+///
+/// Example:
+/// ```dart
+/// formatMessageTimestamp(DateTime.now()); // Returns "14:30" if today
+/// ```
+///
+/// [dateTime]: The DateTime object to be formatted.
+/// Returns a formatted string based on the logic described above.
+String formatMessageTimestamp(DateTime dateTime) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+  // Check if it's today
+  if (messageDate == today) {
+    return DateFormat.Hm().format(dateTime); // Example: 14:30
+  }
+
+  // Check if it's within the past week
+  if (messageDate.isAfter(today.subtract(const Duration(days: 7)))) {
+    return DateFormat.E().format(dateTime); // Example: Mon
+  }
+
+  // Check if it's within the current year
+  if (messageDate.year == today.year) {
+    return DateFormat('dd/MM').format(dateTime); // Example: 17/10
+  }
+
+  // Otherwise, show full date with year
+  return DateFormat('dd/MM/yyyy').format(dateTime); // Example: 17/10/2023
+}
