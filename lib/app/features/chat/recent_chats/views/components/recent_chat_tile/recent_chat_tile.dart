@@ -1,46 +1,67 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ice/app/components/avatar/avatar.dart';
 import 'package:ice/app/extensions/extensions.dart';
 import 'package:ice/app/features/chat/providers/mock.dart';
+import 'package:ice/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.dart';
 import 'package:ice/app/utils/date.dart';
 import 'package:ice/generated/assets.gen.dart';
 
-class RecentChatTile extends StatelessWidget {
+class RecentChatTile extends ConsumerWidget {
   const RecentChatTile(this.chat, {super.key});
   final RecentChatDataModel chat;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isEditMode = ref.watch(conversationsEditModeProvider);
+
     return Row(
       children: [
-        Avatar(
-          imageUrl: chat.sender.imageUrl,
-          size: 40.0.s,
-        ),
-        SizedBox(width: 12.0.s),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  SenderSummary(chat: chat),
-                  ChatTimestamp(chat: chat),
-                ],
-              ),
-              SizedBox(height: 2.0.s),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ChatPreview(chat: chat),
-                  UnreadCountBadge(unreadCount: chat.unreadMessageCount),
-                ],
-              ),
-            ],
+        //TODO: Animation for visibility
+        if (isEditMode)
+          Padding(
+            padding: EdgeInsets.only(right: 10.0.s),
+            child: Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
+          ),
+        //TODO: Animation for scale
+        Flexible(
+          child: AnimatedContainer(
+            curve: Curves.easeInOut,
+            duration: const Duration(milliseconds: 200),
+            child: Row(
+              children: <Widget>[
+                Avatar(
+                  imageUrl: chat.sender.imageUrl,
+                  size: 40.0.s,
+                ),
+                SizedBox(width: 12.0.s),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          SenderSummary(chat: chat),
+                          ChatTimestamp(chat: chat),
+                        ],
+                      ),
+                      SizedBox(height: 2.0.s),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ChatPreview(chat: chat),
+                          UnreadCountBadge(unreadCount: chat.unreadMessageCount),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
