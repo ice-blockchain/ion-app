@@ -6,7 +6,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:ice/app/features/core/model/language.dart';
+import 'package:ion/app/features/core/model/language.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_locale_provider.g.dart';
