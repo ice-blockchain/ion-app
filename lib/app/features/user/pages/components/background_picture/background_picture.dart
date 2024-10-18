@@ -8,14 +8,17 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 
 class BackgroundPicture extends ConsumerWidget {
   const BackgroundPicture({
+    required this.pubkey,
     super.key,
   });
+
+  final String pubkey;
 
   double get aspectRatio => 375 / 276;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final banner = ref.watch(currentUserMetadataProvider).valueOrNull?.banner;
+    final banner = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.banner;
 
     final imageWidth = MediaQuery.of(context).size.width;
     final imageHeight = imageWidth / aspectRatio;
@@ -33,7 +36,7 @@ class BackgroundPicture extends ConsumerWidget {
         imageUrl: banner,
         width: imageWidth,
         height: imageHeight,
-        fit: BoxFit.fitWidth,
+        fit: BoxFit.cover,
         alignment: Alignment.topCenter,
         errorWidget: (context, url, error) => const SizedBox.shrink(),
       ),

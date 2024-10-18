@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/user/pages/pull_right_menu_page/components/header/header_action.dart';
+import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -22,7 +22,7 @@ class Header extends StatelessWidget {
           children: [
             HeaderAction(
               onPressed: () {
-                FeedRoute().go(context);
+                Navigator.of(context).pop(true);
               },
               assetName: Assets.svg.iconChatBack,
             ),
@@ -34,7 +34,7 @@ class Header extends StatelessWidget {
             SizedBox(width: 12.0.s),
             HeaderAction(
               onPressed: () {
-                SwitchAccountRoute().go(context);
+                SwitchAccountRoute().push<void>(context);
               },
               assetName: Assets.svg.iconSwitchProfile,
             ),

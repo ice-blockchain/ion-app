@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/user/providers/user_followers_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_following_provider.g.dart';
@@ -32,6 +33,15 @@ bool isCurrentUserFollowingSelector(IsCurrentUserFollowingSelectorRef ref, Strin
   final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
   return ref.watch(
     userFollowingProvider(currentUserId)
+        .select((state) => state.valueOrNull?.contains(userId) ?? false),
+  );
+}
+
+@riverpod
+bool isCurrentUserFollowerSelector(IsCurrentUserFollowerSelectorRef ref, String userId) {
+  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+  return ref.watch(
+    userFollowersProvider(currentUserId)
         .select((state) => state.valueOrNull?.contains(userId) ?? false),
   );
 }

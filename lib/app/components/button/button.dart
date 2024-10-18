@@ -56,6 +56,8 @@ class Button extends StatelessWidget {
     BorderRadius? borderRadius,
     Color? backgroundColor,
     double size,
+    bool disabled,
+    Size? fixedSize,
   }) = _ButtonWithIcon;
 
   factory Button.compact({

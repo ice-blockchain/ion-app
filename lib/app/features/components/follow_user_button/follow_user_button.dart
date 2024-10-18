@@ -6,14 +6,17 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/user/providers/user_following_provider.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class FollowUserButton extends ConsumerWidget {
   const FollowUserButton({
     required this.userId,
+    this.showIcon = false,
     super.key,
   });
 
   final String userId;
+  final bool showIcon;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,12 +26,20 @@ class FollowUserButton extends ConsumerWidget {
       onPressed: () {
         ref.read(userFollowingProvider(currentUserId).notifier).toggleFollow(userId);
       },
-      type: following ? ButtonType.primary : ButtonType.outlined,
-      tintColor: following ? null : context.theme.appColors.primaryAccent,
+      leadingIcon: showIcon == true
+          ? (following ? Assets.svg.iconSearchFollowers : Assets.svg.iconSearchFollow).icon(
+              color: !following
+                  ? context.theme.appColors.onPrimaryAccent
+                  : context.theme.appColors.primaryAccent,
+              size: 16.0.s,
+            )
+          : null,
+      type: !following ? ButtonType.primary : ButtonType.outlined,
+      tintColor: !following ? null : context.theme.appColors.primaryAccent,
       label: Text(
         following ? context.i18n.button_following : context.i18n.button_follow,
         style: context.theme.appTextThemes.caption.copyWith(
-          color: following
+          color: !following
               ? context.theme.appColors.secondaryBackground
               : context.theme.appColors.primaryAccent,
         ),

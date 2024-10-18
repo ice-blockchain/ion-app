@@ -107,6 +107,7 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 part 'app_routes.g.dart';
 part 'auth_routes.dart';
 part 'feed_routes.dart';
+part 'profile_routes.dart';
 part 'protect_account_routes.dart';
 part 'wallet_routes.dart';
 
@@ -309,32 +310,6 @@ class DAppDetailsRoute extends BaseRouteData {
           type: IceRouteType.bottomSheet,
         );
   final int dappId;
-}
-
-@TypedGoRoute<PullRightMenuRoute>(
-  path: '/pull-right-menu',
-  routes: [
-    TypedShellRoute<ModalShellRouteData>(
-      routes: [
-        TypedGoRoute<SwitchAccountRoute>(path: 'switch-account'),
-      ],
-    ),
-  ],
-)
-class PullRightMenuRoute extends BaseRouteData {
-  PullRightMenuRoute()
-      : super(
-          child: const PullRightMenuPage(),
-          type: IceRouteType.slideFromLeft,
-        );
-}
-
-class SwitchAccountRoute extends BaseRouteData {
-  SwitchAccountRoute()
-      : super(
-          child: const SwitchAccountModal(),
-          type: IceRouteType.bottomSheet,
-        );
 }
 
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')

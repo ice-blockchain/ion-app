@@ -1,0 +1,47 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:flutter/material.dart';
+import 'package:ice/app/extensions/extensions.dart';
+import 'package:ice/app/services/browser/browser.dart';
+
+class UserInfoTile extends StatelessWidget {
+  const UserInfoTile({
+    required this.title,
+    required this.assetName,
+    this.isLink = false,
+    super.key,
+  });
+
+  final String title;
+  final String assetName;
+  final bool isLink;
+
+  @override
+  Widget build(BuildContext context) {
+    final color =
+        isLink ? context.theme.appColors.darkBlue : context.theme.appColors.quaternaryText;
+    return GestureDetector(
+      onTap: isLink ? () => openUrlInAppBrowser(title) : null,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          assetName.icon(
+            size: 16.0.s,
+            color: color,
+          ),
+          SizedBox(width: 4.0.s),
+          Expanded(
+            child: Text(
+              title,
+              style: context.theme.appTextThemes.body2.copyWith(
+                color: color,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

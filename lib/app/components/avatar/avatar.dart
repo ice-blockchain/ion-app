@@ -17,11 +17,7 @@ class Avatar extends StatelessWidget {
     this.hexagon = false,
     BoxFit? fit,
   })  : borderRadius = borderRadius ?? BorderRadius.circular(size * 0.3),
-        fit = fit ?? BoxFit.fitWidth,
-        assert(
-          imageUrl == null || imageWidget == null,
-          'Either imageUrl or imageWidget must be null',
-        );
+        fit = fit ?? BoxFit.fitWidth;
 
   final double size;
   final BorderRadiusGeometry borderRadius;
@@ -33,12 +29,8 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = imageWidget != null
-        ? SizedBox.square(
-            dimension: size,
-            child: FittedBox(fit: fit, child: imageWidget),
-          )
-        : CachedNetworkImage(
+    final image = imageUrl != null
+        ? CachedNetworkImage(
             imageUrl: imageUrl!,
             width: size,
             height: size,
@@ -46,9 +38,17 @@ class Avatar extends StatelessWidget {
             errorWidget: (context, url, error) {
               return SizedBox.square(
                 dimension: size,
-                child: ColoredBox(color: context.theme.appColors.primaryAccent),
+                child: ColoredBox(color: context.theme.appColors.onSecondaryBackground),
               );
             },
+          )
+        : SizedBox.square(
+            dimension: size,
+            child: FittedBox(
+              fit: fit,
+              child:
+                  imageWidget ?? ColoredBox(color: context.theme.appColors.onSecondaryBackground),
+            ),
           );
 
     return Stack(
