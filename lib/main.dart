@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/translations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.dart';
 import 'package:ion/app/features/core/providers/template_provider.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ion/app/features/core/views/components/app_lifecycle_observer.dart';
@@ -31,6 +32,7 @@ class IonApp extends ConsumerWidget {
     final appThemeMode = ref.watch(appThemeModeProvider);
     final template = ref.watch(appTemplateProvider);
     final goRouter = ref.watch(goRouterProvider);
+    final appLocale = ref.watch(appLocaleProvider);
 
     return ContentScaler(
       child: AppLifecycleObserver(
@@ -41,6 +43,7 @@ class IonApp extends ConsumerWidget {
               FlutterQuillLocalizations.delegate,
             ],
             supportedLocales: I18n.supportedLocales,
+            locale: appLocale,
             theme: template.whenOrNull(data: (data) => buildLightTheme(data.theme)),
             darkTheme: template.whenOrNull(data: (data) => buildDarkTheme(data.theme)),
             themeMode: appThemeMode,

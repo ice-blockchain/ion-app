@@ -27,8 +27,6 @@ class OnboardingData extends _$OnboardingData {
       return null;
     }
 
-    //TODO: add peristance per user + read on init + clear on success + check in onboarding_complete
-
     return const OnboardingState();
   }
 

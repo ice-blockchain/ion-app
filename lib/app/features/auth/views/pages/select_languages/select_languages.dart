@@ -12,6 +12,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/pages/select_languages/language_list_item.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.dart';
 import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/hooks/use_languages.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
@@ -25,8 +26,10 @@ class SelectLanguages extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final (selectedLanguages, toggleLanguageSelection) =
-        useSelectedState(ref.watch(onboardingDataProvider)?.languages ?? <String>[]);
+    final (selectedLanguages, toggleLanguageSelection) = useSelectedState(
+      ref.watch(onboardingDataProvider)?.languages ??
+          [ref.watch(localePreferredLanguageProvider).isoCode],
+    );
     final searchQuery = useState('');
     final languages = useLanguages(query: searchQuery.value);
 
