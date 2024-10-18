@@ -5,6 +5,8 @@ import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
+import 'package:ion/app/features/user/model/interest_set.dart';
+import 'package:ion/app/features/user/model/interests.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
@@ -42,6 +44,20 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
           displayName: displayName,
         );
 
+        final languagesInterestSet = InterestSet(
+          pubkey: nostrKeyStore.publicKey,
+          type: InterestSetType.languages,
+          hashtags: languages,
+        );
+
+        final languagesInterestSetEvent = languagesInterestSet.toEventMessage(nostrKeyStore);
+
+        final interests = Interests(
+          pubkey: nostrKeyStore.publicKey,
+          hashtags: [],
+          eventIds: [languagesInterestSetEvent.id],
+        );
+
         final userDelegation = await ref
             .read(userDelegationManagerProvider.notifier)
             .buildCurrentUserDelegationWith(pubkey: nostrKeyStore.publicKey);
@@ -53,7 +69,9 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         ref.read(nostrCacheProvider.notifier).cache(userRelays);
 
         await ref.read(nostrNotifierProvider.notifier).send([
-          //TODO:add langs and folowees here
+          //TODO:add folowees here
+          languagesInterestSetEvent,
+          interests.toEventMessage(nostrKeyStore),
           userRelays.toEventMessage(nostrKeyStore),
           userMetadata.toEventMessage(nostrKeyStore),
           userDelegationEvent,

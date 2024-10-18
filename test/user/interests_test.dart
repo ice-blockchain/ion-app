@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ice/app/features/user/model/interests.dart';
+import 'package:ion/app/features/user/model/interests.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 void main() {
