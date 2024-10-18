@@ -56,8 +56,7 @@ mixin _Interceptors {
 
   Interceptor getLoggerInterceptor() {
     return PrettyDioLogger(
-      requestBody: true,
-      requestHeader: true,
+      responseBody: false,
     );
   }
 }

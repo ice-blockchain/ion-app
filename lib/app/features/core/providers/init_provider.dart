@@ -2,6 +2,7 @@
 
 import 'package:ice/app/features/auth/providers/auth_provider.dart';
 import 'package:ice/app/features/auth/providers/onboarding_complete_provider.dart';
+import 'package:ice/app/features/auth/providers/refresh_token_provider.dart';
 import 'package:ice/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ice/app/features/core/providers/env_provider.dart';
 import 'package:ice/app/features/core/providers/template_provider.dart';
@@ -28,5 +29,6 @@ Future<void> initApp(InitAppRef ref) async {
     ref.read(permissionsProvider.notifier).checkAllPermissions(),
   ]);
 
+  await ref.read(refreshTokensProvider.future);
   await ref.read(onboardingCompleteProvider.future);
 }

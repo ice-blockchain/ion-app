@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ice/app/features/auth/providers/user_tokens_stream_provider.dart';
 import 'package:ice/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:ice/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -67,9 +68,8 @@ String? currentIdentityKeyNameSelector(CurrentIdentityKeyNameSelectorRef ref) {
 Stream<Iterable<String>> authenticatedIdentityKeyNamesStream(
   AuthenticatedIdentityKeyNamesStreamRef ref,
 ) async* {
-  final ionClient = await ref.watch(ionApiClientProvider.future);
-
-  yield* ionClient.authorizedUsers;
+  final tokens = await ref.watch(userTokensStreamProvider.future);
+  yield tokens.map((e) => e.username);
 }
 
 @Riverpod(keepAlive: true)
