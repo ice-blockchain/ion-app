@@ -8,8 +8,8 @@ import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_tex
 import 'package:ion/app/features/feed/views/components/text_editor/utils/wipe_styles/wipe_styles.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ToolbarBoldButton extends HookWidget {
-  const ToolbarBoldButton({required this.textEditorController, super.key});
+class ToolbarH3Button extends HookWidget {
+  const ToolbarH3Button({required this.textEditorController, super.key});
   final QuillController textEditorController;
 
   @override
@@ -17,13 +17,13 @@ class ToolbarBoldButton extends HookWidget {
     final fontType = useTextEditorFontStyle(textEditorController);
 
     return ActionsToolbarButton(
-      icon: Assets.svg.iconPostBoldtextOff,
-      iconSelected: Assets.svg.iconPostBoldtextOn,
+      icon: Assets.svg.iconArticleH3Off,
+      iconSelected: Assets.svg.iconArticleH3On,
       onPressed: () {
         wipeAllStyles(textEditorController);
-        textEditorController.formatSelection(Attribute.bold);
+        textEditorController.formatSelection(Attribute.h3);
       },
-      selected: fontType == FontType.bold,
+      selected: fontType == FontType.h3,
     );
   }
 }
