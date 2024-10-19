@@ -39,10 +39,20 @@ class FeedPage extends HookConsumerWidget {
     log('isStoryPublished: $isStoryPublished');
 
     final notificationHeight = 24.0.s;
+    final animatedHeight = useAnimatedExpandableHeight(
+      isExpanded: isStoryPublished,
+      collapsedHeight: FeedControls.height,
+      expandedHeight: notificationHeight,
+    );
 
     final appBarSliver = CollapsingAppBar(
-      height: (isStoryPublished ? notificationHeight : 0.0) + FeedControls.height,
-      child: const FeedControls(),
+      height: animatedHeight,
+      child: Column(
+        children: [
+          if (isStoryPublished) StoryPublishedNotification(height: notificationHeight),
+          const FeedControls(),
+        ],
+      ),
     );
 
     final slivers = [
