@@ -49,11 +49,16 @@ class StoryPreviewPage extends ConsumerWidget {
               children: [
                 SizedBox(height: 16.0.s),
                 ShareStoryButton(
-                  onPressed: () {
-                    showSimpleBottomSheet<void>(
+                  onPressed: () async {
+                    final result = await showSimpleBottomSheet<bool>(
                       context: context,
                       child: const VisibilitySettingsModal(),
                     );
+
+                    if ((result ?? false) && context.mounted) {
+                      ref.read(storyCameraControllerProvider.notifier).publishStory();
+                      FeedRoute().go(context);
+                    }
                   },
                 ),
                 ScreenBottomOffset(margin: 36.0.s),

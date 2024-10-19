@@ -54,6 +54,13 @@ class StoryCameraController extends _$StoryCameraController {
           newFlashState ? FlashMode.torch : FlashMode.off,
         );
   }
+
+  void publishStory() => state = state.copyWith(isStoryPublished: true);
+
+  // TODO: Refactor this method when backend is ready for video upload.
+  // This should be replaced with actual video upload logic and
+  // the flag should be reset only after successful upload confirmation.
+  void resetStoryPublished() => state = state.copyWith(isStoryPublished: false);
 }
 
 @riverpod
