@@ -17,18 +17,13 @@ class VisibilitySettingsListItem extends ConsumerWidget {
 
   final VisibilitySettingsOptions option;
 
-  void _selectOption(BuildContext context, WidgetRef ref) {
-    ref.read(selectedVisibilityOptionsProvider.notifier).selectedOption = option;
-    context.pop();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedOption = ref.watch(selectedVisibilityOptionsProvider);
     final isSelected = selectedOption == option;
 
     return ListItem(
-      onTap: () => _selectOption(context, ref),
+      onTap: () => context.pop(true),
       title: Text(option.getTitle(context)),
       backgroundColor: context.theme.appColors.secondaryBackground,
       leading: Container(
@@ -45,9 +40,12 @@ class VisibilitySettingsListItem extends ConsumerWidget {
         ),
         child: option.getIcon(context),
       ),
-      trailing: isSelected
-          ? Assets.svg.iconBlockCheckboxOn.icon()
-          : Assets.svg.iconBlockCheckboxOff.icon(),
+      trailing: GestureDetector(
+        onTap: () => ref.read(selectedVisibilityOptionsProvider.notifier).selectedOption = option,
+        child: isSelected
+            ? Assets.svg.iconBlockCheckboxOn.icon()
+            : Assets.svg.iconBlockCheckboxOff.icon(),
+      ),
     );
   }
 }
