@@ -8,5 +8,6 @@ void wipeAllStyles(QuillController controller) {
     ..formatSelection(Attribute.clone(Attribute.italic, null))
     ..formatSelection(Attribute.clone(Attribute.h1, null))
     ..formatSelection(Attribute.clone(Attribute.h2, null))
-    ..formatSelection(Attribute.clone(Attribute.h3, null));
+    ..formatSelection(Attribute.clone(Attribute.h3, null))
+    ..formatSelection(Attribute.clone(Attribute.underline, null));
 }

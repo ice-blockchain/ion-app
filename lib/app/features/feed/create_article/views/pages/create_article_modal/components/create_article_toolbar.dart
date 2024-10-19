@@ -20,6 +20,7 @@ import 'package:ion/app/features/feed/views/components/text_editor/components/to
 import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_regular_button/toolbar_regular_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_separator_button/toolbar_separator_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_typography_button/toolbar_typography_button.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_underlign_button/toolbar_underlign_button.dart';
 
 class CreateArticleToolbar extends HookWidget {
   const CreateArticleToolbar({
@@ -80,6 +81,7 @@ class CreateArticleToolbar extends HookWidget {
         ToolbarRegularButton(textEditorController: textEditorController),
         ToolbarBoldButton(textEditorController: textEditorController),
         ToolbarItalicButton(textEditorController: textEditorController),
+        ToolbarUnderlineButton(textEditorController: textEditorController),
       ],
     );
   }

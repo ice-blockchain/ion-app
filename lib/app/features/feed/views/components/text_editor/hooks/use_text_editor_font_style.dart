@@ -3,7 +3,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 
-enum FontType { regular, bold, italic, h1, h2, h3 }
+enum FontType { regular, bold, italic, h1, h2, h3, underline }
 
 FontType useTextEditorFontStyle(QuillController textEditorController) {
   final fontType = useState<FontType>(FontType.regular);
@@ -26,6 +26,8 @@ FontType useTextEditorFontStyle(QuillController textEditorController) {
         fontType.value = FontType.bold;
       } else if (style.attributes.containsKey(Attribute.italic.key)) {
         fontType.value = FontType.italic;
+      } else if (style.attributes.containsKey(Attribute.underline.key)) {
+        fontType.value = FontType.underline;
       } else {
         fontType.value = FontType.regular;
       }
