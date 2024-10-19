@@ -134,7 +134,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     final interests = Interests(
       pubkey: keyStore.publicKey,
       hashtags: [],
-      eventIds: [interestSetEvent.id],
+      interestSetRefs: [interestSetEvent.id],
     );
 
     final interestsEvent = interests.toEventMessage(keyStore);

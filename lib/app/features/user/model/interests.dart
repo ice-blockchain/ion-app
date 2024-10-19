@@ -11,7 +11,7 @@ class Interests with _$Interests, CacheableEvent {
   const factory Interests({
     required String pubkey,
     required List<String> hashtags,
-    required List<String> eventIds,
+    required List<String> interestSetRefs,
   }) = _Interests;
 
   /// https://github.com/nostr-protocol/nips/blob/master/51.md#standard-lists
@@ -22,7 +22,8 @@ class Interests with _$Interests, CacheableEvent {
 
     return Interests(
       pubkey: eventMessage.pubkey,
-      eventIds: eventMessage.tags.where((tag) => tag[0] == 'a').map((tag) => tag[1]).toList(),
+      interestSetRefs:
+          eventMessage.tags.where((tag) => tag[0] == 'a').map((tag) => tag[1]).toList(),
       hashtags: eventMessage.tags.where((tag) => tag[0] == 't').map((tag) => tag[1]).toList(),
     );
   }
@@ -34,7 +35,7 @@ class Interests with _$Interests, CacheableEvent {
       signer: keyStore,
       kind: kind,
       tags: [
-        ...eventIds.map((id) => ['a', id]),
+        ...interestSetRefs.map((id) => ['a', id]),
         ...hashtags.map((hashtag) => ['t', hashtag]),
       ],
       content: '',

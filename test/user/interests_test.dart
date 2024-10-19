@@ -26,9 +26,9 @@ void main() {
 
       expect(interest, isA<Interests>());
       expect(interest.hashtags.length, 1);
-      expect(interest.eventIds.length, 2);
+      expect(interest.interestSetRefs.length, 2);
       expect(interest.hashtags[0], 'tag');
-      expect(interest.eventIds[0], '111');
+      expect(interest.interestSetRefs[0], '111');
     });
   });
 }
