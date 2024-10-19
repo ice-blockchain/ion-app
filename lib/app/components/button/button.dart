@@ -228,21 +228,28 @@ class ButtonIconFrame extends StatelessWidget {
     super.key,
     this.color,
     this.border,
+    this.containerSize,
+    this.borderRadius,
   });
 
   final Color? color;
   final Widget icon;
   final Border? border;
 
+  final double? containerSize;
+  final BorderRadiusGeometry? borderRadius;
+
   @override
   Widget build(BuildContext context) {
+    final size = containerSize ?? 32.0.s;
+
     return Container(
-      width: 32.0.s,
-      height: 32.0.s,
+      width: size,
+      height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(9.0.s),
+        borderRadius: borderRadius ?? BorderRadius.circular(9.0.s),
         border: border,
       ),
       child: icon,

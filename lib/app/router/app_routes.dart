@@ -68,6 +68,9 @@ import 'package:ion/app/features/protect_account/phone/views/components/countrie
 import 'package:ion/app/features/protect_account/phone/views/pages/setup_phone/phone_setup_page.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_modal.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_options_page.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/follow_list_modal.dart';
+import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
+import 'package:ion/app/features/user/pages/profile_page/types/follow_type.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/switch_account_modal.dart';
 import 'package:ion/app/features/wallet/model/nft_data.dart';

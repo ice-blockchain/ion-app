@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/user/pages/profile_page/components/profile_details/profile_followers_cell.dart';
-import 'package:ice/app/features/user/pages/profile_page/types/follow_type.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_followers_cell.dart';
+import 'package:ion/app/features/user/pages/profile_page/types/follow_type.dart';
 
 class ProfileFollowers extends ConsumerWidget {
   const ProfileFollowers({
@@ -27,7 +27,7 @@ class ProfileFollowers extends ConsumerWidget {
           Expanded(
             child: ProfileFollowersCell(
               pubkey: pubkey,
-              followType: FollowType.followers,
+              followType: FollowType.following,
             ),
           ),
           VerticalDivider(
@@ -40,7 +40,7 @@ class ProfileFollowers extends ConsumerWidget {
           Expanded(
             child: ProfileFollowersCell(
               pubkey: pubkey,
-              followType: FollowType.following,
+              followType: FollowType.followers,
             ),
           ),
         ],

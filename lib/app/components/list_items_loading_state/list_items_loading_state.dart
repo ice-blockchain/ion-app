@@ -9,10 +9,13 @@ import 'package:ion/app/extensions/num.dart';
 
 class ListItemsLoadingState extends StatelessWidget {
   const ListItemsLoadingState({
+    required this.itemsCount,
+    required this.itemHeight,
     super.key,
   });
 
-  static const int itemCount = 7;
+  final int itemsCount;
+  final double itemHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +25,10 @@ class ListItemsLoadingState extends StatelessWidget {
         child: Skeleton(
           child: SeparatedColumn(
             separator: SizedBox(
-              height: 12.0.s,
+              height: itemHeight,
             ),
             children: List.generate(
-              itemCount,
+              itemsCount,
               (_) => ScreenSideOffset.small(child: ListItem()),
             ).toList(),
           ),

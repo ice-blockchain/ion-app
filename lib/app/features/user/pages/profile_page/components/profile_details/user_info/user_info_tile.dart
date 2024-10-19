@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/services/browser/browser.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/services/browser/browser.dart';
 
 class UserInfoTile extends StatelessWidget {
   const UserInfoTile({

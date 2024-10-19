@@ -1,0 +1,58 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/card/info_card.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/user/providers/user_following_provider.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/generated/assets.gen.dart';
+
+class UnfollowUserModal extends ConsumerWidget {
+  const UnfollowUserModal({
+    required this.pubkey,
+    super.key,
+  });
+
+  final String pubkey;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+    final name = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.name ?? '';
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 30.0.s, right: 30.0.s, top: 30.0.s),
+          child: InfoCard(
+            iconAsset: Assets.svg.actionProfileUnfollow,
+            title: context.i18n.profile_popup_unfollow(name),
+            description: context.i18n.profile_popup_unfollow_desc,
+          ),
+        ),
+        SizedBox(height: 24.0.s),
+        ScreenSideOffset.small(
+          child: Button(
+            leadingIcon: Assets.svg.iconCategoriesUnflow.icon(
+              color: context.theme.appColors.onPrimaryAccent,
+            ),
+            onPressed: () {
+              rootNavigatorKey.currentState?.pop();
+              ref.read(userFollowingProvider(currentUserId).notifier).toggleFollow(pubkey);
+            },
+            label: Text(context.i18n.button_unfollow),
+            mainAxisSize: MainAxisSize.max,
+          ),
+        ),
+        ScreenBottomOffset(),
+      ],
+    );
+  }
+}

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/components/manage_coin_item/manage_coin_item.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.dart';
@@ -59,7 +59,11 @@ class ManageCoinsPage extends HookConsumerWidget {
                   ),
                 ),
                 if (manageCoinsData.isEmpty && !isLoading) const EmptyState(),
-                if (manageCoinsData.isEmpty && isLoading) const ListItemsLoadingState(),
+                if (manageCoinsData.isEmpty && isLoading)
+                  ListItemsLoadingState(
+                    itemsCount: 7,
+                    itemHeight: 12.0.s,
+                  ),
                 if (manageCoinsData.isNotEmpty)
                   SliverPadding(
                     padding: EdgeInsets.only(

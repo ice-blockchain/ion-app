@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
-import 'package:ion/app/features/wallet/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/features/wallet/providers/contacts_data_provider.dart';
 import 'package:ion/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
 import 'package:ion/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
@@ -56,7 +56,12 @@ class WalletPage extends HookConsumerWidget {
 
     List<Widget> getActiveTabContent() {
       if (isLoading) {
-        return [const ListItemsLoadingState()];
+        return [
+          ListItemsLoadingState(
+            itemsCount: 7,
+            itemHeight: 12.0.s,
+          ),
+        ];
       }
 
       if (activeTab.value == WalletTabType.coins) {

@@ -2,17 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/components/avatar/avatar.dart';
-import 'package:ice/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/user/pages/components/user_name_tile/user_name_tile.dart';
-import 'package:ice/app/features/user/pages/profile_page/components/decorations.dart';
-import 'package:ice/app/features/user/pages/profile_page/components/profile_details/followed_by/followed_by.dart';
-import 'package:ice/app/features/user/pages/profile_page/components/profile_details/profile_about.dart';
-import 'package:ice/app/features/user/pages/profile_page/components/profile_details/profile_actions.dart';
-import 'package:ice/app/features/user/pages/profile_page/components/profile_details/profile_followers.dart';
-import 'package:ice/app/features/user/pages/profile_page/components/profile_details/user_info/user_info.dart';
-import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/user/pages/components/user_name_tile/user_name_tile.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/decorations.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followed_by/followed_by.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_about.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_followers.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/user_info/user_info.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 
 class ProfileDetails extends ConsumerWidget {
   const ProfileDetails({
@@ -45,7 +45,9 @@ class ProfileDetails extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: pictureSize * 0.6 + 11.0.s),
+                SizedBox(
+                  height: userMetadataValue.picture != null ? (pictureSize * 0.6) : 0 + 11.0.s,
+                ),
                 UserNameTile(pubkey: pubkey),
                 SizedBox(height: 8.0.s),
                 ProfileActions(
@@ -67,19 +69,21 @@ class ProfileDetails extends ConsumerWidget {
         ),
         Positioned(
           top: -pictureSize * 0.4,
-          child: Container(
-            padding: EdgeInsets.all(pictureBorderWidth),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(25.0.s),
-            ),
-            child: Avatar(
-              size: pictureSize - pictureBorderWidth * 2,
-              fit: BoxFit.cover,
-              imageUrl: userMetadataValue.picture,
-              borderRadius: BorderRadius.circular(20.0.s),
-            ),
-          ),
+          child: userMetadataValue.picture != null
+              ? Container(
+                  padding: EdgeInsets.all(pictureBorderWidth),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25.0.s),
+                  ),
+                  child: Avatar(
+                    size: pictureSize - pictureBorderWidth * 2,
+                    fit: BoxFit.cover,
+                    imageUrl: userMetadataValue.picture,
+                    borderRadius: BorderRadius.circular(20.0.s),
+                  ),
+                )
+              : const SizedBox.shrink(),
         ),
       ],
     );

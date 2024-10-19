@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/components/follow_user_button/follow_user_button.dart';
-import 'package:ice/app/features/user/pages/profile_page/components/profile_details/profile_action.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/follow_user_button/follow_user_button.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_action.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/account_notifications_modal/account_notifications_modal.dart';
+import 'package:ion/app/features/user/pages/profile_page/types/user_notifications_type.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/generated/assets.gen.dart';
 
-class ProfileActions extends ConsumerWidget {
+class ProfileActions extends HookConsumerWidget {
   const ProfileActions({
     required this.pubkey,
     super.key,
@@ -21,6 +25,9 @@ class ProfileActions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userNotificationsType = useState(UserNotificationsType.none);
+    final notificationsEnabled = userNotificationsType.value != UserNotificationsType.none;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -40,8 +47,21 @@ class ProfileActions extends ConsumerWidget {
         ),
         SizedBox(width: 8.0.s),
         ProfileAction(
-          onPressed: () {},
-          assetName: Assets.svg.iconProfileNotificationOff,
+          onPressed: () async {
+            final newUserNotificationsType = await showSimpleBottomSheet<UserNotificationsType>(
+              context: context,
+              child: AccountNotificationsModal(
+                selectedUserNotificationsType: userNotificationsType.value,
+              ),
+            );
+            if (newUserNotificationsType != null) {
+              userNotificationsType.value = newUserNotificationsType;
+            }
+          },
+          isAccent: notificationsEnabled,
+          assetName: notificationsEnabled
+              ? Assets.svg.iconProfileNotificationOn
+              : Assets.svg.iconProfileNotificationOff,
         ),
       ],
     );

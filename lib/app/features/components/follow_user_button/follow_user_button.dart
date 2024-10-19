@@ -5,7 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
 import 'package:ion/app/features/user/providers/user_following_provider.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class FollowUserButton extends ConsumerWidget {
@@ -24,7 +26,16 @@ class FollowUserButton extends ConsumerWidget {
     final following = ref.watch(isCurrentUserFollowingSelectorProvider(userId));
     return Button(
       onPressed: () {
-        ref.read(userFollowingProvider(currentUserId).notifier).toggleFollow(userId);
+        if (following) {
+          showSimpleBottomSheet<void>(
+            context: context,
+            child: UnfollowUserModal(
+              pubkey: userId,
+            ),
+          );
+        } else {
+          ref.read(userFollowingProvider(currentUserId).notifier).toggleFollow(userId);
+        }
       },
       leadingIcon: showIcon == true
           ? (following ? Assets.svg.iconSearchFollowers : Assets.svg.iconSearchFollow).icon(

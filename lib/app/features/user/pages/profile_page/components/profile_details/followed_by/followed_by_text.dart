@@ -3,10 +3,10 @@
 import 'package:flutter/gestures.dart'; // Import this for TapGestureRecognizer
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/user/providers/user_followers_provider.dart';
-import 'package:ice/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ice/app/router/app_routes.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/user/providers/user_followers_provider.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
 
 class FollowedByText extends ConsumerStatefulWidget {
   const FollowedByText({
