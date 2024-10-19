@@ -30,6 +30,7 @@
   "button_dont_allow": "Don't Allow",
   "button_share_story": "Share story",
   "button_add_answer": "Add answer",
+  "button_link": "Link",
   "common_show_more": "Show more",
   "common_show_less": "Show less",
   "common_identity_key_name": "Identity key name",
@@ -372,5 +373,7 @@
   "poll_add_answer_button_title": "Add answer",
   "poll_choice_placeholder": "Choice {number}",
   "poll_title_placeholder": "Write a question for the poll",
-  "chat_recents_money_request_message": "Money requested"
+  "chat_recents_money_request_message": "Money requested",
+  "toolbar_link_title": "Add a link",
+  "toolbar_link_placeholder": "http://"
 }

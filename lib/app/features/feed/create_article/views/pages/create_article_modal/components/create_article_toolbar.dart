@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/views/components/text_editor/components/to
 import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_hashtag_button/toolbar_hashtag_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_image_button/toolbar_image_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_italic_button/toolbar_italic_button.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_link_button/toolbar_link_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_list_dots_button/toolbar_list_dots_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_list_numbers_button/toolbar_list_numbers_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_list_quote_button/toolbar_list_quote_button.dart';
@@ -82,6 +83,7 @@ class CreateArticleToolbar extends HookWidget {
         ToolbarBoldButton(textEditorController: textEditorController),
         ToolbarItalicButton(textEditorController: textEditorController),
         ToolbarUnderlineButton(textEditorController: textEditorController),
+        ToolbarLinkButton(textEditorController: textEditorController),
       ],
     );
   }

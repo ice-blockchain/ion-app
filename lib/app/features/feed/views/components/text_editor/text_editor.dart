@@ -34,6 +34,15 @@ class TextEditor extends ConsumerWidget {
             placeholder: placeholder,
             customStyles: _getCustomStyles(context),
             floatingCursorDisabled: true,
+            customStyleBuilder: (attribute) {
+              if (attribute.key == Attribute.link.key) {
+                return TextStyle(
+                  decoration: TextDecoration.underline,
+                  color: context.theme.appColors.primaryAccent,
+                );
+              }
+              return const TextStyle();
+            },
           ),
         ),
       ],
