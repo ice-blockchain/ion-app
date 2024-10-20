@@ -5,13 +5,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
-import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/pages/select_languages/language_list_item.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.dart';
+import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/hooks/use_languages.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
@@ -25,8 +28,12 @@ class SelectLanguages extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final (selectedLanguages, toggleLanguageSelection) =
-        useSelectedState(ref.watch(onboardingDataProvider)?.languages ?? <String>[]);
+    final finishNotifier = ref.watch(onboardingCompleteNotifierProvider);
+    final (selectedLanguages, toggleLanguageSelection) = useSelectedState(
+      ref.watch(onboardingDataProvider)?.languages ??
+          [ref.watch(localePreferredLanguageProvider).isoCode],
+    );
+    final userIdentity = ref.watch(currentUserIdentityProvider).valueOrNull;
     final searchQuery = useState('');
     final languages = useLanguages(query: searchQuery.value);
 
@@ -84,12 +91,23 @@ class SelectLanguages extends HookConsumerWidget {
             SizedBox(height: 16.0.s),
             ScreenSideOffset.small(
               child: Button(
+                disabled: finishNotifier.isLoading,
+                trailingIcon: finishNotifier.isLoading ? const IceLoadingIndicator() : null,
                 label: Text(context.i18n.button_continue),
                 mainAxisSize: MainAxisSize.max,
                 onPressed: () async {
                   ref.read(onboardingDataProvider.notifier).languages = selectedLanguages;
                   hideKeyboardAndCallOnce(
-                    callback: () => DiscoverCreatorsRoute().push<void>(context),
+                    callback: () {
+                      if ((userIdentity?.ionConnectRelays).emptyOrValue.isNotEmpty) {
+                        // Skip "follow-creators" step, if user identity is already created,
+                        // because identity is created based on the selected creators
+                        // and we can't let user change them at this point.
+                        ref.read(onboardingCompleteNotifierProvider.notifier).finish();
+                      } else {
+                        DiscoverCreatorsRoute().push<void>(context);
+                      }
+                    },
                   );
                 },
               ),
