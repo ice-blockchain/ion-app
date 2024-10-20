@@ -103,7 +103,7 @@ class SelectLanguages extends HookConsumerWidget {
                         // Skip "follow-creators" step, if user identity is already created,
                         // because identity is created based on the selected creators
                         // and we can't let user change them at this point.
-                        // ref.read(onboardingCompleteNotifierProvider.notifier).finish();
+                        ref.read(onboardingCompleteNotifierProvider.notifier).finish();
                       } else {
                         DiscoverCreatorsRoute().push<void>(context);
                       }
