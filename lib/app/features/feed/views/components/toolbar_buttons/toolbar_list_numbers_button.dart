@@ -13,7 +13,19 @@ class ToolbarListNumbersButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
       icon: Assets.svg.iconArticleListnumbers,
-      onPressed: () {},
+      onPressed: () {
+        _toggleList(textEditorController, Attribute.ol);
+      },
     );
+  }
+
+  void _toggleList(QuillController controller, Attribute<String?> listType) {
+    final currentAttribute = controller.getSelectionStyle().attributes[Attribute.list.key];
+
+    if (currentAttribute != null && currentAttribute.value == listType.value) {
+      controller.formatSelection(Attribute.clone(Attribute.list, null));
+    } else {
+      controller.formatSelection(listType);
+    }
   }
 }
