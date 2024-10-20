@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ice/app/effects/slide_in_out_effects.dart';
-import 'package:ice/app/extensions/extensions.dart';
-import 'package:ice/app/features/feed/create_story/providers/story_camera_provider.dart';
-import 'package:ice/generated/assets.gen.dart';
+import 'package:ion/app/effects/slide_in_out_effects.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class StoryPublishedNotification extends ConsumerWidget {
   const StoryPublishedNotification({required this.height, super.key});
