@@ -8,12 +8,12 @@ import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/auth/providers/content_creators_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
-import 'package:ion/app/features/user/providers/user_following_provider.dart';
+import 'package:ion/app/hooks/use_selected_state.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class DiscoverCreators extends ConsumerWidget {
@@ -22,14 +22,11 @@ class DiscoverCreators extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final finishNotifier = ref.watch(onboardingCompleteNotifierProvider);
-    final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
-    final followingIds = ref.watch(userFollowingProvider(currentUserId));
+    final creatorPubkeys = ref.watch(contentCreatorsProvider);
 
-    final mayContinue = followingIds.valueOrNull?.isNotEmpty ?? false;
-    final creatorIds = [
-      'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
-      '496bf22b76e63553b2cac70c44b53867368b4b7612053a2c78609f3144324807',
-    ];
+    final (selectedCreators, toggleCreatorSelection) = useSelectedState(<String>[]);
+
+    final mayContinue = selectedCreators.isNotEmpty;
 
     return SheetContent(
       body: Column(
@@ -44,9 +41,13 @@ class DiscoverCreators extends ConsumerWidget {
                   separatorBuilder: (BuildContext _, int __) => SizedBox(
                     height: 8.0.s,
                   ),
-                  itemCount: creatorIds.length,
+                  itemCount: creatorPubkeys.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return CreatorListItem(userId: creatorIds[index]);
+                    return CreatorListItem(
+                      pubkey: creatorPubkeys[index],
+                      selected: false,
+                      onPressed: () {},
+                    );
                   },
                 ),
                 SliverPadding(
@@ -69,7 +70,7 @@ class DiscoverCreators extends ConsumerWidget {
                     label: Text(context.i18n.button_continue),
                     mainAxisSize: MainAxisSize.max,
                     onPressed: () {
-                      ref.read(onboardingDataProvider.notifier).followees = creatorIds;
+                      ref.read(onboardingDataProvider.notifier).followees = selectedCreators;
                       ref.read(onboardingCompleteNotifierProvider.notifier).finish();
                     },
                   ),

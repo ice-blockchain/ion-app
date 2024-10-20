@@ -1,28 +1,24 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/user/providers/user_following_provider.dart';
 
-class FollowUserButton extends ConsumerWidget {
+class FollowUserButton extends StatelessWidget {
   const FollowUserButton({
-    required this.userId,
+    required this.onPressed,
+    required this.following,
     super.key,
   });
 
-  final String userId;
+  final VoidCallback onPressed;
+
+  final bool following;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
-    final following = ref.watch(isCurrentUserFollowingSelectorProvider(userId));
+  Widget build(BuildContext context) {
     return Button(
-      onPressed: () {
-        ref.read(userFollowingProvider(currentUserId).notifier).toggleFollow(userId);
-      },
+      onPressed: onPressed,
       type: following ? ButtonType.primary : ButtonType.outlined,
       tintColor: following ? null : context.theme.appColors.primaryAccent,
       label: Text(

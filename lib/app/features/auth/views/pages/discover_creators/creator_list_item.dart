@@ -2,27 +2,33 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/button/follow_user_button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/components/follow_user_button/follow_user_button.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/utils/username.dart';
 
 class CreatorListItem extends ConsumerWidget {
   const CreatorListItem({
-    required this.userId,
+    required this.pubkey,
+    required this.onPressed,
+    required this.selected,
     super.key,
   });
 
-  final String userId;
+  final String pubkey;
+
+  final VoidCallback onPressed;
+
+  final bool selected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(userMetadataProvider(userId));
+    final userMetadata = ref.watch(userMetadataProvider(pubkey));
 
     return userMetadata.maybeWhen(
       data: (userMetadata) {
@@ -39,7 +45,7 @@ class CreatorListItem extends ConsumerWidget {
             backgroundColor: context.theme.appColors.tertararyBackground,
             contentPadding: EdgeInsets.all(12.0.s),
             borderRadius: BorderRadius.circular(16.0.s),
-            trailing: FollowUserButton(userId: userMetadata.pubkey),
+            trailing: FollowUserButton(onPressed: onPressed, following: selected),
             trailingPadding: EdgeInsets.only(left: 6.0.s),
           ),
         );
