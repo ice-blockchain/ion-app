@@ -12,15 +12,10 @@ import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ion/app/features/feed/providers/poll/poll_answers_provider.dart';
 import 'package:ion/app/features/feed/providers/poll/poll_title_notifier.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
-import 'package:ion/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_bold_button/toolbar_bold_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_image_button/toolbar_image_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_italic_button/toolbar_italic_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_poll_button/toolbar_poll_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_regular_button/toolbar_regular_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
+import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -121,7 +116,7 @@ class CreatePostModal extends HookConsumerWidget {
                       ToolbarItalicButton(textEditorController: textEditorController),
                       ToolbarBoldButton(textEditorController: textEditorController),
                     ],
-                    trailing: ActionsToolbarButtonSend(
+                    trailing: ToolbarSendButton(
                       enabled: isSendButtonEnabled(),
                       onPressed: () {
                         generateMarkdownFromDelta(textEditorController.document.toDelta());

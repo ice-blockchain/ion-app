@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ActionsToolbarButtonSend extends StatelessWidget {
-  const ActionsToolbarButtonSend({
+class ToolbarSendButton extends StatelessWidget {
+  const ToolbarSendButton({
     required this.onPressed,
     this.enabled = false,
     super.key,
