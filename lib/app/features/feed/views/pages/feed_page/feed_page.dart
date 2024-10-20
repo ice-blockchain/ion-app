@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
@@ -36,23 +35,11 @@ class FeedPage extends HookConsumerWidget {
       storyCameraControllerProvider.select((state) => state.isStoryPublished),
     );
 
-    log('isStoryPublished: $isStoryPublished');
-
     final notificationHeight = 24.0.s;
-    final animatedHeight = useAnimatedExpandableHeight(
-      isExpanded: isStoryPublished,
-      collapsedHeight: FeedControls.height,
-      expandedHeight: notificationHeight,
-    );
 
     final appBarSliver = CollapsingAppBar(
-      height: animatedHeight,
-      child: Column(
-        children: [
-          if (isStoryPublished) StoryPublishedNotification(height: notificationHeight),
-          const FeedControls(),
-        ],
-      ),
+      height: FeedControls.height,
+      child: const FeedControls(),
     );
 
     final slivers = [
@@ -86,33 +73,44 @@ class FeedPage extends HookConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          PullRightMenuHandler(
-            child: LoadMoreBuilder(
-              slivers: slivers,
-              hasMore: true,
-              onLoadMore: _onLoadMore,
-              builder: (context, slivers) {
-                return PullToRefreshBuilder(
-                  sliverAppBar: appBarSliver,
-                  slivers: slivers,
-                  onRefresh: () => _onRefresh(ref),
-                  refreshIndicatorEdgeOffset: FeedControls.height +
-                      MediaQuery.paddingOf(context).top +
-                      ScreenTopOffset.defaultMargin,
-                  builder: (context, slivers) {
-                    return CustomScrollView(
-                      controller: scrollController,
-                      slivers: slivers,
-                    );
-                  },
-                );
-              },
+          AnimatedPositioned(
+            duration: 300.ms,
+            top: isStoryPublished ? notificationHeight : 0.0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: PullRightMenuHandler(
+              child: LoadMoreBuilder(
+                slivers: slivers,
+                hasMore: true,
+                onLoadMore: _onLoadMore,
+                builder: (context, slivers) {
+                  return PullToRefreshBuilder(
+                    sliverAppBar: appBarSliver,
+                    slivers: slivers,
+                    onRefresh: () => _onRefresh(ref),
+                    refreshIndicatorEdgeOffset: FeedControls.height +
+                        MediaQuery.paddingOf(context).top +
+                        ScreenTopOffset.defaultMargin,
+                    builder: (context, slivers) {
+                      return CustomScrollView(
+                        controller: scrollController,
+                        slivers: slivers,
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ),
+          // TODO: refactor to support other types of the notifications
           if (isStoryPublished)
-            SafeArea(
-              child: StoryPublishedNotification(
-                maxHeight: notificationHeight,
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                child: StoryPublishedNotification(height: notificationHeight),
               ),
             ),
         ],
