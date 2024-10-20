@@ -4,19 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/components/separated/separator.dart';
+import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/content_creators_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class DiscoverCreators extends ConsumerWidget {
+class DiscoverCreators extends HookConsumerWidget {
   const DiscoverCreators({super.key});
 
   @override
@@ -28,6 +32,8 @@ class DiscoverCreators extends ConsumerWidget {
 
     final mayContinue = selectedCreators.isNotEmpty;
 
+    useOnInit(ref.read(contentCreatorsProvider.notifier).fetchCreators);
+
     return SheetContent(
       body: Column(
         children: [
@@ -37,19 +43,30 @@ class DiscoverCreators extends ConsumerWidget {
               description: context.i18n.discover_creators_description,
               slivers: [
                 SliverPadding(padding: EdgeInsets.only(top: 34.0.s)),
-                SliverList.separated(
-                  separatorBuilder: (BuildContext _, int __) => SizedBox(
-                    height: 8.0.s,
+                if (creatorPubkeys.isEmpty)
+                  SliverToBoxAdapter(
+                    child: ScreenSideOffset.small(
+                      child: Skeleton(
+                        child: SeparatedColumn(
+                          separator: SizedBox(height: 8.0.s),
+                          children: List.generate(5, (_) => ListItem()),
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  SliverList.separated(
+                    separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
+                    itemCount: creatorPubkeys.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final pubkey = creatorPubkeys[index];
+                      return CreatorListItem(
+                        pubkey: pubkey,
+                        selected: selectedCreators.contains(pubkey),
+                        onPressed: () => toggleCreatorSelection(pubkey),
+                      );
+                    },
                   ),
-                  itemCount: creatorPubkeys.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return CreatorListItem(
-                      pubkey: creatorPubkeys[index],
-                      selected: false,
-                      onPressed: () {},
-                    );
-                  },
-                ),
                 SliverPadding(
                   padding: EdgeInsets.only(
                     bottom: 16.0.s + (mayContinue ? 0 : MediaQuery.paddingOf(context).bottom),

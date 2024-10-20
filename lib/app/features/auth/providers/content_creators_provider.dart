@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/nostr/model/search_extension.dart';
+import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
@@ -20,20 +20,23 @@ class ContentCreators extends _$ContentCreators {
   Future<void> fetchCreators() async {
     final requestMessage = RequestMessage()
       ..addFilter(
-        RequestFilter(
-          kinds: const [UserMetadata.kind, UserRelays.kind],
-          search: DiscoveryCreatorsSearchExtension().toString(),
-          limit: 20,
+        const RequestFilter(
+          kinds: [UserMetadata.kind, UserRelays.kind],
+          //TODO: uncomment when our relays are used
+          // search: DiscoveryCreatorsSearchExtension().toString(),
+          limit: 40,
         ),
       );
-    final eventsStream = ref.read(nostrNotifierProvider.notifier).request(requestMessage);
+    final eventsStream = ref
+        .read(nostrNotifierProvider.notifier)
+        .request(requestMessage, actionSource: const ActionSourceIndexers());
     await for (final event in eventsStream) {
       if (event.kind == UserMetadata.kind) {
         final userMetadata = UserMetadata.fromEventMessage(event);
         ref.read(nostrCacheProvider.notifier).cache(userMetadata);
         state = [...state, userMetadata.pubkey];
       } else if (event.kind == UserRelays.kind) {
-        final userRelays = UserMetadata.fromEventMessage(event);
+        final userRelays = UserRelays.fromEventMessage(event);
         ref.read(nostrCacheProvider.notifier).cache(userRelays);
       }
     }
