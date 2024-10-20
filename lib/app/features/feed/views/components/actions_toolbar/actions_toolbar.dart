@@ -19,8 +19,16 @@ class ActionsToolbar extends StatelessWidget {
       height: 40.0.s,
       child: Row(
         children: [
-          ...actions.intersperse(SizedBox(width: 12.0.s)),
-          if (trailing != null) ...[SizedBox(width: 12.0.s), const Spacer(), trailing!],
+          Expanded(
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: 12.0.s),
+              itemCount: actions.length,
+              separatorBuilder: (context, index) => SizedBox(width: 12.0.s),
+              itemBuilder: (context, index) => actions[index],
+            ),
+          ),
+          if (trailing != null) ...[trailing!],
         ],
       ),
     );

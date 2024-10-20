@@ -77,10 +77,8 @@ class CreateArticleModal extends HookConsumerWidget {
                   child: const VisibilitySettingsToolbar(),
                 ),
                 const HorizontalSeparator(),
-                ScreenSideOffset.small(
-                  child: CreateArticleToolbar(
-                    textEditorController: textEditorController,
-                  ),
+                CreateArticleToolbar(
+                  textEditorController: textEditorController,
                 ),
               ],
             ),
