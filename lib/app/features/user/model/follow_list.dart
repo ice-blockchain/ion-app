@@ -49,8 +49,8 @@ class FollowList with _$FollowList, CacheableEvent {
 class Followee with _$Followee {
   const factory Followee({
     required String pubkey,
-    required String relayUrl,
-    required String petname,
+    @Default('') String relayUrl,
+    @Default('') String petname,
   }) = _Followee;
 
   const Followee._();
