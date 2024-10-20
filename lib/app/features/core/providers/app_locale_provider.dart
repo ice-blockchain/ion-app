@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
@@ -21,20 +20,15 @@ class AppLocale extends _$AppLocale {
   }
 
   Locale _getSystemLocale() {
-    final locale = Platform.localeName; // e.g., 'en_US'
-    final localeParts = locale.split('_');
-
-    if (localeParts.length > 1) {
-      return Locale(localeParts[0], localeParts[1]);
-    } else {
-      return Locale(localeParts[0]);
-    }
+    return PlatformDispatcher.instance.locale;
   }
 }
 
 @riverpod
 Language localePreferredLanguage(LocalePreferredLanguageRef ref) {
   final appLocale = ref.watch(appLocaleProvider);
-  return Language.values.firstWhereOrNull((lang) => appLocale.languageCode == lang.isoCode) ??
+  return Language.values.firstWhereOrNull(
+        (lang) => appLocale.languageCode.toLowerCase() == lang.isoCode.toLowerCase(),
+      ) ??
       Language.english;
 }
