@@ -28,7 +28,7 @@ class ActionsToolbar extends StatelessWidget {
               itemBuilder: (context, index) => actions[index],
             ),
           ),
-          if (trailing != null) ...[trailing!],
+          if (trailing != null) trailing!,
         ],
       ),
     );
