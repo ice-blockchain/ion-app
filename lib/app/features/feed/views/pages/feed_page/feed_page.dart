@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
@@ -61,12 +60,6 @@ class FeedPage extends HookConsumerWidget {
               const TrendingVideos(),
               FeedListSeparator(),
             ],
-            Button(
-              onPressed: () {
-                ref.read(storyCameraControllerProvider.notifier).publishStory();
-              },
-              label: const Text('Publish Story'),
-            ),
           ],
         ),
       ),
