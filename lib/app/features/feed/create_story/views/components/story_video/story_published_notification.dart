@@ -31,10 +31,10 @@ class StoryPublishedNotification extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Assets.svg.iconBlockCheckboxOn.icon(
+                Assets.svg.iconBlockCheckboxwhiteOn.icon(
                   color: context.theme.appColors.onPrimaryAccent,
                 ),
-                SizedBox(width: 12.0.s),
+                SizedBox(width: 8.0.s),
                 Text(
                   context.i18n.story_has_been_posted,
                   style: context.theme.appTextThemes.body2.copyWith(
