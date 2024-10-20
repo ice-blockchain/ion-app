@@ -33,7 +33,7 @@ class StoryPublishedNotification extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Assets.svg.iconBlockCheckboxwhiteOn.icon(
+                Assets.svg.iconBlockCheckboxOnblue.icon(
                   color: context.theme.appColors.onPrimaryAccent,
                 ),
                 SizedBox(width: 8.0.s),
