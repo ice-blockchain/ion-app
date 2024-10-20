@@ -8,16 +8,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_code_button/toolbar_code_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_hashtag_button/toolbar_hashtag_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_image_button/toolbar_image_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_list_dots_button/toolbar_list_dots_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_list_numbers_button/toolbar_list_numbers_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_list_quote_button/toolbar_list_quote_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_mention_button/toolbar_mention_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_separator_button/toolbar_separator_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/toolbar_buttons/toolbar_typography_button/toolbar_typography_button.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/components/create_article_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/components/visibility_settings_toolbar/visibility_settings_toolbar.dart';
@@ -86,20 +77,8 @@ class CreateArticleModal extends HookConsumerWidget {
                   child: const VisibilitySettingsToolbar(),
                 ),
                 const HorizontalSeparator(),
-                ScreenSideOffset.small(
-                  child: ActionsToolbar(
-                    actions: [
-                      ToolbarImageButton(textEditorController: textEditorController),
-                      ToolbarTypographyButton(textEditorController: textEditorController),
-                      ToolbarListDotsButton(textEditorController: textEditorController),
-                      ToolbarListNumbersButton(textEditorController: textEditorController),
-                      ToolbarListQuoteButton(textEditorController: textEditorController),
-                      ToolbarMentionButton(textEditorController: textEditorController),
-                      ToolbarHashtagButton(textEditorController: textEditorController),
-                      ToolbarSeparatorButton(textEditorController: textEditorController),
-                      ToolbarCodeButton(textEditorController: textEditorController),
-                    ],
-                  ),
+                CreateArticleToolbar(
+                  textEditorController: textEditorController,
                 ),
               ],
             ),

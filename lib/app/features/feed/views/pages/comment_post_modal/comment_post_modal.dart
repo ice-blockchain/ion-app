@@ -10,10 +10,10 @@ import 'package:ion/app/features/feed/data/models/post/post_data.dart';
 import 'package:ion/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
-import 'package:ion/app/features/feed/views/components/actions_toolbar_button_send/actions_toolbar_button_send.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
+import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/feed/views/pages/comment_post_modal/components/quote_post_comment_input.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
@@ -95,7 +95,7 @@ class CommentPostModal extends ConsumerWidget {
                   onPressed: () {},
                 ),
               ],
-              trailing: ActionsToolbarButtonSend(
+              trailing: ToolbarSendButton(
                 enabled: true,
                 onPressed: () => ref.read(sendReplyRequestNotifierProvider.notifier).sendReply(),
               ),

@@ -5,10 +5,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_font_style.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/wipe_styles/wipe_styles.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ToolbarItalicButton extends HookWidget {
-  const ToolbarItalicButton({required this.textEditorController, super.key});
+class ToolbarH3Button extends HookWidget {
+  const ToolbarH3Button({required this.textEditorController, super.key});
   final QuillController textEditorController;
 
   @override
@@ -16,14 +17,13 @@ class ToolbarItalicButton extends HookWidget {
     final fontType = useTextEditorFontStyle(textEditorController);
 
     return ActionsToolbarButton(
-      icon: Assets.svg.iconPostItalictextOff,
-      iconSelected: Assets.svg.iconPostItalictextOn,
+      icon: Assets.svg.iconArticleH3Off,
+      iconSelected: Assets.svg.iconArticleH3On,
       onPressed: () {
-        textEditorController
-          ..formatSelection(Attribute.clone(Attribute.bold, null))
-          ..formatSelection(Attribute.italic);
+        wipeAllStyles(textEditorController);
+        textEditorController.formatSelection(Attribute.h3);
       },
-      selected: fontType == FontType.italic,
+      selected: fontType == FontType.h3,
     );
   }
 }

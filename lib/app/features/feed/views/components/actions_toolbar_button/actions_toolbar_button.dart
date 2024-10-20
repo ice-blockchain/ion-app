@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class ActionsToolbarButton extends StatelessWidget {
   const ActionsToolbarButton({
@@ -22,7 +21,10 @@ class ActionsToolbarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
-      child: (selected && iconSelected != null ? iconSelected! : icon).icon(size: 24.0.s),
+      child: (selected && iconSelected != null ? iconSelected! : icon).icon(
+        size: 24.0.s,
+        color: context.theme.appColors.primaryAccent,
+      ),
     );
   }
 }

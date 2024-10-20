@@ -5,10 +5,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_font_style.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/wipe_styles/wipe_styles.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ToolbarRegularButton extends HookWidget {
-  const ToolbarRegularButton({required this.textEditorController, super.key});
+class ToolbarUnderlineButton extends HookWidget {
+  const ToolbarUnderlineButton({required this.textEditorController, super.key});
   final QuillController textEditorController;
 
   @override
@@ -16,14 +17,13 @@ class ToolbarRegularButton extends HookWidget {
     final fontType = useTextEditorFontStyle(textEditorController);
 
     return ActionsToolbarButton(
-      icon: Assets.svg.iconPostRegulartextOff,
-      iconSelected: Assets.svg.iconPostRegulartextOn,
+      icon: Assets.svg.iconArticleUnderlineOff,
+      iconSelected: Assets.svg.iconArticleUnderlineOn,
       onPressed: () {
-        textEditorController
-          ..formatSelection(Attribute.clone(Attribute.bold, null))
-          ..formatSelection(Attribute.clone(Attribute.italic, null));
+        wipeAllStyles(textEditorController);
+        textEditorController.formatSelection(Attribute.underline);
       },
-      selected: fontType == FontType.regular,
+      selected: fontType == FontType.underline,
     );
   }
 }

@@ -6,14 +6,19 @@ import 'package:ion/app/features/feed/views/components/actions_toolbar_button/ac
 import 'package:ion/generated/assets.gen.dart';
 
 class ToolbarTypographyButton extends StatelessWidget {
-  const ToolbarTypographyButton({required this.textEditorController, super.key});
+  const ToolbarTypographyButton({
+    required this.textEditorController,
+    required this.onPressed,
+    super.key,
+  });
   final QuillController textEditorController;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
       icon: Assets.svg.iconArticleTextformat,
-      onPressed: () {},
+      onPressed: onPressed,
     );
   }
 }
