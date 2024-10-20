@@ -49,14 +49,27 @@ class FeedCurrentFilter extends _$FeedCurrentFilter {
   }
 
   void _saveState(FeedFiltersState state) {
-    final userId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
+    final userId = ref.read(currentIdentityKeyNameSelectorProvider);
+
+    if (userId == null) {
+      return;
+    }
+
     ref.read(userPreferencesServiceProvider(userId: userId))
       ..setEnum(_feedFilterCategoryKey, state.category)
       ..setEnum(_feedFilterFilterKey, state.filter);
   }
 
   FeedFiltersState _loadSavedState() {
-    final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+    final userId = ref.watch(currentIdentityKeyNameSelectorProvider);
+
+    if (userId == null) {
+      return const FeedFiltersState(
+        category: FeedFiltersState.defaultCategory,
+        filter: FeedFiltersState.defaultFilter,
+      );
+    }
+
     final userPreferencesService = ref.watch(userPreferencesServiceProvider(userId: userId));
 
     final category = userPreferencesService.getEnum(_feedFilterCategoryKey, FeedCategory.values);

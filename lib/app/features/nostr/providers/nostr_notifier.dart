@@ -6,7 +6,7 @@ import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/relays_provider.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
-import 'package:ion/app/features/user/providers/current_user_indexers_provider.dart';
+import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

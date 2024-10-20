@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ion/app/features/core/providers/init_provider.dart';
 import 'package:ion/app/features/core/providers/splash_provider.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
@@ -54,6 +56,7 @@ FutureOr<String?> _mainRedirect({
 }) {
   final hasAuthenticated = (ref.read(authProvider).valueOrNull?.hasAuthenticated).falseOrValue;
   final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
+  final hasNotificationsPermission = ref.read(hasPermissionProvider(Permission.notifications));
 
   final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
@@ -64,8 +67,16 @@ FutureOr<String?> _mainRedirect({
   }
 
   if (hasAuthenticated && onboardingComplete != null) {
-    if (onboardingComplete && (isOnSplash || isOnAuth)) {
-      return FeedRoute().location;
+    if (onboardingComplete) {
+      if (isOnSplash || isOnAuth) {
+        return FeedRoute().location;
+      } else if (isOnOnboarding) {
+        if (hasNotificationsPermission) {
+          return FeedRoute().location;
+        } else {
+          return NotificationsRoute().location;
+        }
+      }
     }
 
     if (!onboardingComplete && !isOnOnboarding) {

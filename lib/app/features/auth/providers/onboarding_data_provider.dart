@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/services/storage/user_preferences_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_data_provider.freezed.dart';
@@ -15,19 +18,17 @@ class OnboardingState with _$OnboardingState {
     List<String>? languages,
     List<String>? followees,
   }) = _OnboardingState;
+
+  factory OnboardingState.fromJson(Map<String, dynamic> json) => _$OnboardingStateFromJson(json);
 }
 
 @Riverpod(keepAlive: true)
 class OnboardingData extends _$OnboardingData {
   @override
   OnboardingState? build() {
-    final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
+    ref.listenSelf((_, next) => _saveState(next));
 
-    if (currentIdentityKeyName == null) {
-      return null;
-    }
-
-    return const OnboardingState();
+    return _loadSavedState();
   }
 
   set name(String name) {
@@ -68,4 +69,44 @@ class OnboardingData extends _$OnboardingData {
     }
     return (name: name, displayName: displayName, languages: languages, followees: followees);
   }
+
+  void _saveState(OnboardingState? state) {
+    final userId = ref.read(currentIdentityKeyNameSelectorProvider);
+    if (userId == null || state == null) {
+      return;
+    }
+
+    ref
+        .read(userPreferencesServiceProvider(userId: userId))
+        .setValue(_onboardingPersistanceKey, json.encode(state.toJson()));
+  }
+
+  OnboardingState? _loadSavedState() {
+    final userId = ref.watch(currentIdentityKeyNameSelectorProvider);
+
+    if (userId == null) {
+      return null;
+    }
+
+    final userPreferencesService = ref.watch(userPreferencesServiceProvider(userId: userId));
+    final savedState = userPreferencesService.getValue<String>(_onboardingPersistanceKey);
+
+    if (savedState == null) {
+      return const OnboardingState();
+    }
+
+    return OnboardingState.fromJson(json.decode(savedState) as Map<String, dynamic>);
+  }
+
+  void reset() {
+    final userId = ref.watch(currentIdentityKeyNameSelectorProvider);
+
+    if (userId == null) {
+      return;
+    }
+
+    ref.watch(userPreferencesServiceProvider(userId: userId)).remove(_onboardingPersistanceKey);
+  }
+
+  static const _onboardingPersistanceKey = 'onboarding_data';
 }

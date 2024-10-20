@@ -58,6 +58,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         ]);
 
         [userMetadata, userDelegation].forEach(ref.read(nostrCacheProvider.notifier).cache);
+
+        ref.read(onboardingDataProvider.notifier).reset();
       },
     );
   }
@@ -68,13 +70,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       return userIdentity.ionConnectRelays;
     }
 
-    //TODO: Add identity io request here.
-    await Future<void>.delayed(const Duration(milliseconds: 300));
-    return [
-      'wss://relay.damus.io',
-      'wss://relay.damus.io',
-      'wss://relay.damus.io',
-    ];
+    return ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);
   }
 
   Future<KeyStore> _generateNostrKeyStore() async {
