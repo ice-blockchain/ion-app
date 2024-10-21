@@ -3,14 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-<<<<<<< HEAD:lib/app/features/components/follow_user_button/follow_user_button.dart
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
-import 'package:ion/app/features/user/providers/user_following_provider.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
-=======
->>>>>>> 86126d81 (feat = add contentCreatorsProvider):lib/app/components/button/follow_user_button.dart
 
 class FollowButton extends StatelessWidget {
   const FollowButton({

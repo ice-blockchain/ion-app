@@ -69,9 +69,7 @@ class DiscoverCreators extends HookConsumerWidget {
           Expanded(
             child: LoadMoreBuilder(
               slivers: slivers,
-              onLoadMore: () async {
-                return ref.read(contentCreatorsProvider.notifier).fetchCreators();
-              },
+              onLoadMore: ref.read(contentCreatorsProvider.notifier).fetchCreators,
               hasMore: contentCreators.pagination.hasMore,
               builder: (context, slivers) {
                 return AuthScrollContainer(
