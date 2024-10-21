@@ -27,16 +27,16 @@ class DiscoverCreators extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final finishNotifier = ref.watch(onboardingCompleteNotifierProvider);
-    final creatorPubkeys = ref.watch(contentCreatorsProvider);
+    final contentCreators = ref.watch(contentCreatorsProvider);
 
     final (selectedCreators, toggleCreatorSelection) = useSelectedState(<String>[]);
 
-    final mayContinue = selectedCreators.isNotEmpty;
-
     useOnInit(ref.read(contentCreatorsProvider.notifier).fetchCreators);
 
+    final mayContinue = selectedCreators.isNotEmpty;
+
     final slivers = [
-      if (creatorPubkeys.isEmpty)
+      if (contentCreators.items.isEmpty)
         SliverToBoxAdapter(
           child: ScreenSideOffset.small(
             child: Skeleton(
@@ -50,9 +50,9 @@ class DiscoverCreators extends HookConsumerWidget {
       else
         SliverList.separated(
           separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
-          itemCount: creatorPubkeys.length,
+          itemCount: contentCreators.items.length,
           itemBuilder: (BuildContext context, int index) {
-            final pubkey = creatorPubkeys[index];
+            final pubkey = contentCreators.items.elementAt(index);
             return CreatorListItem(
               pubkey: pubkey,
               selected: selectedCreators.contains(pubkey),
@@ -70,9 +70,9 @@ class DiscoverCreators extends HookConsumerWidget {
             child: LoadMoreBuilder(
               slivers: slivers,
               onLoadMore: () async {
-                return Future.delayed(const Duration(seconds: 3));
+                return ref.read(contentCreatorsProvider.notifier).fetchCreators();
               },
-              hasMore: true,
+              hasMore: contentCreators.pagination.hasMore,
               builder: (context, slivers) {
                 return AuthScrollContainer(
                   title: context.i18n.discover_creators_title,
