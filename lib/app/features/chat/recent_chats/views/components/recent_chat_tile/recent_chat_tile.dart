@@ -6,6 +6,7 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -17,51 +18,63 @@ class RecentChatTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
 
-    return Row(
-      children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: isEditMode ? 40.0.s : 0,
-          child: Padding(
-            padding: EdgeInsets.only(right: 10.0.s),
-            child: Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
+    final selectedConversationsIds = ref.watch(selectedConversationsIdsProvider);
+
+    return GestureDetector(
+      onTap: () {
+        if (isEditMode) {
+          ref.read(selectedConversationsIdsProvider.notifier).toggle(chat.id);
+        } else {}
+      },
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: isEditMode ? 40.0.s : 0,
+            child: Padding(
+              padding: EdgeInsets.only(right: 10.0.s),
+              child: selectedConversationsIds.contains(chat.id)
+                  ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
+                  : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
+            ),
           ),
-        ),
-        Flexible(
-          child: Row(
-            children: [
-              Avatar(
-                imageUrl: chat.sender.imageUrl,
-                size: 40.0.s,
-              ),
-              SizedBox(width: 12.0.s),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SenderSummary(chat: chat),
-                        ChatTimestamp(chat: chat),
-                      ],
-                    ),
-                    SizedBox(height: 2.0.s),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ChatPreview(chat: chat),
-                        UnreadCountBadge(unreadCount: chat.unreadMessageCount),
-                      ],
-                    ),
-                  ],
+          Flexible(
+            child: Row(
+              children: [
+                Avatar(
+                  imageUrl: chat.sender.imageUrl,
+                  size: 40.0.s,
                 ),
-              ),
-            ],
+                SizedBox(width: 12.0.s),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          SenderSummary(chat: chat),
+                          ChatTimestamp(chat: chat),
+                        ],
+                      ),
+                      SizedBox(height: 2.0.s),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ChatPreview(chat: chat),
+                          UnreadCountBadge(unreadCount: chat.unreadMessageCount),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -181,9 +194,8 @@ class RecentChatMessageIcon extends StatelessWidget {
         PollRecentChatMessage _ => Assets.svg.iconPostPoll,
         MoneyRequestRecentChatMessage _ => Assets.svg.iconProfileTips,
         PhotoRecentChatMessage _ => Assets.svg.iconLoginCamera,
-        VoiceRecentChatMessage _ => Assets.svg.iconLoginCamera, // TODO: Update when design is ready
-        ReplayRecentChatMessage _ =>
-          Assets.svg.iconLoginCamera, // TODO: Update when design is ready
+        VoiceRecentChatMessage _ => Assets.svg.iconChatVoicemessage,
+        ReplayRecentChatMessage _ => Assets.svg.iconChatReplymessage,
       };
 }
 

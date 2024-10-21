@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 class RecentChatDataModel {
-  RecentChatDataModel(this.sender, this.unreadMessageCount, this.message);
+  RecentChatDataModel(this.sender, this.unreadMessageCount, this.message, this.id);
 
+  final String id;
   final ChatSender sender;
   final int unreadMessageCount;
   final RecentChatMessage message;
@@ -81,6 +82,7 @@ final mockConversationData = [
       '🪙 In the coming days, we will find out who is behind the creation of Bitcoin! Here we start again!',
       DateTime.now(),
     ),
+    '1',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -94,6 +96,7 @@ final mockConversationData = [
       'We are excited to announce the launch of our new product!',
       DateTime.now().subtract(const Duration(minutes: 2)),
     ),
+    '2',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -107,6 +110,7 @@ final mockConversationData = [
       'Hey, how are you doing?',
       DateTime.now().subtract(const Duration(minutes: 3)),
     ),
+    '3',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -119,6 +123,7 @@ final mockConversationData = [
     PhotoRecentChatMessage(
       DateTime.now().subtract(const Duration(minutes: 5)),
     ),
+    '4',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -132,6 +137,7 @@ final mockConversationData = [
       'Hey, how are you doing?',
       DateTime.now().subtract(const Duration(minutes: 3)),
     ),
+    '5',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -145,6 +151,7 @@ final mockConversationData = [
       'Hi ☃️ Snowman, 🚨 Join us for an exclusive AMA session on X Spaces...',
       DateTime.now().subtract(const Duration(hours: 2)),
     ),
+    '6',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -157,6 +164,7 @@ final mockConversationData = [
     VoiceRecentChatMessage(
       DateTime.now().subtract(const Duration(days: 5)),
     ),
+    '7',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -170,6 +178,7 @@ final mockConversationData = [
       'Hi, folks 👋',
       DateTime.now().subtract(const Duration(days: 10)),
     ),
+    '8',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -183,6 +192,7 @@ final mockConversationData = [
       'Hello, are you there?',
       DateTime.now().subtract(const Duration(minutes: 3)),
     ),
+    '9',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -195,6 +205,7 @@ final mockConversationData = [
     VideoRecentChatMessage(
       DateTime.now().subtract(const Duration(days: 133)),
     ),
+    '10',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -208,6 +219,7 @@ final mockConversationData = [
       'Whitepaper.pdf',
       DateTime.now().subtract(const Duration(days: 400)),
     ),
+    '11',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -221,6 +233,7 @@ final mockConversationData = [
       'https://ice.network',
       DateTime.now().subtract(const Duration(days: 500)),
     ),
+    '12',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -234,6 +247,7 @@ final mockConversationData = [
       'Alicia Wernet',
       DateTime.now().subtract(const Duration(days: 600)),
     ),
+    '13',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -246,6 +260,7 @@ final mockConversationData = [
     PollRecentChatMessage(
       DateTime.now().subtract(const Duration(days: 700)),
     ),
+    '14',
   ),
   RecentChatDataModel(
     ChatSender(
@@ -258,5 +273,6 @@ final mockConversationData = [
     MoneyRequestRecentChatMessage(
       DateTime.now().subtract(const Duration(days: 800)),
     ),
+    '15',
   ),
 ];
