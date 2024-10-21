@@ -12,8 +12,8 @@ import 'package:ion/generated/assets.gen.dart';
 =======
 >>>>>>> 86126d81 (feat = add contentCreatorsProvider):lib/app/components/button/follow_user_button.dart
 
-class FollowUserButton extends StatelessWidget {
-  const FollowUserButton({
+class FollowButton extends StatelessWidget {
+  const FollowButton({
     required this.onPressed,
     required this.following,
     super.key,
