@@ -7,6 +7,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
@@ -34,45 +35,59 @@ class DiscoverCreators extends HookConsumerWidget {
 
     useOnInit(ref.read(contentCreatorsProvider.notifier).fetchCreators);
 
+    final slivers = [
+      if (creatorPubkeys.isEmpty)
+        SliverToBoxAdapter(
+          child: ScreenSideOffset.small(
+            child: Skeleton(
+              child: SeparatedColumn(
+                separator: SizedBox(height: 8.0.s),
+                children: List.generate(5, (_) => ListItem()),
+              ),
+            ),
+          ),
+        )
+      else
+        SliverList.separated(
+          separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
+          itemCount: creatorPubkeys.length,
+          itemBuilder: (BuildContext context, int index) {
+            final pubkey = creatorPubkeys[index];
+            return CreatorListItem(
+              pubkey: pubkey,
+              selected: selectedCreators.contains(pubkey),
+              onPressed: () => toggleCreatorSelection(pubkey),
+            );
+          },
+        ),
+      SliverPadding(padding: EdgeInsets.only(top: 16.0.s)),
+    ];
+
     return SheetContent(
       body: Column(
         children: [
           Expanded(
-            child: AuthScrollContainer(
-              title: context.i18n.discover_creators_title,
-              description: context.i18n.discover_creators_description,
-              slivers: [
-                SliverPadding(padding: EdgeInsets.only(top: 34.0.s)),
-                if (creatorPubkeys.isEmpty)
-                  SliverToBoxAdapter(
-                    child: ScreenSideOffset.small(
-                      child: Skeleton(
-                        child: SeparatedColumn(
-                          separator: SizedBox(height: 8.0.s),
-                          children: List.generate(5, (_) => ListItem()),
-                        ),
+            child: LoadMoreBuilder(
+              slivers: slivers,
+              onLoadMore: () async {
+                return Future.delayed(const Duration(seconds: 3));
+              },
+              hasMore: true,
+              builder: (context, slivers) {
+                return AuthScrollContainer(
+                  title: context.i18n.discover_creators_title,
+                  description: context.i18n.discover_creators_description,
+                  slivers: [
+                    SliverPadding(padding: EdgeInsets.only(top: 34.0.s)),
+                    ...slivers,
+                    SliverPadding(
+                      padding: EdgeInsets.only(
+                        bottom: 16.0.s + (mayContinue ? 0 : MediaQuery.paddingOf(context).bottom),
                       ),
                     ),
-                  )
-                else
-                  SliverList.separated(
-                    separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
-                    itemCount: creatorPubkeys.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final pubkey = creatorPubkeys[index];
-                      return CreatorListItem(
-                        pubkey: pubkey,
-                        selected: selectedCreators.contains(pubkey),
-                        onPressed: () => toggleCreatorSelection(pubkey),
-                      );
-                    },
-                  ),
-                SliverPadding(
-                  padding: EdgeInsets.only(
-                    bottom: 16.0.s + (mayContinue ? 0 : MediaQuery.paddingOf(context).bottom),
-                  ),
-                ),
-              ],
+                  ],
+                );
+              },
             ),
           ),
           if (mayContinue)
