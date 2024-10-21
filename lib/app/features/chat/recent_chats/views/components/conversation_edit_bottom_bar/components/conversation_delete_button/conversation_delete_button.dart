@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ConversationDeleteButton extends ConsumerWidget {
@@ -19,7 +21,9 @@ class ConversationDeleteButton extends ConsumerWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () {
         if (selectedConversationsIds.isNotEmpty) {
-          ref.read(conversationsEditModeProvider.notifier).editMode = false;
+          DeleteConversationRoute(conversationId: '2').push<void>(context).then((_) {
+            ref.read(conversationsEditModeProvider.notifier).editMode = false;
+          });
         } else {}
       },
       child: Row(

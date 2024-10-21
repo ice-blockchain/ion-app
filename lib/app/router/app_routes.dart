@@ -18,6 +18,7 @@ import 'package:ion/app/features/auth/views/pages/turn_on_notifications/turn_on_
 import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_codes_page.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_options/twofa_options_page.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_success/twofa_success_page.dart';
+import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/chat_main_page.dart';
 import 'package:ion/app/features/core/model/language.dart';
@@ -106,6 +107,7 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'app_routes.g.dart';
 part 'auth_routes.dart';
+part 'chat_routes.dart';
 part 'feed_routes.dart';
 part 'protect_account_routes.dart';
 part 'wallet_routes.dart';
@@ -132,8 +134,8 @@ final transitionObserver = NavigationSheetTransitionObserver();
         TypedGoRoute<ChatRoute>(
           path: '/chat',
           routes: [
+            ...ChatRoutes.routes,
             TypedGoRoute<ChatMainModalRoute>(path: 'main-modal'),
-            TypedGoRoute<AppTestRoute>(path: 'app-test'),
           ],
         ),
       ],
@@ -220,10 +222,6 @@ class FeedRoute extends BaseRouteData {
 
 class ChatRoute extends BaseRouteData {
   ChatRoute() : super(child: const ChatMainPage());
-}
-
-class AppTestRoute extends BaseRouteData {
-  AppTestRoute() : super(child: const AppTestPage());
 }
 
 class WalletRoute extends BaseRouteData {
