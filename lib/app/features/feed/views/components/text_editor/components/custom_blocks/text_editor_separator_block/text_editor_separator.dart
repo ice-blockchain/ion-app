@@ -1,0 +1,80 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ion/app/extensions/extensions.dart';
+
+class TextEditorSeparator extends HookWidget {
+  const TextEditorSeparator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = useState(false);
+
+    final separatorWidth = 58.0.s;
+    final separatorHeight = 1.0.s;
+    final smallDotSize = 3.0.s;
+    final bigDotSize = 4.0.s;
+    final dotsPadding = 6.0.s;
+    final separatorsPadding = 10.0.s;
+
+    return GestureDetector(
+      onTap: () {
+        isSelected.value = !isSelected.value;
+      },
+      child: SizedBox(
+        width: double.infinity,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.0.s),
+            child: SizedBox(
+              width: 217.0.s,
+              height: 24.0.s,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isSelected.value
+                      ? context.theme.appColors.primaryAccent.withOpacity(0.15)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(16.0.s),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: separatorWidth,
+                      height: separatorHeight,
+                      color: context.theme.appColors.onTertararyBackground,
+                    ),
+                    SizedBox(width: separatorsPadding),
+                    _buildDot(context, smallDotSize),
+                    SizedBox(width: dotsPadding),
+                    _buildDot(context, bigDotSize),
+                    SizedBox(width: dotsPadding),
+                    _buildDot(context, smallDotSize),
+                    SizedBox(width: separatorsPadding),
+                    Container(
+                      width: separatorWidth,
+                      height: separatorHeight,
+                      color: context.theme.appColors.onTertararyBackground,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDot(BuildContext context, double size) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: context.theme.appColors.onTertararyBackground,
+        shape: BoxShape.circle,
+      ),
+    );
+  }
+}
