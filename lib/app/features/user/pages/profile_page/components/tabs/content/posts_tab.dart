@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/post_list/components/post_list_item.dart';
+import 'package:ion/app/features/user/model/user_content_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content_separator.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
-import 'package:ion/app/features/user/pages/profile_page/types/user_content_type.dart';
 
 class PostsTab extends StatelessWidget {
   const PostsTab({

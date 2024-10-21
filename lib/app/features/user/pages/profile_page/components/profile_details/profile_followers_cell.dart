@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/pages/profile_page/types/follow_type.dart';
+import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/providers/user_followers_provider.dart';
 import 'package:ion/app/features/user/providers/user_following_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -32,10 +32,8 @@ class ProfileFollowersCell extends ConsumerWidget {
           pubkey: pubkey,
           followType: followType,
         ).push<String>(context);
-        if (newPubkey != null) {
-          if (context.mounted) {
-            unawaited(FeedProfileRoute(pubkey: newPubkey).push<void>(context));
-          }
+        if (newPubkey != null && context.mounted) {
+          unawaited(FeedProfileRoute(pubkey: newPubkey).push<void>(context));
         }
       },
       child: Center(

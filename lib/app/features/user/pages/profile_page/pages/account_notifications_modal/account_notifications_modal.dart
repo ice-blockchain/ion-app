@@ -5,9 +5,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/divider/divider.dart';
-import 'package:ion/app/features/user/pages/profile_page/types/user_notifications_type.dart';
+import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -36,9 +36,7 @@ class AccountNotificationsModal extends HookConsumerWidget {
           showBackButton: false,
           title: Text(context.i18n.profile_notifications_popup_title),
         ),
-        ProfileDivider(
-          height: 1.0.s,
-        ),
+        const HorizontalSeparator(),
         for (final UserNotificationsType option in UserNotificationsType.values.toSet())
           Column(
             children: [
@@ -69,9 +67,7 @@ class AccountNotificationsModal extends HookConsumerWidget {
                   style: textStyles.body,
                 ),
               ),
-              ProfileDivider(
-                height: 1.0.s,
-              ),
+              const HorizontalSeparator(),
             ],
           ),
         ScreenBottomOffset(),

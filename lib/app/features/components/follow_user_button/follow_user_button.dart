@@ -13,12 +13,10 @@ import 'package:ion/generated/assets.gen.dart';
 class FollowUserButton extends ConsumerWidget {
   const FollowUserButton({
     required this.userId,
-    this.showIcon = false,
     super.key,
   });
 
   final String userId;
-  final bool showIcon;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,22 +35,20 @@ class FollowUserButton extends ConsumerWidget {
           ref.read(userFollowingProvider(currentUserId).notifier).toggleFollow(userId);
         }
       },
-      leadingIcon: showIcon == true
-          ? (following ? Assets.svg.iconSearchFollowers : Assets.svg.iconSearchFollow).icon(
-              color: !following
-                  ? context.theme.appColors.onPrimaryAccent
-                  : context.theme.appColors.primaryAccent,
-              size: 16.0.s,
-            )
-          : null,
-      type: !following ? ButtonType.primary : ButtonType.outlined,
-      tintColor: !following ? null : context.theme.appColors.primaryAccent,
+      leadingIcon: (following ? Assets.svg.iconSearchFollowers : Assets.svg.iconSearchFollow).icon(
+        color: following
+            ? context.theme.appColors.primaryAccent
+            : context.theme.appColors.onPrimaryAccent,
+        size: 16.0.s,
+      ),
+      type: following ? ButtonType.outlined : ButtonType.primary,
+      tintColor: following ? context.theme.appColors.primaryAccent : null,
       label: Text(
         following ? context.i18n.button_following : context.i18n.button_follow,
         style: context.theme.appTextThemes.caption.copyWith(
-          color: !following
-              ? context.theme.appColors.secondaryBackground
-              : context.theme.appColors.primaryAccent,
+          color: following
+              ? context.theme.appColors.primaryAccent
+              : context.theme.appColors.secondaryBackground,
         ),
       ),
       style: OutlinedButton.styleFrom(

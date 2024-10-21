@@ -2,13 +2,14 @@
 
 import 'package:flutter/gestures.dart'; // Import this for TapGestureRecognizer
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart'; // Import hooks
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/user_followers_provider.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 
-class FollowedByText extends ConsumerStatefulWidget {
+class FollowedByText extends HookConsumerWidget {
   const FollowedByText({
     required this.pubkey,
     super.key,
@@ -17,70 +18,61 @@ class FollowedByText extends ConsumerStatefulWidget {
   final String pubkey;
 
   @override
-  FollowedByTextState createState() => FollowedByTextState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final firstUserTapRecognizer = useMemoized(TapGestureRecognizer.new);
+    final othersTapRecognizer = useMemoized(TapGestureRecognizer.new);
 
-class FollowedByTextState extends ConsumerState<FollowedByText> {
-  late TapGestureRecognizer _firstUserTapRecognizer;
-  late TapGestureRecognizer _othersTapRecognizer;
+    useEffect(
+      () {
+        return () {
+          firstUserTapRecognizer.dispose();
+          othersTapRecognizer.dispose();
+        };
+      },
+      [firstUserTapRecognizer, othersTapRecognizer],
+    );
 
-  String? _firstUserPubkey;
-  String? _secondUserPubkey;
-  int? _numOthers;
+    String? firstUserPubkey;
+    String? secondUserPubkey;
+    int? numOthers;
 
-  @override
-  void initState() {
-    super.initState();
-
-    _firstUserTapRecognizer = TapGestureRecognizer()..onTap = _onFirstUserTap;
-    _othersTapRecognizer = TapGestureRecognizer()..onTap = _onOthersTap;
-  }
-
-  @override
-  void dispose() {
-    _firstUserTapRecognizer.dispose();
-    _othersTapRecognizer.dispose();
-    super.dispose();
-  }
-
-  void _onFirstUserTap() {
-    final pubkey = _firstUserPubkey;
-    if (pubkey != null) {
-      FeedProfileRoute(pubkey: pubkey).push<void>(context);
-    }
-  }
-
-  void _onOthersTap() {
-    final numOthers = _numOthers;
-    if (numOthers != null && numOthers > 0) {
-      if (numOthers == 1) {
-        final pubkey = _secondUserPubkey;
-        if (pubkey != null) {
-          FeedProfileRoute(pubkey: pubkey).push<void>(context);
-        }
-      } else {
-        // show all followers
+    void onFirstUserTap() {
+      final pubkey = firstUserPubkey;
+      if (pubkey != null) {
+        FeedProfileRoute(pubkey: pubkey).push<void>(context);
       }
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    final userFollowers = ref.watch(userFollowersProvider(widget.pubkey)).valueOrNull;
+    void onOthersTap() {
+      final numOthersVal = numOthers;
+      if (numOthersVal != null && numOthersVal > 0) {
+        if (numOthersVal == 1) {
+          final pubkey = secondUserPubkey;
+          if (pubkey != null) {
+            FeedProfileRoute(pubkey: pubkey).push<void>(context);
+          }
+        } else {
+          // show all followers
+        }
+      }
+    }
+
+    firstUserTapRecognizer.onTap = onFirstUserTap;
+    othersTapRecognizer.onTap = onOthersTap;
+
+    final userFollowers = ref.watch(userFollowersProvider(pubkey)).valueOrNull;
 
     if (userFollowers == null || userFollowers.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final firstUserPubkey = userFollowers.first;
-    _firstUserPubkey = firstUserPubkey;
+    firstUserPubkey = userFollowers.first;
 
     final firstUserName =
         ref.watch(userMetadataProvider(firstUserPubkey)).valueOrNull?.displayName ?? '';
 
     final totalFollowers = userFollowers.length;
-    final numOthers = totalFollowers - 1;
-    _numOthers = numOthers;
+    numOthers = totalFollowers - 1;
 
     final defaultStyle = context.theme.appTextThemes.body2.copyWith(
       color: context.theme.appColors.primaryText,
@@ -97,7 +89,7 @@ class FollowedByTextState extends ConsumerState<FollowedByText> {
       TextSpan(
         text: firstUserName,
         style: actionableStyle,
-        recognizer: _firstUserTapRecognizer,
+        recognizer: firstUserTapRecognizer,
       ),
     ];
 
@@ -109,15 +101,14 @@ class FollowedByTextState extends ConsumerState<FollowedByText> {
         ),
       );
 
-      final secondUserPubkey = userFollowers.elementAt(1);
-      _secondUserPubkey = secondUserPubkey;
+      secondUserPubkey = userFollowers.elementAt(1);
       final secondUserName =
           ref.watch(userMetadataProvider(secondUserPubkey)).valueOrNull?.displayName ?? '';
       textSpans.add(
         TextSpan(
           text: numOthers == 1 ? secondUserName : context.i18n.profile_followed_by_and_others,
           style: actionableStyle,
-          recognizer: _othersTapRecognizer,
+          recognizer: othersTapRecognizer,
         ),
       );
     }

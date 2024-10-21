@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/pages/profile_page/types/user_content_type.dart';
+import 'package:ion/app/features/user/model/user_content_type.dart';
 
 class ProfileTabsHeaderTab extends StatelessWidget {
   const ProfileTabsHeaderTab({

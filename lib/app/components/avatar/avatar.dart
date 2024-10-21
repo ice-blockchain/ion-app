@@ -17,7 +17,11 @@ class Avatar extends StatelessWidget {
     this.hexagon = false,
     BoxFit? fit,
   })  : borderRadius = borderRadius ?? BorderRadius.circular(size * 0.3),
-        fit = fit ?? BoxFit.fitWidth;
+        fit = fit ?? BoxFit.fitWidth,
+        assert(
+          imageUrl == null || imageWidget == null,
+          'Either imageUrl or imageWidget must be null',
+        );
 
   final double size;
   final BorderRadiusGeometry borderRadius;

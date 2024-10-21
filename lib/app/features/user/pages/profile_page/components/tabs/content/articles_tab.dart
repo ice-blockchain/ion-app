@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/features/user/model/user_content_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
-import 'package:ion/app/features/user/pages/profile_page/types/user_content_type.dart';
 
 class ArticlesTab extends StatelessWidget {
   const ArticlesTab({

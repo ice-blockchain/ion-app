@@ -6,7 +6,6 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/pages/components/user_name_tile/user_name_tile.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/decorations.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followed_by/followed_by.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_about.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions.dart';
@@ -40,7 +39,10 @@ class ProfileDetails extends ConsumerWidget {
       children: [
         Container(
           alignment: Alignment.topCenter,
-          decoration: Decorations.borderBoxDecoration(context),
+          decoration: BoxDecoration(
+            color: context.theme.appColors.secondaryBackground,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0.s)),
+          ),
           child: ScreenSideOffset.small(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

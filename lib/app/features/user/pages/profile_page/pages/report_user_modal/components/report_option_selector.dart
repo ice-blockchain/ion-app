@@ -47,7 +47,7 @@ class ReportOptionSelector extends HookWidget {
               ),
               minimumSize: WidgetStateProperty.all(
                 Size(
-                  MediaQuery.of(context).size.width - ScreenSideOffset.defaultLargeMargin * 2,
+                  MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultLargeMargin * 2,
                   height,
                 ),
               ),

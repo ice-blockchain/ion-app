@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/user/model/user_content_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header_tab.dart';
-import 'package:ion/app/features/user/pages/profile_page/types/user_content_type.dart';
 
 class ProfileTabsHeader extends ConsumerWidget {
   const ProfileTabsHeader({
