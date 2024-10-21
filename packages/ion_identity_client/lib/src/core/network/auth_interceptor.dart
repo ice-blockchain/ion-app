@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
+import 'package:ion_identity_client/src/core/types/request_headers.dart';
 
 class AuthInterceptor extends QueuedInterceptor {
   AuthInterceptor({
@@ -24,7 +25,8 @@ class AuthInterceptor extends QueuedInterceptor {
           final newToken = await delegatedLoginService.delegatedLogin(username: username);
 
           // Update the original request with the new token
-          err.requestOptions.headers['Authorization'] = 'Bearer ${newToken.token}';
+          final newAuthHeader = RequestHeaders.getTokenHeader(token: newToken.token).entries.first;
+          err.requestOptions.headers[newAuthHeader.key] = newAuthHeader.value;
 
           // Retry the original request
           final response = await dio.fetch<dynamic>(err.requestOptions);
