@@ -58,7 +58,7 @@ class ContentCreators extends _$ContentCreators {
       state.items,
       pagination: PaginationParams(
         hasMore: lastEventTime != null,
-        lastEventTime: lastEventTime,
+        lastEventTime: lastEventTime ?? state.pagination.lastEventTime,
       ),
     );
   }

@@ -53,9 +53,11 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         ref.read(nostrCacheProvider.notifier).cache(userRelays);
 
         await ref.read(nostrNotifierProvider.notifier).send([
-          followListEvent,
-          interestSetEvent,
-          interestsEvent,
+          //TODO:uncomment when switched to our relays
+          // damus returns "rate-limited: you are noting too much"
+          // followListEvent,
+          // interestSetEvent,
+          // interestsEvent,
           userRelaysEvent,
           userMetadataEvent,
           userDelegationEvent,

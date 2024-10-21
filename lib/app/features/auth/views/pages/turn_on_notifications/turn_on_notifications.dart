@@ -29,6 +29,7 @@ class TurnOnNotifications extends ConsumerWidget {
       body: AuthScrollContainer(
         title: context.i18n.turn_notifications_title,
         description: context.i18n.turn_notifications_description,
+        showBackButton: false,
         children: [
           Column(
             children: [
