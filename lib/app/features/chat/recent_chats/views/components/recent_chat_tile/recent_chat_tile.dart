@@ -6,6 +6,7 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -193,9 +194,8 @@ class RecentChatMessageIcon extends StatelessWidget {
         PollRecentChatMessage _ => Assets.svg.iconPostPoll,
         MoneyRequestRecentChatMessage _ => Assets.svg.iconProfileTips,
         PhotoRecentChatMessage _ => Assets.svg.iconLoginCamera,
-        VoiceRecentChatMessage _ => Assets.svg.iconLoginCamera, // TODO: Update when design is ready
-        ReplayRecentChatMessage _ =>
-          Assets.svg.iconLoginCamera, // TODO: Update when design is ready
+        VoiceRecentChatMessage _ => Assets.svg.iconChatVoicemessage,
+        ReplayRecentChatMessage _ => Assets.svg.iconChatReplymessage,
       };
 }
 
