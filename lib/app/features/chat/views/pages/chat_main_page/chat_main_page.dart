@@ -1,23 +1,38 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/features/chat/providers/mock.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_empty_page/recent_chats_empty_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_timeline_page/recent_chats_timeline_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/components/chat_main_appbar/chat_main_appbar.dart';
 
-class ChatMainPage extends StatelessWidget {
+class ChatMainPage extends ConsumerWidget {
   const ChatMainPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final hasConversations = mockConversationData.isNotEmpty;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final conversations = ref.watch(conversationsProvider);
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: const ChatMainAppBar(),
       body: ScreenSideOffset.small(
-        child: hasConversations ? const RecentChatsTimelinePage() : const RecentChatsEmptyPage(),
+        child: conversations.when(
+          data: (data) {
+            if (data.isEmpty) {
+              return const RecentChatsEmptyPage();
+            }
+            return const RecentChatsTimelinePage();
+          },
+          loading: () {
+            return const Center(child: CircularProgressIndicator());
+          },
+          error: (_, __) {
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

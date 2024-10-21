@@ -58,6 +58,7 @@
   "common_video": "Video",
   "common_voice_message": "Voice message",
   "common_poll": "Poll",
+  "common_archive": "Archive",
   "auth_secured_by": "Secured by",
   "auth_privacy": "By continuing, you are agreeing to our [[:link]]terms_of_service[[/:link]] & [[:link]]privacy_policy[[/:link]]",
   "auth_terms_of_service": "Terms of Service",
@@ -404,5 +405,6 @@
   "poll_title_placeholder": "Write a question for the poll",
   "chat_recents_money_request_message": "Money requested",
   "toolbar_link_title": "Add a link",
-  "toolbar_link_placeholder": "http://"
+  "toolbar_link_placeholder": "http://",
+  "chat_read_all": "Read all"
 }

@@ -31,30 +31,42 @@ class MainTabNavigation extends HookWidget {
       ),
       bottomNavigationBar: Container(
         decoration: state.isMainModalOpen
-            ? null
+            ? BoxDecoration(
+                color: context.theme.appColors.secondaryBackground,
+              )
             : BoxDecoration(
+                color: context.theme.appColors.secondaryBackground,
                 boxShadow: [
-                  BoxShadow(color: context.theme.appColors.darkBlue.withAlpha(14), blurRadius: 10),
+                  BoxShadow(
+                    color: context.theme.appColors.darkBlue.withAlpha(14),
+                    blurRadius: 10,
+                  ),
                 ],
               ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: context.theme.appColors.secondaryBackground,
-          selectedItemColor: context.theme.appColors.primaryAccent,
-          unselectedItemColor: context.theme.appColors.tertararyText,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          currentIndex: shell.currentIndex,
-          onTap: (index) => _onTabPress(context, index, currentTab, tabPressStreamController),
-          items: TabItem.values.map((tabItem) {
-            return BottomNavigationBarItem(
-              icon: tabItem == TabItem.main
-                  ? const MainTabButton()
-                  : TabIcon(
-                      icon: tabItem.icon,
-                      isSelected: currentTab == tabItem,
-                    ),
-              label: '',
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: TabItem.values.map((tabItem) {
+            final isSelected = currentTab == tabItem;
+            return Expanded(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                // hit
+                onTap: () =>
+                    _onTabPress(context, tabItem.index, currentTab, tabPressStreamController),
+                child: Container(
+                  padding: EdgeInsets.only(
+                    top: 9.0.s,
+                    bottom: MediaQuery.of(context).padding.bottom > 0 ? 23.0.s : 9.0.s,
+                  ),
+                  color: context.theme.appColors.secondaryBackground,
+                  child: tabItem == TabItem.main
+                      ? const MainTabButton()
+                      : TabIcon(
+                          icon: tabItem.icon,
+                          isSelected: isSelected,
+                        ),
+                ),
+              ),
             );
           }).toList(),
         ),
