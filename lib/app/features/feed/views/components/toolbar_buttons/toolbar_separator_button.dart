@@ -15,7 +15,14 @@ class ToolbarSeparatorButton extends StatelessWidget {
     return ActionsToolbarButton(
       icon: Assets.svg.iconArticleSeparator,
       onPressed: () {
-        final index = textEditorController.selection.baseOffset;
+        final selection = textEditorController.selection;
+        var index = selection.baseOffset;
+
+        final currentLine = textEditorController.document.querySegmentLeafNode(index).leaf;
+        if (currentLine == null || currentLine.toPlainText().trim().isNotEmpty) {
+          textEditorController.document.insert(index, '\n');
+          index += 1;
+        }
 
         textEditorController.document.insert(
           index,
@@ -24,7 +31,8 @@ class ToolbarSeparatorButton extends StatelessWidget {
           ),
         );
 
-        textEditorController.moveCursorToPosition(index + 1);
+        textEditorController.document.insert(index + 1, '\n');
+        textEditorController.moveCursorToPosition(index + 2);
       },
     );
   }
