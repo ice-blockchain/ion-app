@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/button/follow_user_button.dart';
+import 'package:ion/app/components/button/follow_button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
@@ -45,7 +45,7 @@ class CreatorListItem extends ConsumerWidget {
             backgroundColor: context.theme.appColors.tertararyBackground,
             contentPadding: EdgeInsets.all(12.0.s),
             borderRadius: BorderRadius.circular(16.0.s),
-            trailing: FollowUserButton(onPressed: onPressed, following: selected),
+            trailing: FollowButton(onPressed: onPressed, following: selected),
             trailingPadding: EdgeInsets.only(left: 6.0.s),
           ),
         );

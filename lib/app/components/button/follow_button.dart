@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-class FollowUserButton extends StatelessWidget {
-  const FollowUserButton({
+class FollowButton extends StatelessWidget {
+  const FollowButton({
     required this.onPressed,
     required this.following,
     super.key,
