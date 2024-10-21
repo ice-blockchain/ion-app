@@ -43,7 +43,7 @@ class FeedMainModalPage extends StatelessWidget {
                     feedType: type,
                     onTap: onPressed,
                   ),
-                  onGranted: () => StoryCameraRoute().push<void>(context),
+                  onGranted: () => StoryRecordRoute().push<void>(context),
                   requestDialog: PermissionRequestSheet.fromType(context, Permission.camera),
                   settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
                 );

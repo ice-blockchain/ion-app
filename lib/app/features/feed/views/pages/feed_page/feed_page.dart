@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_video/story_published_notification.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_post_ids_provider.dart';
@@ -29,6 +32,12 @@ class FeedPage extends HookConsumerWidget {
     final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
+
+    final isStoryPublished = ref.watch(
+      storyCameraControllerProvider.select((state) => state.isStoryPublished),
+    );
+
+    final notificationHeight = 24.0.s;
 
     final appBarSliver = CollapsingAppBar(
       height: FeedControls.height,
@@ -57,29 +66,50 @@ class FeedPage extends HookConsumerWidget {
       const FeedPosts(),
     ];
 
-    return PullRightMenuHandler(
-      child: Scaffold(
-        body: LoadMoreBuilder(
-          slivers: slivers,
-          hasMore: true,
-          onLoadMore: _onLoadMore,
-          builder: (context, slivers) {
-            return PullToRefreshBuilder(
-              sliverAppBar: appBarSliver,
-              slivers: slivers,
-              onRefresh: () => _onRefresh(ref),
-              refreshIndicatorEdgeOffset: FeedControls.height +
-                  MediaQuery.paddingOf(context).top +
-                  ScreenTopOffset.defaultMargin,
-              builder: (context, slivers) {
-                return CustomScrollView(
-                  controller: scrollController,
-                  slivers: slivers,
-                );
-              },
-            );
-          },
-        ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          AnimatedPositioned(
+            duration: 300.ms,
+            top: isStoryPublished ? notificationHeight : 0.0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: PullRightMenuHandler(
+              child: LoadMoreBuilder(
+                slivers: slivers,
+                hasMore: true,
+                onLoadMore: _onLoadMore,
+                builder: (context, slivers) {
+                  return PullToRefreshBuilder(
+                    sliverAppBar: appBarSliver,
+                    slivers: slivers,
+                    onRefresh: () => _onRefresh(ref),
+                    refreshIndicatorEdgeOffset: FeedControls.height +
+                        MediaQuery.paddingOf(context).top +
+                        ScreenTopOffset.defaultMargin,
+                    builder: (context, slivers) {
+                      return CustomScrollView(
+                        controller: scrollController,
+                        slivers: slivers,
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+          // TODO: refactor to support other types of the notifications
+          if (isStoryPublished)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                child: StoryPublishedNotification(height: notificationHeight),
+              ),
+            ),
+        ],
       ),
     );
   }
