@@ -28,7 +28,10 @@ class GetWalletsDataSource {
     try {
       final response = await _networkClient.get(
         walletsPath,
-        headers: RequestHeaders.getAuthorizationHeader(token: token.token),
+        headers: RequestHeaders.getAuthorizationHeaders(
+          token: token.token,
+          username: username,
+        ),
         decoder: GetWalletsResponse.fromJson,
       );
       return response.items;

@@ -45,10 +45,12 @@ class RegisterService {
           ),
         )
         .flatMap(
-          (r) => tokenStorage.setToken(
-            username: username,
-            newToken: r.authentication.token,
-            onError: UnknownRegisterUserFailure.new,
+          (r) => TaskEither.tryCatch(
+            () => tokenStorage.setTokens(
+              username: username,
+              newTokens: r.authentication,
+            ),
+            (error, _) => UnknownRegisterUserFailure(error),
           ),
         )
         .run();

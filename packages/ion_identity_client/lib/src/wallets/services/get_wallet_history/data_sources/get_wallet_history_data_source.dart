@@ -35,7 +35,10 @@ class GetWalletHistoryDataSource {
     try {
       return await _networkClient.get(
         sprintf(walletHistoryPath, [walletId]),
-        headers: RequestHeaders.getAuthorizationHeader(token: token.token),
+        headers: RequestHeaders.getAuthorizationHeaders(
+          token: token.token,
+          username: username,
+        ),
         queryParams: GetWalletHistoryRequestParams(
           limit: pageSize,
           paginationToken: pageToken,

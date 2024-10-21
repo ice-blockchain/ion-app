@@ -36,7 +36,7 @@ class UserWalletsPage extends HookConsumerWidget {
 }
 
 class _CreateWalletAction extends ConsumerWidget {
-  const _CreateWalletAction({super.key});
+  const _CreateWalletAction();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

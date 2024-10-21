@@ -32,7 +32,10 @@ class GetWalletNftsDataSource {
     try {
       return await _networkClient.get(
         sprintf(walletNftsPath, [walletId]),
-        headers: RequestHeaders.getAuthorizationHeader(token: token.token),
+        headers: RequestHeaders.getAuthorizationHeaders(
+          token: token.token,
+          username: username,
+        ),
         decoder: WalletNfts.fromJson,
       );
     } on NetworkException catch (e) {

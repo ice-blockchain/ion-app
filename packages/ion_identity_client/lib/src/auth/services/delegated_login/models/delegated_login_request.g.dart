@@ -1,20 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'authentication.dart';
+part of 'delegated_login_request.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AuthenticationImpl _$$AuthenticationImplFromJson(Map<String, dynamic> json) =>
-    _$AuthenticationImpl(
-      token: json['token'] as String,
+_$DelegatedLoginRequestImpl _$$DelegatedLoginRequestImplFromJson(
+        Map<String, dynamic> json) =>
+    _$DelegatedLoginRequestImpl(
+      username: json['username'] as String,
       refreshToken: json['refreshToken'] as String,
     );
 
-Map<String, dynamic> _$$AuthenticationImplToJson(
-        _$AuthenticationImpl instance) =>
+Map<String, dynamic> _$$DelegatedLoginRequestImplToJson(
+        _$DelegatedLoginRequestImpl instance) =>
     <String, dynamic>{
-      'token': instance.token,
+      'username': instance.username,
       'refreshToken': instance.refreshToken,
     };

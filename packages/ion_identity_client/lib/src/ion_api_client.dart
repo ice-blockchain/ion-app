@@ -3,10 +3,10 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/ion_api_user_client.dart';
-import 'package:ion_identity_client/src/ion_client_config.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 
 /// This class is an entry point for interacting with the API.Provids user-specific operations
@@ -67,8 +67,6 @@ class IonApiClient {
   /// A stream of the usernames of currently authorized users. This stream updates
   /// whenever the user tokens change, providing a real-time view of authenticated users.
   Stream<Iterable<String>> get authorizedUsers => _tokenStorage.userTokens.map(
-        (list) => list.map(
-          (e) => e.username,
-        ),
+        (tokens) => tokens.map((token) => token.username),
       );
 }

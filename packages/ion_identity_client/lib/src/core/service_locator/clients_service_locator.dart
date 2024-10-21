@@ -3,6 +3,8 @@
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/data_sources/data_sources.dart';
 import 'package:ion_identity_client/src/auth/data_sources/recover_user_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/delegated_login/data_sources/delegated_login_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/services.dart';
@@ -87,6 +89,7 @@ mixin _AuthClient {
         config: config,
         signer: signer,
       ),
+      delegatedLoginService: createDelegatedLoginService(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
     );
   }
@@ -178,6 +181,24 @@ mixin _AuthClient {
   }) {
     return RecoverUserDataSource(
       networkClient: IonServiceLocator.getNetworkClient(config: config),
+    );
+  }
+
+  DelegatedLoginService createDelegatedLoginService({
+    required IonClientConfig config,
+  }) {
+    return DelegatedLoginService(
+      dataSource: createDelegatedLoginDataSource(config: config),
+      tokenStorage: IonServiceLocator.getTokenStorage(),
+    );
+  }
+
+  DelegatedLoginDataSource createDelegatedLoginDataSource({
+    required IonClientConfig config,
+  }) {
+    return DelegatedLoginDataSource(
+      networkClient: IonServiceLocator.getNetworkClient2(config: config),
+      tokenStorage: IonServiceLocator.getTokenStorage(),
     );
   }
 }
