@@ -17,7 +17,6 @@ class ChatMainPage extends ConsumerWidget {
     final conversations = ref.watch(conversationsProvider);
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       appBar: const ChatMainAppBar(),
       body: ScreenSideOffset.small(
         child: conversations.when(
