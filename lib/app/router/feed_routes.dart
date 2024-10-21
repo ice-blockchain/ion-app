@@ -7,6 +7,14 @@ class FeedRoutes {
     TypedGoRoute<PostDetailsRoute>(path: 'post/:postId'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
+    TypedGoRoute<FeedProfileRoute>(path: 'profile/:pubkey'),
+    ...ProfileRoutes.routes,
+    TypedGoRoute<PullRightMenuRoute>(path: 'pull-right-menu'),
+    TypedShellRoute<ModalShellRouteData>(
+      routes: [
+        TypedGoRoute<SwitchAccountRoute>(path: 'switch-account'),
+      ],
+    ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:postId'),
@@ -97,6 +105,31 @@ class FeedAdvancedSearchRoute extends BaseRouteData {
         );
 
   final String query;
+}
+
+class FeedProfileRoute extends BaseRouteData {
+  FeedProfileRoute({required this.pubkey})
+      : super(
+          child: ProfilePage(pubkey: pubkey),
+        );
+
+  final String pubkey;
+}
+
+class PullRightMenuRoute extends BaseRouteData {
+  PullRightMenuRoute()
+      : super(
+          child: const PullRightMenuPage(),
+          type: IceRouteType.slideFromLeft,
+        );
+}
+
+class SwitchAccountRoute extends BaseRouteData {
+  SwitchAccountRoute()
+      : super(
+          child: const SwitchAccountModal(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class CreatePostRoute extends BaseRouteData {

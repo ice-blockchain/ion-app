@@ -68,6 +68,9 @@ import 'package:ion/app/features/protect_account/phone/views/components/countrie
 import 'package:ion/app/features/protect_account/phone/views/pages/setup_phone/phone_setup_page.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_modal.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_options_page.dart';
+import 'package:ion/app/features/user/model/follow_type.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/follow_list_modal.dart';
+import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/switch_account_modal.dart';
 import 'package:ion/app/features/wallet/model/nft_data.dart';
@@ -107,6 +110,7 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 part 'app_routes.g.dart';
 part 'auth_routes.dart';
 part 'feed_routes.dart';
+part 'profile_routes.dart';
 part 'protect_account_routes.dart';
 part 'wallet_routes.dart';
 
@@ -309,32 +313,6 @@ class DAppDetailsRoute extends BaseRouteData {
           type: IceRouteType.bottomSheet,
         );
   final int dappId;
-}
-
-@TypedGoRoute<PullRightMenuRoute>(
-  path: '/pull-right-menu',
-  routes: [
-    TypedShellRoute<ModalShellRouteData>(
-      routes: [
-        TypedGoRoute<SwitchAccountRoute>(path: 'switch-account'),
-      ],
-    ),
-  ],
-)
-class PullRightMenuRoute extends BaseRouteData {
-  PullRightMenuRoute()
-      : super(
-          child: const PullRightMenuPage(),
-          type: IceRouteType.slideFromLeft,
-        );
-}
-
-class SwitchAccountRoute extends BaseRouteData {
-  SwitchAccountRoute()
-      : super(
-          child: const SwitchAccountModal(),
-          type: IceRouteType.bottomSheet,
-        );
 }
 
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')

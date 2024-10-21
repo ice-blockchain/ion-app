@@ -35,7 +35,7 @@ class OverlayMenu extends HookWidget {
             children: [
               CompositedTransformFollower(
                 link: followLink,
-                offset: Offset(0, renderBox.size.height).translate(offset.dx, offset.dy),
+                offset: Offset(offset.dx, renderBox.size.height + offset.dy),
                 child: menuBuilder(overlayPortalController.hide),
               ),
             ],

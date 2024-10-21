@@ -49,7 +49,7 @@ class ShareAddressView extends StatelessWidget {
                   minimumSize: Size(56.0.s, 56.0.s),
                   leadingIcon: Assets.svg.iconButtonSend.icon(),
                   label: Text(
-                    context.i18n.wallet_share,
+                    context.i18n.button_share,
                   ),
                   onPressed: () {},
                 ),

@@ -12,13 +12,15 @@ class _ButtonWithIcon extends Button {
     super.borderColor,
     super.borderRadius,
     super.backgroundColor,
+    super.disabled,
     ButtonStyle style = const ButtonStyle(),
     double? size,
+    Size? fixedSize,
   }) : super(
           leadingIcon: icon,
           style: style.merge(
             OutlinedButton.styleFrom(
-              fixedSize: Size.square(size ?? 56.0.s),
+              fixedSize: fixedSize ?? Size.square(size ?? 56.0.s),
               minimumSize: Size.zero,
               padding: EdgeInsets.zero,
               backgroundColor: backgroundColor,

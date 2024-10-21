@@ -8,6 +8,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/utils/username.dart';
 
 class PostHeader extends ConsumerWidget {
@@ -33,6 +34,7 @@ class PostHeader extends ConsumerWidget {
             return const SizedBox.shrink();
           }
           return ListItem.user(
+            onTap: () => FeedProfileRoute(pubkey: pubkey).push<void>(context),
             title: Text(userMetadata.displayName),
             subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
             profilePicture: userMetadata.picture,

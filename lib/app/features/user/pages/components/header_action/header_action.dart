@@ -8,19 +8,22 @@ class HeaderAction extends StatelessWidget {
   const HeaderAction({
     required this.onPressed,
     required this.assetName,
+    this.disabled = false,
     super.key,
   });
 
   final String assetName;
   final VoidCallback onPressed;
+  final bool disabled;
 
-  double get buttonSize => 40.0.s;
+  static double get buttonSize => 40.0.s;
 
   double get iconSize => 20.0.s;
 
   @override
   Widget build(BuildContext context) {
     return Button.icon(
+      disabled: disabled,
       size: buttonSize,
       borderColor: context.theme.appColors.onTerararyFill,
       backgroundColor: context.theme.appColors.tertararyBackground,

@@ -33,12 +33,8 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = imageWidget != null
-        ? SizedBox.square(
-            dimension: size,
-            child: FittedBox(fit: fit, child: imageWidget),
-          )
-        : CachedNetworkImage(
+    final image = imageUrl != null
+        ? CachedNetworkImage(
             imageUrl: imageUrl!,
             width: size,
             height: size,
@@ -46,9 +42,17 @@ class Avatar extends StatelessWidget {
             errorWidget: (context, url, error) {
               return SizedBox.square(
                 dimension: size,
-                child: ColoredBox(color: context.theme.appColors.primaryAccent),
+                child: ColoredBox(color: context.theme.appColors.onSecondaryBackground),
               );
             },
+          )
+        : SizedBox.square(
+            dimension: size,
+            child: FittedBox(
+              fit: fit,
+              child:
+                  imageWidget ?? ColoredBox(color: context.theme.appColors.onSecondaryBackground),
+            ),
           );
 
     return Stack(

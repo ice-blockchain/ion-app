@@ -4,20 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/user/pages/components/user_name_tile/user_name_tile.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/profile_details/profile_details_cell.dart';
 import 'package:ion/app/features/user/providers/user_followers_provider.dart';
 import 'package:ion/app/features/user/providers/user_following_provider.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ion/app/utils/username.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 class ProfileDetails extends ConsumerWidget {
   const ProfileDetails({
     super.key,
   });
-
-  double get verifiedIconSize => 16.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,28 +32,7 @@ class ProfileDetails extends ConsumerWidget {
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      userMetadataValue.displayName,
-                      style: context.theme.appTextThemes.title.copyWith(
-                        color: context.theme.appColors.primaryText,
-                      ),
-                    ),
-                    if (userMetadataValue.verified) ...[
-                      SizedBox(width: 6.0.s),
-                      Assets.svg.iconBadgeVerify.icon(size: verifiedIconSize),
-                    ],
-                  ],
-                ),
-                SizedBox(height: 3.0.s),
-                Text(
-                  prefixUsername(username: userMetadataValue.name, context: context),
-                  style: context.theme.appTextThemes.caption.copyWith(
-                    color: context.theme.appColors.secondaryText,
-                  ),
-                ),
+                UserNameTile(pubkey: currentUserId),
                 SizedBox(height: 20.0.s),
                 SizedBox(
                   height: 45.0.s,

@@ -82,7 +82,7 @@ class TransactionResultSheet extends ConsumerWidget {
                     type: ButtonType.outlined,
                     onPressed: () {},
                     leadingIcon: icons.iconButtonShare.icon(),
-                    label: Text(locale.wallet_share),
+                    label: Text(locale.button_share),
                   ),
                 ),
                 SizedBox(width: 13.0.s),

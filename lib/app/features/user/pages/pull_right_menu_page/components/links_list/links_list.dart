@@ -1,22 +1,26 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/links_list/links_list_tile.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class LinksList extends StatelessWidget {
+class LinksList extends ConsumerWidget {
   const LinksList({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentUserPubKey = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.symmetric(horizontal: 40.0.s),
@@ -30,7 +34,9 @@ class LinksList extends StatelessWidget {
             iconTintColor: context.theme.appColors.orangePeel,
             title: context.i18n.profile_profile,
             subtitle: context.i18n.profile_profile_desc,
-            onTap: () {},
+            onTap: () {
+              FeedProfileRoute(pubkey: currentUserPubKey).push<void>(context);
+            },
           ),
           LinksListTile(
             iconAssetName: Assets.svg.iconProfileFeed,
