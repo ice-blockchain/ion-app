@@ -33,7 +33,7 @@ class ChatSimpleSearchPage extends ConsumerWidget {
               query: query,
               loading: usersSearchResults.isLoading,
               onSubmitted: (String query) {
-                FeedAdvancedSearchRoute(query: query).go(context);
+                ChatAdvancedSearchRoute(query: query).go(context);
                 ref.read(chatSearchHistoryProvider.notifier).addQueryToTheHistory(query);
               },
               onTextChanged: (String text) {
@@ -44,13 +44,16 @@ class ChatSimpleSearchPage extends ConsumerWidget {
               data: (userIds) => userIds == null
                   ? history.userIds.isEmpty && history.queries.isEmpty
                       ? SearchHistoryEmpty(
-                          title: context.i18n.core_empty_search,
+                          title: context.i18n.chat_search_empty,
                         )
                       : SearchHistory(
                           userIds: history.userIds,
                           queries: history.queries,
                           onSelectQuery: (String query) {
                             ChatSimpleSearchRoute(query: query).replace(context);
+                          },
+                          onClearHistory: () {
+                            ref.read(chatSearchHistoryProvider.notifier).clear();
                           },
                         )
                   : userIds.isEmpty

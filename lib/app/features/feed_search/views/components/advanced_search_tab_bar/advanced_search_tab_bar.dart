@@ -3,11 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed_search/model/feed_advanced_search_category.dart';
-import 'package:ion/app/features/feed_search/views/pages/feed_advanced_search_page/components/feed_advanced_search_tab_bar/feed_advanced_search_tab.dart';
+import 'package:ion/app/features/feed_search/model/advanced_search_category.dart';
+import 'package:ion/app/features/feed_search/views/components/advanced_search_tab/advanced_search_tab.dart';
 
-class FeedAdvancedSearchTabBar extends StatelessWidget {
-  const FeedAdvancedSearchTabBar({super.key});
+class AdvancedSearchTabBar extends StatelessWidget {
+  const AdvancedSearchTabBar({required this.categories, super.key});
+
+  final List<AdvancedSearchCategory> categories;
 
   static double get _tabItemHorizontalGap => 16.0.s;
 
@@ -22,8 +24,8 @@ class FeedAdvancedSearchTabBar extends StatelessWidget {
       labelPadding: EdgeInsets.symmetric(horizontal: _tabItemHorizontalGap / 2),
       labelColor: context.theme.appColors.primaryAccent,
       unselectedLabelColor: context.theme.appColors.tertararyText,
-      tabs: FeedAdvancedSearchCategory.values.map((category) {
-        return FeedAdvancedSearchTab(category: category);
+      tabs: categories.map((category) {
+        return AdvancedSearchTab(category: category);
       }).toList(),
       indicatorColor: context.theme.appColors.primaryAccent,
       dividerHeight: 0,

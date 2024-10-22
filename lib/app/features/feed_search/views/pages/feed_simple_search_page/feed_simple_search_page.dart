@@ -52,6 +52,9 @@ class FeedSimpleSearchPage extends ConsumerWidget {
                           onSelectQuery: (String query) {
                             FeedSimpleSearchRoute(query: query).replace(context);
                           },
+                          onClearHistory: () {
+                            ref.read(feedSearchHistoryProvider.notifier).clear();
+                          },
                         )
                   : userIds.isEmpty
                       ? NothingIsFound(

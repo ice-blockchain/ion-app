@@ -50,9 +50,9 @@ class ChatSearchResultsListItem extends ConsumerWidget {
                       ntfAvatar: userMetadata.nft,
                     ),
                   ),
-                  Assets.svg.iconMorePopup.icon(
+                  Assets.svg.iconArrowRight.icon(
                     size: 24.0.s,
-                    color: context.theme.appColors.primaryText,
+                    color: context.theme.appColors.tertararyText,
                   ),
                 ],
               ),

@@ -4,13 +4,14 @@ import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed_search/providers/feed_search_history_provider.dart';
 import 'package:ion/app/features/feed_search/views/components/search_history_clear_confirm/search_history_clear_confirm.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SearchHistoryHeader extends ConsumerWidget {
-  const SearchHistoryHeader({super.key});
+  const SearchHistoryHeader({required this.onClearHistory, super.key});
+
+  final VoidCallback onClearHistory;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +35,7 @@ class SearchHistoryHeader extends ConsumerWidget {
                 ) ??
                 false;
             if (confirmed) {
-              await ref.read(feedSearchHistoryProvider.notifier).clear();
+              onClearHistory();
             }
           },
           child: Padding(

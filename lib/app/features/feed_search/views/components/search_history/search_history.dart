@@ -12,6 +12,7 @@ class SearchHistory extends StatelessWidget {
     required this.userIds,
     required this.queries,
     required this.onSelectQuery,
+    required this.onClearHistory,
     super.key,
   });
 
@@ -20,6 +21,7 @@ class SearchHistory extends StatelessWidget {
   final List<String> queries;
 
   final void Function(String query) onSelectQuery;
+  final VoidCallback onClearHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,9 @@ class SearchHistory extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 20.0.s),
-          const SearchHistoryHeader(),
+          SearchHistoryHeader(
+            onClearHistory: onClearHistory,
+          ),
           if (userIds.isNotEmpty)
             Padding(
               padding: EdgeInsets.only(top: 16.0.s),

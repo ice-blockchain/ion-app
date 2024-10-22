@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed_search/model/feed_advanced_search_category.dart';
+import 'package:ion/app/features/feed_search/model/advanced_search_category.dart';
 
-class FeedAdvancedSearchTab extends StatelessWidget {
-  const FeedAdvancedSearchTab({required this.category, super.key});
+class AdvancedSearchTab extends StatelessWidget {
+  const AdvancedSearchTab({required this.category, super.key});
 
-  final FeedAdvancedSearchCategory category;
+  final AdvancedSearchCategory category;
 
   @override
   Widget build(BuildContext context) {

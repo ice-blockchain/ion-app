@@ -12,13 +12,19 @@ import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class FeedAdvancedSearchNavigation extends HookConsumerWidget {
-  const FeedAdvancedSearchNavigation({
+class AdvancedSearchNavigation extends HookConsumerWidget {
+  const AdvancedSearchNavigation({
     required this.query,
+    required this.onTapSearch,
+    this.onFiltersPressed,
     super.key,
   });
 
   final String query;
+
+  final VoidCallback onTapSearch;
+
+  final VoidCallback? onFiltersPressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,14 +57,15 @@ class FeedAdvancedSearchNavigation extends HookConsumerWidget {
             ),
           ),
           SizedBox(width: 12.0.s),
-          NavigationButton(
-            onPressed: () {
-              FeedSearchFiltersRoute().push<void>(context);
-            },
-            icon: Assets.svg.iconButtonManagecoin.icon(
-              color: context.theme.appColors.primaryText,
+          if (onFiltersPressed != null)
+            NavigationButton(
+              onPressed: () {
+                onFiltersPressed?.call();
+              },
+              icon: Assets.svg.iconButtonManagecoin.icon(
+                color: context.theme.appColors.primaryText,
+              ),
             ),
-          ),
         ],
       ),
     );

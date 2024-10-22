@@ -44,6 +44,7 @@ import 'package:ion/app/features/feed/views/pages/post_details_page/post_details
 import 'package:ion/app/features/feed/views/pages/post_reply_modal/post_reply_modal.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
 import 'package:ion/app/features/feed/views/pages/share_post_modal/share_post_modal.dart';
+import 'package:ion/app/features/feed_search/views/pages/chat_advanced_search_page/chat_advanced_search_page.dart';
 import 'package:ion/app/features/feed_search/views/pages/chat_simple_search_page/chat_simple_search_page.dart';
 import 'package:ion/app/features/feed_search/views/pages/feed_advanced_search_page/feed_advanced_search_page.dart';
 import 'package:ion/app/features/feed_search/views/pages/feed_search_filters_page/feed_search_filters_page.dart';

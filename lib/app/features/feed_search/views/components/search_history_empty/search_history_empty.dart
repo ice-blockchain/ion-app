@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/widgets.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -13,7 +12,8 @@ class SearchHistoryEmpty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: ScreenSideOffset.small(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 70.0.s),
         child: Column(
           children: [
             SizedBox(height: 150.0.s),
@@ -21,6 +21,7 @@ class SearchHistoryEmpty extends StatelessWidget {
             SizedBox(height: 8.0.s),
             Text(
               title,
+              textAlign: TextAlign.center,
               style: context.theme.appTextThemes.body2.copyWith(
                 color: context.theme.appColors.tertararyText,
               ),
