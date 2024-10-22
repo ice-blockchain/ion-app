@@ -5,6 +5,7 @@ part of 'app_routes.dart';
 class ChatRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<AppTestRoute>(path: 'app-test'),
+    TypedGoRoute<ChatSimpleSearchRoute>(path: 'simple-search'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<DeleteConversationRoute>(path: 'delete/:conversationId'),
@@ -25,4 +26,14 @@ class DeleteConversationRoute extends BaseRouteData {
         );
 
   final String conversationId;
+}
+
+class ChatSimpleSearchRoute extends BaseRouteData {
+  ChatSimpleSearchRoute({this.query = ''})
+      : super(
+          child: ChatSimpleSearchPage(query: query),
+          type: IceRouteType.fade,
+        );
+
+  final String query;
 }
