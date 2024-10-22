@@ -25,7 +25,6 @@ class ArticleMainToolbar extends StatelessWidget {
           onPressed: onTypographyPressed,
         ),
         ToolbarListDotsButton(textEditorController: textEditorController),
-        ToolbarListNumbersButton(textEditorController: textEditorController),
         ToolbarListQuoteButton(textEditorController: textEditorController),
         ToolbarMentionButton(textEditorController: textEditorController),
         ToolbarHashtagButton(textEditorController: textEditorController),
