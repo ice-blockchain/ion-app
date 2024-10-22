@@ -12,6 +12,9 @@ part 'user_metadata_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
+  return const UserMetadata(pubkey: '', name: 'name', displayName: 'display name');
+
+  // ignore: dead_code
   final userMetadata = ref.watch(nostrCacheProvider.select(cacheSelector<UserMetadata>(pubkey)));
   if (userMetadata != null) {
     return userMetadata;
