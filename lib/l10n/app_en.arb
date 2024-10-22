@@ -462,5 +462,6 @@
   "code_block_type_java": "Java",
   "code_block_type_javascript": "JavaScript",
   "code_block_type_python": "Python",
-  "code_block_type_dart": "Dart"
+  "code_block_type_dart": "Dart",
+  "write_a_message": "Write a message..."
 }

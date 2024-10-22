@@ -210,3 +210,14 @@ class StoryPreviewRoute extends BaseRouteData {
 
   final String videoPath;
 }
+
+@TypedGoRoute<StoryViewingRoute>(
+  path: '/story-viewing',
+)
+class StoryViewingRoute extends BaseRouteData {
+  StoryViewingRoute()
+      : super(
+          child: const StoryViewingPage(),
+          type: IceRouteType.slideFromLeft,
+        );
+}

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_camera/camera_control_button.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_camera/control_button.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -21,7 +21,7 @@ class IdleCameraPreview extends ConsumerWidget {
         Positioned(
           top: 10.0.s,
           left: 10.0.s,
-          child: CameraControlButton(
+          child: ControlButton(
             icon: Assets.svg.iconSheetClose.icon(color: context.theme.appColors.onPrimaryAccent),
             onPressed: () => context.pop(),
           ),
@@ -29,7 +29,7 @@ class IdleCameraPreview extends ConsumerWidget {
         Positioned(
           top: 10.0.s,
           right: 10.0.s,
-          child: CameraControlButton(
+          child: ControlButton(
             icon: Assets.svg.iconStoryLightning.icon(),
             onPressed: storyCameraNotifier.toggleFlash,
           ),
@@ -37,7 +37,7 @@ class IdleCameraPreview extends ConsumerWidget {
         Positioned(
           bottom: 30.0.s,
           right: 16.0.s,
-          child: CameraControlButton(
+          child: ControlButton(
             icon: Assets.svg.iconStorySwitchcamera.icon(),
             onPressed: () => ref.read(cameraControllerNotifierProvider.notifier).switchCamera(),
           ),
@@ -46,7 +46,7 @@ class IdleCameraPreview extends ConsumerWidget {
         Positioned(
           bottom: 30.0.s,
           left: 16.0.s,
-          child: CameraControlButton(
+          child: ControlButton(
             icon: Assets.svg.iconGalleryOpen.icon(color: context.theme.appColors.onPrimaryAccent),
             onPressed: () {},
           ),
