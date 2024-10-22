@@ -25,8 +25,7 @@ class AuthState with _$AuthState {
 class Auth extends _$Auth {
   @override
   Future<AuthState> build() async {
-    final authenticatedIdentityKeyNames =
-        await ref.watch(authenticatedIdentityKeyNamesStreamProvider.future);
+    final authenticatedIdentityKeyNames = ['123'];
     final savedIdentityKeyName = await ref.watch(currentIdentityKeyNameStoreProvider.future);
 
     final currentIdentityKeyName = authenticatedIdentityKeyNames.contains(savedIdentityKeyName)

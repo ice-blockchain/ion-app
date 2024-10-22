@@ -54,6 +54,8 @@ class NostrNotifier extends _$NostrNotifier {
   }
 
   Future<NostrRelay> _getRelay(ActionSource actionSource) async {
+    return await ref.read(relayProvider('wss://relay.damus.io').future);
+    // ignore: dead_code
     switch (actionSource) {
       case ActionSourceCurrentUser():
         {

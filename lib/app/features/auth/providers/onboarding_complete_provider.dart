@@ -16,6 +16,15 @@ Future<bool?> onboardingComplete(OnboardingCompleteRef ref) async {
     return null;
   }
 
+  final nostrKeyStore1 = await ref.watch(currentUserNostrKeyStoreProvider.future);
+
+  if (nostrKeyStore1 == null) {
+    await ref.read(nostrKeyStoreProvider(currentIdentityKeyName).notifier).generate();
+  }
+
+  return true;
+
+  // ignore: dead_code
   final (identity, delegation, nostrKeyStore) = await (
     ref.watch(currentUserIdentityProvider.future),
     ref.watch(currentUserDelegationProvider.future),
