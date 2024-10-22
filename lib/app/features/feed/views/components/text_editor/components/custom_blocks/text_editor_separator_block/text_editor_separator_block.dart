@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/wipe_styles/remove_block.dart';
 
 const textEditorSeparatorKey = 'text-editor-separator';
 
@@ -31,6 +32,10 @@ class TextEditorSeparatorBuilder extends EmbedBuilder {
     bool inline,
     TextStyle textStyle,
   ) {
-    return const TextEditorSeparator();
+    return TextEditorSeparator(
+      onRemove: () => {
+        removeBlock(controller, node),
+      },
+    );
   }
 }

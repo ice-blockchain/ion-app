@@ -3,9 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_close.dart';
 
 class TextEditorSeparator extends HookWidget {
-  const TextEditorSeparator({super.key});
+  const TextEditorSeparator({
+    required this.onRemove,
+    super.key,
+  });
+
+  final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +28,22 @@ class TextEditorSeparator extends HookWidget {
       onTap: () {
         isSelected.value = !isSelected.value;
       },
-      child: SizedBox(
-        width: double.infinity,
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.0.s),
-            child: SizedBox(
-              width: 217.0.s,
-              height: 24.0.s,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: isSelected.value
-                      ? context.theme.appColors.primaryAccent.withOpacity(0.15)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(16.0.s),
-                ),
-                child: Row(
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 16.0.s),
+          child: Container(
+            width: 217.0.s,
+            height: 24.0.s,
+            decoration: BoxDecoration(
+              color: isSelected.value
+                  ? context.theme.appColors.primaryAccent.withOpacity(0.15)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(16.0.s),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
@@ -59,7 +65,14 @@ class TextEditorSeparator extends HookWidget {
                     ),
                   ],
                 ),
-              ),
+                if (isSelected.value)
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: TextEditorSeparatorClose(
+                      onPressed: onRemove,
+                    ),
+                  ),
+              ],
             ),
           ),
         ),

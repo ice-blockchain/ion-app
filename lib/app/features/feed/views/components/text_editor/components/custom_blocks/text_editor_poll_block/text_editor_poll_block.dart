@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -12,6 +11,7 @@ import 'package:ion/app/features/feed/views/components/text_editor/components/cu
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_close_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_length_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_title.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/wipe_styles/remove_block.dart';
 import 'package:ion/app/features/feed/views/pages/poll_length_time_modal/poll_length_time_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
@@ -105,7 +105,7 @@ class TextEditorPollBuilder extends EmbedBuilder {
           ),
         ),
         PollCloseButton(
-          onClosePress: () => _removePoll(node),
+          onClosePress: () => removeBlock(controller, node),
         ),
       ],
     );
@@ -125,39 +125,6 @@ class TextEditorPollBuilder extends EmbedBuilder {
         onApply: onApply,
       ),
     );
-  }
-
-  void _removePoll(Embed node) {
-    final delta = controller.document.toDelta();
-    var pollIndex = -1;
-    var pollLength = 0;
-    var currentIndex = 0;
-
-    for (final operation in delta.operations) {
-      final length = operation.length ?? 1;
-
-      if (operation.isInsert && operation.data is Map<String, dynamic>) {
-        final data = operation.data! as Map<String, dynamic>;
-        if (data.containsKey('custom')) {
-          pollIndex = currentIndex;
-          pollLength = length;
-          break;
-        }
-      }
-      currentIndex += length;
-    }
-
-    if (pollIndex != -1) {
-      final deleteDelta = Delta()
-        ..retain(pollIndex)
-        ..delete(pollLength);
-
-      controller.compose(
-        deleteDelta,
-        TextSelection.collapsed(offset: pollIndex),
-        ChangeSource.local,
-      );
-    }
   }
 }
 
