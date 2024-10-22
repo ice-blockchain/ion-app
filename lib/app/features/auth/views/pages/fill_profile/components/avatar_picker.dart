@@ -15,9 +15,12 @@ import 'package:ion/generated/assets.gen.dart';
 class AvatarPicker extends HookConsumerWidget {
   const AvatarPicker({
     super.key,
+    this.avatar,
     this.onAvatarPicked,
     this.avatarSize = const Size.square(720),
   });
+
+  final MediaFile? avatar;
 
   final void Function(MediaFile)? onAvatarPicked;
 
@@ -25,7 +28,6 @@ class AvatarPicker extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final avatar = useState<MediaFile?>(null);
     final loading = useState(false);
 
     Future<void> pickAvatar() async {
@@ -39,7 +41,6 @@ class AvatarPicker extends HookConsumerWidget {
         final croppedImage = await mediaService.cropImage(context: context, path: cameraImage.path);
         if (croppedImage == null) return;
         final compressedImage = await compressService.compressImage(croppedImage, size: avatarSize);
-        avatar.value = compressedImage;
         onAvatarPicked?.call(compressedImage);
       } catch (error) {
         // TODO:show error to the user when imp
@@ -53,8 +54,8 @@ class AvatarPicker extends HookConsumerWidget {
         Avatar(
           size: 100.0.s,
           borderRadius: BorderRadius.circular(50.0.s),
-          imageWidget: avatar.value != null
-              ? Image.file(File(avatar.value!.path))
+          imageWidget: avatar != null
+              ? Image.file(File(avatar!.path))
               : Assets.svg.userPhotoArea.icon(size: 100.0.s),
         ),
         Positioned(

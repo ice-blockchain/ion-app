@@ -26,6 +26,8 @@ class MediaFile with _$MediaFile {
     int? height,
     String? mimeType,
   }) = _MediaFile;
+
+  factory MediaFile.fromJson(Map<String, dynamic> json) => _$MediaFileFromJson(json);
 }
 
 class MediaService {

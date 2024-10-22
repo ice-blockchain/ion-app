@@ -27,7 +27,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
-        final (:name, :displayName, :languages, :followees) =
+        final (:name, :displayName, :languages, :followees, :avatar) =
             ref.read(onboardingDataProvider.notifier).requireValues();
 
         final (relayUrls, nostrKeyStore) = await (
