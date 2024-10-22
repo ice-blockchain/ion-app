@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/features/feed/create_story/data/models/story.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
@@ -30,11 +31,11 @@ class StoryList extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           final story = stories[index];
           return StoryListItem(
-            imageUrl: story.imageUrl,
-            label: story.author,
-            nft: story.nft,
-            me: story.me,
-            gradient: storyBorderGradients[story.gradientIndex],
+            imageUrl: story.data.imageUrl,
+            label: story.data.author,
+            nft: story.data.nft,
+            me: story.data.me,
+            gradient: storyBorderGradients[story.data.gradientIndex],
           );
         },
       ),
