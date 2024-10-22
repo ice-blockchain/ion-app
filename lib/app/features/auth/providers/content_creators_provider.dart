@@ -5,7 +5,6 @@ import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
-import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,11 +25,11 @@ class ContentCreators extends _$ContentCreators {
     final requestMessage = RequestMessage()
       ..addFilter(
         RequestFilter(
-          kinds: const [UserMetadata.kind, UserRelays.kind],
+          kinds: const [UserMetadata.kind],
           //TODO: uncomment when our relays are used
           // search: DiscoveryCreatorsSearchExtension().toString(),
           until: state.pagination.until,
-          limit: 40,
+          limit: 20,
         ),
       );
 
@@ -42,16 +41,11 @@ class ContentCreators extends _$ContentCreators {
 
     DateTime? lastEventTime;
     await for (final event in eventsStream) {
-      if (event.kind == UserMetadata.kind) {
-        lastEventTime = event.createdAt;
-        final userMetadata = UserMetadata.fromEventMessage(event);
-        ref.read(nostrCacheProvider.notifier).cache(userMetadata);
-        state =
-            Paged.loading({...state.items}..add(userMetadata.pubkey), pagination: state.pagination);
-      } else if (event.kind == UserRelays.kind) {
-        final userRelays = UserRelays.fromEventMessage(event);
-        ref.read(nostrCacheProvider.notifier).cache(userRelays);
-      }
+      lastEventTime = event.createdAt;
+      final userMetadata = UserMetadata.fromEventMessage(event);
+      ref.read(nostrCacheProvider.notifier).cache(userMetadata);
+      state =
+          Paged.loading({...state.items}..add(userMetadata.pubkey), pagination: state.pagination);
     }
 
     state = Paged.data(
