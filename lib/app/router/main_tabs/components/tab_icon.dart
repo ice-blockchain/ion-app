@@ -15,11 +15,15 @@ class TabIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return icon.icon(
-      size: 24.0.s,
-      color: isSelected
-          ? context.theme.appColors.primaryAccent
-          : context.theme.appColors.tertararyText,
+    return SizedBox(
+      height: 50.0.s,
+      child: icon.icon(
+        size: 24.0.s,
+        fit: BoxFit.none,
+        color: isSelected
+            ? context.theme.appColors.primaryAccent
+            : context.theme.appColors.tertararyText,
+      ),
     );
   }
 }
