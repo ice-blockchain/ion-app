@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_close.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_dot.dart';
 
 class TextEditorSeparator extends HookWidget {
   const TextEditorSeparator({
@@ -52,11 +53,11 @@ class TextEditorSeparator extends HookWidget {
                       color: context.theme.appColors.onTertararyBackground,
                     ),
                     SizedBox(width: separatorsPadding),
-                    _buildDot(context, smallDotSize),
+                    TextEditorSeparatorDot(size: smallDotSize),
                     SizedBox(width: dotsPadding),
-                    _buildDot(context, bigDotSize),
+                    TextEditorSeparatorDot(size: bigDotSize),
                     SizedBox(width: dotsPadding),
-                    _buildDot(context, smallDotSize),
+                    TextEditorSeparatorDot(size: smallDotSize),
                     SizedBox(width: separatorsPadding),
                     Container(
                       width: separatorWidth,
@@ -76,17 +77,6 @@ class TextEditorSeparator extends HookWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildDot(BuildContext context, double size) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: context.theme.appColors.onTertararyBackground,
-        shape: BoxShape.circle,
       ),
     );
   }
