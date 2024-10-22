@@ -26,11 +26,12 @@ class FillProfile extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
+    final onboardingData = ref.watch(onboardingDataProvider);
     final nameController = useTextEditingController.fromValue(
-      TextEditingValue(text: ref.watch(onboardingDataProvider)?.displayName ?? ''),
+      TextEditingValue(text: onboardingData?.displayName ?? ''),
     );
     final nicknameController = useTextEditingController.fromValue(
-      TextEditingValue(text: ref.watch(onboardingDataProvider)?.name ?? ''),
+      TextEditingValue(text: onboardingData?.name ?? ''),
     );
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
@@ -50,7 +51,12 @@ class FillProfile extends HookConsumerWidget {
                     child: Column(
                       children: [
                         SizedBox(height: 20.0.s),
-                        AvatarPicker(onAvatarPicked: (MediaFile mediaFile) {}),
+                        AvatarPicker(
+                          avatar: onboardingData?.avatar,
+                          onAvatarPicked: (MediaFile avatar) {
+                            ref.read(onboardingDataProvider.notifier).avatar = avatar;
+                          },
+                        ),
                         SizedBox(height: 28.0.s),
                         NameInput(controller: nameController),
                         SizedBox(height: 16.0.s),

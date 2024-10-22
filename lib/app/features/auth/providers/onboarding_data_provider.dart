@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:ion/app/services/storage/user_preferences_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,6 +14,7 @@ part 'onboarding_data_provider.g.dart';
 @freezed
 class OnboardingState with _$OnboardingState {
   const factory OnboardingState({
+    MediaFile? avatar,
     String? name,
     String? displayName,
     List<String>? languages,
@@ -47,13 +49,22 @@ class OnboardingData extends _$OnboardingData {
     state = state?.copyWith(followees: followees);
   }
 
-  ({String name, String displayName, List<String> languages, List<String> followees})
-      requireValues() {
+  set avatar(MediaFile avatar) {
+    state = state?.copyWith(avatar: avatar);
+  }
+
+  ({
+    String name,
+    String displayName,
+    List<String> languages,
+    List<String> followees,
+    MediaFile? avatar
+  }) requireValues() {
     final data = state;
 
     if (data == null) throw Exception('OnboardingState is empty');
 
-    final OnboardingState(:name, :displayName, :languages, :followees) = data;
+    final OnboardingState(:name, :displayName, :languages, :followees, :avatar) = data;
 
     if (name == null) {
       throw Exception('OnboardingState.name is empty');
@@ -67,7 +78,13 @@ class OnboardingData extends _$OnboardingData {
     if (followees == null || followees.isEmpty) {
       throw Exception('OnboardingState.followees is empty');
     }
-    return (name: name, displayName: displayName, languages: languages, followees: followees);
+    return (
+      name: name,
+      displayName: displayName,
+      languages: languages,
+      followees: followees,
+      avatar: avatar
+    );
   }
 
   void _saveState(OnboardingState? state) {
