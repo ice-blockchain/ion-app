@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -52,7 +53,7 @@ class AuthenticatorDeleteOptions extends _$AuthenticatorDeleteOptions {
 }
 
 @riverpod
-Set<TwoFaType> selectedTwoFaOptions(SelectedTwoFaOptionsRef ref) {
+Set<TwoFaType> selectedTwoFaOptions(Ref ref) {
   final state = ref.watch(authenticatorDeleteOptionsProvider);
   return state.selectedValues.whereType<TwoFaType>().toSet();
 }

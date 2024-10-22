@@ -52,7 +52,7 @@ class FeedSearchFilter extends _$FeedSearchFilter {
   }
 
   void _listenChanges() {
-    ref.listenSelf((_, next) => _saveState(next));
+    listenSelf((_, next) => _saveState(next));
   }
 
   void _saveState(FeedSearchFiltersState state) {

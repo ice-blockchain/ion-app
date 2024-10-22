@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallet/model/contact_data.dart';
 import 'package:ion/app/features/wallet/providers/mock_data/contacts_mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -7,10 +8,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'contacts_provider.g.dart';
 
 @riverpod
-List<ContactData> contacts(ContactsRef ref) => mockedContactDataArray;
+List<ContactData> contacts(Ref ref) => mockedContactDataArray;
 
 @riverpod
-ContactData contactById(ContactByIdRef ref, {required String id}) {
+ContactData contactById(Ref ref, {required String id}) {
   final contacts = ref.watch(contactsProvider);
 
   return contacts.firstWhere((element) => element.id == id);

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/constants/countries.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -7,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'country_provider.g.dart';
 
 @riverpod
-List<Country> countries(CountriesRef ref) => countriesData;
+List<Country> countries(Ref ref) => countriesData;
 
 @riverpod
 class SelectedCountry extends _$SelectedCountry {
@@ -23,7 +24,7 @@ class SelectedCountry extends _$SelectedCountry {
 }
 
 @riverpod
-Future<List<Country>> countryFilter(CountryFilterRef ref, String searchText) async {
+Future<List<Country>> countryFilter(Ref ref, String searchText) async {
   final countries = ref.watch(countriesProvider);
   if (searchText.isEmpty) {
     return countries;

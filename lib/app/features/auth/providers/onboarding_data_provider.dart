@@ -26,7 +26,7 @@ class OnboardingState with _$OnboardingState {
 class OnboardingData extends _$OnboardingData {
   @override
   OnboardingState? build() {
-    ref.listenSelf((_, next) => _saveState(next));
+    listenSelf((_, next) => _saveState(next));
 
     return _loadSavedState();
   }

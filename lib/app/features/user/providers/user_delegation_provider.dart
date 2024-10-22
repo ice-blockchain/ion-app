@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
@@ -14,7 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_delegation_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<UserDelegation?> userDelegation(UserDelegationRef ref, String pubkey) async {
+Future<UserDelegation?> userDelegation(Ref ref, String pubkey) async {
   final userDelegation =
       ref.watch(nostrCacheProvider.select(cacheSelector<UserDelegation>(pubkey)));
   if (userDelegation != null) {
@@ -36,7 +37,7 @@ Future<UserDelegation?> userDelegation(UserDelegationRef ref, String pubkey) asy
 }
 
 @Riverpod(keepAlive: true)
-Future<UserDelegation?> currentUserDelegation(CurrentUserDelegationRef ref) async {
+Future<UserDelegation?> currentUserDelegation(Ref ref) async {
   final mainWallet = await ref.watch(mainWalletProvider.future);
   if (mainWallet == null) {
     return null;

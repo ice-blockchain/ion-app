@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.dart';
@@ -18,7 +19,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'go_router_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-GoRouter goRouter(GoRouterRef ref) {
+GoRouter goRouter(Ref ref) {
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
   return GoRouter(
@@ -52,7 +53,7 @@ GoRouter goRouter(GoRouterRef ref) {
 
 FutureOr<String?> _mainRedirect({
   required String location,
-  required ProviderRef<GoRouter> ref,
+  required Ref ref,
 }) {
   final hasAuthenticated = (ref.read(authProvider).valueOrNull?.hasAuthenticated).falseOrValue;
   final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;

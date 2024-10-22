@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:camera/camera.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story_camera_state.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
@@ -56,7 +57,7 @@ class StoryCameraController extends _$StoryCameraController {
 }
 
 @riverpod
-Future<String?> assetFilePath(AssetFilePathRef ref, String assetId) async {
+Future<String?> assetFilePath(Ref ref, String assetId) async {
   final assetEntity = await ref.watch(assetEntityProvider(assetId).future);
 
   if (assetEntity == null) return null;

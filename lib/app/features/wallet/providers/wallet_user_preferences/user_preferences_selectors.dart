@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/wallet/model/nft_layout_type.dart';
 import 'package:ion/app/features/wallet/model/nft_sorting_type.dart';
@@ -10,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_preferences_selectors.g.dart';
 
 @riverpod
-bool isBalanceVisibleSelector(IsBalanceVisibleSelectorRef ref) {
+bool isBalanceVisibleSelector(Ref ref) {
   final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
 
   return ref.watch(
@@ -21,7 +22,7 @@ bool isBalanceVisibleSelector(IsBalanceVisibleSelectorRef ref) {
 }
 
 @riverpod
-bool isZeroValueAssetsVisibleSelector(IsZeroValueAssetsVisibleSelectorRef ref) {
+bool isZeroValueAssetsVisibleSelector(Ref ref) {
   final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
 
   return ref.watch(
@@ -32,7 +33,7 @@ bool isZeroValueAssetsVisibleSelector(IsZeroValueAssetsVisibleSelectorRef ref) {
 }
 
 @riverpod
-NftLayoutType nftLayoutTypeSelector(NftLayoutTypeSelectorRef ref) {
+NftLayoutType nftLayoutTypeSelector(Ref ref) {
   final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
 
   return ref.watch(
@@ -43,7 +44,7 @@ NftLayoutType nftLayoutTypeSelector(NftLayoutTypeSelectorRef ref) {
 }
 
 @riverpod
-NftSortingType nftSortingTypeSelector(NftSortingTypeSelectorRef ref) {
+NftSortingType nftSortingTypeSelector(Ref ref) {
   final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
 
   return ref.watch(

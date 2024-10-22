@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/permissions/data/models/models.dart';
 import 'package:ion/app/features/core/permissions/factories/permission_factory.dart';
 import 'package:ion/app/features/core/permissions/strategies/strategies.dart';
@@ -8,12 +9,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'permissions_provider.g.dart';
 
 @riverpod
-PlatformPermissionFactory platformFactory(PlatformFactoryRef ref) {
+PlatformPermissionFactory platformFactory(Ref ref) {
   return PlatformPermissionFactory.forPlatform();
 }
 
 @riverpod
-PermissionStrategy permissionStrategy(PermissionStrategyRef ref, Permission type) {
+PermissionStrategy permissionStrategy(Ref ref, Permission type) {
   final factory = ref.watch(platformFactoryProvider);
 
   return factory.createPermission(type);
@@ -58,7 +59,7 @@ class Permissions extends _$Permissions {
 }
 
 @riverpod
-PermissionStatus permissionStatus(PermissionStatusRef ref, Permission permissionType) {
+PermissionStatus permissionStatus(Ref ref, Permission permissionType) {
   return ref.watch(
     permissionsProvider.select(
       (state) => state.permissions[permissionType] ?? PermissionStatus.unknown,
@@ -67,7 +68,7 @@ PermissionStatus permissionStatus(PermissionStatusRef ref, Permission permission
 }
 
 @riverpod
-bool hasPermission(HasPermissionRef ref, Permission permissionType) {
+bool hasPermission(Ref ref, Permission permissionType) {
   final permissionStatus = ref.watch(permissionStatusProvider(permissionType));
 
   return permissionStatus == PermissionStatus.granted ||
@@ -75,7 +76,7 @@ bool hasPermission(HasPermissionRef ref, Permission permissionType) {
 }
 
 @riverpod
-bool isPermanentlyDenied(IsPermanentlyDeniedRef ref, Permission permissionType) {
+bool isPermanentlyDenied(Ref ref, Permission permissionType) {
   final permissionStatus = ref.watch(permissionStatusProvider(permissionType));
 
   return permissionStatus == PermissionStatus.permanentlyDenied;

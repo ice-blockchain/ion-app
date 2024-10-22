@@ -3,6 +3,7 @@
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -25,7 +26,7 @@ class AppLocale extends _$AppLocale {
 }
 
 @riverpod
-Language localePreferredLanguage(LocalePreferredLanguageRef ref) {
+Language localePreferredLanguage(Ref ref) {
   final appLocale = ref.watch(appLocaleProvider);
   return Language.values.firstWhereOrNull(
         (lang) => appLocale.languageCode.toLowerCase() == lang.isoCode.toLowerCase(),

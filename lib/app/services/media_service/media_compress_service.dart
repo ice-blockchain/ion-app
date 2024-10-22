@@ -8,6 +8,7 @@ import 'package:ffmpeg_helper/ffmpeg_helper.dart';
 import 'package:ffmpeg_wasm/ffmpeg_wasm.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_compression_flutter/image_compression_flutter.dart' as compressor_package;
 import 'package:ion/app/services/logger/logger.dart';
@@ -216,8 +217,7 @@ class MediaCompressionService {
 }
 
 @riverpod
-MediaCompressionService mediaCompressService(MediaCompressServiceRef ref) =>
-    MediaCompressionService();
+MediaCompressionService mediaCompressService(Ref ref) => MediaCompressionService();
 
 class ResizeImageParams {
   ResizeImageParams({

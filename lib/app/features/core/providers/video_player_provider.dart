@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_player/video_player.dart';
 
@@ -10,7 +11,7 @@ part 'video_player_provider.g.dart';
 
 @riverpod
 Raw<VideoPlayerController> videoController(
-  VideoControllerRef ref,
+  Ref ref,
   String sourcePath, {
   bool autoPlay = false,
   bool looping = false,
@@ -50,6 +51,6 @@ class VideoPlayerControllerFactory {
 }
 
 @riverpod
-VideoPlayerControllerFactory videoPlayerControllerFactory(VideoPlayerControllerFactoryRef ref) {
+VideoPlayerControllerFactory videoPlayerControllerFactory(Ref ref) {
   return VideoPlayerControllerFactory();
 }

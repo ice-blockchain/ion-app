@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:ion/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
@@ -10,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'main_wallet_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<Wallet?> mainWallet(MainWalletRef ref) async {
+Future<Wallet?> mainWallet(Ref ref) async {
   final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
   if (currentIdentityKeyName == null) {
     return null;

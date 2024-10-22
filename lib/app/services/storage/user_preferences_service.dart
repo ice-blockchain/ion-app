@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -7,7 +8,7 @@ part 'user_preferences_service.g.dart';
 
 @Riverpod(keepAlive: true)
 UserPreferencesService userPreferencesService(
-  UserPreferencesServiceRef ref, {
+  Ref ref, {
   required String userId,
 }) {
   final localStorage = ref.watch(localStorageProvider);

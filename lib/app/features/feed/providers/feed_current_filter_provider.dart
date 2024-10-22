@@ -45,7 +45,7 @@ class FeedCurrentFilter extends _$FeedCurrentFilter {
   }
 
   void _listenChanges() {
-    ref.listenSelf((_, next) => _saveState(next));
+    listenSelf((_, next) => _saveState(next));
   }
 
   void _saveState(FeedFiltersState state) {

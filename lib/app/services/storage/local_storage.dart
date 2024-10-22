@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/enum.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,11 +10,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 part 'local_storage.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<SharedPreferences> sharedPreferences(SharedPreferencesRef ref) =>
-    SharedPreferences.getInstance();
+Future<SharedPreferences> sharedPreferences(Ref ref) => SharedPreferences.getInstance();
 
 @Riverpod(keepAlive: true)
-LocalStorage localStorage(LocalStorageRef ref) {
+LocalStorage localStorage(Ref ref) {
   final prefs = ref.watch(sharedPreferencesProvider);
 
   return LocalStorage(prefs.requireValue);
