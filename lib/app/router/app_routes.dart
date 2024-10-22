@@ -44,12 +44,6 @@ import 'package:ion/app/features/feed/views/pages/post_details_page/post_details
 import 'package:ion/app/features/feed/views/pages/post_reply_modal/post_reply_modal.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
 import 'package:ion/app/features/feed/views/pages/share_post_modal/share_post_modal.dart';
-import 'package:ion/app/features/feed_search/views/pages/chat_advanced_search_page/chat_advanced_search_page.dart';
-import 'package:ion/app/features/feed_search/views/pages/chat_simple_search_page/chat_simple_search_page.dart';
-import 'package:ion/app/features/feed_search/views/pages/feed_advanced_search_page/feed_advanced_search_page.dart';
-import 'package:ion/app/features/feed_search/views/pages/feed_search_filters_page/feed_search_filters_page.dart';
-import 'package:ion/app/features/feed_search/views/pages/feed_search_languages_page/feed_search_languages_page.dart';
-import 'package:ion/app/features/feed_search/views/pages/feed_simple_search_page/feed_simple_search_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_page.dart';
@@ -71,6 +65,12 @@ import 'package:ion/app/features/protect_account/phone/views/components/countrie
 import 'package:ion/app/features/protect_account/phone/views/pages/setup_phone/phone_setup_page.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_modal.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_options_page.dart';
+import 'package:ion/app/features/search/views/pages/chat_advanced_search_page/chat_advanced_search_page.dart';
+import 'package:ion/app/features/search/views/pages/chat_simple_search_page/chat_simple_search_page.dart';
+import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/feed_advanced_search_page.dart';
+import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filters_page.dart';
+import 'package:ion/app/features/search/views/pages/feed_search_languages_page/feed_search_languages_page.dart';
+import 'package:ion/app/features/search/views/pages/feed_simple_search_page/feed_simple_search_page.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/follow_list_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
