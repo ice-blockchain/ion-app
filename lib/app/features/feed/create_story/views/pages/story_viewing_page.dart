@@ -7,10 +7,7 @@ import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart'
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewing/components/story_action_buttons.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewing/components/story_content.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewing/components/story_header.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewing/components/story_input_field.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewing/components/stories_page_view.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewing/components/story_progress_segments.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
@@ -20,9 +17,7 @@ class StoryViewingPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyViewingState = ref.watch(storyViewingControllerProvider);
-    final pageController = usePageController();
     final currentPage = useState(0);
-    final messageController = useTextEditingController();
 
     useOnInit(() {
       ref.read(storyViewingControllerProvider.notifier).loadStories();
@@ -43,47 +38,18 @@ class StoryViewingPage extends HookConsumerWidget {
             return Column(
               children: [
                 Expanded(
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(16.0.s),
-                        child: PageView.builder(
-                          controller: pageController,
-                          itemCount: stories.length,
-                          onPageChanged: (index) => currentPage.value = index,
-                          itemBuilder: (context, index) {
-                            final story = stories[index];
-                            return GestureDetector(
-                              onTapDown: (details) => _handleTapDown(
-                                details,
-                                context,
-                                pageController,
-                                stories.length,
-                              ),
-                              child: StoryContent(story: story),
-                            );
-                          },
-                        ),
-                      ),
-                      Positioned(
-                        top: 14.0.s,
-                        left: 16.0.s,
-                        right: 22.0.s,
-                        child: StoryHeader(currentStory: currentStory),
-                      ),
-                      Positioned(
-                        bottom: 16.0.s,
-                        left: 16.0.s,
-                        right: 70.0.s,
-                        child: StoryInputField(controller: messageController),
-                      ),
-                      Positioned(
-                        bottom: 16.0.s,
-                        right: 16.0.s,
-                        child: StoryActionButtons(story: currentStory),
-                      ),
-                    ],
+                  child: StoriesPageView(
+                    stories: stories,
+                    currentStory: currentStory.data,
+                    currentPage: currentPage,
+                    onPageChanged: (index) => currentPage.value = index,
+                    onTapDown: (details) => _handleTapNavigation(
+                      context,
+                      details,
+                      currentPage.value,
+                      stories.length,
+                      (nextPage) => currentPage.value = nextPage,
+                    ),
                   ),
                 ),
                 SizedBox(height: 28.0.s),
@@ -92,10 +58,7 @@ class StoryViewingPage extends HookConsumerWidget {
                   currentIndex: currentPage.value,
                   onStoryCompleted: () {
                     if (currentPage.value < stories.length - 1) {
-                      pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
+                      currentPage.value++;
                     }
                   },
                 ),
@@ -108,31 +71,20 @@ class StoryViewingPage extends HookConsumerWidget {
     );
   }
 
-  void _handleTapDown(
-    TapDownDetails details,
+  void _handleTapNavigation(
     BuildContext context,
-    PageController pageController,
+    TapDownDetails details,
+    int currentIndex,
     int totalStories,
+    void Function(int) onPageChanged,
   ) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isLeftSide = details.globalPosition.dx < screenWidth / 2;
 
-    if (isLeftSide) {
-      if (pageController.hasClients && pageController.page != null && pageController.page! > 0) {
-        pageController.previousPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-    } else {
-      if (pageController.hasClients &&
-          pageController.page != null &&
-          pageController.page! < totalStories - 1) {
-        pageController.nextPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
+    if (isLeftSide && currentIndex > 0) {
+      onPageChanged(currentIndex - 1);
+    } else if (!isLeftSide && currentIndex < totalStories - 1) {
+      onPageChanged(currentIndex + 1);
     }
   }
 }

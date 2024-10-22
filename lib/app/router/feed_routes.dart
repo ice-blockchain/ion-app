@@ -215,9 +215,5 @@ class StoryPreviewRoute extends BaseRouteData {
   path: '/story-viewing',
 )
 class StoryViewingRoute extends BaseRouteData {
-  StoryViewingRoute()
-      : super(
-          child: const StoryViewingPage(),
-          type: IceRouteType.slideFromLeft,
-        );
+  StoryViewingRoute() : super(child: const StoryViewingPage());
 }
