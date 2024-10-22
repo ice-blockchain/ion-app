@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
@@ -9,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'onboarding_complete_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<bool?> onboardingComplete(OnboardingCompleteRef ref) async {
+Future<bool?> onboardingComplete(Ref ref) async {
   final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
 
   if (currentIdentityKeyName == null) {

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
@@ -13,7 +14,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'init_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<void> initApp(InitAppRef ref) async {
+Future<void> initApp(Ref ref) async {
   Nostr.initialize();
 
   await Future.wait([

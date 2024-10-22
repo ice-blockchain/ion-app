@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -151,4 +152,4 @@ class MediaService {
 }
 
 @riverpod
-MediaService mediaService(MediaServiceRef ref) => MediaService();
+MediaService mediaService(Ref ref) => MediaService();

@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/user/providers/user_followers_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -29,7 +30,7 @@ class UserFollowing extends _$UserFollowing {
 }
 
 @riverpod
-bool isCurrentUserFollowingSelector(IsCurrentUserFollowingSelectorRef ref, String userId) {
+bool isCurrentUserFollowingSelector(Ref ref, String userId) {
   final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
   return ref.watch(
     userFollowingProvider(currentUserId)
@@ -38,7 +39,7 @@ bool isCurrentUserFollowingSelector(IsCurrentUserFollowingSelectorRef ref, Strin
 }
 
 @riverpod
-bool isCurrentUserFollowerSelector(IsCurrentUserFollowerSelectorRef ref, String userId) {
+bool isCurrentUserFollowerSelector(Ref ref, String userId) {
   final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
   return ref.watch(
     userFollowersProvider(currentUserId)

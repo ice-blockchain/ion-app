@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/riverpod.dart';
 import 'package:ion/app/features/wallet/model/coin_data.dart';
 import 'package:ion/app/features/wallet/model/nft_data.dart';
@@ -21,7 +22,7 @@ class WalletSearchQueryController extends _$WalletSearchQueryController {
 }
 
 @Riverpod(keepAlive: true)
-Future<List<CoinData>> filteredCoins(FilteredCoinsRef ref) async {
+Future<List<CoinData>> filteredCoins(Ref ref) async {
   final searchQuery =
       ref.watch(walletSearchQueryControllerProvider(WalletAssetType.coin)).toLowerCase();
   await ref.debounce();
@@ -31,7 +32,7 @@ Future<List<CoinData>> filteredCoins(FilteredCoinsRef ref) async {
 }
 
 @Riverpod(keepAlive: true)
-Future<List<NftData>> filteredNfts(FilteredNftsRef ref) async {
+Future<List<NftData>> filteredNfts(Ref ref) async {
   final searchQuery =
       ref.watch(walletSearchQueryControllerProvider(WalletAssetType.nft)).toLowerCase();
   await ref.debounce();

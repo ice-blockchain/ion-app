@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
@@ -13,7 +14,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'gallery_provider.g.dart';
 
 @riverpod
-Future<AssetEntity?> assetEntity(AssetEntityRef ref, String id) {
+Future<AssetEntity?> assetEntity(Ref ref, String id) {
   return AssetEntity.fromId(id);
 }
 

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallet/model/wallet_data.dart';
 import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ion/app/features/wallets/providers/selected_wallet_id_provider.dart';
@@ -8,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'wallets_data_provider.g.dart';
 
 @riverpod
-String currentWalletId(CurrentWalletIdRef ref) {
+String currentWalletId(Ref ref) {
   final selectedWalletId = ref.watch(selectedWalletIdNotifierProvider);
   final walletsData = ref.watch(walletsDataNotifierProvider);
 
@@ -20,7 +21,7 @@ String currentWalletId(CurrentWalletIdRef ref) {
 }
 
 @riverpod
-WalletData currentWalletData(CurrentWalletDataRef ref) {
+WalletData currentWalletData(Ref ref) {
   final currentWalletId = ref.watch(currentWalletIdProvider);
   final walletsData = ref.watch(walletsDataNotifierProvider);
 
@@ -28,7 +29,7 @@ WalletData currentWalletData(CurrentWalletDataRef ref) {
 }
 
 @riverpod
-WalletData walletById(WalletByIdRef ref, {required String id}) {
+WalletData walletById(Ref ref, {required String id}) {
   final wallets = ref.read(walletsDataNotifierProvider);
 
   return wallets.firstWhere((wallet) => wallet.id == id);

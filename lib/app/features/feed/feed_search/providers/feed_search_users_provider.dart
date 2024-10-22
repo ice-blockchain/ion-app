@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -7,7 +8,7 @@ part 'feed_search_users_provider.g.dart';
 
 @riverpod
 Future<List<String>?> feedSearchUsers(
-  FeedSearchUsersRef ref,
+  Ref ref,
   String query,
 ) async {
   if (query.isEmpty) {

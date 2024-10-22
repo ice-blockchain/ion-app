@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -9,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'ion_identity_client_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<Raw<IonApiClient>> ionApiClient(IonApiClientRef ref) async {
+Future<Raw<IonApiClient>> ionApiClient(Ref ref) async {
   await ref.watch(envProvider.future);
   final envController = ref.watch(envProvider.notifier);
 

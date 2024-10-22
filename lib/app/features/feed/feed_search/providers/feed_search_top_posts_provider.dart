@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/feed_search/providers/feed_search_filters_provider.dart';
 import 'package:ion/app/features/feed/providers/posts_storage_provider.dart';
@@ -12,7 +13,7 @@ part 'feed_search_top_posts_provider.g.dart';
 
 @riverpod
 Future<List<String>?> feedSearchTopPosts(
-  FeedSearchTopPostsRef ref,
+  Ref ref,
   String query,
 ) async {
   if (query.isEmpty) {

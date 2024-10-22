@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
@@ -11,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_metadata_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
+Future<UserMetadata?> userMetadata(Ref ref, String pubkey) async {
   final userMetadata = ref.watch(nostrCacheProvider.select(cacheSelector<UserMetadata>(pubkey)));
   if (userMetadata != null) {
     return userMetadata;
@@ -34,7 +35,7 @@ Future<UserMetadata?> userMetadata(UserMetadataRef ref, String pubkey) async {
 }
 
 @Riverpod(keepAlive: true)
-Future<UserMetadata?> currentUserMetadata(CurrentUserMetadataRef ref) async {
+Future<UserMetadata?> currentUserMetadata(Ref ref) async {
   final currentUserNostrKey = await ref.watch(currentUserNostrKeyStoreProvider.future);
   if (currentUserNostrKey == null) {
     return null;

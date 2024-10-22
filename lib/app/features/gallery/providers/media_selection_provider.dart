@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/gallery/data/models/media_selection_state.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'media_selection_provider.g.dart';
 
 @riverpod
-int maxSelection(MaxSelectionRef ref) => 5;
+int maxSelection(Ref ref) => 5;
 
 @riverpod
 class MediaSelectionNotifier extends _$MediaSelectionNotifier {
@@ -48,7 +49,7 @@ class MediaSelectionNotifier extends _$MediaSelectionNotifier {
 }
 
 @riverpod
-({bool isSelected, int? order}) mediaSelectionState(MediaSelectionStateRef ref, String path) {
+({bool isSelected, int? order}) mediaSelectionState(Ref ref, String path) {
   final selectedMedia = ref.watch(
     mediaSelectionNotifierProvider.select((state) => state.selectedMedia),
   );
