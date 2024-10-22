@@ -14,7 +14,7 @@ void main() {
 
       final delegationEvent = EventMessage.fromData(
         signer: keyStore,
-        kind: UserDelegation.kind,
+        kind: 10100,
         tags: const [
           ['p', pubkey, '', 'active:1674834236:1,7'],
         ],
@@ -32,7 +32,7 @@ void main() {
 
       final delegationEvent = EventMessage.fromData(
         signer: keyStore,
-        kind: UserDelegation.kind,
+        kind: 10100,
         tags: const [
           ['p', pubkey, '', 'active:1674834236'],
         ],
@@ -53,7 +53,7 @@ void main() {
 
       final delegationEvent = EventMessage.fromData(
         signer: masterKeyStore,
-        kind: UserDelegation.kind,
+        kind: 10100,
         tags: [
           ['p', subKeyStore.publicKey, '', 'active:1674834236'],
         ],
@@ -80,7 +80,7 @@ void main() {
 
       final delegationEvent = EventMessage.fromData(
         signer: masterKeyStore,
-        kind: UserDelegation.kind,
+        kind: 10100,
         tags: [
           ['p', subKeyStore.publicKey, '', 'active:1674834236'],
           ['p', subKeyStore.publicKey, '', 'inactive:1684834236'],
@@ -108,7 +108,7 @@ void main() {
 
       final delegationEvent = EventMessage.fromData(
         signer: masterKeyStore,
-        kind: UserDelegation.kind,
+        kind: 10100,
         tags: [
           ['p', subKeyStore.publicKey, '', 'active:1674834236:0,7'],
         ],
@@ -142,7 +142,7 @@ void main() {
 
       final delegationEvent = EventMessage.fromData(
         signer: masterKeyStore,
-        kind: UserDelegation.kind,
+        kind: 10100,
         tags: initialTags,
         content: '',
       );

@@ -99,13 +99,13 @@ class OnboardingData extends _$OnboardingData {
   }
 
   void reset() {
-    final userId = ref.watch(currentIdentityKeyNameSelectorProvider);
+    final userId = ref.read(currentIdentityKeyNameSelectorProvider);
 
     if (userId == null) {
       return;
     }
 
-    ref.watch(userPreferencesServiceProvider(userId: userId)).remove(_onboardingPersistanceKey);
+    ref.read(userPreferencesServiceProvider(userId: userId)).remove(_onboardingPersistanceKey);
   }
 
   static const _onboardingPersistanceKey = 'onboarding_data';

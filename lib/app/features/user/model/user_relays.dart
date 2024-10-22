@@ -56,6 +56,9 @@ class UserRelay with _$UserRelay {
   const UserRelay._();
 
   factory UserRelay.fromTag(List<String> tag) {
+    if (tag[0] != tagName) {
+      throw Exception('Incorrect tag $tag, expected $tagName');
+    }
     return UserRelay(
       url: tag[1],
       read: tag.length == 2 || tag[2] == 'read',
@@ -64,7 +67,7 @@ class UserRelay with _$UserRelay {
   }
 
   List<String> toTag() {
-    final tag = ['r', url];
+    final tag = [tagName, url];
     if (read && !write) {
       tag.add('read');
     } else if (write && !read) {
@@ -72,4 +75,6 @@ class UserRelay with _$UserRelay {
     }
     return tag;
   }
+
+  static const String tagName = 'r';
 }

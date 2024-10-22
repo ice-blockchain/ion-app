@@ -5,6 +5,7 @@ import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
+import 'package:ion/app/features/user/model/follow_list.dart';
 import 'package:ion/app/features/user/model/interest_set.dart';
 import 'package:ion/app/features/user/model/interests.dart';
 import 'package:ion/app/features/user/model/user_delegation.dart';
@@ -46,18 +47,24 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final (:userDelegation, :userDelegationEvent) =
             await _buildUserDelegation(keyStore: nostrKeyStore);
 
+        final (:followList, :followListEvent) =
+            _buildFollowList(keyStore: nostrKeyStore, followees: followees);
+
         ref.read(nostrCacheProvider.notifier).cache(userRelays);
 
         await ref.read(nostrNotifierProvider.notifier).send([
-          //TODO:add folowees here
-          interestSetEvent,
-          interestsEvent,
+          //TODO:uncomment when switched to our relays
+          // damus returns "rate-limited: you are noting too much"
+          // followListEvent,
+          // interestSetEvent,
+          // interestsEvent,
           userRelaysEvent,
           userMetadataEvent,
           userDelegationEvent,
         ]);
 
-        [userMetadata, userDelegation].forEach(ref.read(nostrCacheProvider.notifier).cache);
+        [followList, interestSet, interests, userMetadata, userDelegation]
+            .forEach(ref.read(nostrCacheProvider.notifier).cache);
 
         ref.read(onboardingDataProvider.notifier).reset();
       },
@@ -155,5 +162,19 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         .buildDelegationEventFrom(userDelegation);
 
     return (userDelegation: userDelegation, userDelegationEvent: userDelegationEvent);
+  }
+
+  ({FollowList followList, EventMessage followListEvent}) _buildFollowList({
+    required KeyStore keyStore,
+    required List<String> followees,
+  }) {
+    final followList = FollowList(
+      pubkey: keyStore.publicKey,
+      list: followees.map((pubkey) => Followee(pubkey: pubkey)).toList(),
+    );
+
+    final followListEvent = followList.toEventMessage(keyStore);
+
+    return (followList: followList, followListEvent: followListEvent);
   }
 }

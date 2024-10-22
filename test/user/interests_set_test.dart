@@ -13,7 +13,7 @@ void main() {
 
       final testEvent = EventMessage.fromData(
         signer: keyStore,
-        kind: InterestSet.kind,
+        kind: 30015,
         tags: const [
           ['d', 'languages'],
           ['t', 'en'],
