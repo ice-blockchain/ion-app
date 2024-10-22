@@ -30,7 +30,7 @@ class FeedAdvancedSearchPage extends HookConsumerWidget {
     return Scaffold(
       body: ScreenTopOffset(
         child: DefaultTabController(
-          length: AdvancedSearchCategory.values.length,
+          length: categories.length,
           child: Column(
             children: [
               AdvancedSearchNavigation(
