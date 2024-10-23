@@ -28,7 +28,9 @@ class NostrAuth with _$NostrAuth {
 
     if (payload != null) {
       final hash = await Sha256().hash(payload!);
-      tags.add(['payload', hex.encode(hash.bytes)]);
+      tags.add(
+        ['payload', hex.encode(hash.bytes)],
+      );
     }
 
     return EventMessage.fromData(
