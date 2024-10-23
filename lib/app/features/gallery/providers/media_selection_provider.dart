@@ -9,7 +9,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'media_selection_provider.g.dart';
 
 @riverpod
-int maxSelection(Ref ref) => 5;
+class MaxSelection extends _$MaxSelection {
+  @override
+  int build() => 5;
+
+  Future<void> update(int newValue) async {
+    state = newValue;
+  }
+}
 
 @riverpod
 class MediaSelectionNotifier extends _$MediaSelectionNotifier {

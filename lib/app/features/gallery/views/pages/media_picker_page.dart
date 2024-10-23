@@ -8,17 +8,27 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class MediaPickerPage extends ConsumerWidget {
-  const MediaPickerPage({super.key});
+class MediaPickerPage extends HookConsumerWidget {
+  const MediaPickerPage({required this.maxSelection, super.key});
+
+  final int maxSelection;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final galleryState = ref.watch(galleryNotifierProvider);
     final selectedMedia = ref.watch(
       mediaSelectionNotifierProvider.select((state) => state.selectedMedia),
+    );
+
+    useOnInit(
+      () {
+        ref.read(maxSelectionProvider.notifier).update(maxSelection);
+      },
+      [maxSelection],
     );
 
     final slivers = [

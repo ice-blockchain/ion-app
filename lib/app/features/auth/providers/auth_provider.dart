@@ -15,6 +15,7 @@ class AuthState with _$AuthState {
     required List<String> authenticatedIdentityKeyNames,
     required String? currentIdentityKeyName,
   }) = _AuthState;
+
   const AuthState._();
 
   bool get hasAuthenticated {
@@ -62,6 +63,12 @@ String? currentIdentityKeyNameSelector(Ref ref) {
   return ref.watch(
     authProvider.select((state) => state.valueOrNull?.currentIdentityKeyName),
   );
+}
+
+@riverpod
+bool isCurrentUserSelector(Ref ref, String userId) {
+  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+  return currentUserId == userId;
 }
 
 @Riverpod(keepAlive: true)

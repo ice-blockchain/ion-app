@@ -100,6 +100,7 @@ class Button extends StatelessWidget {
     Color? backgroundColor,
     double? leadingIconOffset,
     double? trailingIconOffset,
+    EdgeInsetsGeometry? padding,
     bool useDefaultBorderRadius,
     bool useDefaultPaddings,
     bool disabled,
