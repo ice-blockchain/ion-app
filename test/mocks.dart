@@ -26,5 +26,7 @@ class MockWalletsDataNotifier extends AsyncNotifier<List<WalletData>>
   final List<WalletData> data;
 
   @override
-  AsyncValue<List<WalletData>> get state => AsyncData(data);
+  Future<List<WalletData>> build() async {
+    return data;
+  }
 }

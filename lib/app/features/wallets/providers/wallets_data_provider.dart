@@ -16,7 +16,7 @@ Future<String> currentWalletId(Ref ref) async {
 
   final selectedWallet =
       walletsData.firstWhereOrNull((wallet) => wallet.id == savedSelectedWalletId);
-  return selectedWallet?.id ?? walletsData.first.id;
+  return selectedWallet?.id ?? walletsData.firstOrNull?.id ?? '';
 }
 
 @riverpod
