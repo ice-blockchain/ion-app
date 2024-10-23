@@ -7,7 +7,8 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/pages/manage_wallets_modal/components/manage_wallets_list/manage_wallets_list.dart';
+import 'package:ion/app/features/wallet/components/wallets_list/wallets_list.dart';
+import 'package:ion/app/features/wallets/pages/manage_wallets_modal/components/manage_wallets_list/manage_wallet_tile.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -42,7 +43,11 @@ class ManageWalletsModal extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
               ),
             ),
-            ScreenSideOffset.small(child: const ManageWalletsList()),
+            ScreenSideOffset.small(
+              child: WalletsList(
+                itemBuilder: (walletData) => ManageWalletTile(walletId: walletData.id),
+              ),
+            ),
             SizedBox(height: MediaQuery.paddingOf(context).bottom + 16.0.s),
           ],
         ),

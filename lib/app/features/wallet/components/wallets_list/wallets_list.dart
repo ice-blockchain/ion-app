@@ -3,13 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallets/pages/wallets_modal/components/wallets_list/wallet_tile.dart';
+import 'package:ion/app/features/wallet/model/wallet_data.dart';
 import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
 
 class WalletsList extends ConsumerWidget {
   const WalletsList({
+    required this.itemBuilder,
     super.key,
   });
+
+  final Widget Function(WalletData) itemBuilder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,10 +27,7 @@ class WalletsList extends ConsumerWidget {
       padding: EdgeInsets.only(top: 6.0.s),
       child: Column(
         children: [
-          for (final walletData in walletsData)
-            WalletTile(
-              walletData: walletData,
-            ),
+          for (final walletData in walletsData) itemBuilder(walletData),
         ],
       ),
     );
