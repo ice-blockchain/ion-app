@@ -16,8 +16,9 @@ class WalletUserPreferencesNotifier extends _$WalletUserPreferencesNotifier {
   static String nftSortingTypeKey = 'UserPreferences:nftSortingType';
 
   @override
-  UserPreferences build({required String userId}) {
-    final userPreferencesService = ref.watch(userPreferencesServiceProvider(userId: userId));
+  UserPreferences build({required String identityKeyName}) {
+    final userPreferencesService =
+        ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
 
     final isBalanceVisible = userPreferencesService.getValue<bool>(isBalanceVisibleKey) ?? true;
 
@@ -45,7 +46,8 @@ class WalletUserPreferencesNotifier extends _$WalletUserPreferencesNotifier {
   }
 
   void switchBalanceVisibility() {
-    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: userId));
+    final userPreferencesService =
+        ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName));
     state = state.copyWith(isBalanceVisible: !state.isBalanceVisible);
     userPreferencesService.setValue(
       isBalanceVisibleKey,
@@ -54,7 +56,8 @@ class WalletUserPreferencesNotifier extends _$WalletUserPreferencesNotifier {
   }
 
   void switchZeroValueAssetsVisibility() {
-    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: userId));
+    final userPreferencesService =
+        ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName));
     state = state.copyWith(
       isZeroValueAssetsVisible: !state.isZeroValueAssetsVisible,
     );
@@ -65,7 +68,8 @@ class WalletUserPreferencesNotifier extends _$WalletUserPreferencesNotifier {
   }
 
   void setNftLayoutType(NftLayoutType newNftLayoutType) {
-    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: userId));
+    final userPreferencesService =
+        ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName));
     state = state.copyWith(
       nftLayoutType: newNftLayoutType,
     );
@@ -76,7 +80,8 @@ class WalletUserPreferencesNotifier extends _$WalletUserPreferencesNotifier {
   }
 
   void setNftSortingType(NftSortingType newNftSortingType) {
-    final userPreferencesService = ref.read(userPreferencesServiceProvider(userId: userId));
+    final userPreferencesService =
+        ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName));
     state = state.copyWith(
       nftSortingType: newNftSortingType,
     );

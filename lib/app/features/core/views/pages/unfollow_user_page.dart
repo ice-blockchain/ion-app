@@ -23,7 +23,7 @@ class UnfollowUserModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+    final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
     final name = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.name ?? '';
 
     return Column(
@@ -45,7 +45,7 @@ class UnfollowUserModal extends ConsumerWidget {
             ),
             onPressed: () {
               rootNavigatorKey.currentState?.pop();
-              ref.read(userFollowingProvider(currentUserId).notifier).toggleFollow(pubkey);
+              ref.read(userFollowingProvider(identityKeyName).notifier).toggleFollow(pubkey);
             },
             label: Text(context.i18n.button_unfollow),
             mainAxisSize: MainAxisSize.max,

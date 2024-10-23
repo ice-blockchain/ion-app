@@ -27,11 +27,11 @@ class FollowListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userIdsResult = (followType == FollowType.followers
+    final pubKeysResult = (followType == FollowType.followers
         ? ref.watch(userFollowersProvider(pubkey))
         : ref.watch(userFollowingProvider(pubkey)));
 
-    final counter = userIdsResult.valueOrNull?.length ?? 0;
+    final counter = pubKeysResult.valueOrNull?.length ?? 0;
 
     return SheetContent(
       body: CustomScrollView(
@@ -66,14 +66,14 @@ class FollowListView extends ConsumerWidget {
               ),
             ),
           ),
-          userIdsResult.maybeWhen(
-            data: (userIds) {
-              final userIdsList = userIds.toList();
+          pubKeysResult.maybeWhen(
+            data: (pubKeys) {
+              final pubKeysList = pubKeys.toList();
 
               return SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    final pubkey = userIdsList[index];
+                    final pubkey = pubKeysList[index];
                     return ScreenSideOffset.small(
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 16.0.s),
@@ -83,7 +83,7 @@ class FollowListView extends ConsumerWidget {
                       ),
                     );
                   },
-                  childCount: userIdsList.length,
+                  childCount: pubKeysList.length,
                 ),
               );
             },

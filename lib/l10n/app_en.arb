@@ -408,5 +408,6 @@
   "toolbar_link_placeholder": "http://",
   "chat_read_all": "Read All",
   "chat_delete_modal_title": "Delete chat?",
-  "chat_delete_modal_description": "Are you sure you want to delete all selected chats?"
+  "chat_delete_modal_description": "Are you sure you want to delete all selected chats?",
+  "chat_search_empty": "Search here for users, chats, groups, and channels..."
 }

@@ -21,7 +21,7 @@ class AccountsTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider);
+    final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
     final keyStore = ref.watch(nostrKeyStoreProvider(identityKeyName)).valueOrNull;
 
     if (keyStore == null) {
@@ -29,7 +29,7 @@ class AccountsTile extends ConsumerWidget {
     }
 
     final userMetadataValue = ref.watch(userMetadataProvider(keyStore.publicKey)).valueOrNull;
-    final isCurrentUser = identityKeyName == currentUserId;
+    final isCurrentUser = identityKeyName == currentIdentityKeyName;
 
     if (userMetadataValue == null) {
       return Skeleton(child: ListItem());

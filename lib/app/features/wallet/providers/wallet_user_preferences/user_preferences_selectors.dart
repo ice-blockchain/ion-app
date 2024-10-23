@@ -12,10 +12,10 @@ part 'user_preferences_selectors.g.dart';
 
 @riverpod
 bool isBalanceVisibleSelector(Ref ref) {
-  final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
 
   return ref.watch(
-    walletUserPreferencesNotifierProvider(userId: userId).select(
+    walletUserPreferencesNotifierProvider(identityKeyName: identityKeyName).select(
       (UserPreferences userPreferences) => userPreferences.isBalanceVisible,
     ),
   );
@@ -23,10 +23,10 @@ bool isBalanceVisibleSelector(Ref ref) {
 
 @riverpod
 bool isZeroValueAssetsVisibleSelector(Ref ref) {
-  final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
 
   return ref.watch(
-    walletUserPreferencesNotifierProvider(userId: userId).select(
+    walletUserPreferencesNotifierProvider(identityKeyName: identityKeyName).select(
       (UserPreferences userPreferences) => userPreferences.isZeroValueAssetsVisible,
     ),
   );
@@ -34,10 +34,10 @@ bool isZeroValueAssetsVisibleSelector(Ref ref) {
 
 @riverpod
 NftLayoutType nftLayoutTypeSelector(Ref ref) {
-  final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
 
   return ref.watch(
-    walletUserPreferencesNotifierProvider(userId: userId).select(
+    walletUserPreferencesNotifierProvider(identityKeyName: identityKeyName).select(
       (UserPreferences userPreferences) => userPreferences.nftLayoutType,
     ),
   );
@@ -45,10 +45,10 @@ NftLayoutType nftLayoutTypeSelector(Ref ref) {
 
 @riverpod
 NftSortingType nftSortingTypeSelector(Ref ref) {
-  final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
 
   return ref.watch(
-    walletUserPreferencesNotifierProvider(userId: userId).select(
+    walletUserPreferencesNotifierProvider(identityKeyName: identityKeyName).select(
       (UserPreferences userPreferences) => userPreferences.nftSortingType,
     ),
   );

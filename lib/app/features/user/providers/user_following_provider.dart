@@ -12,37 +12,37 @@ part 'user_following_provider.g.dart';
 @Riverpod(keepAlive: true)
 class UserFollowing extends _$UserFollowing {
   @override
-  Future<Set<String>> build(String userId) async {
+  Future<Set<String>> build(String pubKey) async {
     await Future<void>.delayed(Duration(milliseconds: Random().nextInt(500) + 300));
     return {};
   }
 
-  Future<void> toggleFollow(String userId) async {
+  Future<void> toggleFollow(String pubKey) async {
     final stateValue = state.valueOrNull;
     if (stateValue == null) return;
 
-    if (stateValue.contains(userId)) {
-      state = AsyncValue.data({...stateValue}..remove(userId));
+    if (stateValue.contains(pubKey)) {
+      state = AsyncValue.data({...stateValue}..remove(pubKey));
     } else {
-      state = AsyncValue.data({...stateValue}..add(userId));
+      state = AsyncValue.data({...stateValue}..add(pubKey));
     }
   }
 }
 
 @riverpod
-bool isCurrentUserFollowingSelector(Ref ref, String userId) {
-  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+bool isCurrentUserFollowingSelector(Ref ref, String pubKey) {
+  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
   return ref.watch(
-    userFollowingProvider(currentUserId)
-        .select((state) => state.valueOrNull?.contains(userId) ?? false),
+    userFollowingProvider(identityKeyName)
+        .select((state) => state.valueOrNull?.contains(pubKey) ?? false),
   );
 }
 
 @riverpod
-bool isCurrentUserFollowerSelector(Ref ref, String userId) {
-  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+bool isCurrentUserFollowerSelector(Ref ref, String pubKey) {
+  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
   return ref.watch(
-    userFollowersProvider(currentUserId)
-        .select((state) => state.valueOrNull?.contains(userId) ?? false),
+    userFollowersProvider(identityKeyName)
+        .select((state) => state.valueOrNull?.contains(pubKey) ?? false),
   );
 }

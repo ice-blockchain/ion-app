@@ -17,7 +17,7 @@ class PullRightMenuPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserPubKey = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+    final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
 
     return Material(
       color: context.theme.appColors.secondaryBackground,
@@ -32,7 +32,7 @@ class PullRightMenuPage extends ConsumerWidget {
           children: [
             Positioned(
               child: BackgroundPicture(
-                pubkey: currentUserPubKey,
+                pubkey: identityKeyName,
               ),
             ),
             SingleChildScrollView(

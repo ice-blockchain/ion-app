@@ -5,6 +5,7 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
+import 'package:ion/app/router/app_routes.dart';
 
 class RecentChatsTimelinePage extends StatelessWidget {
   const RecentChatsTimelinePage({super.key});
@@ -15,8 +16,12 @@ class RecentChatsTimelinePage extends StatelessWidget {
       slivers: [
         SliverAppBar(
           backgroundColor: Colors.transparent,
-          flexibleSpace: const FlexibleSpaceBar(
-            background: SearchInput(),
+          flexibleSpace: FlexibleSpaceBar(
+            background: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => ChatSimpleSearchRoute().push<void>(context),
+              child: const IgnorePointer(child: SearchInput()),
+            ),
           ),
           toolbarHeight: SearchInput.height,
         ),

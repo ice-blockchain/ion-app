@@ -9,19 +9,19 @@ part 'user_preferences_service.g.dart';
 @Riverpod(keepAlive: true)
 UserPreferencesService userPreferencesService(
   Ref ref, {
-  required String userId,
+  required String identityKeyName,
 }) {
   final localStorage = ref.watch(localStorageProvider);
-  return UserPreferencesService(userId, localStorage);
+  return UserPreferencesService(identityKeyName, localStorage);
 }
 
 class UserPreferencesService {
   UserPreferencesService(
-    this._userId,
+    this._identityKeyName,
     this._localStorage,
   );
 
-  final String _userId;
+  final String _identityKeyName;
   final LocalStorage _localStorage;
 
   Future<bool> setValue<T>(String key, T value) {
@@ -69,5 +69,5 @@ class UserPreferencesService {
     return _localStorage.remove(userKey);
   }
 
-  String _getUserKey(String key) => 'user_$_userId:$key';
+  String _getUserKey(String key) => 'user_$_identityKeyName:$key';
 }
