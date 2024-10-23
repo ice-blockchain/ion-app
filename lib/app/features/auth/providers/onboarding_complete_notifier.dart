@@ -5,6 +5,7 @@ import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
+import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';
 import 'package:ion/app/features/user/model/interest_set.dart';
 import 'package:ion/app/features/user/model/interests.dart';
@@ -34,6 +35,10 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
           _assignUserRelays(followees: followees),
           _generateNostrKeyStore(),
         ).wait;
+
+        if (avatar != null) {
+          await ref.read(nostrUploadNotifierProvider.notifier).upload(avatar);
+        }
 
         final (:userRelays, :userRelaysEvent) =
             _buildUserRelays(keyStore: nostrKeyStore, relayUrls: relayUrls);

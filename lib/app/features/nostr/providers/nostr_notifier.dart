@@ -61,12 +61,12 @@ class NostrNotifier extends _$NostrNotifier {
           if (keyStore == null) {
             throw Exception('Current user keystore is not found');
           }
-          final userRelays = await _getUserRelays(keyStore.publicKey);
+          final userRelays = await getUserRelays(keyStore.publicKey);
           return await ref.read(relayProvider(userRelays.list.random.url).future);
         }
       case ActionSourceUser():
         {
-          final userRelays = await _getUserRelays(actionSource.pubkey);
+          final userRelays = await getUserRelays(actionSource.pubkey);
           return await ref.read(relayProvider(userRelays.list.random.url).future);
         }
       case ActionSourceIndexers():
@@ -80,7 +80,7 @@ class NostrNotifier extends _$NostrNotifier {
     }
   }
 
-  Future<UserRelays> _getUserRelays(String pubkey) async {
+  Future<UserRelays> getUserRelays(String pubkey) async {
     final cached = ref.read(nostrCacheProvider.select(cacheSelector<UserRelays>(pubkey)));
     if (cached != null) {
       return cached;
