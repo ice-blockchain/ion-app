@@ -9,14 +9,14 @@ import 'package:ion/app/features/search/views/components/search_history/search_h
 
 class SearchHistory extends StatelessWidget {
   const SearchHistory({
-    required this.userIds,
+    required this.pubKeys,
     required this.queries,
     required this.onSelectQuery,
     required this.onClearHistory,
     super.key,
   });
 
-  final List<String> userIds;
+  final List<String> pubKeys;
 
   final List<String> queries;
 
@@ -32,7 +32,7 @@ class SearchHistory extends StatelessWidget {
           SearchHistoryHeader(
             onClearHistory: onClearHistory,
           ),
-          if (userIds.isNotEmpty)
+          if (pubKeys.isNotEmpty)
             Padding(
               padding: EdgeInsets.only(top: 16.0.s),
               child: SizedBox(
@@ -40,10 +40,10 @@ class SearchHistory extends StatelessWidget {
                 child: ListView.separated(
                   padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
                   scrollDirection: Axis.horizontal,
-                  itemCount: userIds.length,
+                  itemCount: pubKeys.length,
                   separatorBuilder: (context, index) => SizedBox(width: 12.0.s),
                   itemBuilder: (context, index) =>
-                      FeedSearchHistoryUserListItem(userId: userIds[index]),
+                      FeedSearchHistoryUserListItem(pubKey: pubKeys[index]),
                 ),
               ),
             ),

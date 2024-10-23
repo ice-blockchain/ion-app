@@ -56,8 +56,8 @@ class FeedSearchFilter extends _$FeedSearchFilter {
   }
 
   void _saveState(FeedSearchFiltersState state) {
-    final userId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
-    ref.read(userPreferencesServiceProvider(userId: userId))
+    final pubKey = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
+    ref.read(userPreferencesServiceProvider(pubKey: pubKey))
       ..setEnum(_feedSearchPeopleFilterKey, state.people)
       ..setValue<List<String>>(
         _feedSearchLanguagesFilterKey,
@@ -66,8 +66,8 @@ class FeedSearchFilter extends _$FeedSearchFilter {
   }
 
   FeedSearchFiltersState _loadSavedState() {
-    final userId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
-    final userPreferencesService = ref.watch(userPreferencesServiceProvider(userId: userId));
+    final pubKey = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+    final userPreferencesService = ref.watch(userPreferencesServiceProvider(pubKey: pubKey));
 
     final people =
         userPreferencesService.getEnum(_feedSearchPeopleFilterKey, FeedSearchFilterPeople.values);

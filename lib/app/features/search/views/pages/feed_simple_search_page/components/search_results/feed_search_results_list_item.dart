@@ -11,15 +11,15 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/utils/username.dart';
 
 class FeedSearchResultsListItem extends ConsumerWidget {
-  const FeedSearchResultsListItem({required this.userId, super.key});
+  const FeedSearchResultsListItem({required this.pubKey, super.key});
 
   static double get itemVerticalOffset => 8.0.s;
 
-  final String userId;
+  final String pubKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(userMetadataProvider(userId));
+    final userMetadata = ref.watch(userMetadataProvider(pubKey));
     return Padding(
       padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),
       child: ScreenSideOffset.small(

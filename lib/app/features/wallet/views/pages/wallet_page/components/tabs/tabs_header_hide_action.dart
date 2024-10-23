@@ -28,9 +28,9 @@ class WalletTabsHeaderHideAction extends ConsumerWidget {
 
     return TextButton(
       onPressed: () {
-        final userId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
+        final pubKey = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
         ref
-            .read(walletUserPreferencesNotifierProvider(userId: userId).notifier)
+            .read(walletUserPreferencesNotifierProvider(pubKey: pubKey).notifier)
             .switchZeroValueAssetsVisibility();
       },
       child: Padding(

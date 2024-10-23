@@ -41,13 +41,13 @@ class ChatSimpleSearchPage extends ConsumerWidget {
               },
             ),
             usersSearchResults.maybeWhen(
-              data: (userIds) => userIds == null
-                  ? history.userIds.isEmpty && history.queries.isEmpty
+              data: (pubKeys) => pubKeys == null
+                  ? history.pubKeys.isEmpty && history.queries.isEmpty
                       ? SearchHistoryEmpty(
                           title: context.i18n.chat_search_empty,
                         )
                       : SearchHistory(
-                          userIds: history.userIds,
+                          pubKeys: history.pubKeys,
                           queries: history.queries,
                           onSelectQuery: (String query) {
                             ChatSimpleSearchRoute(query: query).replace(context);
@@ -56,11 +56,11 @@ class ChatSimpleSearchPage extends ConsumerWidget {
                             ref.read(chatSearchHistoryProvider.notifier).clear();
                           },
                         )
-                  : userIds.isEmpty
+                  : pubKeys.isEmpty
                       ? NothingIsFound(
                           title: context.i18n.core_empty_search,
                         )
-                      : ChatSearchResults(userIds: userIds),
+                      : ChatSearchResults(pubKeys: pubKeys),
               orElse: SearchResultsSkeleton.new,
             ),
           ],

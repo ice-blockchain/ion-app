@@ -7,22 +7,22 @@ import 'package:ion/app/features/search/views/pages/feed_simple_search_page/comp
 
 class FeedSearchResults extends ConsumerWidget {
   const FeedSearchResults({
-    required this.userIds,
+    required this.pubKeys,
     super.key,
   });
 
   static double get listVerticalOffset => 14.0.s;
 
-  final List<String> userIds;
+  final List<String> pubKeys;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Flexible(
       child: ListView.builder(
         padding: EdgeInsets.symmetric(vertical: listVerticalOffset),
-        itemCount: userIds.length,
+        itemCount: pubKeys.length,
         itemBuilder: (context, index) {
-          return FeedSearchResultsListItem(userId: userIds[index]);
+          return FeedSearchResultsListItem(pubKey: pubKeys[index]);
         },
       ),
     );

@@ -10,13 +10,13 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/utils/username.dart';
 
 class FeedSearchHistoryUserListItem extends ConsumerWidget {
-  const FeedSearchHistoryUserListItem({required this.userId, super.key});
+  const FeedSearchHistoryUserListItem({required this.pubKey, super.key});
 
-  final String userId;
+  final String pubKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(userMetadataProvider(userId));
+    final userMetadata = ref.watch(userMetadataProvider(pubKey));
     return userMetadata.maybeWhen(
       data: (data) => data != null ? _UserListItem(userMetadata: data) : const SizedBox.shrink(),
       orElse: _UserListItemLoading.new,

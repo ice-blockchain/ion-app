@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_followers_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<List<String>> userFollowers(Ref ref, String userId) async {
+Future<List<String>> userFollowers(Ref ref, String pubKey) async {
   await Future<void>.delayed(Duration(milliseconds: Random().nextInt(500) + 300));
   return [
     'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
