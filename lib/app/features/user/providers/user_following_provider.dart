@@ -31,18 +31,18 @@ class UserFollowing extends _$UserFollowing {
 
 @riverpod
 bool isCurrentUserFollowingSelector(Ref ref, String pubKey) {
-  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
   return ref.watch(
-    userFollowingProvider(currentUserId)
+    userFollowingProvider(identityKeyName)
         .select((state) => state.valueOrNull?.contains(pubKey) ?? false),
   );
 }
 
 @riverpod
 bool isCurrentUserFollowerSelector(Ref ref, String pubKey) {
-  final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
   return ref.watch(
-    userFollowersProvider(currentUserId)
+    userFollowersProvider(identityKeyName)
         .select((state) => state.valueOrNull?.contains(pubKey) ?? false),
   );
 }

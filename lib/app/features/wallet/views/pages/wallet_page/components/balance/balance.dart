@@ -52,9 +52,12 @@ class Balance extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () {
-                    final pubKey = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
+                    final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
                     ref
-                        .read(walletUserPreferencesNotifierProvider(pubKey: pubKey).notifier)
+                        .read(
+                          walletUserPreferencesNotifierProvider(identityKeyName: identityKeyName)
+                              .notifier,
+                        )
                         .switchBalanceVisibility();
                   },
                 ),

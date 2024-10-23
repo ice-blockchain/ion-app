@@ -71,24 +71,25 @@ class OnboardingData extends _$OnboardingData {
   }
 
   void _saveState(OnboardingState? state) {
-    final pubKey = ref.read(currentIdentityKeyNameSelectorProvider);
-    if (pubKey == null || state == null) {
+    final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+    if (identityKeyName == null || state == null) {
       return;
     }
 
     ref
-        .read(userPreferencesServiceProvider(pubKey: pubKey))
+        .read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
         .setValue(_onboardingPersistanceKey, json.encode(state.toJson()));
   }
 
   OnboardingState? _loadSavedState() {
-    final pubKey = ref.watch(currentIdentityKeyNameSelectorProvider);
+    final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
 
-    if (pubKey == null) {
+    if (identityKeyName == null) {
       return null;
     }
 
-    final userPreferencesService = ref.watch(userPreferencesServiceProvider(pubKey: pubKey));
+    final userPreferencesService =
+        ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
     final savedState = userPreferencesService.getValue<String>(_onboardingPersistanceKey);
 
     if (savedState == null) {
@@ -99,13 +100,15 @@ class OnboardingData extends _$OnboardingData {
   }
 
   void reset() {
-    final pubKey = ref.read(currentIdentityKeyNameSelectorProvider);
+    final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
 
-    if (pubKey == null) {
+    if (identityKeyName == null) {
       return;
     }
 
-    ref.read(userPreferencesServiceProvider(pubKey: pubKey)).remove(_onboardingPersistanceKey);
+    ref
+        .read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
+        .remove(_onboardingPersistanceKey);
   }
 
   static const _onboardingPersistanceKey = 'onboarding_data';

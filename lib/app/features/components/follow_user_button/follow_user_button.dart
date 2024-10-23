@@ -18,7 +18,7 @@ class FollowUserButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserId = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+    final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
     final following = ref.watch(isCurrentUserFollowingSelectorProvider(pubKey));
     return FollowButton(
       onPressed: () {
@@ -30,7 +30,7 @@ class FollowUserButton extends ConsumerWidget {
             ),
           );
         } else {
-          ref.read(userFollowingProvider(currentUserId).notifier).toggleFollow(pubKey);
+          ref.read(userFollowingProvider(identityKeyName).notifier).toggleFollow(pubKey);
         }
       },
       following: following,

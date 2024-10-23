@@ -23,8 +23,9 @@ class ChatSearchHistory extends _$ChatSearchHistory {
 
   @override
   ChatSearchHistoryState build() {
-    final pubKey = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
-    final userPreferencesService = ref.watch(userPreferencesServiceProvider(pubKey: pubKey));
+    final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+    final userPreferencesService =
+        ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
 
     final storedUserIds = userPreferencesService.getValue<List<String>>(_pubKeysStoreKey) ?? [];
     final storedQueries = userPreferencesService.getValue<List<String>>(_queriesStoreKey) ?? [];
@@ -36,9 +37,9 @@ class ChatSearchHistory extends _$ChatSearchHistory {
     if (!state.pubKeys.contains(pubKey)) {
       final newUserIds = [pubKey, ...state.pubKeys];
 
-      final currentUserId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
+      final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
       final userPreferencesService =
-          ref.read(userPreferencesServiceProvider(pubKey: currentUserId));
+          ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName));
       await userPreferencesService.setValue<List<String>>(_pubKeysStoreKey, newUserIds);
 
       state = state.copyWith(pubKeys: newUserIds);
@@ -49,9 +50,9 @@ class ChatSearchHistory extends _$ChatSearchHistory {
     if (!state.queries.contains(query)) {
       final newQueries = [query, ...state.queries];
 
-      final currentUserId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
+      final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
       final userPreferencesService =
-          ref.read(userPreferencesServiceProvider(pubKey: currentUserId));
+          ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName));
       await userPreferencesService.setValue<List<String>>(_queriesStoreKey, newQueries);
 
       state = state.copyWith(queries: newQueries);
@@ -60,7 +61,8 @@ class ChatSearchHistory extends _$ChatSearchHistory {
 
   Future<void> clear() async {
     final currentUserId = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
-    final userPreferencesService = ref.read(userPreferencesServiceProvider(pubKey: currentUserId));
+    final userPreferencesService =
+        ref.read(userPreferencesServiceProvider(identityKeyName: currentUserId));
     await Future.wait([
       userPreferencesService.remove(_pubKeysStoreKey),
       userPreferencesService.remove(_queriesStoreKey),
