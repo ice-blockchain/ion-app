@@ -119,6 +119,9 @@ flutter:
         - asset: assets/fonts/NotoSans-SemiBoldItalic.ttf
         - asset: assets/fonts/NotoSans-Thin.ttf
         - asset: assets/fonts/NotoSans-ThinItalic.ttf
+    - family: Monaco
+      fonts:
+        - asset: assets/fonts/Monaco.ttf
   assets:
     - .app.env
     - lib/app/templates/basic.json

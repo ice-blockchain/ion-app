@@ -10,7 +10,6 @@ class CodeBlockContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textThemes = context.theme.appTextThemes;
     final codeText = useState('');
 
     final textController = useTextEditingController(text: codeText.value);
@@ -25,7 +24,9 @@ class CodeBlockContent extends HookConsumerWidget {
         maxLines: null,
         cursorColor: context.theme.appColors.primaryAccent,
         cursorHeight: 22.0.s,
-        style: textThemes.body2.copyWith(
+        style: TextStyle(
+          fontFamily: 'Monaco',
+          fontSize: 12.0.s,
           color: context.theme.appColors.primaryText,
         ),
         decoration: const InputDecoration(
