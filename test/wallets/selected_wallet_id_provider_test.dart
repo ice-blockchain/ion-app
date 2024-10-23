@@ -42,20 +42,6 @@ void main() {
       ).called(1);
     });
 
-    test('build() returns first mocked wallet id if localStorage is empty', () {
-      when(
-        () => mockLocalStorage.getString(SelectedWalletIdNotifier.selectedWalletIdKey),
-      ).thenReturn(null);
-
-      final result = container.read(selectedWalletIdNotifierProvider);
-
-      expect(result, mockedWalletDataArray[0].id);
-
-      verify(
-        () => mockLocalStorage.getString(SelectedWalletIdNotifier.selectedWalletIdKey),
-      ).called(1);
-    });
-
     test('selectedWalletId setter updates state and localStorage', () {
       final notifier = container.read(selectedWalletIdNotifierProvider.notifier);
 

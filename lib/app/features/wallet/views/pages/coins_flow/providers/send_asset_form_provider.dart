@@ -5,6 +5,7 @@ import 'package:ion/app/features/wallet/model/contact_data.dart';
 import 'package:ion/app/features/wallet/model/crypto_asset_data.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/model/nft_data.dart';
+import 'package:ion/app/features/wallet/model/wallet_data.dart';
 import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,14 +17,21 @@ enum CryptoAssetType { coin, nft }
 class SendAssetFormController extends _$SendAssetFormController {
   late final CryptoAssetType _cryptoType;
 
+  // TODO: make async
   @override
   CryptoAssetData build({CryptoAssetType type = CryptoAssetType.coin}) {
-    final wallet = ref.watch(currentWalletDataProvider);
+    final wallet = ref.watch(currentWalletDataProvider).valueOrNull;
     _cryptoType = type;
 
     return CryptoAssetData(
       selectedNetwork: NetworkType.eth,
-      wallet: wallet,
+      wallet: wallet ??
+          const WalletData(
+            id: '1',
+            name: 'Wallet 1',
+            balance: 0,
+            icon: '',
+          ),
       address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
       usdtAmount: 350,
       arrivalTime: 15,

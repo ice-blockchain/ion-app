@@ -6,7 +6,8 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallets/pages/wallets_modal/components/wallets_list/wallets_list.dart';
+import 'package:ion/app/features/wallet/components/wallets_list/wallets_list.dart';
+import 'package:ion/app/features/wallets/pages/wallets_modal/components/wallets_list/wallet_tile.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -28,7 +29,11 @@ class WalletsModal extends StatelessWidget {
               title: Text(context.i18n.wallet_wallets),
               actions: const [NavigationCloseButton()],
             ),
-            ScreenSideOffset.small(child: const WalletsList()),
+            ScreenSideOffset.small(
+              child: WalletsList(
+                itemBuilder: (walletData) => WalletTile(walletData: walletData),
+              ),
+            ),
             Padding(
               padding: EdgeInsets.only(
                 bottom: 16.0.s,

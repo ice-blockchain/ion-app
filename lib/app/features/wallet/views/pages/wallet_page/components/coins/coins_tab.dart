@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallet/providers/hooks/use_filtered_wallet_coins.dart';
+import 'package:ion/app/features/wallet/providers/filtered_wallet_coins_provider.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coin_item.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ion/app/router/app_routes.dart';
 
-class CoinsTab extends HookConsumerWidget {
+class CoinsTab extends ConsumerWidget {
   const CoinsTab({
     super.key,
   });
@@ -19,8 +19,9 @@ class CoinsTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coins = useFilteredWalletCoins(ref).coins;
+    final coins = ref.watch(filteredWalletCoinsProvider).valueOrNull ?? [];
 
+    // TODO: add proper loading state
     if (coins.isEmpty) {
       return const EmptyState(
         tabType: tabType,

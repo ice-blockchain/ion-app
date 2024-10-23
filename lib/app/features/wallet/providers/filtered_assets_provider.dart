@@ -26,8 +26,7 @@ Future<List<CoinData>> filteredCoins(Ref ref) async {
   final searchQuery =
       ref.watch(walletSearchQueryControllerProvider(WalletAssetType.coin)).toLowerCase();
   await ref.debounce();
-  await Future<void>.delayed(apiCallDelay);
-  final coins = ref.watch(coinsDataProvider);
+  final coins = await ref.watch(coinsDataProvider.future);
   return _filterCoins(coins, searchQuery);
 }
 
@@ -36,8 +35,7 @@ Future<List<NftData>> filteredNfts(Ref ref) async {
   final searchQuery =
       ref.watch(walletSearchQueryControllerProvider(WalletAssetType.nft)).toLowerCase();
   await ref.debounce();
-  await Future<void>.delayed(apiCallDelay);
-  final nfts = ref.watch(nftsDataProvider);
+  final nfts = await ref.watch(nftsDataProvider.future);
   return _filterNfts(nfts, searchQuery);
 }
 

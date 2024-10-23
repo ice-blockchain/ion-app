@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+// ignore_for_file: avoid_public_notifier_properties
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallet/model/wallet_data.dart';
 import 'package:ion/app/features/wallets/providers/selected_wallet_id_provider.dart';
@@ -17,6 +18,15 @@ class MockSelectedWalletIdNotifier extends Notifier<String?>
     with Mock
     implements SelectedWalletIdNotifier {}
 
-class MockWalletsDataNotifier extends Notifier<List<WalletData>>
+class MockWalletsDataNotifier extends AsyncNotifier<List<WalletData>>
     with Mock
-    implements WalletsDataNotifier {}
+    implements WalletsDataNotifier {
+  MockWalletsDataNotifier(this.data);
+
+  final List<WalletData> data;
+
+  @override
+  Future<List<WalletData>> build() async {
+    return data;
+  }
+}

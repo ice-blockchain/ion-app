@@ -23,11 +23,13 @@ class Balance extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletBalance = ref.watch(currentWalletDataProvider).balance;
+    // TODO: get actual balance
+    final walletBalance = ref.watch(currentWalletDataProvider).valueOrNull?.balance ?? 0;
 
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
     final iconAsset = isBalanceVisible ? Assets.svg.iconBlockEyeOn : Assets.svg.iconBlockEyeOff;
     final hitSlop = 5.0.s;
+
     return ScreenSideOffset.small(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

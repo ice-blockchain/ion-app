@@ -17,7 +17,12 @@ class WalletSwitcher extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletData = ref.watch(currentWalletDataProvider);
+    final walletData = ref.watch(currentWalletDataProvider).valueOrNull;
+
+    // TODO: add proper loading and error handling
+    if (walletData == null) {
+      return const SizedBox.shrink();
+    }
 
     return Button.dropdown(
       onPressed: () {

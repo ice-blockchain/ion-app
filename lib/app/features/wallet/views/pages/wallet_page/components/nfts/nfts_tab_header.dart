@@ -5,22 +5,23 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/ui.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallet/providers/hooks/use_filtered_wallet_nfts.dart';
+import 'package:ion/app/features/wallet/providers/filtered_wallet_nfts_provider.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_header_layout_action.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_header_sort_action.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/search_bar/search_bar.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
-class NftsTabHeader extends HookConsumerWidget {
+class NftsTabHeader extends ConsumerWidget {
   const NftsTabHeader({
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final result = useFilteredWalletNfts(ref);
+    final nfts = ref.watch(filteredWalletNftsProvider).valueOrNull ?? [];
 
-    if (result.nfts.isEmpty) {
+    // TODO: add loading state
+    if (nfts.isEmpty) {
       return SliverToBoxAdapter(
         child: ScreenSideOffset.small(
           child: WalletSearchBar(

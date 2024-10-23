@@ -10,9 +10,6 @@ import 'package:ion/app/components/inputs/text_input/components/text_input_icons
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallet/model/wallet_data.dart';
-import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -56,15 +53,7 @@ class CreateNewWalletModal extends HookConsumerWidget {
             ScreenSideOffset.small(
               child: Button(
                 onPressed: () {
-                  ref.read(walletsDataNotifierProvider.notifier).addWallet(
-                        WalletData(
-                          id: DateTime.now().toString(),
-                          name: walletName.value,
-                          icon: mockWalletIconUrl,
-                          balance: 0,
-                        ),
-                      );
-
+                  // TODO: create wallet
                   context.pop();
                 },
                 label: Text(context.i18n.wallet_create),

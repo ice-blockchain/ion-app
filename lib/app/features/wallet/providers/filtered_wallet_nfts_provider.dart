@@ -1,29 +1,21 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallet/model/nft_data.dart';
 import 'package:ion/app/features/wallet/providers/filtered_assets_provider.dart';
 import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-typedef FilteredNftsResult = ({List<NftData> nfts, bool isLoading});
+part 'filtered_wallet_nfts_provider.g.dart';
 
-FilteredNftsResult useFilteredWalletNfts(WidgetRef ref) {
+@riverpod
+Future<List<NftData>> filteredWalletNfts(Ref ref) async {
   final isZeroValueAssetsVisible = ref.watch(isZeroValueAssetsVisibleSelectorProvider);
-
   final nftsState = ref.watch(filteredNftsProvider);
 
   final walletNfts = nftsState.valueOrNull ?? <NftData>[];
-  final isLoading = nftsState.isLoading;
 
-  final filteredNfts = useMemoized(
-    () {
-      return isZeroValueAssetsVisible
-          ? walletNfts
-          : walletNfts.where((NftData nft) => nft.price > 0.00).toList();
-    },
-    [isZeroValueAssetsVisible, walletNfts],
-  );
-
-  return (nfts: filteredNfts, isLoading: isLoading);
+  return isZeroValueAssetsVisible
+      ? walletNfts
+      : walletNfts.where((NftData nft) => nft.price > 0.00).toList();
 }
