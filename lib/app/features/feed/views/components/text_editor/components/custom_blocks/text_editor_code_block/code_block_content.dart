@@ -16,23 +16,20 @@ class CodeBlockContent extends HookConsumerWidget {
     final textController = useTextEditingController(text: codeText.value);
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 4.0.s),
+      padding: EdgeInsets.only(bottom: 12.0.s, top: 8.0.s, left: 12.0.s, right: 12.0.s),
       child: TextField(
         controller: textController,
         onChanged: (value) {
           codeText.value = value;
         },
+        maxLines: null,
         cursorColor: context.theme.appColors.primaryAccent,
         cursorHeight: 22.0.s,
         style: textThemes.body2.copyWith(
           color: context.theme.appColors.primaryText,
         ),
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           border: InputBorder.none,
-          hintText: context.i18n.poll_title_placeholder,
-          hintStyle: textThemes.body2.copyWith(
-            color: context.theme.appColors.quaternaryText,
-          ),
           contentPadding: EdgeInsets.zero,
         ),
       ),

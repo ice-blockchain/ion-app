@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_code_block/code_block_content.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_code_block/code_block_types_toolbar.dart';
 
 const textEditorCodeKey = 'text-editor-code';
 
@@ -31,7 +32,7 @@ class TextEditorCodeBuilder extends EmbedBuilder {
     TextStyle textStyle,
   ) {
     return Container(
-      padding: EdgeInsets.all(12.0.s),
+      padding: EdgeInsets.only(top: 12.0.s),
       decoration: BoxDecoration(
         color: context.theme.appColors.secondaryBackground,
         borderRadius: BorderRadius.circular(16.0.s),
@@ -39,15 +40,10 @@ class TextEditorCodeBuilder extends EmbedBuilder {
           color: context.theme.appColors.onTerararyFill,
         ),
       ),
-      child: Column(
+      child: const Column(
         children: [
-          Container(
-            height: 20.0.s,
-            width: 100.0.s,
-            color: Colors.amber,
-          ),
-          SizedBox(height: 8.0.s),
-          const CodeBlockContent(),
+          CodeBlockTypesToolbar(),
+          CodeBlockContent(),
         ],
       ),
     );
