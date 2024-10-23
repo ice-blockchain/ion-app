@@ -91,6 +91,23 @@ class TextEditor extends ConsumerWidget {
         null,
         null,
       ),
+      quote: DefaultTextBlockStyle(
+        context.theme.appTextThemes.body2.copyWith(
+          color: context.theme.appColors.primaryText,
+          fontStyle: FontStyle.italic,
+        ),
+        HorizontalSpacing.zero,
+        VerticalSpacing.zero,
+        VerticalSpacing.zero,
+        BoxDecoration(
+          border: Border(
+            left: BorderSide(
+              color: context.theme.appColors.primaryAccent,
+              width: 2.0.s,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
