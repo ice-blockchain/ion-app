@@ -51,16 +51,17 @@ class AvatarPicker extends HookConsumerWidget {
     }
 
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         Avatar(
           size: 100.0.s,
-          borderRadius: BorderRadius.circular(50.0.s),
+          borderRadius: BorderRadius.circular(20.0.s),
           imageWidget: avatar != null
               ? Image.file(File(avatar!.path))
               : Assets.svg.userPhotoArea.icon(size: 100.0.s),
         ),
         Positioned(
-          bottom: 0,
+          bottom: -6.0.s,
           right: 0,
           child: GestureDetector(
             onTap: loading.value ? null : pickAvatar,
