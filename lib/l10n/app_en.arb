@@ -394,7 +394,6 @@
   "camera_no_access_description": "To grant access, go to settings and enable the appropriate settings",
   "story_preview_title": "Story preview",
   "story_settings_title": "Who can reply this story",
-  "story_has_been_posted": "Your story has been published",
   "chat_title": "Chats",
   "chat_empty_description": "You have no conversations yet",
   "chat_new_message_button": "New message",
@@ -409,5 +408,15 @@
   "chat_read_all": "Read All",
   "chat_delete_modal_title": "Delete chat?",
   "chat_delete_modal_description": "Are you sure you want to delete all selected chats?",
-  "chat_search_empty": "Search here for users, chats, groups, and channels..."
+  "chat_search_empty": "Search here for users, chats, groups, and channels...",
+  "notification_video_loading": "Your video is loading...",
+  "notification_story_loading": "Your story is loading...",
+  "notification_post_loading": "Your post is loading...",
+  "notification_article_loading": "Your article is loading...",
+  "notification_video_published": "Your video has been published",
+  "notification_story_published": "Your story has been published",
+  "notification_post_published": "Your post has been published",
+  "notification_article_published": "Your article has been published",
+  "notification_reply_sent": "Your reply has been sent",
+  "notification_repost_successful": "Successfully reposted"
 }

@@ -8,8 +8,8 @@ import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_video/story_published_notification.dart';
+import 'package:ion/app/features/feed/content_notificaiton/providers/content_notification_provider.dart';
+import 'package:ion/app/features/feed/content_notificaiton/views/components/content_conification_bar.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_post_ids_provider.dart';
@@ -28,16 +28,13 @@ class FeedPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final notificationHeight = 24.0.s;
+
     final scrollController = useScrollController();
     final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
+    final notificationData = ref.watch(contentNotificationControllerProvider);
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
-
-    final isStoryPublished = ref.watch(
-      storyCameraControllerProvider.select((state) => state.isStoryPublished),
-    );
-
-    final notificationHeight = 24.0.s;
 
     final appBarSliver = CollapsingAppBar(
       height: FeedControls.height,
@@ -71,7 +68,7 @@ class FeedPage extends HookConsumerWidget {
         children: [
           AnimatedPositioned(
             duration: 300.ms,
-            top: isStoryPublished ? notificationHeight : 0.0,
+            top: notificationData != null ? notificationHeight : 0,
             left: 0,
             right: 0,
             bottom: 0,
@@ -99,14 +96,15 @@ class FeedPage extends HookConsumerWidget {
               ),
             ),
           ),
-          // TODO: refactor to support other types of the notifications
-          if (isStoryPublished)
+          if (notificationData != null)
             Positioned(
               top: 0,
               left: 0,
               right: 0,
-              child: SafeArea(
-                child: StoryPublishedNotification(height: notificationHeight),
+              child: ContentNotificationBar(
+                key: ValueKey(notificationData),
+                data: notificationData,
+                height: notificationHeight,
               ),
             ),
         ],

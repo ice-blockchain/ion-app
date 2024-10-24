@@ -8,6 +8,5 @@ class StoryCameraState with _$StoryCameraState {
   const factory StoryCameraState({
     @Default(false) bool isRecording,
     @Default(false) bool isFlashOn,
-    @Default(false) bool isStoryPublished,
   }) = _StoryCameraState;
 }

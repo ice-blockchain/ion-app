@@ -57,8 +57,11 @@ class StoryPreviewPage extends ConsumerWidget {
                       child: const VisibilitySettingsModal(),
                     );
 
-                    if ((result ?? false) && context.mounted) {
-                      ref.read(storyCameraControllerProvider.notifier).publishStory();
+                    if (result ?? false) {
+                      await ref.read(storyCameraControllerProvider.notifier).publishStory();
+                    }
+
+                    if (context.mounted) {
                       FeedRoute().go(context);
                     }
                   },

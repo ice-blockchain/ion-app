@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/create_story/hooks/use_camera_recording_controller.dart';
@@ -23,19 +21,6 @@ class StoryRecordPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyCameraState = ref.watch(storyCameraControllerProvider);
-
-    useOnAppLifecycleStateChange((_, AppLifecycleState current) async {
-      final hasPermission = ref.read(hasPermissionProvider(Permission.camera));
-
-      if (current == AppLifecycleState.resumed && hasPermission) {
-        await ref.read(cameraControllerNotifierProvider.notifier).resumeCamera();
-      } else if (current == AppLifecycleState.inactive ||
-          current == AppLifecycleState.paused ||
-          current == AppLifecycleState.hidden) {
-        await ref.read(cameraControllerNotifierProvider.notifier).pauseCamera();
-      }
-    });
-
     final cameraControllerAsync = ref.watch(cameraControllerNotifierProvider);
 
     final (recordingDuration, recordingProgress) = useRecordingProgress(
