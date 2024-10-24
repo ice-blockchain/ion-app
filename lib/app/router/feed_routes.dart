@@ -7,8 +7,7 @@ class FeedRoutes {
     TypedGoRoute<PostDetailsRoute>(path: 'post/:postId'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
-    TypedGoRoute<FeedProfileRoute>(path: 'profile/:pubkey'),
-    ...ProfileRoutes.routes,
+    TypedGoRoute<FeedProfileRoute>(path: 'profile/:pubkey', routes: ProfileRoutes.routes),
     TypedGoRoute<PullRightMenuRoute>(path: 'pull-right-menu'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
@@ -167,7 +166,9 @@ class CreateVideoRoute extends BaseRouteData {
 class MediaPickerRoute extends BaseRouteData {
   MediaPickerRoute()
       : super(
-          child: const MediaPickerPage(),
+          child: const MediaPickerPage(
+            maxSelection: 5,
+          ),
           type: IceRouteType.bottomSheet,
         );
 }

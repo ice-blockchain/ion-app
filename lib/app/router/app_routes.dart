@@ -72,6 +72,9 @@ import 'package:ion/app/features/search/views/pages/feed_search_filters_page/fee
 import 'package:ion/app/features/search/views/pages/feed_search_languages_page/feed_search_languages_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_simple_search_page/feed_simple_search_page.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
+import 'package:ion/app/features/user/model/user_category_type.dart';
+import 'package:ion/app/features/user/pages/profile_edit_page/pages/category_select_modal/category_select_modal.dart';
+import 'package:ion/app/features/user/pages/profile_edit_page/profile_edit_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/follow_list_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';

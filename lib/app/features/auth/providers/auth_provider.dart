@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:ion/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,6 +16,7 @@ class AuthState with _$AuthState {
     required List<String> authenticatedIdentityKeyNames,
     required String? currentIdentityKeyName,
   }) = _AuthState;
+
   const AuthState._();
 
   bool get hasAuthenticated {
@@ -62,6 +64,23 @@ String? currentIdentityKeyNameSelector(Ref ref) {
   return ref.watch(
     authProvider.select((state) => state.valueOrNull?.currentIdentityKeyName),
   );
+}
+
+@riverpod
+String? currentPubkeySelector(Ref ref) {
+  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
+  if (identityKeyName == null) {
+    return null;
+  }
+  final keyStore = ref.watch(nostrKeyStoreProvider(identityKeyName)).valueOrNull;
+  return keyStore?.publicKey;
+}
+
+@riverpod
+bool isCurrentUserSelector(Ref ref, String pubkey) {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+
+  return currentPubkey == pubkey;
 }
 
 @Riverpod(keepAlive: true)

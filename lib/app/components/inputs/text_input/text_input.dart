@@ -28,6 +28,7 @@ class TextInput extends HookWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
+    this.maxLength,
     this.alwaysShowPrefixIcon = false,
     EdgeInsets? scrollPadding,
     EdgeInsetsGeometry? contentPadding,
@@ -62,6 +63,7 @@ class TextInput extends HookWidget {
 
   final ValueChanged<String>? onChanged;
   final bool alwaysShowPrefixIcon;
+  final int? maxLength;
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +103,7 @@ class TextInput extends HookWidget {
       ),
       cursorErrorColor: context.theme.appColors.primaryAccent,
       cursorColor: context.theme.appColors.primaryAccent,
+      maxLength: maxLength,
       validator: (String? value) {
         final validatorError = validator?.call(value);
         WidgetsBinding.instance.addPostFrameCallback((_) {
