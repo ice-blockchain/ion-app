@@ -44,18 +44,21 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         // Add user relays to cache first because other actions rely on it
         ref.read(nostrCacheProvider.notifier).cache(userRelays);
 
-        final (:userMetadata, :userMetadataEvent) = await _buildUserMetadata(
-          keyStore: nostrKeyStore,
-          avatar: avatar,
-          name: name,
-          displayName: displayName,
-        );
+        final (
+          (:userMetadata, :userMetadataEvent),
+          (:userDelegation, :userDelegationEvent),
+        ) = await (
+          _buildUserMetadata(
+            keyStore: nostrKeyStore,
+            avatar: avatar,
+            name: name,
+            displayName: displayName,
+          ),
+          _buildUserDelegation(keyStore: nostrKeyStore),
+        ).wait;
 
         final (:interestSet, :interests, :interestSetEvent, :interestsEvent) =
             _buildUserLanguages(keyStore: nostrKeyStore, languages: languages);
-
-        final (:userDelegation, :userDelegationEvent) =
-            await _buildUserDelegation(keyStore: nostrKeyStore);
 
         final (:followList, :followListEvent) =
             _buildFollowList(keyStore: nostrKeyStore, followees: followees);
