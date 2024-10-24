@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/post/post_media_data.dart';
+import 'package:ion/app/features/core/model/media_metadata.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 
 class PostMediaCarouselVertical extends StatelessWidget {
@@ -14,7 +14,7 @@ class PostMediaCarouselVertical extends StatelessWidget {
 
   static const double _viewportFraction = 0.7;
 
-  final List<PostMediaData> media;
+  final List<MediaMetadata> media;
 
   final double aspectRatio;
 

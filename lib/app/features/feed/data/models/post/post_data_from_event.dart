@@ -17,7 +17,7 @@ class _PostDataFromEvent extends PostData {
   PostMetadata _buildMetadata() {
     final imeta = _parseImeta();
 
-    final media = content.fold<Map<String, PostMediaData>>(
+    final media = content.fold<Map<String, MediaMetadata>>(
       {},
       (result, match) {
         final link = match.text;
@@ -27,7 +27,7 @@ class _PostDataFromEvent extends PostData {
           } else {
             final mediaType = MediaType.fromUrl(link);
             if (mediaType != MediaType.unknown) {
-              result[link] = PostMediaData(url: link, mediaType: mediaType);
+              result[link] = MediaMetadata(url: link, mediaType: mediaType);
             }
           }
         }
@@ -49,51 +49,13 @@ class _PostDataFromEvent extends PostData {
   /// imeta may include any field specified by NIP 94.
   ///
   /// Source: https://github.com/nostr-protocol/nips/blob/master/92.md
-  Map<String, PostMediaData> _parseImeta() {
+  Map<String, MediaMetadata> _parseImeta() {
     final tags = eventMessage.tags;
-    final imeta = <String, PostMediaData>{};
+    final imeta = <String, MediaMetadata>{};
     for (final tag in tags) {
       if (tag[0] == 'imeta') {
-        String? url;
-        MediaType? mediaType;
-        String? mimeType;
-        String? blurhash;
-        String? dimension;
-        for (final params in tag.skip(1)) {
-          final pair = params.split(' ');
-          if (pair.length != 2) {
-            continue;
-          }
-          final [key, value] = pair;
-          switch (key) {
-            case 'url':
-              {
-                if ((Uri.tryParse(value)?.isAbsolute).falseOrValue) {
-                  url = value;
-                }
-              }
-            case 'm':
-              {
-                mimeType = value;
-                mediaType = MediaType.fromMimeType(mimeType.emptyOrValue);
-              }
-            case 'blurhash':
-              blurhash = value;
-            case 'dim':
-              dimension = value;
-          }
-        }
-        if (url != null) {
-          imeta[url] = PostMediaData(
-            url: url,
-            mediaType: mediaType == null || mediaType == MediaType.unknown
-                ? MediaType.fromUrl(url)
-                : mediaType,
-            mimeType: mimeType,
-            dimension: dimension,
-            blurhash: blurhash,
-          );
-        }
+        final mediaMetadata = MediaMetadata.fromTag(tag);
+        imeta[mediaMetadata.url] = mediaMetadata;
       }
     }
     return imeta;
