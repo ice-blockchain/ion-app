@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/model/media_metadata.dart';
+import 'package:ion/app/features/core/model/media_attachment.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_carousel.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
@@ -17,9 +17,9 @@ class PostMedia extends HookConsumerWidget {
     super.key,
   });
 
-  final List<MediaMetadata> media;
+  final List<MediaAttachment> media;
 
-  static List<MediaMetadata> _filterKnownMedia(List<MediaMetadata> media) {
+  static List<MediaAttachment> _filterKnownMedia(List<MediaAttachment> media) {
     return media.where((mediaItem) => mediaItem.mediaType != MediaType.unknown).toList();
   }
 
@@ -27,11 +27,11 @@ class PostMedia extends HookConsumerWidget {
   ///
   /// The aspect ratio is calculated by finding an average of the
   /// dominant category (horizontal or vertical).
-  static double _calculateAspectRatio({required List<MediaMetadata> media}) {
+  static double _calculateAspectRatio({required List<MediaAttachment> media}) {
     final horizontalRatios = <double>[];
     final verticalRatios = <double>[];
 
-    for (final MediaMetadata(:aspectRatio) in media) {
+    for (final MediaAttachment(:aspectRatio) in media) {
       if (aspectRatio == null) {
         horizontalRatios.add(PostConstants.maxHorizontalMediaAspectRatio);
       } else if (aspectRatio >= 1) {
