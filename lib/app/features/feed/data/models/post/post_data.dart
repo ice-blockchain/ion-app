@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/core/model/media_metadata.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/model/media_attachment.dart';
 import 'package:ion/app/features/feed/data/models/post/post_metadata.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/services/text_parser/matchers/url_matcher.dart';
@@ -36,14 +35,11 @@ class PostData with CacheableEvent {
   late PostMetadata metadata = _buildMetadata();
 
   PostMetadata _buildMetadata() {
-    final media = content.fold<Map<String, MediaMetadata>>(
+    final media = content.fold<Map<String, MediaAttachment>>(
       {},
       (result, match) {
         if (match.matcherType == UrlMatcher) {
-          final mediaType = MediaType.fromUrl(match.text);
-          if (mediaType != MediaType.unknown) {
-            result[match.text] = MediaMetadata(url: match.text, mediaType: mediaType);
-          }
+          result[match.text] = MediaAttachment(url: match.text);
         }
         return result;
       },

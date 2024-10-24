@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_attachment.dart';
 import 'package:ion/app/features/core/providers/dio_provider.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/file_storage_metadata.dart';
@@ -23,7 +24,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<void> upload(
+  Future<MediaAttachment> upload(
     MediaFile file,
   ) async {
     final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
@@ -42,6 +43,13 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
     );
 
     await ref.read(nostrNotifierProvider.notifier).sendOne(fileMetadata.toEventMessage(keyStore));
+
+    return MediaAttachment(
+      url: fileMetadata.url,
+      mimeType: fileMetadata.mimeType,
+      blurhash: fileMetadata.blurhash,
+      dimension: fileMetadata.dimension,
+    );
   }
 
   Future<String> _getFileStorageApiUrl({required KeyStore keyStore}) async {

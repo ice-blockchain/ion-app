@@ -5,6 +5,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'file_metadata.freezed.dart';
 
+/// https://github.com/nostr-protocol/nips/blob/master/94.md
 @freezed
 class FileMetadata with _$FileMetadata {
   const factory FileMetadata({
@@ -50,7 +51,6 @@ class FileMetadata with _$FileMetadata {
 
   const FileMetadata._();
 
-  /// https://github.com/nostr-protocol/nips/blob/master/94.md
   EventMessage toEventMessage(KeyStore keyStore) {
     final tags = [
       ['url', url],

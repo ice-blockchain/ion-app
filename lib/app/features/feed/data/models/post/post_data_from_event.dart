@@ -17,7 +17,7 @@ class _PostDataFromEvent extends PostData {
   PostMetadata _buildMetadata() {
     final imeta = _parseImeta();
 
-    final media = content.fold<Map<String, MediaMetadata>>(
+    final media = content.fold<Map<String, MediaAttachment>>(
       {},
       (result, match) {
         final link = match.text;
@@ -25,10 +25,7 @@ class _PostDataFromEvent extends PostData {
           if (imeta.containsKey(link)) {
             result[link] = imeta[link]!;
           } else {
-            final mediaType = MediaType.fromUrl(link);
-            if (mediaType != MediaType.unknown) {
-              result[link] = MediaMetadata(url: link, mediaType: mediaType);
-            }
+            result[link] = MediaAttachment(url: link);
           }
         }
         return result;
@@ -49,13 +46,13 @@ class _PostDataFromEvent extends PostData {
   /// imeta may include any field specified by NIP 94.
   ///
   /// Source: https://github.com/nostr-protocol/nips/blob/master/92.md
-  Map<String, MediaMetadata> _parseImeta() {
+  Map<String, MediaAttachment> _parseImeta() {
     final tags = eventMessage.tags;
-    final imeta = <String, MediaMetadata>{};
+    final imeta = <String, MediaAttachment>{};
     for (final tag in tags) {
       if (tag[0] == 'imeta') {
-        final mediaMetadata = MediaMetadata.fromTag(tag);
-        imeta[mediaMetadata.url] = mediaMetadata;
+        final mediaAttachment = MediaAttachment.fromTag(tag);
+        imeta[mediaAttachment.url] = mediaAttachment;
       }
     }
     return imeta;
