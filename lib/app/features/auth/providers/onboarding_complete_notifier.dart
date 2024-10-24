@@ -2,9 +2,11 @@
 
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
+import 'package:ion/app/features/core/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
+import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';
 import 'package:ion/app/features/user/model/interest_set.dart';
 import 'package:ion/app/features/user/model/interests.dart';
@@ -13,6 +15,7 @@ import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,7 +30,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
-        final (:name, :displayName, :languages, :followees) =
+        final (:name, :displayName, :languages, :followees, :avatar) =
             ref.read(onboardingDataProvider.notifier).requireValues();
 
         final (relayUrls, nostrKeyStore) = await (
@@ -38,19 +41,27 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final (:userRelays, :userRelaysEvent) =
             _buildUserRelays(keyStore: nostrKeyStore, relayUrls: relayUrls);
 
-        final (:userMetadata, :userMetadataEvent) =
-            _buildUserMetadata(keyStore: nostrKeyStore, name: name, displayName: displayName);
+        // Add user relays to cache first because other actions rely on it
+        ref.read(nostrCacheProvider.notifier).cache(userRelays);
+
+        final (
+          (:userMetadata, :userMetadataEvent),
+          (:userDelegation, :userDelegationEvent),
+        ) = await (
+          _buildUserMetadata(
+            keyStore: nostrKeyStore,
+            avatar: avatar,
+            name: name,
+            displayName: displayName,
+          ),
+          _buildUserDelegation(keyStore: nostrKeyStore),
+        ).wait;
 
         final (:interestSet, :interests, :interestSetEvent, :interestsEvent) =
             _buildUserLanguages(keyStore: nostrKeyStore, languages: languages);
 
-        final (:userDelegation, :userDelegationEvent) =
-            await _buildUserDelegation(keyStore: nostrKeyStore);
-
         final (:followList, :followListEvent) =
             _buildFollowList(keyStore: nostrKeyStore, followees: followees);
-
-        ref.read(nostrCacheProvider.notifier).cache(userRelays);
 
         await ref.read(nostrNotifierProvider.notifier).send([
           //TODO:uncomment when switched to our relays
@@ -101,15 +112,23 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return (userRelays: userRelays, userRelaysEvent: userRelaysEvent);
   }
 
-  ({UserMetadata userMetadata, EventMessage userMetadataEvent}) _buildUserMetadata({
+  Future<({UserMetadata userMetadata, EventMessage userMetadataEvent})> _buildUserMetadata({
     required KeyStore keyStore,
     required String name,
     required String displayName,
-  }) {
+    MediaFile? avatar,
+  }) async {
+    MediaAttachment? mediaAttachment;
+    if (avatar != null) {
+      mediaAttachment = await ref.read(nostrUploadNotifierProvider.notifier).upload(avatar);
+    }
+
     final userMetadata = UserMetadata(
       pubkey: keyStore.publicKey,
       name: name,
       displayName: displayName,
+      picture: mediaAttachment?.url,
+      media: mediaAttachment != null ? {mediaAttachment.url: mediaAttachment} : {},
     );
 
     final userMetadataEvent = userMetadata.toEventMessage(keyStore);

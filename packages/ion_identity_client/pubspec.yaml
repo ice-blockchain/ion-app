@@ -12,7 +12,7 @@ dependencies:
   crypto: ^3.0.5
   crypto_keys: ^0.3.0+1
   cryptography: ^2.7.0
-  dio: 5.5.0+1
+  dio: ^5.7.0
   flutter:
     sdk: flutter
   flutter_secure_storage: ^9.2.2

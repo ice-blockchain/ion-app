@@ -61,12 +61,12 @@ class NostrNotifier extends _$NostrNotifier {
           if (keyStore == null) {
             throw Exception('Current user keystore is not found');
           }
-          final userRelays = await _getUserRelays(keyStore.publicKey);
+          final userRelays = await getUserRelays(keyStore.publicKey);
           return await ref.read(relayProvider(userRelays.list.random.url).future);
         }
       case ActionSourceUser():
         {
-          final userRelays = await _getUserRelays(actionSource.pubkey);
+          final userRelays = await getUserRelays(actionSource.pubkey);
           return await ref.read(relayProvider(userRelays.list.random.url).future);
         }
       case ActionSourceIndexers():
@@ -80,7 +80,7 @@ class NostrNotifier extends _$NostrNotifier {
     }
   }
 
-  Future<UserRelays> _getUserRelays(String pubkey) async {
+  Future<UserRelays> getUserRelays(String pubkey) async {
     final cached = ref.read(nostrCacheProvider.select(cacheSelector<UserRelays>(pubkey)));
     if (cached != null) {
       return cached;
@@ -98,7 +98,7 @@ class NostrNotifier extends _$NostrNotifier {
       //TODO:uncomment when our relays are used, using damus by then as the fastest one
       // final userRelays = UserRelays.fromEventMessage(event);
       final userRelays =
-          UserRelays(pubkey: pubkey, list: [const UserRelay(url: 'wss://relay.damus.io')]);
+          UserRelays(pubkey: pubkey, list: [const UserRelay(url: 'wss://relay.nostr.band')]);
       ref.read(nostrCacheProvider.notifier).cache(userRelays);
       return userRelays;
     }

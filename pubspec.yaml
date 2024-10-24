@@ -19,6 +19,7 @@ dependencies:
   cryptography: ^2.7.0
   cupertino_icons: ^1.0.6
   device_info_plus: ^10.1.2
+  dio: ^5.7.0
   dotted_border: ^2.1.0
   email_validator: ^2.1.16
   extended_text: ^14.1.0

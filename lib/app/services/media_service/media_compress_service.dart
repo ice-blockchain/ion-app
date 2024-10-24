@@ -18,6 +18,7 @@ import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_bitrate_arg.da
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_preset_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_scale_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_video_codec_arg.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -84,8 +85,8 @@ class MediaCompressionService {
     return XFile(output);
   }
 
-  Future<XFile> getThumbnail(
-    XFile inputFile, {
+  Future<MediaFile> getThumbnail(
+    MediaFile inputFile, {
     Duration duration = const Duration(seconds: 1),
   }) async {
     try {
@@ -97,7 +98,7 @@ class MediaCompressionService {
       );
 
       final compressedImage = await compressImage(
-        XFile(file!.path),
+        MediaFile(path: file!.path),
         quality: 100,
         size: const Size(200, 200),
       );
@@ -136,10 +137,10 @@ class MediaCompressionService {
     return XFile.fromData(compressedVideoBytes, name: output);
   }
 
-  Future<XFile> compressImage(
-    XFile file, {
-    required int quality,
+  Future<MediaFile> compressImage(
+    MediaFile file, {
     required Size size,
+    int quality = 80,
     bool keepAspectRatio = true,
   }) async {
     try {
@@ -147,7 +148,7 @@ class MediaCompressionService {
         (params) async {
           return resizeImage(params.file, params.size, keepAspectRatio: params.keepAspectRatio);
         },
-        ResizeImageParams(file: file, size: size, keepAspectRatio: keepAspectRatio),
+        ResizeImageParams(file: XFile(file.path), size: size, keepAspectRatio: keepAspectRatio),
       );
 
       if (resizedBytes.isEmpty) {
@@ -166,10 +167,18 @@ class MediaCompressionService {
 
       final output = await compressor_package.compressor.compress(config);
 
-      return XFile.fromData(
-        output.rawBytes,
-        name: file.name,
-        mimeType: file.mimeType,
+      final fileName = path.basename(file.path);
+
+      final savedFilePath =
+          await FileSaver.instance.saveFile(name: fileName, bytes: output.rawBytes);
+
+      return MediaFile(
+        path: savedFilePath,
+        mimeType: output.contentType,
+        width: size.width.toInt(),
+        height: size.height.toInt(),
+        name: fileName,
+        size: output.sizeInBytes,
       );
     } catch (error, stackTrace) {
       Logger.log('Error during image compression!', error: error, stackTrace: stackTrace);

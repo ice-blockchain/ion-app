@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -41,7 +41,7 @@ extension NotificationDataExtension on NotificationData {
 
   Widget getIcon(BuildContext context) {
     return when(
-      loading: (_) => IceLoadingIndicator(
+      loading: (_) => IonLoadingIndicator(
         size: Size.square(16.0.s),
       ),
       published: (_) => Assets.svg.iconBlockCheckboxOnblue.icon(

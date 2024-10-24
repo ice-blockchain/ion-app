@@ -2,9 +2,9 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/avatar/default_avatar.dart';
 import 'package:ion/app/components/shapes/hexagon_path.dart';
 import 'package:ion/app/components/shapes/shape.dart';
-import 'package:ion/app/extensions/extensions.dart';
 
 class Avatar extends StatelessWidget {
   Avatar({
@@ -39,21 +39,14 @@ class Avatar extends StatelessWidget {
             width: size,
             height: size,
             fit: fit,
-            errorWidget: (context, url, error) {
-              return SizedBox.square(
-                dimension: size,
-                child: ColoredBox(color: context.theme.appColors.onSecondaryBackground),
-              );
-            },
+            errorWidget: (context, url, error) => DefaultAvatar(size: size),
           )
-        : SizedBox.square(
-            dimension: size,
-            child: FittedBox(
-              fit: fit,
-              child:
-                  imageWidget ?? ColoredBox(color: context.theme.appColors.onSecondaryBackground),
-            ),
-          );
+        : imageWidget != null
+            ? SizedBox.square(
+                dimension: size,
+                child: FittedBox(fit: fit, child: imageWidget),
+              )
+            : DefaultAvatar(size: size);
 
     return Stack(
       clipBehavior: Clip.none,
