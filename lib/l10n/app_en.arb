@@ -441,5 +441,6 @@
   "notification_repost_successful": "Successfully reposted",
   "chat_groups_joined": "Joined",
   "chat_groups_explore": "Explore",
-  "chat_groups_subscribed": "Subscribed"
+  "chat_groups_subscribed": "Subscribed",
+  "write_a_message": "Write a message..."
 }

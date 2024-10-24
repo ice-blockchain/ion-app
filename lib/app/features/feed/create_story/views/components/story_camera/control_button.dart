@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-class CameraControlButton extends StatelessWidget {
-  const CameraControlButton({
+class ControlButton extends StatelessWidget {
+  const ControlButton({
     required this.icon,
     required this.onPressed,
     super.key,

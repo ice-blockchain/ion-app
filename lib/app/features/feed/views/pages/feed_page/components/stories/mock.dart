@@ -3,134 +3,198 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-
-class Story {
-  const Story({
-    required this.imageUrl,
-    required this.author,
-    this.nft = false,
-    this.me = false,
-    this.gradientIndex = 0,
-  });
-
-  final String imageUrl;
-  final String author;
-  final bool nft;
-  final bool me;
-  final int gradientIndex;
-}
+import 'package:ion/app/features/feed/create_story/data/models/story.dart';
 
 final random = Random();
 
 final List<Story> stories = [
-  Story(
-    author: 'you',
-    imageUrl: 'https://i.pravatar.cc/150?u=@john',
-    me: true,
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  const Story.image(
+    data: StoryData(
+      id: '1',
+      contentUrl: 'https://picsum.photos/500/800?random=1',
+      imageUrl: 'https://i.pravatar.cc/150?u=@john_avatar',
+      author: 'you',
+      me: true,
+      nft: true,
+    ),
   ),
-  Story(
-    author: '@mysterox',
-    imageUrl: 'https://i.pravatar.cc/150?u=@mysterox',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.image(
+    data: StoryData(
+      id: '2',
+      contentUrl: 'https://picsum.photos/500/800?random=2',
+      imageUrl: 'https://i.pravatar.cc/150?u=@mysterox_avatar',
+      author: '@mysterox',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
   ),
-  Story(
-    author: '@foxydyrr',
-    imageUrl: 'https://i.pravatar.cc/150?u=@foxydyrr',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.image(
+    data: StoryData(
+      id: '3',
+      contentUrl: 'https://picsum.photos/500/800?random=3',
+      imageUrl: 'https://i.pravatar.cc/150?u=@foxydyrr_avatar',
+      author: '@foxydyrr',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
   ),
-  Story(
-    author: '@mikeydiy',
-    imageUrl: 'https://i.pravatar.cc/150?u=@mikeydiy',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.video(
+    data: StoryData(
+      id: '4',
+      contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_1.mp4',
+      imageUrl: 'https://i.pravatar.cc/150?u=@mikeydiy_avatar',
+      author: '@mikeydiy',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
+    muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
   ),
-  Story(
-    author: '@isaiah ',
-    imageUrl: 'https://i.pravatar.cc/150?u=@isaiah',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.video(
+    data: StoryData(
+      id: '5',
+      contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_2.mp4',
+      imageUrl: 'https://i.pravatar.cc/150?u=@isaiah_avatar',
+      author: '@isaiah',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
+    muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
   ),
-  Story(
-    author: '@kilback',
-    imageUrl: 'https://i.pravatar.cc/150?u=@kilback',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.image(
+    data: StoryData(
+      id: '6',
+      contentUrl: 'https://picsum.photos/500/800?random=6',
+      imageUrl: 'https://i.pravatar.cc/150?u=@kilback_avatar',
+      author: '@kilback',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
   ),
-  Story(
-    author: '@jamison',
-    imageUrl: 'https://i.pravatar.cc/150?u=@jamison',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.image(
+    data: StoryData(
+      id: '7',
+      contentUrl: 'https://picsum.photos/500/800?random=7',
+      imageUrl: 'https://i.pravatar.cc/150?u=@jamison_avatar',
+      author: '@jamison',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
   ),
-  Story(
-    author: '@rolfson',
-    imageUrl: 'https://i.pravatar.cc/150?u=@rolfson',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.video(
+    data: StoryData(
+      id: '8',
+      contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_2.mp4',
+      imageUrl: 'https://i.pravatar.cc/150?u=@rolfson_avatar',
+      author: '@rolfson',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
+    muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
   ),
-  Story(
-    author: '@wendy',
-    imageUrl: 'https://i.pravatar.cc/150?u=@wendy',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.image(
+    data: StoryData(
+      id: '9',
+      contentUrl: 'https://picsum.photos/500/800?random=9',
+      imageUrl: 'https://i.pravatar.cc/150?u=@wendy_avatar',
+      author: '@wendy',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
   ),
-  Story(
-    author: '@cruickshank',
-    imageUrl: 'https://i.pravatar.cc/150?u=@cruickshank',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.video(
+    data: StoryData(
+      id: '10',
+      contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_1.mp4',
+      imageUrl: 'https://i.pravatar.cc/150?u=@cruickshank_avatar',
+      author: '@cruickshank',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
+    muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
   ),
-  Story(
-    author: '@pierre',
-    imageUrl: 'https://i.pravatar.cc/150?u=@pierre',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.image(
+    data: StoryData(
+      id: '11',
+      contentUrl: 'https://picsum.photos/500/800?random=11',
+      imageUrl: 'https://i.pravatar.cc/150?u=@pierre_avatar',
+      author: '@pierre',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
   ),
-  Story(
-    author: '@armstrong',
-    imageUrl: 'https://i.pravatar.cc/150?u=@armstrong',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.video(
+    data: StoryData(
+      id: '12',
+      contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_2.mp4',
+      imageUrl: 'https://i.pravatar.cc/150?u=@armstrong_avatar',
+      author: '@armstrong',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
+    muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
   ),
-  Story(
-    author: '@emanuel',
-    imageUrl: 'https://i.pravatar.cc/150?u=@emanuel',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.image(
+    data: StoryData(
+      id: '13',
+      contentUrl: 'https://picsum.photos/500/800?random=13',
+      imageUrl: 'https://i.pravatar.cc/150?u=@emanuel_avatar',
+      author: '@emanuel',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
   ),
-  Story(
-    author: '@kozey',
-    imageUrl: 'https://i.pravatar.cc/150?u=@kozey',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.video(
+    data: StoryData(
+      id: '14',
+      contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_1.mp4',
+      imageUrl: 'https://i.pravatar.cc/150?u=@kozey_avatar',
+      author: '@kozey',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
+    muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
   ),
-  Story(
-    author: '@estella',
-    imageUrl: 'https://i.pravatar.cc/150?u=@estella',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.image(
+    data: StoryData(
+      id: '15',
+      contentUrl: 'https://picsum.photos/500/800?random=15',
+      imageUrl: 'https://i.pravatar.cc/150?u=@estella_avatar',
+      author: '@estella',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
   ),
-  Story(
-    author: '@ward',
-    imageUrl: 'https://i.pravatar.cc/150?u=@ward',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.video(
+    data: StoryData(
+      id: '16',
+      contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_2.mp4',
+      imageUrl: 'https://i.pravatar.cc/150?u=@ward_avatar',
+      author: '@ward',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
+    muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
   ),
-  Story(
-    author: '@javier',
-    imageUrl: 'https://i.pravatar.cc/150?u=@javier',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.image(
+    data: StoryData(
+      id: '17',
+      contentUrl: 'https://picsum.photos/500/800?random=17',
+      imageUrl: 'https://i.pravatar.cc/150?u=@javier_avatar',
+      author: '@javier',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
   ),
-  Story(
-    author: '@bergnaum',
-    imageUrl: 'https://i.pravatar.cc/150?u=@bergnaum',
-    nft: random.nextBool(),
-    gradientIndex: Random().nextInt(storyBorderGradients.length),
+  Story.video(
+    data: StoryData(
+      id: '18',
+      contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_1.mp4',
+      imageUrl: 'https://i.pravatar.cc/150?u=@bergnaum_avatar',
+      author: '@bergnaum',
+      nft: random.nextBool(),
+      gradientIndex: random.nextInt(storyBorderGradients.length),
+    ),
+    muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
   ),
 ];
 
