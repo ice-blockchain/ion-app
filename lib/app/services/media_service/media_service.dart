@@ -20,6 +20,8 @@ part 'media_service.g.dart';
 class MediaFile with _$MediaFile {
   const factory MediaFile({
     required String path,
+    int? size,
+    String? name,
     int? width,
     int? height,
     String? mimeType,
