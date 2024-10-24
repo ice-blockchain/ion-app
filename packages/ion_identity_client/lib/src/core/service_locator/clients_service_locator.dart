@@ -6,6 +6,8 @@ import 'package:ion_identity_client/src/auth/data_sources/recover_user_data_sour
 import 'package:ion_identity_client/src/auth/services/delegated_login/data_sources/delegated_login_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
+import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/services.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
@@ -132,7 +134,7 @@ mixin _AuthClient {
     required IonClientConfig config,
   }) {
     return LoginDataSource(
-      networkClient: IonServiceLocator.getNetworkClient(config: config),
+      networkClient: IonServiceLocator.getNetworkClient2(config: config),
     );
   }
 

@@ -3,7 +3,7 @@
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/services/create_recovery_credentials_service.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
-import 'package:ion_identity_client/src/auth/services/login_service.dart';
+import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/register_service.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
@@ -39,7 +39,7 @@ class IonAuth {
 
   Future<RegisterUserResult> registerUser() => registerService.registerUser();
 
-  Future<LoginUserResult> loginUser() => loginService.loginUser();
+  Future<void> loginUser() => loginService.loginUser();
 
   Future<CreateRecoveryCredentialsResult> createRecoveryCredentials() =>
       createRecoveryCredentialsService.createRecoveryCredentials();

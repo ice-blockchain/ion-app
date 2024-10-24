@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion.dart';
 import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion_data.dart';
 import 'package:ion_identity_client/src/signer/dtos/fido_2_attestation.dart';
@@ -104,36 +105,40 @@ class PasskeysSigner {
   /// This method interacts with a passkey authenticator to authenticate the
   /// user, utilizing the options specified in [PasskeysOptions].
   Future<Fido2Assertion> sign(UserActionChallenge challenge) async {
-    final fido2Assertion = await PasskeyAuthenticator().authenticate(
-      AuthenticateRequestType(
-        preferImmediatelyAvailableCredentials: false,
-        relyingPartyId: challenge.rp.id,
-        challenge: challenge.challenge,
-        timeout: options.timeout,
-        userVerification: challenge.userVerification,
-        allowCredentials: List<CredentialType>.from(
-          challenge.allowCredentials.webauthn.map(
-            (e) => CredentialType(
-              type: e.type,
-              id: e.id,
-              transports: [],
+    try {
+      final fido2Assertion = await PasskeyAuthenticator().authenticate(
+        AuthenticateRequestType(
+          preferImmediatelyAvailableCredentials: false,
+          relyingPartyId: challenge.rp.id,
+          challenge: challenge.challenge,
+          timeout: options.timeout,
+          userVerification: challenge.userVerification,
+          allowCredentials: List<CredentialType>.from(
+            challenge.allowCredentials.webauthn.map(
+              (e) => CredentialType(
+                type: e.type,
+                id: e.id,
+                transports: [],
+              ),
             ),
           ),
+          mediation: MediationType.Required,
         ),
-        mediation: MediationType.Required,
-      ),
-    );
+      );
 
-    return Fido2Assertion(
-      'Fido2',
-      Fido2AssertionData(
-        fido2Assertion.clientDataJSON,
-        fido2Assertion.rawId,
-        fido2Assertion.signature,
-        fido2Assertion.authenticatorData,
-        fido2Assertion.userHandle,
-      ),
-    );
+      return Fido2Assertion(
+        'Fido2',
+        Fido2AssertionData(
+          fido2Assertion.clientDataJSON,
+          fido2Assertion.rawId,
+          fido2Assertion.signature,
+          fido2Assertion.authenticatorData,
+          fido2Assertion.userHandle,
+        ),
+      );
+    } catch (e) {
+      throw const PasskeyValidationException();
+    }
   }
 
   Future<bool> canAuthenticate() {
