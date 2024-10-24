@@ -13,7 +13,7 @@ class RecoverUserPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recoverUserState = ref.watch(recoverUserActionNotifierProvider);
 
-    if (recoverUserState.valueOrNull == null) {
+    if (recoverUserState.valueOrNull == const RecoverUserActionState.initial()) {
       return RecoveryKeysInputContainer(
         isLoading: recoverUserState.isLoading,
         validator: (value, property) => value == null || value.isEmpty ? '' : null,

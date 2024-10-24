@@ -1,15 +1,22 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
-import 'package:ion_identity_client/ion_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'recover_user_action_notifier.freezed.dart';
 part 'recover_user_action_notifier.g.dart';
+
+@freezed
+class RecoverUserActionState with _$RecoverUserActionState {
+  const factory RecoverUserActionState.initial() = _RecoverUserActionStateInitial;
+  const factory RecoverUserActionState.success() = _RecoverUserActionStateSuccess;
+}
 
 @riverpod
 class RecoverUserActionNotifier extends _$RecoverUserActionNotifier {
   @override
-  FutureOr<RecoverUserSuccess?> build() => null;
+  FutureOr<RecoverUserActionState> build() => const RecoverUserActionState.initial();
 
   Future<void> recoverUser({
     required String username,
@@ -18,19 +25,14 @@ class RecoverUserActionNotifier extends _$RecoverUserActionNotifier {
   }) async {
     state = const AsyncLoading();
 
-    try {
+    state = await AsyncValue.guard(() async {
       final ionClient = await ref.read(ionApiClientProvider.future);
 
-      final result = await ionClient(username: username)
+      await ionClient(username: username)
           .auth
           .recoverUser(credentialId: credentialId, recoveryKey: recoveryKey);
 
-      state = switch (result) {
-        RecoverUserSuccess() => AsyncValue.data(result),
-        RecoverUserFailure() => AsyncValue.error(result, StackTrace.current),
-      };
-    } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
-    }
+      return const RecoverUserActionState.success();
+    });
   }
 }

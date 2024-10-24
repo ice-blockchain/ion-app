@@ -6,13 +6,12 @@ import 'dart:math';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart' as crypto;
-import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/ion_client.dart';
-import 'package:ion_identity_client/src/auth/data_sources/create_recovery_credentials_data_source.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_info.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_request_data.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_response.dart';
 import 'package:ion_identity_client/src/auth/dtos/recovery_key_data.dart';
+import 'package:ion_identity_client/src/auth/services/create_recovery_credentials/data_sources/create_recovery_credentials_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:uuid/uuid.dart';
@@ -32,50 +31,35 @@ class CreateRecoveryCredentialsService {
   final UserActionSigner userActionSigner;
   final KeyService keyService;
 
-  Future<CreateRecoveryCredentialsResult> createRecoveryCredentials() async {
-    final result = await dataSource
-        .createCredentialInit(username: username)
-        .flatMap(
-          (credentialChallenge) =>
-              TaskEither<CreateRecoveryCredentialsFailure, RecoveryKeyData>.tryCatch(
-            () => createRecoveryKey(
-              challenge: credentialChallenge.challenge,
-              origin: config.origin,
-            ),
-            CreateRecoveryKeyCreateRecoveryCredentialsFailure.new,
-          ).flatMap(
-            (recoveryKeyData) {
-              final credentialRequestData = CredentialRequestData(
-                challengeIdentifier: credentialChallenge.challengeIdentifier,
-                credentialName: recoveryKeyData.name,
-                credentialKind: 'RecoveryKey',
-                credentialInfo: recoveryKeyData.credentialInfo,
-                encryptedPrivateKey: recoveryKeyData.encryptedPrivateKey,
-              );
+  Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials() async {
+    final credentialChallenge = await dataSource.createCredentialInit(username: username);
+    final recoveryKeyData = await createRecoveryKey(
+      challenge: credentialChallenge.challenge,
+      origin: config.origin,
+    );
 
-              final request = dataSource.buildCreateCredentialSigningRequest(
-                username,
-                credentialRequestData,
-              );
+    final credentialRequestData = CredentialRequestData(
+      challengeIdentifier: credentialChallenge.challengeIdentifier,
+      credentialName: recoveryKeyData.name,
+      credentialKind: 'RecoveryKey',
+      credentialInfo: recoveryKeyData.credentialInfo,
+      encryptedPrivateKey: recoveryKeyData.encryptedPrivateKey,
+    );
 
-              return userActionSigner
-                  .execute(request, CredentialResponse.fromJson)
-                  .mapLeft(CreateCredentialRequestCreateRecoveryCredentialsFailure.new)
-                  .map(
-                    (credentialResponse) => CreateRecoveryCredentialsSuccess(
-                      identityKeyName: username,
-                      recoveryCode: recoveryKeyData.recoveryCode,
-                      recoveryKeyId: credentialResponse.credentialId,
-                    ),
-                  );
-            },
-          ),
-        )
-        .run();
+    final credentialRequest = dataSource.buildCreateCredentialSigningRequest(
+      username,
+      credentialRequestData,
+    );
 
-    return result.fold(
-      (failure) => failure,
-      (success) => success,
+    final credentialResponse = await userActionSigner.execute(
+      credentialRequest,
+      CredentialResponse.fromJson,
+    );
+
+    return CreateRecoveryCredentialsSuccess(
+      identityKeyName: username,
+      recoveryCode: recoveryKeyData.recoveryCode,
+      recoveryKeyId: credentialResponse.credentialId,
     );
   }
 

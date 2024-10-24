@@ -2,8 +2,8 @@
 
 import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_client.dart';
-import 'package:ion_identity_client/src/core/network2/network_client2.dart';
-import 'package:ion_identity_client/src/core/network2/network_exception.dart';
+import 'package:ion_identity_client/src/core/network/network_client.dart';
+import 'package:ion_identity_client/src/core/network/network_exception.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/models/get_wallets_response.dart';
@@ -14,7 +14,7 @@ class GetWalletsDataSource {
     this._tokenStorage,
   );
 
-  final NetworkClient2 _networkClient;
+  final NetworkClient _networkClient;
   final TokenStorage _tokenStorage;
 
   static const walletsPath = '/wallets';

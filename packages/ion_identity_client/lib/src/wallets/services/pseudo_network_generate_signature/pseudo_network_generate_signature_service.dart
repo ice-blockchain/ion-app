@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/src/signer/user_action_signer2.dart';
+import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/data_sources/pseudo_network_generate_signature_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/models/pseudo_network_signature_response.dart';
 
@@ -8,13 +8,13 @@ class PseudoNetworkGenerateSignatureService {
   PseudoNetworkGenerateSignatureService({
     required this.username,
     required PseudoNetworkGenerateSignatureDataSource dataSource,
-    required UserActionSigner2 userActionSigner,
+    required UserActionSigner userActionSigner,
   })  : _dataSource = dataSource,
         _userActionSigner = userActionSigner;
 
   final String username;
   final PseudoNetworkGenerateSignatureDataSource _dataSource;
-  final UserActionSigner2 _userActionSigner;
+  final UserActionSigner _userActionSigner;
 
   Future<PseudoNetworkSignatureResponse> generateHashSignature({
     required String walletId,

@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_client.dart';
-import 'package:ion_identity_client/src/auth/data_sources/data_sources.dart';
-import 'package:ion_identity_client/src/auth/data_sources/recover_user_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/create_recovery_credentials/create_recovery_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/create_recovery_credentials/data_sources/create_recovery_credentials_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/data_sources/delegated_login_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
-import 'package:ion_identity_client/src/auth/services/recover_user_service.dart';
-import 'package:ion_identity_client/src/auth/services/services.dart';
+import 'package:ion_identity_client/src/auth/services/recover_user/data_sources/recover_user_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_service.dart';
+import 'package:ion_identity_client/src/auth/services/register/data_sources/register_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/register/register_service.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
 import 'package:ion_identity_client/src/ion_api_user_client.dart';
 import 'package:ion_identity_client/src/signer/data_sources/user_action_signer_data_source.dart';
-import 'package:ion_identity_client/src/signer/data_sources/user_action_signer_data_source2.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
-import 'package:ion_identity_client/src/signer/user_action_signer2.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/data_sources/create_wallet_data_source.dart';
@@ -134,7 +134,7 @@ mixin _AuthClient {
     required IonClientConfig config,
   }) {
     return LoginDataSource(
-      networkClient: IonServiceLocator.getNetworkClient2(config: config),
+      networkClient: IonServiceLocator.getNetworkClient(config: config),
     );
   }
 
@@ -147,7 +147,7 @@ mixin _AuthClient {
       username: username,
       config: config,
       dataSource: createCreateRecoveryCredentialsDataSource(config: config),
-      userActionSigner: ClientsServiceLocator().createUserActionSigner(
+      userActionSigner: ClientsServiceLocator().createUserActionSigner2(
         config: config,
         signer: signer,
       ),
@@ -199,7 +199,7 @@ mixin _AuthClient {
     required IonClientConfig config,
   }) {
     return DelegatedLoginDataSource(
-      networkClient: IonServiceLocator.getNetworkClient2(config: config),
+      networkClient: IonServiceLocator.getNetworkClient(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
     );
   }
@@ -263,7 +263,7 @@ mixin _WalletsClient {
     required IonClientConfig config,
   }) {
     return GetWalletsDataSource(
-      IonServiceLocator.getNetworkClient2(config: config),
+      IonServiceLocator.getNetworkClient(config: config),
       IonServiceLocator.getTokenStorage(),
     );
   }
@@ -280,7 +280,7 @@ mixin _WalletsClient {
 
   GetWalletAssetsDataSource createGetWalletAssetsDataSource(IonClientConfig config) {
     return GetWalletAssetsDataSource(
-      IonServiceLocator.getNetworkClient2(config: config),
+      IonServiceLocator.getNetworkClient(config: config),
       IonServiceLocator.getTokenStorage(),
     );
   }
@@ -297,7 +297,7 @@ mixin _WalletsClient {
 
   GetWalletNftsDataSource createGetWalletNftsDataSource(IonClientConfig config) {
     return GetWalletNftsDataSource(
-      IonServiceLocator.getNetworkClient2(config: config),
+      IonServiceLocator.getNetworkClient(config: config),
       IonServiceLocator.getTokenStorage(),
     );
   }
@@ -314,7 +314,7 @@ mixin _WalletsClient {
 
   GetWalletHistoryDataSource createGetWalletHistoryDataSource(IonClientConfig config) {
     return GetWalletHistoryDataSource(
-      IonServiceLocator.getNetworkClient2(config: config),
+      IonServiceLocator.getNetworkClient(config: config),
       IonServiceLocator.getTokenStorage(),
     );
   }
@@ -333,7 +333,7 @@ mixin _WalletsClient {
     IonClientConfig config,
   ) {
     return GetWalletTransferRequestsDataSource(
-      IonServiceLocator.getNetworkClient2(config: config),
+      IonServiceLocator.getNetworkClient(config: config),
       IonServiceLocator.getTokenStorage(),
     );
   }
@@ -378,21 +378,21 @@ mixin _UserActionSigner {
     );
   }
 
-  UserActionSigner2 createUserActionSigner2({
+  UserActionSigner createUserActionSigner2({
     required IonClientConfig config,
     required PasskeysSigner signer,
   }) {
-    return UserActionSigner2(
+    return UserActionSigner(
       dataSource: createUserActionSignerDataSource2(config: config),
       passkeysSigner: signer,
     );
   }
 
-  UserActionSignerDataSource2 createUserActionSignerDataSource2({
+  UserActionSignerDataSource createUserActionSignerDataSource2({
     required IonClientConfig config,
   }) {
-    return UserActionSignerDataSource2(
-      networkClient: IonServiceLocator.getNetworkClient2(config: config),
+    return UserActionSignerDataSource(
+      networkClient: IonServiceLocator.getNetworkClient(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
     );
   }

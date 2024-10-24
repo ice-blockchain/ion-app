@@ -17,22 +17,14 @@ class CreateRecoveryKeyActionNotifier extends _$CreateRecoveryKeyActionNotifier 
   Future<void> createRecoveryCredentials() async {
     state = const AsyncValue.loading();
 
-    try {
+    state = await AsyncValue.guard(() async {
       final selectedUser = ref.read(authProvider).valueOrNull?.currentIdentityKeyName;
       if (selectedUser == null) {
         throw Exception('No selected user');
       }
 
       final ionClient = await ref.read(ionApiClientProvider.future);
-
-      final result = await ionClient(username: selectedUser).auth.createRecoveryCredentials();
-
-      state = switch (result) {
-        CreateRecoveryCredentialsSuccess() => AsyncValue.data(result),
-        CreateRecoveryCredentialsFailure() => AsyncValue.error(result, StackTrace.current),
-      };
-    } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
-    }
+      return ionClient(username: selectedUser).auth.createRecoveryCredentials();
+    });
   }
 }
