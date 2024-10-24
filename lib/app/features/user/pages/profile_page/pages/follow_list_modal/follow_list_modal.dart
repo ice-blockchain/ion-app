@@ -88,8 +88,8 @@ class FollowListView extends ConsumerWidget {
               );
             },
             orElse: () => ListItemsLoadingState(
-              itemsCount: 11,
               itemHeight: 35.0.s,
+              listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
             ),
           ),
         ],

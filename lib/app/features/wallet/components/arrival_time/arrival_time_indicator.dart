@@ -1,20 +1,22 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ArrivalTimeIndicator extends ConsumerWidget {
-  const ArrivalTimeIndicator({super.key});
+class ArrivalTimeIndicator extends StatelessWidget {
+  const ArrivalTimeIndicator({
+    required this.arrivalTimeInMinutes,
+    super.key,
+  });
+
+  final int arrivalTimeInMinutes;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
-    final formData = ref.watch(sendAssetFormControllerProvider());
 
     return Row(
       children: [
@@ -41,7 +43,7 @@ class ArrivalTimeIndicator extends ConsumerWidget {
               ),
               SizedBox(width: 5.0.s),
               Text(
-                '${formData.arrivalTime} ${locale.wallet_arrival_time_minutes}',
+                '$arrivalTimeInMinutes ${locale.wallet_arrival_time_minutes}',
                 style: textTheme.body2.copyWith(
                   color: colors.primaryAccent,
                 ),

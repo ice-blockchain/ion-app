@@ -11,5 +11,6 @@ class WalletData with _$WalletData {
     required String name,
     required String icon,
     required double balance,
+    required String? address,
   }) = _WalletData;
 }

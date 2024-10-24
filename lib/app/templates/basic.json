@@ -24,7 +24,8 @@
         "raspberry": "#EA3665",
         "darkBlue": "#1D46EB",
         "lightBlue": "#1B9CF0",
-        "quaternaryText": "#727689"
+        "quaternaryText": "#727689",
+        "attentionBlock": "#EEF1FF"
       },
       "dark": {
         "primaryAccent": "#0166FF",
@@ -49,7 +50,8 @@
         "raspberry": "#EA3665",
         "darkBlue": "#1D46EB",
         "lightBlue": "#1B9CF0",
-        "quaternaryText": "#727689"
+        "quaternaryText": "#727689",
+        "attentionBlock": "#EEF1FF"
       }
     },
     "textThemes": {

@@ -5,15 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/components/inputs/text_input/components/text_input_text_button.dart';
-import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/components/slider/app_slider.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallet/components/arrival_time/arrival_time.dart';
-import 'package:ion/app/features/wallet/components/network_fee/network_fee.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/coin_button.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
@@ -32,7 +29,6 @@ class SendCoinsForm extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.theme.appColors;
-    final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
 
     final formController = ref.watch(sendAssetFormControllerProvider());
@@ -93,46 +89,17 @@ class SendCoinsForm extends HookConsumerWidget {
                       },
                     ),
                     SizedBox(height: 12.0.s),
-                    TextInput(
+                    CoinAmountInput(
                       controller: amountController,
-                      labelText: locale.wallet_usdt_amount,
-                      onChanged: (value) {
-                        ref.read(sendAssetFormControllerProvider().notifier).updateAmount(value);
-                      },
-                      suffixIcon: TextInputTextButton(
-                        onPressed: () {
-                          final maxAmount = formController.wallet.balance.toString();
-                          amountController.text = maxAmount;
-                          ref
-                              .read(sendAssetFormControllerProvider().notifier)
-                              .updateAmount(maxAmount);
-                        },
-                        label: locale.wallet_max,
-                      ),
-                    ),
-                    SizedBox(height: 10.0.s),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '~ 349.99 USD',
-                        style: textTheme.caption2.copyWith(
-                          color: colors.tertararyText,
-                        ),
-                      ),
+                      coinId: formController.selectedCoin!.abbreviation,
                     ),
                     SizedBox(height: 17.0.s),
-                    const ArrivalTime(),
-                    SizedBox(height: 12.0.s),
-                    AppSlider(
-                      initialValue: formController.arrivalTime.toDouble(),
-                      onChanged: (double value) {
-                        ref
-                            .read(sendAssetFormControllerProvider().notifier)
-                            .updateArrivalTime(value.toInt());
-                      },
+                    ArrivalTimeSelector(
+                      arrivalTimeInMinutes: formController.arrivalTime,
+                      onArrivalTimeChanged: (int value) => ref
+                          .read(sendAssetFormControllerProvider().notifier)
+                          .updateArrivalTime(value),
                     ),
-                    SizedBox(height: 8.0.s),
-                    const NetworkFee(),
                     SizedBox(height: 45.0.s),
                     Button(
                       label: Text(

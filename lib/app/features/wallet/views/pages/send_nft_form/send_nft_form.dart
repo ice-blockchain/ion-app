@@ -6,12 +6,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/components/slider/app_slider.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallet/components/arrival_time/arrival_time.dart';
-import 'package:ion/app/features/wallet/components/network_fee/network_fee.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
 import 'package:ion/app/features/wallet/views/pages/nft_details/components/nft_name/nft_name.dart';
 import 'package:ion/app/features/wallet/views/pages/nft_details/components/nft_picture/nft_picture.dart';
@@ -84,20 +82,12 @@ class SendNftForm extends ConsumerWidget {
                         },
                       ),
                       SizedBox(height: 17.0.s),
-                      const ArrivalTime(),
-                      SizedBox(height: 12.0.s),
-                      AppSlider(
-                        initialValue: formController.arrivalTime.toDouble(),
-                        onChanged: (double value) {
-                          ref
-                              .read(
-                                sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier,
-                              )
-                              .updateArrivalTime(value.toInt());
-                        },
+                      ArrivalTimeSelector(
+                        arrivalTimeInMinutes: formController.arrivalTime,
+                        onArrivalTimeChanged: (int value) => ref
+                            .read(sendAssetFormControllerProvider().notifier)
+                            .updateArrivalTime(value),
                       ),
-                      SizedBox(height: 8.0.s),
-                      const NetworkFee(),
                       SizedBox(height: 45.0.s),
                       Button(
                         label: Text(
