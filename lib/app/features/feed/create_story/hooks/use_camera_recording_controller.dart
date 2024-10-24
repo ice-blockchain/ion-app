@@ -14,25 +14,20 @@ typedef RecordingHandlers = (
 /// Manages camera readiness and provides handlers to start/stop recording.
 RecordingHandlers useCameraRecordingController(WidgetRef ref) {
   final cameraControllerAsync = ref.watch(cameraControllerNotifierProvider);
-  final isCameraReady = useState(false);
+  final controller = cameraControllerAsync.value;
 
-  useEffect(
-    () {
-      isCameraReady.value =
-          cameraControllerAsync.value != null && cameraControllerAsync.value!.value.isInitialized;
-      return null;
-    },
-    [cameraControllerAsync.value],
-  );
+  final cameraValue = controller != null ? useValueListenable(controller) : null;
+
+  final isCameraReady = cameraValue?.isInitialized ?? false;
 
   Future<void> handleRecordingStart() async {
-    if (isCameraReady.value) {
+    if (isCameraReady) {
       await ref.read(storyCameraControllerProvider.notifier).startVideoRecording();
     }
   }
 
   Future<String?> handleRecordingStop() async {
-    if (isCameraReady.value) {
+    if (isCameraReady) {
       final videoPath = await ref.read(storyCameraControllerProvider.notifier).stopVideoRecording();
       return videoPath;
     }
@@ -40,7 +35,7 @@ RecordingHandlers useCameraRecordingController(WidgetRef ref) {
   }
 
   return (
-    isCameraReady.value,
+    isCameraReady,
     handleRecordingStart,
     handleRecordingStop,
   );

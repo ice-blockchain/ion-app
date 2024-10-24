@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_video/share_story_button.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_video/story_video_preview.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_video/verified_account_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/visibility_settings_modal/visibility_settings_modal.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
@@ -49,11 +51,19 @@ class StoryPreviewPage extends ConsumerWidget {
               children: [
                 SizedBox(height: 16.0.s),
                 ShareStoryButton(
-                  onPressed: () {
-                    showSimpleBottomSheet<void>(
+                  onPressed: () async {
+                    final result = await showSimpleBottomSheet<bool>(
                       context: context,
                       child: const VisibilitySettingsModal(),
                     );
+
+                    if (result ?? false) {
+                      await ref.read(storyCameraControllerProvider.notifier).publishStory();
+                    }
+
+                    if (context.mounted) {
+                      FeedRoute().go(context);
+                    }
                   },
                 ),
                 ScreenBottomOffset(margin: 36.0.s),

@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:ui';
+
 import 'package:camera/camera.dart';
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
+import 'package:ion/app/features/core/providers/app_lifecycle_provider.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,9 +21,21 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
 
   @override
   Future<Raw<CameraController>?> build() async {
-    ref.onDispose(() {
-      _cameraController?.dispose();
-    });
+    ref
+      ..onDispose(() {
+        _cameraController?.dispose();
+      })
+      ..listen(appLifecycleProvider, (previous, current) async {
+        final hasPermission = ref.read(hasPermissionProvider(Permission.camera));
+
+        if (current == AppLifecycleState.resumed && hasPermission) {
+          await resumeCamera();
+        } else if (current == AppLifecycleState.inactive ||
+            current == AppLifecycleState.paused ||
+            current == AppLifecycleState.hidden) {
+          await pauseCamera();
+        }
+      });
 
     final hasPermission = ref.watch(hasPermissionProvider(Permission.camera));
 
