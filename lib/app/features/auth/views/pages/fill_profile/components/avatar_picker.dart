@@ -40,7 +40,8 @@ class AvatarPicker extends HookConsumerWidget {
         loading.value = true;
         final croppedImage = await mediaService.cropImage(context: context, path: cameraImage.path);
         if (croppedImage == null) return;
-        final compressedImage = await compressService.compressImage(croppedImage, size: avatarSize);
+        final compressedImage =
+            await compressService.compressImage(croppedImage, size: avatarSize, quality: 70);
         onAvatarPicked?.call(compressedImage);
       } catch (error) {
         // TODO:show error to the user when imp

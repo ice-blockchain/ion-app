@@ -28,6 +28,10 @@ class PostMedia extends HookConsumerWidget {
   /// The aspect ratio is calculated by finding an average of the
   /// dominant category (horizontal or vertical).
   static double _calculateAspectRatio({required List<MediaAttachment> media}) {
+    if (media.isEmpty) {
+      return 0;
+    }
+
     final horizontalRatios = <double>[];
     final verticalRatios = <double>[];
 
@@ -50,6 +54,7 @@ class PostMedia extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final knownMedia = useMemoized(() => _filterKnownMedia(media));
+
     final aspectRatio = useMemoized(
       () => _calculateAspectRatio(media: knownMedia),
     );
