@@ -18,6 +18,14 @@ class UserNotFoundException extends IonException {
   const UserNotFoundException() : super('User not found');
 }
 
+class PasskeyNotAvailableException extends IonException {
+  const PasskeyNotAvailableException() : super('Passkey not available');
+}
+
+class PasskeyValidationException extends IonException {
+  const PasskeyValidationException() : super('Passkey validation failed');
+}
+
 class UnknownIonException extends IonException {
   const UnknownIonException([super.message]);
 }

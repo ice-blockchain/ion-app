@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/auth/views/pages/ion_identity_client_test/ion_identity_client_test_page.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class AppTestPage extends ConsumerWidget {
@@ -34,16 +33,6 @@ class AppTestPage extends ConsumerWidget {
                 child: const Text('Logout'),
               ),
               const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (context) => const IonIdentityClientTestPage(),
-                    ),
-                  );
-                },
-                child: const Text('ion-identity-client'),
-              ),
               ElevatedButton(
                 onPressed: () {
                   CompressTestRoute().push<void>(context);

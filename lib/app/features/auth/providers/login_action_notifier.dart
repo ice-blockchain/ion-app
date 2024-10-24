@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
-import 'package:ion_identity_client/ion_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'login_action_notifier.g.dart';
@@ -14,16 +13,9 @@ class LoginActionNotifier extends _$LoginActionNotifier {
   Future<void> signIn({required String keyName}) async {
     state = const AsyncValue.loading();
 
-    try {
+    state = await AsyncValue.guard(() async {
       final ionClient = await ref.read(ionApiClientProvider.future);
-      final loginResult = await ionClient(username: keyName).auth.loginUser();
-
-      state = switch (loginResult) {
-        LoginUserSuccess() => const AsyncValue.data(null),
-        LoginUserFailure() => AsyncValue.error(loginResult, StackTrace.current),
-      };
-    } catch (e) {
-      state = AsyncValue.error(e, StackTrace.current);
-    }
+      await ionClient(username: keyName).auth.loginUser();
+    });
   }
 }
