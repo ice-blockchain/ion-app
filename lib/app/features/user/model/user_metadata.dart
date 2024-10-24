@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/core/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -19,6 +20,7 @@ class UserMetadata with _$UserMetadata, CacheableEvent {
     String? picture,
     String? website,
     String? banner,
+    @Default({}) Map<String, MediaAttachment> media,
     @Default(false) bool bot,
     @Default(false) bool verified,
     @Default(false) bool nft,
@@ -34,6 +36,14 @@ class UserMetadata with _$UserMetadata, CacheableEvent {
       json.decode(eventMessage.content) as Map<String, dynamic>,
     );
 
+    final media = eventMessage.tags.fold(<String, MediaAttachment>{}, (res, tag) {
+      if (tag[0] == MediaAttachment.tagName) {
+        final attachment = MediaAttachment.fromTag(tag);
+        return {...res, attachment.url: attachment};
+      }
+      return res;
+    });
+
     return UserMetadata(
       pubkey: eventMessage.pubkey,
       name: userDataContent.name ?? '',
@@ -43,6 +53,7 @@ class UserMetadata with _$UserMetadata, CacheableEvent {
       website: userDataContent.website,
       banner: userDataContent.banner,
       bot: userDataContent.bot ?? false,
+      media: media,
     );
   }
 
@@ -63,6 +74,7 @@ class UserMetadata with _$UserMetadata, CacheableEvent {
           bot: bot,
         ).toJson(),
       ),
+      tags: media.values.map((attachment) => attachment.toJson()).toList(),
     );
   }
 

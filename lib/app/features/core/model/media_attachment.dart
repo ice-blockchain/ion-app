@@ -17,7 +17,7 @@ class MediaAttachment {
 
   /// https://github.com/nostr-protocol/nips/blob/master/92.md#example
   factory MediaAttachment.fromTag(List<String> tag) {
-    if (tag[0] != 'imeta') {
+    if (tag[0] != tagName) {
       throw Exception('Wrong tags ${tag[0]}, expected "imeta"');
     }
 
@@ -106,13 +106,15 @@ class MediaAttachment {
 
   List<String> toJson() {
     return [
-      'imeta',
+      tagName,
       'url $url',
       if (mimeType != null) 'm $mimeType',
       if (blurhash != null) 'blurhash $blurhash',
       if (dimension != null) 'dim $dimension',
     ];
   }
+
+  static const String tagName = 'imeta';
 
   @override
   String toString() {
