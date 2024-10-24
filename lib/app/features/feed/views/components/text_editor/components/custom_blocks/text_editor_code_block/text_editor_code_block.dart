@@ -5,6 +5,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_code_block/code_block_content.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_code_block/code_block_types_toolbar.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/wipe_styles/remove_block.dart';
 
 const textEditorCodeKey = 'text-editor-code';
 
@@ -40,10 +41,12 @@ class TextEditorCodeBuilder extends EmbedBuilder {
           color: context.theme.appColors.onTerararyFill,
         ),
       ),
-      child: const Column(
+      child: Column(
         children: [
-          CodeBlockTypesToolbar(),
-          CodeBlockContent(),
+          const CodeBlockTypesToolbar(),
+          CodeBlockContent(
+            onRemoveBlock: () => removeBlock(controller, node),
+          ),
         ],
       ),
     );
