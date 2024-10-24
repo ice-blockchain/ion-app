@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/post/post_media_data.dart';
+import 'package:ion/app/features/core/model/media_metadata.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 
 class PostMediaCarouselHorizontal extends HookConsumerWidget {
@@ -14,7 +14,7 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
     super.key,
   });
 
-  final List<PostMediaData> media;
+  final List<MediaMetadata> media;
 
   final double aspectRatio;
 
