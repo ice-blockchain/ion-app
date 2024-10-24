@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/search/views/components/advanced_search_groups/advanced_search_group_list_item.dart';
+import 'package:ion/app/features/search/views/components/advanced_search_groups/explore_groups.dart';
+import 'package:ion/app/features/search/views/components/advanced_search_groups/joined_groups.dart';
 import 'package:ion/app/features/search/views/components/search_sub_header/search_sub_header.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -30,31 +30,7 @@ class AdvancedSearchGroups extends HookConsumerWidget {
               count: 4,
             ),
           ),
-          ListView.builder(
-            itemCount: 4,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  if (index == 0)
-                    SizedBox(
-                      height: 12.0.s,
-                    ),
-                  const AdvancedSearchGroupListItem(
-                    avatarUrl:
-                        'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-                    displayName: 'HOT Crypto Updates',
-                    message: 'Interesting statistics on the mass distribution of cryptocurrencies.',
-                    joined: false,
-                  ),
-                  HorizontalSeparator(
-                    height: 16.0.s,
-                  ),
-                ],
-              );
-            },
-          ),
+          const JoinedGroups(),
           Padding(
             padding: EdgeInsets.only(top: 8.0.s),
             child: SearchSubHeader(
@@ -63,31 +39,7 @@ class AdvancedSearchGroups extends HookConsumerWidget {
               count: 4,
             ),
           ),
-          ListView.builder(
-            itemCount: 4,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  if (index == 0)
-                    SizedBox(
-                      height: 12.0.s,
-                    ),
-                  const AdvancedSearchGroupListItem(
-                    avatarUrl:
-                        'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
-                    displayName: 'Trending Crypto Apps',
-                    message: '10,000',
-                    joined: true,
-                  ),
-                  HorizontalSeparator(
-                    height: 16.0.s,
-                  ),
-                ],
-              );
-            },
-          ),
+          const ExploreGroups(),
         ],
       ),
     );

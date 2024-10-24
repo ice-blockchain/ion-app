@@ -39,47 +39,9 @@ class AdvancedSearchGroupListItem extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      displayName,
-                      style: context.theme.appTextThemes.subtitle3,
-                    ),
-                    if (isVerified)
-                      Padding(
-                        padding: EdgeInsets.only(left: 4.0.s),
-                        child: Assets.svg.iconBadgeIcelogo.icon(size: 16.0.s),
-                      ),
-                    if (isIon)
-                      Padding(
-                        padding: EdgeInsets.only(left: 4.0.s),
-                        child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
-                      ),
-                  ],
-                ),
+                GroupHeader(displayName: displayName, isVerified: isVerified, isIon: isIon),
                 SizedBox(height: 2.0.s),
-                Row(
-                  children: [
-                    if (joined)
-                      Padding(
-                        padding: EdgeInsets.only(right: 4.0.s),
-                        child: Assets.svg.iconChannelMembers.icon(
-                          size: 12.0.s,
-                          color: context.theme.appColors.onTertararyBackground,
-                        ),
-                      ),
-                    Flexible(
-                      child: Text(
-                        message,
-                        style: context.theme.appTextThemes.body2.copyWith(
-                          color: context.theme.appColors.onTertararyBackground,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
+                GroupDescription(joined: joined, message: message),
               ],
             ),
           ),
@@ -87,6 +49,78 @@ class AdvancedSearchGroupListItem extends ConsumerWidget {
               .icon(size: 24.0.s, color: context.theme.appColors.tertararyText),
         ],
       ),
+    );
+  }
+}
+
+class GroupDescription extends StatelessWidget {
+  const GroupDescription({
+    required this.joined,
+    required this.message,
+    super.key,
+  });
+
+  final bool joined;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        if (joined)
+          Padding(
+            padding: EdgeInsets.only(right: 4.0.s),
+            child: Assets.svg.iconChannelMembers.icon(
+              size: 12.0.s,
+              color: context.theme.appColors.onTertararyBackground,
+            ),
+          ),
+        Flexible(
+          child: Text(
+            message,
+            style: context.theme.appTextThemes.body2.copyWith(
+              color: context.theme.appColors.onTertararyBackground,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class GroupHeader extends StatelessWidget {
+  const GroupHeader({
+    required this.displayName,
+    required this.isVerified,
+    required this.isIon,
+    super.key,
+  });
+
+  final String displayName;
+  final bool isVerified;
+  final bool isIon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          displayName,
+          style: context.theme.appTextThemes.subtitle3,
+        ),
+        if (isVerified)
+          Padding(
+            padding: EdgeInsets.only(left: 4.0.s),
+            child: Assets.svg.iconBadgeIcelogo.icon(size: 16.0.s),
+          ),
+        if (isIon)
+          Padding(
+            padding: EdgeInsets.only(left: 4.0.s),
+            child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
+          ),
+      ],
     );
   }
 }
