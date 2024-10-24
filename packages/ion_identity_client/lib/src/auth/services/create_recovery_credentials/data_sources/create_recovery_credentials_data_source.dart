@@ -3,7 +3,7 @@
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_challenge.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_request_data.dart';
-import 'package:ion_identity_client/src/core/network/network.dart';
+import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/http_method.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
@@ -23,29 +23,23 @@ class CreateRecoveryCredentialsDataSource {
   final NetworkClient networkClient;
   final TokenStorage tokenStorage;
 
-  TaskEither<CreateRecoveryCredentialsFailure, CredentialChallenge> createCredentialInit({
+  Future<CredentialChallenge> createCredentialInit({
     required String username,
   }) {
     final token = tokenStorage.getToken(username: username);
     if (token == null) {
-      return TaskEither.left(
-        CreateCredentialInitCreateRecoveryCredentialsFailure(
-          RequestExecutionNetworkFailure(401, StackTrace.current),
-        ),
-      );
+      throw const UnauthenticatedException();
     }
 
-    return networkClient
-        .post(
-          createCredentialInitPath,
-          data: recoveryKeyBody,
-          decoder: CredentialChallenge.fromJson,
-          headers: RequestHeaders.getAuthorizationHeaders(
-            token: token.token,
-            username: username,
-          ),
-        )
-        .mapLeft(CreateCredentialInitCreateRecoveryCredentialsFailure.new);
+    return networkClient.post(
+      createCredentialInitPath,
+      data: recoveryKeyBody,
+      decoder: CredentialChallenge.fromJson,
+      headers: RequestHeaders.getAuthorizationHeaders(
+        token: token.token,
+        username: username,
+      ),
+    );
   }
 
   UserActionSigningRequest buildCreateCredentialSigningRequest(

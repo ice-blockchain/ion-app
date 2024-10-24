@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/src/core/network/network_failure.dart';
-
 sealed class RecoverUserResult {
   const RecoverUserResult();
 }
@@ -18,11 +16,7 @@ sealed class RecoverUserFailure extends RecoverUserResult {
 }
 
 class CreateChallengeRequestRecoverUserFailure extends RecoverUserFailure {
-  const CreateChallengeRequestRecoverUserFailure(
-    this.networkFailure,
-  ) : super(null, null);
-
-  final NetworkFailure networkFailure;
+  const CreateChallengeRequestRecoverUserFailure() : super(null, null);
 }
 
 class SignChallengeRecoverUserFailure extends RecoverUserFailure {
@@ -34,9 +28,5 @@ class SignNewCredentialsRecoverUserFailure extends RecoverUserFailure {
 }
 
 class RecoverUserRequestRecoverUserFailure extends RecoverUserFailure {
-  const RecoverUserRequestRecoverUserFailure(
-    this.networkFailure,
-  ) : super(null, null);
-
-  final NetworkFailure networkFailure;
+  const RecoverUserRequestRecoverUserFailure() : super(null, null);
 }

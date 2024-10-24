@@ -24,7 +24,7 @@ class SignUpPasskeyForm extends HookConsumerWidget {
     final registerActionState = ref.watch(registerActionNotifierProvider);
 
     ref.listen(registerActionNotifierProvider, (_, next) {
-      if (next.hasValue) {
+      if (next.hasError && next.error != null) {
         showDialog<void>(
           context: context,
           builder: (context) => AlertDialog(

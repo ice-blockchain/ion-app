@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
-import 'package:ion_identity_client/src/core/network2/network_client2.dart';
+import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/dtos/user_action_signing_complete_request.dart';
 
@@ -9,7 +9,7 @@ class LoginDataSource {
     required this.networkClient,
   });
 
-  final NetworkClient2 networkClient;
+  final NetworkClient networkClient;
 
   static const loginInitPath = '/auth/login/init';
   static const loginCompletePath = '/auth/login';
