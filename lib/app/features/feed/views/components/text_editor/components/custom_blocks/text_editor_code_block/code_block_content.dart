@@ -40,7 +40,7 @@ class CodeBlockContent extends HookConsumerWidget {
           cursorColor: context.theme.appColors.primaryAccent,
           cursorHeight: 22.0.s,
           style: TextStyle(
-            fontFamily: 'Monaco-Regular',
+            fontFamily: 'Monaco',
             fontSize: 12.0.s,
             color: context.theme.appColors.primaryText,
           ),
