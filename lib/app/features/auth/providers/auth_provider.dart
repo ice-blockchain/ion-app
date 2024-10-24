@@ -67,10 +67,13 @@ String? currentIdentityKeyNameSelector(Ref ref) {
 }
 
 @riverpod
-String currentPubkeySelector(Ref ref) {
-  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+String? currentPubkeySelector(Ref ref) {
+  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
+  if (identityKeyName == null) {
+    return null;
+  }
   final keyStore = ref.watch(nostrKeyStoreProvider(identityKeyName)).valueOrNull;
-  return keyStore?.publicKey ?? '';
+  return keyStore?.publicKey;
 }
 
 @riverpod

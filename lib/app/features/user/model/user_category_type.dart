@@ -20,38 +20,21 @@ enum UserCategoryType {
   traveler,
   news;
 
-  String getTitle(BuildContext context) {
-    switch (this) {
-      case UserCategoryType.aviation:
-        return context.i18n.category_aviation;
-      case UserCategoryType.blockchain:
-        return context.i18n.category_blockchain;
-      case UserCategoryType.business:
-        return context.i18n.category_business;
-      case UserCategoryType.cars:
-        return context.i18n.category_cars;
-      case UserCategoryType.cryptocurrency:
-        return context.i18n.category_cryptocurrency;
-      case UserCategoryType.dataScience:
-        return context.i18n.category_data_science;
-      case UserCategoryType.education:
-        return context.i18n.category_education;
-      case UserCategoryType.finance:
-        return context.i18n.category_finance;
-      case UserCategoryType.gamer:
-        return context.i18n.category_gamer;
-      case UserCategoryType.style:
-        return context.i18n.category_style;
-      case UserCategoryType.restaurant:
-        return context.i18n.category_restaurant;
-      case UserCategoryType.trading:
-        return context.i18n.category_trading;
-      case UserCategoryType.technology:
-        return context.i18n.category_technology;
-      case UserCategoryType.traveler:
-        return context.i18n.category_traveler;
-      case UserCategoryType.news:
-        return context.i18n.category_news;
-    }
-  }
+  String getTitle(BuildContext context) => switch (this) {
+        UserCategoryType.aviation => context.i18n.category_aviation,
+        UserCategoryType.blockchain => context.i18n.category_blockchain,
+        UserCategoryType.business => context.i18n.category_business,
+        UserCategoryType.cars => context.i18n.category_cars,
+        UserCategoryType.cryptocurrency => context.i18n.category_cryptocurrency,
+        UserCategoryType.dataScience => context.i18n.category_data_science,
+        UserCategoryType.education => context.i18n.category_education,
+        UserCategoryType.finance => context.i18n.category_finance,
+        UserCategoryType.gamer => context.i18n.category_gamer,
+        UserCategoryType.style => context.i18n.category_style,
+        UserCategoryType.restaurant => context.i18n.category_restaurant,
+        UserCategoryType.trading => context.i18n.category_trading,
+        UserCategoryType.technology => context.i18n.category_technology,
+        UserCategoryType.traveler => context.i18n.category_traveler,
+        UserCategoryType.news => context.i18n.category_news,
+      };
 }

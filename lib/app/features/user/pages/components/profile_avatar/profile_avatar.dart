@@ -31,7 +31,7 @@ class ProfileAvatar extends ConsumerWidget {
       alignment: Alignment.topCenter,
       clipBehavior: Clip.none,
       children: [
-        Container(
+        Align(
           alignment: Alignment.topCenter,
           child: ScreenSideOffset.small(
             child: Column(
