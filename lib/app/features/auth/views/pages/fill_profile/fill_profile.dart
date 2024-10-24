@@ -17,6 +17,7 @@ import 'package:ion/app/features/auth/views/pages/fill_profile/components/fill_p
 import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class FillProfile extends HookConsumerWidget {
@@ -49,7 +50,7 @@ class FillProfile extends HookConsumerWidget {
                     child: Column(
                       children: [
                         SizedBox(height: 20.0.s),
-                        AvatarPicker(onAvatarPicked: (String path) {}),
+                        AvatarPicker(onAvatarPicked: (MediaFile mediaFile) {}),
                         SizedBox(height: 28.0.s),
                         NameInput(controller: nameController),
                         SizedBox(height: 16.0.s),

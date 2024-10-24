@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
-import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -92,7 +92,7 @@ class SelectLanguages extends HookConsumerWidget {
             ScreenSideOffset.small(
               child: Button(
                 disabled: finishNotifier.isLoading,
-                trailingIcon: finishNotifier.isLoading ? const IceLoadingIndicator() : null,
+                trailingIcon: finishNotifier.isLoading ? const IonLoadingIndicator() : null,
                 label: Text(context.i18n.button_continue),
                 mainAxisSize: MainAxisSize.max,
                 onPressed: () async {

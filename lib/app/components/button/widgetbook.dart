@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
@@ -64,7 +64,7 @@ Widget regularButtonUseCase(BuildContext context) {
           label: const Text('Loading'),
           disabled: true,
           mainAxisSize: MainAxisSize.max,
-          trailingIcon: const IceLoadingIndicator(),
+          trailingIcon: const IonLoadingIndicator(),
           onPressed: () {},
         ),
         Button(

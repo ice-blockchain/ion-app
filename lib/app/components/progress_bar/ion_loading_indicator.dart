@@ -11,8 +11,8 @@ enum IndicatorType {
   dark,
 }
 
-class IceLoadingIndicator extends HookWidget {
-  const IceLoadingIndicator({
+class IonLoadingIndicator extends HookWidget {
+  const IonLoadingIndicator({
     this.type = IndicatorType.light,
     this.size,
     super.key,
