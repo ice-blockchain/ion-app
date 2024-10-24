@@ -2,6 +2,7 @@
 
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
+import 'package:ion/app/features/core/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
@@ -14,6 +15,7 @@ import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -36,15 +38,15 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
           _generateNostrKeyStore(),
         ).wait;
 
-        if (avatar != null) {
-          await ref.read(nostrUploadNotifierProvider.notifier).upload(avatar);
-        }
-
         final (:userRelays, :userRelaysEvent) =
             _buildUserRelays(keyStore: nostrKeyStore, relayUrls: relayUrls);
 
-        final (:userMetadata, :userMetadataEvent) =
-            _buildUserMetadata(keyStore: nostrKeyStore, name: name, displayName: displayName);
+        final (:userMetadata, :userMetadataEvent) = await _buildUserMetadata(
+          keyStore: nostrKeyStore,
+          avatar: avatar,
+          name: name,
+          displayName: displayName,
+        );
 
         final (:interestSet, :interests, :interestSetEvent, :interestsEvent) =
             _buildUserLanguages(keyStore: nostrKeyStore, languages: languages);
@@ -106,15 +108,23 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return (userRelays: userRelays, userRelaysEvent: userRelaysEvent);
   }
 
-  ({UserMetadata userMetadata, EventMessage userMetadataEvent}) _buildUserMetadata({
+  Future<({UserMetadata userMetadata, EventMessage userMetadataEvent})> _buildUserMetadata({
     required KeyStore keyStore,
     required String name,
     required String displayName,
-  }) {
+    MediaFile? avatar,
+  }) async {
+    MediaAttachment? mediaAttachment;
+    if (avatar != null) {
+      mediaAttachment = await ref.read(nostrUploadNotifierProvider.notifier).upload(avatar);
+    }
+
     final userMetadata = UserMetadata(
       pubkey: keyStore.publicKey,
       name: name,
       displayName: displayName,
+      picture: mediaAttachment?.url,
+      media: mediaAttachment != null ? {mediaAttachment.url: mediaAttachment} : {},
     );
 
     final userMetadataEvent = userMetadata.toEventMessage(keyStore);
