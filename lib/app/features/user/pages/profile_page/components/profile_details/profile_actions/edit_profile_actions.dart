@@ -22,7 +22,7 @@ class EditProfileActions extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         EditUserButton(
-          userId: pubkey,
+          pupkey: pubkey,
         ),
       ],
     );

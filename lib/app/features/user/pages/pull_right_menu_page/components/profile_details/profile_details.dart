@@ -18,10 +18,10 @@ class ProfileDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
     final userMetadataValue = ref.watch(currentUserMetadataProvider).valueOrNull;
-    final userFollowers = ref.watch(userFollowersProvider(identityKeyName));
-    final userFollowing = ref.watch(userFollowingProvider(identityKeyName));
+    final userFollowers = ref.watch(userFollowersProvider(currentPubkey));
+    final userFollowing = ref.watch(userFollowingProvider(currentPubkey));
 
     return Container(
       alignment: Alignment.center,
@@ -32,7 +32,7 @@ class ProfileDetails extends ConsumerWidget {
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                UserNameTile(pubkey: identityKeyName),
+                UserNameTile(pubkey: currentPubkey),
                 SizedBox(height: 20.0.s),
                 SizedBox(
                   height: 45.0.s,

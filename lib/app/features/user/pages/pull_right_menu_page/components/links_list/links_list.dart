@@ -20,7 +20,8 @@ class LinksList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.symmetric(horizontal: 40.0.s),
@@ -35,7 +36,7 @@ class LinksList extends ConsumerWidget {
             title: context.i18n.profile_profile,
             subtitle: context.i18n.profile_profile_desc,
             onTap: () {
-              FeedProfileRoute(pubkey: identityKeyName).push<void>(context);
+              FeedProfileRoute(pubkey: currentPubkey).push<void>(context);
             },
           ),
           LinksListTile(
