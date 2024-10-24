@@ -10,7 +10,7 @@ class FileStorageMetadata with _$FileStorageMetadata {
   /// https://github.com/nostr-protocol/nips/blob/master/96.md#server-adaptation
   const factory FileStorageMetadata({
     @JsonKey(name: 'api_url') required String apiUrl,
-    @JsonKey(name: 'delegated_to_url') required String delegatedToUrl,
+    @JsonKey(name: 'delegated_to_url') String? delegatedToUrl,
   }) = _FileStorageMetadata;
 
   factory FileStorageMetadata.fromJson(Map<String, dynamic> json) =>
