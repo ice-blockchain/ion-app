@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -18,7 +19,6 @@ class AvatarPicker extends HookConsumerWidget {
     this.avatarFile,
     this.avatarUrl,
     this.onAvatarPicked,
-    this.avatarSize = const Size.square(720),
   });
 
   final MediaFile? avatarFile;
@@ -27,7 +27,7 @@ class AvatarPicker extends HookConsumerWidget {
 
   final void Function(MediaFile)? onAvatarPicked;
 
-  final Size avatarSize;
+  static Size avatarSize = const Size.square(720);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +41,11 @@ class AvatarPicker extends HookConsumerWidget {
       try {
         final cameraImage = await mediaService.captureImageFromCamera();
         if (cameraImage == null || !context.mounted) return;
-        final croppedImage = await mediaService.cropImage(context: context, path: cameraImage.path);
+        final croppedImage = await mediaService.cropImage(
+          context: context,
+          path: cameraImage.path,
+          cropStyle: CropStyle.rectangle,
+        );
         if (croppedImage == null) return;
         localAvatarFile.value = croppedImage;
         loading.value = true;
@@ -49,8 +53,10 @@ class AvatarPicker extends HookConsumerWidget {
             await compressService.compressImage(croppedImage, size: avatarSize, quality: 70);
         onAvatarPicked?.call(compressedImage);
       } catch (error) {
-        localAvatarFile.value = avatarFile;
-        // TODO:show error to the user when imp
+        if (context.mounted) {
+          localAvatarFile.value = avatarFile;
+          // TODO:show error to the user when imp
+        }
       } finally {
         if (context.mounted) {
           loading.value = false;

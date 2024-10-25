@@ -76,6 +76,7 @@ class MediaService {
     required BuildContext context,
     required String path,
     CropAspectRatio aspectRatio = const CropAspectRatio(ratioX: 1, ratioY: 1),
+    CropStyle cropStyle = CropStyle.circle,
     List<CropAspectRatioPresetData> aspectRatioPresets = const [CropAspectRatioPreset.square],
   }) async {
     final croppedFile = await ImageCropper().cropImage(
@@ -86,12 +87,12 @@ class MediaService {
           toolbarTitle: context.i18n.common_crop_image,
           toolbarColor: context.theme.appColors.primaryAccent,
           toolbarWidgetColor: context.theme.appColors.primaryBackground,
-          cropStyle: CropStyle.circle,
+          cropStyle: cropStyle,
           aspectRatioPresets: aspectRatioPresets,
         ),
         IOSUiSettings(
           title: context.i18n.common_crop_image,
-          cropStyle: CropStyle.circle,
+          cropStyle: cropStyle,
           aspectRatioPresets: aspectRatioPresets,
         ),
         // `WebUiSettings` is required for Web, `context` is also required

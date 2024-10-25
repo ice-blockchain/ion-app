@@ -25,15 +25,39 @@ class FillProfile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loading = useState(false);
+    final avatarFile = useState<MediaFile?>(null);
     final formKey = useMemoized(GlobalKey<FormState>.new);
     final onboardingData = ref.watch(onboardingDataProvider);
     final nameController = useTextEditingController.fromValue(
-      TextEditingValue(text: onboardingData?.displayName ?? ''),
+      TextEditingValue(text: onboardingData.displayName ?? ''),
     );
     final nicknameController = useTextEditingController.fromValue(
-      TextEditingValue(text: onboardingData?.name ?? ''),
+      TextEditingValue(text: onboardingData.name ?? ''),
     );
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
+
+    final onSubmit = useCallback(() async {
+      if (formKey.currentState!.validate()) {
+        loading.value = true;
+        try {
+          if (avatarFile.value != null) {
+            await ref.read(onboardingDataProvider.notifier).uploadAvatar(avatarFile.value!);
+          }
+          ref.read(onboardingDataProvider.notifier).name = nicknameController.text;
+          ref.read(onboardingDataProvider.notifier).displayName = nameController.text;
+          hideKeyboardAndCallOnce(
+            callback: () => SelectLanguagesRoute().push<void>(context),
+          );
+        } catch (error) {
+          //TODO: show error
+        } finally {
+          if (context.mounted) {
+            loading.value = false;
+          }
+        }
+      }
+    });
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -52,9 +76,9 @@ class FillProfile extends HookConsumerWidget {
                       children: [
                         SizedBox(height: 20.0.s),
                         AvatarPicker(
-                          avatarFile: onboardingData?.avatar,
-                          onAvatarPicked: (MediaFile avatar) {
-                            ref.read(onboardingDataProvider.notifier).avatar = avatar;
+                          avatarUrl: onboardingData.avatarMediaAttachment?.url,
+                          onAvatarPicked: (avatar) {
+                            avatarFile.value = avatar;
                           },
                         ),
                         SizedBox(height: 28.0.s),
@@ -63,17 +87,8 @@ class FillProfile extends HookConsumerWidget {
                         NicknameInput(controller: nicknameController),
                         SizedBox(height: 26.0.s),
                         FillProfileSubmitButton(
-                          onPressed: () async {
-                            if (formKey.currentState!.validate()) {
-                              ref.read(onboardingDataProvider.notifier).name =
-                                  nicknameController.text;
-                              ref.read(onboardingDataProvider.notifier).displayName =
-                                  nameController.text;
-                              hideKeyboardAndCallOnce(
-                                callback: () => SelectLanguagesRoute().push<void>(context),
-                              );
-                            }
-                          },
+                          loading: loading.value,
+                          onPressed: onSubmit,
                         ),
                         SizedBox(height: 40.0.s + MediaQuery.paddingOf(context).bottom),
                       ],

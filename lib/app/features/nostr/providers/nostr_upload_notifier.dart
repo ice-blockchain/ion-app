@@ -10,7 +10,6 @@ import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/file_storage_metadata.dart';
 import 'package:ion/app/features/nostr/model/nostr_auth.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,7 +22,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<MediaAttachment> upload(
+  Future<(FileMetadata, MediaAttachment)> upload(
     MediaFile file,
   ) async {
     final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
@@ -41,14 +40,14 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
       mimeType: file.mimeType,
     );
 
-    await ref.read(nostrNotifierProvider.notifier).sendOne(fileMetadata.toEventMessage(keyStore));
-
-    return MediaAttachment(
+    final mediaAttachment = MediaAttachment(
       url: fileMetadata.url,
       mimeType: fileMetadata.mimeType,
       blurhash: fileMetadata.blurhash,
       dimension: fileMetadata.dimension,
     );
+
+    return (fileMetadata, mediaAttachment);
   }
 
   // TODO: handle delegatedToUrl when migrating to common relays
