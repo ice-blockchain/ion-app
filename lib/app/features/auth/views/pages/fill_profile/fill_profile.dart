@@ -84,7 +84,10 @@ class FillProfile extends HookConsumerWidget {
                         SizedBox(height: 28.0.s),
                         NameInput(controller: nameController),
                         SizedBox(height: 16.0.s),
-                        NicknameInput(controller: nicknameController),
+                        NicknameInput(
+                          controller: nicknameController,
+                          textInputAction: TextInputAction.done,
+                        ),
                         SizedBox(height: 26.0.s),
                         FillProfileSubmitButton(
                           loading: loading.value,

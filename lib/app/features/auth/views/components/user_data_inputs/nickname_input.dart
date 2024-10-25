@@ -7,9 +7,11 @@ import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NicknameInput extends StatelessWidget {
-  const NicknameInput({required this.controller, super.key});
+  const NicknameInput({required this.controller, super.key, this.textInputAction});
 
   final TextEditingController controller;
+
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +19,7 @@ class NicknameInput extends StatelessWidget {
       controller: controller,
       prefixIconAssetName: Assets.svg.iconFieldNickname,
       labelText: context.i18n.fill_profile_input_nickname,
+      textInputAction: textInputAction,
       validator: (String? value) {
         if (Validators.isEmpty(value)) return '';
         if (Validators.isInvalidName(value)) {
