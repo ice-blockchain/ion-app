@@ -15,28 +15,16 @@ enum CodeBlockType {
   python,
   dart;
 
-  String getTitle(BuildContext context) {
-    switch (this) {
-      case CodeBlockType.plainText:
-        return context.i18n.code_block_type_plain_text;
-      case CodeBlockType.swift:
-        return context.i18n.code_block_type_swift;
-      case CodeBlockType.c:
-        return context.i18n.code_block_type_c;
-      case CodeBlockType.cPlusPlus:
-        return context.i18n.code_block_type_c_plus_plus;
-      case CodeBlockType.cSharp:
-        return context.i18n.code_block_type_c_sharp;
-      case CodeBlockType.css:
-        return context.i18n.code_block_type_css;
-      case CodeBlockType.java:
-        return context.i18n.code_block_type_java;
-      case CodeBlockType.javascript:
-        return context.i18n.code_block_type_javascript;
-      case CodeBlockType.python:
-        return context.i18n.code_block_type_python;
-      case CodeBlockType.dart:
-        return context.i18n.code_block_type_dart;
-    }
-  }
+  String getTitle(BuildContext context) => switch (this) {
+        CodeBlockType.plainText => context.i18n.code_block_type_plain_text,
+        CodeBlockType.swift => context.i18n.code_block_type_swift,
+        CodeBlockType.c => context.i18n.code_block_type_c,
+        CodeBlockType.cPlusPlus => context.i18n.code_block_type_c_plus_plus,
+        CodeBlockType.cSharp => context.i18n.code_block_type_c_sharp,
+        CodeBlockType.css => context.i18n.code_block_type_css,
+        CodeBlockType.java => context.i18n.code_block_type_java,
+        CodeBlockType.javascript => context.i18n.code_block_type_javascript,
+        CodeBlockType.python => context.i18n.code_block_type_python,
+        CodeBlockType.dart => context.i18n.code_block_type_dart,
+      };
 }
