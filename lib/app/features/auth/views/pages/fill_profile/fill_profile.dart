@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/avatar/avatar_picker.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
@@ -12,7 +13,6 @@ import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/name_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/nickname_input.dart';
-import 'package:ion/app/features/auth/views/pages/fill_profile/components/avatar_picker.dart';
 import 'package:ion/app/features/auth/views/pages/fill_profile/components/fill_prifile_submit_button.dart';
 import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -52,7 +52,7 @@ class FillProfile extends HookConsumerWidget {
                       children: [
                         SizedBox(height: 20.0.s),
                         AvatarPicker(
-                          avatar: onboardingData?.avatar,
+                          avatarFile: onboardingData?.avatar,
                           onAvatarPicked: (MediaFile avatar) {
                             ref.read(onboardingDataProvider.notifier).avatar = avatar;
                           },

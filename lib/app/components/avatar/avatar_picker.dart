@@ -15,12 +15,15 @@ import 'package:ion/generated/assets.gen.dart';
 class AvatarPicker extends HookConsumerWidget {
   const AvatarPicker({
     super.key,
-    this.avatar,
+    this.avatarFile,
+    this.avatarUrl,
     this.onAvatarPicked,
     this.avatarSize = const Size.square(720),
   });
 
-  final MediaFile? avatar;
+  final MediaFile? avatarFile;
+
+  final String? avatarUrl;
 
   final void Function(MediaFile)? onAvatarPicked;
 
@@ -46,7 +49,9 @@ class AvatarPicker extends HookConsumerWidget {
       } catch (error) {
         // TODO:show error to the user when imp
       } finally {
-        loading.value = false;
+        if (context.mounted) {
+          loading.value = false;
+        }
       }
     }
 
@@ -56,9 +61,12 @@ class AvatarPicker extends HookConsumerWidget {
         Avatar(
           size: 100.0.s,
           borderRadius: BorderRadius.circular(20.0.s),
-          imageWidget: avatar != null
-              ? Image.file(File(avatar!.path))
-              : Assets.svg.userPhotoArea.icon(size: 100.0.s),
+          imageUrl: avatarFile == null ? avatarUrl : null,
+          imageWidget: avatarFile != null
+              ? Image.file(File(avatarFile!.path))
+              : avatarUrl == null
+                  ? Assets.svg.userPhotoArea.icon(size: 100.0.s)
+                  : null,
         ),
         Positioned(
           bottom: -6.0.s,
