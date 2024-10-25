@@ -46,7 +46,7 @@ class AvatarPicker extends HookConsumerWidget {
           path: cameraImage.path,
           cropStyle: CropStyle.rectangle,
         );
-        if (croppedImage == null) return;
+        if (croppedImage == null || !context.mounted) return;
         localAvatarFile.value = croppedImage;
         loading.value = true;
         final compressedImage =
