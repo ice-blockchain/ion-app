@@ -31,6 +31,7 @@ class AvatarPicker extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final localAvatarFile = useState<MediaFile?>(avatarFile);
     final loading = useState(false);
 
     Future<void> pickAvatar() async {
@@ -40,13 +41,15 @@ class AvatarPicker extends HookConsumerWidget {
       try {
         final cameraImage = await mediaService.captureImageFromCamera();
         if (cameraImage == null || !context.mounted) return;
-        loading.value = true;
         final croppedImage = await mediaService.cropImage(context: context, path: cameraImage.path);
         if (croppedImage == null) return;
+        localAvatarFile.value = croppedImage;
+        loading.value = true;
         final compressedImage =
             await compressService.compressImage(croppedImage, size: avatarSize, quality: 70);
         onAvatarPicked?.call(compressedImage);
       } catch (error) {
+        localAvatarFile.value = avatarFile;
         // TODO:show error to the user when imp
       } finally {
         if (context.mounted) {
@@ -61,9 +64,9 @@ class AvatarPicker extends HookConsumerWidget {
         Avatar(
           size: 100.0.s,
           borderRadius: BorderRadius.circular(20.0.s),
-          imageUrl: avatarFile == null ? avatarUrl : null,
-          imageWidget: avatarFile != null
-              ? Image.file(File(avatarFile!.path))
+          imageUrl: localAvatarFile.value == null ? avatarUrl : null,
+          imageWidget: localAvatarFile.value != null
+              ? Image.file(File(localAvatarFile.value!.path))
               : avatarUrl == null
                   ? Assets.svg.userPhotoArea.icon(size: 100.0.s)
                   : null,
