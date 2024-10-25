@@ -13,7 +13,15 @@ class ToolbarListQuoteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
       icon: Assets.svg.iconArticleQuote,
-      onPressed: () {},
+      onPressed: () {
+        final currentStyle = textEditorController.getSelectionStyle().attributes;
+
+        if (currentStyle.containsKey(Attribute.blockQuote.key)) {
+          textEditorController.formatSelection(Attribute.clone(Attribute.blockQuote, null));
+        } else {
+          textEditorController.formatSelection(Attribute.blockQuote);
+        }
+      },
     );
   }
 }

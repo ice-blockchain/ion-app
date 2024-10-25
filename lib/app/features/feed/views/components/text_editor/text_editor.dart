@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
@@ -31,6 +32,7 @@ class TextEditor extends ConsumerWidget {
                 ref: ref,
               ),
               TextEditorSeparatorBuilder(),
+              TextEditorCodeBuilder(),
             ],
             autoFocus: true,
             placeholder: placeholder,
@@ -90,6 +92,23 @@ class TextEditor extends ConsumerWidget {
         VerticalSpacing.zero,
         null,
         null,
+      ),
+      quote: DefaultTextBlockStyle(
+        context.theme.appTextThemes.body2.copyWith(
+          color: context.theme.appColors.primaryText,
+          fontStyle: FontStyle.italic,
+        ),
+        HorizontalSpacing.zero,
+        VerticalSpacing.zero,
+        VerticalSpacing.zero,
+        BoxDecoration(
+          border: Border(
+            left: BorderSide(
+              color: context.theme.appColors.primaryAccent,
+              width: 2.0.s,
+            ),
+          ),
+        ),
       ),
     );
   }

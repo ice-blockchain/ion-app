@@ -441,5 +441,15 @@
   "notification_repost_successful": "Successfully reposted",
   "chat_groups_joined": "Joined",
   "chat_groups_explore": "Explore",
-  "chat_groups_subscribed": "Subscribed"
+  "chat_groups_subscribed": "Subscribed",
+  "code_block_type_plain_text": "Plain text",
+  "code_block_type_swift": "Swift",
+  "code_block_type_c": "C",
+  "code_block_type_c_plus_plus": "C++",
+  "code_block_type_c_sharp": "C#",
+  "code_block_type_css": "CSS",
+  "code_block_type_java": "Java",
+  "code_block_type_javascript": "JavaScript",
+  "code_block_type_python": "Python",
+  "code_block_type_dart": "Dart"
 }
