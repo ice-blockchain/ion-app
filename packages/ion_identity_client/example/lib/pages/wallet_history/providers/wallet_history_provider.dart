@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ion_client_example/providers/current_username_notifier.dart';
 import 'package:ion_client_example/providers/ion_client_provider.dart';
 import 'package:ion_identity_client/ion_client.dart';
@@ -8,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'wallet_history_provider.g.dart';
 
 @riverpod
-Future<WalletHistory> walletHistory(WalletHistoryRef ref, String walletId) async {
+Future<WalletHistory> walletHistory(Ref ref, String walletId) async {
   final username = ref.watch(currentUsernameNotifierProvider) ?? 'ERROR';
   final ionClient = await ref.watch(ionClientProvider.future);
 

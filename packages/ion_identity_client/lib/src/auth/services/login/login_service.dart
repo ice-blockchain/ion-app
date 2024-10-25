@@ -21,7 +21,20 @@ class LoginService {
   /// Logs in an existing user using the provided username, handling the necessary
   /// API interactions and storing the authentication token securely.
   ///
-  /// Throws IonException
+  /// This method performs the following steps:
+  /// 1. Checks if the device can authenticate using passkeys.
+  /// 2. Initiates the login process with the server.
+  /// 3. Generates a passkey assertion.
+  /// 4. Completes the login with the server.
+  /// 5. Stores the received authentication tokens.
+  ///
+  /// Throws:
+  /// - [PasskeyNotAvailableException] if the device cannot authenticate using passkeys.
+  /// - [UnauthenticatedException] if the login credentials are invalid.
+  /// - [UserDeactivatedException] if the user account has been deactivated.
+  /// - [UserNotFoundException] if the user account does not exist.
+  /// - [PasskeyValidationException] if the passkey validation fails.
+  /// - [UnknownIonException] for any other unexpected errors during the login process.
   Future<void> loginUser() async {
     final canAuthenticate = await signer.canAuthenticate();
     if (!canAuthenticate) {

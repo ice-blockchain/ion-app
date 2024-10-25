@@ -3,12 +3,9 @@
 import 'dart:convert';
 
 import 'package:cryptography/cryptography.dart' as cryptography;
-import 'package:fpdart/fpdart.dart';
 import 'package:ion_identity_client/ion_client.dart';
-import 'package:ion_identity_client/src/auth/data_sources/recover_user_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
-import 'package:ion_identity_client/src/core/types/types.dart';
-import 'package:ion_identity_client/src/signer/extensions/passkey_signer_extentions.dart';
+import 'package:ion_identity_client/src/auth/services/recover_user/data_sources/recover_user_data_source.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 
 class RecoverUserService {
@@ -26,48 +23,34 @@ class RecoverUserService {
   final PasskeysSigner passkeySigner;
   final KeyService keyService;
 
-  Future<RecoverUserResult> recoverUser({
+  Future<void> recoverUser({
     required String credentialId,
     required String recoveryKey,
   }) async {
-    final result = await passkeySigner
-        .registerChallenge(
-          dataSource.createDelegatedRecoveryChallenge(
-            username: username,
-            credentialId: credentialId,
-          ),
-          SignChallengeRecoverUserFailure.new,
-        )
-        .flatMap(
-          (signedChallenge) => TaskEither<RecoverUserFailure, JsonObject>.tryCatch(
-            () => _signNewCredentials(
-              encryptedKey: signedChallenge
-                  .userRegistrationChallenge.allowedRecoveryCredentials![0].encryptedRecoveryKey,
-              recoveryKey: recoveryKey,
-              credentialId: credentialId,
-              newCredentials: {
-                'firstFactorCredential': signedChallenge.attestation.toJson(),
-              },
-            ),
-            SignNewCredentialsRecoverUserFailure.new,
-          ).flatMap<JsonObject>(
-            (signedRecoveryPackage) => dataSource.recoverUser(
-              recoveryData: {
-                'newCredentials': {
-                  'firstFactorCredential': signedChallenge.attestation.toJson(),
-                },
-                'recovery': signedRecoveryPackage,
-              },
-              temporaryAuthenticationToken:
-                  signedChallenge.userRegistrationChallenge.temporaryAuthenticationToken,
-            ),
-          ),
-        )
-        .run();
+    final userRegistrationChallenge = await dataSource.createDelegatedRecoveryChallenge(
+      username: username,
+      credentialId: credentialId,
+    );
 
-    return result.fold(
-      (l) => l,
-      (r) => const RecoverUserSuccess(),
+    final attestation = await passkeySigner.register(userRegistrationChallenge);
+
+    final signedRecoveryPackage = await _signNewCredentials(
+      encryptedKey: userRegistrationChallenge.allowedRecoveryCredentials![0].encryptedRecoveryKey,
+      recoveryKey: recoveryKey,
+      credentialId: credentialId,
+      newCredentials: {
+        'firstFactorCredential': attestation.toJson(),
+      },
+    );
+
+    await dataSource.recoverUser(
+      recoveryData: {
+        'newCredentials': {
+          'firstFactorCredential': attestation.toJson(),
+        },
+        'recovery': signedRecoveryPackage,
+      },
+      temporaryAuthenticationToken: userRegistrationChallenge.temporaryAuthenticationToken,
     );
   }
 

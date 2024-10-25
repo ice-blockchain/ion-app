@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:dio/dio.dart';
-import 'package:fpdart/fpdart.dart';
-import 'package:ion_identity_client/src/core/network/network_failure.dart';
+import 'package:ion_identity_client/src/core/network/network_exception.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
 
 typedef Decoder<T> = T Function(JsonObject response);
@@ -23,14 +22,13 @@ class NetworkClient {
   /// Sends a GET request to the specified [path] with optional [queryParams],
   /// and decodes the JSON response into a [Result] using the provided [decoder].
   ///
-  /// Returns a [TaskEither] that either contains a [NetworkFailure] or the
-  /// decoded [Result].
-  TaskEither<NetworkFailure, Result> get<Result>(
+  /// Throws a [NetworkException] if the request fails or the response cannot be decoded.
+  Future<Result> get<Result>(
     String path, {
     required Decoder<Result> decoder,
     JsonObject queryParams = const {},
     JsonObject headers = const {},
-  }) {
+  }) async {
     return _makeRequest(
       request: () => dio.get<JsonObject>(
         path,
@@ -45,15 +43,14 @@ class NetworkClient {
   /// and request [data], and decodes the JSON response into a [Result] using
   /// the provided [decoder].
   ///
-  /// Returns a [TaskEither] that either contains a [NetworkFailure] or the
-  /// decoded [Result].
-  TaskEither<NetworkFailure, Result> post<Result>(
+  /// Throws a [NetworkException] if the request fails or the response cannot be decoded.
+  Future<Result> post<Result>(
     String path, {
     required Decoder<Result> decoder,
     JsonObject queryParams = const {},
     JsonObject headers = const {},
     Object? data,
-  }) {
+  }) async {
     return _makeRequest(
       request: () => dio.post<JsonObject>(
         path,
@@ -68,27 +65,30 @@ class NetworkClient {
   /// A private method that executes the provided [request] function, handles
   /// potential errors, and decodes the JSON response using the provided [decoder].
   ///
-  /// Returns a [TaskEither] that either contains a [NetworkFailure] or the
-  /// decoded [Result].
-  TaskEither<NetworkFailure, Result> _makeRequest<Result>({
+  /// Throws a [NetworkException] if the request fails or the response cannot be decoded.
+  Future<Result> _makeRequest<Result>({
     required Future<Response<JsonObject>> Function() request,
     required Decoder<Result> decoder,
-  }) {
-    return TaskEither<NetworkFailure, dynamic>.tryCatch(
-      request,
-      RequestExecutionNetworkFailure.new,
-    )
-        .flatMap(
-          (response) => Either.tryCatch(
-            () => response.data as Map<String, dynamic>,
-            (_, __) => ResponseFormatNetworkFailure(response.data),
-          ).toTaskEither(),
-        )
-        .flatMap(
-          (r) => Either.tryCatch(
-            () => decoder(r),
-            (error, stackTrace) => DecodeNetworkFailure(r, error, stackTrace),
-          ).toTaskEither(),
-        );
+  }) async {
+    try {
+      final response = await request();
+      final data = response.data;
+
+      if (data == null) {
+        throw ResponseFormatException(data);
+      }
+
+      try {
+        return decoder(data);
+      } catch (e, stackTrace) {
+        throw DecodeException(data, e, stackTrace);
+      }
+    } on DioException catch (e, stackTrace) {
+      throw RequestExecutionException(e, stackTrace);
+    } on NetworkException {
+      rethrow;
+    } catch (e, stackTrace) {
+      throw RequestExecutionException(e, stackTrace);
+    }
   }
 }

@@ -3,13 +3,14 @@
 import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_client_provider.g.dart';
 
 @riverpod
-Future<IonApiClient> ionClient(IonClientRef ref) async {
+Future<IonApiClient> ionClient(Ref ref) async {
   await dotenv.load(fileName: '.app.env');
   final appId =
       Platform.isAndroid ? dotenv.get('ION_ANDROID_APP_ID') : dotenv.get('ION_IOS_APP_ID');
