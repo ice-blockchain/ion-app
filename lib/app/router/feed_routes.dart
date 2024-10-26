@@ -27,6 +27,7 @@ class FeedRoutes {
         TypedGoRoute<MediaPickerRoute>(path: 'media-picker'),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
         TypedGoRoute<FeedSearchLanguagesRoute>(path: 'feed-search-languages'),
+        TypedGoRoute<StoryContactsShareRoute>(path: 'story-contacts-share'),
       ],
     ),
   ];
@@ -213,7 +214,18 @@ class StoryPreviewRoute extends BaseRouteData {
 
 @TypedGoRoute<StoryViewingRoute>(
   path: '/story-viewing',
+  // routes: [
+
+  // ],
 )
 class StoryViewingRoute extends BaseRouteData {
   StoryViewingRoute() : super(child: const StoryViewingPage());
+}
+
+class StoryContactsShareRoute extends BaseRouteData {
+  StoryContactsShareRoute()
+      : super(
+          child: const StoryShareModal(),
+          type: IceRouteType.bottomSheet,
+        );
 }

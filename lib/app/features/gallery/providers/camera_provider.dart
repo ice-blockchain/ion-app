@@ -7,6 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.dart';
+import 'package:ion/app/features/gallery/data/models/camera_state.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,12 +20,12 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
   CameraDescription? _frontCamera;
   CameraDescription? _backCamera;
 
+  void _onCameraControllerUpdate() => ref.notifyListeners();
+
   @override
-  Future<Raw<CameraController>?> build() async {
+  CameraState build() {
     ref
-      ..onDispose(() {
-        _cameraController?.dispose();
-      })
+      ..onDispose(_disposeCamera)
       ..listen(appLifecycleProvider, (previous, current) async {
         final hasPermission = ref.read(hasPermissionProvider(Permission.camera));
 
@@ -40,34 +41,43 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
     final hasPermission = ref.watch(hasPermissionProvider(Permission.camera));
 
     if (!hasPermission) {
-      return null;
+      return const CameraState.initial();
     }
 
-    return _initializeCamera();
+    _initializeCamera();
+    return const CameraState.initial();
   }
 
-  Future<Raw<CameraController>?> _initializeCamera() async {
-    _cameras = await availableCameras();
+  Future<void> _initializeCamera() async {
+    state = const CameraState.loading();
+    try {
+      _cameras = await availableCameras();
 
-    _backCamera = _cameras?.firstWhereOrNull(
-      (camera) => camera.lensDirection == CameraLensDirection.back,
-    );
+      _backCamera = _cameras?.firstWhereOrNull(
+        (camera) => camera.lensDirection == CameraLensDirection.back,
+      );
 
-    _frontCamera = _cameras?.firstWhereOrNull(
-      (camera) => camera.lensDirection == CameraLensDirection.front,
-    );
+      _frontCamera = _cameras?.firstWhereOrNull(
+        (camera) => camera.lensDirection == CameraLensDirection.front,
+      );
 
-    final initialCamera = _backCamera ?? _frontCamera;
+      final initialCamera = _backCamera ?? _frontCamera;
 
-    if (initialCamera == null) {
-      Logger.log('Camera not found');
-      return null;
+      if (initialCamera == null) {
+        Logger.log('Camera not found');
+        state = const CameraState.error(message: 'Camera not found');
+        return;
+      }
+
+      final controller = await _createCameraController(initialCamera);
+      state = CameraState.ready(controller: controller);
+    } catch (e) {
+      Logger.log('Camera initialization error: $e');
+      state = CameraState.error(message: 'Camera initialization error: $e');
     }
-
-    return _createCameraController(initialCamera);
   }
 
-  Future<Raw<CameraController>?> _createCameraController(CameraDescription camera) async {
+  Future<CameraController> _createCameraController(CameraDescription camera) async {
     _cameraController = CameraController(
       camera,
       ResolutionPreset.high,
@@ -75,24 +85,20 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
 
     try {
       await _cameraController?.initialize();
-      _cameraController?.addListener(ref.notifyListeners);
-      return _cameraController;
+      _cameraController?.addListener(_onCameraControllerUpdate);
+      return _cameraController!;
     } catch (e) {
       Logger.log('Camera initialization error: $e');
-
-      _cameraController?.removeListener(ref.notifyListeners);
-      await _cameraController?.dispose();
-      _cameraController = null;
-      return null;
+      await _disposeCamera();
+      throw Exception('Camera initialization error: $e');
     }
   }
 
   Future<void> pauseCamera() async {
     if (_cameraController != null) {
-      _cameraController?.removeListener(ref.notifyListeners);
-      await _cameraController?.dispose();
-      _cameraController = null;
-      state = const AsyncValue.data(null);
+      _cameraController?.removeListener(_onCameraControllerUpdate);
+      await _disposeCamera();
+      state = const CameraState.initial();
     }
   }
 
@@ -103,11 +109,8 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       return false;
     }
 
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      return _initializeCamera();
-    });
-    return state.value != null;
+    await _initializeCamera();
+    return state is CameraReady;
   }
 
   Future<bool> handlePermissionChange({required bool hasPermission}) async {
@@ -129,44 +132,102 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
     if (newCamera == null) return;
 
     await pauseCamera();
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      return _createCameraController(newCamera);
-    });
+    state = const CameraState.loading();
+    try {
+      final controller = await _createCameraController(newCamera);
+      state = CameraState.ready(controller: controller);
+    } catch (e) {
+      state = CameraState.error(message: 'Camera switch error: $e');
+    }
   }
 
   Future<void> setFlashMode(FlashMode mode) async {
-    if (_cameraController?.value.isInitialized ?? false) {
-      try {
-        await _cameraController?.setFlashMode(mode);
-        ref.notifyListeners();
-      } catch (e) {
-        Logger.log('Error setting flash mode: $e');
-      }
-    }
+    await state.maybeWhen(
+      ready: (controller, isRecording, isFlashOn) async {
+        try {
+          await controller.setFlashMode(mode);
+          state = CameraState.ready(
+            controller: controller,
+            isRecording: isRecording,
+            isFlashOn: mode == FlashMode.torch,
+          );
+        } catch (e) {
+          Logger.log('Error setting flash mode: $e');
+          state = CameraState.error(message: 'Error setting flash mode: $e');
+        }
+      },
+      orElse: () {},
+    );
+  }
+
+  Future<void> toggleFlash() async {
+    await state.maybeWhen(
+      ready: (controller, isRecording, isFlashOn) async {
+        final newFlashMode = isFlashOn ? FlashMode.off : FlashMode.torch;
+        try {
+          await controller.setFlashMode(newFlashMode);
+          state = CameraState.ready(
+            controller: controller,
+            isRecording: isRecording,
+            isFlashOn: !isFlashOn,
+          );
+        } catch (e) {
+          Logger.log('Error toggling flash mode: $e');
+          state = CameraState.error(message: 'Error toggling flash mode: $e');
+        }
+      },
+      orElse: () {},
+    );
   }
 
   Future<void> startVideoRecording() async {
-    if (_cameraController?.value.isInitialized ?? false) {
-      try {
-        await _cameraController?.startVideoRecording();
-        ref.notifyListeners();
-      } catch (e) {
-        Logger.log('Error starting video recording: $e');
-      }
-    }
+    await state.maybeWhen(
+      ready: (controller, isRecording, isFlashOn) async {
+        if (!isRecording) {
+          try {
+            await controller.startVideoRecording();
+            state = CameraState.ready(
+              controller: controller,
+              isRecording: true,
+              isFlashOn: isFlashOn,
+            );
+          } catch (e) {
+            Logger.log('Error starting video recording: $e');
+            state = CameraState.error(message: 'Error starting video recording: $e');
+          }
+        }
+      },
+      orElse: () {},
+    );
   }
 
   Future<XFile?> stopVideoRecording() async {
-    if (_cameraController?.value.isRecordingVideo ?? false) {
-      try {
-        final file = await _cameraController?.stopVideoRecording();
-        ref.notifyListeners();
-        return file;
-      } catch (e) {
-        Logger.log('Error stopping video recording: $e');
-      }
+    return await state.maybeWhen(
+      ready: (controller, isRecording, isFlashOn) async {
+        if (isRecording) {
+          try {
+            final file = await controller.stopVideoRecording();
+            state = CameraState.ready(
+              controller: controller,
+              isFlashOn: isFlashOn,
+            );
+            return file;
+          } catch (e) {
+            Logger.log('Error stopping video recording: $e');
+            state = CameraState.error(message: 'Error stopping video recording: $e');
+            return null;
+          }
+        }
+        return null;
+      },
+      orElse: () => null,
+    );
+  }
+
+  Future<void> _disposeCamera() async {
+    if (_cameraController != null) {
+      await _cameraController?.dispose();
+      _cameraController = null;
     }
-    return null;
   }
 }

@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_camera/control_button.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class StoryActionButtons extends ConsumerWidget {
@@ -27,7 +28,9 @@ class StoryActionButtons extends ConsumerWidget {
           icon: Assets.svg.iconBlockShare.icon(
             color: context.theme.appColors.onPrimaryAccent,
           ),
-          onPressed: () {},
+          onPressed: () {
+            StoryContactsShareRoute().push<void>(context);
+          },
         ),
         SizedBox(height: 16.0.s),
         _LikeButton(story: story),
