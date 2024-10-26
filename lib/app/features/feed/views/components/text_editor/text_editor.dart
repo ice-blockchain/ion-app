@@ -8,8 +8,9 @@ import 'package:ion/app/features/feed/views/components/text_editor/components/cu
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/mentions_hashtags_handler.dart';
 
-class TextEditor extends ConsumerWidget {
+class TextEditor extends ConsumerStatefulWidget {
   const TextEditor(
     this.controller, {
     super.key,
@@ -19,33 +20,69 @@ class TextEditor extends ConsumerWidget {
   final String? placeholder;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  TextEditorState createState() => TextEditorState();
+}
+
+class TextEditorState extends ConsumerState<TextEditor> {
+  late MentionsHashtagsHandler _mentionsHashtagsHandler;
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _mentionsHashtagsHandler = MentionsHashtagsHandler(
+      controller: widget.controller,
+      focusNode: _focusNode,
+      context: context,
+    );
+    _mentionsHashtagsHandler.initialize();
+  }
+
+  @override
+  void dispose() {
+    _mentionsHashtagsHandler.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         QuillEditor.basic(
-          controller: controller,
+          controller: widget.controller,
+          focusNode: _focusNode,
           configurations: QuillEditorConfigurations(
             embedBuilders: [
               TextEditorSingleImageBuilder(),
               TextEditorPollBuilder(
-                controller: controller,
+                controller: widget.controller,
                 ref: ref,
               ),
               TextEditorSeparatorBuilder(),
               TextEditorCodeBuilder(),
             ],
             autoFocus: true,
-            placeholder: placeholder,
+            placeholder: widget.placeholder,
             customStyles: _getCustomStyles(context),
             floatingCursorDisabled: true,
             customStyleBuilder: (attribute) {
               if (attribute.key == Attribute.link.key) {
-                return TextStyle(
-                  decoration: TextDecoration.underline,
-                  color: context.theme.appColors.primaryAccent,
-                );
+                final linkValue = attribute.value as String;
+                if (linkValue.startsWith('mention:')) {
+                  return TextStyle(
+                    color: context.theme.appColors.primaryAccent,
+                  );
+                } else if (linkValue.startsWith('hashtag:')) {
+                  return TextStyle(
+                    color: context.theme.appColors.primaryAccent,
+                  );
+                } else {
+                  return TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: context.theme.appColors.primaryAccent,
+                  );
+                }
               }
-
               return const TextStyle();
             },
           ),
