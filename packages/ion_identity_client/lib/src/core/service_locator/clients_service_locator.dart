@@ -12,11 +12,14 @@ import 'package:ion_identity_client/src/auth/services/recover_user/data_sources/
 import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/register/data_sources/register_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/register/register_service.dart';
+import 'package:ion_identity_client/src/core/service_locator/ion_clients/users_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
 import 'package:ion_identity_client/src/ion_api_user_client.dart';
 import 'package:ion_identity_client/src/signer/data_sources/user_action_signer_data_source.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
+import 'package:ion_identity_client/src/users/get_user_details/data_sources/get_user_details_data_source.dart';
+import 'package:ion_identity_client/src/users/get_user_details/get_user_details_service.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/data_sources/create_wallet_data_source.dart';
@@ -33,7 +36,8 @@ import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets
 import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/data_sources/pseudo_network_generate_signature_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/pseudo_network_generate_signature_service.dart';
 
-class ClientsServiceLocator with _IonClient, _AuthClient, _WalletsClient, _UserActionSigner {
+class ClientsServiceLocator
+    with _IonClient, _AuthClient, _WalletsClient, _UserActionSigner, UsersClientServiceLocator {
   factory ClientsServiceLocator() {
     return _instance;
   }
@@ -64,6 +68,10 @@ mixin _IonClient {
           config: config,
           signer: signer,
         ),
+        users: ClientsServiceLocator().getUsersClient(
+          username: username,
+          config: config,
+        ),
       );
       _clients[username] = client;
     }
@@ -93,6 +101,7 @@ mixin _AuthClient {
       ),
       delegatedLoginService: createDelegatedLoginService(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
+      getUserService: createGetUserService(username: username, config: config),
     );
   }
 
@@ -201,6 +210,25 @@ mixin _AuthClient {
     return DelegatedLoginDataSource(
       networkClient: IonServiceLocator.getNetworkClient(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
+    );
+  }
+
+  GetUserDetailsService createGetUserService({
+    required String username,
+    required IonClientConfig config,
+  }) {
+    return GetUserDetailsService(
+      username,
+      createGetUserDataSource(config: config),
+    );
+  }
+
+  GetUserDetailsDataSource createGetUserDataSource({
+    required IonClientConfig config,
+  }) {
+    return GetUserDetailsDataSource(
+      IonServiceLocator.getNetworkClient(config: config),
+      IonServiceLocator.getTokenStorage(),
     );
   }
 }

@@ -9,6 +9,7 @@ export 'src/core/types/ion_exception.dart';
 export 'src/core/types/user_token.dart';
 export 'src/ion_api_client.dart';
 export 'src/ion_client_config.dart';
+export 'src/users/get_user_details/models/user_details.dart';
 export 'src/wallets/models/wallet.dart';
 export 'src/wallets/models/wallet_signing_key.dart';
 export 'src/wallets/services/get_wallet_assets/exceptions/get_wallet_assets_exception.dart';
