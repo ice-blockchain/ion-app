@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 
 typedef StoryProgressResult = double;
 
@@ -27,7 +26,7 @@ StoryProgressResult useStoryProgressTracker(
       : null;
 
   void handleImageProgress() {
-    if (!isCurrent || !context.mounted) return;
+    if (!isCurrent) return;
     storyProgress.value = animationController.value;
     if (animationController.isCompleted) {
       onCompleted();
@@ -35,10 +34,7 @@ StoryProgressResult useStoryProgressTracker(
   }
 
   void handleVideoProgress() {
-    if (!isCurrent ||
-        !context.mounted ||
-        videoController == null ||
-        !videoController.value.isInitialized) {
+    if (!isCurrent || videoController == null || !videoController.value.isInitialized) {
       return;
     }
 
@@ -57,7 +53,7 @@ StoryProgressResult useStoryProgressTracker(
 
   useEffect(
     () {
-      if (!isCurrent || !context.mounted) {
+      if (!isCurrent) {
         storyProgress.value = 0;
         return null;
       }
@@ -67,21 +63,19 @@ StoryProgressResult useStoryProgressTracker(
           ..reset()
           ..forward()
           ..addListener(handleImageProgress);
+
         return () {
-          if (context.mounted) {
-            animationController
-              ..removeListener(handleImageProgress)
-              ..reset();
-          }
+          animationController
+            ..removeListener(handleImageProgress)
+            ..reset();
         };
       }
 
       if (videoController != null) {
         videoController.addListener(handleVideoProgress);
+
         return () {
-          if (context.mounted) {
-            videoController.removeListener(handleVideoProgress);
-          }
+          videoController.removeListener(handleVideoProgress);
         };
       }
 
@@ -90,13 +84,18 @@ StoryProgressResult useStoryProgressTracker(
     [isCurrent, videoController?.value.isInitialized],
   );
 
-  useOnInit(() {
-    if (context.mounted && story is VideoStory && videoController != null) {
-      videoController
-        ..pause()
-        ..seekTo(Duration.zero);
-    }
-  });
+  useEffect(
+    () {
+      if (story is VideoStory && videoController != null) {
+        videoController
+          ..pause()
+          ..seekTo(Duration.zero);
+      }
+
+      return null;
+    },
+    const [],
+  );
 
   return storyProgress.value;
 }

@@ -39,15 +39,13 @@ class StoriesSwiper extends HookConsumerWidget {
       () {
         if (currentIndex != previousIndex.value) {
           previousIndex.value = currentIndex;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (context.mounted && pageController.hasClients) {
-              pageController.animateToPage(
-                currentIndex,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            }
-          });
+          if (pageController.hasClients) {
+            pageController.animateToPage(
+              currentIndex,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          }
         }
         return null;
       },
