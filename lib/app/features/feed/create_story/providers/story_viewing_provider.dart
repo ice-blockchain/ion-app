@@ -3,7 +3,7 @@
 import 'dart:math';
 
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
-import 'package:ion/app/features/feed/create_story/data/models/story_viewing_state.dart';
+import 'package:ion/app/features/feed/create_story/data/models/story_viewer_state.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,25 +12,25 @@ part 'story_viewing_provider.g.dart';
 @riverpod
 class StoryViewingController extends _$StoryViewingController {
   @override
-  StoryViewingState build() => const StoryViewingState.initial();
+  StoryViewerState build() => const StoryViewerState.initial();
 
   Future<void> loadStories() async {
-    state = const StoryViewingState.loading();
+    state = const StoryViewerState.loading();
 
     try {
       final stories = await _fetchStories();
 
       if (stories.isEmpty) {
-        state = const StoryViewingState.error(message: 'No stories available');
+        state = const StoryViewerState.error(message: 'No stories available');
         return;
       }
 
-      state = StoryViewingState.ready(
+      state = StoryViewerState.ready(
         stories: stories,
         currentIndex: 0,
       );
     } catch (e) {
-      state = StoryViewingState.error(message: e.toString());
+      state = StoryViewerState.error(message: e.toString());
     }
   }
 
@@ -38,7 +38,7 @@ class StoryViewingController extends _$StoryViewingController {
     state.mapOrNull(
       ready: (ready) {
         if (ready.currentIndex < ready.stories.length - 1) {
-          state = StoryViewingState.ready(
+          state = StoryViewerState.ready(
             stories: ready.stories,
             currentIndex: ready.currentIndex + 1,
           );
@@ -51,7 +51,7 @@ class StoryViewingController extends _$StoryViewingController {
     state.mapOrNull(
       ready: (ready) {
         if (ready.currentIndex > 0) {
-          state = StoryViewingState.ready(
+          state = StoryViewerState.ready(
             stories: ready.stories,
             currentIndex: ready.currentIndex - 1,
           );
@@ -64,7 +64,7 @@ class StoryViewingController extends _$StoryViewingController {
     state.mapOrNull(
       ready: (ready) {
         if (index >= 0 && index < ready.stories.length) {
-          state = StoryViewingState.ready(
+          state = StoryViewerState.ready(
             stories: ready.stories,
             currentIndex: index,
           );
@@ -91,7 +91,7 @@ class StoryViewingController extends _$StoryViewingController {
           );
         }).toList();
 
-        state = StoryViewingState.ready(
+        state = StoryViewerState.ready(
           stories: updatedStories,
           currentIndex: ready.currentIndex,
         );
@@ -132,7 +132,7 @@ class StoryViewingController extends _$StoryViewingController {
           return story.copyWith(data: updatedData);
         }).toList();
 
-        state = StoryViewingState.ready(
+        state = StoryViewerState.ready(
           stories: updatedStories,
           currentIndex: ready.currentIndex,
         );

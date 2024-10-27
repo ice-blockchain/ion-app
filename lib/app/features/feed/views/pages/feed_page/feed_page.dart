@@ -61,7 +61,7 @@ class FeedPage extends HookConsumerWidget {
             ],
             Button(
               onPressed: () {
-                StoryViewingRoute().push<void>(context);
+                StoryViewerRoute().push<void>(context);
               },
               label: const Text('View Story'),
             ),

@@ -34,10 +34,10 @@ import 'package:ion/app/features/feed/create_article/views/pages/create_article_
 import 'package:ion/app/features/feed/create_post/views/pages/compress_test_page.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/create_post_modal.dart';
 import 'package:ion/app/features/feed/create_story/create_story_modal.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewing/components/story_share_modal.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_share_modal.dart';
 import 'package:ion/app/features/feed/create_story/views/pages/story_preview_page.dart';
 import 'package:ion/app/features/feed/create_story/views/pages/story_record_page.dart';
-import 'package:ion/app/features/feed/create_story/views/pages/story_viewing_page.dart';
+import 'package:ion/app/features/feed/create_story/views/pages/story_viewer_page.dart';
 import 'package:ion/app/features/feed/create_video/views/pages/create_video_modal/create_video_modal.dart';
 import 'package:ion/app/features/feed/views/pages/comment_post_modal/comment_post_modal.dart';
 import 'package:ion/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';

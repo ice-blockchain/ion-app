@@ -6,7 +6,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story_camera_state.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_video/share_story_button.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_video/story_share_button.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_video/story_video_preview.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_video/verified_account_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/visibility_settings_modal/visibility_settings_modal.dart';
@@ -57,7 +57,7 @@ class StoryPreviewPage extends ConsumerWidget {
             Column(
               children: [
                 SizedBox(height: 16.0.s),
-                ShareStoryButton(
+                StoryShareButton(
                   onPressed: () async {
                     final result = await showSimpleBottomSheet<bool>(
                       context: context,

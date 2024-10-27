@@ -212,14 +212,14 @@ class StoryPreviewRoute extends BaseRouteData {
   final String videoPath;
 }
 
-@TypedGoRoute<StoryViewingRoute>(
+@TypedGoRoute<StoryViewerRoute>(
   path: '/story-viewing',
   // routes: [
 
   // ],
 )
-class StoryViewingRoute extends BaseRouteData {
-  StoryViewingRoute() : super(child: const StoryViewingPage());
+class StoryViewerRoute extends BaseRouteData {
+  StoryViewerRoute() : super(child: const StoryViewerPage());
 }
 
 class StoryContactsShareRoute extends BaseRouteData {

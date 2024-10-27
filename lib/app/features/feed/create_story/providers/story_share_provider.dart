@@ -9,7 +9,7 @@ class StoryShareController extends _$StoryShareController {
   @override
   Set<String> build() => {};
 
-  void toggleContact(String contactId) {
+  void toggleContactSelection(String contactId) {
     if (state.contains(contactId)) {
       state = state.difference({contactId});
     } else {

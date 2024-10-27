@@ -11,7 +11,7 @@ import 'package:ion/app/features/core/permissions/views/components/permission_di
 import 'package:ion/app/features/feed/create_story/data/models/story_camera_state.dart';
 import 'package:ion/app/features/feed/create_story/hooks/use_recording_progress.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_camera/components.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_capture/components.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -58,14 +58,14 @@ class StoryRecordPage extends HookConsumerWidget {
                   orElse: () => const CenteredLoadingIndicator(),
                 ),
                 if (isRecording)
-                  RecordingIndicator(recordingDuration: recordingDuration)
+                  StoryRecordingIndicator(recordingDuration: recordingDuration)
                 else
                   const IdleCameraPreview(),
                 Positioned.fill(
                   bottom: 16.0.s,
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: CaptureButton(
+                    child: StoryCaptureButton(
                       isRecording: isRecording,
                       recordingProgress: recordingProgress,
                       onRecordingStart: isCameraReady
