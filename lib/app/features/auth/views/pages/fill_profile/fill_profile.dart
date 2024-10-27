@@ -4,20 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/avatar/avatar_picker.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/auth/providers/fill_profile_notifier.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/name_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/nickname_input.dart';
 import 'package:ion/app/features/auth/views/pages/fill_profile/components/fill_prifile_submit_button.dart';
+import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
+import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
 import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class FillProfile extends HookConsumerWidget {
@@ -25,10 +26,11 @@ class FillProfile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final loading = useState(false);
-    final avatarFile = useState<MediaFile?>(null);
+    final fillProfileState = ref.watch(fillProfileNotifierProvider);
     final formKey = useMemoized(GlobalKey<FormState>.new);
     final onboardingData = ref.watch(onboardingDataProvider);
+    final isAvatarCompressing =
+        ref.watch(avatarPickerNotifierProvider.select((state) => state is AvatarPickerStatePicked));
     final nameController = useTextEditingController.fromValue(
       TextEditingValue(text: onboardingData.displayName ?? ''),
     );
@@ -37,25 +39,18 @@ class FillProfile extends HookConsumerWidget {
     );
     final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
-    final onSubmit = useCallback(() async {
+    final onSubmit = useCallback(() {
       if (formKey.currentState!.validate()) {
-        loading.value = true;
-        try {
-          if (avatarFile.value != null) {
-            await ref.read(onboardingDataProvider.notifier).uploadAvatar(avatarFile.value!);
-          }
-          ref.read(onboardingDataProvider.notifier).name = nicknameController.text;
-          ref.read(onboardingDataProvider.notifier).displayName = nameController.text;
-          hideKeyboardAndCallOnce(
-            callback: () => SelectLanguagesRoute().push<void>(context),
-          );
-        } catch (error) {
-          //TODO: show error
-        } finally {
-          if (context.mounted) {
-            loading.value = false;
-          }
-        }
+        hideKeyboardAndCallOnce(
+          callback: () async {
+            await ref
+                .read(fillProfileNotifierProvider.notifier)
+                .submit(nickname: nicknameController.text, displayName: nameController.text);
+            if (context.mounted) {
+              await SelectLanguagesRoute().push<void>(context);
+            }
+          },
+        );
       }
     });
 
@@ -77,9 +72,6 @@ class FillProfile extends HookConsumerWidget {
                         SizedBox(height: 20.0.s),
                         AvatarPicker(
                           avatarUrl: onboardingData.avatarMediaAttachment?.url,
-                          onAvatarPicked: (avatar) {
-                            avatarFile.value = avatar;
-                          },
                         ),
                         SizedBox(height: 28.0.s),
                         NameInput(controller: nameController),
@@ -90,7 +82,8 @@ class FillProfile extends HookConsumerWidget {
                         ),
                         SizedBox(height: 26.0.s),
                         FillProfileSubmitButton(
-                          loading: loading.value,
+                          disabled: isAvatarCompressing,
+                          loading: fillProfileState.isLoading,
                           onPressed: onSubmit,
                         ),
                         SizedBox(height: 40.0.s + MediaQuery.paddingOf(context).bottom),

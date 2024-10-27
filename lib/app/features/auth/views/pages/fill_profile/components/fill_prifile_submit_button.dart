@@ -10,6 +10,7 @@ class FillProfileSubmitButton extends StatelessWidget {
   const FillProfileSubmitButton({
     required this.onPressed,
     required this.loading,
+    required this.disabled,
     super.key,
   });
 
@@ -17,10 +18,12 @@ class FillProfileSubmitButton extends StatelessWidget {
 
   final bool loading;
 
+  final bool disabled;
+
   @override
   Widget build(BuildContext context) {
     return Button(
-      disabled: loading,
+      disabled: loading || disabled,
       trailingIcon: loading
           ? const IonLoadingIndicator()
           : Assets.svg.iconProfileSave.icon(
