@@ -23,10 +23,8 @@ class StoryViewingPage extends HookConsumerWidget {
     return Scaffold(
       backgroundColor: context.theme.appColors.primaryText,
       body: SafeArea(
-        child: storyViewingState.map(
-          initial: (_) => const CenteredLoadingIndicator(),
-          loading: (_) => const CenteredLoadingIndicator(),
-          error: (error) => Center(child: Text(error.message)),
+        child: storyViewingState.maybeMap(
+          orElse: () => const CenteredLoadingIndicator(),
           ready: (ready) => Column(
             children: [
               Expanded(
@@ -34,19 +32,13 @@ class StoryViewingPage extends HookConsumerWidget {
                   stories: ready.stories,
                   currentIndex: ready.currentIndex,
                   onPageChanged: storyViewingController.moveToStory,
-                  onTapDown: (details) => _handleTapNavigation(
-                    context: context,
-                    details: details,
-                    currentIndex: ready.currentIndex,
-                    totalStories: ready.stories.length,
-                    onPrevious: storyViewingController.moveToPreviousStory,
-                    onNext: storyViewingController.moveToNextStory,
-                  ),
+                  onNext: () => _onNext(ref),
+                  onPrevious: () => _onPrevious(ref),
                 ),
               ),
               SizedBox(height: 28.0.s),
               StoryProgressSegments(
-                onStoryCompleted: storyViewingController.moveToNextStory,
+                onStoryCompleted: () => _onNext(ref),
               ),
               ScreenBottomOffset(margin: 16.0.s),
             ],
@@ -56,21 +48,11 @@ class StoryViewingPage extends HookConsumerWidget {
     );
   }
 
-  void _handleTapNavigation({
-    required BuildContext context,
-    required TapDownDetails details,
-    required int currentIndex,
-    required int totalStories,
-    required VoidCallback onPrevious,
-    required VoidCallback onNext,
-  }) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final isLeftSide = details.globalPosition.dx < screenWidth / 2;
+  void _onNext(WidgetRef ref) {
+    ref.read(storyViewingControllerProvider.notifier).moveToNextStory();
+  }
 
-    if (isLeftSide && currentIndex > 0) {
-      onPrevious();
-    } else if (!isLeftSide && currentIndex < totalStories - 1) {
-      onNext();
-    }
+  void _onPrevious(WidgetRef ref) {
+    ref.read(storyViewingControllerProvider.notifier).moveToPreviousStory();
   }
 }
