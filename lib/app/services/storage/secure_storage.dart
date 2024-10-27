@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'secure_storage.g.dart';
 
@@ -21,6 +22,20 @@ class SecureStorage {
 
   Future<void> remove({required String key}) {
     return _storage.delete(key: key);
+  }
+
+  /// Forcefully clear secure storage after app installation or reinstallation.
+  /// This is necessary because the iOS keychain retains values even after the app is deleted.
+  Future<void> clearOnReinstall() async {
+    const key = 'SecureStorage:hasRunBefore';
+    final prefs = await SharedPreferences.getInstance();
+
+    if (prefs.getBool(key) == null) {
+      await Future.wait([
+        const FlutterSecureStorage().deleteAll(),
+        prefs.setBool(key, true),
+      ]);
+    }
   }
 }
 
