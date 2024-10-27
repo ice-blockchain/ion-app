@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -32,13 +33,18 @@ class StoryViewingPage extends HookConsumerWidget {
                   stories: ready.stories,
                   currentIndex: ready.currentIndex,
                   onPageChanged: storyViewingController.moveToStory,
-                  onNext: () => _onNext(ref),
-                  onPrevious: () => _onPrevious(ref),
+                  onNext: () => ref.read(storyViewingControllerProvider.notifier).moveToNextStory(),
+                  onPrevious: () =>
+                      ref.read(storyViewingControllerProvider.notifier).moveToPreviousStory(),
                 ),
               ),
               SizedBox(height: 28.0.s),
               StoryProgressSegments(
-                onStoryCompleted: () => _onNext(ref),
+                onStoryCompleted: () => storyViewingState.whenOrNull(
+                  ready: (stories, currentIndex) => currentIndex >= stories.length - 1
+                      ? context.pop()
+                      : storyViewingController.moveToNextStory(),
+                ),
               ),
               ScreenBottomOffset(margin: 16.0.s),
             ],
@@ -46,13 +52,5 @@ class StoryViewingPage extends HookConsumerWidget {
         ),
       ),
     );
-  }
-
-  void _onNext(WidgetRef ref) {
-    ref.read(storyViewingControllerProvider.notifier).moveToNextStory();
-  }
-
-  void _onPrevious(WidgetRef ref) {
-    ref.read(storyViewingControllerProvider.notifier).moveToPreviousStory();
   }
 }
