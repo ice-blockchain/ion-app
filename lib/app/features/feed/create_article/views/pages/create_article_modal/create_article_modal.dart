@@ -11,7 +11,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/components/create_article_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
-import 'package:ion/app/features/feed/views/components/visibility_settings_toolbar/visibility_settings_toolbar.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -72,10 +71,6 @@ class CreateArticleModal extends HookConsumerWidget {
             ),
             Column(
               children: [
-                const HorizontalSeparator(),
-                ScreenSideOffset.small(
-                  child: const VisibilitySettingsToolbar(),
-                ),
                 const HorizontalSeparator(),
                 CreateArticleToolbar(
                   textEditorController: textEditorController,

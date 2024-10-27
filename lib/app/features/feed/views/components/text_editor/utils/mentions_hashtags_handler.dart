@@ -2,6 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/hashtags_suggestions.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/mentions_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/utils/mocked_data.dart';
 
 class MentionsHashtagsHandler {
@@ -99,41 +102,31 @@ class MentionsHashtagsHandler {
   }
 
   OverlayEntry _createOverlayEntry() {
-    final textPosition = _getCursorPosition();
+    final screenHeight = MediaQuery.of(context).size.height;
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+
+    final topPosition = screenHeight -
+        keyboardHeight -
+        suggestions.value.length * hashtagItemSize -
+        hashtagContainerPadding -
+        toolbarHeight;
 
     return OverlayEntry(
       builder: (context) => Positioned(
-        left: textPosition.dx,
-        top: textPosition.dy + 20,
-        child: Material(
-          elevation: 4,
-          child: Container(
-            width: 200,
-            constraints: const BoxConstraints(maxHeight: 150),
-            child: ValueListenableBuilder(
-              valueListenable: suggestions,
-              builder: (context, List<String> suggestions, _) {
-                return ListView.builder(
-                  itemCount: suggestions.length,
-                  itemBuilder: (context, index) {
-                    final suggestion = suggestions[index];
-                    return ListTile(
-                      title: Text(suggestion),
-                      onTap: () => _onSuggestionSelected(suggestion),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ),
+        left: 0,
+        top: topPosition,
+        right: 0,
+        child: taggingCharacter == '@'
+            ? MentionsSuggestions(
+                suggestions: suggestions.value,
+                onSuggestionSelected: _onSuggestionSelected,
+              )
+            : HashtagsSuggestions(
+                suggestions: suggestions.value,
+                onSuggestionSelected: _onSuggestionSelected,
+              ),
       ),
     );
-  }
-
-  Offset _getCursorPosition() {
-    final textBox = focusNode.context!.findRenderObject()! as RenderBox;
-    return textBox.localToGlobal(Offset.zero);
   }
 
   void _onSuggestionSelected(String suggestion) {
