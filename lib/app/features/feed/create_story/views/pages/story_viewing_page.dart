@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -16,75 +15,62 @@ class StoryViewingPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final storyViewingController = ref.read(storyViewingControllerProvider.notifier);
     final storyViewingState = ref.watch(storyViewingControllerProvider);
-    final currentPage = useState(0);
 
-    useOnInit(() {
-      ref.read(storyViewingControllerProvider.notifier).loadStories();
-    });
+    useOnInit(storyViewingController.loadStories);
 
     return Scaffold(
       backgroundColor: context.theme.appColors.primaryText,
       body: SafeArea(
-        child: storyViewingState.maybeWhen(
-          orElse: () => const CenteredLoadingIndicator(),
-          data: (stories) {
-            if (stories.isEmpty) {
-              return const Center(child: Text('No stories available'));
-            }
-
-            final currentStory = stories[currentPage.value];
-
-            return Column(
-              children: [
-                Expanded(
-                  child: StoriesPageView(
-                    stories: stories,
-                    currentStory: currentStory.data,
-                    currentPage: currentPage,
-                    onPageChanged: (index) => currentPage.value = index,
-                    onTapDown: (details) => _handleTapNavigation(
-                      context,
-                      details,
-                      currentPage.value,
-                      stories.length,
-                      (nextPage) => currentPage.value = nextPage,
-                    ),
+        child: storyViewingState.map(
+          initial: (_) => const CenteredLoadingIndicator(),
+          loading: (_) => const CenteredLoadingIndicator(),
+          error: (error) => Center(child: Text(error.message)),
+          ready: (ready) => Column(
+            children: [
+              Expanded(
+                child: StoriesPageView(
+                  stories: ready.stories,
+                  currentIndex: ready.currentIndex,
+                  onPageChanged: storyViewingController.moveToStory,
+                  onTapDown: (details) => _handleTapNavigation(
+                    context: context,
+                    details: details,
+                    currentIndex: ready.currentIndex,
+                    totalStories: ready.stories.length,
+                    onPrevious: storyViewingController.moveToPreviousStory,
+                    onNext: storyViewingController.moveToNextStory,
                   ),
                 ),
-                SizedBox(height: 28.0.s),
-                StoryProgressSegments(
-                  stories: stories,
-                  currentIndex: currentPage.value,
-                  onStoryCompleted: () {
-                    if (currentPage.value < stories.length - 1) {
-                      currentPage.value++;
-                    }
-                  },
-                ),
-                ScreenBottomOffset(margin: 16.0.s),
-              ],
-            );
-          },
+              ),
+              SizedBox(height: 28.0.s),
+              StoryProgressSegments(
+                onStoryCompleted: storyViewingController.moveToNextStory,
+              ),
+              ScreenBottomOffset(margin: 16.0.s),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void _handleTapNavigation(
-    BuildContext context,
-    TapDownDetails details,
-    int currentIndex,
-    int totalStories,
-    void Function(int) onPageChanged,
-  ) {
+  void _handleTapNavigation({
+    required BuildContext context,
+    required TapDownDetails details,
+    required int currentIndex,
+    required int totalStories,
+    required VoidCallback onPrevious,
+    required VoidCallback onNext,
+  }) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isLeftSide = details.globalPosition.dx < screenWidth / 2;
 
     if (isLeftSide && currentIndex > 0) {
-      onPageChanged(currentIndex - 1);
+      onPrevious();
     } else if (!isLeftSide && currentIndex < totalStories - 1) {
-      onPageChanged(currentIndex + 1);
+      onNext();
     }
   }
 }
