@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
 typedef StoryProgressResult = double;
 
@@ -14,6 +15,7 @@ StoryProgressResult useStoryProgress(
   required Story story,
   required bool isCurrent,
   required VoidCallback onCompleted,
+  required BuildContext context,
 }) {
   final progress = useState<double>(0);
   final animationController = useAnimationController(duration: const Duration(seconds: 5));
@@ -25,7 +27,7 @@ StoryProgressResult useStoryProgress(
       : null;
 
   void handleImageProgress() {
-    if (!isCurrent) return;
+    if (!isCurrent || !context.mounted) return;
     progress.value = animationController.value;
     if (animationController.isCompleted) {
       onCompleted();
@@ -33,7 +35,12 @@ StoryProgressResult useStoryProgress(
   }
 
   void handleVideoProgress() {
-    if (!isCurrent || videoController == null || !videoController.value.isInitialized) return;
+    if (!isCurrent ||
+        !context.mounted ||
+        videoController == null ||
+        !videoController.value.isInitialized) {
+      return;
+    }
 
     final position = videoController.value.position;
     final duration = videoController.value.duration;
@@ -50,7 +57,7 @@ StoryProgressResult useStoryProgress(
 
   useEffect(
     () {
-      if (!isCurrent) {
+      if (!isCurrent || !context.mounted) {
         progress.value = 0;
         return null;
       }
@@ -61,16 +68,20 @@ StoryProgressResult useStoryProgress(
           ..forward()
           ..addListener(handleImageProgress);
         return () {
-          animationController
-            ..removeListener(handleImageProgress)
-            ..reset();
+          if (context.mounted) {
+            animationController
+              ..removeListener(handleImageProgress)
+              ..reset();
+          }
         };
       }
 
       if (videoController != null) {
         videoController.addListener(handleVideoProgress);
         return () {
-          videoController.removeListener(handleVideoProgress);
+          if (context.mounted) {
+            videoController.removeListener(handleVideoProgress);
+          }
         };
       }
 
@@ -79,17 +90,13 @@ StoryProgressResult useStoryProgress(
     [isCurrent, videoController?.value.isInitialized],
   );
 
-  // Очистка при размонтировании
-  useEffect(
-    () => () {
-      if (story is VideoStory && videoController != null) {
-        videoController
-          ..pause()
-          ..seekTo(Duration.zero);
-      }
-    },
-    const [],
-  );
+  useOnInit(() {
+    if (context.mounted && story is VideoStory && videoController != null) {
+      videoController
+        ..pause()
+        ..seekTo(Duration.zero);
+    }
+  });
 
   return progress.value;
 }

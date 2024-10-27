@@ -40,11 +40,13 @@ class StoriesPageView extends HookConsumerWidget {
         if (currentIndex != previousIndex.value) {
           previousIndex.value = currentIndex;
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            pageController.animateToPage(
-              currentIndex,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
+            if (context.mounted && pageController.hasClients) {
+              pageController.animateToPage(
+                currentIndex,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
           });
         }
         return null;

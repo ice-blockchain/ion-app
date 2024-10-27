@@ -67,6 +67,7 @@ class _ProgressSegmentController extends HookConsumerWidget {
       story: story,
       isCurrent: isCurrent,
       onCompleted: onCompleted,
+      context: context,
     );
 
     return _ProgressSegment(
