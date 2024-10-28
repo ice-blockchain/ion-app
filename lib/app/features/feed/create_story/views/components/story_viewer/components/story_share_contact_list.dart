@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-// views/components/story_share/story_share_contacts_list.dart
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';

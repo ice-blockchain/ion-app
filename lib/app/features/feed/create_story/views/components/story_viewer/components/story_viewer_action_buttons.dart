@@ -52,7 +52,9 @@ class _SoundButton extends ConsumerWidget {
       video: (data, muteState) => StoryControlButton(
         icon: muteState == MuteState.muted
             ? Assets.svg.iconChannelUnmute.icon()
-            : Assets.svg.iconChannelMute.icon(),
+            : Assets.svg.iconChannelMute.icon(
+                color: context.theme.appColors.onPrimaryAccent,
+              ),
         onPressed: () => ref.read(storyViewingControllerProvider.notifier).toggleMute(data.id),
       ),
       orElse: () => const SizedBox.shrink(),
