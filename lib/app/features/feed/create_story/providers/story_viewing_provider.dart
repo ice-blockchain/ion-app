@@ -17,30 +17,26 @@ class StoryViewingController extends _$StoryViewingController {
   Future<void> loadStories() async {
     state = const StoryViewerState.loading();
 
-    try {
-      final stories = await _fetchStories();
+    final stories = await _fetchStories();
 
-      if (stories.isEmpty) {
-        state = const StoryViewerState.error(message: 'No stories available');
-        return;
-      }
-
-      state = StoryViewerState.ready(
-        stories: stories,
-        currentIndex: 0,
-      );
-    } catch (e) {
-      state = StoryViewerState.error(message: e.toString());
+    if (stories.isEmpty) {
+      state = const StoryViewerState.error(message: 'No stories available');
+      return;
     }
+
+    state = StoryViewerState.ready(
+      stories: stories,
+      currentIndex: 0,
+    );
   }
 
   void moveToNextStory() {
-    state.mapOrNull(
-      ready: (ready) {
-        if (ready.currentIndex < ready.stories.length - 1) {
+    state.whenOrNull(
+      ready: (stories, currentIndex) {
+        if (currentIndex < stories.length - 1) {
           state = StoryViewerState.ready(
-            stories: ready.stories,
-            currentIndex: ready.currentIndex + 1,
+            stories: stories,
+            currentIndex: currentIndex + 1,
           );
         }
       },
@@ -48,12 +44,12 @@ class StoryViewingController extends _$StoryViewingController {
   }
 
   void moveToPreviousStory() {
-    state.mapOrNull(
-      ready: (ready) {
-        if (ready.currentIndex > 0) {
+    state.whenOrNull(
+      ready: (stories, currentIndex) {
+        if (currentIndex > 0) {
           state = StoryViewerState.ready(
-            stories: ready.stories,
-            currentIndex: ready.currentIndex - 1,
+            stories: stories,
+            currentIndex: currentIndex - 1,
           );
         }
       },
@@ -61,11 +57,11 @@ class StoryViewingController extends _$StoryViewingController {
   }
 
   void moveToStory(int index) {
-    state.mapOrNull(
-      ready: (ready) {
-        if (index >= 0 && index < ready.stories.length) {
+    state.whenOrNull(
+      ready: (stories, currentIndex) {
+        if (index >= 0 && index < stories.length) {
           state = StoryViewerState.ready(
-            stories: ready.stories,
+            stories: stories,
             currentIndex: index,
           );
         }
@@ -74,9 +70,9 @@ class StoryViewingController extends _$StoryViewingController {
   }
 
   void toggleMute(String storyId) {
-    state.mapOrNull(
-      ready: (ready) {
-        final updatedStories = ready.stories.map((story) {
+    state.whenOrNull(
+      ready: (stories, currentIndex) {
+        final updatedStories = stories.map((story) {
           return story.map(
             image: (imageStory) => imageStory,
             video: (videoStory) {
@@ -93,36 +89,39 @@ class StoryViewingController extends _$StoryViewingController {
 
         state = StoryViewerState.ready(
           stories: updatedStories,
-          currentIndex: ready.currentIndex,
+          currentIndex: currentIndex,
         );
       },
     );
   }
 
   void toggleLike(String storyId) {
-    state.mapOrNull(
-      ready: (ready) {
-        final index = ready.stories.indexWhere((story) => story.data.id == storyId);
+    state.whenOrNull(
+      ready: (stories, currentIndex) {
+        final index = stories.indexWhere((story) => story.data.id == storyId);
         if (index != -1) {
-          final story = ready.stories[index];
+          final story = stories[index];
           final liked = story.data.likeState == LikeState.liked;
           final updatedStory = story.copyWith(
             data: story.data.copyWith(
               likeState: liked ? LikeState.notLiked : LikeState.liked,
             ),
           );
-          final updatedStories = List<Story>.from(ready.stories);
+          final updatedStories = List<Story>.from(stories);
           updatedStories[index] = updatedStory;
-          state = ready.copyWith(stories: updatedStories);
+          state = StoryViewerState.ready(
+            stories: updatedStories,
+            currentIndex: currentIndex,
+          );
         }
       },
     );
   }
 
   void updateProgress(String storyId, double progress) {
-    state.mapOrNull(
-      ready: (ready) {
-        final updatedStories = ready.stories.map((story) {
+    state.whenOrNull(
+      ready: (stories, currentIndex) {
+        final updatedStories = stories.map((story) {
           if (story.data.id != storyId) return story;
 
           final updatedData = story.data.copyWith(
@@ -134,7 +133,7 @@ class StoryViewingController extends _$StoryViewingController {
 
         state = StoryViewerState.ready(
           stories: updatedStories,
-          currentIndex: ready.currentIndex,
+          currentIndex: currentIndex,
         );
       },
     );
