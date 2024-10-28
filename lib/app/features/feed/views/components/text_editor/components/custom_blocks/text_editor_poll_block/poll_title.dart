@@ -14,7 +14,7 @@ class PollTitle extends HookConsumerWidget {
     final textThemes = context.theme.appTextThemes;
     final title = ref.watch(pollTitleNotifierProvider).text;
 
-    final textController = useTextEditingController(text: title);
+    final textController = useTextEditingController(text: label);
 
     useEffect(
       () {

@@ -9,7 +9,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/dapps/model/dapp_data.dart';
-import 'package:ion/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ion/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ion/app/features/dapps/views/components/grid_item/grid_item.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';

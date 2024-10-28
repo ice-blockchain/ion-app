@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/providers/posts_storage_provider.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'post_reply_ids_provider.g.dart';

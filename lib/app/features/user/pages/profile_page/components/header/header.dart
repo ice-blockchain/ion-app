@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu.dart';
 import 'package:ion/generated/assets.gen.dart';

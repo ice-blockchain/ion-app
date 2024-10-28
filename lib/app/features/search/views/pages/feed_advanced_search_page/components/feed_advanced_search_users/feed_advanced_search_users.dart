@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post_list/post_list_skeleton.dart';
-import 'package:ion/app/features/search/providers/feed_search_users_provider.dart';
 import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_users/feed_advanced_search_user_list_item.dart';
 

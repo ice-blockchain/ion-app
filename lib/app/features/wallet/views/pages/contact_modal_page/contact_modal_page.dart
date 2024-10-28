@@ -8,7 +8,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/views/pages/contact_modal_page/components/contact_item.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
-import 'package:ion/app/features/wallet/views/pages/wallet_page/components/contacts/providers/contacts_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/share/share.dart';

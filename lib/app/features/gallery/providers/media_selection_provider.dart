@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/gallery/data/models/media_selection_state.dart';
-import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'media_selection_provider.g.dart';

@@ -3,8 +3,6 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/services/storage/user_preferences_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_data_provider.freezed.dart';

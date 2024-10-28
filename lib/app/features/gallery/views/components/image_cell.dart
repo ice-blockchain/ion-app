@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
-import 'package:ion/app/features/gallery/providers/media_selection_provider.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:photo_manager/photo_manager.dart';

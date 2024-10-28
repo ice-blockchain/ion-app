@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ion/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ion/app/features/dapps/views/categories/featured.dart';
 import 'package:ion/app/features/dapps/views/components/categories/categories.dart';

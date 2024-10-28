@@ -5,8 +5,6 @@ import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
-import 'package:ion/app/features/core/providers/app_lifecycle_provider.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

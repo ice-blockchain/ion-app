@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
-import 'package:ion/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
 class NftsTabFooter extends ConsumerWidget {

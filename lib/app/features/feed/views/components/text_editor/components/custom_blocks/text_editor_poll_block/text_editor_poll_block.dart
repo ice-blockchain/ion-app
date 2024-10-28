@@ -5,7 +5,6 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/poll/poll_length_time_provider.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_add_answer_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_answers_list_view.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_close_button.dart';

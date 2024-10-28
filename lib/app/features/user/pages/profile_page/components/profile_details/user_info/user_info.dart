@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/user_info/user_info_tile.dart';
-import 'package:ion/app/features/user/providers/user_following_provider.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class UserInfo extends ConsumerWidget {

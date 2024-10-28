@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/slider/slider_utils.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 

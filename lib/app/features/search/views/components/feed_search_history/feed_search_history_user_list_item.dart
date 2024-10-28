@@ -6,7 +6,6 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/utils/username.dart';
 
 class FeedSearchHistoryUserListItem extends ConsumerWidget {

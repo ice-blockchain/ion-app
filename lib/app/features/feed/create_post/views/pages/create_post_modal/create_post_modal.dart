@@ -9,8 +9,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
-import 'package:ion/app/features/feed/providers/poll/poll_answers_provider.dart';
-import 'package:ion/app/features/feed/providers/poll/poll_title_notifier.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';

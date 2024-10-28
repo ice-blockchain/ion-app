@@ -99,7 +99,7 @@ class SelectLanguages extends HookConsumerWidget {
                   ref.read(onboardingDataProvider.notifier).languages = selectedLanguages;
                   hideKeyboardAndCallOnce(
                     callback: () {
-                      if ((userIdentity?.ionConnectRelays).emptyOrValue.isNotEmpty) {
+                      if (userIdentity?.ionConnectRelays.emptyOrValue.isNotEmpty) {
                         // Skip "follow-creators" step, if user identity is already created,
                         // because identity is created based on the selected creators
                         // and we can't let user change them at this point.

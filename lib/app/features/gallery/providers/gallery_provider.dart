@@ -78,7 +78,7 @@ class GalleryNotifier extends _$GalleryNotifier {
 
     if (mediaFile != null) {
       state = await AsyncValue.guard(() async {
-        final currentState = state.value!;
+        final currentState = state.value;
         final updatedMediaData = [mediaFile, ...currentState.mediaData];
 
         return currentState.copyWith(

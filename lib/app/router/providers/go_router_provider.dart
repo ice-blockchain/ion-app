@@ -55,7 +55,7 @@ FutureOr<String?> _mainRedirect({
   required String location,
   required Ref ref,
 }) {
-  final hasAuthenticated = (ref.read(authProvider).valueOrNull?.hasAuthenticated).falseOrValue;
+  final hasAuthenticated = ref.read(authProvider).valueOrNull?.hasAuthenticated.falseOrValue;
   final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
   final hasNotificationsPermission = ref.read(hasPermissionProvider(Permission.notifications));
 

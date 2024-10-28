@@ -10,7 +10,6 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/components/manage_coin_item/manage_coin_item.dart';
-import 'package:ion/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';

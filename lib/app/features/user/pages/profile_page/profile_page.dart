@@ -7,7 +7,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
 import 'package:ion/app/features/user/pages/components/background_picture/background_picture.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';

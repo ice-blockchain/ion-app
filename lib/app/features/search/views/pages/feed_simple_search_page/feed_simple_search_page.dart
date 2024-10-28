@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/search/providers/feed_search_history_provider.dart'
-    show feedSearchHistoryProvider;
-import 'package:ion/app/features/search/providers/feed_search_users_provider.dart';
 import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/features/search/views/components/search_history/search_history.dart';
 import 'package:ion/app/features/search/views/components/search_history_empty/search_history_empty.dart';

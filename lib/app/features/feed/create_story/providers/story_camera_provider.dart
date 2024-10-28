@@ -5,11 +5,7 @@ import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/content_notificaiton/data/models/content_notification_data.dart';
-import 'package:ion/app/features/feed/content_notificaiton/providers/content_notification_provider.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story_camera_state.dart';
-import 'package:ion/app/features/gallery/providers/camera_provider.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_camera_provider.g.dart';

@@ -6,7 +6,6 @@ import 'package:ion/app/features/wallet/model/crypto_asset_data.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/model/nft_data.dart';
 import 'package:ion/app/features/wallet/model/wallet_data.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_asset_form_provider.g.dart';

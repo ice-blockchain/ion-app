@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class AppTestPage extends ConsumerWidget {

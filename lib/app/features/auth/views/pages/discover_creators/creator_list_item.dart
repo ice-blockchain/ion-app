@@ -9,7 +9,6 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/utils/username.dart';
 
 class CreatorListItem extends ConsumerWidget {

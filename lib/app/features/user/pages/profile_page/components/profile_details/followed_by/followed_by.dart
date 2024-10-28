@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followed_by/followed_by_text.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followed_by/user_avatar.dart';
-import 'package:ion/app/features/user/providers/user_followers_provider.dart';
 
 class FollowedBy extends ConsumerWidget {
   const FollowedBy({

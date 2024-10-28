@@ -3,15 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
-import 'package:ion/app/features/wallet/providers/wallet_user_preferences/wallet_user_preferences_provider.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';

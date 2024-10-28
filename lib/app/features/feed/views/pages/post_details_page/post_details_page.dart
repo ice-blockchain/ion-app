@@ -8,8 +8,6 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/async_value_listener.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
-import 'package:ion/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
-import 'package:ion/app/features/feed/providers/post_reply_ids_provider.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_footer/post_details_footer.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';

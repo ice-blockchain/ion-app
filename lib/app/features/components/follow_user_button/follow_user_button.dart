@@ -3,9 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/follow_button.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
-import 'package:ion/app/features/user/providers/user_following_provider.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class FollowUserButton extends ConsumerWidget {

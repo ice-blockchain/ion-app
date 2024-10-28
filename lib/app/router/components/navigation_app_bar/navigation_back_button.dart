@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/constants/ui.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/generated/assets.gen.dart';

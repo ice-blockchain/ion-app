@@ -9,8 +9,6 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/wallet_data.dart';
-import 'package:ion/app/features/wallets/providers/selected_wallet_id_provider.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 

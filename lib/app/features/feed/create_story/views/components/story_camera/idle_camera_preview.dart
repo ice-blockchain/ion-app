@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_camera/camera_control_button.dart';
-import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class IdleCameraPreview extends ConsumerWidget {

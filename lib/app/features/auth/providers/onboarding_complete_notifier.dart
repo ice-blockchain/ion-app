@@ -72,7 +72,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   }
 
   Future<List<String>> _assignUserRelays({required List<String> followees}) async {
-    final userIdentity = (await ref.read(currentUserIdentityProvider.future))!;
+    final userIdentity = (await ref.read(currentUserIdentityProvider.future));
     if (userIdentity.ionConnectRelays.isNotEmpty) {
       return userIdentity.ionConnectRelays;
     }
@@ -81,7 +81,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   }
 
   Future<KeyStore> _generateNostrKeyStore() async {
-    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
+    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
     final nostrKeyStore = await ref.read(currentUserNostrKeyStoreProvider.future) ??
         await ref.read(nostrKeyStoreProvider(currentIdentityKeyName).notifier).generate();
     return nostrKeyStore;

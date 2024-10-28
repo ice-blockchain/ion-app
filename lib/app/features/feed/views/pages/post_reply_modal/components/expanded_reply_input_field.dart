@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/post_reply/reply_data_notifier.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
 class ExpandedReplyInputField extends HookConsumerWidget {

@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/video_player_provider.dart';
-import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
 import 'package:video_player/video_player.dart';
 
 class StoryVideoPreview extends ConsumerWidget {

@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/components/coins_list/coins_list_view.dart';
 import 'package:ion/app/features/wallet/model/coin_data.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 

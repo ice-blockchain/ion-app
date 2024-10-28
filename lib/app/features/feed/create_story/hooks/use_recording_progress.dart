@@ -3,7 +3,6 @@
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
 
 final Duration maxRecordingDuration = 20.seconds;
 

@@ -19,7 +19,6 @@ import 'package:ion/app/features/user/pages/components/background_picture/backgr
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/category_selector/category_selector.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/header/header.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 

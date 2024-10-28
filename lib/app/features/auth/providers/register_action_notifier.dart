@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'register_action_notifier.g.dart';

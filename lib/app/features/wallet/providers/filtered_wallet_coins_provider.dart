@@ -2,8 +2,6 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallet/model/coin_data.dart';
-import 'package:ion/app/features/wallet/providers/filtered_assets_provider.dart';
-import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'filtered_wallet_coins_provider.g.dart';

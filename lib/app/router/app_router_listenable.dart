@@ -2,10 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/auth/providers/onboarding_complete_provider.dart';
-import 'package:ion/app/features/core/providers/init_provider.dart';
-import 'package:ion/app/features/core/providers/splash_provider.dart';
 
 class AppRouterNotifier extends ChangeNotifier {
   AppRouterNotifier(this.ref) {

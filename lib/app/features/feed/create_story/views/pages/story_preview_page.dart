@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_video/share_story_button.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_video/story_video_preview.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_video/verified_account_list_item.dart';

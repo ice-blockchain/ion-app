@@ -11,7 +11,6 @@ import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_h
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/step_pages.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';

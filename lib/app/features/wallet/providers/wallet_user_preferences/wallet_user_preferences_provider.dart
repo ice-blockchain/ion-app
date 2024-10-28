@@ -3,7 +3,6 @@
 import 'package:ion/app/features/wallet/model/nft_layout_type.dart';
 import 'package:ion/app/features/wallet/model/nft_sorting_type.dart';
 import 'package:ion/app/features/wallet/model/user_preferences.dart';
-import 'package:ion/app/services/storage/user_preferences_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallet_user_preferences_provider.g.dart';

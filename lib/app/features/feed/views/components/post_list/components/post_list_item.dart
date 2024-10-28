@@ -3,7 +3,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
-import 'package:ion/app/features/feed/providers/post_reply_ids_provider.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/post_replies/post_replies.dart';

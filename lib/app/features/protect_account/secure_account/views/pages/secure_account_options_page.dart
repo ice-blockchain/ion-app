@@ -10,7 +10,6 @@ import 'package:ion/app/features/protect_account/authenticator/data/model/authen
 import 'package:ion/app/features/protect_account/components/secure_account_option.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class PermissionAwareWidget extends ConsumerWidget {

@@ -10,7 +10,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/protect_account/backup/data/models/recovery_key_property.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/recovery_key_input.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 

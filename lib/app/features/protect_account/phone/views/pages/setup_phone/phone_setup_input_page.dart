@@ -10,7 +10,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/countries.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
-import 'package:ion/app/features/protect_account/phone/provider/country_provider.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/countries/country_code_input.dart';
 import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';

@@ -59,7 +59,7 @@ class UserDelegationManager extends _$UserDelegationManager {
   FutureOr<void> build() {}
 
   Future<UserDelegation> buildCurrentUserDelegationWith({required String pubkey}) async {
-    final mainWallet = (await ref.read(mainWalletProvider.future))!;
+    final mainWallet = (await ref.read(mainWalletProvider.future));
 
     final delegation = (await ref.read(currentUserDelegationProvider.future)) ??
         UserDelegation(
@@ -80,8 +80,8 @@ class UserDelegationManager extends _$UserDelegationManager {
   }
 
   Future<EventMessage> buildDelegationEventFrom(UserDelegation userDelegation) async {
-    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
-    final mainWallet = (await ref.read(mainWalletProvider.future))!;
+    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+    final mainWallet = (await ref.read(mainWalletProvider.future));
     final ionClient = await ref.read(ionApiClientProvider.future);
 
     final tags = userDelegation.tags;

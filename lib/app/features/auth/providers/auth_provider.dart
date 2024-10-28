@@ -2,9 +2,6 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
-import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
-import 'package:ion/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_provider.freezed.dart';

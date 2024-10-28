@@ -6,7 +6,6 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class WalletButton extends ConsumerWidget {

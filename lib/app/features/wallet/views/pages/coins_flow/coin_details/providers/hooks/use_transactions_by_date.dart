@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallet/model/coin_transaction_data.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/providers/coin_transactions_provider.dart';
 import 'package:ion/app/utils/date.dart';
 
 Map<String, List<CoinTransactionData>> useTransactionsByDate(

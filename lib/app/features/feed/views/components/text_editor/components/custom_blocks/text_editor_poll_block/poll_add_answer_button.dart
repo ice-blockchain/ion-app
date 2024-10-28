@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/poll/poll_answers_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class PollAddAnswerButton extends ConsumerWidget {

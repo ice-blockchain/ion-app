@@ -11,7 +11,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/utils/validators.dart';

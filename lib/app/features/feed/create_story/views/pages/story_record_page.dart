@@ -10,9 +10,7 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/create_story/hooks/use_camera_recording_controller.dart';
 import 'package:ion/app/features/feed/create_story/hooks/use_recording_progress.dart';
-import 'package:ion/app/features/feed/create_story/providers/story_camera_provider.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_camera/components.dart';
-import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class StoryRecordPage extends HookConsumerWidget {

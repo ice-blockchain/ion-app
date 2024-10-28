@@ -9,7 +9,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/components/coins_list/coin_item.dart';
 import 'package:ion/app/features/wallet/model/coin_data.dart';
-import 'package:ion/app/features/wallet/providers/filtered_wallet_coins_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 

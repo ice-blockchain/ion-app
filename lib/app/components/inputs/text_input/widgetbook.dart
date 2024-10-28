@@ -7,7 +7,6 @@ import 'package:ion/app/components/inputs/text_input/components/text_input_clear
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_text_button.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/string.dart';
 import 'package:ion/generated/assets.gen.dart';

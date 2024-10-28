@@ -6,7 +6,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ion/app/features/dapps/views/components/featured_collection/shadow_text.dart';
 import 'package:ion/app/router/app_routes.dart';
 

@@ -8,7 +8,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_options/twofa_option_selector.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class AuthenticatorDeleteSelectOptionsPage extends HookConsumerWidget {

@@ -3,7 +3,6 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';

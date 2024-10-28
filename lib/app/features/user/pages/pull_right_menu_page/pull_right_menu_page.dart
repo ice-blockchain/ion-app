@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/user/pages/components/background_picture/background_picture.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/footer/footer.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/header/header.dart';

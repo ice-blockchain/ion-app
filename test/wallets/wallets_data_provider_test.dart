@@ -3,8 +3,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/wallet/model/wallet_data.dart';
 import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
-import 'package:ion/app/features/wallets/providers/selected_wallet_id_provider.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
 
 import '../mocks.dart';
 import '../test_utils.dart';

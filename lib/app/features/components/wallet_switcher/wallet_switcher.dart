@@ -7,7 +7,6 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class WalletSwitcher extends ConsumerWidget {

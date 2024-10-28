@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/wallet/model/wallet_data.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
 
 class WalletsList extends ConsumerWidget {
   const WalletsList({
