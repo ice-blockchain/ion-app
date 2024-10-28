@@ -66,22 +66,21 @@ class TextEditorState extends ConsumerState<TextEditor> {
             customStyles: _getCustomStyles(context),
             floatingCursorDisabled: true,
             customStyleBuilder: (attribute) {
-              if (attribute.key == Attribute.link.key) {
-                final linkValue = attribute.value as String;
-                if (linkValue.startsWith('mention:')) {
-                  return TextStyle(
-                    color: context.theme.appColors.primaryAccent,
-                  );
-                } else if (linkValue.startsWith('hashtag:')) {
-                  return TextStyle(
-                    color: context.theme.appColors.primaryAccent,
-                  );
-                } else {
-                  return TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: context.theme.appColors.primaryAccent,
-                  );
-                }
+              if (attribute.key == 'mention') {
+                return TextStyle(
+                  color: context.theme.appColors.primaryAccent,
+                  decoration: TextDecoration.none,
+                );
+              } else if (attribute.key == 'hashtag') {
+                return TextStyle(
+                  color: context.theme.appColors.primaryAccent,
+                  decoration: TextDecoration.none,
+                );
+              } else if (attribute.key == Attribute.link.key) {
+                return TextStyle(
+                  decoration: TextDecoration.underline,
+                  color: context.theme.appColors.primaryAccent,
+                );
               }
               return const TextStyle();
             },
