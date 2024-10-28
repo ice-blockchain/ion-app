@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_attachment.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_image.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_video.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 
 class PostMediaItem extends StatelessWidget {
   const PostMediaItem({

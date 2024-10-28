@@ -2,8 +2,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/core/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.dart';
 import 'package:ion/app/services/media_service/media_service.dart';

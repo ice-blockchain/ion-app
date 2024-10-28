@@ -4,18 +4,18 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/core/model/media_attachment.dart';
 import 'package:ion/app/features/core/providers/dio_provider.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/file_storage_metadata.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_auth.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'nostr_upload_notifier.g.dart';
 part 'nostr_upload_notifier.freezed.dart';
+part 'nostr_upload_notifier.g.dart';
 
 @riverpod
 class NostrUploadNotifier extends _$NostrUploadNotifier {

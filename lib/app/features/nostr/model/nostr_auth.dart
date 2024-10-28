@@ -9,6 +9,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'nostr_auth.freezed.dart';
 
+//TODO: move core nostr related models to nostr-lib
 @freezed
 class NostrAuth with _$NostrAuth {
   const factory NostrAuth({

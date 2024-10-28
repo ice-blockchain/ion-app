@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/core/model/media_attachment.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 

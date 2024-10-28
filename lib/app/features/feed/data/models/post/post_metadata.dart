@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/core/model/media_attachment.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 
 class PostMetadata {
   const PostMetadata({
