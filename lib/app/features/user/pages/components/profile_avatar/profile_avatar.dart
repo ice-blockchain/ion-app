@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 
 class ProfileAvatar extends ConsumerWidget {
@@ -22,10 +24,7 @@ class ProfileAvatar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadataValue = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
-
-    if (userMetadataValue == null) {
-      return const SizedBox.shrink();
-    }
+    final isCurrentUserProfile = ref.watch(isCurrentUserSelectorProvider(pubkey));
 
     return Stack(
       alignment: Alignment.topCenter,
@@ -52,12 +51,14 @@ class ProfileAvatar extends ConsumerWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(25.0.s),
             ),
-            child: Avatar(
-              size: pictureSize - pictureBorderWidth * 2,
-              fit: BoxFit.cover,
-              imageUrl: userMetadataValue.data.picture,
-              borderRadius: BorderRadius.circular(20.0.s),
-            ),
+            child: isCurrentUserProfile
+                ? AvatarPicker(avatarUrl: userMetadataValue?.data?.picture)
+                : Avatar(
+                    size: pictureSize - pictureBorderWidth * 2,
+                    fit: BoxFit.cover,
+                    imageUrl: userMetadataValue?.data?.picture,
+                    borderRadius: BorderRadius.circular(20.0.s),
+                  ),
           ),
         ),
       ],

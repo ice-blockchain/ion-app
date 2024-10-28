@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/views/components/post_list/components/post_list_item.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content_separator.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
 
 class RepliesTab extends StatelessWidget {
@@ -16,8 +19,27 @@ class RepliesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const EmptyState(
-      tabType: tabType,
+    const replies = <String>[];
+
+    if (replies.isEmpty) {
+      return const EmptyState(
+        tabType: tabType,
+      );
+    }
+
+    return SliverList.separated(
+      itemCount: replies.length,
+      separatorBuilder: (BuildContext context, int index) {
+        return const ContentSeparator();
+      },
+      itemBuilder: (BuildContext context, int index) {
+        return ColoredBox(
+          color: context.theme.appColors.secondaryBackground,
+          child: PostListItem(
+            postId: replies[index],
+          ),
+        );
+      },
     );
   }
 }
