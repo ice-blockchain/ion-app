@@ -44,20 +44,12 @@ class MentionsHashtagsHandler {
         taggingCharacter = char;
         lastTagIndex = cursorIndex - 1;
         controller.formatText(lastTagIndex, 1, LinkAttribute('https://someurl.com/$char'));
-
-        _updateSuggestions('');
         _showOverlay();
-      } else if (lastTagIndex != -1) {
-        final query = text.substring(lastTagIndex, cursorIndex);
-        if (query.length > 1) {
-          _updateSuggestions(query);
-          _showOverlay();
-        } else {
-          _removeOverlay();
-        }
       } else if (char == ' ' || char == '\n') {
         _applyTagIfNeeded(cursorIndex);
         _removeOverlay();
+      } else if (lastTagIndex != -1) {
+        _updateSuggestions(text.substring(lastTagIndex, cursorIndex));
       }
     }
   }
@@ -98,11 +90,6 @@ class MentionsHashtagsHandler {
   }
 
   void _showOverlay() {
-    if (suggestions.value.isEmpty) {
-      _removeOverlay();
-      return;
-    }
-
     _removeOverlay();
     overlayEntry = _createOverlayEntry();
     Overlay.of(context).insert(overlayEntry!);
@@ -148,6 +135,12 @@ class MentionsHashtagsHandler {
     controller
       ..replaceText(lastTagIndex, cursorIndex - lastTagIndex, suggestion, null)
       ..formatSelection(LinkAttribute(linkUrl));
+
+    final newCursorIndex = lastTagIndex + suggestion.length;
+    controller.updateSelection(
+      TextSelection.collapsed(offset: newCursorIndex),
+      ChangeSource.local,
+    );
 
     _removeOverlay();
   }

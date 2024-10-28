@@ -35,13 +35,18 @@ class HashtagsSuggestions extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final suggestion = suggestions[index];
-            return ScreenSideOffset.small(
-              child: SizedBox(
-                height: hashtagItemSize,
-                child: Text(
-                  suggestion,
-                  style: context.theme.appTextThemes.caption.copyWith(
-                    color: context.theme.appColors.primaryText,
+            return GestureDetector(
+              onTap: () {
+                onSuggestionSelected(suggestion);
+              },
+              child: ScreenSideOffset.small(
+                child: SizedBox(
+                  height: hashtagItemSize,
+                  child: Text(
+                    suggestion,
+                    style: context.theme.appTextThemes.caption.copyWith(
+                      color: context.theme.appColors.primaryText,
+                    ),
                   ),
                 ),
               ),
