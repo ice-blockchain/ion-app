@@ -137,6 +137,9 @@ class MediaCompressionService {
     return XFile.fromData(compressedVideoBytes, name: output);
   }
 
+  // TODO: We're using the default ImageOutputType.webpThenJpg
+  // But we need to log the exact reason if webp conversion is not available
+  // In case of fallback we need to use avif instead of jpg
   Future<MediaFile> compressImage(
     MediaFile file, {
     required Size size,
