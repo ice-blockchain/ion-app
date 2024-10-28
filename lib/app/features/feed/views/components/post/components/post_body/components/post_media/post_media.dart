@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/feed/data/models/post/post_media_data.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_carousel.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 import 'package:ion/app/features/feed/views/components/post/constants.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 
 class PostMedia extends HookConsumerWidget {
   const PostMedia({
@@ -17,9 +17,9 @@ class PostMedia extends HookConsumerWidget {
     super.key,
   });
 
-  final List<PostMediaData> media;
+  final List<MediaAttachment> media;
 
-  static List<PostMediaData> _filterKnownMedia(List<PostMediaData> media) {
+  static List<MediaAttachment> _filterKnownMedia(List<MediaAttachment> media) {
     return media.where((mediaItem) => mediaItem.mediaType != MediaType.unknown).toList();
   }
 
@@ -27,11 +27,15 @@ class PostMedia extends HookConsumerWidget {
   ///
   /// The aspect ratio is calculated by finding an average of the
   /// dominant category (horizontal or vertical).
-  static double _calculateAspectRatio({required List<PostMediaData> media}) {
+  static double _calculateAspectRatio({required List<MediaAttachment> media}) {
+    if (media.isEmpty) {
+      return 0;
+    }
+
     final horizontalRatios = <double>[];
     final verticalRatios = <double>[];
 
-    for (final PostMediaData(:aspectRatio) in media) {
+    for (final MediaAttachment(:aspectRatio) in media) {
       if (aspectRatio == null) {
         horizontalRatios.add(PostConstants.maxHorizontalMediaAspectRatio);
       } else if (aspectRatio >= 1) {
@@ -50,6 +54,7 @@ class PostMedia extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final knownMedia = useMemoized(() => _filterKnownMedia(media));
+
     final aspectRatio = useMemoized(
       () => _calculateAspectRatio(media: knownMedia),
     );

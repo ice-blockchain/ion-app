@@ -20,11 +20,17 @@ part 'media_service.g.dart';
 class MediaFile with _$MediaFile {
   const factory MediaFile({
     required String path,
+    int? size,
+    String? name,
     int? width,
     int? height,
     String? mimeType,
   }) = _MediaFile;
+
+  factory MediaFile.fromJson(Map<String, dynamic> json) => _$MediaFileFromJson(json);
 }
+
+typedef CropImageUiSettings = List<PlatformUiSettings>;
 
 class MediaService {
   Future<MediaFile?> captureImageFromCamera({bool saveToGallery = false}) async {
@@ -69,35 +75,42 @@ class MediaService {
   }
 
   Future<MediaFile?> cropImage({
-    required BuildContext context,
     required String path,
+    required CropImageUiSettings uiSettings,
     CropAspectRatio aspectRatio = const CropAspectRatio(ratioX: 1, ratioY: 1),
-    List<CropAspectRatioPresetData> aspectRatioPresets = const [CropAspectRatioPreset.square],
   }) async {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: path,
       aspectRatio: aspectRatio,
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: context.i18n.common_crop_image,
-          toolbarColor: context.theme.appColors.primaryAccent,
-          toolbarWidgetColor: context.theme.appColors.primaryBackground,
-          cropStyle: CropStyle.circle,
-          aspectRatioPresets: aspectRatioPresets,
-        ),
-        IOSUiSettings(
-          title: context.i18n.common_crop_image,
-          cropStyle: CropStyle.circle,
-          aspectRatioPresets: aspectRatioPresets,
-        ),
-        // `WebUiSettings` is required for Web, `context` is also required
-        WebUiSettings(context: context),
-      ],
+      uiSettings: uiSettings,
     );
 
     if (croppedFile == null) return null;
 
     return MediaFile(path: croppedFile.path);
+  }
+
+  CropImageUiSettings buildCropImageUiSettings(
+    BuildContext context, {
+    CropStyle cropStyle = CropStyle.rectangle,
+    List<CropAspectRatioPresetData> aspectRatioPresets = const [CropAspectRatioPreset.square],
+  }) {
+    return [
+      AndroidUiSettings(
+        toolbarTitle: context.i18n.common_crop_image,
+        toolbarColor: context.theme.appColors.primaryAccent,
+        toolbarWidgetColor: context.theme.appColors.primaryBackground,
+        cropStyle: cropStyle,
+        aspectRatioPresets: aspectRatioPresets,
+      ),
+      IOSUiSettings(
+        title: context.i18n.common_crop_image,
+        cropStyle: cropStyle,
+        aspectRatioPresets: aspectRatioPresets,
+      ),
+      // `WebUiSettings` is required for Web, `context` is also required
+      WebUiSettings(context: context),
+    ];
   }
 
   Future<MediaFile?> _saveCameraImage(File imageFile) async {

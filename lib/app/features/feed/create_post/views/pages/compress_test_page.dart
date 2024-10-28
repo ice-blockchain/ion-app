@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/media_compress_service.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:video_player/video_player.dart';
 
 Timer? debounce;
@@ -57,7 +57,7 @@ class VideoCompressTab extends HookConsumerWidget {
     final isCompressing = useState<bool>(false);
     final originalSize = useState<String>('');
     final compressedSize = useState<String>('');
-    final thumbnail = useState<Uint8List?>(null);
+    final thumbnail = useState<MediaFile?>(null);
 
     Future<void> pickAndCompressVideo() async {
       final pickedFile = await FilePicker.platform.pickFiles(
@@ -66,10 +66,9 @@ class VideoCompressTab extends HookConsumerWidget {
       );
 
       if (pickedFile != null) {
-        thumbnail.value = await (await ref
-                .read(mediaCompressServiceProvider)
-                .getThumbnail(pickedFile.xFiles.first))
-            .readAsBytes();
+        thumbnail.value = await ref
+            .read(mediaCompressServiceProvider)
+            .getThumbnail(MediaFile(path: pickedFile.xFiles.first.path));
 
         await compressedVideoController.value?.dispose();
         compressedVideoController.value = null;
@@ -106,8 +105,8 @@ class VideoCompressTab extends HookConsumerWidget {
         if (thumbnail.value != null)
           Column(
             children: <Widget>[
-              Image.memory(
-                thumbnail.value!,
+              Image.file(
+                File(thumbnail.value!.path),
                 height: 200,
                 width: 300,
                 fit: BoxFit.cover,
@@ -134,7 +133,7 @@ class ImageCompressTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final compressedImage = useState<Uint8List?>(null);
+    final compressedImage = useState<MediaFile?>(null);
     final isCompressing = useState<bool>(false);
     final originalSize = useState<String>('');
     final compressedSize = useState<String>('');
@@ -155,16 +154,14 @@ class ImageCompressTab extends HookConsumerWidget {
 
         final pickedXFile = XFile(pickedFile.files.first.path!);
         final compressedFile = await ref.read(mediaCompressServiceProvider).compressImage(
-              pickedXFile,
-              quality: 80,
+              MediaFile(path: pickedXFile.path),
               size: const Size(1280, 720),
             );
 
         // Display the compressed image size in MB
-        compressedSize.value =
-            '${(await compressedFile.length() / 1024 / 1024).toStringAsFixed(2)} MB';
+        compressedSize.value = '${(compressedFile.size ?? 0 / 1024 / 1024).toStringAsFixed(2)} MB';
 
-        compressedImage.value = await compressedFile.readAsBytes();
+        compressedImage.value = compressedFile;
         isCompressing.value = false;
       }
     }
@@ -179,8 +176,8 @@ class ImageCompressTab extends HookConsumerWidget {
         if (originalSize.value.isNotEmpty) Text('Original Size: ${originalSize.value}'),
         if (compressedSize.value.isNotEmpty) Text('Compressed Size: ${compressedSize.value}'),
         if (compressedImage.value != null)
-          Image.memory(
-            compressedImage.value!,
+          Image.file(
+            File(compressedImage.value!.path),
             height: 200,
             width: 300,
             fit: BoxFit.cover,

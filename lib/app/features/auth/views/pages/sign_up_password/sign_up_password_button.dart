@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -23,7 +23,7 @@ class SignUpPasswordButton extends ConsumerWidget {
     return Button(
       disabled: authState.isLoading,
       trailingIcon: authState.isLoading || (authState.valueOrNull?.hasAuthenticated).falseOrValue
-          ? const IceLoadingIndicator()
+          ? const IonLoadingIndicator()
           : Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
       onPressed: onPressed,
       label: Text(context.i18n.button_continue),

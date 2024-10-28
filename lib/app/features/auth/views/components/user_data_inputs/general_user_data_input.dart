@@ -13,6 +13,7 @@ class GeneralUserDataInput extends StatelessWidget {
     this.validator,
     this.maxLines,
     this.minLines,
+    this.textInputAction,
     super.key,
   });
 
@@ -22,6 +23,7 @@ class GeneralUserDataInput extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final int? maxLines;
   final int? minLines;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class GeneralUserDataInput extends StatelessWidget {
       labelText: labelText,
       controller: controller,
       validator: validator,
-      textInputAction: TextInputAction.next,
+      textInputAction: textInputAction ?? TextInputAction.next,
       scrollPadding: EdgeInsets.all(120.0.s),
       maxLines: maxLines,
       minLines: minLines,

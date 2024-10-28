@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/components/progress_bar/ice_loading_indicator.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/register_action_notifier.dart';
@@ -47,7 +47,7 @@ class SignUpPasskeyForm extends HookConsumerWidget {
             disabled: registerActionState.isLoading,
             trailingIcon: registerActionState.isLoading ||
                     (authState.valueOrNull?.hasAuthenticated).falseOrValue
-                ? const IceLoadingIndicator()
+                ? const IonLoadingIndicator()
                 : const SizedBox.shrink(),
             onPressed: () {
               if (formKey.value.currentState!.validate()) {

@@ -12,10 +12,13 @@ import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ion/app/router/providers/go_router_provider.dart';
 import 'package:ion/app/services/logger/config.dart';
 import 'package:ion/app/services/riverpod/riverpod_logger.dart';
+import 'package:ion/app/services/storage/secure_storage.dart';
 import 'package:ion/app/theme/theme.dart';
 import 'package:ion/generated/app_localizations.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SecureStorage().clearOnReinstall();
   runApp(
     ProviderScope(
       observers: [if (LoggerConfig.riverpodLogsEnabled) RiverpodLogger()],

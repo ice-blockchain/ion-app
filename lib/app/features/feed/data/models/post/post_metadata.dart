@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/feed/data/models/post/post_media_data.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 
 class PostMetadata {
   const PostMetadata({
     this.media = const {},
   });
 
-  final Map<String, PostMediaData> media;
+  final Map<String, MediaAttachment> media;
 
   @override
   String toString() => 'PostMetadata(media: $media)';
