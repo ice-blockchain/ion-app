@@ -24,33 +24,29 @@ StoryProgress useImageStoryProgress({
 
   final handleProgress = useCallback(
     () {
-      if (!isCurrent) return;
-
       final currentProgress = animationController.value;
       progress.value = currentProgress;
       isCompletedRef.value = currentProgress >= 1.0;
     },
-    [isCurrent, animationController],
+    [animationController],
   );
 
   useEffect(
     () {
-      if (!isCurrent) {
+      if (isCurrent) {
+        animationController
+          ..reset()
+          ..forward()
+          ..addListener(handleProgress);
+
+        return () => animationController.removeListener(handleProgress);
+      } else {
         progress.value = 0.0;
         isCompletedRef.value = false;
-        return null;
+        animationController.reset();
       }
 
-      animationController
-        ..reset()
-        ..forward()
-        ..addListener(handleProgress);
-
-      return () {
-        animationController
-          ..removeListener(handleProgress)
-          ..reset();
-      };
+      return null;
     },
     [isCurrent, handleProgress, animationController],
   );
