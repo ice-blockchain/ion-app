@@ -53,7 +53,7 @@ class StoryInputField extends HookWidget {
                 focusNode: focusNode,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: Colors.black.withOpacity(0.4),
+                  fillColor: context.theme.appColors.primaryText.withOpacity(0.5),
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 12.0.s,
                     vertical: 9.0.s,

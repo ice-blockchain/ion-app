@@ -11,8 +11,6 @@ import 'package:ion/app/features/feed/create_story/hooks/use_video_story_progres
 import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
-typedef OnStoryCompleted = void Function();
-
 class StoryProgressBar extends ConsumerWidget {
   const StoryProgressBar({
     required this.onStoryCompleted,

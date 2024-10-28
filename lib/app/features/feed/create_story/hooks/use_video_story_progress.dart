@@ -14,7 +14,7 @@ StoryProgress useVideoStoryProgress({
 
   final handleProgress = useCallback(
     () {
-      if (!isCurrent || controller == null || !controller.value.isInitialized) {
+      if (controller == null || !controller.value.isInitialized) {
         return;
       }
 
@@ -29,38 +29,27 @@ StoryProgress useVideoStoryProgress({
         isCompletedRef.value = currentProgress >= 1.0;
       }
     },
-    [isCurrent, controller],
+    [controller],
   );
 
   useEffect(
     () {
-      if (!isCurrent) {
+      if (isCurrent && controller != null) {
+        controller
+          ..addListener(handleProgress)
+          ..pause()
+          ..seekTo(Duration.zero);
+
+        return () => controller.removeListener(handleProgress);
+      } else {
         progressRef.value = 0.0;
         progress.value = 0.0;
         isCompletedRef.value = false;
-        return null;
-      }
-
-      if (controller != null) {
-        controller.addListener(handleProgress);
-        return () => controller.removeListener(handleProgress);
       }
 
       return null;
     },
     [isCurrent, controller, handleProgress],
-  );
-
-  useEffect(
-    () {
-      if (controller != null) {
-        controller
-          ..pause()
-          ..seekTo(Duration.zero);
-      }
-      return null;
-    },
-    const [],
   );
 
   return StoryProgress(

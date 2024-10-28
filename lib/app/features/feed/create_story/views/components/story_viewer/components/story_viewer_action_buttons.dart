@@ -51,7 +51,9 @@ class _SoundButton extends ConsumerWidget {
     return story.maybeWhen(
       video: (data, muteState) => StoryControlButton(
         icon: muteState == MuteState.muted
-            ? Assets.svg.iconChannelUnmute.icon()
+            ? Assets.svg.iconChannelUnmute.icon(
+                color: context.theme.appColors.onPrimaryAccent,
+              )
             : Assets.svg.iconChannelMute.icon(
                 color: context.theme.appColors.onPrimaryAccent,
               ),
@@ -73,7 +75,8 @@ class _LikeButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isLiked = story.data.likeState == LikeState.liked;
     final icon = isLiked ? Assets.svg.iconVideoLikeOn : Assets.svg.iconVideoLikeOff;
-    final color = isLiked ? Colors.red : context.theme.appColors.onPrimaryAccent;
+    final color =
+        isLiked ? context.theme.appColors.attentionRed : context.theme.appColors.onPrimaryAccent;
 
     return StoryControlButton(
       icon: icon.icon(color: color),
