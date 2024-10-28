@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
@@ -21,34 +22,46 @@ class StoryViewerPage extends HookConsumerWidget {
 
     useOnInit(storyViewingController.loadStories);
 
-    return Scaffold(
-      backgroundColor: context.theme.appColors.primaryText,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: storyViewingState.maybeMap(
-          orElse: () => const CenteredLoadingIndicator(),
-          ready: (ready) => Column(
-            children: [
-              Expanded(
-                child: StoriesSwiper(
-                  stories: ready.stories,
-                  currentIndex: ready.currentIndex,
-                  onPageChanged: storyViewingController.moveToStory,
-                  onNext: () => ref.read(storyViewingControllerProvider.notifier).moveToNextStory(),
-                  onPrevious: () =>
-                      ref.read(storyViewingControllerProvider.notifier).moveToPreviousStory(),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: context.theme.appColors.primaryText,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: context.theme.appColors.primaryText,
+        body: SafeArea(
+          child: storyViewingState.maybeMap(
+            orElse: () => const CenteredLoadingIndicator(),
+            ready: (ready) => Stack(
+              children: [
+                Column(
+                  children: [
+                    Expanded(
+                      child: StoriesSwiper(
+                        stories: ready.stories,
+                        currentIndex: ready.currentIndex,
+                        onPageChanged: storyViewingController.moveToStory,
+                        onNext: () =>
+                            ref.read(storyViewingControllerProvider.notifier).moveToNextStory(),
+                        onPrevious: () =>
+                            ref.read(storyViewingControllerProvider.notifier).moveToPreviousStory(),
+                      ),
+                    ),
+                    SizedBox(height: 28.0.s),
+                    StoryProgressBar(
+                      onStoryCompleted: () => storyViewingState.whenOrNull(
+                        ready: (stories, currentIndex) => currentIndex >= stories.length - 1
+                            ? context.pop()
+                            : storyViewingController.moveToNextStory(),
+                      ),
+                    ),
+                    ScreenBottomOffset(margin: 16.0.s),
+                  ],
                 ),
-              ),
-              SizedBox(height: 28.0.s),
-              StoryProgressBar(
-                onStoryCompleted: () => storyViewingState.whenOrNull(
-                  ready: (stories, currentIndex) => currentIndex >= stories.length - 1
-                      ? context.pop()
-                      : storyViewingController.moveToNextStory(),
-                ),
-              ),
-              ScreenBottomOffset(margin: 16.0.s),
-            ],
+              ],
+            ),
           ),
         ),
       ),

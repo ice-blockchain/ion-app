@@ -41,14 +41,13 @@ class CameraCell extends HookConsumerWidget {
       ..listen<CameraState>(
         cameraControllerNotifierProvider,
         (previous, next) async {
-          await next.maybeWhen(
+          await next.whenOrNull(
             ready: (_, __, ___) async {
               if (shouldOpenCamera.value) {
                 shouldOpenCamera.value = false;
                 await ref.read(galleryNotifierProvider.notifier).captureImage();
               }
             },
-            orElse: () {},
           );
         },
       );
