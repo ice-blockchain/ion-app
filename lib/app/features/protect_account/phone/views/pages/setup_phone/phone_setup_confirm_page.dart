@@ -12,7 +12,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -27,7 +26,6 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
     final locale = context.i18n;
     final theme = context.theme;
     final formKey = useRef(GlobalKey<FormState>());
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final phoneController = useTextEditingController.fromValue(TextEditingValue.empty);
 
     return Form(
@@ -70,14 +68,8 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
                   label: Text(locale.button_confirm),
                   onPressed: () {
                     if (formKey.value.currentState?.validate() ?? false) {
-                      hideKeyboardAndCallOnce(
-                        callback: () {
-                          ref
-                              .read(securityAccountControllerProvider.notifier)
-                              .togglePhone(value: true);
-                          PhoneSetupRoute(step: PhoneSetupSteps.success).push<void>(context);
-                        },
-                      );
+                      ref.read(securityAccountControllerProvider.notifier).togglePhone(value: true);
+                      PhoneSetupRoute(step: PhoneSetupSteps.success).push<void>(context);
                     }
                   },
                 ),

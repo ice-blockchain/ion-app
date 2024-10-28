@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
@@ -9,17 +8,15 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/restore_menu/restore_menu_item.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class RestoreMenuPage extends HookWidget {
+class RestoreMenuPage extends StatelessWidget {
   const RestoreMenuPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return SheetContent(
       body: AuthScrollContainer(
         title: context.i18n.restore_identity_title,
@@ -43,9 +40,7 @@ class RestoreMenuPage extends HookWidget {
                   title: context.i18n.restore_identity_type_credentials_title,
                   description: context.i18n.restore_identity_type_credentials_description,
                   onPressed: () {
-                    hideKeyboardAndCallOnce(
-                      callback: () => RestoreRecoveryKeysRoute().push<void>(context),
-                    );
+                    RestoreRecoveryKeysRoute().push<void>(context);
                   },
                 ),
                 SizedBox(height: 12.0.s),

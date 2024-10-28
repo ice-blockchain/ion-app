@@ -15,7 +15,6 @@ import 'package:ion/app/features/auth/views/pages/sign_up_password/password_inpu
 import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_fixed_footer.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_password_button.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_password_checkbox.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -26,7 +25,6 @@ class SignUpPasswordPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final identityKeyNameController = useTextEditingController();
     final passwordController = useTextEditingController();
     final formKey = useRef(GlobalKey<FormState>());
@@ -95,11 +93,9 @@ class SignUpPasswordPage extends HookConsumerWidget {
                 final valid = formKey.value.currentState!.validate();
                 if (checkboxSelected.value) {
                   if (valid) {
-                    hideKeyboardAndCallOnce(
-                      callback: () => ref
-                          .read(registerActionNotifierProvider.notifier)
-                          .signUp(keyName: identityKeyNameController.text),
-                    );
+                    ref
+                        .read(registerActionNotifierProvider.notifier)
+                        .signUp(keyName: identityKeyNameController.text);
                   }
                 } else {
                   checkboxHighlighted.value = true;

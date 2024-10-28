@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/phone/provider/country_provider.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/countries/countries.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
@@ -17,7 +16,6 @@ class SelectCountryPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final filteredCountriesAsync = ref.watch(countryFilterProvider(searchText.value));
 
     return SheetContent(
@@ -42,9 +40,7 @@ class SelectCountryPage extends HookConsumerWidget {
                       final country = filteredCountries[index];
                       return CountryListItem(
                         country: country,
-                        onTap: () => hideKeyboardAndCallOnce(
-                          callback: () => context.pop(country),
-                        ),
+                        onTap: () => context.pop(country),
                       );
                     },
                   ),

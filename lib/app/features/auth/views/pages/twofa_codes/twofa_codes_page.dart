@@ -15,7 +15,6 @@ import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.d
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_try_again/twofa_try_again_page.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -31,7 +30,6 @@ class TwoFaCodesPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final formKey = useRef(GlobalKey<FormState>());
     final controllers = {
       for (final type in twoFaTypes) type: useTextEditingController(),
@@ -63,18 +61,14 @@ class TwoFaCodesPage extends HookWidget {
                       Button(
                         onPressed: () {
                           if (formKey.value.currentState!.validate()) {
-                            hideKeyboardAndCallOnce(
-                              callback: () {
-                                if (Random().nextBool() == true) {
-                                  TwoFaSuccessRoute().push<void>(context);
-                                } else {
-                                  showSimpleBottomSheet<void>(
-                                    context: context,
-                                    child: const TwoFaTryAgainPage(),
-                                  );
-                                }
-                              },
-                            );
+                            if (Random().nextBool() == true) {
+                              TwoFaSuccessRoute().push<void>(context);
+                            } else {
+                              showSimpleBottomSheet<void>(
+                                context: context,
+                                child: const TwoFaTryAgainPage(),
+                              );
+                            }
                           }
                         },
                         label: Text(context.i18n.button_confirm),

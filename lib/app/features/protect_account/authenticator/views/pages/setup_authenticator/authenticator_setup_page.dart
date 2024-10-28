@@ -14,7 +14,6 @@ import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_h
 import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/step_pages.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
@@ -25,7 +24,6 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final formKey = useState<GlobalKey<FormState>?>(null);
 
     return SheetContent(
@@ -72,7 +70,7 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
                     mainAxisSize: MainAxisSize.max,
                     label: Text(step.getButtonText(context)),
                     onPressed: () => step == AuthenticatorSetupSteps.confirmation
-                        ? _validateAndProceed(context, ref, formKey.value, hideKeyboardAndCallOnce)
+                        ? _validateAndProceed(context, ref, formKey.value)
                         : _navigateToNextStep(context),
                   ),
                 ),
@@ -89,17 +87,10 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     GlobalKey<FormState>? formKey,
-    void Function({
-      required VoidCallback callback,
-    }) hideKeyboardAndCallOnce,
   ) {
     if (formKey?.currentState?.validate() ?? false) {
-      hideKeyboardAndCallOnce(
-        callback: () {
-          ref.read(securityAccountControllerProvider.notifier).toggleAuthenticator(value: true);
-          _navigateToNextStep(context);
-        },
-      );
+      ref.read(securityAccountControllerProvider.notifier).toggleAuthenticator(value: true);
+      _navigateToNextStep(context);
     }
   }
 

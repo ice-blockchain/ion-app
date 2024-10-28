@@ -12,7 +12,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
 import 'package:ion/app/features/protect_account/phone/provider/country_provider.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/countries/country_code_input.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/utils/validators.dart';
 
@@ -27,7 +26,6 @@ class PhoneSetupInputPage extends HookConsumerWidget {
     final locale = context.i18n;
     final formKey = useRef(GlobalKey<FormState>());
     final phoneController = useTextEditingController();
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
     final country = ref.watch(selectedCountryProvider);
 
@@ -70,17 +68,11 @@ class PhoneSetupInputPage extends HookConsumerWidget {
                   label: Text(locale.button_next),
                   onPressed: () {
                     if (formKey.value.currentState?.validate() ?? false) {
-                      hideKeyboardAndCallOnce(
-                        callback: () {
-                          final fullPhoneNumber =
-                              '${country.iddCode}${phoneController.text.trim()}';
-
-                          PhoneSetupRoute(
-                            step: PhoneSetupSteps.confirmation,
-                            phone: fullPhoneNumber,
-                          ).push<void>(context);
-                        },
-                      );
+                      final fullPhoneNumber = '${country.iddCode}${phoneController.text.trim()}';
+                      PhoneSetupRoute(
+                        step: PhoneSetupSteps.confirmation,
+                        phone: fullPhoneNumber,
+                      ).push<void>(context);
                     }
                   },
                 ),

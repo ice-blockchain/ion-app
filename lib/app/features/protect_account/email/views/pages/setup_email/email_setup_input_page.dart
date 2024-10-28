@@ -10,7 +10,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class EmailSetupInputPage extends HookWidget {
@@ -21,7 +20,6 @@ class EmailSetupInputPage extends HookWidget {
     final locale = context.i18n;
     final formKey = useRef(GlobalKey<FormState>());
     final emailController = useTextEditingController.fromValue(TextEditingValue.empty);
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
     return Form(
       key: formKey.value,
@@ -54,14 +52,10 @@ class EmailSetupInputPage extends HookWidget {
                   label: Text(locale.button_next),
                   onPressed: () {
                     if (formKey.value.currentState?.validate() ?? false) {
-                      hideKeyboardAndCallOnce(
-                        callback: () {
-                          EmailSetupRoute(
-                            step: EmailSetupSteps.confirmation,
-                            email: emailController.text,
-                          ).push<void>(context);
-                        },
-                      );
+                      EmailSetupRoute(
+                        step: EmailSetupSteps.confirmation,
+                        email: emailController.text,
+                      ).push<void>(context);
                     }
                   },
                 ),

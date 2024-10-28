@@ -9,7 +9,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/login_action_notifier.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class LoginForm extends HookConsumerWidget {
@@ -18,7 +17,6 @@ class LoginForm extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final identityKeyNameController = useTextEditingController();
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final formKey = useRef(GlobalKey<FormState>());
 
     final authState = ref.watch(authProvider);
@@ -53,11 +51,9 @@ class LoginForm extends HookConsumerWidget {
                 : Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
-                hideKeyboardAndCallOnce(
-                  callback: () => ref
-                      .read(loginActionNotifierProvider.notifier)
-                      .signIn(keyName: identityKeyNameController.text),
-                );
+                ref
+                    .read(loginActionNotifierProvider.notifier)
+                    .signIn(keyName: identityKeyNameController.text);
               }
             },
             label: Text(context.i18n.button_continue),

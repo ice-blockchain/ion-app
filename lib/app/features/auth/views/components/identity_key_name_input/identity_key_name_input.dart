@@ -1,17 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_info.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class IdentityKeyNameInput extends HookWidget {
+class IdentityKeyNameInput extends StatelessWidget {
   const IdentityKeyNameInput({
     this.textInputAction = TextInputAction.done,
     this.controller,
@@ -32,7 +30,6 @@ class IdentityKeyNameInput extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     return TextInput(
       keyboardType: TextInputType.emailAddress,
       prefixIcon: TextInputIcons(
@@ -48,14 +45,10 @@ class IdentityKeyNameInput extends HookWidget {
                   child: IconButton(
                     icon: Assets.svg.iconBlockInformation.icon(),
                     onPressed: () {
-                      hideKeyboardAndCallOnce(
-                        callback: () {
-                          showSimpleBottomSheet<void>(
-                            context: context,
-                            child: const IdentityInfo(),
-                            useRootNavigator: false,
-                          );
-                        },
+                      showSimpleBottomSheet<void>(
+                        context: context,
+                        child: const IdentityInfo(),
+                        useRootNavigator: false,
                       );
                     },
                   ),
