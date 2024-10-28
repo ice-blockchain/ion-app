@@ -99,7 +99,8 @@ class CoinDetailsPage extends HookConsumerWidget {
           if (isLoading)
             ListItemsLoadingState(
               itemsCount: 7,
-              itemHeight: 12.0.s,
+              separatorHeight: 12.0.s,
+              listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
             ),
           if (coinTransactionsMap.isNotEmpty && !isLoading)
             for (final MapEntry<String, List<CoinTransactionData>>(

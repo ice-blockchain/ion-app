@@ -59,7 +59,8 @@ class WalletPage extends HookConsumerWidget {
         return [
           ListItemsLoadingState(
             itemsCount: 7,
-            itemHeight: 12.0.s,
+            separatorHeight: 12.0.s,
+            listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
           ),
         ];
       }

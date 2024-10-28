@@ -8,6 +8,7 @@ import 'package:ion/app/features/components/follow_user_button/follow_user_butto
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions/profile_action.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/account_notifications_modal/account_notifications_modal.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -36,7 +37,9 @@ class ProfileActions extends HookConsumerWidget {
         ),
         SizedBox(width: 8.0.s),
         ProfileAction(
-          onPressed: () {},
+          onPressed: () {
+            PaymentSelectionRoute(pubkey: pubkey).push<void>(context);
+          },
           assetName: Assets.svg.iconProfileTips,
         ),
         SizedBox(width: 8.0.s),

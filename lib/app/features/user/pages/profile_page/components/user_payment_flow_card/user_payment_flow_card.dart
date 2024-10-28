@@ -5,19 +5,20 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/components/follow_user_button/follow_user_button.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/utils/username.dart';
 
-class FollowListItem extends ConsumerWidget {
-  const FollowListItem({
+class UserPaymentFlowCard extends ConsumerWidget {
+  const UserPaymentFlowCard({
     required this.pubkey,
+    this.onTap,
     super.key,
   });
 
   final String pubkey;
+  final VoidCallback? onTap;
 
-  static double get itemHeight => 35.0.s;
+  static double get itemHeight => 58.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,21 +30,18 @@ class FollowListItem extends ConsumerWidget {
           return const SizedBox.shrink();
         }
         return ListItem.user(
-          title: Text(userMetadata.name),
-          trailing: FollowUserButton(
-            pubKey: pubkey,
-          ),
-          subtitle: Text(
-            prefixUsername(
-              username: userMetadata.displayName,
-              context: context,
-            ),
-          ),
+          onTap: onTap,
+          title: Text(userMetadata.displayName),
+          subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
           profilePicture: userMetadata.picture,
           verifiedBadge: userMetadata.verified,
-          onTap: () {
-            Navigator.of(context).pop(userMetadata.pubkey);
-          },
+          ntfAvatar: userMetadata.nft,
+          contentPadding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 8.0.s),
+          border: Border.all(
+            color: context.theme.appColors.strokeElements,
+          ),
+          borderRadius: BorderRadius.circular(16.0.s),
+          constraints: BoxConstraints(minHeight: itemHeight),
         );
       },
       orElse: () => ItemLoadingState(

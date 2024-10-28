@@ -28,6 +28,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.darkBlue,
     required this.lightBlue,
     required this.quaternaryText,
+    required this.attentionBlock,
   });
 
   factory AppColorsExtension.fromTemplate(TemplateColors templateColors) {
@@ -55,6 +56,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       darkBlue: templateColors.darkBlue,
       lightBlue: templateColors.lightBlue,
       quaternaryText: templateColors.quaternaryText,
+      attentionBlock: templateColors.attentionBlock,
     );
   }
 
@@ -81,6 +83,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color darkBlue;
   final Color lightBlue;
   final Color quaternaryText;
+  final Color attentionBlock;
 
   @override
   ThemeExtension<AppColorsExtension> copyWith({
@@ -107,6 +110,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? darkBlue,
     Color? lightBlue,
     Color? quaternaryText,
+    Color? attentionBlock,
   }) {
     return AppColorsExtension(
       primaryAccent: primaryAccent ?? this.primaryAccent,
@@ -132,6 +136,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       darkBlue: darkBlue ?? this.darkBlue,
       lightBlue: lightBlue ?? this.lightBlue,
       quaternaryText: quaternaryText ?? this.quaternaryText,
+      attentionBlock: attentionBlock ?? this.attentionBlock,
     );
   }
 
@@ -168,6 +173,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       darkBlue: Color.lerp(darkBlue, other.darkBlue, t)!,
       lightBlue: Color.lerp(lightBlue, other.lightBlue, t)!,
       quaternaryText: Color.lerp(quaternaryText, other.quaternaryText, t)!,
+      attentionBlock: Color.lerp(attentionBlock, other.attentionBlock, t)!,
     );
   }
 }

@@ -6,7 +6,12 @@ import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/components/arrival_time/arrival_time_indicator.dart';
 
 class ArrivalTime extends StatelessWidget {
-  const ArrivalTime({super.key});
+  const ArrivalTime({
+    required this.arrivalTimeInMinutes,
+    super.key,
+  });
+
+  final int arrivalTimeInMinutes;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,7 @@ class ArrivalTime extends StatelessWidget {
           style: context.theme.appTextThemes.body,
         ),
         const Spacer(),
-        const ArrivalTimeIndicator(),
+        ArrivalTimeIndicator(arrivalTimeInMinutes: arrivalTimeInMinutes),
       ],
     );
   }

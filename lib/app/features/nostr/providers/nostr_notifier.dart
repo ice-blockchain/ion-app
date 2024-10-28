@@ -98,7 +98,7 @@ class NostrNotifier extends _$NostrNotifier {
       //TODO:uncomment when our relays are used, using damus by then as the fastest one
       // final userRelays = UserRelays.fromEventMessage(event);
       final userRelays =
-          UserRelays(pubkey: pubkey, list: [const UserRelay(url: 'wss://relay.damus.io')]);
+          UserRelays(pubkey: pubkey, list: [const UserRelay(url: 'wss://relay.nostr.band')]);
       ref.read(nostrCacheProvider.notifier).cache(userRelays);
       return userRelays;
     }
@@ -115,5 +115,6 @@ class NostrNotifier extends _$NostrNotifier {
 
 class UserRelaysNotFoundException implements Exception {
   UserRelaysNotFoundException([this.message = 'User relays are not found']);
+
   final String message;
 }

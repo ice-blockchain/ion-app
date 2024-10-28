@@ -7,6 +7,8 @@ import 'package:ion/generated/assets.gen.dart';
 enum NetworkType {
   all,
   arbitrum,
+  bnb,
+  cosmos,
   eth,
   tron,
   matic,
@@ -15,7 +17,9 @@ enum NetworkType {
   String getDisplayName(BuildContext context) {
     return switch (this) {
       NetworkType.all => context.i18n.core_all,
-      NetworkType.arbitrum => 'Arbitrum One',
+      NetworkType.arbitrum => 'Arbitrum',
+      NetworkType.bnb => 'BNB Smart Chain',
+      NetworkType.cosmos => 'Cosmos',
       NetworkType.eth => 'Ethereum',
       NetworkType.tron => 'Tron',
       NetworkType.matic => 'Polygon',
@@ -27,6 +31,8 @@ enum NetworkType {
     return switch (this) {
       NetworkType.all => Assets.images.wallet.walletInfinite,
       NetworkType.arbitrum => Assets.images.wallet.walletArbitrum,
+      NetworkType.bnb => Assets.images.wallet.walletBinance,
+      NetworkType.cosmos => Assets.images.wallet.walletCosmos,
       NetworkType.eth => Assets.images.wallet.walletEth,
       NetworkType.tron => Assets.images.wallet.walletTron,
       NetworkType.matic => Assets.images.wallet.walletMatic,

@@ -31,6 +31,7 @@ class SendAssetFormController extends _$SendAssetFormController {
             name: 'Wallet 1',
             balance: 0,
             icon: '',
+            address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
           ),
       address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
       usdtAmount: 350,

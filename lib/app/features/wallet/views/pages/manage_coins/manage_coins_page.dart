@@ -62,7 +62,8 @@ class ManageCoinsPage extends HookConsumerWidget {
                 if (manageCoinsData.isEmpty && isLoading)
                   ListItemsLoadingState(
                     itemsCount: 7,
-                    itemHeight: 12.0.s,
+                    separatorHeight: 12.0.s,
+                    listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
                   ),
                 if (manageCoinsData.isNotEmpty)
                   SliverPadding(
