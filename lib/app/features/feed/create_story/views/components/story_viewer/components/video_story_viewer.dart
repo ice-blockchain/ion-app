@@ -20,7 +20,6 @@ class VideoStoryViewer extends ConsumerWidget {
       videoControllerProvider(
         videoPath,
         autoPlay: true,
-        looping: true,
       ),
     );
 

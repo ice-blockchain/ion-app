@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
-import 'package:ion/app/features/feed/create_story/hooks/use_story_progress_tracker.dart';
+import 'package:ion/app/features/feed/create_story/hooks/use_image_story_progress.dart';
+import 'package:ion/app/features/feed/create_story/hooks/use_video_story_progress.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
 typedef OnStoryCompleted = void Function();
 
@@ -62,17 +65,38 @@ class _ProgressSegmentController extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyProgress = useStoryProgressTracker(
-      ref,
-      story: story,
-      isCurrent: isCurrent,
-      onCompleted: onCompleted,
-      context: context,
+    final videoController = story is VideoStory
+        ? ref.watch(
+            videoControllerProvider(
+              story.data.contentUrl,
+              autoPlay: isCurrent,
+            ),
+          )
+        : null;
+
+    final storyProgress = switch (story) {
+      ImageStory() => useImageStoryProgress(
+          isCurrent: isCurrent,
+          duration: const Duration(seconds: 5),
+        ),
+      VideoStory() => useVideoStoryProgress(
+          isCurrent: isCurrent,
+          controller: videoController,
+        ),
+    };
+
+    useOnInit(
+      () {
+        if (storyProgress.isCompleted) {
+          onCompleted();
+        }
+      },
+      [storyProgress.isCompleted],
     );
 
     return _ProgressSegment(
       isActive: isActive,
-      storyProgress: isActive ? storyProgress : 0.0,
+      storyProgress: isActive ? storyProgress.progress : 0.0,
       margin: margin,
     );
   }
