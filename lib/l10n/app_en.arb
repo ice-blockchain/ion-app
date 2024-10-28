@@ -463,5 +463,7 @@
   "code_block_type_javascript": "JavaScript",
   "code_block_type_python": "Python",
   "code_block_type_dart": "Dart",
-  "write_a_message": "Write a message..."
+  "write_a_message": "Write a message...",
+  "reaction_was_sent": "'Reaction was sent",
+  "share_via": "Share via..."
 }

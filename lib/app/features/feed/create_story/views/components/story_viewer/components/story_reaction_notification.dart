@@ -33,13 +33,13 @@ class StoryReactionNotification extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Reaction was sent ',
+                  context.i18n.reaction_was_sent,
                   style: context.theme.appTextThemes.body2.copyWith(
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
                 ),
                 Text(
-                  emoji,
+                  ' emoji',
                   style: TextStyle(
                     fontSize: 16.0.s,
                   ),

@@ -28,7 +28,7 @@ class StoryShareModal extends ConsumerWidget {
       body: Column(
         children: [
           NavigationAppBar.modal(
-            title: const Text('Share via...'),
+            title: Text(context.i18n.share_via),
           ),
           Padding(
             padding: EdgeInsets.symmetric(

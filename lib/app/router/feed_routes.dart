@@ -214,9 +214,6 @@ class StoryPreviewRoute extends BaseRouteData {
 
 @TypedGoRoute<StoryViewerRoute>(
   path: '/story-viewing',
-  // routes: [
-
-  // ],
 )
 class StoryViewerRoute extends BaseRouteData {
   StoryViewerRoute() : super(child: const StoryViewerPage());
