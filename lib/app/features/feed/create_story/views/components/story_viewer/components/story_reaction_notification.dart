@@ -39,7 +39,7 @@ class StoryReactionNotification extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  ' emoji',
+                  ' $emoji',
                   style: TextStyle(
                     fontSize: 16.0.s,
                   ),
