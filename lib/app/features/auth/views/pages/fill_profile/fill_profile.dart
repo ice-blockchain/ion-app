@@ -16,7 +16,6 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/nickname
 import 'package:ion/app/features/auth/views/pages/fill_profile/components/fill_prifile_submit_button.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
 import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -37,20 +36,15 @@ class FillProfile extends HookConsumerWidget {
     final nicknameController = useTextEditingController.fromValue(
       TextEditingValue(text: onboardingData.name ?? ''),
     );
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
-    final onSubmit = useCallback(() {
+    final onSubmit = useCallback(() async {
       if (formKey.currentState!.validate()) {
-        hideKeyboardAndCallOnce(
-          callback: () async {
-            await ref
-                .read(fillProfileNotifierProvider.notifier)
-                .submit(nickname: nicknameController.text, displayName: nameController.text);
-            if (context.mounted) {
-              await SelectLanguagesRoute().push<void>(context);
-            }
-          },
-        );
+        await ref
+            .read(fillProfileNotifierProvider.notifier)
+            .submit(nickname: nicknameController.text, displayName: nameController.text);
+        if (context.mounted) {
+          await SelectLanguagesRoute().push<void>(context);
+        }
       }
     });
 

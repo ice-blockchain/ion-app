@@ -9,10 +9,9 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/model/manage_coin_data.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ManageCoinItem extends HookConsumerWidget {
+class ManageCoinItem extends ConsumerWidget {
   const ManageCoinItem({
     required this.manageCoinData,
     super.key,
@@ -28,8 +27,6 @@ class ManageCoinItem extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
-
     final coinData = manageCoinData.coinData;
 
     return ListItem(
@@ -39,13 +36,7 @@ class ManageCoinItem extends HookConsumerWidget {
       leading: coinData.iconUrl.icon(size: 36.0.s),
       trailing: _getCheckbox(),
       onTap: () {
-        hideKeyboardAndCallOnce(
-          callback: () {
-            ref
-                .read(manageCoinsNotifierProvider.notifier)
-                .switchCoin(coinId: coinData.abbreviation);
-          },
-        );
+        ref.read(manageCoinsNotifierProvider.notifier).switchCoin(coinId: coinData.abbreviation);
       },
     );
   }

@@ -11,7 +11,6 @@ import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class EmailSetupConfirmPage extends HookConsumerWidget {
@@ -24,7 +23,6 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
     final locale = context.i18n;
     final theme = context.theme;
     final formKey = useRef(GlobalKey<FormState>());
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final emailController = useTextEditingController.fromValue(TextEditingValue.empty);
 
     return Form(
@@ -55,14 +53,8 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
                   label: Text(locale.button_confirm),
                   onPressed: () {
                     if (formKey.value.currentState?.validate() ?? false) {
-                      hideKeyboardAndCallOnce(
-                        callback: () {
-                          ref
-                              .read(securityAccountControllerProvider.notifier)
-                              .toggleEmail(value: true);
-                          EmailSetupRoute(step: EmailSetupSteps.success).push<void>(context);
-                        },
-                      );
+                      ref.read(securityAccountControllerProvider.notifier).toggleEmail(value: true);
+                      EmailSetupRoute(step: EmailSetupSteps.success).push<void>(context);
                     }
                   },
                 ),

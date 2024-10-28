@@ -12,7 +12,6 @@ import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_try_again/twofa_try_again_page.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/components/two_fa_input_list.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
@@ -26,7 +25,6 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
     final formKey = useRef(GlobalKey<FormState>());
 
     return ScreenSideOffset.large(
@@ -41,7 +39,7 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
               label: Text(context.i18n.button_confirm),
               onPressed: () {
                 if (formKey.value.currentState!.validate()) {
-                  hideKeyboardAndCallOnce(callback: () => _onConfirm(ref, context));
+                  _onConfirm(ref, context);
                 }
               },
             ),

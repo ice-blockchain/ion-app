@@ -15,7 +15,6 @@ import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_h
 import 'package:ion/app/features/auth/views/pages/select_languages/language_list_item.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
-import 'package:ion/app/hooks/use_hide_keyboard_and_call_once.dart';
 import 'package:ion/app/hooks/use_languages.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -36,8 +35,6 @@ class SelectLanguages extends HookConsumerWidget {
     final userIdentity = ref.watch(currentUserIdentityProvider).valueOrNull;
     final searchQuery = useState('');
     final languages = useLanguages(query: searchQuery.value);
-
-    final hideKeyboardAndCallOnce = useHideKeyboardAndCallOnce();
 
     final mayContinue = selectedLanguages.isNotEmpty;
 
@@ -95,20 +92,16 @@ class SelectLanguages extends HookConsumerWidget {
                 trailingIcon: finishNotifier.isLoading ? const IonLoadingIndicator() : null,
                 label: Text(context.i18n.button_continue),
                 mainAxisSize: MainAxisSize.max,
-                onPressed: () async {
+                onPressed: () {
                   ref.read(onboardingDataProvider.notifier).languages = selectedLanguages;
-                  hideKeyboardAndCallOnce(
-                    callback: () {
-                      if ((userIdentity?.ionConnectRelays).emptyOrValue.isNotEmpty) {
-                        // Skip "follow-creators" step, if user identity is already created,
-                        // because identity is created based on the selected creators
-                        // and we can't let user change them at this point.
-                        ref.read(onboardingCompleteNotifierProvider.notifier).finish();
-                      } else {
-                        DiscoverCreatorsRoute().push<void>(context);
-                      }
-                    },
-                  );
+                  if ((userIdentity?.ionConnectRelays).emptyOrValue.isNotEmpty) {
+                    // Skip "follow-creators" step, if user identity is already created,
+                    // because identity is created based on the selected creators
+                    // and we can't let user change them at this point.
+                    ref.read(onboardingCompleteNotifierProvider.notifier).finish();
+                  } else {
+                    DiscoverCreatorsRoute().push<void>(context);
+                  }
                 },
               ),
             ),
