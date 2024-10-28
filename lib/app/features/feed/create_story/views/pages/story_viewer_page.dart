@@ -23,6 +23,7 @@ class StoryViewerPage extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.theme.appColors.primaryText,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: storyViewingState.maybeMap(
           orElse: () => const CenteredLoadingIndicator(),
