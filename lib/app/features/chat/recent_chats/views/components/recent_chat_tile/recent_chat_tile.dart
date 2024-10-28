@@ -7,11 +7,13 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends ConsumerWidget {
   const RecentChatTile(this.chat, {super.key});
+
   final RecentChatDataModel chat;
 
   @override
@@ -24,7 +26,10 @@ class RecentChatTile extends ConsumerWidget {
       onTap: () {
         if (isEditMode) {
           ref.read(selectedConversationsIdsProvider.notifier).toggle(chat.id);
-        } else {}
+        } else {
+          ProfileRoute(pubkey: '91d0411861e83ab3353739bc9da3b33f24dbb741a0f524bdf2ab51648c6866e0')
+              .push<void>(context);
+        }
       },
       behavior: HitTestBehavior.opaque,
       child: Row(
@@ -81,6 +86,7 @@ class RecentChatTile extends ConsumerWidget {
 
 class SenderSummary extends StatelessWidget {
   const SenderSummary({required this.chat, super.key});
+
   final RecentChatDataModel chat;
 
   @override
@@ -127,6 +133,7 @@ class ChatTimestamp extends StatelessWidget {
 
 class ChatPreview extends StatelessWidget {
   const ChatPreview({required this.chat, super.key});
+
   final RecentChatDataModel chat;
 
   @override
@@ -167,6 +174,7 @@ class ChatPreview extends StatelessWidget {
 
 class RecentChatMessageIcon extends StatelessWidget {
   const RecentChatMessageIcon({required this.message, super.key});
+
   final RecentChatMessage message;
 
   @override
@@ -201,6 +209,7 @@ class RecentChatMessageIcon extends StatelessWidget {
 
 class UnreadCountBadge extends StatelessWidget {
   const UnreadCountBadge({required this.unreadCount, super.key});
+
   final int unreadCount;
 
   @override

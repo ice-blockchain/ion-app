@@ -39,7 +39,7 @@ class FollowedByText extends HookConsumerWidget {
     void onFirstUserTap() {
       final pubkey = firstUserPubkey;
       if (pubkey != null) {
-        FeedProfileRoute(pubkey: pubkey).push<void>(context);
+        ProfileRoute(pubkey: pubkey).push<void>(context);
       }
     }
 
@@ -49,7 +49,7 @@ class FollowedByText extends HookConsumerWidget {
         if (numOthersVal == 1) {
           final pubkey = secondUserPubkey;
           if (pubkey != null) {
-            FeedProfileRoute(pubkey: pubkey).push<void>(context);
+            ProfileRoute(pubkey: pubkey).push<void>(context);
           }
         } else {
           // show all followers

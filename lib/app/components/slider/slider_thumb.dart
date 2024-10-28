@@ -3,14 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/slider/slider_utils.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/extensions/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SliderThumb extends StatelessWidget {
   const SliderThumb({
     required this.sliderValue,
     required this.sliderWidth,
-    required this.onChanged,
     required this.thumbIconSize,
     required this.maxValue,
     required this.minValue,
@@ -21,7 +19,6 @@ class SliderThumb extends StatelessWidget {
 
   final ValueNotifier<double> sliderValue;
   final double sliderWidth;
-  final void Function(double) onChanged;
   final double thumbIconSize;
   final double maxValue;
   final double minValue;
@@ -46,10 +43,9 @@ class SliderThumb extends StatelessWidget {
           currentValue: sliderValue.value,
           stops: stops,
         );
-        onChanged(sliderValue.value);
       },
       child: Assets.svg.iconBlockRocket.icon(
-        size: thumbIconSize.s,
+        size: thumbIconSize,
       ),
     );
   }

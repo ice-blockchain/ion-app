@@ -34,7 +34,7 @@ class PostHeader extends ConsumerWidget {
             return const SizedBox.shrink();
           }
           return ListItem.user(
-            onTap: () => FeedProfileRoute(pubkey: pubkey).push<void>(context),
+            onTap: () => ProfileRoute(pubkey: pubkey).push<void>(context),
             title: Text(userMetadataEntity.data.displayName),
             subtitle:
                 Text(prefixUsername(username: userMetadataEntity.data.name, context: context)),

@@ -33,7 +33,7 @@ class ProfileFollowersCell extends ConsumerWidget {
           followType: followType,
         ).push<String>(context);
         if (newPubkey != null && context.mounted) {
-          unawaited(FeedProfileRoute(pubkey: newPubkey).push<void>(context));
+          unawaited(ProfileRoute(pubkey: newPubkey).push<void>(context));
         }
       },
       child: Center(

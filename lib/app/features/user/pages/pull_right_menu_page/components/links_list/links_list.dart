@@ -36,7 +36,7 @@ class LinksList extends ConsumerWidget {
             title: context.i18n.profile_profile,
             subtitle: context.i18n.profile_profile_desc,
             onTap: () {
-              FeedProfileRoute(pubkey: currentPubkey).push<void>(context);
+              ProfileRoute(pubkey: currentPubkey).push<void>(context);
             },
           ),
           LinksListTile(

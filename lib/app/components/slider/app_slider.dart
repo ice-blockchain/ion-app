@@ -40,10 +40,8 @@ class AppSlider extends HookWidget {
     final sliderValue = useState(initialValue);
     final animationController = useAnimationController(
       duration: const Duration(milliseconds: 100),
-      initialValue: sliderValue.value / maxValue,
+      initialValue: initialValue / maxValue,
     );
-
-    useListenable(sliderValue);
 
     useEffect(
       () {
@@ -53,16 +51,28 @@ class AppSlider extends HookWidget {
       <Object?>[sliderValue.value],
     );
 
-    final animation = animationController.drive(
-      Tween<double>(
-        begin: minValue,
-        end: maxValue,
-      ),
+    useEffect(
+      () {
+        void listener() {
+          onChanged(sliderValue.value);
+        }
+
+        sliderValue.addListener(listener);
+
+        return () => sliderValue.removeListener(listener);
+      },
+      [sliderValue],
     );
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final sliderWidth = constraints.maxWidth;
+        final animation = animationController.drive(
+          Tween<double>(
+            begin: 0,
+            end: sliderWidth,
+          ),
+        );
 
         return GestureDetector(
           onPanUpdate: (DragUpdateDetails details) => _handlePanUpdate(
@@ -90,12 +100,7 @@ class AppSlider extends HookWidget {
                       child: TrackBar.active(
                         trackBarHeight: trackBarHeight,
                         color: context.theme.appColors.primaryAccent,
-                        width: SliderUtils.calculateActiveTrackWidth(
-                          value: animation.value,
-                          minValue: minValue,
-                          maxValue: maxValue,
-                          sliderWidth: sliderWidth,
-                        ).s,
+                        width: animation.value,
                       ),
                     );
                   },
@@ -107,7 +112,6 @@ class AppSlider extends HookWidget {
                   markerRadius: markerRadius.s,
                   onMarkerTapped: (double stop) {
                     sliderValue.value = stop;
-                    onChanged(stop);
                   },
                 ),
                 AnimatedBuilder(
@@ -116,12 +120,8 @@ class AppSlider extends HookWidget {
                     return Positioned(
                       left: SliderUtils.computeSliderOffset(
                         value: animation.value,
-                        minValue: minValue,
-                        maxValue: maxValue,
                         sliderWidth: sliderWidth,
                         thumbSize: thumbIconSize.s,
-                        leftOffset: -2.5.s,
-                        rightOffset: -0.7.s,
                       ),
                       child: child!,
                     );
@@ -129,7 +129,6 @@ class AppSlider extends HookWidget {
                   child: SliderThumb(
                     sliderValue: sliderValue,
                     sliderWidth: sliderWidth,
-                    onChanged: onChanged,
                     thumbIconSize: thumbIconSize.s,
                     maxValue: maxValue,
                     minValue: minValue,
@@ -175,7 +174,5 @@ class AppSlider extends HookWidget {
       stops: stops,
       resistance: resistance,
     );
-
-    onChanged(sliderValue.value);
   }
 }

@@ -40,7 +40,7 @@ class SelectCoinModal extends StatelessWidget {
                 pubkey: pubkey,
                 coinId: coinData.abbreviation,
                 selectNetworkModalType: SelectNetworkModalType.select,
-              ).go(context);
+              ).replace(context);
             case SelectCoinModalType.update:
               context.pop(coinData.abbreviation);
           }

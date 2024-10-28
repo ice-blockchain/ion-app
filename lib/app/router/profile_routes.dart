@@ -20,6 +20,15 @@ class ProfileRoutes {
   ];
 }
 
+class ProfileRoute extends BaseRouteData {
+  ProfileRoute({required this.pubkey})
+      : super(
+          child: ProfilePage(pubkey: pubkey),
+        );
+
+  final String pubkey;
+}
+
 class ProfileEditRoute extends BaseRouteData {
   ProfileEditRoute({required this.pubkey})
       : super(
