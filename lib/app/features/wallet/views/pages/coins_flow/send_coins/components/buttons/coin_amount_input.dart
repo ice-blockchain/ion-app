@@ -7,6 +7,7 @@ import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/providers/coins_provider.dart';
 import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
+import 'package:ion/app/utils/validators.dart';
 
 class CoinAmountInput extends ConsumerWidget {
   const CoinAmountInput({
@@ -28,7 +29,7 @@ class CoinAmountInput extends ConsumerWidget {
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
 
-    final walletBalance = ref.watch(currentWalletDataProvider).valueOrNull?.balance ?? 0;
+    final walletBalance = ref.watch(currentWalletDataProvider).valueOrNull?.balance;
     final coinData = ref.watch(coinByIdProvider(coinId: coinId)).valueOrNull;
 
     return Column(
@@ -37,17 +38,12 @@ class CoinAmountInput extends ConsumerWidget {
           controller: controller,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return '';
-            }
-            final amount = double.tryParse(value);
-            if (amount == null) {
-              return '';
-            }
+            if (Validators.isEmpty(value)) return '';
+            if (Validators.isInvalidNumber(value)) return '';
             return null;
           },
           labelText: locale.wallet_coin_amount(coinData?.abbreviation ?? ''),
-          suffixIcon: showMaxAction
+          suffixIcon: showMaxAction && walletBalance != null
               ? TextInputTextButton(
                   onPressed: () {
                     controller.text = walletBalance.toString();

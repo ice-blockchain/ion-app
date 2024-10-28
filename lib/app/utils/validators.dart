@@ -29,4 +29,8 @@ class Validators {
 
     return false;
   }
+
+  static bool isInvalidNumber(String? value) {
+    return isEmpty(value) || double.tryParse(value!) == null;
+  }
 }
