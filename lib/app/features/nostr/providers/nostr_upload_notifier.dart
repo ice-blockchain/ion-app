@@ -58,8 +58,14 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
     const relayUrl = /*userRelays.list.random.url*/ 'wss://nostr.build';
 
     try {
-      final metadataUri =
-          Uri.parse(relayUrl).replace(scheme: 'https', path: FileStorageMetadata.path);
+      final parsedRelayUrl = Uri.parse(relayUrl);
+      final metadataUri = Uri(
+        scheme: 'https',
+        host: parsedRelayUrl.host,
+        port: parsedRelayUrl.hasPort ? parsedRelayUrl.port : null,
+        path: FileStorageMetadata.path,
+      );
+
       final response = await ref.read(dioProvider).getUri<Map<String, dynamic>>(metadataUri);
       return FileStorageMetadata.fromJson(response.data!).apiUrl;
     } catch (error) {
