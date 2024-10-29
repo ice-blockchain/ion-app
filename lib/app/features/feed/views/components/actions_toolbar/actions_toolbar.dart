@@ -17,7 +17,8 @@ class ActionsToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      color: context.theme.appColors.onPrimaryAccent,
       height: toolbarHeight,
       child: Row(
         children: [

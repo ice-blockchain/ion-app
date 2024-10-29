@@ -7,7 +7,11 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/hashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/mentions_suggestions.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/mocked_pubkeys.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/utils/mocked_data.dart';
+
+const maxMentionsLength = 3;
+const maxHashtagsLength = 5;
 
 class MentionAttribute extends Attribute<String> {
   const MentionAttribute(String mentionValue)
@@ -167,8 +171,6 @@ class MentionsHashtagsHandler {
     List<String> newSuggestions;
     if (taggingCharacter == '#') {
       newSuggestions = _getHashTagSuggestions(query);
-    } else if (taggingCharacter == '@') {
-      newSuggestions = _getMentionSuggestions(query);
     } else {
       newSuggestions = [];
     }
@@ -179,12 +181,6 @@ class MentionsHashtagsHandler {
 
   List<String> _getHashTagSuggestions(String query) {
     return hashtags.where((String tag) => tag.toLowerCase().contains(query.toLowerCase())).toList();
-  }
-
-  List<String> _getMentionSuggestions(String query) {
-    return mentions
-        .where((String mention) => mention.toLowerCase().contains(query.toLowerCase()))
-        .toList();
   }
 
   void _showOverlay() {
@@ -202,26 +198,37 @@ class MentionsHashtagsHandler {
     final screenHeight = MediaQuery.of(context).size.height;
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-    final topPosition = screenHeight -
-        keyboardHeight -
-        suggestions.value.length * hashtagItemSize -
-        hashtagContainerPadding -
-        toolbarHeight;
+    final mockedPubKeys = getRandomPubKeys();
+
+    final itemsLength = taggingCharacter == '@'
+        ? (mockedPubKeys.length > maxMentionsLength ? maxMentionsLength : mockedPubKeys.length)
+        : (suggestions.value.length > maxHashtagsLength
+            ? maxHashtagsLength
+            : suggestions.value.length);
+    final itemSize = taggingCharacter == '@' ? mentionItemSize : hashtagItemSize;
+    final containerPadding =
+        taggingCharacter == '@' ? mentionContainerPadding : hashtagContainerPadding;
+
+    final totalSuggestionHeight = itemsLength * itemSize + containerPadding * 2;
+    final topPosition = screenHeight - keyboardHeight - totalSuggestionHeight - toolbarHeight;
 
     return OverlayEntry(
       builder: (context) => Positioned(
         left: 0,
         top: topPosition,
         right: 0,
-        child: taggingCharacter == '@'
-            ? MentionsSuggestions(
-                suggestions: suggestions.value,
-                onSuggestionSelected: _onSuggestionSelected,
-              )
-            : HashtagsSuggestions(
-                suggestions: suggestions.value,
-                onSuggestionSelected: _onSuggestionSelected,
-              ),
+        child: SizedBox(
+          height: totalSuggestionHeight,
+          child: taggingCharacter == '@'
+              ? MentionsSuggestions(
+                  suggestions: mockedPubKeys,
+                  onSuggestionSelected: _onSuggestionSelected,
+                )
+              : HashtagsSuggestions(
+                  suggestions: suggestions.value,
+                  onSuggestionSelected: _onSuggestionSelected,
+                ),
+        ),
       ),
     );
   }

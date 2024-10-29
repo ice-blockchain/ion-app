@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/separated/separator.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/mention_item.dart';
+
+const double mentionContainerPadding = 4;
+const double mentionItemSize = 51;
 
 class MentionsSuggestions extends StatelessWidget {
   const MentionsSuggestions({
@@ -15,16 +21,40 @@ class MentionsSuggestions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      constraints: const BoxConstraints(maxHeight: 150),
-      child: ListView.builder(
-        itemCount: suggestions.length,
-        itemBuilder: (context, index) {
-          final suggestion = suggestions[index];
-          return ListTile(
-            title: Text(suggestion),
-            onTap: () => onSuggestionSelected(suggestion),
-          );
-        },
+      padding: const EdgeInsets.symmetric(vertical: mentionContainerPadding),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height / 2,
+        ),
+        child: Column(
+          children: [
+            const HorizontalSeparator(),
+            Expanded(
+              child: ListView.builder(
+                itemCount: suggestions.length,
+                padding: EdgeInsets.zero,
+                itemBuilder: (context, index) {
+                  final suggestion = suggestions[index];
+                  return SizedBox(
+                    height: mentionItemSize,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          onSuggestionSelected(suggestion);
+                        },
+                        child: ScreenSideOffset.small(
+                          child: MentionItem(
+                            pubkey: suggestion,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
