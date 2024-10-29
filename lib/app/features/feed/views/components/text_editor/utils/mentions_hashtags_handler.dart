@@ -79,6 +79,7 @@ class MentionsHashtagsHandler {
           } finally {
             controller.addListener(_editorListener);
           }
+          _showOverlay();
         } else if (char == ' ' || char == '\n') {
           _applyTagIfNeeded(cursorIndex);
           _removeOverlay();
@@ -88,7 +89,6 @@ class MentionsHashtagsHandler {
 
           if (lastTagIndex >= 0 && cursorIndex > lastTagIndex) {
             controller.removeListener(_editorListener);
-
             try {
               final attribute = taggingCharacter == '@'
                   ? MentionAttribute.withValue(currentTagText)
@@ -106,6 +106,9 @@ class MentionsHashtagsHandler {
         if (remainingText == '#' || remainingText == '@') {
           _removeOverlay();
           lastTagIndex = -1;
+          lastTagIndex = cursorIndex - 1;
+          _updateSuggestions(remainingText);
+          _showOverlay();
         }
       }
     });
@@ -197,9 +200,7 @@ class MentionsHashtagsHandler {
   OverlayEntry _createOverlayEntry() {
     final screenHeight = MediaQuery.of(context).size.height;
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-
     final mockedPubKeys = getRandomPubKeys();
-
     final itemsLength = taggingCharacter == '@'
         ? (mockedPubKeys.length > maxMentionsLength ? maxMentionsLength : mockedPubKeys.length)
         : (suggestions.value.length > maxHashtagsLength
