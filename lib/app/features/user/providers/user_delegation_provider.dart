@@ -27,15 +27,9 @@ Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
       RequestFilter(kinds: const [UserDelegationEntity.kind], limit: 1, authors: [pubkey]),
     );
 
-  final event = await ref.read(nostrNotifierProvider.notifier).requestOne(requestMessage);
-
-  if (event != null) {
-    final userDelegation = UserDelegationEntity.fromEventMessage(event);
-    ref.read(nostrCacheProvider.notifier).cache(userDelegation);
-    return userDelegation;
-  }
-
-  return null;
+  return ref
+      .read(nostrNotifierProvider.notifier)
+      .requestOneEntity<UserDelegationEntity>(requestMessage);
 }
 
 @Riverpod(keepAlive: true)
