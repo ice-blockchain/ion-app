@@ -68,6 +68,15 @@ class NostrNotifier extends _$NostrNotifier {
     return events.isNotEmpty ? events.first : null;
   }
 
+  Future<T?> requestOneEntity<T>(
+    RequestMessage requestMessage, {
+    ActionSource actionSource = const ActionSourceCurrentUser(),
+  }) async {
+    final entitiesStream = requestEntities(requestMessage, actionSource: actionSource);
+    final entities = await entitiesStream.toList();
+    return entities.isNotEmpty ? entities.first as T : null;
+  }
+
   Future<NostrRelay> _getRelay(ActionSource actionSource) async {
     switch (actionSource) {
       case ActionSourceCurrentUser():

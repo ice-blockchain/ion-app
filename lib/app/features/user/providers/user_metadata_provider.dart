@@ -21,18 +21,10 @@ Future<UserMetadataEntity?> userMetadata(Ref ref, String pubkey) async {
 
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserMetadataEntity.kind], authors: [pubkey], limit: 1));
-  final event = await ref.read(nostrNotifierProvider.notifier).requestOne(
+  return ref.read(nostrNotifierProvider.notifier).requestOneEntity<UserMetadataEntity>(
         requestMessage,
         actionSource: ActionSourceUser(pubkey),
       );
-
-  if (event != null) {
-    final userMetadata = UserMetadataEntity.fromEventMessage(event);
-    ref.read(nostrCacheProvider.notifier).cache(userMetadata);
-    return userMetadata;
-  }
-
-  return null;
 }
 
 @Riverpod(keepAlive: true)

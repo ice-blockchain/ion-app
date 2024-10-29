@@ -17,8 +17,8 @@ part 'nostr_event_parser.g.dart';
 class EventParser {
   NostrEntity parse(EventMessage eventMessage) {
     return switch (eventMessage.kind) {
-      UserMetadataEntity.kind => UserMetadata.fromEventMessage(eventMessage),
-      PostEntity.kind => PostData.fromEventMessage(eventMessage),
+      UserMetadataEntity.kind => UserMetadataEntity.fromEventMessage(eventMessage),
+      PostEntity.kind => PostEntity.fromEventMessage(eventMessage),
       UserRelaysEntity.kind => UserRelaysEntity.fromEventMessage(eventMessage),
       FollowListEntity.kind => FollowListEntity.fromEventMessage(eventMessage),
       InterestSetEntity.kind => InterestSetEntity.fromEventMessage(eventMessage),
