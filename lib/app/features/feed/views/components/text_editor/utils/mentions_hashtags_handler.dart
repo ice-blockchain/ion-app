@@ -8,19 +8,16 @@ import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_t
 import 'package:ion/app/features/feed/views/components/text_editor/components/hashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/mentions_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/utils/mocked_data.dart';
-import 'package:ion/app/services/logger/logger.dart';
 
 class MentionAttribute extends Attribute<String> {
   const MentionAttribute(String mentionValue)
       : super('mention', AttributeScope.inline, mentionValue);
-
   const MentionAttribute.withValue(String value) : this(value);
 }
 
 class HashtagAttribute extends Attribute<String> {
   const HashtagAttribute(String hashtagValue)
       : super('hashtag', AttributeScope.inline, hashtagValue);
-
   const HashtagAttribute.withValue(String value) : this(value);
 }
 
@@ -40,6 +37,7 @@ class MentionsHashtagsHandler {
   bool isLinkApplied = false;
   Timer? _debounce;
   final ValueNotifier<List<String>> suggestions = ValueNotifier([]);
+  String? previousText;
 
   void initialize() {
     controller.addListener(_editorListener);
@@ -56,84 +54,108 @@ class MentionsHashtagsHandler {
   void _editorListener() {
     final cursorIndex = controller.selection.baseOffset;
     final text = controller.document.toPlainText();
+    final isBackspace = previousText != null && text.length < previousText!.length;
+    previousText = text;
 
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 50), () {
-      Logger.log('Debounced cursorIndex: $cursorIndex, lastTagIndex: $lastTagIndex, text: "$text"');
-
       if (cursorIndex > 0) {
         final char = text.substring(cursorIndex - 1, cursorIndex);
-        Logger.log('Character detected: "$char"');
 
         if (char == '#' || char == '@') {
           taggingCharacter = char;
           lastTagIndex = cursorIndex - 1;
-          isLinkApplied = false;
-          Logger.log('Tagging character "$char" detected. Setting lastTagIndex: $lastTagIndex');
-          _showOverlay();
+
+          controller.removeListener(_editorListener);
+          try {
+            final attribute = taggingCharacter == '@'
+                ? MentionAttribute.withValue(taggingCharacter)
+                : HashtagAttribute.withValue(taggingCharacter);
+            controller.formatText(lastTagIndex, 1, attribute);
+          } finally {
+            controller.addListener(_editorListener);
+          }
         } else if (char == ' ' || char == '\n') {
-          Logger.log('Space or newline detected. Applying tag if needed.');
           _applyTagIfNeeded(cursorIndex);
           _removeOverlay();
         } else if (lastTagIndex != -1) {
           final currentTagText = text.substring(lastTagIndex, cursorIndex);
-          Logger.log('Updating suggestions with currentTagText: "$currentTagText"');
-
           _updateSuggestions(currentTagText);
 
           if (lastTagIndex >= 0 && cursorIndex > lastTagIndex) {
-            Logger.log(
-              'Applying Custom Attribute from lastTagIndex: $lastTagIndex to cursorIndex: $cursorIndex',
-            );
+            controller.removeListener(_editorListener);
+
             try {
               final attribute = taggingCharacter == '@'
                   ? MentionAttribute.withValue(currentTagText)
                   : HashtagAttribute.withValue(currentTagText);
-
-              controller.formatText(
-                lastTagIndex,
-                cursorIndex - lastTagIndex,
-                attribute,
-              );
-            } catch (e) {
-              Logger.log('Error applying formatText: $e');
+              controller.formatText(lastTagIndex, cursorIndex - lastTagIndex, attribute);
+            } finally {
+              controller.addListener(_editorListener);
             }
           }
+        }
+      }
+
+      if (isBackspace && lastTagIndex != -1) {
+        final remainingText = text.substring(lastTagIndex, cursorIndex);
+        if (remainingText == '#' || remainingText == '@') {
+          _removeOverlay();
+          lastTagIndex = -1;
         }
       }
     });
   }
 
-  void _applyTagIfNeeded(int cursorIndex) {
-    Logger.log('Applying tag at cursorIndex: $cursorIndex, lastTagIndex: $lastTagIndex');
+  void _onSuggestionSelected(String suggestion) {
+    final cursorIndex = controller.selection.baseOffset;
+    final attribute = taggingCharacter == '@'
+        ? MentionAttribute.withValue(suggestion)
+        : HashtagAttribute.withValue(suggestion);
 
+    try {
+      controller
+        ..removeListener(_editorListener)
+        ..replaceText(
+          lastTagIndex,
+          cursorIndex - lastTagIndex,
+          '$suggestion ',
+          null,
+        )
+        ..formatText(lastTagIndex, suggestion.length, attribute);
+
+      final newCursorIndex = lastTagIndex + suggestion.length + 1;
+      controller.updateSelection(
+        TextSelection.collapsed(offset: newCursorIndex),
+        ChangeSource.local,
+      );
+
+      lastTagIndex = -1;
+      taggingCharacter = '';
+    } finally {
+      controller.addListener(_editorListener);
+    }
+
+    _removeOverlay();
+  }
+
+  void _applyTagIfNeeded(int cursorIndex) {
     if (overlayEntry != null && lastTagIndex != -1) {
       final tagText = controller.document.toPlainText().substring(lastTagIndex, cursorIndex);
-
       final attribute = taggingCharacter == '@'
           ? MentionAttribute.withValue(tagText)
           : HashtagAttribute.withValue(tagText);
 
       if (lastTagIndex >= 0 && cursorIndex > lastTagIndex) {
-        Logger.log('Finalizing tag formatting for tagText: "$tagText" with attribute: $attribute');
-
         try {
           controller
-            ..replaceText(
-              lastTagIndex,
-              cursorIndex - lastTagIndex,
-              tagText,
-              null,
-            )
+            ..replaceText(lastTagIndex, cursorIndex - lastTagIndex, tagText, null)
             ..formatText(lastTagIndex, tagText.length, attribute);
-        } catch (e) {
-          Logger.log('Error in _applyTagIfNeeded while formatting text: $e');
+        } finally {
+          lastTagIndex = -1;
+          isLinkApplied = false;
         }
       }
-
-      lastTagIndex = -1;
-      isLinkApplied = false;
-      Logger.log('Reset lastTagIndex and isLinkApplied after applying tag.');
     }
   }
 
@@ -142,11 +164,17 @@ class MentionsHashtagsHandler {
   }
 
   void _updateSuggestions(String query) {
+    List<String> newSuggestions;
     if (taggingCharacter == '#') {
-      suggestions.value = _getHashTagSuggestions(query);
+      newSuggestions = _getHashTagSuggestions(query);
     } else if (taggingCharacter == '@') {
-      suggestions.value = _getMentionSuggestions(query);
+      newSuggestions = _getMentionSuggestions(query);
+    } else {
+      newSuggestions = [];
     }
+
+    suggestions.value = newSuggestions;
+    _showOverlay();
   }
 
   List<String> _getHashTagSuggestions(String query) {
@@ -196,38 +224,5 @@ class MentionsHashtagsHandler {
               ),
       ),
     );
-  }
-
-  void _onSuggestionSelected(String suggestion) {
-    final cursorIndex = controller.selection.baseOffset;
-    final attribute = taggingCharacter == '@'
-        ? MentionAttribute.withValue(suggestion)
-        : HashtagAttribute.withValue(suggestion);
-
-    Logger.log('Suggestion selected: "$suggestion", applying attribute: $attribute');
-
-    try {
-      controller
-        ..replaceText(
-          lastTagIndex,
-          cursorIndex - lastTagIndex,
-          suggestion,
-          null,
-        )
-        ..formatText(lastTagIndex, suggestion.length, attribute);
-
-      final newCursorIndex = lastTagIndex + suggestion.length;
-      controller.updateSelection(
-        TextSelection.collapsed(offset: newCursorIndex),
-        ChangeSource.local,
-      );
-
-      lastTagIndex = -1;
-      taggingCharacter = '';
-    } catch (e) {
-      Logger.log('Error in _onSuggestionSelected: $e');
-    }
-
-    _removeOverlay();
   }
 }
