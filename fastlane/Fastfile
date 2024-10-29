@@ -55,6 +55,12 @@ platform :ios do
             output_directory: "./build/ios/",
             export_method: export_method,
             export_team_id: APPLE_DEVELOPMENT_TEAM,
+            xcconfig: "ios/Flutter/Generated.xcconfig",
+            export_options: {
+                provisioningProfiles: {
+                    APP_ID => ENV["sigh_#{APP_ID}_#{sign_type}_profile-name"]
+                }
+            },
         )
     end
 
