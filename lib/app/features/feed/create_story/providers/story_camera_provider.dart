@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:camera/camera.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/content_notificaiton/data/models/content_notification_data.dart';
 import 'package:ion/app/features/feed/content_notificaiton/providers/content_notification_provider.dart';
@@ -17,53 +16,47 @@ part 'story_camera_provider.g.dart';
 @riverpod
 class StoryCameraController extends _$StoryCameraController {
   @override
-  StoryCameraState build() => const StoryCameraState();
+  StoryCameraState build() => const StoryCameraState.initial();
 
   Future<void> startVideoRecording() async {
-    if (!state.isRecording) {
-      final cameraController = ref.read(cameraControllerNotifierProvider).value;
-      if (cameraController != null && cameraController.value.isInitialized) {
-        await ref.read(cameraControllerNotifierProvider.notifier).startVideoRecording();
-        state = state.copyWith(isRecording: true);
-      }
-    }
+    await ref.read(cameraControllerNotifierProvider.notifier).startVideoRecording();
+    state = const StoryCameraState.recording();
   }
 
-  Future<String?> stopVideoRecording() async {
-    if (state.isRecording) {
-      final video = await ref.read(cameraControllerNotifierProvider.notifier).stopVideoRecording();
+  Future<void> stopVideoRecording() async {
+    final cameraNotifier = ref.read(cameraControllerNotifierProvider.notifier);
+    final videoFile = await cameraNotifier.stopVideoRecording();
 
-      if (video != null) {
-        final mediaFile = await ref.read(mediaServiceProvider).saveVideoToGallery(video.path);
-        state = state.copyWith(isRecording: false);
+    if (videoFile != null) {
+      final mediaFile = await ref.read(mediaServiceProvider).saveVideoToGallery(videoFile.path);
 
-        if (mediaFile != null) {
-          return mediaFile.path;
-        }
+      if (mediaFile != null) {
+        state = StoryCameraState.saved(videoPath: mediaFile.path);
       }
-
-      state = state.copyWith(isRecording: false);
+    } else {
+      state = const StoryCameraState.error(message: 'Failed to stop video recording.');
     }
-
-    return null;
-  }
-
-  void toggleFlash() {
-    final newFlashState = !state.isFlashOn;
-    state = state.copyWith(isFlashOn: newFlashState);
-
-    ref.read(cameraControllerNotifierProvider.notifier).setFlashMode(
-          newFlashState ? FlashMode.torch : FlashMode.off,
-        );
   }
 
   Future<void> publishStory() async {
-    ref.read(contentNotificationControllerProvider.notifier).showLoading(ContentType.story);
+    state = const StoryCameraState.uploading();
+
+    final notificationController = ref.read(contentNotificationControllerProvider.notifier)
+      ..showLoading(ContentType.story);
 
     await Future<void>.delayed(const Duration(seconds: 2));
 
-    ref.read(contentNotificationControllerProvider.notifier).showPublished(ContentType.story);
+    state = const StoryCameraState.published();
+
+    notificationController.showPublished(ContentType.story);
   }
+
+  Future<void> toggleFlash() async {
+    final cameraNotifier = ref.read(cameraControllerNotifierProvider.notifier);
+    await cameraNotifier.toggleFlash();
+  }
+
+  void reset() => state = const StoryCameraState.initial();
 }
 
 @riverpod

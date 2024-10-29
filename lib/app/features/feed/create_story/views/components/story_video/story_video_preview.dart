@@ -27,7 +27,7 @@ class StoryVideoPreview extends ConsumerWidget {
                 return const CenteredLoadingIndicator();
               }
 
-              final videoController = ref.watch(
+              final videoController = ref.read(
                 videoControllerProvider(
                   filePath,
                   autoPlay: true,

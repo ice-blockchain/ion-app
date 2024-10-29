@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-class CircularRecordingIndicator extends StatelessWidget {
-  const CircularRecordingIndicator({
+class StoryCircularProgressIndicator extends StatelessWidget {
+  const StoryCircularProgressIndicator({
     required this.progress,
     super.key,
   });

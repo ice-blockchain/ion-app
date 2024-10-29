@@ -10,6 +10,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/plus_icon.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
+import 'package:ion/app/router/app_routes.dart';
 
 class StoryListItem extends HookWidget {
   const StoryListItem({
@@ -42,6 +43,7 @@ class StoryListItem extends HookWidget {
     return GestureDetector(
       onTap: () {
         if (!me) viewed.value = true;
+        StoryViewerRoute().push<void>(context);
       },
       child: SizedBox(
         width: width,

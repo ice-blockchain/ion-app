@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_camera/circular_recording_indicator.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_camera/inner_capture_circle.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_capture/inner_capture_circle.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_capture/story_circular_progress_indicator.dart';
 
-class CaptureButton extends StatelessWidget {
-  const CaptureButton({
+class StoryCaptureButton extends StatelessWidget {
+  const StoryCaptureButton({
     required this.isRecording,
     required this.recordingProgress,
     required this.onRecordingStart,
@@ -43,7 +43,7 @@ class CaptureButton extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             if (isRecording)
-              CircularRecordingIndicator(
+              StoryCircularProgressIndicator(
                 progress: recordingProgress,
               ),
             const InnerCaptureCircle(),
