@@ -19,39 +19,33 @@ class MentionsSuggestions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(vertical: mentionContainerPadding),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height / 2,
-        ),
-        child: Column(
-          children: [
-            const HorizontalSeparator(),
-            Expanded(
-              child: ListView.builder(
-                itemCount: suggestions.length,
-                padding: EdgeInsets.zero,
-                itemBuilder: (context, index) {
-                  final suggestion = suggestions[index];
-                  return SizedBox(
-                    height: mentionItemSize,
-                    child: Center(
-                      child: ScreenSideOffset.small(
-                        child: MentionItem(
-                          pubkey: suggestion,
-                          onPress: onSuggestionSelected,
-                        ),
+    return Column(
+      children: [
+        const HorizontalSeparator(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: mentionContainerPadding),
+            child: ListView.builder(
+              itemCount: suggestions.length,
+              padding: EdgeInsets.zero,
+              itemBuilder: (context, index) {
+                final suggestion = suggestions[index];
+                return SizedBox(
+                  height: mentionItemSize,
+                  child: Center(
+                    child: ScreenSideOffset.small(
+                      child: MentionItem(
+                        pubkey: suggestion,
+                        onPress: onSuggestionSelected,
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

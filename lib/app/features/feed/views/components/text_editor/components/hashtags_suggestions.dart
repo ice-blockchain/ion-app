@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
 const double hashtagContainerPadding = 5;
@@ -21,39 +22,42 @@ class HashtagsSuggestions extends StatelessWidget {
   Widget build(BuildContext context) {
     if (suggestions.isEmpty) return const SizedBox.shrink();
 
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(vertical: hashtagContainerPadding),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height / 2,
-        ),
-        child: ListView.builder(
-          padding: EdgeInsets.zero,
-          itemCount: suggestions.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            final suggestion = suggestions[index];
-            return GestureDetector(
-              onTap: () {
-                onSuggestionSelected(suggestion);
-              },
-              child: ScreenSideOffset.small(
-                child: SizedBox(
-                  height: hashtagItemSize,
-                  child: Text(
-                    suggestion,
-                    style: context.theme.appTextThemes.caption.copyWith(
-                      color: context.theme.appColors.primaryText,
+    return Column(
+      children: [
+        const HorizontalSeparator(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: hashtagContainerPadding),
+            child: ListView.builder(
+              padding: EdgeInsets.zero,
+              itemCount: suggestions.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final suggestion = suggestions[index];
+                return GestureDetector(
+                  onTap: () {
+                    onSuggestionSelected(suggestion);
+                  },
+                  child: ScreenSideOffset.small(
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      height: hashtagItemSize,
+                      child: DefaultTextStyle(
+                        style: context.theme.appTextThemes.caption.copyWith(
+                          color: context.theme.appColors.primaryText,
+                        ),
+                        child: Text(
+                          suggestion,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            );
-          },
+                );
+              },
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
