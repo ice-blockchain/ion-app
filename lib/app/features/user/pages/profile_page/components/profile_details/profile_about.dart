@@ -15,7 +15,7 @@ class ProfileAbout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final aboutText = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.about ??
+    final aboutText = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.data.about ??
         'Read @America to understand why I’m supporting Donald #Trump for President';
 
     return SizedBox(

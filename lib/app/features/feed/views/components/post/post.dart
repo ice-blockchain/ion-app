@@ -11,13 +11,13 @@ import 'package:ion/app/features/feed/views/components/post/components/post_menu
 
 class Post extends StatelessWidget {
   const Post({
-    required this.postData,
+    required this.postEntity,
     this.header,
     this.footer,
     super.key,
   });
 
-  final PostData postData;
+  final PostEntity postEntity;
   final Widget? header;
   final Widget? footer;
 
@@ -27,10 +27,10 @@ class Post extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          header ?? PostHeader(pubkey: postData.pubkey, trailing: const PostMenu()),
-          PostBody(postData: postData),
+          header ?? PostHeader(pubkey: postEntity.pubkey, trailing: const PostMenu()),
+          PostBody(postEntity: postEntity),
           SizedBox(height: 10.0.s),
-          footer ?? PostFooter(postData: postData),
+          footer ?? PostFooter(postEntity: postEntity),
         ],
       ),
     );

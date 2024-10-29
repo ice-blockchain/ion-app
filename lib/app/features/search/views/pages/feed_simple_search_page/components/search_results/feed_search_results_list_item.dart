@@ -24,8 +24,8 @@ class FeedSearchResultsListItem extends ConsumerWidget {
       padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),
       child: ScreenSideOffset.small(
         child: userMetadata.maybeWhen(
-          data: (userMetadata) {
-            if (userMetadata == null) {
+          data: (userMetadataEntity) {
+            if (userMetadataEntity == null) {
               return const SizedBox.shrink();
             }
 
@@ -34,16 +34,16 @@ class FeedSearchResultsListItem extends ConsumerWidget {
               onTap: () {
                 ref
                     .read(feedSearchHistoryProvider.notifier)
-                    .addUserIdToTheHistory(userMetadata.pubkey);
+                    .addUserIdToTheHistory(userMetadataEntity.pubkey);
               },
               child: ListItem.user(
-                title: Text(userMetadata.displayName),
+                title: Text(userMetadataEntity.data.displayName),
                 subtitle: Text(
-                  prefixUsername(username: userMetadata.name, context: context),
+                  prefixUsername(username: userMetadataEntity.data.name, context: context),
                 ),
-                profilePicture: userMetadata.picture,
-                verifiedBadge: userMetadata.verified,
-                ntfAvatar: userMetadata.nft,
+                profilePicture: userMetadataEntity.data.picture,
+                verifiedBadge: userMetadataEntity.data.verified,
+                ntfAvatar: userMetadataEntity.data.nft,
               ),
             );
           },

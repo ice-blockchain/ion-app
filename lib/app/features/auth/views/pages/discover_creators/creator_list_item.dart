@@ -31,17 +31,18 @@ class CreatorListItem extends ConsumerWidget {
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
 
     return userMetadata.maybeWhen(
-      data: (userMetadata) {
-        if (userMetadata == null) {
+      data: (userMetadataEntity) {
+        if (userMetadataEntity == null) {
           return const SizedBox.shrink();
         }
         return ScreenSideOffset.small(
           child: ListItem.user(
-            title: Text(userMetadata.displayName),
-            subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
-            profilePicture: userMetadata.picture,
-            verifiedBadge: userMetadata.verified,
-            ntfAvatar: userMetadata.nft,
+            title: Text(userMetadataEntity.data.displayName),
+            subtitle:
+                Text(prefixUsername(username: userMetadataEntity.data.name, context: context)),
+            profilePicture: userMetadataEntity.data.picture,
+            verifiedBadge: userMetadataEntity.data.verified,
+            ntfAvatar: userMetadataEntity.data.nft,
             backgroundColor: context.theme.appColors.tertararyBackground,
             contentPadding: EdgeInsets.all(12.0.s),
             borderRadius: BorderRadius.circular(16.0.s),

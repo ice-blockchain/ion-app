@@ -35,11 +35,12 @@ class ProfileEditPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
     final userMetadataValue = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
-    final nameController = useTextEditingController(text: userMetadataValue?.displayName ?? '');
-    final nicknameController = useTextEditingController(text: userMetadataValue?.name ?? '');
-    final bioController = useTextEditingController(text: userMetadataValue?.about ?? '');
+    final nameController =
+        useTextEditingController(text: userMetadataValue?.data.displayName ?? '');
+    final nicknameController = useTextEditingController(text: userMetadataValue?.data.name ?? '');
+    final bioController = useTextEditingController(text: userMetadataValue?.data.about ?? '');
     final locationController = useTextEditingController(text: '');
-    final websiteController = useTextEditingController(text: userMetadataValue?.website ?? '');
+    final websiteController = useTextEditingController(text: userMetadataValue?.data.website ?? '');
     final category = useState<UserCategoryType?>(null);
 
     final paddingValue = 20.0.s;

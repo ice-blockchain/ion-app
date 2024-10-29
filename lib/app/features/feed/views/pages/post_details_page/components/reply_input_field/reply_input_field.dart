@@ -22,11 +22,11 @@ import 'package:ion/generated/assets.gen.dart';
 
 class ReplyInputField extends HookConsumerWidget {
   const ReplyInputField({
-    required this.postData,
+    required this.postEntity,
     super.key,
   });
 
-  final PostData postData;
+  final PostEntity postEntity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,7 +48,7 @@ class ReplyInputField extends HookConsumerWidget {
           if (hasFocus.value)
             Padding(
               padding: EdgeInsets.only(bottom: 12.0.s),
-              child: ReplyAuthorHeader(postData: postData),
+              child: ReplyAuthorHeader(postEntity: postEntity),
             ),
           SizedBox(
             // When we focus the TextField, a new child is added to the Column,
@@ -86,7 +86,7 @@ class ReplyInputField extends HookConsumerWidget {
                     if (hasFocus.value)
                       GestureDetector(
                         onTap: () async {
-                          await PostReplyModalRoute(postId: postData.id, showCollapseButton: true)
+                          await PostReplyModalRoute(postId: postEntity.id, showCollapseButton: true)
                               .push<void>(context);
                           textController.text = ref.read(replyDataNotifierProvider).text;
                         },

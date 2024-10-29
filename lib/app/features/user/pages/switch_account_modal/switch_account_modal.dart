@@ -47,7 +47,7 @@ class SwitchAccountModal extends ConsumerWidget {
               ActionButton(
                 icon: Assets.svg.iconMenuLogout.icon(size: 24.0.s),
                 label: context.i18n.profile_log_out(
-                  prefixUsername(username: userMetadataValue?.name, context: context),
+                  prefixUsername(username: userMetadataValue?.data.name, context: context),
                 ),
                 onTap: () {
                   ref.read(authProvider.notifier).signOut();

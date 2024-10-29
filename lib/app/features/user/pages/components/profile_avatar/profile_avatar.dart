@@ -55,7 +55,7 @@ class ProfileAvatar extends ConsumerWidget {
             child: Avatar(
               size: pictureSize - pictureBorderWidth * 2,
               fit: BoxFit.cover,
-              imageUrl: userMetadataValue.picture,
+              imageUrl: userMetadataValue.data.picture,
               borderRadius: BorderRadius.circular(20.0.s),
             ),
           ),

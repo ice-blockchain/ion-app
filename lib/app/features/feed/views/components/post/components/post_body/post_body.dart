@@ -10,18 +10,18 @@ import 'package:ion/app/services/text_parser/matchers/url_matcher.dart';
 
 class PostBody extends ConsumerWidget {
   const PostBody({
-    required this.postData,
+    required this.postEntity,
     super.key,
   });
 
-  final PostData postData;
+  final PostEntity postEntity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postMedia = usePostMedia(postData);
+    final postMedia = usePostMedia(postEntity.data);
 
     //TODO::temp impl
-    final postText = postData.content.fold<StringBuffer>(StringBuffer(), (result, match) {
+    final postText = postEntity.data.content.fold<StringBuffer>(StringBuffer(), (result, match) {
       if (match.matcherType != UrlMatcher) {
         result.write(match.text);
       }

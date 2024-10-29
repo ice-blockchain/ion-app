@@ -29,15 +29,16 @@ class PostHeader extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.only(top: 12.0.s, bottom: 10.0.s),
       child: userMetadata.maybeWhen(
-        data: (userMetadata) {
-          if (userMetadata == null) {
+        data: (userMetadataEntity) {
+          if (userMetadataEntity == null) {
             return const SizedBox.shrink();
           }
           return ListItem.user(
             onTap: () => FeedProfileRoute(pubkey: pubkey).push<void>(context),
-            title: Text(userMetadata.displayName),
-            subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
-            profilePicture: userMetadata.picture,
+            title: Text(userMetadataEntity.data.displayName),
+            subtitle:
+                Text(prefixUsername(username: userMetadataEntity.data.name, context: context)),
+            profilePicture: userMetadataEntity.data.picture,
             trailing: trailing,
             iceBadge: Random().nextBool(),
             verifiedBadge: Random().nextBool(),
