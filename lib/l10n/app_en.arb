@@ -191,6 +191,7 @@
   "profile_request_option_desc": "Securely receive funds with one tap",
   "profile_send_coin": "Send coin",
   "profile_request_funds": "Request funds",
+  "profile_empty_state": "There's nothing here yet",
   "category_aviation": "Aviation",
   "category_blockchain": "Blockchain",
   "category_business": "Business",

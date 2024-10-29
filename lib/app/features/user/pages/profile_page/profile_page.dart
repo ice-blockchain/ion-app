@@ -3,26 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
 import 'package:ion/app/features/user/pages/components/background_picture/background_picture.dart';
+import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
-import 'package:ion/app/features/user/pages/components/user_name_tile/user_name_tile.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/header.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followed_by/followed_by.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_about.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions/edit_profile_actions.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions/profile_actions.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_followers.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/profile_details/user_info/user_info.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/articles_tab.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/posts_tab.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/replies_tab.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/videos_tab.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_details.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/tab_content.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 
@@ -36,111 +26,112 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isCurrentUserProfile = ref.watch(isCurrentUserSelectorProvider(pubkey));
     final activeTab = useState<UserContentType>(UserContentType.posts);
 
-    List<Widget> getActiveTabContent() {
-      switch (activeTab.value) {
-        case UserContentType.posts:
-          return [
-            PostsTab(pubkey: pubkey),
-          ];
-        case UserContentType.replies:
-          return [
-            RepliesTab(pubkey: pubkey),
-          ];
-        case UserContentType.videos:
-          return [
-            VideosTab(pubkey: pubkey),
-          ];
-        case UserContentType.articles:
-          return [
-            ArticlesTab(pubkey: pubkey),
-          ];
-      }
-    }
+    final scrollController = useScrollController();
+    final opacityValue = useState<double>(0.0.s);
+    final paddingTop = 60.0.s;
+
+    useEffect(
+      () {
+        void listener() {
+          opacityValue.value = (scrollController.offset / paddingTop).clamp(0.0, 1.0);
+        }
+
+        scrollController.addListener(listener);
+        return () => scrollController.removeListener(listener);
+      },
+      [scrollController, paddingTop],
+    );
+
+    final backgroundColor = context.theme.appColors.secondaryBackground;
 
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          Positioned(
-            child: BackgroundPicture(pubkey: pubkey),
-          ),
-          CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: ScreenTopOffset(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 60.0.s),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: context.theme.appColors.secondaryBackground,
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(30.0.s)),
-                        ),
-                        child: ScreenSideOffset.small(
+      body: ColoredBox(
+        color: backgroundColor,
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Positioned(
+              child: Opacity(
+                opacity: 1.0 - opacityValue.value,
+                child: BackgroundPicture(pubkey: pubkey),
+              ),
+            ),
+            ScreenTopOffset(
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  PinnedHeaderSliver(
+                    child: SizedBox(height: paddingTop),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: backgroundColor,
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0.s)),
+                          ),
                           child: Column(
                             children: [
                               ProfileAvatar(
                                 pubkey: pubkey,
                               ),
-                              UserNameTile(pubkey: pubkey),
-                              SizedBox(height: 8.0.s),
-                              if (isCurrentUserProfile)
-                                EditProfileActions(
-                                  pubkey: pubkey,
-                                )
-                              else
-                                ProfileActions(
-                                  pubkey: pubkey,
-                                ),
-                              SizedBox(height: 16.0.s),
-                              ProfileFollowers(
+                              ProfileDetails(
                                 pubkey: pubkey,
                               ),
-                              SizedBox(height: 10.0.s),
-                              FollowedBy(pubkey: pubkey),
-                              SizedBox(height: 12.0.s),
-                              ProfileAbout(pubkey: pubkey),
-                              SizedBox(height: 12.0.s),
-                              UserInfo(pubkey: pubkey),
+                              SizedBox(
+                                height: 16.0.s,
+                              ),
+                              const HorizontalSeparator(),
+                              SizedBox(
+                                height: 16.0.s,
+                              ),
                             ],
                           ),
                         ),
-                      ),
-                      ColoredBox(
-                        color: context.theme.appColors.secondaryBackground,
-                        child: Column(
-                          children: [
-                            HorizontalSeparator(
-                              height: 32.0.s,
-                            ),
-                            ProfileTabsHeader(
-                              activeTab: activeTab.value,
-                              onTabSwitch: (UserContentType newTab) {
-                                if (newTab != activeTab.value) {
-                                  activeTab.value = newTab;
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  PinnedHeaderSliver(
+                    child: ColoredBox(
+                      color: backgroundColor,
+                      child: Column(
+                        children: [
+                          ProfileTabsHeader(
+                            activeTab: activeTab.value,
+                            onTabSwitch: (UserContentType newTab) {
+                              if (newTab != activeTab.value) {
+                                activeTab.value = newTab;
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const TabHeader(),
+                  TabContent(
+                    tab: activeTab.value,
+                    pubkey: pubkey,
+                  ),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                padding: EdgeInsets.only(bottom: paddingTop - HeaderAction.buttonSize),
+                color: backgroundColor.withOpacity(opacityValue.value),
+                child: Header(
+                  opacity: opacityValue.value,
+                  pubkey: pubkey,
                 ),
               ),
-              const TabHeader(),
-              ...getActiveTabContent(),
-            ],
-          ),
-          Positioned(
-            child: Header(
-              pubkey: pubkey,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
