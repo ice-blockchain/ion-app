@@ -12,10 +12,12 @@ import 'package:ion/app/utils/username.dart';
 class MentionItem extends ConsumerWidget {
   const MentionItem({
     required this.pubkey,
+    required this.onPress,
     super.key,
   });
 
   final String pubkey;
+  final ValueChanged<String> onPress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +30,7 @@ class MentionItem extends ConsumerWidget {
         }
         return IntrinsicHeight(
           child: ListItem.user(
-            onTap: () => {},
+            onTap: () => onPress('@${userMetadata.name}'),
             title: Text(userMetadata.displayName),
             subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
             profilePicture: userMetadata.picture,

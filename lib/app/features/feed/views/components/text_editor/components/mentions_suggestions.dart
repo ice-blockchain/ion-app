@@ -38,14 +38,10 @@ class MentionsSuggestions extends StatelessWidget {
                   return SizedBox(
                     height: mentionItemSize,
                     child: Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          onSuggestionSelected(suggestion);
-                        },
-                        child: ScreenSideOffset.small(
-                          child: MentionItem(
-                            pubkey: suggestion,
-                          ),
+                      child: ScreenSideOffset.small(
+                        child: MentionItem(
+                          pubkey: suggestion,
+                          onPress: onSuggestionSelected,
                         ),
                       ),
                     ),
