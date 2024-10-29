@@ -21,7 +21,7 @@ class FeedAdvancedSearchUserListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadataValue = ref.watch(userMetadataProvider(pubKey)).valueOrNull;
+    final userMetadataValue = ref.watch(userMetadataProvider(pubKey)).valueOrNull?.data;
 
     if (userMetadataValue == null) {
       return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));

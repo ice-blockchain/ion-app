@@ -18,7 +18,7 @@ class BackgroundPicture extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final banner = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.banner;
+    final banner = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.data.banner;
 
     final imageWidth = MediaQuery.of(context).size.width;
     final imageHeight = imageWidth / aspectRatio;

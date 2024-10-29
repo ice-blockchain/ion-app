@@ -24,7 +24,7 @@ class UnfollowUserModal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
-    final name = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.name ?? '';
+    final name = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.data.name ?? '';
 
     return Column(
       mainAxisSize: MainAxisSize.min,

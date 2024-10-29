@@ -21,13 +21,13 @@ typedef ActionIconBuilder = Widget Function(
 
 class PostFooter extends HookConsumerWidget {
   PostFooter({
-    required this.postData,
+    required this.postEntity,
     this.actionBuilder,
     double? bottomPadding,
     super.key,
   }) : bottomPadding = bottomPadding ?? 16.0.s;
 
-  final PostData postData;
+  final PostEntity postEntity;
   final ActionIconBuilder? actionBuilder;
   final double bottomPadding;
 
@@ -41,13 +41,13 @@ class PostFooter extends HookConsumerWidget {
 
     void onToggleComment() {
       HapticFeedback.lightImpact();
-      PostReplyModalRoute(postId: postData.id).push<void>(context);
+      PostReplyModalRoute(postId: postEntity.id).push<void>(context);
       isCommentActive.value = !isCommentActive.value;
     }
 
     void onToggleRepost() {
       HapticFeedback.lightImpact();
-      RepostOptionsModalRoute(postId: postData.id).push<void>(context);
+      RepostOptionsModalRoute(postId: postEntity.id).push<void>(context);
       isReposted.value = !isReposted.value;
     }
 
@@ -58,7 +58,7 @@ class PostFooter extends HookConsumerWidget {
 
     void onShareOptions() {
       HapticFeedback.lightImpact();
-      SharePostModalRoute(postId: postData.id).push<void>(context);
+      SharePostModalRoute(postId: postEntity.id).push<void>(context);
     }
 
     void onIceStroke() => HapticFeedback.lightImpact();

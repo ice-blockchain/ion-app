@@ -5,11 +5,7 @@ part of 'post_data.dart';
 class _PostDataFromEvent extends PostData {
   _PostDataFromEvent(
     this.eventMessage,
-  ) : super.fromRawContent(
-          id: eventMessage.id,
-          pubkey: eventMessage.pubkey,
-          rawContent: eventMessage.content,
-        );
+  ) : super.fromRawContent(rawContent: eventMessage.content);
 
   final EventMessage eventMessage;
 

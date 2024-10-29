@@ -20,7 +20,7 @@ class UserAvatar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userPicture = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.picture;
+    final userPicture = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.data.picture;
 
     return Container(
       padding: EdgeInsets.all(borderWidth),

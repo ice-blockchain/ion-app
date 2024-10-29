@@ -25,7 +25,7 @@ Future<bool?> onboardingComplete(Ref ref) async {
 
   return delegation != null &&
       nostrKeyStore != null &&
-      delegation.hasDelegateFor(pubkey: nostrKeyStore.publicKey) &&
+      delegation.data.hasDelegateFor(pubkey: nostrKeyStore.publicKey) &&
       identity != null &&
       identity.masterPubkey != null &&
       identity.ionConnectRelays.isNotEmpty;

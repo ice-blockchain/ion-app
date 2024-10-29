@@ -22,13 +22,13 @@ void main() {
         content: '',
       );
 
-      final followList = FollowList.fromEventMessage(testEvent);
+      final followList = FollowListEntity.fromEventMessage(testEvent);
 
-      expect(followList, isA<FollowList>());
-      expect(followList.list.length, 3);
-      expect(followList.list[1].pubkey, '14aeb..8dad4');
-      expect(followList.list[1].relayUrl, 'wss://bobrelay.com/nostr');
-      expect(followList.list[1].petname, 'bob');
+      expect(followList, isA<FollowListEntity>());
+      expect(followList.data.list.length, 3);
+      expect(followList.data.list[1].pubkey, '14aeb..8dad4');
+      expect(followList.data.list[1].relayUrl, 'wss://bobrelay.com/nostr');
+      expect(followList.data.list[1].petname, 'bob');
     });
   });
 }

@@ -35,7 +35,6 @@ Widget feedPostUseCase(BuildContext context) {
               initialValue: 7,
             ),
             userMetadata: UserMetadata(
-              pubkey: '1',
               name: context.knobs.string(
                 label: 'Name',
                 initialValue: 'Alina Proxima',

@@ -2,7 +2,6 @@
 
 import 'package:ion/app/features/core/model/paged.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -25,7 +24,7 @@ class ContentCreators extends _$ContentCreators {
     final requestMessage = RequestMessage()
       ..addFilter(
         RequestFilter(
-          kinds: const [UserMetadata.kind],
+          kinds: const [UserMetadataEntity.kind],
           //TODO: uncomment when our relays are used
           // search: DiscoveryCreatorsSearchExtension().toString(),
           until: state.pagination.until,
@@ -35,17 +34,14 @@ class ContentCreators extends _$ContentCreators {
 
     state = Paged.loading(state.items, pagination: state.pagination);
 
-    final eventsStream = ref
+    final entitiesStream = ref
         .read(nostrNotifierProvider.notifier)
-        .request(requestMessage, actionSource: const ActionSourceIndexers());
+        .requestEntities(requestMessage, actionSource: const ActionSourceIndexers());
 
     DateTime? lastEventTime;
-    await for (final event in eventsStream) {
-      lastEventTime = event.createdAt;
-      final userMetadata = UserMetadata.fromEventMessage(event);
-      ref.read(nostrCacheProvider.notifier).cache(userMetadata);
-      state =
-          Paged.loading({...state.items}..add(userMetadata.pubkey), pagination: state.pagination);
+    await for (final entity in entitiesStream) {
+      lastEventTime = entity.createdAt;
+      state = Paged.loading({...state.items}..add(entity.pubkey), pagination: state.pagination);
     }
 
     state = Paged.data(

@@ -30,7 +30,7 @@ class UserInfo extends ConsumerWidget {
     final technology = random.nextBool() ? 'Technology' : null;
     final date = random.nextBool() ? 'October 2024' : null;
     final address = random.nextBool() ? 'Vienna, Austria' : null;
-    final website = userMetadataValue.website;
+    final website = userMetadataValue.data.website;
     final isFollower = ref.watch(isCurrentUserFollowerSelectorProvider(pubkey));
 
     final tiles = <Widget>[];

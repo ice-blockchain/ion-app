@@ -21,10 +21,10 @@ void main() {
         content: '',
       );
 
-      final userDelegation = UserDelegation.fromEventMessage(delegationEvent);
+      final userDelegation = UserDelegationEntity.fromEventMessage(delegationEvent);
 
-      expect(userDelegation, isA<UserDelegation>());
-      expect(userDelegation.delegates.first.kinds?.length, 2);
+      expect(userDelegation, isA<UserDelegationEntity>());
+      expect(userDelegation.data.delegates.first.kinds?.length, 2);
     });
 
     test('UserDelegation.fromEventMessage should work when kinds are not set', () {
@@ -39,10 +39,10 @@ void main() {
         content: '',
       );
 
-      final userDelegation = UserDelegation.fromEventMessage(delegationEvent);
+      final userDelegation = UserDelegationEntity.fromEventMessage(delegationEvent);
 
       expect(
-        userDelegation.delegates.first.kinds,
+        userDelegation.data.delegates.first.kinds,
         isNull,
       );
     });
@@ -66,10 +66,10 @@ void main() {
         content: 'test event',
       );
 
-      final userDelegation = UserDelegation.fromEventMessage(delegationEvent);
+      final userDelegation = UserDelegationEntity.fromEventMessage(delegationEvent);
 
       expect(
-        userDelegation.validate(event),
+        userDelegation.data.validate(event),
         isTrue,
       );
     });
@@ -94,10 +94,10 @@ void main() {
         content: 'test event',
       );
 
-      final userDelegation = UserDelegation.fromEventMessage(delegationEvent);
+      final userDelegation = UserDelegationEntity.fromEventMessage(delegationEvent);
 
       expect(
-        userDelegation.validate(event),
+        userDelegation.data.validate(event),
         isFalse,
       );
     });
@@ -121,10 +121,10 @@ void main() {
         content: 'test event',
       );
 
-      final userDelegation = UserDelegation.fromEventMessage(delegationEvent);
+      final userDelegation = UserDelegationEntity.fromEventMessage(delegationEvent);
 
       expect(
-        userDelegation.validate(event),
+        userDelegation.data.validate(event),
         isFalse,
       );
     });
@@ -147,12 +147,15 @@ void main() {
         content: '',
       );
 
-      final initialUserDelegation = UserDelegation.fromEventMessage(delegationEvent);
+      final initialUserDelegation = UserDelegationEntity.fromEventMessage(delegationEvent);
 
-      final newUserDelegation = initialUserDelegation
-          .copyWith(delegates: [...initialUserDelegation.delegates, UserDelegate.fromTag(newTag)]);
+      final newUserDelegation = initialUserDelegation.copyWith(
+        data: initialUserDelegation.data.copyWith(
+          delegates: [...initialUserDelegation.data.delegates, UserDelegate.fromTag(newTag)],
+        ),
+      );
 
-      expect(newUserDelegation.tags, [...initialTags, newTag]);
+      expect(newUserDelegation.data.tags, [...initialTags, newTag]);
     });
   });
 }

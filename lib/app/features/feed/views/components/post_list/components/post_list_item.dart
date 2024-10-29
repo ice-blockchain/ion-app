@@ -18,7 +18,7 @@ class PostListItem extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(nostrCacheProvider.select(cacheSelector<PostData>(postId)));
+    final post = ref.watch(nostrCacheProvider.select(cacheSelector<PostEntity>(postId)));
     final replyIds = ref.watch(postReplyIdsSelectorProvider(postId: postId));
 
     useOnInit(() {
@@ -30,10 +30,10 @@ class PostListItem extends HookConsumerWidget {
     return GestureDetector(
       onTap: () => PostDetailsRoute(postId: postId).push<void>(context),
       child: Post(
-        postData: post,
+        postEntity: post,
         footer: Column(
           children: [
-            PostFooter(postData: post),
+            PostFooter(postEntity: post),
             if (replyIds.isNotEmpty) PostReplies(postIds: replyIds),
           ],
         ),

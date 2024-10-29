@@ -22,12 +22,12 @@ void main() {
         content: '',
       );
 
-      final interestSet = InterestSet.fromEventMessage(testEvent);
+      final interestSet = InterestSetEntity.fromEventMessage(testEvent);
 
-      expect(interestSet, isA<InterestSet>());
-      expect(interestSet.type, InterestSetType.languages);
-      expect(interestSet.hashtags.length, 2);
-      expect(interestSet.hashtags[0], 'en');
+      expect(interestSet, isA<InterestSetEntity>());
+      expect(interestSet.data.type, InterestSetType.languages);
+      expect(interestSet.data.hashtags.length, 2);
+      expect(interestSet.data.hashtags[0], 'en');
     });
   });
 }

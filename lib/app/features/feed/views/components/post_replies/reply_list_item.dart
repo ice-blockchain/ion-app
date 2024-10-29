@@ -15,13 +15,13 @@ class ReplyListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(nostrCacheProvider.select(cacheSelector<PostData>(postId)));
+    final post = ref.watch(nostrCacheProvider.select(cacheSelector<PostEntity>(postId)));
 
     if (post == null) return const SizedBox.shrink();
 
     return GestureDetector(
       onTap: () => PostDetailsRoute(postId: postId).push<void>(context),
-      child: Post(header: PostHeader(pubkey: post.pubkey), postData: post),
+      child: Post(header: PostHeader(pubkey: post.pubkey), postEntity: post),
     );
   }
 }
