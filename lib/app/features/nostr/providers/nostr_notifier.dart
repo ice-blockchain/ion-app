@@ -2,12 +2,16 @@
 
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
+import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ion/app/features/nostr/providers/nostr_event_parser.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/relays_provider.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
-import 'package:nostr_dart/nostr_dart.dart';
+import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
+import 'package:nostr_dart/nostr_dart.dart' as nd;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nostr_notifier.g.dart';
@@ -17,7 +21,7 @@ class NostrNotifier extends _$NostrNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<void> send(
+  Future<void> sendEvents(
     List<EventMessage> events, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
@@ -27,30 +31,69 @@ class NostrNotifier extends _$NostrNotifier {
     await Future.wait(events.map(relay.sendEvent).toList());
   }
 
-  Future<void> sendOne(
+  Future<void> sendEvent(
     EventMessage event, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    return send([event], actionSource: actionSource);
+    return sendEvents([event], actionSource: actionSource);
   }
 
-  Stream<EventMessage> request(
+  Future<List<NostrEntity>> sendEntitiesData(
+    List<EventSerializable> entitiesData, {
+    ActionSource actionSource = const ActionSourceCurrentUser(),
+  }) async {
+    final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
+
+    if (keyStore == null) {
+      throw Exception('Current user keystore is null');
+    }
+
+    final events = entitiesData.map((data) => data.toEventMessage(keyStore)).toList();
+    await sendEvents(events);
+    return events.map(_parseAndCache).toList();
+  }
+
+  Future<NostrEntity> sendEntityData(
+    EventSerializable entityData, {
+    ActionSource actionSource = const ActionSourceCurrentUser(),
+  }) async {
+    final entities = await sendEntitiesData([entityData], actionSource: actionSource);
+    return entities.first;
+  }
+
+  Stream<EventMessage> requestEvents(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
     final relay = await _getRelay(actionSource);
-    await for (final event in requestEvents(requestMessage, relay)) {
-      yield event;
-    }
+    yield* nd.requestEvents(requestMessage, relay);
   }
 
-  Future<EventMessage?> requestOne(
+  Future<EventMessage?> requestEvent(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    final eventsStream = request(requestMessage, actionSource: actionSource);
+    final eventsStream = requestEvents(requestMessage, actionSource: actionSource);
     final events = await eventsStream.toList();
     return events.isNotEmpty ? events.first : null;
+  }
+
+  Stream<NostrEntity> requestEntities(
+    RequestMessage requestMessage, {
+    ActionSource actionSource = const ActionSourceCurrentUser(),
+  }) async* {
+    await for (final event in requestEvents(requestMessage, actionSource: actionSource)) {
+      yield _parseAndCache(event);
+    }
+  }
+
+  Future<T?> requestEntity<T>(
+    RequestMessage requestMessage, {
+    ActionSource actionSource = const ActionSourceCurrentUser(),
+  }) async {
+    final entitiesStream = requestEntities(requestMessage, actionSource: actionSource);
+    final entities = await entitiesStream.toList();
+    return entities.isNotEmpty ? entities.first as T : null;
   }
 
   Future<NostrRelay> _getRelay(ActionSource actionSource) async {
@@ -62,12 +105,12 @@ class NostrNotifier extends _$NostrNotifier {
             throw Exception('Current user keystore is not found');
           }
           final userRelays = await getUserRelays(keyStore.publicKey);
-          return await ref.read(relayProvider(userRelays.list.random.url).future);
+          return await ref.read(relayProvider(userRelays.data.list.random.url).future);
         }
       case ActionSourceUser():
         {
           final userRelays = await getUserRelays(actionSource.pubkey);
-          return await ref.read(relayProvider(userRelays.list.random.url).future);
+          return await ref.read(relayProvider(userRelays.data.list.random.url).future);
         }
       case ActionSourceIndexers():
         {
@@ -80,16 +123,16 @@ class NostrNotifier extends _$NostrNotifier {
     }
   }
 
-  Future<UserRelays> getUserRelays(String pubkey) async {
-    final cached = ref.read(nostrCacheProvider.select(cacheSelector<UserRelays>(pubkey)));
+  Future<UserRelaysEntity> getUserRelays(String pubkey) async {
+    final cached = ref.read(nostrCacheProvider.select(cacheSelector<UserRelaysEntity>(pubkey)));
     if (cached != null) {
       return cached;
     }
 
     final requestMessage = RequestMessage()
-      ..addFilter(RequestFilter(kinds: const [UserRelays.kind], authors: [pubkey], limit: 1));
+      ..addFilter(RequestFilter(kinds: const [UserRelaysEntity.kind], authors: [pubkey], limit: 1));
 
-    final event = await ref.read(nostrNotifierProvider.notifier).requestOne(
+    final event = await ref.read(nostrNotifierProvider.notifier).requestEvent(
           requestMessage,
           actionSource: const ActionSourceIndexers(),
         );
@@ -97,8 +140,12 @@ class NostrNotifier extends _$NostrNotifier {
     if (event != null) {
       //TODO:uncomment when our relays are used, using damus by then as the fastest one
       // final userRelays = UserRelays.fromEventMessage(event);
-      final userRelays =
-          UserRelays(pubkey: pubkey, list: [const UserRelay(url: 'wss://relay.nostr.band')]);
+      final userRelays = UserRelaysEntity(
+        id: '',
+        createdAt: DateTime.now(),
+        pubkey: pubkey,
+        data: const UserRelaysData(list: [UserRelay(url: 'wss://relay.nostr.band')]),
+      );
       ref.read(nostrCacheProvider.notifier).cache(userRelays);
       return userRelays;
     }
@@ -110,6 +157,15 @@ class NostrNotifier extends _$NostrNotifier {
     // return ...
 
     throw UserRelaysNotFoundException();
+  }
+
+  NostrEntity _parseAndCache(EventMessage event) {
+    final parser = ref.read(eventParserProvider);
+    final entity = parser.parse(event);
+    if (entity is CacheableEntity) {
+      ref.read(nostrCacheProvider.notifier).cache(entity as CacheableEntity);
+    }
+    return entity;
   }
 }
 

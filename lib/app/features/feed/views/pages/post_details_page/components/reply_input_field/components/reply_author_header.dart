@@ -8,11 +8,11 @@ import 'package:ion/app/features/feed/views/components/post_replies/replying_to.
 
 class ReplyAuthorHeader extends StatelessWidget {
   const ReplyAuthorHeader({
-    required this.postData,
+    required this.postEntity,
     super.key,
   });
 
-  final PostData postData;
+  final PostEntity postEntity;
 
   @override
   Widget build(BuildContext context) {

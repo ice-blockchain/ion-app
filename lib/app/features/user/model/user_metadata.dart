@@ -3,7 +3,9 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
+import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -11,9 +13,42 @@ part 'user_metadata.freezed.dart';
 part 'user_metadata.g.dart';
 
 @freezed
-class UserMetadata with _$UserMetadata, CacheableEvent {
-  const factory UserMetadata({
+class UserMetadataEntity with _$UserMetadataEntity implements CacheableEntity, NostrEntity {
+  const factory UserMetadataEntity({
+    required String id,
     required String pubkey,
+    required DateTime createdAt,
+    required UserMetadata data,
+  }) = _UserMetadataEntity;
+
+  const UserMetadataEntity._();
+
+  /// https://github.com/nostr-protocol/nips/blob/master/01.md#kinds
+  factory UserMetadataEntity.fromEventMessage(EventMessage eventMessage) {
+    if (eventMessage.kind != kind) {
+      throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
+    }
+
+    return UserMetadataEntity(
+      id: eventMessage.id,
+      pubkey: eventMessage.pubkey,
+      createdAt: eventMessage.createdAt,
+      data: UserMetadata.fromEventMessage(eventMessage),
+    );
+  }
+
+  @override
+  String get cacheKey => pubkey;
+
+  @override
+  Type get cacheType => UserMetadataEntity;
+
+  static const int kind = 0;
+}
+
+@freezed
+class UserMetadata with _$UserMetadata implements EventSerializable {
+  const factory UserMetadata({
     @Default('') String name,
     @Default('') String displayName,
     String? about,
@@ -26,12 +61,9 @@ class UserMetadata with _$UserMetadata, CacheableEvent {
     @Default(false) bool nft,
   }) = _UserMetadata;
 
-  /// https://github.com/nostr-protocol/nips/blob/master/01.md#kinds
-  factory UserMetadata.fromEventMessage(EventMessage eventMessage) {
-    if (eventMessage.kind != kind) {
-      throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
-    }
+  const UserMetadata._();
 
+  factory UserMetadata.fromEventMessage(EventMessage eventMessage) {
     final userDataContent = UserDataEventMessageContent.fromJson(
       json.decode(eventMessage.content) as Map<String, dynamic>,
     );
@@ -45,7 +77,6 @@ class UserMetadata with _$UserMetadata, CacheableEvent {
     });
 
     return UserMetadata(
-      pubkey: eventMessage.pubkey,
       name: userDataContent.name ?? '',
       displayName: userDataContent.displayName ?? '',
       about: userDataContent.about,
@@ -57,12 +88,11 @@ class UserMetadata with _$UserMetadata, CacheableEvent {
     );
   }
 
-  const UserMetadata._();
-
-  EventMessage toEventMessage(KeyStore keyStore) {
+  @override
+  EventMessage toEventMessage(EventSigner signer) {
     return EventMessage.fromData(
-      signer: keyStore,
-      kind: kind,
+      signer: signer,
+      kind: UserMetadataEntity.kind,
       content: jsonEncode(
         UserDataEventMessageContent(
           name: name,
@@ -77,14 +107,6 @@ class UserMetadata with _$UserMetadata, CacheableEvent {
       tags: media.values.map((attachment) => attachment.toJson()).toList(),
     );
   }
-
-  @override
-  String get cacheKey => pubkey;
-
-  @override
-  Type get cacheType => UserMetadata;
-
-  static const int kind = 0;
 }
 
 @JsonSerializable(createToJson: true)

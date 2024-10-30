@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -10,35 +11,62 @@ part 'user_delegation.freezed.dart';
 enum DelegationStatus { active, inactive, revoked }
 
 @freezed
-class UserDelegation with _$UserDelegation, CacheableEvent {
-  const factory UserDelegation({
+class UserDelegationEntity with _$UserDelegationEntity implements CacheableEntity, NostrEntity {
+  const factory UserDelegationEntity({
+    required String id,
     required String pubkey,
-    required List<UserDelegate> delegates,
-  }) = _UserDelegation;
+    required DateTime createdAt,
+    required UserDelegationData data,
+  }) = _UserDelegationEntity;
 
-  const UserDelegation._();
+  const UserDelegationEntity._();
 
   /// https://github.com/nostr-protocol/nips/pull/1482/files
-  factory UserDelegation.fromEventMessage(EventMessage eventMessage) {
+  factory UserDelegationEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
     }
 
+    return UserDelegationEntity(
+      id: eventMessage.id,
+      pubkey: eventMessage.pubkey,
+      createdAt: eventMessage.createdAt,
+      data: UserDelegationData.fromEventMessage(eventMessage),
+    );
+  }
+
+  @override
+  String get cacheKey => pubkey;
+
+  @override
+  Type get cacheType => UserDelegationEntity;
+
+  static const int kind = 10100;
+}
+
+@freezed
+class UserDelegationData with _$UserDelegationData {
+  const factory UserDelegationData({
+    required List<UserDelegate> delegates,
+  }) = _UserDelegationData;
+
+  factory UserDelegationData.fromEventMessage(EventMessage eventMessage) {
     final delegates =
         eventMessage.tags.where((tag) => tag[0] == 'p').map(UserDelegate.fromTag).toList();
 
-    return UserDelegation(
-      pubkey: eventMessage.pubkey,
+    return UserDelegationData(
       delegates: delegates,
     );
   }
+
+  const UserDelegationData._();
 
   bool validate(EventMessage message) {
     final currentDelegates = delegates.fold(<String, UserDelegate>{}, (currentDelegates, delegate) {
       /// `inactive` and `revoked` attestations invalidate all previous `active` attestations,
       /// and subsequent `active` attestations are considered invalid as well
-      if (currentDelegates[pubkey]?.status == DelegationStatus.inactive ||
-          currentDelegates[pubkey]?.status == DelegationStatus.revoked) {
+      if (currentDelegates[delegate.pubkey]?.status == DelegationStatus.inactive ||
+          currentDelegates[delegate.pubkey]?.status == DelegationStatus.revoked) {
         return currentDelegates;
       }
       currentDelegates[delegate.pubkey] = delegate;
@@ -61,14 +89,6 @@ class UserDelegation with _$UserDelegation, CacheableEvent {
   List<List<String>> get tags {
     return delegates.map((delegate) => delegate.toTag()).toList();
   }
-
-  @override
-  String get cacheKey => pubkey;
-
-  @override
-  Type get cacheType => UserDelegation;
-
-  static const int kind = 10100;
 }
 
 @freezed

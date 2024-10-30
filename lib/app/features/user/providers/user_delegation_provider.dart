@@ -15,29 +15,25 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_delegation_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<UserDelegation?> userDelegation(Ref ref, String pubkey) async {
+Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
   final userDelegation =
-      ref.watch(nostrCacheProvider.select(cacheSelector<UserDelegation>(pubkey)));
+      ref.watch(nostrCacheProvider.select(cacheSelector<UserDelegationEntity>(pubkey)));
   if (userDelegation != null) {
     return userDelegation;
   }
 
   final requestMessage = RequestMessage()
-    ..addFilter(RequestFilter(kinds: const [UserDelegation.kind], limit: 1, authors: [pubkey]));
+    ..addFilter(
+      RequestFilter(kinds: const [UserDelegationEntity.kind], limit: 1, authors: [pubkey]),
+    );
 
-  final event = await ref.read(nostrNotifierProvider.notifier).requestOne(requestMessage);
-
-  if (event != null) {
-    final userDelegation = UserDelegation.fromEventMessage(event);
-    ref.read(nostrCacheProvider.notifier).cache(userDelegation);
-    return userDelegation;
-  }
-
-  return null;
+  return ref
+      .read(nostrNotifierProvider.notifier)
+      .requestEntity<UserDelegationEntity>(requestMessage);
 }
 
 @Riverpod(keepAlive: true)
-Future<UserDelegation?> currentUserDelegation(Ref ref) async {
+Future<UserDelegationEntity?> currentUserDelegation(Ref ref) async {
   final mainWallet = await ref.watch(mainWalletProvider.future);
   if (mainWallet == null) {
     return null;
@@ -58,14 +54,9 @@ class UserDelegationManager extends _$UserDelegationManager {
   @override
   FutureOr<void> build() {}
 
-  Future<UserDelegation> buildCurrentUserDelegationWith({required String pubkey}) async {
-    final mainWallet = (await ref.read(mainWalletProvider.future))!;
-
-    final delegation = (await ref.read(currentUserDelegationProvider.future)) ??
-        UserDelegation(
-          pubkey: mainWallet.signingKey.publicKey,
-          delegates: [],
-        );
+  Future<UserDelegationData> buildCurrentUserDelegationDataWith({required String pubkey}) async {
+    final delegation = (await ref.read(currentUserDelegationProvider.future))?.data ??
+        const UserDelegationData(delegates: []);
 
     return delegation.copyWith(
       delegates: [
@@ -79,14 +70,14 @@ class UserDelegationManager extends _$UserDelegationManager {
     );
   }
 
-  Future<EventMessage> buildDelegationEventFrom(UserDelegation userDelegation) async {
+  Future<EventMessage> buildDelegationEventFrom(UserDelegationData userDelegationData) async {
     final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
     final mainWallet = (await ref.read(mainWalletProvider.future))!;
     final ionClient = await ref.read(ionApiClientProvider.future);
 
-    final tags = userDelegation.tags;
+    final tags = userDelegationData.tags;
     final createdAt = DateTime.now();
-    const kind = UserDelegation.kind;
+    const kind = UserDelegationEntity.kind;
     final masterPubkey = mainWallet.signingKey.publicKey;
 
     final eventId = EventMessage.calculateEventId(

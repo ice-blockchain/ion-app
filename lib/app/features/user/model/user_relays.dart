@@ -1,38 +1,35 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
+import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'user_relays.freezed.dart';
 
 @freezed
-class UserRelays with _$UserRelays, CacheableEvent {
-  const factory UserRelays({
+class UserRelaysEntity with _$UserRelaysEntity implements CacheableEntity, NostrEntity {
+  const factory UserRelaysEntity({
+    required String id,
     required String pubkey,
-    required List<UserRelay> list,
-  }) = _UserRelays;
+    required DateTime createdAt,
+    required UserRelaysData data,
+  }) = _UserRelaysEntity;
+
+  const UserRelaysEntity._();
 
   /// https://github.com/nostr-protocol/nips/blob/master/65.md
-  factory UserRelays.fromEventMessage(EventMessage eventMessage) {
+  factory UserRelaysEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
     }
 
-    return UserRelays(
+    return UserRelaysEntity(
+      id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      list: eventMessage.tags.where((tag) => tag[0] == 'r').map(UserRelay.fromTag).toList(),
-    );
-  }
-
-  const UserRelays._();
-
-  EventMessage toEventMessage(KeyStore keyStore) {
-    return EventMessage.fromData(
-      signer: keyStore,
-      kind: kind,
-      tags: list.map((relay) => relay.toTag()).toList(),
-      content: '',
+      createdAt: eventMessage.createdAt,
+      data: UserRelaysData.fromEventMessage(eventMessage),
     );
   }
 
@@ -40,9 +37,34 @@ class UserRelays with _$UserRelays, CacheableEvent {
   String get cacheKey => pubkey;
 
   @override
-  Type get cacheType => UserRelays;
+  Type get cacheType => UserRelaysEntity;
 
   static const int kind = 10002;
+}
+
+@freezed
+class UserRelaysData with _$UserRelaysData implements EventSerializable {
+  const factory UserRelaysData({
+    required List<UserRelay> list,
+  }) = _UserRelaysData;
+
+  const UserRelaysData._();
+
+  factory UserRelaysData.fromEventMessage(EventMessage eventMessage) {
+    return UserRelaysData(
+      list: eventMessage.tags.where((tag) => tag[0] == 'r').map(UserRelay.fromTag).toList(),
+    );
+  }
+
+  @override
+  EventMessage toEventMessage(EventSigner signer) {
+    return EventMessage.fromData(
+      signer: signer,
+      kind: UserRelaysEntity.kind,
+      tags: list.map((relay) => relay.toTag()).toList(),
+      content: '',
+    );
+  }
 }
 
 @freezed

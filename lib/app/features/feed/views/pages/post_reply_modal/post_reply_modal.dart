@@ -35,9 +35,9 @@ class PostReplyModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(nostrCacheProvider.select(cacheSelector<PostData>(postId)));
+    final postEntity = ref.watch(nostrCacheProvider.select(cacheSelector<PostEntity>(postId)));
 
-    if (postData == null) {
+    if (postEntity == null) {
       return const SizedBox.shrink();
     }
 
@@ -61,7 +61,7 @@ class PostReplyModal extends ConsumerWidget {
                       verifiedBadge: true,
                     ),
                     SizedBox(height: 8.0.s),
-                    _PostBody(postData: postData),
+                    _PostBody(postEntity: postEntity),
                     SizedBox(height: 10.0.s),
                     const ExpandedReplyInputField(),
                   ],
@@ -103,10 +103,10 @@ class PostReplyModal extends ConsumerWidget {
 
 class _PostBody extends StatelessWidget {
   const _PostBody({
-    required this.postData,
+    required this.postEntity,
   });
 
-  final PostData postData;
+  final PostEntity postEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +127,7 @@ class _PostBody extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              PostBody(postData: postData),
+              PostBody(postEntity: postEntity),
               SizedBox(height: 12.0.s),
               const ReplyingTo(name: 'abc'),
             ],

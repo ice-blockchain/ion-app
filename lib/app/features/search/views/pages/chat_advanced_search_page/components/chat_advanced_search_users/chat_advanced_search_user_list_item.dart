@@ -19,7 +19,7 @@ class ChatAdvancedSearchUserListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadataValue = ref.watch(userMetadataProvider(pubKey)).valueOrNull;
+    final userMetadataValue = ref.watch(userMetadataProvider(pubKey)).valueOrNull?.data;
 
     if (userMetadataValue == null) {
       return const SizedBox.shrink();

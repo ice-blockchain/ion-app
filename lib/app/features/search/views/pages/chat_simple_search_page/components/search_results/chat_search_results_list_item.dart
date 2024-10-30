@@ -41,13 +41,13 @@ class ChatSearchResultsListItem extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: ListItem.user(
-                      title: Text(userMetadata.displayName),
+                      title: Text(userMetadata.data.displayName),
                       subtitle: Text(
-                        prefixUsername(username: userMetadata.name, context: context),
+                        prefixUsername(username: userMetadata.data.name, context: context),
                       ),
-                      profilePicture: userMetadata.picture,
-                      verifiedBadge: userMetadata.verified,
-                      ntfAvatar: userMetadata.nft,
+                      profilePicture: userMetadata.data.picture,
+                      verifiedBadge: userMetadata.data.verified,
+                      ntfAvatar: userMetadata.data.nft,
                     ),
                   ),
                   Assets.svg.iconArrowRight.icon(

@@ -32,7 +32,7 @@ class PostDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postData = ref.watch(nostrCacheProvider.select(cacheSelector<PostData>(postId)));
+    final postEntity = ref.watch(nostrCacheProvider.select(cacheSelector<PostEntity>(postId)));
     final replyIds = ref.watch(postReplyIdsSelectorProvider(postId: postId));
 
     useOnInit(() {
@@ -42,7 +42,7 @@ class PostDetailsPage extends HookConsumerWidget {
     final showReplySentNotification = useState(false);
     _listenReplySentNotification(ref, showReplySentNotification);
 
-    if (postData == null) {
+    if (postEntity == null) {
       return const PostNotFound();
     }
 
@@ -78,9 +78,9 @@ class PostDetailsPage extends HookConsumerWidget {
                 ),
                 SliverToBoxAdapter(
                   child: Post(
-                    postData: postData,
+                    postEntity: postEntity,
                     footer: PostDetailsFooter(
-                      postData: postData,
+                      postEntity: postEntity,
                     ),
                   ),
                 ),
@@ -93,7 +93,7 @@ class PostDetailsPage extends HookConsumerWidget {
             ),
           ),
           const HorizontalSeparator(),
-          ReplyInputField(postData: postData),
+          ReplyInputField(postEntity: postEntity),
         ],
       ),
     );

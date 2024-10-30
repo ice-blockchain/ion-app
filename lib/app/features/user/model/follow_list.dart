@@ -1,38 +1,35 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
+import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'follow_list.freezed.dart';
 
 @freezed
-class FollowList with _$FollowList, CacheableEvent {
-  const factory FollowList({
+class FollowListEntity with _$FollowListEntity implements CacheableEntity, NostrEntity {
+  const factory FollowListEntity({
+    required String id,
     required String pubkey,
-    required List<Followee> list,
-  }) = _FollowList;
+    required DateTime createdAt,
+    required FollowListData data,
+  }) = _FollowListEntity;
 
-  /// https://github.com/nostr-protocol/nips/blob/master/02.md
-  factory FollowList.fromEventMessage(EventMessage eventMessage) {
+  const FollowListEntity._();
+
+  /// https://github.com/nostr-protocol/nips/blob/master/51.md#sets
+  factory FollowListEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
     }
 
-    return FollowList(
+    return FollowListEntity(
+      id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      list: eventMessage.tags.map(Followee.fromTag).toList(),
-    );
-  }
-
-  const FollowList._();
-
-  EventMessage toEventMessage(KeyStore keyStore) {
-    return EventMessage.fromData(
-      signer: keyStore,
-      kind: kind,
-      tags: list.map((followee) => followee.toTag()).toList(),
-      content: '',
+      createdAt: eventMessage.createdAt,
+      data: FollowListData.fromEventMessage(eventMessage),
     );
   }
 
@@ -40,9 +37,35 @@ class FollowList with _$FollowList, CacheableEvent {
   String get cacheKey => pubkey;
 
   @override
-  Type get cacheType => FollowList;
+  Type get cacheType => FollowListEntity;
 
   static const int kind = 3;
+}
+
+@freezed
+class FollowListData with _$FollowListData implements EventSerializable {
+  const factory FollowListData({
+    required List<Followee> list,
+  }) = _FollowListData;
+
+  /// https://github.com/nostr-protocol/nips/blob/master/02.md
+  factory FollowListData.fromEventMessage(EventMessage eventMessage) {
+    return FollowListData(
+      list: eventMessage.tags.map(Followee.fromTag).toList(),
+    );
+  }
+
+  const FollowListData._();
+
+  @override
+  EventMessage toEventMessage(EventSigner signer) {
+    return EventMessage.fromData(
+      signer: signer,
+      kind: FollowListEntity.kind,
+      tags: list.map((followee) => followee.toTag()).toList(),
+      content: '',
+    );
+  }
 }
 
 @freezed

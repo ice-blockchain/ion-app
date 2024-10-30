@@ -69,7 +69,7 @@ class FollowedByText extends HookConsumerWidget {
     firstUserPubkey = userFollowers.first;
 
     final firstUserName =
-        ref.watch(userMetadataProvider(firstUserPubkey)).valueOrNull?.displayName ?? '';
+        ref.watch(userMetadataProvider(firstUserPubkey)).valueOrNull?.data.displayName ?? '';
 
     final totalFollowers = userFollowers.length;
     numOthers = totalFollowers - 1;
@@ -103,7 +103,7 @@ class FollowedByText extends HookConsumerWidget {
 
       secondUserPubkey = userFollowers.elementAt(1);
       final secondUserName =
-          ref.watch(userMetadataProvider(secondUserPubkey)).valueOrNull?.displayName ?? '';
+          ref.watch(userMetadataProvider(secondUserPubkey)).valueOrNull?.data.displayName ?? '';
       textSpans.add(
         TextSpan(
           text: numOthers == 1 ? secondUserName : context.i18n.profile_followed_by_and_others,

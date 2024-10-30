@@ -31,12 +31,12 @@ class UserNameTile extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              userMetadataValue.displayName,
+              userMetadataValue.data.displayName,
               style: context.theme.appTextThemes.title.copyWith(
                 color: context.theme.appColors.primaryText,
               ),
             ),
-            if (userMetadataValue.verified) ...[
+            if (userMetadataValue.data.verified) ...[
               SizedBox(width: 6.0.s),
               Assets.svg.iconBadgeVerify.icon(size: verifiedIconSize),
             ],
@@ -44,7 +44,7 @@ class UserNameTile extends ConsumerWidget {
         ),
         SizedBox(height: 3.0.s),
         Text(
-          prefixUsername(username: userMetadataValue.name, context: context),
+          prefixUsername(username: userMetadataValue.data.name, context: context),
           style: context.theme.appTextThemes.caption.copyWith(
             color: context.theme.appColors.secondaryText,
           ),

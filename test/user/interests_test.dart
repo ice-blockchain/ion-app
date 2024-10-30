@@ -22,13 +22,13 @@ void main() {
         content: '',
       );
 
-      final interest = Interests.fromEventMessage(testEvent);
+      final interest = InterestsEntity.fromEventMessage(testEvent);
 
-      expect(interest, isA<Interests>());
-      expect(interest.hashtags.length, 1);
-      expect(interest.interestSetRefs.length, 2);
-      expect(interest.hashtags[0], 'tag');
-      expect(interest.interestSetRefs[0], '111');
+      expect(interest, isA<InterestsEntity>());
+      expect(interest.data.hashtags.length, 1);
+      expect(interest.data.interestSetRefs.length, 2);
+      expect(interest.data.hashtags[0], 'tag');
+      expect(interest.data.interestSetRefs[0], '111');
     });
   });
 }

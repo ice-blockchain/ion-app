@@ -12,30 +12,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_metadata_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<UserMetadata?> userMetadata(Ref ref, String pubkey) async {
-  final userMetadata = ref.watch(nostrCacheProvider.select(cacheSelector<UserMetadata>(pubkey)));
+Future<UserMetadataEntity?> userMetadata(Ref ref, String pubkey) async {
+  final userMetadata =
+      ref.watch(nostrCacheProvider.select(cacheSelector<UserMetadataEntity>(pubkey)));
   if (userMetadata != null) {
     return userMetadata;
   }
 
   final requestMessage = RequestMessage()
-    ..addFilter(RequestFilter(kinds: const [UserMetadata.kind], authors: [pubkey], limit: 1));
-  final event = await ref.read(nostrNotifierProvider.notifier).requestOne(
+    ..addFilter(RequestFilter(kinds: const [UserMetadataEntity.kind], authors: [pubkey], limit: 1));
+  return ref.read(nostrNotifierProvider.notifier).requestEntity<UserMetadataEntity>(
         requestMessage,
         actionSource: ActionSourceUser(pubkey),
       );
-
-  if (event != null) {
-    final userMetadata = UserMetadata.fromEventMessage(event);
-    ref.read(nostrCacheProvider.notifier).cache(userMetadata);
-    return userMetadata;
-  }
-
-  return null;
 }
 
 @Riverpod(keepAlive: true)
-Future<UserMetadata?> currentUserMetadata(Ref ref) async {
+Future<UserMetadataEntity?> currentUserMetadata(Ref ref) async {
   final currentUserNostrKey = await ref.watch(currentUserNostrKeyStoreProvider.future);
   if (currentUserNostrKey == null) {
     return null;

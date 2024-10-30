@@ -8,11 +8,11 @@ import 'package:ion/app/features/feed/views/components/post/components/post_foot
 
 class PostDetailsFooter extends StatelessWidget {
   const PostDetailsFooter({
-    required this.postData,
+    required this.postEntity,
     super.key,
   });
 
-  final PostData postData;
+  final PostEntity postEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class PostDetailsFooter extends StatelessWidget {
         ),
         SizedBox(height: 12.0.s),
         PostFooter(
-          postData: postData,
+          postEntity: postEntity,
           bottomPadding: 12.0.s,
           actionBuilder: (context, child, onPressed) => PostDetailsActionButton(
             onPressed: onPressed,

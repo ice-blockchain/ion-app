@@ -18,7 +18,9 @@ class FeedSearchHistoryUserListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadata = ref.watch(userMetadataProvider(pubKey));
     return userMetadata.maybeWhen(
-      data: (data) => data != null ? _UserListItem(userMetadata: data) : const SizedBox.shrink(),
+      data: (userMetadataEntity) => userMetadataEntity != null
+          ? _UserListItem(userMetadata: userMetadataEntity.data)
+          : const SizedBox.shrink(),
       orElse: _UserListItemLoading.new,
     );
   }
