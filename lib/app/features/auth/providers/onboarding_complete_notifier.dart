@@ -48,7 +48,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
         final avatarFileMetadataEvent = _buildAvatarFileMetadataEvent(keyStore: nostrKeyStore);
 
-        await ref.read(nostrNotifierProvider.notifier).send([
+        await ref.read(nostrNotifierProvider.notifier).sendEvents([
           //TODO:uncomment when switched to our relays
           // damus returns "rate-limited: you are noting too much"
           // followListEvent,
