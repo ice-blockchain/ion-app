@@ -61,6 +61,9 @@ class MentionsHashtagsHandler {
     final cursorIndex = controller.selection.baseOffset;
     final text = controller.document.toPlainText();
     final isBackspace = previousText != null && text.length < previousText!.length;
+
+    if (previousText == text) return;
+
     previousText = text;
 
     _debounce?.cancel();
