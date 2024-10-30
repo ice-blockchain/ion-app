@@ -4,11 +4,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/hashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/mentions_suggestions.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/mocked_pubkeys.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/mocked_data.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 const maxMentionsLength = 3;
 const maxHashtagsLength = 5;
@@ -30,17 +31,18 @@ class MentionsHashtagsHandler {
     required this.controller,
     required this.focusNode,
     required this.context,
+    required this.ref,
   });
 
   final QuillController controller;
   final FocusNode focusNode;
   final BuildContext context;
+  final WidgetRef ref;
   OverlayEntry? overlayEntry;
   String taggingCharacter = '';
   int lastTagIndex = -1;
   bool isLinkApplied = false;
   Timer? _debounce;
-  final ValueNotifier<List<String>> suggestions = ValueNotifier([]);
   String? previousText;
 
   void initialize() {
@@ -52,7 +54,7 @@ class MentionsHashtagsHandler {
     controller.removeListener(_editorListener);
     focusNode.removeListener(_focusListener);
     _debounce?.cancel();
-    _removeOverlay();
+    removeOverlay();
   }
 
   void _editorListener() {
@@ -62,7 +64,7 @@ class MentionsHashtagsHandler {
     previousText = text;
 
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 50), () {
+    _debounce = Timer(const Duration(milliseconds: 1), () {
       if (cursorIndex > 0) {
         final char = text.substring(cursorIndex - 1, cursorIndex);
 
@@ -79,13 +81,15 @@ class MentionsHashtagsHandler {
           } finally {
             controller.addListener(_editorListener);
           }
-          _showOverlay();
+          // showOverlay();
         } else if (char == ' ' || char == '\n') {
           _applyTagIfNeeded(cursorIndex);
-          _removeOverlay();
+          removeOverlay();
         } else if (lastTagIndex != -1) {
           final currentTagText = text.substring(lastTagIndex, cursorIndex);
-          _updateSuggestions(currentTagText);
+          ref
+              .read(suggestionsNotifierProvider.notifier)
+              .updateSuggestions(currentTagText, taggingCharacter);
 
           if (lastTagIndex >= 0 && cursorIndex > lastTagIndex) {
             controller.removeListener(_editorListener);
@@ -104,11 +108,10 @@ class MentionsHashtagsHandler {
       if (isBackspace && lastTagIndex != -1) {
         final remainingText = text.substring(lastTagIndex, cursorIndex);
         if (remainingText == '#' || remainingText == '@') {
-          _removeOverlay();
+          Logger.log('remainingText: $remainingText');
           lastTagIndex = -1;
           lastTagIndex = cursorIndex - 1;
-          _updateSuggestions(remainingText);
-          _showOverlay();
+          ref.read(suggestionsNotifierProvider.notifier).updateSuggestions('', taggingCharacter);
         }
       }
     });
@@ -143,7 +146,7 @@ class MentionsHashtagsHandler {
       controller.addListener(_editorListener);
     }
 
-    _removeOverlay();
+    removeOverlay();
   }
 
   void _applyTagIfNeeded(int cursorIndex) {
@@ -167,32 +170,16 @@ class MentionsHashtagsHandler {
   }
 
   void _focusListener() {
-    if (!focusNode.hasFocus) _removeOverlay();
+    if (!focusNode.hasFocus) removeOverlay();
   }
 
-  void _updateSuggestions(String query) {
-    List<String> newSuggestions;
-    if (taggingCharacter == '#') {
-      newSuggestions = _getHashTagSuggestions(query);
-    } else {
-      newSuggestions = [];
-    }
-
-    suggestions.value = newSuggestions;
-    _showOverlay();
-  }
-
-  List<String> _getHashTagSuggestions(String query) {
-    return hashtags.where((String tag) => tag.toLowerCase().contains(query.toLowerCase())).toList();
-  }
-
-  void _showOverlay() {
-    _removeOverlay();
+  void showOverlay() {
+    removeOverlay();
     overlayEntry = _createOverlayEntry();
     Overlay.of(context).insert(overlayEntry!);
   }
 
-  void _removeOverlay() {
+  void removeOverlay() {
     overlayEntry?.remove();
     overlayEntry = null;
   }
@@ -200,12 +187,10 @@ class MentionsHashtagsHandler {
   OverlayEntry _createOverlayEntry() {
     final screenHeight = MediaQuery.of(context).size.height;
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    final mockedPubKeys = getRandomPubKeys();
+    final suggestions = ref.read(suggestionsNotifierProvider);
     final itemsLength = taggingCharacter == '@'
-        ? (mockedPubKeys.length > maxMentionsLength ? maxMentionsLength : mockedPubKeys.length)
-        : (suggestions.value.length > maxHashtagsLength
-            ? maxHashtagsLength
-            : suggestions.value.length);
+        ? (suggestions.length > maxMentionsLength ? maxMentionsLength : suggestions.length)
+        : (suggestions.length > maxHashtagsLength ? maxHashtagsLength : suggestions.length);
     final itemSize = taggingCharacter == '@' ? mentionItemSize : hashtagItemSize;
     final containerPadding =
         taggingCharacter == '@' ? mentionContainerPadding : hashtagContainerPadding;
@@ -222,11 +207,11 @@ class MentionsHashtagsHandler {
           height: totalSuggestionHeight,
           child: taggingCharacter == '@'
               ? MentionsSuggestions(
-                  suggestions: mockedPubKeys,
+                  suggestions: suggestions,
                   onSuggestionSelected: _onSuggestionSelected,
                 )
               : HashtagsSuggestions(
-                  suggestions: suggestions.value,
+                  suggestions: suggestions,
                   onSuggestionSelected: _onSuggestionSelected,
                 ),
         ),

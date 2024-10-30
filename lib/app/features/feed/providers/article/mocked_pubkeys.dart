@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
-const List<String> mockedPubKeys = [
+const List<String> pubKeys = [
   'c558c7cc69bbda3c271782b736babc64acd2da258b14f356dbca966cb0b7b89e',
   '91d0411861e83ab3353739bc9da3b33f24dbb741a0f524bdf2ab51648c6866e0',
   'fdfefa96f9591f7f90cf4a6c31630826532a1f0d195a05c9bec604953736b8f9',
@@ -19,14 +17,3 @@ const List<String> mockedPubKeys = [
   '3fdf8b43d2e6eb59fc399f7cb1b81923d1dff0215d45a11e1c1f279827eaaad8',
   'cef69a32f8ab7e032f4c52e681876af87e7756a04bded1da05cd7eee4935f374',
 ];
-
-List<String> getRandomPubKeys() {
-  final random = Random();
-  final randomKeys = <String>{};
-
-  while (randomKeys.length < 6) {
-    randomKeys.add(mockedPubKeys[random.nextInt(mockedPubKeys.length)]);
-  }
-
-  return randomKeys.toList();
-}
