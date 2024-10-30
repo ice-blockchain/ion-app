@@ -30,10 +30,10 @@ class MentionItem extends ConsumerWidget {
         }
         return IntrinsicHeight(
           child: ListItem.user(
-            onTap: () => onPress('@${userMetadata.name}'),
-            title: Text(userMetadata.displayName),
-            subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
-            profilePicture: userMetadata.picture,
+            onTap: () => onPress('@${userMetadata.data.name}'),
+            title: Text(userMetadata.data.displayName),
+            subtitle: Text(prefixUsername(username: userMetadata.data.name, context: context)),
+            profilePicture: userMetadata.data.picture,
             iceBadge: Random().nextBool(),
             verifiedBadge: Random().nextBool(),
             ntfAvatar: Random().nextBool(),
