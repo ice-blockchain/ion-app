@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -46,7 +47,7 @@ class UserMetadataEntity with _$UserMetadataEntity implements CacheableEntity, N
 }
 
 @freezed
-class UserMetadata with _$UserMetadata {
+class UserMetadata with _$UserMetadata implements EventSerializable {
   const factory UserMetadata({
     @Default('') String name,
     @Default('') String displayName,
@@ -87,9 +88,10 @@ class UserMetadata with _$UserMetadata {
     );
   }
 
-  EventMessage toEventMessage(KeyStore keyStore) {
+  @override
+  EventMessage toEventMessage(EventSigner signer) {
     return EventMessage.fromData(
-      signer: keyStore,
+      signer: signer,
       kind: UserMetadataEntity.kind,
       content: jsonEncode(
         UserDataEventMessageContent(

@@ -29,7 +29,7 @@ Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
 
   return ref
       .read(nostrNotifierProvider.notifier)
-      .requestOneEntity<UserDelegationEntity>(requestMessage);
+      .requestEntity<UserDelegationEntity>(requestMessage);
 }
 
 @Riverpod(keepAlive: true)

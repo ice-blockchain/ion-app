@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/enum.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -46,7 +47,7 @@ class InterestSetEntity with _$InterestSetEntity implements CacheableEntity, Nos
 }
 
 @freezed
-class InterestSetData with _$InterestSetData {
+class InterestSetData with _$InterestSetData implements EventSerializable {
   const factory InterestSetData({
     required InterestSetType type,
     required List<String> hashtags,
@@ -67,9 +68,10 @@ class InterestSetData with _$InterestSetData {
     );
   }
 
-  EventMessage toEventMessage(KeyStore keyStore) {
+  @override
+  EventMessage toEventMessage(EventSigner signer) {
     return EventMessage.fromData(
-      signer: keyStore,
+      signer: signer,
       kind: InterestSetEntity.kind,
       tags: [
         ['d', type.toShortString()],

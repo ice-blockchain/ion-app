@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -42,7 +43,7 @@ class UserRelaysEntity with _$UserRelaysEntity implements CacheableEntity, Nostr
 }
 
 @freezed
-class UserRelaysData with _$UserRelaysData {
+class UserRelaysData with _$UserRelaysData implements EventSerializable {
   const factory UserRelaysData({
     required List<UserRelay> list,
   }) = _UserRelaysData;
@@ -55,9 +56,10 @@ class UserRelaysData with _$UserRelaysData {
     );
   }
 
-  EventMessage toEventMessage(KeyStore keyStore) {
+  @override
+  EventMessage toEventMessage(EventSigner signer) {
     return EventMessage.fromData(
-      signer: keyStore,
+      signer: signer,
       kind: UserRelaysEntity.kind,
       tags: list.map((relay) => relay.toTag()).toList(),
       content: '',

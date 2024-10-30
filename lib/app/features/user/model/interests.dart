@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -42,7 +43,7 @@ class InterestsEntity with _$InterestsEntity implements CacheableEntity, NostrEn
 }
 
 @freezed
-class InterestsData with _$InterestsData {
+class InterestsData with _$InterestsData implements EventSerializable {
   const factory InterestsData({
     required List<String> hashtags,
     required List<String> interestSetRefs,
@@ -58,9 +59,10 @@ class InterestsData with _$InterestsData {
     );
   }
 
-  EventMessage toEventMessage(KeyStore keyStore) {
+  @override
+  EventMessage toEventMessage(EventSigner signer) {
     return EventMessage.fromData(
-      signer: keyStore,
+      signer: signer,
       kind: InterestsEntity.kind,
       tags: [
         ...interestSetRefs.map((id) => ['a', id]),

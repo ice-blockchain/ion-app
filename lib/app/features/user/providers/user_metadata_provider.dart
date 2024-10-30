@@ -21,7 +21,7 @@ Future<UserMetadataEntity?> userMetadata(Ref ref, String pubkey) async {
 
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserMetadataEntity.kind], authors: [pubkey], limit: 1));
-  return ref.read(nostrNotifierProvider.notifier).requestOneEntity<UserMetadataEntity>(
+  return ref.read(nostrNotifierProvider.notifier).requestEntity<UserMetadataEntity>(
         requestMessage,
         actionSource: ActionSourceUser(pubkey),
       );

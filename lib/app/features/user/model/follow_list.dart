@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -42,7 +43,7 @@ class FollowListEntity with _$FollowListEntity implements CacheableEntity, Nostr
 }
 
 @freezed
-class FollowListData with _$FollowListData {
+class FollowListData with _$FollowListData implements EventSerializable {
   const factory FollowListData({
     required List<Followee> list,
   }) = _FollowListData;
@@ -56,9 +57,10 @@ class FollowListData with _$FollowListData {
 
   const FollowListData._();
 
-  EventMessage toEventMessage(KeyStore keyStore) {
+  @override
+  EventMessage toEventMessage(EventSigner signer) {
     return EventMessage.fromData(
-      signer: keyStore,
+      signer: signer,
       kind: FollowListEntity.kind,
       tags: list.map((followee) => followee.toTag()).toList(),
       content: '',
