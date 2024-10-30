@@ -50,7 +50,6 @@ class Header extends ConsumerWidget {
                   ),
                 ),
               ),
-              // if (isCurrentUserProfile) const Spacer() else const Spacer(),
               if (!isCurrentUserProfile)
                 ContextMenu(
                   pubkey: pubkey,

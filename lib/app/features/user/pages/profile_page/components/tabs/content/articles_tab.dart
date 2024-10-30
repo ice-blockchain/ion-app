@@ -27,12 +27,8 @@ class ArticlesTab extends StatelessWidget {
       );
     }
 
-    return SliverList.separated(
-      itemCount: articles.length,
-      separatorBuilder: (BuildContext context, int index) {
-        return const ContentSeparator();
-      },
-      itemBuilder: (BuildContext context, int index) {
+    return ListView.separated(
+      itemBuilder: (context, index) {
         return ColoredBox(
           color: context.theme.appColors.secondaryBackground,
           child: PostListItem(
@@ -40,6 +36,10 @@ class ArticlesTab extends StatelessWidget {
           ),
         );
       },
+      separatorBuilder: (context, index) {
+        return const ContentSeparator();
+      },
+      itemCount: articles.length,
     );
   }
 }
