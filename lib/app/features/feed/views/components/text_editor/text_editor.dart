@@ -57,42 +57,44 @@ class TextEditorState extends ConsumerState<TextEditor> {
     });
     return Column(
       children: [
-        QuillEditor.basic(
-          controller: widget.controller,
-          focusNode: _focusNode,
-          configurations: QuillEditorConfigurations(
-            embedBuilders: [
-              TextEditorSingleImageBuilder(),
-              TextEditorPollBuilder(
-                controller: widget.controller,
-                ref: ref,
-              ),
-              TextEditorSeparatorBuilder(),
-              TextEditorCodeBuilder(),
-            ],
-            autoFocus: true,
-            placeholder: widget.placeholder,
-            customStyles: _getCustomStyles(context),
-            floatingCursorDisabled: true,
-            customStyleBuilder: (attribute) {
-              if (attribute.key == 'mention') {
-                return TextStyle(
-                  color: context.theme.appColors.primaryAccent,
-                  decoration: TextDecoration.none,
-                );
-              } else if (attribute.key == 'hashtag') {
-                return TextStyle(
-                  color: context.theme.appColors.primaryAccent,
-                  decoration: TextDecoration.none,
-                );
-              } else if (attribute.key == Attribute.link.key) {
-                return TextStyle(
-                  decoration: TextDecoration.underline,
-                  color: context.theme.appColors.primaryAccent,
-                );
-              }
-              return const TextStyle();
-            },
+        Expanded(
+          child: QuillEditor.basic(
+            controller: widget.controller,
+            focusNode: _focusNode,
+            configurations: QuillEditorConfigurations(
+              embedBuilders: [
+                TextEditorSingleImageBuilder(),
+                TextEditorPollBuilder(
+                  controller: widget.controller,
+                  ref: ref,
+                ),
+                TextEditorSeparatorBuilder(),
+                TextEditorCodeBuilder(),
+              ],
+              autoFocus: true,
+              placeholder: widget.placeholder,
+              customStyles: _getCustomStyles(context),
+              floatingCursorDisabled: true,
+              customStyleBuilder: (attribute) {
+                if (attribute.key == 'mention') {
+                  return TextStyle(
+                    color: context.theme.appColors.primaryAccent,
+                    decoration: TextDecoration.none,
+                  );
+                } else if (attribute.key == 'hashtag') {
+                  return TextStyle(
+                    color: context.theme.appColors.primaryAccent,
+                    decoration: TextDecoration.none,
+                  );
+                } else if (attribute.key == Attribute.link.key) {
+                  return TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: context.theme.appColors.primaryAccent,
+                  );
+                }
+                return const TextStyle();
+              },
+            ),
           ),
         ),
       ],

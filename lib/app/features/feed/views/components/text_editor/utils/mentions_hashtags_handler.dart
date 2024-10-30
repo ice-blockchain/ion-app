@@ -9,7 +9,6 @@ import 'package:ion/app/features/feed/providers/article/suggestions_notifier_pro
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/hashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/mentions_suggestions.dart';
-import 'package:ion/app/services/logger/logger.dart';
 
 const maxMentionsLength = 3;
 const maxHashtagsLength = 5;
@@ -111,7 +110,6 @@ class MentionsHashtagsHandler {
       if (isBackspace && lastTagIndex != -1) {
         final remainingText = text.substring(lastTagIndex, cursorIndex);
         if (remainingText == '#' || remainingText == '@') {
-          Logger.log('remainingText: $remainingText');
           lastTagIndex = -1;
           lastTagIndex = cursorIndex - 1;
           ref.read(suggestionsNotifierProvider.notifier).updateSuggestions('', taggingCharacter);
