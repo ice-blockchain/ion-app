@@ -19,7 +19,7 @@ class FollowListEntity with _$FollowListEntity implements CacheableEntity, Nostr
 
   const FollowListEntity._();
 
-  /// https://github.com/nostr-protocol/nips/blob/master/51.md#sets
+  /// https://github.com/nostr-protocol/nips/blob/master/02.md
   factory FollowListEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
@@ -48,7 +48,6 @@ class FollowListData with _$FollowListData implements EventSerializable {
     required List<Followee> list,
   }) = _FollowListData;
 
-  /// https://github.com/nostr-protocol/nips/blob/master/02.md
   factory FollowListData.fromEventMessage(EventMessage eventMessage) {
     return FollowListData(
       list: eventMessage.tags.map(Followee.fromTag).toList(),

@@ -7,8 +7,7 @@ import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/user/providers/user_following_provider.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -23,7 +22,6 @@ class UnfollowUserModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
     final name = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.data.name ?? '';
 
     return Column(
@@ -45,7 +43,7 @@ class UnfollowUserModal extends ConsumerWidget {
             ),
             onPressed: () {
               rootNavigatorKey.currentState?.pop();
-              ref.read(userFollowingProvider(identityKeyName).notifier).toggleFollow(pubkey);
+              ref.read(followListManagerProvider.notifier).toggleFollow(pubkey);
             },
             label: Text(context.i18n.button_unfollow),
             mainAxisSize: MainAxisSize.max,

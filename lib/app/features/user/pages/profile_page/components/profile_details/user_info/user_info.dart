@@ -7,7 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/user_info/user_info_tile.dart';
-import 'package:ion/app/features/user/providers/user_following_provider.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -32,7 +32,7 @@ class UserInfo extends HookConsumerWidget {
     final date = useMemoized(() => random.nextBool() ? 'October 2024' : null, []);
     final address = useMemoized(() => random.nextBool() ? 'Vienna, Austria' : null, []);
     final website = userMetadataValue.data.website;
-    final isFollower = ref.watch(isCurrentUserFollowerSelectorProvider(pubkey));
+    final isFollower = ref.watch(isCurrentUserFollowingSelectorProvider(pubkey));
 
     final tiles = <Widget>[];
 
