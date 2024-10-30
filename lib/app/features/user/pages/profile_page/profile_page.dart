@@ -12,7 +12,10 @@ import 'package:ion/app/features/user/pages/components/header_action/header_acti
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/header.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_details.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/tab_content.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/articles_tab.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/posts_tab.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/replies_tab.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/videos_tab.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 
@@ -26,8 +29,6 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activeTab = useState<UserContentType>(UserContentType.posts);
-
     final scrollController = useScrollController();
     final opacityValue = useState<double>(0.0.s);
     final paddingTop = 60.0.s;
@@ -59,64 +60,62 @@ class ProfilePage extends HookConsumerWidget {
               ),
             ),
             ScreenTopOffset(
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: [
-                  PinnedHeaderSliver(
-                    child: SizedBox(height: paddingTop),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: backgroundColor,
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0.s)),
-                          ),
-                          child: Column(
-                            children: [
-                              ProfileAvatar(
-                                pubkey: pubkey,
-                              ),
-                              ProfileDetails(
-                                pubkey: pubkey,
-                              ),
-                              SizedBox(
-                                height: 16.0.s,
-                              ),
-                              const HorizontalSeparator(),
-                              SizedBox(
-                                height: 16.0.s,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  PinnedHeaderSliver(
-                    child: ColoredBox(
-                      color: backgroundColor,
-                      child: Column(
-                        children: [
-                          ProfileTabsHeader(
-                            activeTab: activeTab.value,
-                            onTabSwitch: (UserContentType newTab) {
-                              if (newTab != activeTab.value) {
-                                activeTab.value = newTab;
-                              }
-                            },
-                          ),
-                        ],
+              child: DefaultTabController(
+                length: UserContentType.values.length,
+                child: NestedScrollView(
+                  controller: scrollController,
+                  headerSliverBuilder: (context, innerBoxIsScrolled) {
+                    return [
+                      PinnedHeaderSliver(
+                        child: SizedBox(height: paddingTop),
                       ),
-                    ),
+                      SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: backgroundColor,
+                                borderRadius: BorderRadius.vertical(top: Radius.circular(30.0.s)),
+                              ),
+                              child: Column(
+                                children: [
+                                  ProfileAvatar(
+                                    pubkey: pubkey,
+                                  ),
+                                  ProfileDetails(
+                                    pubkey: pubkey,
+                                  ),
+                                  SizedBox(
+                                    height: 16.0.s,
+                                  ),
+                                  const HorizontalSeparator(),
+                                  SizedBox(
+                                    height: 16.0.s,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      PinnedHeaderSliver(
+                        child: ColoredBox(
+                          color: backgroundColor,
+                          child: const ProfileTabsHeader(),
+                        ),
+                      ),
+                      const TabHeader(),
+                    ];
+                  },
+                  body: TabBarView(
+                    children: [
+                      PostsTab(pubkey: pubkey),
+                      RepliesTab(pubkey: pubkey),
+                      VideosTab(pubkey: pubkey),
+                      ArticlesTab(pubkey: pubkey),
+                    ],
                   ),
-                  const TabHeader(),
-                  TabContent(
-                    tab: activeTab.value,
-                    pubkey: pubkey,
-                  ),
-                ],
+                ),
               ),
             ),
             Align(

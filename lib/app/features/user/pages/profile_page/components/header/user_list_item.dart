@@ -27,15 +27,15 @@ class UseListItem extends ConsumerWidget {
           return const SizedBox.shrink();
         }
         return ListItem.user(
-          title: Text(userMetadata.name),
+          title: Text(userMetadata.data.name),
           subtitle: Text(
             prefixUsername(
-              username: userMetadata.displayName,
+              username: userMetadata.data.displayName,
               context: context,
             ),
           ),
-          profilePicture: userMetadata.picture,
-          verifiedBadge: userMetadata.verified,
+          profilePicture: userMetadata.data.picture,
+          verifiedBadge: userMetadata.data.verified,
           constraints: BoxConstraints(maxHeight: minHeight, minHeight: minHeight),
         );
       },

@@ -17,18 +17,10 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverFillRemaining(
-      hasScrollBody: false,
-      child: ColoredBox(
-        color: context.theme.appColors.secondaryBackground,
-        child: ScreenSideOffset.small(
-          child: Expanded(
-            child: EmptyList(
-              asset: Assets.svg.walletIconProfileEmptyprofile,
-              title: context.i18n.profile_empty_state,
-            ),
-          ),
-        ),
+    return ScreenSideOffset.small(
+      child: EmptyList(
+        asset: Assets.svg.walletIconProfileEmptyprofile,
+        title: context.i18n.profile_empty_state,
       ),
     );
   }

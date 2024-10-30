@@ -15,7 +15,7 @@ class ProfileAvatar extends ConsumerWidget {
     super.key,
   });
 
-  double get pictureSize => 100.0.s;
+  static double get pictureSize => 100.0.s;
 
   double get pictureBorderWidth => 5.0.s;
 
@@ -52,11 +52,11 @@ class ProfileAvatar extends ConsumerWidget {
               borderRadius: BorderRadius.circular(25.0.s),
             ),
             child: isCurrentUserProfile
-                ? AvatarPicker(avatarUrl: userMetadataValue?.data?.picture)
+                ? AvatarPicker(avatarUrl: userMetadataValue?.data.picture)
                 : Avatar(
                     size: pictureSize - pictureBorderWidth * 2,
                     fit: BoxFit.cover,
-                    imageUrl: userMetadataValue?.data?.picture,
+                    imageUrl: userMetadataValue?.data.picture,
                     borderRadius: BorderRadius.circular(20.0.s),
                   ),
           ),
