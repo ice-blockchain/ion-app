@@ -80,7 +80,7 @@ String? currentPubkeySelector(Ref ref) {
 bool isCurrentUserSelector(Ref ref, String pubkey) {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
-  return currentPubkey != pubkey;
+  return currentPubkey == pubkey;
 }
 
 @Riverpod(keepAlive: true)
