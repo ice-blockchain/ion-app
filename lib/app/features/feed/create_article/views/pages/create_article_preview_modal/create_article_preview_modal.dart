@@ -1,21 +1,22 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/create_article_topics.dart';
-import 'package:ion/app/features/feed/views/components/visibility_settings_toolbar/visibility_settings_toolbar.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_arcticle_topics_item.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_arcticle_visibility_item.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CreateArticlePreviewModal extends StatelessWidget {
+class CreateArticlePreviewModal extends ConsumerWidget {
   const CreateArticlePreviewModal({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final paddingValue = 20.0.s;
 
     return SheetContent(
@@ -42,16 +43,12 @@ class CreateArticlePreviewModal extends StatelessWidget {
           //   ),
           // ),
 
-          ScreenSideOffset.small(
-            child: const CreateArticleTopics(),
-          ),
+          const SelectArticleTopicsItem(),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 20.0.s),
             child: const HorizontalSeparator(),
           ),
-          ScreenSideOffset.small(
-            child: const VisibilitySettingsToolbar(),
-          ),
+          const SelectArticleVisibilityItem(),
           const Spacer(),
           Align(
             alignment: Alignment.bottomCenter,

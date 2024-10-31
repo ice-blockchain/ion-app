@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -23,7 +22,7 @@ class VisibilitySettingsListItem extends ConsumerWidget {
     final isSelected = selectedOption == option;
 
     return ListItem(
-      onTap: () => context.pop(true),
+      onTap: () => ref.read(selectedVisibilityOptionsProvider.notifier).selectedOption = option,
       title: Text(option.getTitle(context)),
       backgroundColor: context.theme.appColors.secondaryBackground,
       leading: Container(
