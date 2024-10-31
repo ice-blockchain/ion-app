@@ -13,7 +13,17 @@ class ToolbarHashtagButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ActionsToolbarButton(
       icon: Assets.svg.iconArticleHashtag,
-      onPressed: () {},
+      onPressed: () {
+        final cursorPosition = textEditorController.selection.baseOffset;
+        if (cursorPosition >= 0) {
+          textEditorController
+            ..replaceText(cursorPosition, 0, '#', null)
+            ..updateSelection(
+              TextSelection.collapsed(offset: cursorPosition + 1),
+              ChangeSource.local,
+            );
+        }
+      },
     );
   }
 }

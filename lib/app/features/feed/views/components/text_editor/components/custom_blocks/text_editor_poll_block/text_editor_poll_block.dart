@@ -11,7 +11,7 @@ import 'package:ion/app/features/feed/views/components/text_editor/components/cu
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_close_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_length_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/poll_title.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/wipe_styles/remove_block.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/remove_block.dart';
 import 'package:ion/app/features/feed/views/pages/poll_length_time_modal/poll_length_time_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 

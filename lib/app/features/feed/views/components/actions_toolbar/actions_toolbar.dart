@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
+const toolbarHeight = 40.0;
+
 class ActionsToolbar extends StatelessWidget {
   const ActionsToolbar({
     required this.actions,
@@ -15,8 +17,9 @@ class ActionsToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40.0.s,
+    return Container(
+      color: context.theme.appColors.onPrimaryAccent,
+      height: toolbarHeight,
       child: Row(
         children: [
           Expanded(
