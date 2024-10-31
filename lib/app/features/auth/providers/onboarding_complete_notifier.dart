@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -79,9 +80,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       return userIdentity.ionConnectRelays;
     }
     final followees = ref.read(onboardingDataProvider).followees;
-    if (followees == null || followees.isEmpty) {
-      throw Exception('Failed to assign user relays, follow list is null or empty');
-    }
+    if (followees == null) throw FollowListNotFoundException();
+    if (followees.isEmpty) throw FollowListIsEmptyException();
 
     final userRelays =
         await ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);

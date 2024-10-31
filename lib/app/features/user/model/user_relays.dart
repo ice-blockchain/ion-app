@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -22,7 +23,7 @@ class UserRelaysEntity with _$UserRelaysEntity implements CacheableEntity, Nostr
   /// https://github.com/nostr-protocol/nips/blob/master/65.md
   factory UserRelaysEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
+      throw IncorrectEventKindException(actual: eventMessage.kind, excepted: kind);
     }
 
     return UserRelaysEntity(
@@ -79,7 +80,7 @@ class UserRelay with _$UserRelay {
 
   factory UserRelay.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
-      throw Exception('Incorrect tag $tag, expected $tagName');
+      throw IncorrectEventTagException(actual: tag[0], excepted: tagName);
     }
     return UserRelay(
       url: tag[1],

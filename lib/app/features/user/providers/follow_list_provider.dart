@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
@@ -57,7 +58,7 @@ class FollowListManager extends _$FollowListManager {
     state = await AsyncValue.guard(() async {
       final followList = await ref.read(currentUserFollowListProvider.future);
       if (followList == null) {
-        throw Exception('Current user follow list is null');
+        throw FollowListNotFoundException();
       }
       final followees = List<Followee>.from(followList.data.list);
       final followee = followees.firstWhereOrNull((followee) => followee.pubkey == pubkey);

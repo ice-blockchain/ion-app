@@ -9,12 +9,12 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_item.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/hooks/use_follow_list_data.dart';
+import 'package:ion/app/features/user/providers/follow_pubkeys.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class FollowListView extends HookConsumerWidget {
+class FollowListView extends ConsumerWidget {
   const FollowListView({
     required this.followType,
     required this.pubkey,
@@ -26,7 +26,7 @@ class FollowListView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final (:count, :pubkeys) = useFollowListData(ref, followType: followType, pubkey: pubkey);
+    final pubkeys = ref.watch(followPubkeysProvider(followType: followType, pubkey: pubkey));
 
     return SheetContent(
       body: CustomScrollView(
@@ -39,7 +39,7 @@ class FollowListView extends HookConsumerWidget {
                   onPressed: () => context.pop(),
                 ),
               ],
-              title: Text(followType.getTitleWithCounter(context, count)),
+              title: Text(followType.getTitleWithCounter(context, pubkeys?.length ?? 0)),
             ),
             automaticallyImplyLeading: false,
             toolbarHeight: NavigationAppBar.modalHeaderHeight,

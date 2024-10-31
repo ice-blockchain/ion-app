@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
@@ -45,7 +46,7 @@ class NostrNotifier extends _$NostrNotifier {
     final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
 
     if (keyStore == null) {
-      throw Exception('Current user keystore is null');
+      throw KeystoreNotFoundException();
     }
 
     final events = entitiesData.map((data) => data.toEventMessage(keyStore)).toList();
@@ -102,7 +103,7 @@ class NostrNotifier extends _$NostrNotifier {
         {
           final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
           if (keyStore == null) {
-            throw Exception('Current user keystore is not found');
+            throw KeystoreNotFoundException();
           }
           final userRelays = await getUserRelays(keyStore.publicKey);
           return await ref.read(relayProvider(userRelays.data.list.random.url).future);
@@ -167,10 +168,4 @@ class NostrNotifier extends _$NostrNotifier {
     }
     return entity;
   }
-}
-
-class UserRelaysNotFoundException implements Exception {
-  UserRelaysNotFoundException([this.message = 'User relays are not found']);
-
-  final String message;
 }

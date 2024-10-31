@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -22,7 +23,7 @@ class FollowListEntity with _$FollowListEntity implements CacheableEntity, Nostr
   /// https://github.com/nostr-protocol/nips/blob/master/02.md
   factory FollowListEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
+      throw IncorrectEventKindException(actual: eventMessage.kind, excepted: kind);
     }
 
     return FollowListEntity(
@@ -79,7 +80,7 @@ class Followee with _$Followee {
 
   factory Followee.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
-      throw Exception('Incorrect tag $tag, expected $tagName');
+      throw IncorrectEventTagException(actual: tag[0], excepted: tagName);
     }
     return Followee(pubkey: tag[1], relayUrl: tag[2], petname: tag[3]);
   }

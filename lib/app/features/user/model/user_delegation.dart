@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -24,7 +25,7 @@ class UserDelegationEntity with _$UserDelegationEntity implements CacheableEntit
   /// https://github.com/nostr-protocol/nips/pull/1482/files
   factory UserDelegationEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
+      throw IncorrectEventKindException(actual: eventMessage.kind, excepted: kind);
     }
 
     return UserDelegationEntity(
