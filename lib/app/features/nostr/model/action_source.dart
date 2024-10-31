@@ -13,6 +13,11 @@ class ActionSourceUser extends ActionSource {
   final String pubkey;
 }
 
+class ActionSourceRelayUrl extends ActionSource {
+  ActionSourceRelayUrl(this.url);
+  final String url;
+}
+
 class ActionSourceIndexers extends ActionSource {
   const ActionSourceIndexers();
 }

@@ -11,7 +11,7 @@ import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/relays_provider.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
-import 'package:ion/app/features/user/providers/user_relays_provider.dart';
+import 'package:ion/app/features/user/providers/user_relays_manager.dart';
 import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
 import 'package:nostr_dart/nostr_dart.dart' as nd;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -122,15 +122,19 @@ class NostrNotifier extends _$NostrNotifier {
           }
           return await ref.read(relayProvider(indexers.random).future);
         }
+      case ActionSourceRelayUrl():
+        {
+          return await ref.read(relayProvider(actionSource.url).future);
+        }
     }
   }
 
   Future<UserRelaysEntity> _getUserRelays(String pubkey) async {
-    final userRelays = await ref.read(userRelaysProvider(pubkey).future);
-    if (userRelays == null) {
+    final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
+    if (userRelays.isEmpty) {
       throw UserRelaysNotFoundException();
     }
-    return userRelays;
+    return userRelays.first;
   }
 
   NostrEntity _parseAndCache(EventMessage event) {

@@ -34,6 +34,8 @@ class UserRelaysEntity with _$UserRelaysEntity implements CacheableEntity, Nostr
     );
   }
 
+  List<String> get urls => data.list.map((relay) => relay.url).toList();
+
   @override
   String get cacheKey => pubkey;
 

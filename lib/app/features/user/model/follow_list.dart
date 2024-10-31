@@ -34,6 +34,8 @@ class FollowListEntity with _$FollowListEntity implements CacheableEntity, Nostr
     );
   }
 
+  List<String> get pubkeys => data.list.map((followee) => followee.pubkey).toList();
+
   @override
   String get cacheKey => pubkey;
 

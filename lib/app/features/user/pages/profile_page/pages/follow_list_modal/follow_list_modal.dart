@@ -9,7 +9,8 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_item.dart';
-import 'package:ion/app/features/user/providers/follow_pubkeys.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.dart';
+import 'package:ion/app/features/user/providers/user_followers_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -26,7 +27,10 @@ class FollowListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pubkeys = ref.watch(followPubkeysProvider(followType: followType, pubkey: pubkey));
+    final pubkeys = switch (followType) {
+      FollowType.followers => ref.watch(userFollowersProvider(pubkey)).valueOrNull,
+      FollowType.following => ref.watch(followListProvider(pubkey)).valueOrNull?.pubkeys,
+    };
 
     return SheetContent(
       body: CustomScrollView(
