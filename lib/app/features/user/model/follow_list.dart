@@ -23,7 +23,7 @@ class FollowListEntity with _$FollowListEntity implements CacheableEntity, Nostr
   /// https://github.com/nostr-protocol/nips/blob/master/02.md
   factory FollowListEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(actual: eventMessage.kind, excepted: kind);
+      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
     }
 
     return FollowListEntity(
@@ -82,7 +82,7 @@ class Followee with _$Followee {
 
   factory Followee.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
-      throw IncorrectEventTagException(actual: tag[0], excepted: tagName);
+      throw IncorrectEventTagException(actual: tag[0], expected: tagName);
     }
     return Followee(pubkey: tag[1], relayUrl: tag[2], petname: tag[3]);
   }

@@ -19,7 +19,7 @@ class MediaAttachment {
   /// https://github.com/nostr-protocol/nips/blob/master/92.md#example
   factory MediaAttachment.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
-      throw IncorrectEventTagException(actual: tag[0], excepted: tagName);
+      throw IncorrectEventTagException(actual: tag[0], expected: tagName);
     }
 
     String? url;

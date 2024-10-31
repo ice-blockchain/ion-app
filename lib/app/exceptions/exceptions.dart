@@ -33,15 +33,15 @@ class UserIndexersNotFoundException extends IonException {
 class IncorrectEventKindException extends IonException {
   IncorrectEventKindException({
     required int actual,
-    required int excepted,
-  }) : super(10006, 'Incorrect event with kind $actual, expected $excepted');
+    required int expected,
+  }) : super(10006, 'Incorrect event with kind $actual, expected $expected');
 }
 
 class IncorrectEventTagException extends IonException {
   IncorrectEventTagException({
     required String actual,
-    required String excepted,
-  }) : super(10007, 'Incorrect event tag $actual, expected $excepted');
+    required String expected,
+  }) : super(10007, 'Incorrect event tag $actual, expected $expected');
 }
 
 class MainWalletNotFoundException extends IonException {

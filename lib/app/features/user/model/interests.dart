@@ -23,7 +23,7 @@ class InterestsEntity with _$InterestsEntity implements CacheableEntity, NostrEn
   /// https://github.com/nostr-protocol/nips/blob/master/51.md#standard-lists
   factory InterestsEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(actual: eventMessage.kind, excepted: kind);
+      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
     }
 
     return InterestsEntity(

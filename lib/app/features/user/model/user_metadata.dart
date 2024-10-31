@@ -27,7 +27,7 @@ class UserMetadataEntity with _$UserMetadataEntity implements CacheableEntity, N
   /// https://github.com/nostr-protocol/nips/blob/master/01.md#kinds
   factory UserMetadataEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(actual: eventMessage.kind, excepted: kind);
+      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
     }
 
     return UserMetadataEntity(

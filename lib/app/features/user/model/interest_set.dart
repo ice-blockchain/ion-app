@@ -27,7 +27,7 @@ class InterestSetEntity with _$InterestSetEntity implements CacheableEntity, Nos
   /// https://github.com/nostr-protocol/nips/blob/master/51.md#sets
   factory InterestSetEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(actual: eventMessage.kind, excepted: kind);
+      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
     }
 
     return InterestSetEntity(

@@ -29,7 +29,7 @@ class PostEntity with _$PostEntity implements CacheableEntity, NostrEntity {
   /// https://github.com/nostr-protocol/nips/blob/master/51.md#sets
   factory PostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(actual: eventMessage.kind, excepted: kind);
+      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
     }
 
     return PostEntity(
