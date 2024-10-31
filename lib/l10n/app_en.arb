@@ -38,6 +38,7 @@
   "button_mute": "Mute",
   "button_block": "Block",
   "button_report": "Report",
+  "button_publish": "Publish",
   "dropdown_select_category": "Select category",
   "dropdown_category_hate": "Hate",
   "dropdown_category_violence": "Violent speech",
@@ -484,5 +485,6 @@
   "topic_people": "People",
   "topic_world": "World",
   "topics_add": "Add",
-  "topics_title": "Topics"
+  "topics_title": "Topics",
+  "article_preview_title": "Article preview"
 }
