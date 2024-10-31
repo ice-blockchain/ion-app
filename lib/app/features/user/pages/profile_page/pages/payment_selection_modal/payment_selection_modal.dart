@@ -54,7 +54,7 @@ class PaymentSelectionModal extends StatelessWidget {
                         paymentType: option,
                         pubkey: pubkey,
                         selectCoinModalType: SelectCoinModalType.select,
-                      ).go(context);
+                      ).replace(context);
                     },
                     trailing: Assets.svg.iconArrowRight.icon(
                       color: context.theme.appColors.primaryText,

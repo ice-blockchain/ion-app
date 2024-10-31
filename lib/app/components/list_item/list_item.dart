@@ -110,6 +110,7 @@ class ListItem extends StatelessWidget {
         constraints: constraints,
         padding: contentPadding,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               children: [

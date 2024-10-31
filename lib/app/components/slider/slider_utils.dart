@@ -36,40 +36,15 @@ class SliderUtils {
   /// Computes the offset for the slider thumb based on the current value.
   ///
   /// [value] is the current value of the slider.
-  /// [minValue] is the minimum value of the slider.
-  /// [maxValue] is the maximum value of the slider.
   /// [sliderWidth] is the total width of the slider.
   /// [thumbSize] is the size of the slider thumb.
-  /// [leftOffset] is the additional offset for the left edge to account for
-  /// the empty pixels around the border of the thumb image.
-  /// [rightOffset] is the additional offset for the right edge to account for
-  /// the empty pixels around the border of the thumb image.
   static double computeSliderOffset({
     required double value,
-    required double minValue,
-    required double maxValue,
     required double sliderWidth,
     required double thumbSize,
-    required double leftOffset,
-    required double rightOffset,
   }) {
-    final offset = ((value - minValue) / (maxValue - minValue) * sliderWidth) - (thumbSize / 2);
-    return offset.clamp(leftOffset, sliderWidth - thumbSize - rightOffset);
-  }
-
-  /// Calculates the width of the active track based on the current value.
-  ///
-  /// [value] is the current value of the slider.
-  /// [minValue] is the minimum value of the slider.
-  /// [maxValue] is the maximum value of the slider.
-  /// [sliderWidth] is the total width of the slider.
-  static double calculateActiveTrackWidth({
-    required double value,
-    required double minValue,
-    required double maxValue,
-    required double sliderWidth,
-  }) {
-    return sliderWidth * ((value - minValue) / (maxValue - minValue));
+    final left = value - (thumbSize / 2);
+    return left.clamp(0.0, sliderWidth - thumbSize);
   }
 
   /// Calculates the new slider value based on a horizontal drag.

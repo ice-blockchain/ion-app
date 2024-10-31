@@ -28,12 +28,14 @@ class ProfileFollowersCell extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () async {
-        final newPubkey = await FollowListRoute(
-          pubkey: pubkey,
-          followType: followType,
-        ).push<String>(context);
-        if (newPubkey != null && context.mounted) {
-          unawaited(FeedProfileRoute(pubkey: newPubkey).push<void>(context));
+        if (usersNumber > 0) {
+          final newPubkey = await FollowListRoute(
+            pubkey: pubkey,
+            followType: followType,
+          ).push<String>(context);
+          if (newPubkey != null && context.mounted) {
+            unawaited(ProfileRoute(pubkey: newPubkey).push<void>(context));
+          }
         }
       },
       child: Center(

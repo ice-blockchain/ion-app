@@ -7,7 +7,7 @@ class FeedRoutes {
     TypedGoRoute<PostDetailsRoute>(path: 'post/:postId'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
-    TypedGoRoute<FeedProfileRoute>(path: 'profile/:pubkey', routes: ProfileRoutes.routes),
+    TypedGoRoute<ProfileRoute>(path: 'profile/:pubkey', routes: ProfileRoutes.routes),
     TypedGoRoute<PullRightMenuRoute>(path: 'pull-right-menu'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
@@ -105,15 +105,6 @@ class FeedAdvancedSearchRoute extends BaseRouteData {
         );
 
   final String query;
-}
-
-class FeedProfileRoute extends BaseRouteData {
-  FeedProfileRoute({required this.pubkey})
-      : super(
-          child: ProfilePage(pubkey: pubkey),
-        );
-
-  final String pubkey;
 }
 
 class PullRightMenuRoute extends BaseRouteData {

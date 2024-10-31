@@ -17,10 +17,12 @@ import 'package:ion/generated/assets.gen.dart';
 class ContextMenu extends HookConsumerWidget {
   const ContextMenu({
     required this.pubkey,
+    this.opacity = 1,
     super.key,
   });
 
   final String pubkey;
+  final double opacity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -83,6 +85,7 @@ class ContextMenu extends HookConsumerWidget {
       child: HeaderAction(
         onPressed: () {},
         disabled: true,
+        opacity: opacity,
         assetName: Assets.svg.iconMorePopup,
       ),
     );
