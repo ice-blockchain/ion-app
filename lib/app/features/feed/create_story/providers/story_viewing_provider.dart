@@ -2,8 +2,10 @@
 
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story_viewer_state.dart';
+import 'package:ion/app/features/feed/create_story/extensions/story_extensions.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,52 +19,151 @@ class StoryViewingController extends _$StoryViewingController {
   Future<void> loadStories() async {
     state = const StoryViewerState.loading();
 
-    final stories = await _fetchStories();
+    try {
+      final users = await _fetchUserStories();
 
-    if (stories.isEmpty) {
-      state = const StoryViewerState.error(message: 'No stories available');
-      return;
+      if (users.isEmpty) {
+        state = const StoryViewerState.error(message: 'No stories available');
+        return;
+      }
+
+      state = StoryViewerState.ready(
+        users: users,
+        currentUserIndex: 0,
+        currentStoryIndex: 0,
+      );
+    } catch (e) {
+      state = StoryViewerState.error(message: e.toString());
     }
-
-    state = StoryViewerState.ready(
-      stories: stories,
-      currentIndex: 0,
-    );
   }
 
   void moveToNextStory() {
     state.whenOrNull(
-      ready: (stories, currentIndex) {
-        if (currentIndex < stories.length - 1) {
+      ready: (users, userIndex, storyIndex) {
+        final storiesCount = users[userIndex].stories.length;
+
+        if (storyIndex < storiesCount - 1) {
           state = StoryViewerState.ready(
-            stories: stories,
-            currentIndex: currentIndex + 1,
+            users: users,
+            currentUserIndex: userIndex,
+            currentStoryIndex: storyIndex + 1,
           );
-        }
+        } else if (userIndex < users.length - 1) {
+          state = StoryViewerState.ready(
+            users: users,
+            currentUserIndex: userIndex + 1,
+            currentStoryIndex: 0,
+          );
+        } else {}
       },
     );
   }
 
   void moveToPreviousStory() {
     state.whenOrNull(
-      ready: (stories, currentIndex) {
-        if (currentIndex > 0) {
+      ready: (users, userIndex, storyIndex) {
+        if (storyIndex > 0) {
           state = StoryViewerState.ready(
-            stories: stories,
-            currentIndex: currentIndex - 1,
+            users: users,
+            currentUserIndex: userIndex,
+            currentStoryIndex: storyIndex - 1,
+          );
+        } else if (userIndex > 0) {
+          final previousUserStoriesCount = users[userIndex - 1].stories.length;
+          state = StoryViewerState.ready(
+            users: users,
+            currentUserIndex: userIndex - 1,
+            currentStoryIndex: previousUserStoriesCount - 1,
+          );
+        } else {}
+      },
+    );
+  }
+
+  void moveToUser(int userIndex) {
+    state.whenOrNull(
+      ready: (users, _, __) {
+        if (userIndex >= 0 && userIndex < users.length) {
+          state = StoryViewerState.ready(
+            users: users,
+            currentUserIndex: userIndex,
+            currentStoryIndex: 0,
           );
         }
       },
     );
   }
 
-  void moveToStory(int index) {
+  void moveToStoryIndex(int storyIndex) {
     state.whenOrNull(
-      ready: (stories, currentIndex) {
-        if (index >= 0 && index < stories.length) {
+      ready: (users, userIndex, _) {
+        final userStories = users[userIndex];
+        if (storyIndex >= 0 && storyIndex < userStories.stories.length) {
           state = StoryViewerState.ready(
-            stories: stories,
-            currentIndex: index,
+            users: users,
+            currentUserIndex: userIndex,
+            currentStoryIndex: storyIndex,
+          );
+        }
+      },
+    );
+  }
+
+  void moveToNextUser() {
+    state.whenOrNull(
+      ready: (users, userIndex, _) {
+        if (userIndex < users.length - 1) {
+          state = StoryViewerState.ready(
+            users: users,
+            currentUserIndex: userIndex + 1,
+            currentStoryIndex: 0,
+          );
+        }
+      },
+    );
+  }
+
+  void moveToPreviousUser() {
+    state.whenOrNull(
+      ready: (users, userIndex, _) {
+        if (userIndex > 0) {
+          final previousUserStoriesCount = users[userIndex - 1].stories.length;
+          state = StoryViewerState.ready(
+            users: users,
+            currentUserIndex: userIndex - 1,
+            currentStoryIndex: previousUserStoriesCount - 1,
+          );
+        }
+      },
+    );
+  }
+
+  bool hasNextUser() {
+    return state.whenOrNull(
+          ready: (users, userIndex, _) => userIndex < users.length - 1,
+        ) ??
+        false;
+  }
+
+  bool hasPreviousUser() {
+    return state.whenOrNull(
+          ready: (_, userIndex, __) => userIndex > 0,
+        ) ??
+        false;
+  }
+
+  void moveToStory(int userIndex, int storyIndex) {
+    state.whenOrNull(
+      ready: (users, _, __) {
+        final isValidUser = userIndex >= 0 && userIndex < users.length;
+        final isValidStory =
+            isValidUser && storyIndex >= 0 && storyIndex < users[userIndex].stories.length;
+
+        if (isValidStory) {
+          state = StoryViewerState.ready(
+            users: users,
+            currentUserIndex: userIndex,
+            currentStoryIndex: storyIndex,
           );
         }
       },
@@ -70,86 +171,95 @@ class StoryViewingController extends _$StoryViewingController {
   }
 
   void toggleMute(String storyId) {
+    final currentStory = state.currentStory;
+    if (currentStory == null) return;
+
     state.whenOrNull(
-      ready: (stories, currentIndex) {
-        final updatedStories = stories.map((story) {
-          return story.map(
-            image: (imageStory) => imageStory,
-            video: (videoStory) {
-              if (videoStory.data.id == storyId) {
-                final isMuted = videoStory.muteState == MuteState.muted;
-                return videoStory.copyWith(
-                  muteState: isMuted ? MuteState.unmuted : MuteState.muted,
-                );
-              }
-              return videoStory;
-            },
-          );
+      ready: (users, userIndex, storyIndex) {
+        final updatedUsers = users.map((user) {
+          if (!user.hasStoryWithId(storyId)) return user;
+
+          final updatedStories = user.stories
+              .map(
+                (story) => story.map(
+                  image: (image) => image,
+                  video: (video) => video.data.id == storyId
+                      ? video.copyWith(
+                          muteState: video.muteState == MuteState.muted
+                              ? MuteState.unmuted
+                              : MuteState.muted,
+                        )
+                      : video,
+                ),
+              )
+              .toList();
+
+          return user.copyWith(stories: updatedStories);
         }).toList();
 
         state = StoryViewerState.ready(
-          stories: updatedStories,
-          currentIndex: currentIndex,
+          users: updatedUsers,
+          currentUserIndex: userIndex,
+          currentStoryIndex: storyIndex,
         );
       },
     );
   }
 
   void toggleLike(String storyId) {
+    final currentStory = state.currentStory;
+    if (currentStory == null) return;
+
     state.whenOrNull(
-      ready: (stories, currentIndex) {
-        final index = stories.indexWhere((story) => story.data.id == storyId);
-        if (index != -1) {
-          final story = stories[index];
-          final liked = story.data.likeState == LikeState.liked;
-          final updatedStory = story.copyWith(
+      ready: (users, userIndex, storyIndex) {
+        final updatedUsers = users.map((user) {
+          if (!user.hasStoryWithId(storyId)) return user;
+
+          final storyIndex = user.getStoryIndex(storyId);
+          if (storyIndex == -1) return user;
+
+          final story = user.stories[storyIndex];
+          final updatedStories = [...user.stories];
+          updatedStories[storyIndex] = story.copyWith(
             data: story.data.copyWith(
-              likeState: liked ? LikeState.notLiked : LikeState.liked,
+              likeState:
+                  story.data.likeState == LikeState.liked ? LikeState.notLiked : LikeState.liked,
             ),
           );
-          final updatedStories = List<Story>.from(stories);
-          updatedStories[index] = updatedStory;
-          state = StoryViewerState.ready(
-            stories: updatedStories,
-            currentIndex: currentIndex,
-          );
-        }
-      },
-    );
-  }
 
-  void updateProgress(String storyId, double progress) {
-    state.whenOrNull(
-      ready: (stories, currentIndex) {
-        final updatedStories = stories.map((story) {
-          if (story.data.id != storyId) return story;
-
-          final updatedData = story.data.copyWith(
-            progressState: ProgressState.inProgress(progress),
-          );
-
-          return story.copyWith(data: updatedData);
+          return user.copyWith(stories: updatedStories);
         }).toList();
 
         state = StoryViewerState.ready(
-          stories: updatedStories,
-          currentIndex: currentIndex,
+          users: updatedUsers,
+          currentUserIndex: userIndex,
+          currentStoryIndex: storyIndex,
         );
       },
     );
   }
 
-  Future<List<Story>> _fetchStories() async {
+  Future<List<UserStories>> _fetchUserStories() async {
     try {
       await Future<void>.delayed(const Duration(seconds: 1));
 
-      final imageStories = stories.whereType<ImageStory>().take(2).toList();
-      final videoStories = stories.whereType<VideoStory>().take(2).toList();
+      final groupedStories = groupBy<Story, String>(
+        stories,
+        (Story story) => story.data.authorId,
+      );
 
-      return [
-        ...imageStories,
-        ...videoStories,
-      ]..shuffle(Random());
+      return groupedStories.entries.map<UserStories>((MapEntry<String, List<Story>> entry) {
+        final userStories = entry.value;
+        final firstStory = userStories.first;
+
+        return UserStories(
+          userId: entry.key,
+          userName: firstStory.data.author,
+          userAvatar: firstStory.data.imageUrl,
+          stories: userStories,
+          isVerified: Random().nextBool(),
+        );
+      }).toList();
     } catch (e) {
       throw Exception('Failed to fetch stories: $e');
     }

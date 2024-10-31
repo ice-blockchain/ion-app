@@ -1,47 +1,40 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
-import 'package:ion/app/features/feed/create_story/hooks/use_image_story_progress.dart';
-import 'package:ion/app/features/feed/create_story/hooks/use_video_story_progress.dart';
-import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryProgressBar extends ConsumerWidget {
   const StoryProgressBar({
+    required this.totalStories,
+    required this.currentIndex,
     required this.onStoryCompleted,
     super.key,
   });
 
+  final int totalStories;
+  final int currentIndex;
   final VoidCallback onStoryCompleted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyState = ref.watch(storyViewingControllerProvider);
-
-    return storyState.maybeMap(
-      ready: (ready) => ScreenSideOffset.small(
-        child: Row(
-          children: ready.stories.asMap().entries.map((entry) {
-            final index = entry.key;
-            final story = entry.value;
-            return Expanded(
-              child: _ProgressSegmentController(
-                story: story,
-                isActive: index <= ready.currentIndex,
-                isCurrent: index == ready.currentIndex,
-                onCompleted: onStoryCompleted,
-                margin: index > 0 ? EdgeInsets.only(left: 4.0.s) : null,
-              ),
-            );
-          }).toList(),
-        ),
+    return ScreenSideOffset.small(
+      child: Row(
+        children: List.generate(totalStories, (index) {
+          return Expanded(
+            child: _ProgressSegmentController(
+              story: null,
+              isActive: index <= currentIndex,
+              isCurrent: index == currentIndex,
+              onCompleted: onStoryCompleted,
+              margin: index > 0 ? EdgeInsets.only(left: 4.0.s) : null,
+            ),
+          );
+        }),
       ),
-      orElse: () => const SizedBox.shrink(),
     );
   }
 }
@@ -55,7 +48,7 @@ class _ProgressSegmentController extends HookConsumerWidget {
     this.margin,
   });
 
-  final Story story;
+  final Story? story;
   final bool isActive;
   final bool isCurrent;
   final VoidCallback onCompleted;
@@ -63,38 +56,42 @@ class _ProgressSegmentController extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videoController = story is VideoStory
-        ? ref.watch(
-            videoControllerProvider(
-              story.data.contentUrl,
-              autoPlay: isCurrent,
-            ),
-          )
-        : null;
+    final progress = useState<double>(0);
 
-    final storyProgress = switch (story) {
-      ImageStory() => useImageStoryProgress(
-          isCurrent: isCurrent,
-          duration: const Duration(seconds: 5),
-        ),
-      VideoStory() => useVideoStoryProgress(
-          isCurrent: isCurrent,
-          controller: videoController,
-        ),
-    };
+    final animationController = useAnimationController(
+      duration: const Duration(seconds: 5),
+    );
 
-    useOnInit(
+    useEffect(
       () {
-        if (storyProgress.isCompleted) {
-          onCompleted();
+        if (isCurrent && isActive) {
+          void listener() {
+            progress.value = animationController.value;
+            if (animationController.isCompleted) {
+              onCompleted();
+            }
+          }
+
+          animationController
+            ..addListener(listener)
+            ..forward(from: 0);
+
+          return () {
+            animationController
+              ..removeListener(listener)
+              ..reset();
+          };
+        } else {
+          animationController.reset();
         }
+        return null;
       },
-      [storyProgress.isCompleted],
+      [isCurrent, isActive],
     );
 
     return _ProgressSegment(
       isActive: isActive,
-      storyProgress: isActive ? storyProgress.progress : 0.0,
+      storyProgress: progress.value,
       margin: margin,
     );
   }

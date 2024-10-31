@@ -2,15 +2,38 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/create_story/extensions/story_extensions.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/stories_swiper.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_progress_bar.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+
+PageController usePageControllerWithInitialPage(int initialPage) {
+  final initialPageRef = useRef<int>(initialPage);
+  final controller = useMemoized(() => PageController(initialPage: initialPage), []);
+  useEffect(() => controller.dispose, [controller]);
+
+  useEffect(
+    () {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (controller.hasClients && initialPageRef.value != initialPage) {
+          controller.jumpToPage(initialPage);
+          initialPageRef.value = initialPage;
+        }
+      });
+      return null;
+    },
+    [initialPage],
+  );
+
+  return controller;
+}
 
 class StoryViewerPage extends HookConsumerWidget {
   const StoryViewerPage({super.key});
@@ -36,30 +59,36 @@ class StoryViewerPage extends HookConsumerWidget {
             orElse: () => const CenteredLoadingIndicator(),
             ready: (ready) => Stack(
               children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: StoriesSwiper(
-                        stories: ready.stories,
-                        currentIndex: ready.currentIndex,
-                        onPageChanged: storyViewingController.moveToStory,
-                        onNext: () =>
-                            ref.read(storyViewingControllerProvider.notifier).moveToNextStory(),
-                        onPrevious: () =>
-                            ref.read(storyViewingControllerProvider.notifier).moveToPreviousStory(),
-                      ),
-                    ),
-                    SizedBox(height: 28.0.s),
-                    StoryProgressBar(
-                      onStoryCompleted: () => storyViewingState.whenOrNull(
-                        ready: (stories, currentIndex) => currentIndex >= stories.length - 1
-                            ? context.pop()
-                            : storyViewingController.moveToNextStory(),
-                      ),
-                    ),
-                    ScreenBottomOffset(margin: 16.0.s),
-                  ],
+                StoriesSwiper(
+                  users: ready.users,
+                  currentUserIndex: ready.currentUserIndex,
+                  currentStoryIndex: ready.currentStoryIndex,
+                  onUserPageChanged: storyViewingController.moveToUser,
+                  onStoryPageChanged: storyViewingController.moveToStoryIndex,
+                  onNextStory: storyViewingController.moveToNextStory,
+                  onPreviousStory: storyViewingController.moveToPreviousStory,
                 ),
+                Positioned(
+                  bottom: 28.0.s,
+                  left: 0,
+                  right: 0,
+                  child: StoryProgressBar(
+                    totalStories: ready.users[ready.currentUserIndex].stories.length,
+                    currentIndex: ready.currentStoryIndex,
+                    onStoryCompleted: () {
+                      final state = ref.read(storyViewingControllerProvider);
+                      final controller = ref.read(storyViewingControllerProvider.notifier);
+                      if (state.hasNextStory) {
+                        controller.moveToNextStory();
+                      } else if (state.hasNextUser) {
+                        controller.moveToNextUser();
+                      } else {
+                        context.pop();
+                      }
+                    },
+                  ),
+                ),
+                ScreenBottomOffset(margin: 16.0.s),
               ],
             ),
           ),

@@ -2,172 +2,134 @@
 
 import 'package:cube_transition_plus/cube_transition_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
-import 'package:ion/app/features/feed/create_story/providers/emoji_reaction_provider.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_input_field.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_reaction_notification.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_reaction_overlay.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_viewer_action_buttons.dart';
+import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_viewer_content.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_viewer_header.dart';
+import 'package:ion/app/features/feed/create_story/views/pages/story_viewer_page.dart';
 
 class StoriesSwiper extends HookConsumerWidget {
   const StoriesSwiper({
-    required this.stories,
-    required this.currentIndex,
-    required this.onPageChanged,
-    required this.onNext,
-    required this.onPrevious,
+    required this.users,
+    required this.currentUserIndex,
+    required this.currentStoryIndex,
+    required this.onUserPageChanged,
+    required this.onStoryPageChanged,
+    required this.onNextStory,
+    required this.onPreviousStory,
     super.key,
   });
 
-  final List<Story> stories;
-  final int currentIndex;
-  final ValueChanged<int> onPageChanged;
-  final VoidCallback onNext;
-  final VoidCallback onPrevious;
+  final List<UserStories> users;
+  final int currentUserIndex;
+  final int currentStoryIndex;
+  final ValueChanged<int> onUserPageChanged;
+  final ValueChanged<int> onStoryPageChanged;
+  final VoidCallback onNextStory;
+  final VoidCallback onPreviousStory;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pageController = usePageController(initialPage: currentIndex);
-    final previousIndex = useRef(currentIndex);
-    final tapPosition = useState<Offset?>(null);
-    final textController = useTextEditingController.fromValue(
-      TextEditingValue.empty,
-    );
+    final userPageController = usePageControllerWithInitialPage(currentUserIndex);
 
-    final emojiState = ref.watch(emojiReactionsControllerProvider);
+    return CubePageView.builder(
+      controller: userPageController,
+      itemCount: users.length,
+      onPageChanged: onUserPageChanged,
+      itemBuilder: (context, userIndex, userNotifier) {
+        final user = users[userIndex];
+        final isCurrentUser = userIndex == currentUserIndex;
 
-    useEffect(
-      () {
-        if (currentIndex != previousIndex.value) {
-          previousIndex.value = currentIndex;
-          if (pageController.hasClients) {
-            pageController.animateToPage(
-              currentIndex,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          }
-        }
-        return null;
+        return CubeWidget(
+          index: userIndex,
+          pageNotifier: userNotifier,
+          child: UserStoryPageView(
+            user: user,
+            isCurrentUser: isCurrentUser,
+            currentStoryIndex: isCurrentUser ? currentStoryIndex : 0,
+            onStoryPageChanged: (storyIndex) {
+              if (isCurrentUser) {
+                onStoryPageChanged(storyIndex);
+              }
+            },
+            onNextStory: onNextStory,
+            onPreviousStory: onPreviousStory,
+          ),
+        );
       },
-      [currentIndex],
     );
+  }
+}
 
-    return KeyboardVisibilityBuilder(
-      builder: (context, isKeyboardVisible) {
-        final bottomPadding =
-            isKeyboardVisible ? MediaQuery.of(context).viewInsets.bottom - 30.0.s : 16.0.s;
+class UserStoryPageView extends HookConsumerWidget {
+  const UserStoryPageView({
+    required this.user,
+    required this.isCurrentUser,
+    required this.currentStoryIndex,
+    required this.onStoryPageChanged,
+    required this.onNextStory,
+    required this.onPreviousStory,
+    super.key,
+  });
 
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            CubePageView.builder(
-              controller: pageController,
-              itemCount: stories.length,
-              onPageChanged: onPageChanged,
-              itemBuilder: (context, index, notifier) {
-                final story = stories[index];
-                return CubeWidget(
-                  index: index,
-                  pageNotifier: notifier,
-                  child: GestureDetector(
-                    onTapDown: (details) => tapPosition.value = details.globalPosition,
-                    onTap: () => _handleTap(
-                      context,
-                      tapPosition.value?.dx ?? 0,
-                    ),
-                    onLongPress: () {
-                      if (story is VideoStory) {
-                        ref.read(videoControllerProvider(story.data.contentUrl)).pause();
-                      }
-                    },
-                    onLongPressEnd: (_) {
-                      if (story is VideoStory) {
-                        ref.read(videoControllerProvider(story.data.contentUrl)).play();
-                      }
-                    },
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(16.0.s),
-                          child: StoryViewerContent(story: story),
-                        ),
-                        Positioned(
-                          top: 14.0.s,
-                          left: 16.0.s,
-                          right: 22.0.s,
-                          child: StoryViewerHeader(currentStory: story),
-                        ),
-                        Positioned(
-                          bottom: bottomPadding,
-                          left: 16.0.s,
-                          right: 70.0.s,
-                          child: StoryInputField(
-                            controller: textController,
-                          ),
-                        ),
-                        Positioned(
-                          bottom: bottomPadding,
-                          right: 16.0.s,
-                          child: StoryViewerActionButtons(story: story),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-            if (isKeyboardVisible)
-              StoryReactionOverlay(
-                textController: textController,
+  final UserStories user;
+  final bool isCurrentUser;
+  final int currentStoryIndex;
+  final ValueChanged<int> onStoryPageChanged;
+  final VoidCallback onNextStory;
+  final VoidCallback onPreviousStory;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final storyPageController = usePageControllerWithInitialPage(currentStoryIndex);
+
+    return PageView.builder(
+      controller: storyPageController,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: user.stories.length,
+      onPageChanged: onStoryPageChanged,
+      itemBuilder: (context, storyIndex) {
+        final story = user.stories[storyIndex];
+        return GestureDetector(
+          onTapDown: (details) => _handleTap(context, details.globalPosition.dx, ref),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16.0.s),
+                child: StoryViewerContent(story: story),
               ),
-            if (emojiState.showNotification && emojiState.selectedEmoji != null)
               Positioned(
-                top: 70.0.s,
-                left: 0.0.s,
-                right: 0.0.s,
-                child: Animate(
-                  key: ValueKey(emojiState.selectedEmoji),
-                  onComplete: (controller) {
-                    ref.read(emojiReactionsControllerProvider.notifier).hideNotification();
-                  },
-                  effects: [
-                    FadeEffect(duration: 300.ms),
-                    ThenEffect(delay: 2.seconds),
-                    FadeEffect(
-                      begin: 1,
-                      end: 0,
-                      duration: 300.ms,
-                    ),
-                  ],
-                  child: StoryReactionNotification(
-                    emoji: emojiState.selectedEmoji!,
-                  ),
-                ),
+                top: 14.0.s,
+                left: 16.0.s,
+                right: 22.0.s,
+                child: StoryViewerHeader(currentStory: story),
               ),
-          ],
+            ],
+          ),
         );
       },
     );
   }
 
-  void _handleTap(BuildContext context, double tapX) {
+  void _handleTap(BuildContext context, double tapX, WidgetRef ref) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isLeftSide = tapX < screenWidth / 2;
 
     if (isLeftSide) {
-      onPrevious();
+      if (currentStoryIndex > 0) {
+        onPreviousStory();
+      } else {
+        ref.read(storyViewingControllerProvider.notifier).moveToPreviousUser();
+      }
     } else {
-      onNext();
+      if (currentStoryIndex < user.stories.length - 1) {
+        onNextStory();
+      } else {
+        ref.read(storyViewingControllerProvider.notifier).moveToNextUser();
+      }
     }
   }
 }

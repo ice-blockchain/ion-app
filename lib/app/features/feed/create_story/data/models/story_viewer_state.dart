@@ -10,8 +10,9 @@ sealed class StoryViewerState with _$StoryViewerState {
   const factory StoryViewerState.initial() = _StoryViewerStateInitial;
   const factory StoryViewerState.loading() = _StoryViewerStateLoading;
   const factory StoryViewerState.ready({
-    required List<Story> stories,
-    required int currentIndex,
+    required List<UserStories> users,
+    required int currentUserIndex,
+    required int currentStoryIndex,
   }) = _StoryViewerStateReady;
   const factory StoryViewerState.error({
     required String message,

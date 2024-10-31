@@ -9,26 +9,33 @@ enum LikeState { liked, notLiked }
 enum MuteState { muted, unmuted }
 
 @freezed
-class ProgressState with _$ProgressState {
-  const factory ProgressState.inProgress(double value) = _InProgress;
-  const factory ProgressState.completed() = _Completed;
-  const factory ProgressState.notStarted() = _NotStarted;
+class UserStories with _$UserStories {
+  const factory UserStories({
+    required String userId,
+    required String userName,
+    required String userAvatar,
+    required List<Story> stories,
+    @Default(false) bool isVerified,
+  }) = _UserStories;
+
+  const UserStories._();
+  bool get hasStories => stories.isNotEmpty;
 }
 
 @freezed
 class StoryData with _$StoryData {
   const factory StoryData({
     required String id,
+    required String authorId,
+    required String author,
     required String imageUrl,
     required String contentUrl,
-    required String author,
-    DateTime? createdAt,
-    String? caption,
     @Default(false) bool nft,
     @Default(false) bool me,
+    DateTime? createdAt,
+    String? caption,
     @Default(0) int gradientIndex,
     @Default(LikeState.notLiked) LikeState likeState,
-    @Default(ProgressState.notStarted()) ProgressState progressState,
   }) = _StoryData;
 }
 
