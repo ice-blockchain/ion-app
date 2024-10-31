@@ -21,12 +21,19 @@ class CreateArticlePreviewModal extends StatelessWidget {
     return SheetContent(
       bottomPadding: 0,
       body: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.article_preview_title),
             onBackPress: () {},
           ),
+          const HorizontalSeparator(),
+          Container(
+            color: Colors.blue,
+            width: double.infinity,
+            height: 300,
+          ),
+          const HorizontalSeparator(),
+          SizedBox(height: 40.0.s),
           // Expanded(
           //   child: ScreenSideOffset.small(
           //     child: TextEditor(
@@ -34,41 +41,35 @@ class CreateArticlePreviewModal extends StatelessWidget {
           //     ),
           //   ),
           // ),
-          Column(
-            children: [
-              const HorizontalSeparator(),
-              ScreenSideOffset.small(
-                child: const CreateArticleTopics(),
-              ),
-              const HorizontalSeparator(),
-              ScreenSideOffset.small(
-                child: const VisibilitySettingsToolbar(),
-              ),
-            ],
-          ),
 
+          ScreenSideOffset.small(
+            child: const CreateArticleTopics(),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 20.0.s),
+            child: const HorizontalSeparator(),
+          ),
+          ScreenSideOffset.small(
+            child: const VisibilitySettingsToolbar(),
+          ),
+          const Spacer(),
           Align(
             alignment: Alignment.bottomCenter,
-            child: ColoredBox(
-              color: context.theme.appColors.secondaryBackground,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const HorizontalSeparator(),
-                  SizedBox(height: 16.0.s),
-                  ScreenSideOffset.large(
-                    child: Button(
-                      leadingIcon: Assets.svg.iconFeedArticles.icon(
-                        color: context.theme.appColors.onPrimaryAccent,
-                      ),
-                      onPressed: () {},
-                      label: Text(context.i18n.button_publish),
-                      mainAxisSize: MainAxisSize.max,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ScreenSideOffset.large(
+                  child: Button(
+                    leadingIcon: Assets.svg.iconFeedArticles.icon(
+                      color: context.theme.appColors.onPrimaryAccent,
                     ),
+                    onPressed: () {},
+                    label: Text(context.i18n.button_publish),
+                    mainAxisSize: MainAxisSize.max,
                   ),
-                  SizedBox(height: paddingValue + MediaQuery.paddingOf(context).bottom),
-                ],
-              ),
+                ),
+                SizedBox(height: paddingValue + MediaQuery.paddingOf(context).bottom),
+              ],
             ),
           ),
         ],

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/back_hardware_button_interceptor/back_hardware_button_interceptor.dart';
 import 'package:ion/app/components/button/button.dart';
@@ -12,6 +11,7 @@ import 'package:ion/app/features/feed/create_article/views/pages/create_article_
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -58,7 +58,9 @@ class CreateArticleModal extends HookConsumerWidget {
                   ),
                   backgroundColor: context.theme.appColors.secondaryBackground,
                   borderColor: context.theme.appColors.secondaryBackground,
-                  onPressed: context.pop,
+                  onPressed: () {
+                    ArticlePreviewRoute().push<void>(context);
+                  },
                 ),
               ],
             ),
