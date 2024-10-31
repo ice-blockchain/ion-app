@@ -17,7 +17,7 @@ Future<Map<String, List<String>>> feedDataSource(Ref ref, {required FeedFilter f
 
   switch (filter) {
     case FeedFilter.forYou:
-      // final userRelays = ref.watch(nostrCacheProvider.select(cacheSelector<UserRelaysEntity>(postId)))
+      // final userRelays = ref.watch(currentUserRelaysProvider);
       return {};
     case FeedFilter.following:
       return {};

@@ -5,12 +5,14 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/file_storage_metadata.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_auth.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/user/providers/user_relays_provider.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -53,10 +55,11 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
 
   // TODO: handle delegatedToUrl when migrating to common relays
   Future<String> _getFileStorageApiUrl({required KeyStore keyStore}) async {
-    //TODO: switch to userRelays.list.random.url when using our relays
-    // final userRelays =
-    //     await ref.read(nostrNotifierProvider.notifier).getUserRelays(keyStore.publicKey);
-    const relayUrl = /*userRelays.list.random.url*/ 'wss://nostr.build';
+    final userRelays = await ref.read(userRelaysProvider(keyStore.publicKey).future);
+    if (userRelays == null) {
+      throw UserRelaysNotFoundException();
+    }
+    final relayUrl = userRelays.data.list.random.url;
 
     try {
       final parsedRelayUrl = Uri.parse(relayUrl);

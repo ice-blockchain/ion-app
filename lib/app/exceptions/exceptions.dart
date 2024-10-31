@@ -26,20 +26,24 @@ class UserRelaysNotFoundException extends IonException {
   UserRelaysNotFoundException() : super(10004, 'User relays not found');
 }
 
+class UserIndexersNotFoundException extends IonException {
+  UserIndexersNotFoundException() : super(10005, 'User indexers not found');
+}
+
 class IncorrectEventKindException extends IonException {
   IncorrectEventKindException({
     required int actual,
     required int excepted,
-  }) : super(10005, 'Incorrect event with kind $actual, expected $excepted');
+  }) : super(10006, 'Incorrect event with kind $actual, expected $excepted');
 }
 
 class IncorrectEventTagException extends IonException {
   IncorrectEventTagException({
     required String actual,
     required String excepted,
-  }) : super(10006, 'Incorrect event tag $actual, expected $excepted');
+  }) : super(10007, 'Incorrect event tag $actual, expected $excepted');
 }
 
 class MainWalletNotFoundException extends IonException {
-  MainWalletNotFoundException() : super(10007, 'Main wallet not found');
+  MainWalletNotFoundException() : super(10008, 'Main wallet not found');
 }
