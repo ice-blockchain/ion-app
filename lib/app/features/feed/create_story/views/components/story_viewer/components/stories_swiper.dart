@@ -7,6 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_input_field.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_viewer_action_buttons.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_viewer_content.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_viewer_header.dart';
 import 'package:ion/app/features/feed/create_story/views/pages/story_viewer_page.dart';
@@ -125,6 +127,17 @@ class UserStoryPageView extends HookConsumerWidget {
                 left: 16.0.s,
                 right: 22.0.s,
                 child: StoryViewerHeader(currentStory: story),
+              ),
+              Positioned(
+                bottom: 100.0.s,
+                right: 16.0.s,
+                child: StoryViewerActionButtons(story: story),
+              ),
+              Positioned(
+                bottom: 16.0.s,
+                left: 0,
+                right: 0,
+                child: StoryInputField(controller: TextEditingController()),
               ),
             ],
           ),

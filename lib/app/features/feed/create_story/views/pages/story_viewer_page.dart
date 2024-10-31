@@ -72,28 +72,26 @@ class StoryViewerPage extends HookConsumerWidget {
         resizeToAvoidBottomInset: false,
         backgroundColor: context.theme.appColors.primaryText,
         body: SafeArea(
-          child: storyViewingState.maybeMap(
+          child: storyViewingState.maybeWhen(
             orElse: () => const CenteredLoadingIndicator(),
-            ready: (ready) {
+            ready: (users, currentUserIndex, currentStoryIndex) {
               return Stack(
                 children: [
                   StoriesSwiper(
                     userPageController: userPageController,
-                    users: ready.users,
-                    currentUserIndex: ready.currentUserIndex,
-                    currentStoryIndex: ready.currentStoryIndex,
+                    users: users,
+                    currentUserIndex: currentUserIndex,
+                    currentStoryIndex: currentStoryIndex,
                     onUserPageChanged: storyViewingController.moveToUser,
                     onStoryPageChanged: storyViewingController.moveToStoryIndex,
                     onNextStory: storyViewingController.moveToNextStory,
                     onPreviousStory: storyViewingController.moveToPreviousStory,
                   ),
-                  Positioned(
-                    bottom: 28.0.s,
-                    left: 0,
-                    right: 0,
+                  Align(
+                    alignment: Alignment.bottomCenter,
                     child: StoryProgressBar(
-                      totalStories: ready.users[ready.currentUserIndex].stories.length,
-                      currentIndex: ready.currentStoryIndex,
+                      totalStories: users[currentUserIndex].stories.length,
+                      currentIndex: currentStoryIndex,
                       onStoryCompleted: () {
                         final state = ref.read(storyViewingControllerProvider);
                         final controller = ref.read(storyViewingControllerProvider.notifier);
