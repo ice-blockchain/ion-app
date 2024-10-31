@@ -2,6 +2,7 @@
 
 import 'package:cube_transition_plus/cube_transition_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
@@ -10,8 +11,9 @@ import 'package:ion/app/features/feed/create_story/views/components/story_viewer
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_viewer_header.dart';
 import 'package:ion/app/features/feed/create_story/views/pages/story_viewer_page.dart';
 
-class StoriesSwiper extends HookConsumerWidget {
+class StoriesSwiper extends StatelessWidget {
   const StoriesSwiper({
+    required this.userPageController,
     required this.users,
     required this.currentUserIndex,
     required this.currentStoryIndex,
@@ -22,6 +24,7 @@ class StoriesSwiper extends HookConsumerWidget {
     super.key,
   });
 
+  final PageController userPageController;
   final List<UserStories> users;
   final int currentUserIndex;
   final int currentStoryIndex;
@@ -31,13 +34,15 @@ class StoriesSwiper extends HookConsumerWidget {
   final VoidCallback onPreviousStory;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final userPageController = usePageControllerWithInitialPage(currentUserIndex);
-
+  Widget build(BuildContext context) {
     return CubePageView.builder(
       controller: userPageController,
       itemCount: users.length,
-      onPageChanged: onUserPageChanged,
+      onPageChanged: (index) {
+        Future(() {
+          onUserPageChanged(index);
+        });
+      },
       itemBuilder: (context, userIndex, userNotifier) {
         final user = users[userIndex];
         final isCurrentUser = userIndex == currentUserIndex;
@@ -83,13 +88,27 @@ class UserStoryPageView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyPageController = usePageControllerWithInitialPage(currentStoryIndex);
+    final storyPageController = usePageControllerWithInitialPage(0);
+
+    useEffect(
+      () {
+        if (storyPageController.hasClients && isCurrentUser) {
+          storyPageController.jumpToPage(currentStoryIndex);
+        }
+        return null;
+      },
+      [currentStoryIndex, isCurrentUser],
+    );
 
     return PageView.builder(
       controller: storyPageController,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: user.stories.length,
-      onPageChanged: onStoryPageChanged,
+      onPageChanged: (index) {
+        Future(() {
+          onStoryPageChanged(index);
+        });
+      },
       itemBuilder: (context, storyIndex) {
         final story = user.stories[storyIndex];
         return GestureDetector(

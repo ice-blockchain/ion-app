@@ -45,6 +45,23 @@ class StoryViewerPage extends HookConsumerWidget {
 
     useOnInit(storyViewingController.loadStories);
 
+    final userPageController = usePageControllerWithInitialPage(0);
+
+    useEffect(
+      () {
+        storyViewingState.maybeWhen(
+          ready: (users, currentUserIndex, _) {
+            if (userPageController.hasClients) {
+              userPageController.jumpToPage(currentUserIndex);
+            }
+          },
+          orElse: () {},
+        );
+        return null;
+      },
+      [storyViewingState],
+    );
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: context.theme.appColors.primaryText,
@@ -57,40 +74,47 @@ class StoryViewerPage extends HookConsumerWidget {
         body: SafeArea(
           child: storyViewingState.maybeMap(
             orElse: () => const CenteredLoadingIndicator(),
-            ready: (ready) => Stack(
-              children: [
-                StoriesSwiper(
-                  users: ready.users,
-                  currentUserIndex: ready.currentUserIndex,
-                  currentStoryIndex: ready.currentStoryIndex,
-                  onUserPageChanged: storyViewingController.moveToUser,
-                  onStoryPageChanged: storyViewingController.moveToStoryIndex,
-                  onNextStory: storyViewingController.moveToNextStory,
-                  onPreviousStory: storyViewingController.moveToPreviousStory,
-                ),
-                Positioned(
-                  bottom: 28.0.s,
-                  left: 0,
-                  right: 0,
-                  child: StoryProgressBar(
-                    totalStories: ready.users[ready.currentUserIndex].stories.length,
-                    currentIndex: ready.currentStoryIndex,
-                    onStoryCompleted: () {
-                      final state = ref.read(storyViewingControllerProvider);
-                      final controller = ref.read(storyViewingControllerProvider.notifier);
-                      if (state.hasNextStory) {
-                        controller.moveToNextStory();
-                      } else if (state.hasNextUser) {
-                        controller.moveToNextUser();
-                      } else {
-                        context.pop();
-                      }
-                    },
+            ready: (ready) {
+              return Stack(
+                children: [
+                  StoriesSwiper(
+                    userPageController: userPageController,
+                    users: ready.users,
+                    currentUserIndex: ready.currentUserIndex,
+                    currentStoryIndex: ready.currentStoryIndex,
+                    onUserPageChanged: storyViewingController.moveToUser,
+                    onStoryPageChanged: storyViewingController.moveToStoryIndex,
+                    onNextStory: storyViewingController.moveToNextStory,
+                    onPreviousStory: storyViewingController.moveToPreviousStory,
                   ),
-                ),
-                ScreenBottomOffset(margin: 16.0.s),
-              ],
-            ),
+                  Positioned(
+                    bottom: 28.0.s,
+                    left: 0,
+                    right: 0,
+                    child: StoryProgressBar(
+                      totalStories: ready.users[ready.currentUserIndex].stories.length,
+                      currentIndex: ready.currentStoryIndex,
+                      onStoryCompleted: () {
+                        final state = ref.read(storyViewingControllerProvider);
+                        final controller = ref.read(storyViewingControllerProvider.notifier);
+
+                        if (state.hasNextStory) {
+                          controller.moveToNextStory();
+                        } else if (state.hasNextUser) {
+                          userPageController.nextPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        } else {
+                          context.pop();
+                        }
+                      },
+                    ),
+                  ),
+                  ScreenBottomOffset(margin: 16.0.s),
+                ],
+              );
+            },
           ),
         ),
       ),
