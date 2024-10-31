@@ -11,7 +11,7 @@ class HeaderAction extends StatelessWidget {
     required this.onPressed,
     required this.assetName,
     this.disabled = false,
-    this.opacity = 1,
+    this.opacity = 0,
     super.key,
   });
 
