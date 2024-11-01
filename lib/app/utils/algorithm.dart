@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
+
 /// Finds the best options from a given map of keys to their associated options.
 ///
 /// Example:
@@ -15,6 +17,10 @@
 ///   "Option8": ["Key3"]
 /// }
 Map<String, List<String>> findBestOptions(Map<String, List<String>> keysToOptions) {
+  if (keysToOptions.isEmpty) {
+    return {};
+  }
+
   /// Transforms
   /// {
   ///   "Key1": ["Option1", "Option2"],
@@ -34,10 +40,11 @@ Map<String, List<String>> findBestOptions(Map<String, List<String>> keysToOption
   }
 
   /// Looking for the "best" entry - entry with most keys
-  final maxEntry = optionsToKeys.entries.reduce(
-    (maxEntry, currentEntry) =>
-        currentEntry.value.length > maxEntry.value.length ? currentEntry : maxEntry,
-  );
+  final maxEntry = maxBy(optionsToKeys.entries, (entry) => entry.value.length);
+
+  if (maxEntry == null) {
+    throw Exception('Unable to find best entry for $keysToOptions');
+  }
 
   /// Removing the keys that are kept in the `maxEntry`
   /// from the initial key:options structure
