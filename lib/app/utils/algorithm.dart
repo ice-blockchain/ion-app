@@ -24,7 +24,7 @@ Map<String, List<String>> findBestOptions(Map<String, List<String>> keysToOption
   /// {
   ///   "Option1": ["Key1"],
   ///   "Option2": ["Key1", "Key2"],
-  ///   "Option3": ["Key1"]
+  ///   "Option3": ["Key2"]
   /// }
   final optionsToKeys = <String, List<String>>{};
   for (final entry in keysToOptions.entries) {
