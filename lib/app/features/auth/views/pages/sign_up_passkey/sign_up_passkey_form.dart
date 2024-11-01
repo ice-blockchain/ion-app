@@ -45,7 +45,7 @@ class SignUpPasskeyForm extends HookConsumerWidget {
             disabled: registerActionState.isLoading,
             trailingIcon: registerActionState.isLoading ||
                     (authState.valueOrNull?.hasAuthenticated).falseOrValue
-                ? const IonLoadingIndicator()
+                ? const IONLoadingIndicator()
                 : const SizedBox.shrink(),
             onPressed: () {
               if (formKey.value.currentState!.validate()) {

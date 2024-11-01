@@ -2,6 +2,6 @@
 
 import 'package:ion_identity_client/src/core/types/ion_exception.dart';
 
-sealed class GetWalletAssetsException extends IonException {
+sealed class GetWalletAssetsException extends IONIdentityException {
   const GetWalletAssetsException([super.message]);
 }

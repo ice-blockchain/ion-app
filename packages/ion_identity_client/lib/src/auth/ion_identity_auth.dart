@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/create_recovery_credentials/create_recovery_credentials_service.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
 import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
@@ -10,15 +10,15 @@ import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 
 /// A class that handles user authentication processes, including user registration,
 /// login, and logout.
-class IonAuth {
-  /// Constructs an [IonAuth] instance with the provided services and token storage.
+class IONIdentityAuth {
+  /// Constructs an [IONIdentityAuth] instance with the provided services and token storage.
   ///
   /// The [username] is the identifier for the user.
   /// The [registerService] handles user registration.
   /// The [loginService] handles user login.
   /// The [tokenStorage] manages the storage of authentication tokens.
   /// The [createRecoveryCredentialsService] handles the creation of recovery credentials.
-  IonAuth({
+  IONIdentityAuth({
     required this.username,
     required this.registerService,
     required this.loginService,

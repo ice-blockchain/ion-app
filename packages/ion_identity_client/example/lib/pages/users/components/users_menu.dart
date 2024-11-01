@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ion_client_example/pages/login/login_page.dart';
-import 'package:ion_client_example/pages/login_delegated/delegated_login_page.dart';
-import 'package:ion_client_example/pages/register/register_page.dart';
+import 'package:ion_identity_client_example/pages/login/login_page.dart';
+import 'package:ion_identity_client_example/pages/login_delegated/delegated_login_page.dart';
+import 'package:ion_identity_client_example/pages/register/register_page.dart';
 
 class UsersMenu extends HookWidget {
   const UsersMenu({super.key});

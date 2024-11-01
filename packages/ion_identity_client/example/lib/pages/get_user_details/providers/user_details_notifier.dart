@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_client_example/providers/current_username_notifier.dart';
-import 'package:ion_client_example/providers/ion_client_provider.dart';
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_details_notifier.g.dart';
@@ -23,7 +23,7 @@ class UserDetailsNotifier extends _$UserDetailsNotifier {
         throw Exception('Current user not found');
       }
 
-      final ionIdentity = await ref.watch(ionClientProvider.future);
+      final ionIdentity = await ref.watch(ionIdentityProvider.future);
       return await ionIdentity(username: currentUser).users.details(userId: userId);
     });
   }

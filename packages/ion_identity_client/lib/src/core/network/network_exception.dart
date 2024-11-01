@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
 
 /// A base class for all network-related exceptions.
-class NetworkException implements IonException {
+class NetworkException implements IONIdentityException {
   const NetworkException(this.message);
 
   @override

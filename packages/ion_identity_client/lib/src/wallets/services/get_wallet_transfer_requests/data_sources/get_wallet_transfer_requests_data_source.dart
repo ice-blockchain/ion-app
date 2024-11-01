@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:dio/dio.dart';
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/network_exception.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
@@ -50,7 +50,7 @@ class GetWalletTransferRequestsDataSource {
           throw const WalletNotFoundException();
         }
       }
-      throw const UnknownIonException();
+      throw const UnknownIONIdentityException();
     }
   }
 }

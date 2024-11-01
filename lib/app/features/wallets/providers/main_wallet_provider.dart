@@ -4,9 +4,9 @@ import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
-import 'package:ion/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
+import 'package:ion/app/services/ion_identity/mocked_ton_wallet_keystore.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'main_wallet_provider.g.dart';
@@ -18,8 +18,8 @@ Future<Wallet?> mainWallet(Ref ref) async {
     return null;
   }
   // TODO: take the list from walletsDataNotifierProvider when connected to ionClient
-  final ionClient = await ref.watch(ionApiClientProvider.future);
-  final wallets = await ionClient(username: currentIdentityKeyName).wallets.getWallets();
+  final ionIdentity = await ref.watch(ionIdentityProvider.future);
+  final wallets = await ionIdentity(username: currentIdentityKeyName).wallets.getWallets();
   final mainWallet = wallets.firstWhereOrNull((wallet) => wallet.name == 'main');
   if (mainWallet == null) {
     throw MainWalletNotFoundException();
@@ -27,7 +27,7 @@ Future<Wallet?> mainWallet(Ref ref) async {
 
   // TODO:take `mainWallet` when signing with TON is implemented and remove this 'temp-main'
   var tempMainWallet = wallets.firstWhereOrNull((wallet) => wallet.name == 'temp-main');
-  tempMainWallet ??= await ionClient(username: currentIdentityKeyName)
+  tempMainWallet ??= await ionIdentity(username: currentIdentityKeyName)
       .wallets
       .createWallet(network: 'KeyEdDSA', name: 'temp-main');
   // TODO: still using mocked wallet because damus do not accept non default signatures

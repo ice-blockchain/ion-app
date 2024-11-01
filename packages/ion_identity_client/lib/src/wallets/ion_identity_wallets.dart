@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_history/get_wallet_history_service.dart';
@@ -11,15 +11,15 @@ import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate
 
 /// A class that handles operations related to user wallets, such as listing the wallets
 /// associated with a specific user.
-class IonWallets {
-  /// Creates an instance of [IonWallets] with the provided [username], [config],
+class IONIdentityWallets {
+  /// Creates an instance of [IONIdentityWallets] with the provided [username], [config],
   /// [dataSource], and [signer].
   ///
   /// - [username]: The username of the user whose wallets are being managed.
   /// - [config]: The client configuration containing necessary identifiers.
   /// - [dataSource]: The data source responsible for API interactions related to wallets.
   /// - [signer]: The passkey signer used for handling cryptographic operations, if needed.
-  IonWallets({
+  IONIdentityWallets({
     required this.username,
     required CreateWalletService createWalletService,
     required GetWalletsService getWalletsService,
@@ -45,6 +45,7 @@ class IonWallets {
   final GetWalletHistoryService _getWalletHistoryService;
   final GetWalletTransferRequestsService _getWalletTransferRequestsService;
   final PseudoNetworkGenerateSignatureService _generateSignatureService;
+
   Future<Wallet> createWallet({
     required String network,
     required String name,

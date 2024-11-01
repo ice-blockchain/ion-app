@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 
-class IonConnectIndexersDataSource {
-  IonConnectIndexersDataSource(
+class IONConnectIndexersDataSource {
+  IONConnectIndexersDataSource(
     this._networkClient,
     this._tokenStorage,
   );
@@ -14,9 +14,9 @@ class IonConnectIndexersDataSource {
   final NetworkClient _networkClient;
   final TokenStorage _tokenStorage;
 
-  static const getUserConnectIndexersPath = '/v1/users';
+  static const basePath = '/v1/users';
 
-  Future<List<String>> fetchIonConnectIndexers({
+  Future<List<String>> fetchIONConnectIndexers({
     required String username,
     required String userId,
   }) async {
@@ -26,12 +26,12 @@ class IonConnectIndexersDataSource {
     }
 
     final response = await _networkClient.get(
-      '$getUserConnectIndexersPath/$userId/ion-connect-indexers',
+      '$basePath/$userId/ion-connect-indexers',
       headers: RequestHeaders.getAuthorizationHeaders(
         username: username,
         token: token.token,
       ),
-      decoder: IonConnectIndexersResponse.fromJson,
+      decoder: IONConnectIndexersResponse.fromJson,
     );
 
     return response.ionConnectIndexers;

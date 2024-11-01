@@ -16,7 +16,7 @@ class StoryCameraPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!controller.value.isInitialized) {
-      return const Center(child: IonLoadingIndicator());
+      return const Center(child: IONLoadingIndicator());
     }
 
     final size = MediaQuery.sizeOf(context);

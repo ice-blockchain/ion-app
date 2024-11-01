@@ -6,11 +6,11 @@ part 'ion_connect_indexers_response.freezed.dart';
 part 'ion_connect_indexers_response.g.dart';
 
 @freezed
-class IonConnectIndexersResponse with _$IonConnectIndexersResponse {
-  const factory IonConnectIndexersResponse({
+class IONConnectIndexersResponse with _$IONConnectIndexersResponse {
+  const factory IONConnectIndexersResponse({
     required List<String> ionConnectIndexers,
-  }) = _IonConnectIndexersResponse;
+  }) = _IONConnectIndexersResponse;
 
-  factory IonConnectIndexersResponse.fromJson(Map<String, dynamic> json) =>
-      _$IonConnectIndexersResponseFromJson(json);
+  factory IONConnectIndexersResponse.fromJson(Map<String, dynamic> json) =>
+      _$IONConnectIndexersResponseFromJson(json);
 }

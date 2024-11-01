@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ion_client_example/pages/wallet_transfer_requests/providers/wallet_transfer_requests_provider.dart';
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client_example/pages/wallet_transfer_requests/providers/wallet_transfer_requests_provider.dart';
 
 class WalletTransferRequestsPage extends ConsumerStatefulWidget {
   const WalletTransferRequestsPage({

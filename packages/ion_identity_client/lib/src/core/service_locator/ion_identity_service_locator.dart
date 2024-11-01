@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/service_locator/clients_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/network_service_locator.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
-import 'package:ion_identity_client/src/ion_api_user_client.dart';
+import 'package:ion_identity_client/src/ion_identity_user_client.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 
-class IonServiceLocator {
-  static NetworkClient getNetworkClient({
-    required IonClientConfig config,
+class IONIdentityServiceLocator {
+  static NetworkClient networkClient({
+    required IONIdentityConfig config,
   }) =>
-      NetworkServiceLocator().getNetworkClient(config: config);
+      NetworkServiceLocator().networkClient(config: config);
 
-  static TokenStorage getTokenStorage() => NetworkServiceLocator().getTokenStorage();
+  static TokenStorage tokenStorage() => NetworkServiceLocator().tokenStorage();
 
-  static IonApiUserClient getApiClient({
+  static IONIdentityClient identityUserClient({
     required String username,
-    required IonClientConfig config,
+    required IONIdentityConfig config,
     required PasskeysSigner signer,
   }) {
-    return ClientsServiceLocator().getIonClient(
+    return ClientsServiceLocator().ionIdentityClient(
       username: username,
       config: config,
       signer: signer,

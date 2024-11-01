@@ -9,7 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/recovery_key_option.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class CreateRecoveryKeySuccessState extends StatelessWidget {
   const CreateRecoveryKeySuccessState({required this.recoveryData, super.key});

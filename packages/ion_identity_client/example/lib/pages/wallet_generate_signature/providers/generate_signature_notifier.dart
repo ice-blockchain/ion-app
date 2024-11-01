@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_client_example/providers/current_username_notifier.dart';
-import 'package:ion_client_example/providers/ion_client_provider.dart';
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'generate_signature_notifier.g.dart';
@@ -16,9 +16,8 @@ class GenerateSignatureNotifier extends _$GenerateSignatureNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final username = ref.read(currentUsernameNotifierProvider) ?? '';
-      final ionClient = await ref.read(ionClientProvider.future);
-
-      return ionClient(username: username).wallets.generateSignature(walletId, message);
+      final ionIdentity = await ref.read(ionIdentityProvider.future);
+      return ionIdentity(username: username).wallets.generateSignature(walletId, message);
     });
   }
 }

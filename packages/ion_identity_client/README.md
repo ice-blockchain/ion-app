@@ -1,4 +1,4 @@
-The IonIdentityClient library is a Dart-based client that simplifies interaction with an API, providing convenient methods for user authentication, wallet management, etc.
+The IONIdentityClient library is a Dart-based client that simplifies interaction with an API, providing convenient methods for user authentication, wallet management, etc.
 
 ## Features
 
@@ -11,7 +11,7 @@ The IonIdentityClient library is a Dart-based client that simplifies interaction
 ## Getting started
 
 #### 1. Installation:
-Add the IonIdentityClient package to your pubspec.yaml:
+Add the IONIdentityClient package to your pubspec.yaml:
 
 ```yaml
 dependencies:
@@ -26,13 +26,13 @@ dart pub get
 #### 2. Configuration:
 Start by creating the client's config and the client:
 ```dart
-final config = IonClientConfig(
+final config = IONIdentityConfig(
   appId: 'ap-abcde-...',
   orgId: 'or-123fg-...',
   origin: 'https://my.example.com',
 );
 
-final client = IonApiClient.createDefault(config: config);
+final client = IONIdentity.createDefault(config: config);
 ```
 
 You're ready to go!
@@ -63,4 +63,4 @@ final usersSubscription = client.authorizedUsers.listen((List<String> authentica
 
 ## Additional information
 
-- **Error Handling**: `IonApiClient` returns result objects instead of throwing exceptions. Each operation provides success or failure results, allowing you to handle specific errors like user already exists or validation failures directly and more clearly in your code.
+- **Error Handling**: `IONIdentityClient` throws exceptions, mostly `IONException`.

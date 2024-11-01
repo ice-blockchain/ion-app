@@ -22,13 +22,13 @@ void main() async {
   runApp(
     ProviderScope(
       observers: [if (LoggerConfig.riverpodLogsEnabled) RiverpodLogger()],
-      child: const IonApp(),
+      child: const IONApp(),
     ),
   );
 }
 
-class IonApp extends ConsumerWidget {
-  const IonApp({super.key});
+class IONApp extends ConsumerWidget {
+  const IONApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

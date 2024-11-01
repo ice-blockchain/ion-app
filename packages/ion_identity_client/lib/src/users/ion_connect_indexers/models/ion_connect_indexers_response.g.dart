@@ -6,16 +6,16 @@ part of 'ion_connect_indexers_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$IonConnectIndexersResponseImpl _$$IonConnectIndexersResponseImplFromJson(
+_$IONConnectIndexersResponseImpl _$$IONConnectIndexersResponseImplFromJson(
         Map<String, dynamic> json) =>
-    _$IonConnectIndexersResponseImpl(
+    _$IONConnectIndexersResponseImpl(
       ionConnectIndexers: (json['ionConnectIndexers'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
     );
 
-Map<String, dynamic> _$$IonConnectIndexersResponseImplToJson(
-        _$IonConnectIndexersResponseImpl instance) =>
+Map<String, dynamic> _$$IONConnectIndexersResponseImplToJson(
+        _$IONConnectIndexersResponseImpl instance) =>
     <String, dynamic>{
       'ionConnectIndexers': instance.ionConnectIndexers,
     };

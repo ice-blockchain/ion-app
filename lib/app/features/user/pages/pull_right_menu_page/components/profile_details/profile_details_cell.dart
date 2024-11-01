@@ -27,7 +27,7 @@ class ProfileDetailsCell extends StatelessWidget {
           ),
         ),
         if (value == null)
-          const IonLoadingIndicator(type: IndicatorType.dark)
+          const IONLoadingIndicator(type: IndicatorType.dark)
         else
           Text(
             value.toString(),

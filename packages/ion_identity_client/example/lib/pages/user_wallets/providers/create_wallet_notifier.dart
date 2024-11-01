@@ -2,9 +2,9 @@
 
 import 'dart:math';
 
-import 'package:ion_client_example/providers/current_username_notifier.dart';
-import 'package:ion_client_example/providers/ion_client_provider.dart';
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_wallet_notifier.g.dart';
@@ -22,8 +22,8 @@ class CreateWalletNotifier extends _$CreateWalletNotifier {
     state = await AsyncValue.guard(
       () async {
         final username = ref.read(currentUsernameNotifierProvider) ?? 'ERROR';
-        final ionClient = await ref.read(ionClientProvider.future);
-        return ionClient(username: username)
+        final ionIdentity = await ref.read(ionIdentityProvider.future);
+        return ionIdentity(username: username)
             .wallets
             .createWallet(network: 'KeyEdDSA', name: 'KeyEdDSA ${Random().nextInt(1000000)}');
       },

@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/wallet/model/nft_data.dart';
 import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
-import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nfts_provider.g.dart';
@@ -17,8 +17,9 @@ Future<List<NftData>> nftsData(Ref ref) async {
   }
   final currentWalletId = await ref.watch(currentWalletIdProvider.future);
 
-  final ionClient = await ref.watch(ionApiClientProvider.future);
-  final walletNfts = await ionClient(username: currentUser).wallets.getWalletNfts(currentWalletId);
+  final ionIdentity = await ref.watch(ionIdentityProvider.future);
+  final walletNfts =
+      await ionIdentity(username: currentUser).wallets.getWalletNfts(currentWalletId);
 
   final coins = [
     // ignore: unused_local_variable

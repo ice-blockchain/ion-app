@@ -14,47 +14,47 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-IonConnectIndexersResponse _$IonConnectIndexersResponseFromJson(
+IONConnectIndexersResponse _$IONConnectIndexersResponseFromJson(
     Map<String, dynamic> json) {
-  return _IonConnectIndexersResponse.fromJson(json);
+  return _IONConnectIndexersResponse.fromJson(json);
 }
 
 /// @nodoc
-mixin _$IonConnectIndexersResponse {
+mixin _$IONConnectIndexersResponse {
   List<String> get ionConnectIndexers => throw _privateConstructorUsedError;
 
-  /// Serializes this IonConnectIndexersResponse to a JSON map.
+  /// Serializes this IONConnectIndexersResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of IonConnectIndexersResponse
+  /// Create a copy of IONConnectIndexersResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $IonConnectIndexersResponseCopyWith<IonConnectIndexersResponse>
+  $IONConnectIndexersResponseCopyWith<IONConnectIndexersResponse>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $IonConnectIndexersResponseCopyWith<$Res> {
-  factory $IonConnectIndexersResponseCopyWith(IonConnectIndexersResponse value,
-          $Res Function(IonConnectIndexersResponse) then) =
-      _$IonConnectIndexersResponseCopyWithImpl<$Res,
-          IonConnectIndexersResponse>;
+abstract class $IONConnectIndexersResponseCopyWith<$Res> {
+  factory $IONConnectIndexersResponseCopyWith(IONConnectIndexersResponse value,
+          $Res Function(IONConnectIndexersResponse) then) =
+      _$IONConnectIndexersResponseCopyWithImpl<$Res,
+          IONConnectIndexersResponse>;
   @useResult
   $Res call({List<String> ionConnectIndexers});
 }
 
 /// @nodoc
-class _$IonConnectIndexersResponseCopyWithImpl<$Res,
-        $Val extends IonConnectIndexersResponse>
-    implements $IonConnectIndexersResponseCopyWith<$Res> {
-  _$IonConnectIndexersResponseCopyWithImpl(this._value, this._then);
+class _$IONConnectIndexersResponseCopyWithImpl<$Res,
+        $Val extends IONConnectIndexersResponse>
+    implements $IONConnectIndexersResponseCopyWith<$Res> {
+  _$IONConnectIndexersResponseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of IonConnectIndexersResponse
+  /// Create a copy of IONConnectIndexersResponse
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -71,35 +71,35 @@ class _$IonConnectIndexersResponseCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$IonConnectIndexersResponseImplCopyWith<$Res>
-    implements $IonConnectIndexersResponseCopyWith<$Res> {
-  factory _$$IonConnectIndexersResponseImplCopyWith(
-          _$IonConnectIndexersResponseImpl value,
-          $Res Function(_$IonConnectIndexersResponseImpl) then) =
-      __$$IonConnectIndexersResponseImplCopyWithImpl<$Res>;
+abstract class _$$IONConnectIndexersResponseImplCopyWith<$Res>
+    implements $IONConnectIndexersResponseCopyWith<$Res> {
+  factory _$$IONConnectIndexersResponseImplCopyWith(
+          _$IONConnectIndexersResponseImpl value,
+          $Res Function(_$IONConnectIndexersResponseImpl) then) =
+      __$$IONConnectIndexersResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<String> ionConnectIndexers});
 }
 
 /// @nodoc
-class __$$IonConnectIndexersResponseImplCopyWithImpl<$Res>
-    extends _$IonConnectIndexersResponseCopyWithImpl<$Res,
-        _$IonConnectIndexersResponseImpl>
-    implements _$$IonConnectIndexersResponseImplCopyWith<$Res> {
-  __$$IonConnectIndexersResponseImplCopyWithImpl(
-      _$IonConnectIndexersResponseImpl _value,
-      $Res Function(_$IonConnectIndexersResponseImpl) _then)
+class __$$IONConnectIndexersResponseImplCopyWithImpl<$Res>
+    extends _$IONConnectIndexersResponseCopyWithImpl<$Res,
+        _$IONConnectIndexersResponseImpl>
+    implements _$$IONConnectIndexersResponseImplCopyWith<$Res> {
+  __$$IONConnectIndexersResponseImplCopyWithImpl(
+      _$IONConnectIndexersResponseImpl _value,
+      $Res Function(_$IONConnectIndexersResponseImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of IonConnectIndexersResponse
+  /// Create a copy of IONConnectIndexersResponse
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? ionConnectIndexers = null,
   }) {
-    return _then(_$IonConnectIndexersResponseImpl(
+    return _then(_$IONConnectIndexersResponseImpl(
       ionConnectIndexers: null == ionConnectIndexers
           ? _value._ionConnectIndexers
           : ionConnectIndexers // ignore: cast_nullable_to_non_nullable
@@ -110,14 +110,14 @@ class __$$IonConnectIndexersResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$IonConnectIndexersResponseImpl implements _IonConnectIndexersResponse {
-  const _$IonConnectIndexersResponseImpl(
+class _$IONConnectIndexersResponseImpl implements _IONConnectIndexersResponse {
+  const _$IONConnectIndexersResponseImpl(
       {required final List<String> ionConnectIndexers})
       : _ionConnectIndexers = ionConnectIndexers;
 
-  factory _$IonConnectIndexersResponseImpl.fromJson(
+  factory _$IONConnectIndexersResponseImpl.fromJson(
           Map<String, dynamic> json) =>
-      _$$IonConnectIndexersResponseImplFromJson(json);
+      _$$IONConnectIndexersResponseImplFromJson(json);
 
   final List<String> _ionConnectIndexers;
   @override
@@ -130,14 +130,14 @@ class _$IonConnectIndexersResponseImpl implements _IonConnectIndexersResponse {
 
   @override
   String toString() {
-    return 'IonConnectIndexersResponse(ionConnectIndexers: $ionConnectIndexers)';
+    return 'IONConnectIndexersResponse(ionConnectIndexers: $ionConnectIndexers)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$IonConnectIndexersResponseImpl &&
+            other is _$IONConnectIndexersResponseImpl &&
             const DeepCollectionEquality()
                 .equals(other._ionConnectIndexers, _ionConnectIndexers));
   }
@@ -147,39 +147,39 @@ class _$IonConnectIndexersResponseImpl implements _IonConnectIndexersResponse {
   int get hashCode => Object.hash(
       runtimeType, const DeepCollectionEquality().hash(_ionConnectIndexers));
 
-  /// Create a copy of IonConnectIndexersResponse
+  /// Create a copy of IONConnectIndexersResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$IonConnectIndexersResponseImplCopyWith<_$IonConnectIndexersResponseImpl>
-      get copyWith => __$$IonConnectIndexersResponseImplCopyWithImpl<
-          _$IonConnectIndexersResponseImpl>(this, _$identity);
+  _$$IONConnectIndexersResponseImplCopyWith<_$IONConnectIndexersResponseImpl>
+      get copyWith => __$$IONConnectIndexersResponseImplCopyWithImpl<
+          _$IONConnectIndexersResponseImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$IonConnectIndexersResponseImplToJson(
+    return _$$IONConnectIndexersResponseImplToJson(
       this,
     );
   }
 }
 
-abstract class _IonConnectIndexersResponse
-    implements IonConnectIndexersResponse {
-  const factory _IonConnectIndexersResponse(
+abstract class _IONConnectIndexersResponse
+    implements IONConnectIndexersResponse {
+  const factory _IONConnectIndexersResponse(
           {required final List<String> ionConnectIndexers}) =
-      _$IonConnectIndexersResponseImpl;
+      _$IONConnectIndexersResponseImpl;
 
-  factory _IonConnectIndexersResponse.fromJson(Map<String, dynamic> json) =
-      _$IonConnectIndexersResponseImpl.fromJson;
+  factory _IONConnectIndexersResponse.fromJson(Map<String, dynamic> json) =
+      _$IONConnectIndexersResponseImpl.fromJson;
 
   @override
   List<String> get ionConnectIndexers;
 
-  /// Create a copy of IonConnectIndexersResponse
+  /// Create a copy of IONConnectIndexersResponse
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$IonConnectIndexersResponseImplCopyWith<_$IonConnectIndexersResponseImpl>
+  _$$IONConnectIndexersResponseImplCopyWith<_$IONConnectIndexersResponseImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

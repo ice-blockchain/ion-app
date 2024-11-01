@@ -1,4 +1,4 @@
-# ion_client_example
+# ion_identity_client_example
 
 A new Flutter project.
 

@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:cryptography/cryptography.dart' as cryptography;
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user/data_sources/recover_user_data_source.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
@@ -19,7 +19,7 @@ class RecoverUserService {
 
   final String username;
   final RecoverUserDataSource dataSource;
-  final IonClientConfig config;
+  final IONIdentityConfig config;
   final PasskeysSigner passkeySigner;
   final KeyService keyService;
 

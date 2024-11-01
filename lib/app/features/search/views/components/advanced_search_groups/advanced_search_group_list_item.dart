@@ -14,7 +14,7 @@ class AdvancedSearchGroupListItem extends ConsumerWidget {
     required this.message,
     required this.joined,
     this.isVerified = false,
-    this.isIon = false,
+    this.isION = false,
     super.key,
   });
 
@@ -23,7 +23,7 @@ class AdvancedSearchGroupListItem extends ConsumerWidget {
   final String message;
   final bool joined;
   final bool isVerified;
-  final bool isIon;
+  final bool isION;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +39,7 @@ class AdvancedSearchGroupListItem extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GroupHeader(displayName: displayName, isVerified: isVerified, isIon: isIon),
+                GroupHeader(displayName: displayName, isVerified: isVerified, isION: isION),
                 SizedBox(height: 2.0.s),
                 GroupDescription(joined: joined, message: message),
               ],
@@ -94,13 +94,13 @@ class GroupHeader extends StatelessWidget {
   const GroupHeader({
     required this.displayName,
     required this.isVerified,
-    required this.isIon,
+    required this.isION,
     super.key,
   });
 
   final String displayName;
   final bool isVerified;
-  final bool isIon;
+  final bool isION;
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class GroupHeader extends StatelessWidget {
             padding: EdgeInsets.only(left: 4.0.s),
             child: Assets.svg.iconBadgeIcelogo.icon(size: 16.0.s),
           ),
-        if (isIon)
+        if (isION)
           Padding(
             padding: EdgeInsets.only(left: 4.0.s),
             child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),

@@ -6,11 +6,11 @@ part 'set_ion_connect_relays_response.freezed.dart';
 part 'set_ion_connect_relays_response.g.dart';
 
 @freezed
-class SetIonConnectRelaysResponse with _$SetIonConnectRelaysResponse {
-  const factory SetIonConnectRelaysResponse({
+class SetIONConnectRelaysResponse with _$SetIONConnectRelaysResponse {
+  const factory SetIONConnectRelaysResponse({
     required List<String> ionConnectRelays,
-  }) = _SetIonConnectRelaysResponse;
+  }) = _SetIONConnectRelaysResponse;
 
-  factory SetIonConnectRelaysResponse.fromJson(Map<String, dynamic> json) =>
-      _$SetIonConnectRelaysResponseFromJson(json);
+  factory SetIONConnectRelaysResponse.fromJson(Map<String, dynamic> json) =>
+      _$SetIONConnectRelaysResponseFromJson(json);
 }

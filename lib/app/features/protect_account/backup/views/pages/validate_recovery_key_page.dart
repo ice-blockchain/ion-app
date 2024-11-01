@@ -6,7 +6,7 @@ import 'package:ion/app/features/auth/views/components/recovery_keys_input_conta
 import 'package:ion/app/features/protect_account/backup/data/models/recovery_key_property.dart';
 import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
 import 'package:ion/app/router/app_routes.dart';
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class ValidateRecoveryKeyPage extends ConsumerWidget {
   const ValidateRecoveryKeyPage({super.key});

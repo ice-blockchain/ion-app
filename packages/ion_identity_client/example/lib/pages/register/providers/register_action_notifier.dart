@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_client_example/providers/ion_client_provider.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'register_action_notifier.g.dart';
@@ -14,8 +14,8 @@ class RegisterActionNotifier extends _$RegisterActionNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final ionClient = await ref.read(ionClientProvider.future);
-      await ionClient(username: keyName).auth.registerUser();
+      final ionIdentity = await ref.read(ionIdentityProvider.future);
+      await ionIdentity(username: keyName).auth.registerUser();
     });
   }
 }

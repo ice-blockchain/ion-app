@@ -14,47 +14,47 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-SetIonConnectRelaysRequest _$SetIonConnectRelaysRequestFromJson(
+SetIONConnectRelaysRequest _$SetIONConnectRelaysRequestFromJson(
     Map<String, dynamic> json) {
-  return _SetIonConnectRelaysRequest.fromJson(json);
+  return _SetIONConnectRelaysRequest.fromJson(json);
 }
 
 /// @nodoc
-mixin _$SetIonConnectRelaysRequest {
+mixin _$SetIONConnectRelaysRequest {
   List<String> get followeeList => throw _privateConstructorUsedError;
 
-  /// Serializes this SetIonConnectRelaysRequest to a JSON map.
+  /// Serializes this SetIONConnectRelaysRequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of SetIonConnectRelaysRequest
+  /// Create a copy of SetIONConnectRelaysRequest
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $SetIonConnectRelaysRequestCopyWith<SetIonConnectRelaysRequest>
+  $SetIONConnectRelaysRequestCopyWith<SetIONConnectRelaysRequest>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $SetIonConnectRelaysRequestCopyWith<$Res> {
-  factory $SetIonConnectRelaysRequestCopyWith(SetIonConnectRelaysRequest value,
-          $Res Function(SetIonConnectRelaysRequest) then) =
-      _$SetIonConnectRelaysRequestCopyWithImpl<$Res,
-          SetIonConnectRelaysRequest>;
+abstract class $SetIONConnectRelaysRequestCopyWith<$Res> {
+  factory $SetIONConnectRelaysRequestCopyWith(SetIONConnectRelaysRequest value,
+          $Res Function(SetIONConnectRelaysRequest) then) =
+      _$SetIONConnectRelaysRequestCopyWithImpl<$Res,
+          SetIONConnectRelaysRequest>;
   @useResult
   $Res call({List<String> followeeList});
 }
 
 /// @nodoc
-class _$SetIonConnectRelaysRequestCopyWithImpl<$Res,
-        $Val extends SetIonConnectRelaysRequest>
-    implements $SetIonConnectRelaysRequestCopyWith<$Res> {
-  _$SetIonConnectRelaysRequestCopyWithImpl(this._value, this._then);
+class _$SetIONConnectRelaysRequestCopyWithImpl<$Res,
+        $Val extends SetIONConnectRelaysRequest>
+    implements $SetIONConnectRelaysRequestCopyWith<$Res> {
+  _$SetIONConnectRelaysRequestCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of SetIonConnectRelaysRequest
+  /// Create a copy of SetIONConnectRelaysRequest
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -71,35 +71,35 @@ class _$SetIonConnectRelaysRequestCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$SetIonConnectRelaysRequestImplCopyWith<$Res>
-    implements $SetIonConnectRelaysRequestCopyWith<$Res> {
-  factory _$$SetIonConnectRelaysRequestImplCopyWith(
-          _$SetIonConnectRelaysRequestImpl value,
-          $Res Function(_$SetIonConnectRelaysRequestImpl) then) =
-      __$$SetIonConnectRelaysRequestImplCopyWithImpl<$Res>;
+abstract class _$$SetIONConnectRelaysRequestImplCopyWith<$Res>
+    implements $SetIONConnectRelaysRequestCopyWith<$Res> {
+  factory _$$SetIONConnectRelaysRequestImplCopyWith(
+          _$SetIONConnectRelaysRequestImpl value,
+          $Res Function(_$SetIONConnectRelaysRequestImpl) then) =
+      __$$SetIONConnectRelaysRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<String> followeeList});
 }
 
 /// @nodoc
-class __$$SetIonConnectRelaysRequestImplCopyWithImpl<$Res>
-    extends _$SetIonConnectRelaysRequestCopyWithImpl<$Res,
-        _$SetIonConnectRelaysRequestImpl>
-    implements _$$SetIonConnectRelaysRequestImplCopyWith<$Res> {
-  __$$SetIonConnectRelaysRequestImplCopyWithImpl(
-      _$SetIonConnectRelaysRequestImpl _value,
-      $Res Function(_$SetIonConnectRelaysRequestImpl) _then)
+class __$$SetIONConnectRelaysRequestImplCopyWithImpl<$Res>
+    extends _$SetIONConnectRelaysRequestCopyWithImpl<$Res,
+        _$SetIONConnectRelaysRequestImpl>
+    implements _$$SetIONConnectRelaysRequestImplCopyWith<$Res> {
+  __$$SetIONConnectRelaysRequestImplCopyWithImpl(
+      _$SetIONConnectRelaysRequestImpl _value,
+      $Res Function(_$SetIONConnectRelaysRequestImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of SetIonConnectRelaysRequest
+  /// Create a copy of SetIONConnectRelaysRequest
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? followeeList = null,
   }) {
-    return _then(_$SetIonConnectRelaysRequestImpl(
+    return _then(_$SetIONConnectRelaysRequestImpl(
       followeeList: null == followeeList
           ? _value._followeeList
           : followeeList // ignore: cast_nullable_to_non_nullable
@@ -110,14 +110,14 @@ class __$$SetIonConnectRelaysRequestImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SetIonConnectRelaysRequestImpl implements _SetIonConnectRelaysRequest {
-  const _$SetIonConnectRelaysRequestImpl(
+class _$SetIONConnectRelaysRequestImpl implements _SetIONConnectRelaysRequest {
+  const _$SetIONConnectRelaysRequestImpl(
       {required final List<String> followeeList})
       : _followeeList = followeeList;
 
-  factory _$SetIonConnectRelaysRequestImpl.fromJson(
+  factory _$SetIONConnectRelaysRequestImpl.fromJson(
           Map<String, dynamic> json) =>
-      _$$SetIonConnectRelaysRequestImplFromJson(json);
+      _$$SetIONConnectRelaysRequestImplFromJson(json);
 
   final List<String> _followeeList;
   @override
@@ -129,14 +129,14 @@ class _$SetIonConnectRelaysRequestImpl implements _SetIonConnectRelaysRequest {
 
   @override
   String toString() {
-    return 'SetIonConnectRelaysRequest(followeeList: $followeeList)';
+    return 'SetIONConnectRelaysRequest(followeeList: $followeeList)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SetIonConnectRelaysRequestImpl &&
+            other is _$SetIONConnectRelaysRequestImpl &&
             const DeepCollectionEquality()
                 .equals(other._followeeList, _followeeList));
   }
@@ -146,39 +146,39 @@ class _$SetIonConnectRelaysRequestImpl implements _SetIonConnectRelaysRequest {
   int get hashCode => Object.hash(
       runtimeType, const DeepCollectionEquality().hash(_followeeList));
 
-  /// Create a copy of SetIonConnectRelaysRequest
+  /// Create a copy of SetIONConnectRelaysRequest
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$SetIonConnectRelaysRequestImplCopyWith<_$SetIonConnectRelaysRequestImpl>
-      get copyWith => __$$SetIonConnectRelaysRequestImplCopyWithImpl<
-          _$SetIonConnectRelaysRequestImpl>(this, _$identity);
+  _$$SetIONConnectRelaysRequestImplCopyWith<_$SetIONConnectRelaysRequestImpl>
+      get copyWith => __$$SetIONConnectRelaysRequestImplCopyWithImpl<
+          _$SetIONConnectRelaysRequestImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SetIonConnectRelaysRequestImplToJson(
+    return _$$SetIONConnectRelaysRequestImplToJson(
       this,
     );
   }
 }
 
-abstract class _SetIonConnectRelaysRequest
-    implements SetIonConnectRelaysRequest {
-  const factory _SetIonConnectRelaysRequest(
+abstract class _SetIONConnectRelaysRequest
+    implements SetIONConnectRelaysRequest {
+  const factory _SetIONConnectRelaysRequest(
           {required final List<String> followeeList}) =
-      _$SetIonConnectRelaysRequestImpl;
+      _$SetIONConnectRelaysRequestImpl;
 
-  factory _SetIonConnectRelaysRequest.fromJson(Map<String, dynamic> json) =
-      _$SetIonConnectRelaysRequestImpl.fromJson;
+  factory _SetIONConnectRelaysRequest.fromJson(Map<String, dynamic> json) =
+      _$SetIONConnectRelaysRequestImpl.fromJson;
 
   @override
   List<String> get followeeList;
 
-  /// Create a copy of SetIonConnectRelaysRequest
+  /// Create a copy of SetIONConnectRelaysRequest
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SetIonConnectRelaysRequestImplCopyWith<_$SetIonConnectRelaysRequestImpl>
+  _$$SetIONConnectRelaysRequestImplCopyWith<_$SetIONConnectRelaysRequestImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

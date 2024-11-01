@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/wallet/model/coin_data.dart';
 import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
-import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,9 +18,9 @@ Future<List<CoinData>> coinsData(Ref ref) async {
   }
   final currentWalletId = await ref.watch(currentWalletIdProvider.future);
 
-  final ionClient = await ref.watch(ionApiClientProvider.future);
+  final ionIdentity = await ref.watch(ionIdentityProvider.future);
   final walletAssets =
-      await ionClient(username: currentUser).wallets.getWalletAssets(currentWalletId);
+      await ionIdentity(username: currentUser).wallets.getWalletAssets(currentWalletId);
 
   final coins = [
     for (final (_, asset) in walletAssets.assets.indexed)

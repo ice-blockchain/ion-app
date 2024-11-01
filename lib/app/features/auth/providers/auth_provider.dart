@@ -3,7 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
-import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
 import 'package:ion/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -48,8 +48,8 @@ class Auth extends _$Auth {
     final currentUser = state.valueOrNull?.currentIdentityKeyName;
     if (currentUser == null) return;
 
-    final ionClient = await ref.read(ionApiClientProvider.future);
-    await ionClient(username: currentUser).auth.logOut();
+    final ionIdentity = await ref.read(ionIdentityProvider.future);
+    await ionIdentity(username: currentUser).auth.logOut();
   }
 
   void setCurrentUser(String identityKeyName) {
@@ -85,9 +85,9 @@ bool isCurrentUserSelector(Ref ref, String pubkey) {
 
 @Riverpod(keepAlive: true)
 Stream<Iterable<String>> authenticatedIdentityKeyNamesStream(Ref ref) async* {
-  final ionClient = await ref.watch(ionApiClientProvider.future);
+  final ionIdentity = await ref.watch(ionIdentityProvider.future);
 
-  yield* ionClient.authorizedUsers;
+  yield* ionIdentity.authorizedUsers;
 }
 
 @Riverpod(keepAlive: true)
