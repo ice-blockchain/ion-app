@@ -10,6 +10,7 @@ environment:
   flutter: "3.24.2"
 
 dependencies:
+  audio_waveforms: ^1.1.1
   back_button_interceptor: ^7.0.3
   cached_network_image: ^3.3.1
   camera: ^0.11.0+2
@@ -58,6 +59,7 @@ dependencies:
     git:
       url: https://github.com/ice-blockchain/nostr-dart.git
       ref: 0.0.5
+  ogp_data_extract: ^0.1.4
   path: ^1.9.0
   path_provider: ^2.1.4
   permission_handler: ^11.3.0
@@ -75,6 +77,7 @@ dependencies:
   url_launcher: ^6.0.12
   video_player: ^2.9.1
   video_player_win: ^2.3.11
+  visibility_detector: ^0.4.0+2
   widgetbook: ^3.7.1
   widgetbook_annotation: ^3.1.0
   window_manager: ^0.4.2

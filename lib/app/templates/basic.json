@@ -104,6 +104,10 @@
         "fontSize": 11,
         "height": 1.63,
         "fontWeight": 400
+      },
+      "caption4": {
+        "fontSize": 10,
+        "fontWeight": 500
       }
     },
     "appBar": {

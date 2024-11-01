@@ -78,6 +78,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  audio_waveforms:
+    dependency: "direct main"
+    description:
+      name: audio_waveforms
+      sha256: "9fbd314cd4f67e8964df960548ea3b56f829716879527caafb8f3d76ee7e6bf0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   back_button_interceptor:
     dependency: "direct main"
     description:
@@ -1386,6 +1394,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  ogp_data_extract:
+    dependency: "direct main"
+    description:
+      name: ogp_data_extract
+      sha256: "75258f23832f3cf0211fdc81d86391468b3c0d71c676d376d4513dbc33166a54"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.4"
   package_config:
     dependency: transitive
     description:
@@ -1983,6 +1999,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  string_validator:
+    dependency: transitive
+    description:
+      name: string_validator
+      sha256: a278d038104aa2df15d0e09c47cb39a49f907260732067d0034dc2f2e4e2ac94
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   synchronized:
     dependency: transitive
     description:
@@ -2223,6 +2247,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.11"
+  visibility_detector:
+    dependency: "direct main"
+    description:
+      name: visibility_detector
+      sha256: dd5cc11e13494f432d15939c3aa8ae76844c42b723398643ce9addb88a5ed420
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0+2"
   vm_service:
     dependency: transitive
     description:

@@ -38,7 +38,6 @@ class StoryContextMenu extends HookConsumerWidget {
     );
 
     return OverlayMenu(
-      offset: Offset(-menuWidth.value + 24.0.s, 6.0.s),
       menuBuilder: (closeMenu) => OverlayMenuContainer(
         child: IntrinsicWidth(
           child: Column(

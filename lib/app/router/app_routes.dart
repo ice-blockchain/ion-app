@@ -18,6 +18,7 @@ import 'package:ion/app/features/auth/views/pages/turn_on_notifications/turn_on_
 import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_codes_page.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_options/twofa_options_page.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_success/twofa_success_page.dart';
+import 'package:ion/app/features/chat/messages/views/pages/messages_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/chat_main_page.dart';
@@ -298,6 +299,14 @@ class WalletMainModalRoute extends BaseRouteData {
           child: const WalletMainModalPage(),
           type: IceRouteType.mainModalSheet,
         );
+}
+
+@TypedGoRoute<MessagesRoute>(
+  path: '/messages',
+  routes: [],
+)
+class MessagesRoute extends BaseRouteData {
+  MessagesRoute() : super(child: const MessagesPage());
 }
 
 @TypedGoRoute<DAppsRoute>(
