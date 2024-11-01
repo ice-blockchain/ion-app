@@ -5,16 +5,19 @@ import 'package:ion_client_example/providers/ion_client_provider.dart';
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_details_notifier.g.dart';
+part 'set_ion_connect_relays_notifier.g.dart';
 
 @riverpod
-class UserDetailsNotifier extends _$UserDetailsNotifier {
+class SetIonConnectRelaysNotifier extends _$SetIonConnectRelaysNotifier {
   @override
-  FutureOr<UserDetails?> build() async {
+  FutureOr<SetIonConnectRelaysResponse?> build() async {
     return null;
   }
 
-  Future<void> fetchUserDetails(String userId) async {
+  Future<void> setIonConnectRelays({
+    required String userId,
+    required List<String> followeeList,
+  }) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
@@ -24,7 +27,10 @@ class UserDetailsNotifier extends _$UserDetailsNotifier {
       }
 
       final ionIdentity = await ref.watch(ionClientProvider.future);
-      return await ionIdentity(username: currentUser).users.details(userId: userId);
+      return await ionIdentity(username: currentUser).users.setIonConnectRelays(
+            userId: userId,
+            followeeList: followeeList,
+          );
     });
   }
 }

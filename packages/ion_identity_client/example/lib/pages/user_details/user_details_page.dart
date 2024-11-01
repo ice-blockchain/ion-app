@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion_client_example/pages/get_user_connect_indexers/get_user_connect_indexers_page.dart';
+import 'package:ion_client_example/pages/get_ion_connect_indexers/get_ion_connect_indexers_page.dart';
 import 'package:ion_client_example/pages/get_user_details/get_user_details_page.dart';
-import 'package:ion_client_example/pages/set_user_connect_relays/set_user_connect_relays_page.dart';
+import 'package:ion_client_example/pages/set_ion_connect_relays/set_ion_connect_relays_page.dart';
 import 'package:ion_client_example/pages/user_wallets/user_wallets_page.dart';
 import 'package:ion_client_example/providers/current_username_notifier.dart';
 
@@ -41,7 +41,7 @@ class UserDetailsPage extends HookConsumerWidget {
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const GetUserConnectIndexersPage(),
+                      builder: (context) => const GetIonConnectIndexersPage(),
                     ),
                   ),
                   child: const Text('Get user connect indexers'),
@@ -50,7 +50,7 @@ class UserDetailsPage extends HookConsumerWidget {
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const SetUserConnectRelaysPage(),
+                      builder: (context) => const SetIonConnectRelaysPage(),
                     ),
                   ),
                   child: const Text('Set user connect relays'),

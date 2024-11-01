@@ -18,8 +18,6 @@ import 'package:ion_identity_client/src/ion_api_user_client.dart';
 import 'package:ion_identity_client/src/signer/data_sources/user_action_signer_data_source.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
-import 'package:ion_identity_client/src/users/get_user_details/data_sources/get_user_details_data_source.dart';
-import 'package:ion_identity_client/src/users/get_user_details/get_user_details_service.dart';
 import 'package:ion_identity_client/src/wallets/ion_wallets.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/data_sources/create_wallet_data_source.dart';
@@ -68,7 +66,7 @@ mixin _IonClient {
           config: config,
           signer: signer,
         ),
-        users: ClientsServiceLocator().getUsersClient(
+        users: ClientsServiceLocator().users(
           username: username,
           config: config,
         ),
@@ -101,7 +99,6 @@ mixin _AuthClient {
       ),
       delegatedLoginService: createDelegatedLoginService(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
-      getUserService: createGetUserService(username: username, config: config),
     );
   }
 
@@ -210,25 +207,6 @@ mixin _AuthClient {
     return DelegatedLoginDataSource(
       networkClient: IonServiceLocator.getNetworkClient(config: config),
       tokenStorage: IonServiceLocator.getTokenStorage(),
-    );
-  }
-
-  GetUserDetailsService createGetUserService({
-    required String username,
-    required IonClientConfig config,
-  }) {
-    return GetUserDetailsService(
-      username,
-      createGetUserDataSource(config: config),
-    );
-  }
-
-  GetUserDetailsDataSource createGetUserDataSource({
-    required IonClientConfig config,
-  }) {
-    return GetUserDetailsDataSource(
-      IonServiceLocator.getNetworkClient(config: config),
-      IonServiceLocator.getTokenStorage(),
     );
   }
 }

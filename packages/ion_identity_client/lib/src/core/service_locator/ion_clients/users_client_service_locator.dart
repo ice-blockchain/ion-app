@@ -2,63 +2,63 @@
 
 import 'package:ion_identity_client/ion_client.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
-import 'package:ion_identity_client/src/users/get_user_connect_indexers/data_sources/get_user_connect_indexers_data_source.dart';
-import 'package:ion_identity_client/src/users/get_user_connect_indexers/get_user_connect_indexers_service.dart';
-import 'package:ion_identity_client/src/users/get_user_details/data_sources/get_user_details_data_source.dart';
-import 'package:ion_identity_client/src/users/get_user_details/get_user_details_service.dart';
+import 'package:ion_identity_client/src/users/ion_connect_indexers/data_sources/ion_connect_indexers_data_source.dart';
+import 'package:ion_identity_client/src/users/ion_connect_indexers/get_user_connect_indexers_service.dart';
 import 'package:ion_identity_client/src/users/ion_users.dart';
-import 'package:ion_identity_client/src/users/set_user_connect_relays/data_sources/set_user_connect_relays_data_source.dart';
-import 'package:ion_identity_client/src/users/set_user_connect_relays/set_user_connect_relays_service.dart';
+import 'package:ion_identity_client/src/users/set_ion_connect_relays/data_sources/set_ion_connect_relays_data_source.dart';
+import 'package:ion_identity_client/src/users/set_ion_connect_relays/set_ion_connect_relays_service.dart';
+import 'package:ion_identity_client/src/users/user_details/data_sources/user_details_data_source.dart';
+import 'package:ion_identity_client/src/users/user_details/user_details_service.dart';
 
 mixin UsersClientServiceLocator {
-  IONUsersClient getUsersClient({
+  IONUsersClient users({
     required String username,
     required IonClientConfig config,
   }) =>
       IONUsersClient(
-        _getUserDetailsService(
+        _userDetails(
           username: username,
           config: config,
         ),
-        _getUserConnectIndexersService(
+        _ionConnectIndexers(
           username: username,
           config: config,
         ),
-        _setUserConnectRelaysService(
+        _setIonConnectRelays(
           username: username,
           config: config,
         ),
       );
 
-  GetUserDetailsService _getUserDetailsService({
+  UserDetailsService _userDetails({
     required String username,
     required IonClientConfig config,
   }) =>
-      GetUserDetailsService(
+      UserDetailsService(
         username,
-        GetUserDetailsDataSource(
+        UserDetailsDataSource(
           IonServiceLocator.getNetworkClient(config: config),
           IonServiceLocator.getTokenStorage(),
         ),
       );
 
-  GetUserConnectIndexersService _getUserConnectIndexersService({
+  IonConnectIndexersService _ionConnectIndexers({
     required String username,
     required IonClientConfig config,
   }) =>
-      GetUserConnectIndexersService(
+      IonConnectIndexersService(
         username,
-        GetUserConnectIndexersDataSource(
+        IonConnectIndexersDataSource(
           IonServiceLocator.getNetworkClient(config: config),
           IonServiceLocator.getTokenStorage(),
         ),
       );
 
-  SetUserConnectRelaysService _setUserConnectRelaysService({
+  SetIonConnectRelaysService _setIonConnectRelays({
     required String username,
     required IonClientConfig config,
   }) =>
-      SetUserConnectRelaysService(
+      SetIonConnectRelaysService(
         username,
         SetUserConnectRelaysDataSource(
           IonServiceLocator.getNetworkClient(config: config),

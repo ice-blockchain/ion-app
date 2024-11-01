@@ -7,7 +7,6 @@ import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/register/register_service.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
-import 'package:ion_identity_client/src/users/get_user_details/get_user_details_service.dart';
 
 /// A class that handles user authentication processes, including user registration,
 /// login, and logout.
@@ -27,7 +26,6 @@ class IonAuth {
     required this.createRecoveryCredentialsService,
     required this.recoverUserService,
     required this.delegatedLoginService,
-    required this.getUserService,
   });
 
   final RegisterService registerService;
@@ -35,7 +33,6 @@ class IonAuth {
   final CreateRecoveryCredentialsService createRecoveryCredentialsService;
   final RecoverUserService recoverUserService;
   final DelegatedLoginService delegatedLoginService;
-  final GetUserDetailsService getUserService;
 
   final String username;
   final TokenStorage tokenStorage;
