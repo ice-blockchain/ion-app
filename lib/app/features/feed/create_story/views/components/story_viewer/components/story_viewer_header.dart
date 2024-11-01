@@ -13,52 +13,57 @@ class StoryViewerHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Avatar(
-          imageUrl: currentStory.data.imageUrl,
-          size: 30.0.s,
-        ),
-        SizedBox(width: 8.0.s),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    currentStory.data.author,
-                    style: context.theme.appTextThemes.subtitle3
-                        .copyWith(color: context.theme.appColors.onPrimaryAccent),
-                  ),
-                  SizedBox(width: 4.0.s),
-                  Assets.svg.iconBadgeIcelogo.icon(
-                    size: 16.0.s,
-                  ),
-                  SizedBox(width: 4.0.s),
-                  Assets.svg.iconBadgeCompany.icon(
-                    size: 16.0.s,
-                  ),
-                ],
-              ),
-              Text(
-                '@${currentStory.data.author}',
-                style: context.theme.appTextThemes.caption
-                    .copyWith(color: context.theme.appColors.onPrimaryAccent),
-              ),
-            ],
+    return Positioned(
+      top: 14.0.s,
+      left: 16.0.s,
+      right: 22.0.s,
+      child: Row(
+        children: [
+          Avatar(
+            imageUrl: currentStory.data.imageUrl,
+            size: 30.0.s,
           ),
-        ),
-        GestureDetector(
-          child: Assets.svg.iconMoreStories.icon(color: context.theme.appColors.onPrimaryAccent),
-          onTap: () => context.pop(),
-        ),
-        SizedBox(width: 16.0.s),
-        GestureDetector(
-          child: Assets.svg.iconSheetClose.icon(color: context.theme.appColors.onPrimaryAccent),
-          onTap: () => context.pop(),
-        ),
-      ],
+          SizedBox(width: 8.0.s),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      currentStory.data.author,
+                      style: context.theme.appTextThemes.subtitle3
+                          .copyWith(color: context.theme.appColors.onPrimaryAccent),
+                    ),
+                    SizedBox(width: 4.0.s),
+                    Assets.svg.iconBadgeIcelogo.icon(
+                      size: 16.0.s,
+                    ),
+                    SizedBox(width: 4.0.s),
+                    Assets.svg.iconBadgeCompany.icon(
+                      size: 16.0.s,
+                    ),
+                  ],
+                ),
+                Text(
+                  '@${currentStory.data.author}',
+                  style: context.theme.appTextThemes.caption
+                      .copyWith(color: context.theme.appColors.onPrimaryAccent),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            child: Assets.svg.iconMoreStories.icon(color: context.theme.appColors.onPrimaryAccent),
+            onTap: () => context.pop(),
+          ),
+          SizedBox(width: 16.0.s),
+          GestureDetector(
+            child: Assets.svg.iconSheetClose.icon(color: context.theme.appColors.onPrimaryAccent),
+            onTap: () => context.pop(),
+          ),
+        ],
+      ),
     );
   }
 }

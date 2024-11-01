@@ -10,10 +10,12 @@ import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_s
 class StoryInputField extends HookWidget {
   const StoryInputField({
     required this.controller,
+    required this.bottomPadding,
     super.key,
   });
 
   final TextEditingController controller;
+  final double bottomPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -35,60 +37,65 @@ class StoryInputField extends HookWidget {
       [controller],
     );
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-            left: 16.0.s,
-            right: 16.0.s,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16.0.s),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-              child: TextField(
-                cursorColor: context.theme.appColors.onPrimaryAccent,
-                controller: controller,
-                focusNode: focusNode,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: context.theme.appColors.primaryText.withOpacity(0.5),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 12.0.s,
-                    vertical: 9.0.s,
+    return Positioned(
+      bottom: bottomPadding,
+      left: 16.0.s,
+      right: 70.0.s,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: 16.0.s,
+              right: 16.0.s,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16.0.s),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                child: TextField(
+                  cursorColor: context.theme.appColors.onPrimaryAccent,
+                  controller: controller,
+                  focusNode: focusNode,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: context.theme.appColors.primaryText.withOpacity(0.5),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12.0.s,
+                      vertical: 9.0.s,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.0.s),
+                      borderSide: BorderSide.none,
+                    ),
+                    suffixIcon: isTextNotEmpty.value
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                              top: 4.0.s,
+                              bottom: 4.0.s,
+                              right: 4.0.s,
+                            ),
+                            child: ToolbarSendButton(
+                              enabled: true,
+                              onPressed: () {},
+                            ),
+                          )
+                        : null,
+                    hintText: context.i18n.write_a_message,
+                    hintStyle: context.theme.appTextThemes.body2.copyWith(
+                      color: context.theme.appColors.onPrimaryAccent,
+                    ),
+                    isDense: true,
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.0.s),
-                    borderSide: BorderSide.none,
-                  ),
-                  suffixIcon: isTextNotEmpty.value
-                      ? Padding(
-                          padding: EdgeInsets.only(
-                            top: 4.0.s,
-                            bottom: 4.0.s,
-                            right: 4.0.s,
-                          ),
-                          child: ToolbarSendButton(
-                            enabled: true,
-                            onPressed: () {},
-                          ),
-                        )
-                      : null,
-                  hintText: context.i18n.write_a_message,
-                  hintStyle: context.theme.appTextThemes.body2.copyWith(
+                  style: context.theme.appTextThemes.body2.copyWith(
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
-                  isDense: true,
-                ),
-                style: context.theme.appTextThemes.body2.copyWith(
-                  color: context.theme.appColors.onPrimaryAccent,
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

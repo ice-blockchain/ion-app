@@ -12,29 +12,35 @@ import 'package:ion/generated/assets.gen.dart';
 class StoryViewerActionButtons extends ConsumerWidget {
   const StoryViewerActionButtons({
     required this.story,
+    required this.bottomPadding,
     super.key,
   });
 
   final Story story;
+  final double bottomPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _SoundButton(story: story),
-        SizedBox(height: 16.0.s),
-        StoryControlButton(
-          icon: Assets.svg.iconBlockShare.icon(
-            color: context.theme.appColors.onPrimaryAccent,
+    return Positioned(
+      bottom: bottomPadding,
+      right: 16.0.s,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _SoundButton(story: story),
+          SizedBox(height: 16.0.s),
+          StoryControlButton(
+            icon: Assets.svg.iconBlockShare.icon(
+              color: context.theme.appColors.onPrimaryAccent,
+            ),
+            onPressed: () {
+              StoryContactsShareRoute().push<void>(context);
+            },
           ),
-          onPressed: () {
-            StoryContactsShareRoute().push<void>(context);
-          },
-        ),
-        SizedBox(height: 16.0.s),
-        _LikeButton(story: story),
-      ],
+          SizedBox(height: 16.0.s),
+          _LikeButton(story: story),
+        ],
+      ),
     );
   }
 }
