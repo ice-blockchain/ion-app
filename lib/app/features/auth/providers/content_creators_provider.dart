@@ -12,7 +12,7 @@ part 'content_creators_provider.g.dart';
 @riverpod
 class ContentCreators extends _$ContentCreators {
   @override
-  Paged<String> build() {
+  Paged<String, PaginationParams> build() {
     return Paged.data({}, pagination: PaginationParams());
   }
 
