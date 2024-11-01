@@ -8,9 +8,6 @@ part of 'user_details.dart';
 
 _$UserDetailsImpl _$$UserDetailsImplFromJson(Map<String, dynamic> json) =>
     _$UserDetailsImpl(
-      twoFaOptions: (json['2faOptions'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
       ionConnectIndexerRelays:
           (json['ionConnectIndexerRelays'] as List<dynamic>)
               .map((e) => e as String)
@@ -18,6 +15,10 @@ _$UserDetailsImpl _$$UserDetailsImplFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       userId: json['userId'] as String,
       username: json['username'] as String,
+      masterPubKey: json['masterPubKey'] as String,
+      twoFaOptions: (json['2faOptions'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       email:
           (json['email'] as List<dynamic>?)?.map((e) => e as String).toList(),
       phoneNumber: (json['phoneNumber'] as List<dynamic>?)
@@ -30,11 +31,12 @@ _$UserDetailsImpl _$$UserDetailsImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$UserDetailsImplToJson(_$UserDetailsImpl instance) =>
     <String, dynamic>{
-      '2faOptions': instance.twoFaOptions,
       'ionConnectIndexerRelays': instance.ionConnectIndexerRelays,
       'name': instance.name,
       'userId': instance.userId,
       'username': instance.username,
+      'masterPubKey': instance.masterPubKey,
+      '2faOptions': instance.twoFaOptions,
       'email': instance.email,
       'phoneNumber': instance.phoneNumber,
       'ionConnectRelays': instance.ionConnectRelays,

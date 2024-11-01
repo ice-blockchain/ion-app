@@ -8,11 +8,12 @@ part 'user_details.g.dart';
 @freezed
 class UserDetails with _$UserDetails {
   const factory UserDetails({
-    @JsonKey(name: '2faOptions') required List<String> twoFaOptions,
     required List<String> ionConnectIndexerRelays,
     required String name,
     required String userId,
     required String username,
+    required String masterPubKey,
+    @JsonKey(name: '2faOptions') List<String>? twoFaOptions,
     List<String>? email,
     List<String>? phoneNumber,
     List<String>? ionConnectRelays,
