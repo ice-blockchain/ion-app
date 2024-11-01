@@ -12,6 +12,7 @@ import 'package:ion_identity_client/src/auth/services/recover_user/data_sources/
 import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/register/data_sources/register_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/register/register_service.dart';
+import 'package:ion_identity_client/src/core/service_locator/ion_clients/users_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
 import 'package:ion_identity_client/src/ion_api_user_client.dart';
 import 'package:ion_identity_client/src/signer/data_sources/user_action_signer_data_source.dart';
@@ -33,7 +34,8 @@ import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets
 import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/data_sources/pseudo_network_generate_signature_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/pseudo_network_generate_signature_service.dart';
 
-class ClientsServiceLocator with _IonClient, _AuthClient, _WalletsClient, _UserActionSigner {
+class ClientsServiceLocator
+    with _IonClient, _AuthClient, _WalletsClient, _UserActionSigner, UsersClientServiceLocator {
   factory ClientsServiceLocator() {
     return _instance;
   }
@@ -63,6 +65,10 @@ mixin _IonClient {
           username: username,
           config: config,
           signer: signer,
+        ),
+        users: ClientsServiceLocator().users(
+          username: username,
+          config: config,
         ),
       );
       _clients[username] = client;
