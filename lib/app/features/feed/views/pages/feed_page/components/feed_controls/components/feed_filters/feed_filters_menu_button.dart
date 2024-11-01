@@ -13,7 +13,6 @@ class FeedFiltersMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OverlayMenu(
-      offset: Offset(-160.0.s, 10.0.s),
       menuBuilder: (closeMenu) => FeedFiltersMenuOverlay(closeMenu: closeMenu),
       child: const _MenuButton(),
     );

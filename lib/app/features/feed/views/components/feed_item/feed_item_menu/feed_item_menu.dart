@@ -18,7 +18,6 @@ class FeedItemMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OverlayMenu(
-      offset: Offset(-146.0.s, 0),
       menuBuilder: (closeMenu) => Column(
         children: [
           OverlayMenuContainer(

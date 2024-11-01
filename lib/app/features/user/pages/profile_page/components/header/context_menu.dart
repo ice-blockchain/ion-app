@@ -38,7 +38,6 @@ class ContextMenu extends HookConsumerWidget {
     );
 
     return OverlayMenu(
-      offset: Offset(-menuWidth.value + HeaderAction.buttonSize, 6.0.s),
       menuBuilder: (closeMenu) => OverlayMenuContainer(
         child: IntrinsicWidth(
           child: Column(

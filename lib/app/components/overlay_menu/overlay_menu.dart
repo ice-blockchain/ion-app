@@ -3,23 +3,24 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/overlay_menu/hooks/use_hide_on_scroll.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class OverlayMenu extends HookWidget {
   const OverlayMenu({
     required this.child,
     required this.menuBuilder,
     super.key,
-    this.offset = Offset.zero,
   });
 
   final Widget child;
   final Widget Function(VoidCallback closeMenu) menuBuilder;
-  final Offset offset;
 
   @override
   Widget build(BuildContext context) {
     final overlayPortalController = useMemoized(OverlayPortalController.new);
     final followLink = useMemoized(LayerLink.new);
+    final animationController = useAnimationController(duration: const Duration(milliseconds: 400));
+    final scaleAnimation = CurvedAnimation(parent: animationController, curve: Curves.easeOutBack);
 
     useHideOnScroll(context, overlayPortalController);
 
@@ -30,20 +31,32 @@ class OverlayMenu extends HookWidget {
 
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
-          onTap: overlayPortalController.hide,
+          onTap: () {
+            animationController.reverse().whenComplete(overlayPortalController.hide);
+          },
           child: Stack(
             children: [
               CompositedTransformFollower(
                 link: followLink,
-                offset: Offset(offset.dx, renderBox.size.height + offset.dy),
-                child: menuBuilder(overlayPortalController.hide),
+                offset: Offset(renderBox.size.width, renderBox.size.height + 6.0.s),
+                followerAnchor: Alignment.topRight,
+                child: ScaleTransition(
+                  alignment: Alignment.topRight,
+                  scale: scaleAnimation,
+                  child: menuBuilder(() {
+                    animationController.reverse().whenComplete(overlayPortalController.hide);
+                  }),
+                ),
               ),
             ],
           ),
         );
       },
       child: GestureDetector(
-        onTap: overlayPortalController.show,
+        onTap: () {
+          overlayPortalController.show();
+          animationController.forward();
+        },
         child: CompositedTransformTarget(
           link: followLink,
           child: child,
