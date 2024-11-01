@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/article/components/article_header/article_header.dart';
+import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
 import 'package:ion/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
@@ -21,39 +21,62 @@ class Article extends StatelessWidget {
   });
 
   final String id;
-
   final UserMetadata userMetadata;
-
   final DateTime publishedAt;
-
   final String imageUrl;
-
   final int minutesToRead;
-
   final String title;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListItem.user(
-          title: Text(userMetadata.displayName),
-          subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
-          profilePicture: userMetadata.picture,
-          verifiedBadge: userMetadata.verified,
-          ntfAvatar: userMetadata.nft,
-          timeago: publishedAt,
-          onTap: () {},
-          trailing: const BookmarkButton(id: 'test_article_id'),
+    return ColoredBox(
+      color: context.theme.appColors.onPrimaryAccent,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 12.0.s),
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              Container(
+                clipBehavior: Clip.antiAlias,
+                width: 4.0.s,
+                decoration: BoxDecoration(
+                  color: context.theme.appColors.primaryAccent,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(4.0.s),
+                    bottomRight: Radius.circular(4.0.s),
+                  ),
+                ),
+              ),
+              SizedBox(width: 12.0.s),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListItem.user(
+                      title: Text(userMetadata.displayName),
+                      subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
+                      profilePicture: userMetadata.picture,
+                      verifiedBadge: userMetadata.verified,
+                      ntfAvatar: userMetadata.nft,
+                      timeago: publishedAt,
+                      onTap: () {},
+                      trailing: const BookmarkButton(id: 'test_article_id'),
+                    ),
+                    SizedBox(height: 10.0.s),
+                    ArticleImage(
+                      imageUrl: imageUrl,
+                      minutesToRead: minutesToRead,
+                    ),
+                    SizedBox(height: 10.0.s),
+                    ArticleFooter(text: title),
+                  ],
+                ),
+              ),
+              SizedBox(width: 16.0.s),
+            ],
+          ),
         ),
-        SizedBox(height: 10.0.s),
-        ArticleImage(
-          imageUrl: imageUrl,
-          minutesToRead: minutesToRead,
-        ),
-        SizedBox(height: 16.0.s),
-        ArticleHeader(text: title),
-      ],
+      ),
     );
   }
 }

@@ -36,7 +36,7 @@ class ReadTimeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.0.s, vertical: 4.0.s),
+      padding: EdgeInsets.symmetric(horizontal: 7.0.s, vertical: 4.0.s),
       decoration: BoxDecoration(
         color: context.theme.appColors.tertararyBackground,
         border: Border.all(
@@ -52,7 +52,7 @@ class ReadTimeTile extends StatelessWidget {
             size: 16.0.s,
             color: context.theme.appColors.sharkText,
           ),
-          SizedBox(width: 3.0.s),
+          SizedBox(width: 4.0.s),
           Text(
             context.i18n.feed_read_time_in_mins(minutesToRead),
             style: context.theme.appTextThemes.caption
