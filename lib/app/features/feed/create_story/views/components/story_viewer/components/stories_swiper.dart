@@ -2,6 +2,7 @@
 
 import 'package:cube_transition_plus/cube_transition_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/user_story_page_view.dart';
 
@@ -55,6 +56,26 @@ class StoriesSwiper extends StatelessWidget {
             },
             onNextStory: onNextStory,
             onPreviousStory: onPreviousStory,
+            onNextUser: () {
+              if (userPageController.hasClients && currentUserIndex < users.length - 1) {
+                userPageController.nextPage(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              } else {
+                context.pop();
+              }
+            },
+            onPreviousUser: () {
+              if (userPageController.hasClients && currentUserIndex > 0) {
+                userPageController.previousPage(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              } else {
+                context.pop();
+              }
+            },
           ),
         );
       },
