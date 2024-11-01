@@ -18,7 +18,7 @@ Map<String, List<String>> findBestOptions(Map<String, List<String>> keysToOption
   /// Transforms
   /// {
   ///   "Key1": ["Option1", "Option2"],
-  ///   "Key1": ["Option2", "Option3"]
+  ///   "Key2": ["Option2", "Option3"]
   /// }
   /// to
   /// {
