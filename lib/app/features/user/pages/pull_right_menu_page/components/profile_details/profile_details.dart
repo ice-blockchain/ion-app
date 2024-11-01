@@ -7,8 +7,8 @@ import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/user/pages/components/user_name_tile/user_name_tile.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/profile_details/profile_details_cell.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.dart';
 import 'package:ion/app/features/user/providers/user_followers_provider.dart';
-import 'package:ion/app/features/user/providers/user_following_provider.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 
 class ProfileDetails extends ConsumerWidget {
@@ -21,7 +21,7 @@ class ProfileDetails extends ConsumerWidget {
     final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
     final userMetadataValue = ref.watch(currentUserMetadataProvider).valueOrNull;
     final userFollowers = ref.watch(userFollowersProvider(currentPubkey));
-    final userFollowing = ref.watch(userFollowingProvider(currentPubkey));
+    final followList = ref.watch(followListProvider(currentPubkey));
 
     return Container(
       alignment: Alignment.center,
@@ -41,7 +41,7 @@ class ProfileDetails extends ConsumerWidget {
                     children: [
                       ProfileDetailsCell(
                         title: context.i18n.profile_following,
-                        value: userFollowing.valueOrNull?.length,
+                        value: followList.valueOrNull?.data.list.length,
                       ),
                       VerticalDivider(
                         width: 36.0.s,

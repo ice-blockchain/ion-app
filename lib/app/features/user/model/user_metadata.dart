@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
@@ -26,7 +27,7 @@ class UserMetadataEntity with _$UserMetadataEntity implements CacheableEntity, N
   /// https://github.com/nostr-protocol/nips/blob/master/01.md#kinds
   factory UserMetadataEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
+      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
     }
 
     return UserMetadataEntity(

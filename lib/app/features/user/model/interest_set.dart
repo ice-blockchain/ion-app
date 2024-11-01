@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/enum.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
@@ -26,7 +27,7 @@ class InterestSetEntity with _$InterestSetEntity implements CacheableEntity, Nos
   /// https://github.com/nostr-protocol/nips/blob/master/51.md#sets
   factory InterestSetEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
+      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
     }
 
     return InterestSetEntity(

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
@@ -10,6 +11,7 @@ import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/relays_provider.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
+import 'package:ion/app/features/user/providers/user_relays_manager.dart';
 import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
 import 'package:nostr_dart/nostr_dart.dart' as nd;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -45,7 +47,7 @@ class NostrNotifier extends _$NostrNotifier {
     final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
 
     if (keyStore == null) {
-      throw Exception('Current user keystore is null');
+      throw KeystoreNotFoundException();
     }
 
     final events = entitiesData.map((data) => data.toEventMessage(keyStore)).toList();
@@ -102,61 +104,37 @@ class NostrNotifier extends _$NostrNotifier {
         {
           final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
           if (keyStore == null) {
-            throw Exception('Current user keystore is not found');
+            throw KeystoreNotFoundException();
           }
-          final userRelays = await getUserRelays(keyStore.publicKey);
+          final userRelays = await _getUserRelays(keyStore.publicKey);
           return await ref.read(relayProvider(userRelays.data.list.random.url).future);
         }
       case ActionSourceUser():
         {
-          final userRelays = await getUserRelays(actionSource.pubkey);
+          final userRelays = await _getUserRelays(actionSource.pubkey);
           return await ref.read(relayProvider(userRelays.data.list.random.url).future);
         }
       case ActionSourceIndexers():
         {
           final indexers = await ref.read(currentUserIndexersProvider.future);
           if (indexers == null) {
-            throw UserRelaysNotFoundException();
+            throw UserIndexersNotFoundException();
           }
           return await ref.read(relayProvider(indexers.random).future);
+        }
+      case ActionSourceRelayUrl():
+        {
+          return await ref.read(relayProvider(actionSource.url).future);
         }
     }
   }
 
-  Future<UserRelaysEntity> getUserRelays(String pubkey) async {
-    final cached = ref.read(nostrCacheProvider.select(cacheSelector<UserRelaysEntity>(pubkey)));
-    if (cached != null) {
-      return cached;
+  Future<UserRelaysEntity> _getUserRelays(String pubkey) async {
+    final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
+    if (userRelays.isEmpty) {
+      throw UserRelaysNotFoundException();
     }
-
-    final requestMessage = RequestMessage()
-      ..addFilter(RequestFilter(kinds: const [UserRelaysEntity.kind], authors: [pubkey], limit: 1));
-
-    final event = await ref.read(nostrNotifierProvider.notifier).requestEvent(
-          requestMessage,
-          actionSource: const ActionSourceIndexers(),
-        );
-
-    if (event != null) {
-      //TODO:uncomment when our relays are used, using damus by then as the fastest one
-      // final userRelays = UserRelays.fromEventMessage(event);
-      final userRelays = UserRelaysEntity(
-        id: '',
-        createdAt: DateTime.now(),
-        pubkey: pubkey,
-        data: const UserRelaysData(list: [UserRelay(url: 'wss://relay.nostr.band')]),
-      );
-      ref.read(nostrCacheProvider.notifier).cache(userRelays);
-      return userRelays;
-    }
-    //TODO:
-    // else
-    // request to identity->get-user for the provided `pubkey` when implemented
-    // and return them here if found:
-    // ref.read(nostrCacheProvider.notifier).cache(userRelays);
-    // return ...
-
-    throw UserRelaysNotFoundException();
+    return userRelays.first;
   }
 
   NostrEntity _parseAndCache(EventMessage event) {
@@ -167,10 +145,4 @@ class NostrNotifier extends _$NostrNotifier {
     }
     return entity;
   }
-}
-
-class UserRelaysNotFoundException implements Exception {
-  UserRelaysNotFoundException([this.message = 'User relays are not found']);
-
-  final String message;
 }

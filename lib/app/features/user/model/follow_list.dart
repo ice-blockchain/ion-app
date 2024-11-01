@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -19,10 +20,10 @@ class FollowListEntity with _$FollowListEntity implements CacheableEntity, Nostr
 
   const FollowListEntity._();
 
-  /// https://github.com/nostr-protocol/nips/blob/master/51.md#sets
+  /// https://github.com/nostr-protocol/nips/blob/master/02.md
   factory FollowListEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw Exception('Incorrect event with kind ${eventMessage.kind}, expected $kind');
+      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
     }
 
     return FollowListEntity(
@@ -32,6 +33,8 @@ class FollowListEntity with _$FollowListEntity implements CacheableEntity, Nostr
       data: FollowListData.fromEventMessage(eventMessage),
     );
   }
+
+  List<String> get pubkeys => data.list.map((followee) => followee.pubkey).toList();
 
   @override
   String get cacheKey => pubkey;
@@ -48,7 +51,6 @@ class FollowListData with _$FollowListData implements EventSerializable {
     required List<Followee> list,
   }) = _FollowListData;
 
-  /// https://github.com/nostr-protocol/nips/blob/master/02.md
   factory FollowListData.fromEventMessage(EventMessage eventMessage) {
     return FollowListData(
       list: eventMessage.tags.map(Followee.fromTag).toList(),
@@ -80,7 +82,7 @@ class Followee with _$Followee {
 
   factory Followee.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
-      throw Exception('Incorrect tag $tag, expected $tagName');
+      throw IncorrectEventTagException(actual: tag[0], expected: tagName);
     }
     return Followee(pubkey: tag[1], relayUrl: tag[2], petname: tag[3]);
   }

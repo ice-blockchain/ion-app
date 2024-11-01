@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
 import 'package:ion/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
@@ -21,7 +22,7 @@ Future<Wallet?> mainWallet(Ref ref) async {
   final wallets = await ionClient(username: currentIdentityKeyName).wallets.getWallets();
   final mainWallet = wallets.firstWhereOrNull((wallet) => wallet.name == 'main');
   if (mainWallet == null) {
-    throw Exception('Main wallet is not found');
+    throw MainWalletNotFoundException();
   }
 
   // TODO:take `mainWallet` when signing with TON is implemented and remove this 'temp-main'

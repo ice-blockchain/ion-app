@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 
@@ -18,7 +19,7 @@ class MediaAttachment {
   /// https://github.com/nostr-protocol/nips/blob/master/92.md#example
   factory MediaAttachment.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
-      throw Exception('Wrong tags ${tag[0]}, expected "imeta"');
+      throw IncorrectEventTagException(actual: tag[0], expected: tagName);
     }
 
     String? url;

@@ -9,8 +9,8 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_item.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.dart';
 import 'package:ion/app/features/user/providers/user_followers_provider.dart';
-import 'package:ion/app/features/user/providers/user_following_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -27,11 +27,10 @@ class FollowListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pubKeysResult = (followType == FollowType.followers
-        ? ref.watch(userFollowersProvider(pubkey))
-        : ref.watch(userFollowingProvider(pubkey)));
-
-    final counter = pubKeysResult.valueOrNull?.length ?? 0;
+    final pubkeys = switch (followType) {
+      FollowType.followers => ref.watch(userFollowersProvider(pubkey)).valueOrNull,
+      FollowType.following => ref.watch(followListProvider(pubkey)).valueOrNull?.pubkeys,
+    };
 
     return SheetContent(
       body: CustomScrollView(
@@ -44,7 +43,7 @@ class FollowListView extends ConsumerWidget {
                   onPressed: () => context.pop(),
                 ),
               ],
-              title: Text(followType.getTitleWithCounter(context, counter)),
+              title: Text(followType.getTitleWithCounter(context, pubkeys?.length ?? 0)),
             ),
             automaticallyImplyLeading: false,
             toolbarHeight: NavigationAppBar.modalHeaderHeight,
@@ -66,32 +65,28 @@ class FollowListView extends ConsumerWidget {
               ),
             ),
           ),
-          pubKeysResult.maybeWhen(
-            data: (pubKeys) {
-              final pubKeysList = pubKeys.toList();
-
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    final pubkey = pubKeysList[index];
-                    return ScreenSideOffset.small(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 16.0.s),
-                        child: FollowListItem(
-                          pubkey: pubkey,
-                        ),
+          if (pubkeys != null)
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  final pubkey = pubkeys[index];
+                  return ScreenSideOffset.small(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 16.0.s),
+                      child: FollowListItem(
+                        pubkey: pubkey,
                       ),
-                    );
-                  },
-                  childCount: pubKeysList.length,
-                ),
-              );
-            },
-            orElse: () => ListItemsLoadingState(
+                    ),
+                  );
+                },
+                childCount: pubkeys.length,
+              ),
+            )
+          else
+            ListItemsLoadingState(
               itemHeight: 35.0.s,
               listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
             ),
-          ),
         ],
       ),
     );
