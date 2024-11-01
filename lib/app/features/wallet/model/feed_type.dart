@@ -3,14 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/core/model/main_modal_list_item.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-enum FeedType {
+enum FeedType implements MainModalListItem {
   post,
   story,
   video,
   article;
 
+  @override
   String getDisplayName(BuildContext context) {
     return switch (this) {
       FeedType.post => context.i18n.feed_modal_post,
@@ -20,6 +22,7 @@ enum FeedType {
     };
   }
 
+  @override
   String getDescription(BuildContext context) {
     return switch (this) {
       FeedType.post => context.i18n.feed_modal_post_description,
@@ -29,6 +32,7 @@ enum FeedType {
     };
   }
 
+  @override
   Color getIconColor(BuildContext context) {
     return switch (this) {
       FeedType.post => context.theme.appColors.purple,
@@ -38,6 +42,7 @@ enum FeedType {
     };
   }
 
+  @override
   String get iconAsset {
     return switch (this) {
       FeedType.post => Assets.svg.iconFeedPost,
