@@ -46,10 +46,11 @@ class SelectArticleTopicsItem extends ConsumerWidget {
             ),
             trailing: Assets.svg.iconArrowRight.icon(color: context.theme.appColors.primaryText),
             constraints: BoxConstraints(minHeight: 40.0.s),
-            onTap: () {
-              showSimpleBottomSheet<void>(
+            onTap: () async {
+              await showSimpleBottomSheet<void>(
                 context: context,
                 child: const TopicSelectModal(),
+                useRootNavigator: false,
               );
             },
           ),
