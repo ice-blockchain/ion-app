@@ -11,13 +11,12 @@ class FeedPosts extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postIds = ref.watch(feedPostIdsProvider);
+    final postIds = ref.watch(feedPostIdsProvider).valueOrNull;
 
-    return postIds.maybeWhen(
-      data: (data) {
-        return PostList(postIds: data);
-      },
-      orElse: () => const PostListSkeleton(),
-    );
+    if (postIds == null) {
+      return const PostListSkeleton();
+    }
+
+    return PostList(postIds: postIds);
   }
 }
