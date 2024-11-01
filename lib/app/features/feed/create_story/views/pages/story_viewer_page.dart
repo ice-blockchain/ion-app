@@ -13,27 +13,6 @@ import 'package:ion/app/features/feed/create_story/views/components/story_viewer
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_progress_bar.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
-PageController usePageControllerWithInitialPage(int initialPage) {
-  final initialPageRef = useRef<int>(initialPage);
-  final controller = useMemoized(() => PageController(initialPage: initialPage), []);
-  useEffect(() => controller.dispose, [controller]);
-
-  useEffect(
-    () {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (controller.hasClients && initialPageRef.value != initialPage) {
-          controller.jumpToPage(initialPage);
-          initialPageRef.value = initialPage;
-        }
-      });
-      return null;
-    },
-    [initialPage],
-  );
-
-  return controller;
-}
-
 class StoryViewerPage extends HookConsumerWidget {
   const StoryViewerPage({super.key});
 
@@ -44,7 +23,21 @@ class StoryViewerPage extends HookConsumerWidget {
 
     useOnInit(storyViewingController.loadStories);
 
-    final userPageController = usePageControllerWithInitialPage(0);
+    final userPageController = usePageController();
+
+    useEffect(
+      () {
+        storyViewingState.whenOrNull(
+          ready: (users, currentUserIndex, _) {
+            if (userPageController.hasClients) {
+              userPageController.jumpToPage(currentUserIndex);
+            }
+          },
+        );
+        return null;
+      },
+      [storyViewingState],
+    );
 
     useEffect(
       () {

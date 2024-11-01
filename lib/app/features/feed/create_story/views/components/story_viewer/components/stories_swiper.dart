@@ -34,7 +34,7 @@ class StoriesSwiper extends StatelessWidget {
       controller: userPageController,
       itemCount: users.length,
       onPageChanged: (index) {
-        Future(() {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           onUserPageChanged(index);
         });
       },
