@@ -6,7 +6,7 @@ import 'dart:math';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart' as crypto;
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_info.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_request_data.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_response.dart';
@@ -26,7 +26,7 @@ class CreateRecoveryCredentialsService {
   });
 
   final String username;
-  final IonClientConfig config;
+  final IONIdentityConfig config;
   final CreateRecoveryCredentialsDataSource dataSource;
   final UserActionSigner userActionSigner;
   final KeyService keyService;

@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="ion_client_example"
+        android:label="ion_identity_client_example"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

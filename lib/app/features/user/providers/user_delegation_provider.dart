@@ -8,8 +8,8 @@ import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/user_delegation.dart';
 import 'package:ion/app/features/wallets/providers/main_wallet_provider.dart';
-import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
-import 'package:ion/app/services/ion_identity_client/mocked_ton_wallet_keystore.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
+import 'package:ion/app/services/ion_identity/mocked_ton_wallet_keystore.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -74,7 +74,7 @@ class UserDelegationManager extends _$UserDelegationManager {
   Future<EventMessage> buildDelegationEventFrom(UserDelegationData userDelegationData) async {
     final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
     final mainWallet = (await ref.read(mainWalletProvider.future))!;
-    final ionClient = await ref.read(ionApiClientProvider.future);
+    final ionIdentity = await ref.read(ionIdentityProvider.future);
 
     final tags = userDelegationData.tags;
     final createdAt = DateTime.now();
@@ -89,7 +89,7 @@ class UserDelegationManager extends _$UserDelegationManager {
       content: '',
     );
 
-    final signResponse = await ionClient(username: currentIdentityKeyName)
+    final signResponse = await ionIdentity(username: currentIdentityKeyName)
         .wallets
         .generateSignature(mainWallet.id, eventId);
 

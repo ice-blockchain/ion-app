@@ -41,7 +41,7 @@ extension NotificationDataExtension on NotificationData {
 
   Widget getIcon(BuildContext context) {
     return when(
-      loading: (_) => IonLoadingIndicator(
+      loading: (_) => IONLoadingIndicator(
         size: Size.square(16.0.s),
       ),
       published: (_) => Assets.svg.iconBlockCheckboxOnblue.icon(

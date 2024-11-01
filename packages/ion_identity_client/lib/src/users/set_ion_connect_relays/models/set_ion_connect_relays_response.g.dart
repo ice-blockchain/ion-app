@@ -6,16 +6,16 @@ part of 'set_ion_connect_relays_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SetIonConnectRelaysResponseImpl _$$SetIonConnectRelaysResponseImplFromJson(
+_$SetIONConnectRelaysResponseImpl _$$SetIONConnectRelaysResponseImplFromJson(
         Map<String, dynamic> json) =>
-    _$SetIonConnectRelaysResponseImpl(
+    _$SetIONConnectRelaysResponseImpl(
       ionConnectRelays: (json['ionConnectRelays'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
     );
 
-Map<String, dynamic> _$$SetIonConnectRelaysResponseImplToJson(
-        _$SetIonConnectRelaysResponseImpl instance) =>
+Map<String, dynamic> _$$SetIONConnectRelaysResponseImplToJson(
+        _$SetIONConnectRelaysResponseImpl instance) =>
     <String, dynamic>{
       'ionConnectRelays': instance.ionConnectRelays,
     };

@@ -3,29 +3,29 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:ion_identity_client/ion_client.dart';
-import 'package:ion_identity_client/src/core/service_locator/ion_service_locator.dart';
+import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
-import 'package:ion_identity_client/src/ion_api_user_client.dart';
+import 'package:ion_identity_client/src/ion_identity_user_client.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 
 /// This class is an entry point for interacting with the API.Provids user-specific operations
 /// such as authentication and wallet management. This client supports multi-user
 /// scenarios, allowing different user sessions to be managed concurrently.
-class IonApiClient {
-  /// Creates an instance of [IonApiClient] with the given [config], [signer],
+class IONIdentity {
+  /// Creates an instance of [IONIdentity] with the given [config], [signer],
   /// and [tokenStorage]. This constructor is private and used internally.
-  IonApiClient._({
-    required IonClientConfig config,
+  IONIdentity._({
+    required IONIdentityConfig config,
     required PasskeysSigner signer,
     required TokenStorage tokenStorage,
   })  : _config = config,
         _signer = signer,
         _tokenStorage = tokenStorage;
 
-  /// Factory method to create a default instance of [IonApiClient] using the given [config].
-  factory IonApiClient.createDefault({
-    required IonClientConfig config,
+  /// Factory method to create a default instance of [IONIdentity] using the given [config].
+  factory IONIdentity.createDefault({
+    required IONIdentityConfig config,
   }) {
     if (!(kIsWeb || Platform.isAndroid || Platform.isIOS)) {
       throw UnimplementedError('Current platform is not supproted');
@@ -33,10 +33,10 @@ class IonApiClient {
 
     final signer = PasskeysSigner();
 
-    return IonApiClient._(
+    return IONIdentity._(
       config: config,
       signer: signer,
-      tokenStorage: IonServiceLocator.getTokenStorage(),
+      tokenStorage: IONIdentityServiceLocator.tokenStorage(),
     );
   }
 
@@ -50,17 +50,17 @@ class IonApiClient {
 
   /// Returns a user-specific API client for the given [username].
   /// This allows the caller to perform actions on behalf of the specified user.
-  IonApiUserClient call({
+  IONIdentityClient call({
     required String username,
   }) {
-    return IonServiceLocator.getApiClient(
+    return IONIdentityServiceLocator.identityUserClient(
       username: username,
       config: _config,
       signer: _signer,
     );
   }
 
-  final IonClientConfig _config;
+  final IONIdentityConfig _config;
   final PasskeysSigner _signer;
   final TokenStorage _tokenStorage;
 

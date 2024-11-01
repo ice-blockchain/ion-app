@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_client_example/providers/ion_client_provider.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'delegated_login_notifier.g.dart';
@@ -14,8 +14,8 @@ class DelegatedLoginNotifier extends _$DelegatedLoginNotifier {
     state = const AsyncLoading();
 
     try {
-      final ionClient = await ref.read(ionClientProvider.future);
-      await ionClient(username: username).auth.delegatedLogin();
+      final ionIdentity = await ref.read(ionIdentityProvider.future);
+      await ionIdentity(username: username).auth.delegatedLogin();
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }

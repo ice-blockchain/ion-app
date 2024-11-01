@@ -64,7 +64,7 @@ Widget regularButtonUseCase(BuildContext context) {
           label: const Text('Loading'),
           disabled: true,
           mainAxisSize: MainAxisSize.max,
-          trailingIcon: const IonLoadingIndicator(),
+          trailingIcon: const IONLoadingIndicator(),
           onPressed: () {},
         ),
         Button(

@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion.dart';
 import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion_data.dart';
 import 'package:ion_identity_client/src/signer/dtos/fido_2_attestation.dart';

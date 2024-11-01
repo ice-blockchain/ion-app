@@ -29,7 +29,7 @@ class SubscribedChannels extends StatelessWidget {
               message: 'Exploring the intersection of finance and technology.',
               joined: false,
               isVerified: true,
-              isIon: true,
+              isION: true,
             ),
             HorizontalSeparator(
               height: 16.0.s,

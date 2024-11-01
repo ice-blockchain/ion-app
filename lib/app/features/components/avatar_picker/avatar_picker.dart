@@ -72,7 +72,7 @@ class AvatarPicker extends ConsumerWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   child: avatarPickerState is AvatarPickerStatePicked
-                      ? const IonLoadingIndicator()
+                      ? const IONLoadingIndicator()
                       : Assets.svg.iconLoginCamera.icon(),
                 ),
               );

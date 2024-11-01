@@ -6,16 +6,16 @@ part of 'set_ion_connect_relays_request.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SetIonConnectRelaysRequestImpl _$$SetIonConnectRelaysRequestImplFromJson(
+_$SetIONConnectRelaysRequestImpl _$$SetIONConnectRelaysRequestImplFromJson(
         Map<String, dynamic> json) =>
-    _$SetIonConnectRelaysRequestImpl(
+    _$SetIONConnectRelaysRequestImpl(
       followeeList: (json['followeeList'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
     );
 
-Map<String, dynamic> _$$SetIonConnectRelaysRequestImplToJson(
-        _$SetIonConnectRelaysRequestImpl instance) =>
+Map<String, dynamic> _$$SetIONConnectRelaysRequestImplToJson(
+        _$SetIONConnectRelaysRequestImpl instance) =>
     <String, dynamic>{
       'followeeList': instance.followeeList,
     };

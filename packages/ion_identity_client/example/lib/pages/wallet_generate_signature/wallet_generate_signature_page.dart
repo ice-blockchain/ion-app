@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion_client_example/pages/user_wallets/providers/user_wallets_provider.dart';
-import 'package:ion_client_example/pages/wallet_generate_signature/providers/generate_signature_notifier.dart';
-import 'package:ion_client_example/providers/current_username_notifier.dart';
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client_example/pages/user_wallets/providers/user_wallets_provider.dart';
+import 'package:ion_identity_client_example/pages/wallet_generate_signature/providers/generate_signature_notifier.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.dart';
 
 class WalletGenerateSignaturePage extends HookConsumerWidget {
   const WalletGenerateSignaturePage({super.key});

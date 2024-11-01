@@ -4,22 +4,22 @@ import 'package:ion_identity_client/src/users/set_ion_connect_relays/data_source
 import 'package:ion_identity_client/src/users/set_ion_connect_relays/models/set_ion_connect_relays_request.dart';
 import 'package:ion_identity_client/src/users/set_ion_connect_relays/models/set_ion_connect_relays_response.dart';
 
-class SetIonConnectRelaysService {
-  SetIonConnectRelaysService(
+class SetIONConnectRelaysService {
+  SetIONConnectRelaysService(
     this.username,
     this._dataSource,
   );
 
   final String username;
-  final SetUserConnectRelaysDataSource _dataSource;
+  final SetIONConnectRelaysDataSource _dataSource;
 
-  Future<SetIonConnectRelaysResponse> setIonConnectRelays({
+  Future<SetIONConnectRelaysResponse> setIONConnectRelays({
     required String userId,
     required List<String> followeeList,
   }) async {
-    final request = SetIonConnectRelaysRequest(followeeList: followeeList);
+    final request = SetIONConnectRelaysRequest(followeeList: followeeList);
 
-    return _dataSource.setIonConnectRelays(
+    return _dataSource.setIONConnectRelays(
       username: username,
       userId: userId,
       request: request,

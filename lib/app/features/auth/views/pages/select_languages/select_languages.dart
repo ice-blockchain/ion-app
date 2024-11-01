@@ -89,7 +89,7 @@ class SelectLanguages extends HookConsumerWidget {
             ScreenSideOffset.small(
               child: Button(
                 disabled: finishNotifier.isLoading,
-                trailingIcon: finishNotifier.isLoading ? const IonLoadingIndicator() : null,
+                trailingIcon: finishNotifier.isLoading ? const IONLoadingIndicator() : null,
                 label: Text(context.i18n.button_continue),
                 mainAxisSize: MainAxisSize.max,
                 onPressed: () {

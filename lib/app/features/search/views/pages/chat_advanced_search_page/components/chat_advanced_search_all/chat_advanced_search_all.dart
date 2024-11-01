@@ -61,7 +61,7 @@ class ChatAdvancedSearchAll extends HookConsumerWidget {
           displayName: 'HOT Crypto Updates',
           message: '10,000',
           joined: true,
-          isIon: true,
+          isION: true,
         ),
       ],
     );

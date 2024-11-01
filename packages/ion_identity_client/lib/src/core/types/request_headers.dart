@@ -12,7 +12,7 @@ class RequestHeaders {
   }) {
     return {
       ...getTokenHeader(token: token),
-      ...getIonIdentityKeyNameHeader(username: username),
+      ...getIONIdentityKeyNameHeader(username: username),
     };
   }
 
@@ -24,7 +24,7 @@ class RequestHeaders {
     };
   }
 
-  static Map<String, String> getIonIdentityKeyNameHeader({
+  static Map<String, String> getIONIdentityKeyNameHeader({
     required String username,
   }) {
     return {

@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion_client_example/pages/wallet_nfts/providers/wallet_nfts_provider.dart';
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client_example/pages/wallet_nfts/providers/wallet_nfts_provider.dart';
 
 class WalletNftsPage extends HookConsumerWidget {
   const WalletNftsPage({
@@ -58,7 +58,7 @@ class _Body extends HookConsumerWidget {
 
   String _getErrorMessage(BuildContext context, Object error) {
     return switch (error) {
-          IonException(:final message) => message,
+          IONException(:final message) => message,
           _ => null,
         } ??
         'Unknown error';

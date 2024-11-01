@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion_client_example/pages/get_ion_connect_indexers/providers/ion_connect_indexers_notifier.dart';
+import 'package:ion_identity_client_example/pages/get_ion_connect_indexers/providers/ion_connect_indexers_notifier.dart';
 
-class GetIonConnectIndexersPage extends HookConsumerWidget {
-  const GetIonConnectIndexersPage({super.key});
+class GetIONConnectIndexersPage extends HookConsumerWidget {
+  const GetIONConnectIndexersPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +41,7 @@ class GetIonConnectIndexersPage extends HookConsumerWidget {
             onPressed: () {
               ref
                   .read(ionConnectIndexersNotifierProvider.notifier)
-                  .fetchIonConnectIndexers(userIdController.text);
+                  .fetchIONConnectIndexers(userIdController.text);
             },
             child: const Text('Get indexers'),
           ),

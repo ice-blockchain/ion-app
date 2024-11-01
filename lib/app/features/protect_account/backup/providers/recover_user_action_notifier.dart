@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/services/ion_identity_client/ion_identity_client_provider.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'recover_user_action_notifier.freezed.dart';
@@ -26,9 +26,9 @@ class RecoverUserActionNotifier extends _$RecoverUserActionNotifier {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final ionClient = await ref.read(ionApiClientProvider.future);
+      final ionIdentity = await ref.read(ionIdentityProvider.future);
 
-      await ionClient(username: username)
+      await ionIdentity(username: username)
           .auth
           .recoverUser(credentialId: credentialId, recoveryKey: recoveryKey);
 

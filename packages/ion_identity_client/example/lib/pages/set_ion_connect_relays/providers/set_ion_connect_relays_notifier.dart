@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_client_example/providers/current_username_notifier.dart';
-import 'package:ion_client_example/providers/ion_client_provider.dart';
-import 'package:ion_identity_client/ion_client.dart';
+import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'set_ion_connect_relays_notifier.g.dart';
 
 @riverpod
-class SetIonConnectRelaysNotifier extends _$SetIonConnectRelaysNotifier {
+class SetIONConnectRelaysNotifier extends _$SetIONConnectRelaysNotifier {
   @override
-  FutureOr<SetIonConnectRelaysResponse?> build() async {
+  FutureOr<SetIONConnectRelaysResponse?> build() async {
     return null;
   }
 
-  Future<void> setIonConnectRelays({
+  Future<void> setIONConnectRelays({
     required String userId,
     required List<String> followeeList,
   }) async {
@@ -26,8 +26,8 @@ class SetIonConnectRelaysNotifier extends _$SetIonConnectRelaysNotifier {
         throw Exception('Current user not found');
       }
 
-      final ionIdentity = await ref.watch(ionClientProvider.future);
-      return await ionIdentity(username: currentUser).users.setIonConnectRelays(
+      final ionIdentity = await ref.watch(ionIdentityProvider.future);
+      return await ionIdentity(username: currentUser).users.setIONConnectRelays(
             userId: userId,
             followeeList: followeeList,
           );

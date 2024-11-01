@@ -2,19 +2,19 @@
 
 import 'package:ion_identity_client/src/users/ion_connect_indexers/data_sources/ion_connect_indexers_data_source.dart';
 
-class IonConnectIndexersService {
-  IonConnectIndexersService(
+class IONConnectIndexersService {
+  IONConnectIndexersService(
     this.username,
     this._dataSource,
   );
 
   final String username;
-  final IonConnectIndexersDataSource _dataSource;
+  final IONConnectIndexersDataSource _dataSource;
 
   Future<List<String>> ionConnectIndexers({
     required String userId,
   }) async =>
-      _dataSource.fetchIonConnectIndexers(
+      _dataSource.fetchIONConnectIndexers(
         username: username,
         userId: userId,
       );
