@@ -83,8 +83,8 @@ class StoryViewerPage extends HookConsumerWidget {
                   ),
                   SizedBox(height: 28.0.s),
                   StoryProgressBar(
-                    totalStories: users[currentUserIndex].stories.length,
-                    currentIndex: currentStoryIndex,
+                    stories: users[currentUserIndex].stories,
+                    currentStoryIndex: currentStoryIndex,
                     onStoryCompleted: () {
                       if (currentStoryIndex < users[currentUserIndex].stories.length - 1) {
                         storyViewingController.moveToNextStory();
