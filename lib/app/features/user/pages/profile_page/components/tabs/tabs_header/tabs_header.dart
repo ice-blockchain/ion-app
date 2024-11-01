@@ -23,10 +23,8 @@ class ProfileTabsHeader extends ConsumerWidget {
       labelColor: context.theme.appColors.primaryAccent,
       unselectedLabelColor: context.theme.appColors.tertararyText,
       tabs: UserContentType.values.map((tabType) {
-        return Expanded(
-          child: ProfileTabsHeaderTab(
-            tabType: tabType,
-          ),
+        return ProfileTabsHeaderTab(
+          tabType: tabType,
         );
       }).toList(),
       indicatorColor: context.theme.appColors.primaryAccent,

@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/controllers/hooks/use_text_editing_with_highlights_controller.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
@@ -38,7 +39,8 @@ class ProfileEditPage extends HookConsumerWidget {
     final nameController =
         useTextEditingController(text: userMetadataValue?.data.displayName ?? '');
     final nicknameController = useTextEditingController(text: userMetadataValue?.data.name ?? '');
-    final bioController = useTextEditingController(text: userMetadataValue?.data.about ?? '');
+    final bioController =
+        useTextEditingWithHighlightsController(text: userMetadataValue?.data.about ?? '');
     final locationController = useTextEditingController(text: '');
     final websiteController = useTextEditingController(text: userMetadataValue?.data.website ?? '');
     final category = useState<UserCategoryType?>(null);

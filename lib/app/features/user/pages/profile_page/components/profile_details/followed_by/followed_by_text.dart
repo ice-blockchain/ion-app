@@ -117,6 +117,7 @@ class FollowedByText extends HookConsumerWidget {
       text: TextSpan(
         children: textSpans,
       ),
+      textScaler: MediaQuery.textScalerOf(context),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
