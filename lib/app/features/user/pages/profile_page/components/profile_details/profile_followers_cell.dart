@@ -23,7 +23,7 @@ class ProfileFollowersCell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final usersNumber = followType == FollowType.following
-        ? ref.watch(FollowListProvider(pubkey)).valueOrNull?.data.list.length ?? 0
+        ? ref.watch(followListProvider(pubkey)).valueOrNull?.data.list.length ?? 0
         : ref.watch(userFollowersProvider(pubkey)).valueOrNull?.length ?? 0;
 
     return GestureDetector(
