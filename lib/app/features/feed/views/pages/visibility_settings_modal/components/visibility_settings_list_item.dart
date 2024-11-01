@@ -21,8 +21,13 @@ class VisibilitySettingsListItem extends ConsumerWidget {
     final selectedOption = ref.watch(selectedVisibilityOptionsProvider);
     final isSelected = selectedOption == option;
 
+    void onSelect() {
+      ref.read(selectedVisibilityOptionsProvider.notifier).selectedOption = option;
+      Navigator.pop(context, false);
+    }
+
     return ListItem(
-      onTap: () => ref.read(selectedVisibilityOptionsProvider.notifier).selectedOption = option,
+      onTap: onSelect,
       title: Text(option.getTitle(context)),
       backgroundColor: context.theme.appColors.secondaryBackground,
       leading: Container(
@@ -40,7 +45,7 @@ class VisibilitySettingsListItem extends ConsumerWidget {
         child: option.getIcon(context),
       ),
       trailing: GestureDetector(
-        onTap: () => ref.read(selectedVisibilityOptionsProvider.notifier).selectedOption = option,
+        onTap: onSelect,
         child: isSelected
             ? Assets.svg.iconBlockCheckboxOn.icon()
             : Assets.svg.iconBlockCheckboxOff.icon(),
