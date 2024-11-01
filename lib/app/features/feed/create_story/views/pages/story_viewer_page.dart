@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_story/extensions/story_extensions.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/stories_swiper.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_progress_bar.dart';
@@ -75,39 +74,36 @@ class StoryViewerPage extends HookConsumerWidget {
           child: storyViewingState.maybeWhen(
             orElse: () => const CenteredLoadingIndicator(),
             ready: (users, currentUserIndex, currentStoryIndex) {
-              return Stack(
+              return Column(
                 children: [
-                  StoriesSwiper(
-                    userPageController: userPageController,
-                    users: users,
-                    currentUserIndex: currentUserIndex,
-                    currentStoryIndex: currentStoryIndex,
-                    onUserPageChanged: storyViewingController.moveToUser,
-                    onStoryPageChanged: storyViewingController.moveToStoryIndex,
-                    onNextStory: storyViewingController.moveToNextStory,
-                    onPreviousStory: storyViewingController.moveToPreviousStory,
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: StoryProgressBar(
-                      totalStories: users[currentUserIndex].stories.length,
-                      currentIndex: currentStoryIndex,
-                      onStoryCompleted: () {
-                        final state = ref.read(storyViewingControllerProvider);
-                        final controller = ref.read(storyViewingControllerProvider.notifier);
-
-                        if (state.hasNextStory) {
-                          controller.moveToNextStory();
-                        } else if (state.hasNextUser) {
-                          userPageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        } else {
-                          context.pop();
-                        }
-                      },
+                  Expanded(
+                    child: StoriesSwiper(
+                      userPageController: userPageController,
+                      users: users,
+                      currentUserIndex: currentUserIndex,
+                      currentStoryIndex: currentStoryIndex,
+                      onUserPageChanged: storyViewingController.moveToUser,
+                      onStoryPageChanged: storyViewingController.moveToStoryIndex,
+                      onNextStory: storyViewingController.moveToNextStory,
+                      onPreviousStory: storyViewingController.moveToPreviousStory,
                     ),
+                  ),
+                  SizedBox(height: 28.0.s),
+                  StoryProgressBar(
+                    totalStories: users[currentUserIndex].stories.length,
+                    currentIndex: currentStoryIndex,
+                    onStoryCompleted: () {
+                      if (currentStoryIndex < users[currentUserIndex].stories.length - 1) {
+                        storyViewingController.moveToNextStory();
+                      } else if (currentUserIndex < users.length - 1) {
+                        userPageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      } else {
+                        context.pop();
+                      }
+                    },
                   ),
                   ScreenBottomOffset(margin: 16.0.s),
                 ],

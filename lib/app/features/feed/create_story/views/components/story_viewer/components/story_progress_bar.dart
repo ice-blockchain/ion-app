@@ -2,12 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_story/data/models/story.dart';
 
-class StoryProgressBar extends ConsumerWidget {
+class StoryProgressBar extends StatelessWidget {
   const StoryProgressBar({
     required this.totalStories,
     required this.currentIndex,
@@ -20,13 +17,14 @@ class StoryProgressBar extends ConsumerWidget {
   final VoidCallback onStoryCompleted;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ScreenSideOffset.small(
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 8.0.s),
+      color: Colors.black,
       child: Row(
         children: List.generate(totalStories, (index) {
           return Expanded(
             child: _ProgressSegmentController(
-              story: null,
               isActive: index <= currentIndex,
               isCurrent: index == currentIndex,
               onCompleted: onStoryCompleted,
@@ -39,23 +37,21 @@ class StoryProgressBar extends ConsumerWidget {
   }
 }
 
-class _ProgressSegmentController extends HookConsumerWidget {
+class _ProgressSegmentController extends HookWidget {
   const _ProgressSegmentController({
-    required this.story,
     required this.isActive,
     required this.isCurrent,
     required this.onCompleted,
     this.margin,
   });
 
-  final Story? story;
   final bool isActive;
   final bool isCurrent;
   final VoidCallback onCompleted;
   final EdgeInsetsGeometry? margin;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final progress = useState<double>(0);
 
     final animationController = useAnimationController(
