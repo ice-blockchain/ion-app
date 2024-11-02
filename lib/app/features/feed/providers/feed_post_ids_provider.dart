@@ -77,7 +77,10 @@ class FeedPostIds extends _$FeedPostIds with NotifierMounted {
     MapEntry<String, List<String>> dataSource,
   ) async {
     final key = mountedKey;
-    if (state?.data.pagination[dataSource.key]?.hasMore == false) {
+    final currentState = state!;
+    final paginationParams = currentState.data.pagination[dataSource.key]!;
+
+    if (!paginationParams.hasMore) {
       return MapEntry(dataSource.key, PaginationParams(hasMore: false));
     }
 
@@ -85,7 +88,8 @@ class FeedPostIds extends _$FeedPostIds with NotifierMounted {
       ..addFilter(
         RequestFilter(
           kinds: const [PostEntity.kind],
-          until: state?.data.pagination[dataSource.key]?.until,
+          until: paginationParams.until,
+          authors: currentState.filters == FeedFilter.following ? dataSource.value : null,
           limit: 10,
         ),
       );
