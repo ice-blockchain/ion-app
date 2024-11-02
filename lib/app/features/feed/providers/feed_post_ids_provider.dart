@@ -21,6 +21,7 @@ class FeedPostsState with _$FeedPostsState {
   const factory FeedPostsState({
     required FeedFilter filters,
     required Map<String, List<String>> dataSource,
+    // Processing pagination params per data source
     required Paged<String, Map<String, PaginationParams>> data,
   }) = _FeedPostsState;
 }
@@ -28,52 +29,68 @@ class FeedPostsState with _$FeedPostsState {
 @riverpod
 class FeedPostIds extends _$FeedPostIds {
   @override
-  Future<FeedPostsState> build() async {
+  FeedPostsState? build() {
+    //TODO:check what happens when we change filter during fetchPosts
     final filters = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
-    final dataSource = await ref.watch(feedDataSourceProvider(filters).future);
+    final dataSource = ref.watch(feedDataSourceProvider(filters));
 
-    return FeedPostsState(
-      filters: filters,
-      dataSource: dataSource,
-      data: Paged.data(
-        {},
-        pagination: {for (final source in dataSource.keys) source: PaginationParams()},
+    return dataSource.mapOrNull(
+      data: (data) => FeedPostsState(
+        filters: filters,
+        dataSource: data.value,
+        data: Paged.data(
+          {},
+          pagination: {for (final source in data.value.keys) source: PaginationParams()},
+        ),
       ),
     );
   }
 
   Future<void> fetchPosts() async {
-    if (stateValue is PagedLoading || stateValue == null) {
+    final currentState = state;
+    if (currentState == null || currentState.dataSource is PagedLoading) {
       return;
     }
 
-    final lastEventTimes = await Future.wait(
-      stateValue.dataSource.entries.map((dataSourceEntry) async {
+    state = currentState.copyWith(
+      data: Paged.loading(currentState.data.items, pagination: currentState.data.pagination),
+    );
+
+    final paginationEntries = await Future.wait(
+      currentState.dataSource.entries.map((dataSourceEntry) async {
         final requestMessage = RequestMessage()
-          ..addFilter(const RequestFilter(kinds: [PostEntity.kind], limit: 20));
+          ..addFilter(const RequestFilter(kinds: [PostEntity.kind], limit: 10));
+
         final entitiesStream = ref.read(nostrNotifierProvider.notifier).requestEntities(
               requestMessage,
               actionSource: ActionSourceRelayUrl(dataSourceEntry.key),
             );
+
         DateTime? lastEventTime;
         await for (final entity in entitiesStream) {
           if (entity is PostEntity) {
             lastEventTime = entity.createdAt;
-            state = state
+            state = state?.copyWith(
+              data: Paged.loading(
+                {...state!.data.items}..add(entity.id),
+                pagination: currentState.data.pagination,
+              ),
+            );
           }
         }
-        return lastEventTime;
+
+        return MapEntry(
+          dataSourceEntry.key,
+          PaginationParams(hasMore: lastEventTime != null, lastEventTime: lastEventTime),
+        );
       }),
     );
 
-    // state = AsyncData(
-    //   Paged.data(
-    //     state.items,
-    //     pagination: Map.fromIterable(
-    //       dataSource.entries,
-    //       key: (element) => element,
-    //     ),
-    //   ),
-    // );
+    state = state?.copyWith(
+      data: Paged.data(
+        state!.data.items,
+        pagination: Map.fromEntries(paginationEntries),
+      ),
+    );
   }
 }

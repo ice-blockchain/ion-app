@@ -7,21 +7,26 @@ import 'package:ion/app/features/feed/views/components/post_list/post_list.dart'
 import 'package:ion/app/features/feed/views/components/post_list/post_list_skeleton.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
-class FeedPosts extends ConsumerWidget {
+class FeedPosts extends HookConsumerWidget {
   const FeedPosts({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postIds = ref.watch(feedPostIdsProvider).valueOrNull;
+    final postIds = ref.watch(feedPostIdsProvider);
 
-    useOnInit(() {
-      ref.read(feedPostIdsProvider.notifier).fetchPosts();
-    });
+    useOnInit(
+      () {
+        if (postIds?.dataSource != null) {
+          ref.read(feedPostIdsProvider.notifier).fetchPosts();
+        }
+      },
+      [postIds?.dataSource],
+    );
 
     if (postIds == null) {
       return const PostListSkeleton();
     }
 
-    return PostList(postIds: postIds.items.toList());
+    return PostList(postIds: postIds.data.items.toList());
   }
 }

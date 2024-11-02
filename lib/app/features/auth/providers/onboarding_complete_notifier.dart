@@ -52,7 +52,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         await ref.read(nostrNotifierProvider.notifier).sendEvents([
           //TODO:uncomment when switched to our relays
           // damus returns "rate-limited: you are noting too much"
-          // followListEvent,
+          followListEvent,
           // interestSetEvent,
           // interestsEvent,
           if (avatarFileMetadataEvent != null) avatarFileMetadataEvent,
