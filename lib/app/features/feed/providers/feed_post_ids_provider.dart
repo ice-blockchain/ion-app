@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dar
 import 'package:ion/app/features/feed/providers/feed_data_source.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
+import 'package:ion/app/services/riverpod/notifier_mounted_mixin.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,12 +28,13 @@ class FeedPostsState with _$FeedPostsState {
 }
 
 @riverpod
-class FeedPostIds extends _$FeedPostIds {
+class FeedPostIds extends _$FeedPostIds with NotifierMounted {
   @override
   FeedPostsState? build() {
-    //TODO:check what happens when we change filter during fetchPosts
     final filters = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
     final dataSource = ref.watch(feedDataSourceProvider(filters));
+
+    mount(ref);
 
     return dataSource.mapOrNull(
       data: (data) => FeedPostsState(
@@ -48,6 +50,7 @@ class FeedPostIds extends _$FeedPostIds {
 
   Future<void> fetchPosts() async {
     final currentState = state;
+    final key = mountedKey;
     if (currentState == null || currentState.dataSource is PagedLoading) {
       return;
     }
@@ -60,17 +63,20 @@ class FeedPostIds extends _$FeedPostIds {
       currentState.dataSource.entries.map(_fetchPostsFromDataSource),
     );
 
-    state = state?.copyWith(
-      data: Paged.data(
-        state!.data.items,
-        pagination: Map.fromEntries(paginationEntries),
-      ),
-    );
+    if (mounted(key)) {
+      state = state?.copyWith(
+        data: Paged.data(
+          state!.data.items,
+          pagination: Map.fromEntries(paginationEntries),
+        ),
+      );
+    }
   }
 
   Future<MapEntry<String, PaginationParams>> _fetchPostsFromDataSource(
     MapEntry<String, List<String>> dataSource,
   ) async {
+    final key = mountedKey;
     if (state?.data.pagination[dataSource.key]?.hasMore == false) {
       return MapEntry(dataSource.key, PaginationParams(hasMore: false));
     }
@@ -91,7 +97,7 @@ class FeedPostIds extends _$FeedPostIds {
 
     DateTime? lastEventTime;
     await for (final entity in entitiesStream) {
-      if (entity is PostEntity) {
+      if (mounted(key) && entity is PostEntity) {
         lastEventTime = entity.createdAt;
         state = state?.copyWith(
           data: Paged.loading(
