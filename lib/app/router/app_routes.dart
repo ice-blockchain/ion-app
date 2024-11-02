@@ -34,7 +34,7 @@ import 'package:ion/app/features/feed/create_article/views/pages/create_article_
 import 'package:ion/app/features/feed/create_post/views/pages/compress_test_page.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/create_post_modal.dart';
 import 'package:ion/app/features/feed/create_story/create_story_modal.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_share_modal.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/share/story_share_modal.dart';
 import 'package:ion/app/features/feed/create_story/views/pages/story_preview_page.dart';
 import 'package:ion/app/features/feed/create_story/views/pages/story_record_page.dart';
 import 'package:ion/app/features/feed/create_story/views/pages/story_viewer_page.dart';

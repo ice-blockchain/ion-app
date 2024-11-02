@@ -10,8 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_story/extensions/story_extensions.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/progress_bar/story_progress_bar_container.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/stories_swiper.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryViewerPage extends HookConsumerWidget {

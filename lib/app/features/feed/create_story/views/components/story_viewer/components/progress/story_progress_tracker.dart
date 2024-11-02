@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
-import 'package:ion/app/features/feed/create_story/data/models/story.dart';
+import 'package:ion/app/features/feed/create_story/data/models/models.dart';
 import 'package:ion/app/features/feed/create_story/hooks/use_story_progress.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/progress_bar/story_progress_segment.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/progress/progress.dart';
 import 'package:video_player/video_player.dart';
 
 class StoryProgressTracker extends HookConsumerWidget {

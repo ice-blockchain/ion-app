@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_story/data/models/story.dart';
+import 'package:ion/app/features/feed/create_story/data/models/models.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_capture/story_control_button.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_capture/components.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 

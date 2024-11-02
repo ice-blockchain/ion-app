@@ -4,7 +4,7 @@ import 'package:cube_transition_plus/cube_transition_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/user_story_page_view.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/core/core.dart';
 
 class StoriesSwiper extends StatelessWidget {
   const StoriesSwiper({

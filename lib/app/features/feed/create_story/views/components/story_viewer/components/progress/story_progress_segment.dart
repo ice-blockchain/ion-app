@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/progress_bar/story_progress_fill.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/progress/progress.dart';
 
 class StoryProgressSegment extends StatelessWidget {
   const StoryProgressSegment({

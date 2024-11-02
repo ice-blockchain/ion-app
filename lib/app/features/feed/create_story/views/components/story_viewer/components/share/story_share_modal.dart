@@ -10,7 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_share_contact_list.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/share/story_share_contact_list.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';

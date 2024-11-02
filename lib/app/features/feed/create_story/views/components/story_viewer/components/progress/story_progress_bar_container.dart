@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/progress_bar/story_progress_tracker.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/progress/progress.dart';
 
 class StoryProgressBarContainer extends ConsumerWidget {
   const StoryProgressBarContainer({

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/features/feed/create_story/data/models/story.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_content.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_gesture_handler.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/core/story_content.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/core/story_gesture_handler.dart';
 
 class UserStoryPageView extends ConsumerWidget {
   const UserStoryPageView({

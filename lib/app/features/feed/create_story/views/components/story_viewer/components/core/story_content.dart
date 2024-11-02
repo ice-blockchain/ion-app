@@ -5,14 +5,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_story/data/models/story.dart';
+import 'package:ion/app/features/feed/create_story/data/models/models.dart';
 import 'package:ion/app/features/feed/create_story/providers/emoji_reaction_provider.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_input_field.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_reaction_notification.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_reaction_overlay.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_viewer_action_buttons.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_viewer_content.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_viewer_header.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/components.dart';
 
 class StoryContent extends HookConsumerWidget {
   const StoryContent({

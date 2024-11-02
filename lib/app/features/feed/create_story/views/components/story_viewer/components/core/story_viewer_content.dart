@@ -3,9 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_story/data/models/story.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/image_story_viewer.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/video_story_viewer.dart';
+import 'package:ion/app/features/feed/create_story/data/models/models.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/viewers/viewers.dart';
 
 class StoryViewerContent extends StatelessWidget {
   const StoryViewerContent({required this.story, super.key});
