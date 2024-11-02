@@ -57,7 +57,9 @@ class StoriesSwiper extends StatelessWidget {
             onNextStory: onNextStory,
             onPreviousStory: onPreviousStory,
             onNextUser: () {
-              if (userPageController.hasClients && currentUserIndex < users.length - 1) {
+              final hasNextUser = userPageController.hasClients && userIndex < users.length - 1;
+
+              if (hasNextUser) {
                 userPageController.nextPage(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
@@ -67,7 +69,9 @@ class StoriesSwiper extends StatelessWidget {
               }
             },
             onPreviousUser: () {
-              if (userPageController.hasClients && currentUserIndex > 0) {
+              final hasPreviousUser = userPageController.hasClients && userIndex > 0;
+
+              if (hasPreviousUser) {
                 userPageController.previousPage(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,

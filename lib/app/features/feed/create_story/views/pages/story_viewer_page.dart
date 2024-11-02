@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/create_story/extensions/story_extensions.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/progress_bar/story_progress_bar_container.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/stories_swiper.dart';
@@ -67,6 +68,7 @@ class StoryViewerPage extends HookConsumerWidget {
           child: storyViewingState.maybeWhen(
             orElse: () => const CenteredLoadingIndicator(),
             ready: (users, currentUserIndex, currentStoryIndex) {
+              final currentUser = users[currentUserIndex];
               return Column(
                 children: [
                   Expanded(
@@ -83,12 +85,12 @@ class StoryViewerPage extends HookConsumerWidget {
                   ),
                   SizedBox(height: 28.0.s),
                   StoryProgressBarContainer(
-                    stories: users[currentUserIndex].stories,
+                    stories: currentUser.stories,
                     currentStoryIndex: currentStoryIndex,
                     onStoryCompleted: () {
-                      if (currentStoryIndex < users[currentUserIndex].stories.length - 1) {
+                      if (storyViewingState.hasNextStory) {
                         storyViewingController.moveToNextStory();
-                      } else if (currentUserIndex < users.length - 1) {
+                      } else if (storyViewingState.hasNextUser) {
                         userPageController.nextPage(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,

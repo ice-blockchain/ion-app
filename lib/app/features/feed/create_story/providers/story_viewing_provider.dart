@@ -40,15 +40,13 @@ class StoryViewingController extends _$StoryViewingController {
   void moveToNextStory() {
     state.whenOrNull(
       ready: (users, userIndex, storyIndex) {
-        final storiesCount = users[userIndex].stories.length;
-
-        if (storyIndex < storiesCount - 1) {
+        if (state.hasNextStory) {
           state = StoryViewerState.ready(
             users: users,
             currentUserIndex: userIndex,
             currentStoryIndex: storyIndex + 1,
           );
-        } else if (userIndex < users.length - 1) {
+        } else if (state.hasNextUser) {
           state = StoryViewerState.ready(
             users: users,
             currentUserIndex: userIndex + 1,
@@ -62,13 +60,13 @@ class StoryViewingController extends _$StoryViewingController {
   void moveToPreviousStory() {
     state.whenOrNull(
       ready: (users, userIndex, storyIndex) {
-        if (storyIndex > 0) {
+        if (state.hasPreviousStory) {
           state = StoryViewerState.ready(
             users: users,
             currentUserIndex: userIndex,
             currentStoryIndex: storyIndex - 1,
           );
-        } else if (userIndex > 0) {
+        } else if (state.hasPreviousUser) {
           final previousUserStoriesCount = users[userIndex - 1].stories.length;
           state = StoryViewerState.ready(
             users: users,
@@ -112,7 +110,7 @@ class StoryViewingController extends _$StoryViewingController {
   void moveToNextUser() {
     state.whenOrNull(
       ready: (users, userIndex, _) {
-        if (userIndex < users.length - 1) {
+        if (state.hasNextUser) {
           state = StoryViewerState.ready(
             users: users,
             currentUserIndex: userIndex + 1,
@@ -126,7 +124,7 @@ class StoryViewingController extends _$StoryViewingController {
   void moveToPreviousUser() {
     state.whenOrNull(
       ready: (users, userIndex, _) {
-        if (userIndex > 0) {
+        if (state.hasPreviousUser) {
           final previousUserStoriesCount = users[userIndex - 1].stories.length;
           state = StoryViewerState.ready(
             users: users,
@@ -136,20 +134,6 @@ class StoryViewingController extends _$StoryViewingController {
         }
       },
     );
-  }
-
-  bool hasNextUser() {
-    return state.whenOrNull(
-          ready: (users, userIndex, _) => userIndex < users.length - 1,
-        ) ??
-        false;
-  }
-
-  bool hasPreviousUser() {
-    return state.whenOrNull(
-          ready: (_, userIndex, __) => userIndex > 0,
-        ) ??
-        false;
   }
 
   void moveToStory(int userIndex, int storyIndex) {
