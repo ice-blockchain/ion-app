@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -40,56 +41,73 @@ class ArticleEntity with _$ArticleEntity implements CacheableEntity, NostrEntity
   static const kind = 30023;
 }
 
-class ArticleData {
+class ArticleData implements EventSerializable {
   ArticleData({
-    required this.title,
-    required this.image,
-    required this.summary,
     required this.content,
-    required this.publishedAt,
+    this.title,
+    this.image,
+    this.summary,
+    this.publishedAt,
   });
 
   factory ArticleData.fromEventMessage(EventMessage eventMessage) {
-    return _ArticleDataFromEvent(eventMessage);
-  }
+    String? title;
+    String? image;
+    String? summary;
+    DateTime? publishedAt;
 
-  final String title;
-  final String image;
-  final String summary;
-  final String content;
-  final DateTime publishedAt;
+    for (final tag in eventMessage.tags) {
+      if (tag.isNotEmpty) {
+        switch (tag[0]) {
+          case 'title':
+            title = tag[1];
+          case 'image':
+            image = tag[1];
+          case 'summary':
+            summary = tag[1];
+          case 'published_at':
+            final timestamp = int.tryParse(tag[1]);
+            if (timestamp != null) {
+              publishedAt = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+            }
+        }
+      }
+    }
 
-  @override
-  String toString() =>
-      'ArticleData(title: $title, image: $image, summary: $summary, publishedAt: $publishedAt)';
-}
-
-class _ArticleDataFromEvent extends ArticleData {
-  _ArticleDataFromEvent(EventMessage eventMessage)
-      : super(
-          title: _extractTag(eventMessage, 'title') ?? 'Untitled',
-          image: _extractTag(eventMessage, 'image') ?? '',
-          summary: _extractTag(eventMessage, 'summary') ?? '',
-          content: eventMessage.content,
-          publishedAt: _extractPublishedAt(eventMessage),
-        );
-
-  static String? _extractTag(EventMessage eventMessage, String tagName) {
-    return eventMessage.tags
-        .firstWhere((tag) => tag.isNotEmpty && tag[0] == tagName, orElse: () => [])
-        .elementAt(1);
-  }
-
-  static DateTime _extractPublishedAt(EventMessage eventMessage) {
     final publishedAtTag = eventMessage.tags.firstWhere(
       (tag) => tag.isNotEmpty && tag[0] == 'published_at',
       orElse: () => [],
     );
-    if (publishedAtTag.length > 1) {
-      final timestamp = int.tryParse(publishedAtTag[1]) ?? DateTime.now().millisecondsSinceEpoch;
-      return DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-    } else {
-      return eventMessage.createdAt;
-    }
+    if (publishedAtTag.length > 1) {}
+
+    return ArticleData(
+      title: title,
+      image: image,
+      summary: summary,
+      content: eventMessage.content,
+      publishedAt: publishedAt,
+    );
   }
+
+  @override
+  EventMessage toEventMessage(EventSigner signer) {
+    return EventMessage.fromData(
+      signer: signer,
+      kind: ArticleEntity.kind,
+      tags: [
+        if (title != null) ['title', title!],
+        if (image != null) ['image', image!],
+        if (summary != null) ['summary', summary!],
+        if (publishedAt != null)
+          ['published_at', (publishedAt!.millisecondsSinceEpoch / 1000).toString()],
+      ],
+      content: content,
+    );
+  }
+
+  final String? title;
+  final String? image;
+  final String? summary;
+  final String content;
+  final DateTime? publishedAt;
 }
