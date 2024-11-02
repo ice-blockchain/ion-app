@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/providers/feed_data_provider.dart';
+import 'package:ion/app/features/feed/providers/entities_paged_data_provider.dart';
+import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.dart';
 import 'package:ion/app/features/feed/views/components/post_list/post_list.dart';
 import 'package:ion/app/features/feed/views/components/post_list/post_list_skeleton.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -12,15 +13,16 @@ class FeedPosts extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postIds = ref.watch(feedDataProvider);
+    final dataSource = ref.watch(feedPostsDataSourceProvider);
+    final postIds = ref.watch(entitiesPagedDataProvider(dataSource));
 
     useOnInit(
       () {
-        if (postIds?.dataSource != null) {
-          ref.read(feedDataProvider.notifier).fetchPosts();
+        if (dataSource != null) {
+          ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities();
         }
       },
-      [postIds?.dataSource],
+      [dataSource],
     );
 
     if (postIds == null) {

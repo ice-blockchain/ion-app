@@ -11,8 +11,9 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/content_notificaiton/providers/content_notification_provider.dart';
 import 'package:ion/app/features/feed/content_notificaiton/views/components/content_conification_bar.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
+import 'package:ion/app/features/feed/providers/entities_paged_data_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
-import 'package:ion/app/features/feed/providers/feed_data_provider.dart';
+import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
@@ -113,10 +114,12 @@ class FeedPage extends HookConsumerWidget {
   }
 
   Future<void> _onRefresh(WidgetRef ref) async {
-    ref.invalidate(feedDataProvider);
+    ref.invalidate(entitiesPagedDataProvider(ref.read(feedPostsDataSourceProvider)));
   }
 
   Future<void> _onLoadMore(WidgetRef ref) async {
-    await ref.read(feedDataProvider.notifier).fetchPosts();
+    await ref
+        .read(entitiesPagedDataProvider(ref.read(feedPostsDataSourceProvider)).notifier)
+        .fetchEntities();
   }
 }
