@@ -7,37 +7,37 @@ import 'package:ion/app/features/core/model/paged.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
-import 'package:ion/app/features/feed/providers/feed_data_source.dart';
+import 'package:ion/app/features/feed/providers/feed_data_source_provider.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/services/riverpod/notifier_mounted_mixin.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'feed_post_ids_provider.g.dart';
-part 'feed_post_ids_provider.freezed.dart';
+part 'feed_data_provider.g.dart';
+part 'feed_data_provider.freezed.dart';
 
 @freezed
-class FeedPostsState with _$FeedPostsState {
-  const factory FeedPostsState({
+class FeedDataState with _$FeedDataState {
+  const factory FeedDataState({
     required FeedFilter filters,
     required Map<String, List<String>> dataSource,
     // Processing pagination params per data source
     required Paged<String, Map<String, PaginationParams>> data,
-  }) = _FeedPostsState;
+  }) = _FeedDataState;
 }
 
 @riverpod
-class FeedPostIds extends _$FeedPostIds with NotifierMounted {
+class FeedData extends _$FeedData with NotifierMounted {
   @override
-  FeedPostsState? build() {
+  FeedDataState? build() {
     final filters = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
     final dataSource = ref.watch(feedDataSourceProvider(filters));
 
     mount(ref);
 
     return dataSource.mapOrNull(
-      data: (data) => FeedPostsState(
+      data: (data) => FeedDataState(
         filters: filters,
         dataSource: data.value,
         data: Paged.data(
@@ -77,10 +77,10 @@ class FeedPostIds extends _$FeedPostIds with NotifierMounted {
     MapEntry<String, List<String>> dataSource,
   ) async {
     final key = mountedKey;
-    final currentState = state!;
-    final paginationParams = currentState.data.pagination[dataSource.key]!;
+    final currentState = state;
+    final paginationParams = state?.data.pagination[dataSource.key];
 
-    if (!paginationParams.hasMore) {
+    if (currentState == null || paginationParams == null || !paginationParams.hasMore) {
       return MapEntry(dataSource.key, PaginationParams(hasMore: false));
     }
 

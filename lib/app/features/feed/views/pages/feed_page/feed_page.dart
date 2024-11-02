@@ -12,7 +12,7 @@ import 'package:ion/app/features/feed/content_notificaiton/providers/content_not
 import 'package:ion/app/features/feed/content_notificaiton/views/components/content_conification_bar.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
-import 'package:ion/app/features/feed/providers/feed_post_ids_provider.dart';
+import 'package:ion/app/features/feed/providers/feed_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
@@ -113,10 +113,10 @@ class FeedPage extends HookConsumerWidget {
   }
 
   Future<void> _onRefresh(WidgetRef ref) async {
-    ref.invalidate(feedPostIdsProvider);
+    ref.invalidate(feedDataProvider);
   }
 
   Future<void> _onLoadMore(WidgetRef ref) async {
-    await ref.read(feedPostIdsProvider.notifier).fetchPosts();
+    await ref.read(feedDataProvider.notifier).fetchPosts();
   }
 }

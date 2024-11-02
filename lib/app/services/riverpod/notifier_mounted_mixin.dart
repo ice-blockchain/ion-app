@@ -12,7 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// @riverpod
 /// class MyProvider extends _$MyProvider with NotifierMounted {
 ///     @override
-///     FeedPostsState? build() {
+///     State? build() {
 ///       ref.watch(someOtherProvider);
 ///       mount(ref);
 ///     }

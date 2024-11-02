@@ -9,7 +9,7 @@ import 'package:ion/app/features/user/providers/user_relays_manager.dart';
 import 'package:ion/app/utils/algorithm.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'feed_data_source.g.dart';
+part 'feed_data_source_provider.g.dart';
 
 @riverpod
 Future<Map<String, List<String>>> feedDataSource(Ref ref, FeedFilter filter) async {
