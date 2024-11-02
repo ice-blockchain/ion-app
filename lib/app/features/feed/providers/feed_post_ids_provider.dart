@@ -57,33 +57,7 @@ class FeedPostIds extends _$FeedPostIds {
     );
 
     final paginationEntries = await Future.wait(
-      currentState.dataSource.entries.map((dataSourceEntry) async {
-        final requestMessage = RequestMessage()
-          ..addFilter(const RequestFilter(kinds: [PostEntity.kind], limit: 10));
-
-        final entitiesStream = ref.read(nostrNotifierProvider.notifier).requestEntities(
-              requestMessage,
-              actionSource: ActionSourceRelayUrl(dataSourceEntry.key),
-            );
-
-        DateTime? lastEventTime;
-        await for (final entity in entitiesStream) {
-          if (entity is PostEntity) {
-            lastEventTime = entity.createdAt;
-            state = state?.copyWith(
-              data: Paged.loading(
-                {...state!.data.items}..add(entity.id),
-                pagination: currentState.data.pagination,
-              ),
-            );
-          }
-        }
-
-        return MapEntry(
-          dataSourceEntry.key,
-          PaginationParams(hasMore: lastEventTime != null, lastEventTime: lastEventTime),
-        );
-      }),
+      currentState.dataSource.entries.map(_fetchPostsFromDataSource),
     );
 
     state = state?.copyWith(
@@ -91,6 +65,46 @@ class FeedPostIds extends _$FeedPostIds {
         state!.data.items,
         pagination: Map.fromEntries(paginationEntries),
       ),
+    );
+  }
+
+  Future<MapEntry<String, PaginationParams>> _fetchPostsFromDataSource(
+    MapEntry<String, List<String>> dataSource,
+  ) async {
+    if (state?.data.pagination[dataSource.key]?.hasMore == false) {
+      return MapEntry(dataSource.key, PaginationParams(hasMore: false));
+    }
+
+    final requestMessage = RequestMessage()
+      ..addFilter(
+        RequestFilter(
+          kinds: const [PostEntity.kind],
+          until: state?.data.pagination[dataSource.key]?.until,
+          limit: 10,
+        ),
+      );
+
+    final entitiesStream = ref.read(nostrNotifierProvider.notifier).requestEntities(
+          requestMessage,
+          actionSource: ActionSourceRelayUrl(dataSource.key),
+        );
+
+    DateTime? lastEventTime;
+    await for (final entity in entitiesStream) {
+      if (entity is PostEntity) {
+        lastEventTime = entity.createdAt;
+        state = state?.copyWith(
+          data: Paged.loading(
+            {...state!.data.items}..add(entity.id),
+            pagination: state!.data.pagination,
+          ),
+        );
+      }
+    }
+
+    return MapEntry(
+      dataSource.key,
+      PaginationParams(hasMore: lastEventTime != null, lastEventTime: lastEventTime),
     );
   }
 }
