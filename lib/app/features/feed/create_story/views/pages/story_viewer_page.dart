@@ -39,21 +39,6 @@ class StoryViewerPage extends HookConsumerWidget {
       [storyViewingState],
     );
 
-    useEffect(
-      () {
-        storyViewingState.maybeWhen(
-          ready: (users, currentUserIndex, _) {
-            if (userPageController.hasClients) {
-              userPageController.jumpToPage(currentUserIndex);
-            }
-          },
-          orElse: () {},
-        );
-        return null;
-      },
-      [storyViewingState],
-    );
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: context.theme.appColors.primaryText,
