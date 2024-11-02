@@ -3,7 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/features/feed/create_story/data/models/story.dart';
+import 'package:ion/app/features/feed/stories/data/models/story.dart';
 
 final random = Random();
 

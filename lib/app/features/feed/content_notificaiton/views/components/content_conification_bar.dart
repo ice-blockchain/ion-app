@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/content_notificaiton/data/models/content_notification_data.dart';
 import 'package:ion/app/features/feed/content_notificaiton/providers/content_notification_provider.dart';
-import 'package:ion/app/features/feed/create_story/effects/slide_in_out_effects.dart';
+import 'package:ion/app/features/feed/stories/effects/slide_in_out_effects.dart';
 
 class ContentNotificationBar extends ConsumerWidget {
   const ContentNotificationBar({

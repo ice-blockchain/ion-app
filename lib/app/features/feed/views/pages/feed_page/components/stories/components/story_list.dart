@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/features/feed/create_story/data/models/story.dart';
+import 'package:ion/app/features/feed/stories/data/models/story.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
