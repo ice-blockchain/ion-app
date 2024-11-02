@@ -9,8 +9,8 @@ import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart'
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_story/providers/story_viewing_provider.dart';
+import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/progress_bar/story_progress_bar_container.dart';
 import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/stories_swiper.dart';
-import 'package:ion/app/features/feed/create_story/views/components/story_viewer/components/story_progress_bar.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryViewerPage extends HookConsumerWidget {
@@ -82,7 +82,7 @@ class StoryViewerPage extends HookConsumerWidget {
                     ),
                   ),
                   SizedBox(height: 28.0.s),
-                  StoryProgressBar(
+                  StoryProgressBarContainer(
                     stories: users[currentUserIndex].stories,
                     currentStoryIndex: currentStoryIndex,
                     onStoryCompleted: () {
