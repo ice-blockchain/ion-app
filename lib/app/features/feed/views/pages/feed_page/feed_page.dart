@@ -11,7 +11,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/content_notificaiton/providers/content_notification_provider.dart';
 import 'package:ion/app/features/feed/content_notificaiton/views/components/content_conification_bar.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
-import 'package:ion/app/features/feed/providers/entities_paged_data_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
@@ -20,6 +19,7 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_cont
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/pull_right_menu_handler.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';

@@ -3,9 +3,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
-import 'package:ion/app/features/feed/providers/entities_paged_data_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
