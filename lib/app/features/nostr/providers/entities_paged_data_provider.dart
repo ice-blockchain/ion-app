@@ -16,7 +16,7 @@ part 'entities_paged_data_provider.freezed.dart';
 @freezed
 class EntitiesDataSource with _$EntitiesDataSource {
   const factory EntitiesDataSource({
-    required String relayUrl,
+    required ActionSource actionSource,
     required RequestFilter requestFilter,
     required bool Function(NostrEntity entity) entityFilter,
   }) = _EntitiesDataSource;
@@ -27,7 +27,7 @@ class EntitiesPagedDataState with _$EntitiesPagedDataState {
   const factory EntitiesPagedDataState({
     required List<EntitiesDataSource> dataSources,
     // Processing pagination params per data source
-    required Paged<NostrEntity, Map<String, PaginationParams>> data,
+    required Paged<NostrEntity, Map<ActionSource, PaginationParams>> data,
   }) = _EntitiesPagedDataState;
 }
 
@@ -40,7 +40,7 @@ class EntitiesPagedData extends _$EntitiesPagedData {
         dataSources: dataSources,
         data: Paged.data(
           {},
-          pagination: {for (final source in dataSources) source.relayUrl: PaginationParams()},
+          pagination: {for (final source in dataSources) source.actionSource: PaginationParams()},
         ),
       );
     }
@@ -69,14 +69,14 @@ class EntitiesPagedData extends _$EntitiesPagedData {
     );
   }
 
-  Future<MapEntry<String, PaginationParams>> _fetchEntitiesFromDataSource(
+  Future<MapEntry<ActionSource, PaginationParams>> _fetchEntitiesFromDataSource(
     EntitiesDataSource dataSource,
   ) async {
     final currentState = state;
-    final paginationParams = state?.data.pagination[dataSource.relayUrl];
+    final paginationParams = state?.data.pagination[dataSource.actionSource];
 
     if (currentState == null || paginationParams == null || !paginationParams.hasMore) {
-      return MapEntry(dataSource.relayUrl, PaginationParams(hasMore: false));
+      return MapEntry(dataSource.actionSource, PaginationParams(hasMore: false));
     }
 
     final requestMessage = RequestMessage()
@@ -88,7 +88,7 @@ class EntitiesPagedData extends _$EntitiesPagedData {
 
     final entitiesStream = ref.read(nostrNotifierProvider.notifier).requestEntities(
           requestMessage,
-          actionSource: ActionSourceRelayUrl(dataSource.relayUrl),
+          actionSource: dataSource.actionSource,
         );
 
     DateTime? lastEventTime;
@@ -105,7 +105,7 @@ class EntitiesPagedData extends _$EntitiesPagedData {
     }
 
     return MapEntry(
-      dataSource.relayUrl,
+      dataSource.actionSource,
       PaginationParams(hasMore: lastEventTime != null, lastEventTime: lastEventTime),
     );
   }

@@ -5,6 +5,7 @@ import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.dart';
+import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -20,7 +21,7 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
     final dataSources = filterRelays.entries
         .map(
           (entry) => EntitiesDataSource(
-            relayUrl: entry.key,
+            actionSource: ActionSourceRelayUrl(entry.key),
             entityFilter: (entity) => entity is PostEntity,
             requestFilter: RequestFilter(
               kinds: const [PostEntity.kind],
