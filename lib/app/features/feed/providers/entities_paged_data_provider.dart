@@ -18,7 +18,7 @@ class EntitiesDataSource with _$EntitiesDataSource {
   const factory EntitiesDataSource({
     required String relayUrl,
     required RequestFilter requestFilter,
-    required bool Function(NostrEntity entity) filter,
+    required bool Function(NostrEntity entity) entityFilter,
   }) = _EntitiesDataSource;
 }
 
@@ -27,7 +27,7 @@ class EntitiesPagedDataState with _$EntitiesPagedDataState {
   const factory EntitiesPagedDataState({
     required List<EntitiesDataSource> dataSources,
     // Processing pagination params per data source
-    required Paged<String, Map<String, PaginationParams>> data,
+    required Paged<NostrEntity, Map<String, PaginationParams>> data,
   }) = _EntitiesPagedDataState;
 }
 
@@ -93,11 +93,11 @@ class EntitiesPagedData extends _$EntitiesPagedData {
 
     DateTime? lastEventTime;
     await for (final entity in entitiesStream) {
-      if (dataSource.filter(entity)) {
+      if (dataSource.entityFilter(entity)) {
         lastEventTime = entity.createdAt;
         state = state?.copyWith(
           data: Paged.loading(
-            {...state!.data.items}..add(entity.id),
+            {...state!.data.items}..add(entity),
             pagination: state!.data.pagination,
           ),
         );

@@ -14,7 +14,7 @@ class FeedPosts extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(feedPostsDataSourceProvider);
-    final postIds = ref.watch(entitiesPagedDataProvider(dataSource));
+    final posts = ref.watch(entitiesPagedDataProvider(dataSource));
 
     useOnInit(
       () {
@@ -25,10 +25,10 @@ class FeedPosts extends HookConsumerWidget {
       [dataSource],
     );
 
-    if (postIds == null) {
+    if (posts == null) {
       return const PostListSkeleton();
     }
 
-    return PostList(postIds: postIds.data.items.toList());
+    return PostList(posts: posts.data.items.toList());
   }
 }

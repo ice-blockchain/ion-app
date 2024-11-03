@@ -20,8 +20,8 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
     final dataSources = filterRelays.entries
         .map(
           (entry) => EntitiesDataSource(
-            filter: (entity) => entity is PostEntity,
             relayUrl: entry.key,
+            entityFilter: (entity) => entity is PostEntity,
             requestFilter: RequestFilter(
               kinds: const [PostEntity.kind],
               authors: filters == FeedFilter.following ? entry.value : null,

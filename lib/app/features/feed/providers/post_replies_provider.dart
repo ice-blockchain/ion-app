@@ -3,16 +3,17 @@
 import 'dart:math';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/data/models/post/post_data.dart';
 import 'package:ion/app/features/feed/providers/posts_storage_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'post_reply_ids_provider.g.dart';
+part 'post_replies_provider.g.dart';
 
 @riverpod
-class PostReplyIds extends _$PostReplyIds {
+class PostReplies extends _$PostReplies {
   @override
-  Map<String, List<String>> build() {
+  Map<String, List<PostEntity>> build() {
     return {};
   }
 
@@ -24,11 +25,11 @@ class PostReplyIds extends _$PostReplyIds {
     final posts = List.generate(Random().nextInt(10) + 1, (_) => generateFakePost())
       ..forEach(ref.read(nostrCacheProvider.notifier).cache);
 
-    state = {...state, postId: posts.map((post) => post.id).toList()};
+    state = {...state, postId: posts};
   }
 }
 
 @riverpod
-List<String> postReplyIdsSelector(Ref ref, {required String postId}) {
-  return ref.watch(postReplyIdsProvider.select((state) => state[postId] ?? []));
+List<PostEntity> postRepliesSelector(Ref ref, {required String postId}) {
+  return ref.watch(postRepliesProvider.select((state) => state[postId] ?? []));
 }
