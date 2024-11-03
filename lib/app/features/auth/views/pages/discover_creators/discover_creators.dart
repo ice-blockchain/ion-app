@@ -12,11 +12,13 @@ import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/content_creators_provider.dart';
+import 'package:ion/app/features/auth/providers/content_creators_data_source_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
+import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -27,16 +29,17 @@ class DiscoverCreators extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final finishNotifier = ref.watch(onboardingCompleteNotifierProvider);
-    final contentCreators = ref.watch(contentCreatorsProvider);
+    final dataSource = ref.watch(contentCreatorsDataSourceProvider);
+    final contentCreators = ref.watch(entitiesPagedDataProvider(dataSource));
 
-    final (selectedCreators, toggleCreatorSelection) = useSelectedState(<String>[]);
+    final (selectedCreators, toggleCreatorSelection) = useSelectedState(<UserMetadataEntity>[]);
 
-    useOnInit(ref.read(contentCreatorsProvider.notifier).fetchCreators);
+    useOnInit(ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities, [dataSource]);
 
     final mayContinue = selectedCreators.isNotEmpty;
 
     final slivers = [
-      if (contentCreators.items.isEmpty)
+      if (contentCreators == null || contentCreators.data.items.isEmpty)
         SliverToBoxAdapter(
           child: ScreenSideOffset.small(
             child: Skeleton(
@@ -50,14 +53,17 @@ class DiscoverCreators extends HookConsumerWidget {
       else
         SliverList.separated(
           separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
-          itemCount: contentCreators.items.length,
+          itemCount: contentCreators.data.items.length,
           itemBuilder: (BuildContext context, int index) {
-            final pubkey = contentCreators.items.elementAt(index);
-            return CreatorListItem(
-              pubkey: pubkey,
-              selected: selectedCreators.contains(pubkey),
-              onPressed: () => toggleCreatorSelection(pubkey),
-            );
+            final creator = contentCreators.data.items.elementAt(index);
+            if (creator is UserMetadataEntity) {
+              return CreatorListItem(
+                userMetadataEntity: creator,
+                selected: selectedCreators.contains(creator),
+                onPressed: () => toggleCreatorSelection(creator),
+              );
+            }
+            return null;
           },
         ),
       SliverPadding(padding: EdgeInsets.only(top: 16.0.s)),
@@ -69,8 +75,8 @@ class DiscoverCreators extends HookConsumerWidget {
           Expanded(
             child: LoadMoreBuilder(
               slivers: slivers,
-              onLoadMore: ref.read(contentCreatorsProvider.notifier).fetchCreators,
-              hasMore: contentCreators.pagination.hasMore,
+              onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
+              hasMore: contentCreators?.data.pagination.values.first.hasMore ?? true,
               builder: (context, slivers) {
                 return AuthScrollContainer(
                   title: context.i18n.discover_creators_title,
@@ -100,7 +106,8 @@ class DiscoverCreators extends HookConsumerWidget {
                     label: Text(context.i18n.button_continue),
                     mainAxisSize: MainAxisSize.max,
                     onPressed: () {
-                      ref.read(onboardingDataProvider.notifier).followees = selectedCreators;
+                      ref.read(onboardingDataProvider.notifier).followees =
+                          selectedCreators.map((creator) => creator.pubkey).toList();
                       ref.read(onboardingCompleteNotifierProvider.notifier).finish();
                     },
                   ),
