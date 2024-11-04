@@ -187,6 +187,7 @@ jobs:
         id: build-app
         run: |
           cd main-repo
+          ./scripts/generate_ios_export_options.sh --signType=$IOS_SIGN_TYPE --bundleId=$APP_ID --outputPath=ios/ExportOptions.plist
           flutter build ipa --release --build-number=$BUILD_NUMBER --build-name=$APP_VERSION --export-options-plist=ios/ExportOptions.plist
       - name: Deploy iOS App to ${{env.DEPLOY_TARGET}}
         id: deploy-app
