@@ -165,6 +165,9 @@ jobs:
         env:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
         run: |
+          set -a
+          source .env
+          set +a
           if [[ ${{ inputs.deployment == 'firebase' }} == true ]]
             then
               echo "IOS_SIGN_TYPE=adhoc" >> $GITHUB_ENV
