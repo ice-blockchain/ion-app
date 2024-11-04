@@ -32,10 +32,10 @@ Map<String, List<String>> findBestOptions(Map<String, List<String>> keysToOption
   ///   "Option2": ["Key1", "Key2"],
   ///   "Option3": ["Key2"]
   /// }
-  final optionsToKeys = <String, List<String>>{};
+  final optionsToKeys = <String, Set<String>>{};
   for (final entry in keysToOptions.entries) {
     for (final option in entry.value) {
-      optionsToKeys.putIfAbsent(option, () => <String>[]).add(entry.key);
+      optionsToKeys.putIfAbsent(option, () => <String>{}).add(entry.key);
     }
   }
 
@@ -43,7 +43,8 @@ Map<String, List<String>> findBestOptions(Map<String, List<String>> keysToOption
   final maxEntry = maxBy(optionsToKeys.entries, (entry) => entry.value.length);
 
   if (maxEntry == null) {
-    throw Exception('Unable to find best entry for $keysToOptions');
+    /// If all options for all the remaining keys are empty
+    return {};
   }
 
   /// Removing the keys that are kept in the `maxEntry`
@@ -53,8 +54,8 @@ Map<String, List<String>> findBestOptions(Map<String, List<String>> keysToOption
 
   /// If there are any remaining unhandled keys, process them recursively
   if (leftKeysToOptions.isNotEmpty) {
-    return {maxEntry.key: maxEntry.value, ...findBestOptions(leftKeysToOptions)};
+    return {maxEntry.key: maxEntry.value.toList(), ...findBestOptions(leftKeysToOptions)};
   }
 
-  return {maxEntry.key: maxEntry.value};
+  return {maxEntry.key: maxEntry.value.toList()};
 }

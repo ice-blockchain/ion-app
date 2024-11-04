@@ -9,10 +9,10 @@ import 'package:ion/app/features/user/providers/user_relays_manager.dart';
 import 'package:ion/app/utils/algorithm.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'feed_data_source.g.dart';
+part 'feed_filter_relays_provider.g.dart';
 
 @riverpod
-Future<Map<String, List<String>>> feedDataSource(Ref ref, FeedFilter filter) async {
+Future<Map<String, List<String>>> feedFilterRelays(Ref ref, FeedFilter filter) async {
   final followList = await ref.watch(currentUserFollowListProvider.future);
   if (followList == null) {
     throw FollowListNotFoundException();

@@ -3,38 +3,34 @@
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
-import 'package:ion/app/features/feed/providers/post_reply_ids_provider.dart';
+import 'package:ion/app/features/feed/providers/post_replies_provider.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
-import 'package:ion/app/features/feed/views/components/post_replies/post_replies.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ion/app/features/feed/views/components/post_replies/post_replies_list.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class PostListItem extends HookConsumerWidget {
-  const PostListItem({required this.postId, super.key});
+  const PostListItem({required this.post, super.key});
 
-  final String postId;
+  final PostEntity post;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(nostrCacheProvider.select(cacheSelector<PostEntity>(postId)));
-    final replyIds = ref.watch(postReplyIdsSelectorProvider(postId: postId));
+    final replies = ref.watch(postRepliesSelectorProvider(postId: post.id));
 
     useOnInit(() {
-      ref.read(postReplyIdsProvider.notifier).fetchReplies(postId: postId);
+      ref.read(postRepliesProvider.notifier).fetchReplies(postId: post.id);
     });
 
-    if (post == null) return const SizedBox.shrink();
-
     return GestureDetector(
-      onTap: () => PostDetailsRoute(postId: postId).push<void>(context),
+      onTap: () => PostDetailsRoute(postId: post.id).push<void>(context),
       child: Post(
         postEntity: post,
         footer: Column(
           children: [
             PostFooter(postEntity: post),
-            if (replyIds.isNotEmpty) PostReplies(postIds: replyIds),
+            if (replies.isNotEmpty) PostRepliesList(replies: replies),
           ],
         ),
       ),

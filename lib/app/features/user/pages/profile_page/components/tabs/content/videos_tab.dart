@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/post/post_data.dart';
 import 'package:ion/app/features/feed/views/components/post_list/components/post_list_item.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content_separator.dart';
@@ -19,7 +20,7 @@ class VideosTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const videos = <String>[];
+    const videos = <PostEntity>[];
 
     if (videos.isEmpty) {
       return const EmptyState(
@@ -32,7 +33,7 @@ class VideosTab extends StatelessWidget {
         return ColoredBox(
           color: context.theme.appColors.secondaryBackground,
           child: PostListItem(
-            postId: videos[index],
+            post: videos[index],
           ),
         );
       },

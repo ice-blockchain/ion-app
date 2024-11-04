@@ -21,13 +21,13 @@ class FeedAdvancedSearchTop extends HookConsumerWidget {
     final topPostsSearchResults = ref.watch(feedSearchTopPostsProvider(query));
 
     return topPostsSearchResults.maybeWhen(
-      data: (postIds) {
-        if (postIds == null || postIds.isEmpty) {
+      data: (posts) {
+        if (posts == null || posts.isEmpty) {
           return NothingIsFound(
             title: context.i18n.feed_nothing_found,
           );
         }
-        return CustomScrollView(slivers: [PostList(postIds: postIds)]);
+        return CustomScrollView(slivers: [PostList(posts: posts)]);
       },
       orElse: () => const CustomScrollView(slivers: [PostListSkeleton()]),
     );

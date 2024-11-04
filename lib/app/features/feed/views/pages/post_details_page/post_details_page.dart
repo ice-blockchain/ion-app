@@ -8,8 +8,8 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/async_value_listener.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/providers/post_replies_provider.dart';
 import 'package:ion/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
-import 'package:ion/app/features/feed/providers/post_reply_ids_provider.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_footer/post_details_footer.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
@@ -33,10 +33,10 @@ class PostDetailsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final postEntity = ref.watch(nostrCacheProvider.select(cacheSelector<PostEntity>(postId)));
-    final replyIds = ref.watch(postReplyIdsSelectorProvider(postId: postId));
+    final replies = ref.watch(postRepliesSelectorProvider(postId: postId));
 
     useOnInit(() {
-      ref.read(postReplyIdsProvider.notifier).fetchReplies(postId: postId);
+      ref.read(postRepliesProvider.notifier).fetchReplies(postId: postId);
     });
 
     final showReplySentNotification = useState(false);
@@ -86,7 +86,7 @@ class PostDetailsPage extends HookConsumerWidget {
                 ),
                 SliverToBoxAdapter(child: FeedListSeparator()),
                 PostList(
-                  postIds: replyIds,
+                  posts: replies,
                   separator: FeedListSeparator(height: 1.0.s),
                 ),
               ],

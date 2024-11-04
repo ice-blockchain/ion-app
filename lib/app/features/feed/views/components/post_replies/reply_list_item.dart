@@ -5,23 +5,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_header/post_header.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class ReplyListItem extends ConsumerWidget {
-  const ReplyListItem({required this.postId, super.key});
+  const ReplyListItem({required this.reply, super.key});
 
-  final String postId;
+  final PostEntity reply;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(nostrCacheProvider.select(cacheSelector<PostEntity>(postId)));
-
-    if (post == null) return const SizedBox.shrink();
-
     return GestureDetector(
-      onTap: () => PostDetailsRoute(postId: postId).push<void>(context),
-      child: Post(header: PostHeader(pubkey: post.pubkey), postEntity: post),
+      onTap: () => PostDetailsRoute(postId: reply.id).push<void>(context),
+      child: Post(header: PostHeader(pubkey: reply.pubkey), postEntity: reply),
     );
   }
 }

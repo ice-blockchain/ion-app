@@ -18,18 +18,18 @@ class PaginationParams with _$PaginationParams {
 }
 
 @freezed
-sealed class Paged<T> with _$Paged<T> {
+sealed class Paged<T, P> with _$Paged<T, P> {
   const factory Paged.loading(
     Set<T> items, {
-    required PaginationParams pagination,
+    required P pagination,
   }) = PagedLoading;
   const factory Paged.data(
     Set<T> items, {
-    required PaginationParams pagination,
+    required P pagination,
   }) = PagedData;
   const factory Paged.error(
     Set<T> items, {
     required Object error,
-    required PaginationParams pagination,
+    required P pagination,
   }) = PagedError;
 }
