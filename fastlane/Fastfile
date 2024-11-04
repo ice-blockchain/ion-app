@@ -46,6 +46,10 @@ platform :ios do
             api_key_path: "./fastlane/keys/appstore-connect-key.json",
             git_url: MATCH_GIT_URL
         )
+
+        sh("./scripts/generate_ios_export_options.sh --signType adhoc --bundleId io.ion.app.staging --outputPath ios/ExportOptions.plist")
+
+        sh("flutter build ipa --release --build-number=173 --build-name=9.9.9 --export-options-plist=ios/ExportOptions.plist")
     end
 
     desc "Deploy iOS app"

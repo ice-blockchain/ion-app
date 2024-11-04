@@ -186,19 +186,19 @@ jobs:
         run: |
           cd main-repo
           bundle exec fastlane ios fetch_code_identity sign_type:$IOS_SIGN_TYPE
-      - name: Build iOS App (v${{ env.APP_VERSION }} build:${{ env.BUILD_NUMBER }})
-        id: build-app
-        run: |
-          cd main-repo
-          echo "foo---"
-          echo $IOS_SIGN_TYPE
-          echo "_"
-          echo $APP_ID
-          echo "-"
-          echo env.APP_ID
-          echo "---foo"
-          ./scripts/generate_ios_export_options.sh --signType $IOS_SIGN_TYPE --bundleId io.ion.app.staging --outputPath ios/ExportOptions.plist
-          flutter build ipa --release --build-number=$BUILD_NUMBER --build-name=$APP_VERSION --export-options-plist=ios/ExportOptions.plist
+      # - name: Build iOS App (v${{ env.APP_VERSION }} build:${{ env.BUILD_NUMBER }})
+      #   id: build-app
+      #   run: |
+      #     cd main-repo
+      #     echo "foo---"
+      #     echo $IOS_SIGN_TYPE
+      #     echo "_"
+      #     echo $APP_ID
+      #     echo "-"
+      #     echo env.APP_ID
+      #     echo "---foo"
+      #     ./scripts/generate_ios_export_options.sh --signType $IOS_SIGN_TYPE --bundleId io.ion.app.staging --outputPath ios/ExportOptions.plist
+      #     flutter build ipa --release --build-number=$BUILD_NUMBER --build-name=$APP_VERSION --export-options-plist=ios/ExportOptions.plist
       - name: Deploy iOS App to ${{env.DEPLOY_TARGET}}
         id: deploy-app
         run: |
