@@ -17,16 +17,27 @@ Raw<VideoPlayerController> videoController(
   bool looping = false,
 }) {
   final controller = ref.read(videoPlayerControllerFactoryProvider).createController(sourcePath);
+  var isInitialized = false;
 
-  controller.initialize().then((_) {
+  void handleInitialized() {
+    if (!isInitialized && controller.value.isInitialized) {
+      isInitialized = true;
+      controller
+        ..setLooping(looping)
+        ..setVolume(0); // required for web - https://developer.chrome.com/blog/autoplay/
+      if (autoPlay) controller.play();
+    }
     ref.notifyListeners();
-    controller
-      ..setLooping(looping)
-      ..setVolume(0); // required for web - https://developer.chrome.com/blog/autoplay/
-    if (autoPlay) controller.play();
-  });
+  }
 
-  ref.onDispose(controller.dispose);
+  controller
+    ..addListener(handleInitialized)
+    ..initialize();
+
+  ref.onDispose(() async {
+    controller.removeListener(handleInitialized);
+    await controller.dispose();
+  });
 
   return controller;
 }
