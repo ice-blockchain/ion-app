@@ -22,49 +22,46 @@ class Article extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ColoredBox(
       color: context.theme.appColors.onPrimaryAccent,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 12.0.s),
-        child: IntrinsicHeight(
-          child: Row(
-            children: [
-              Container(
-                clipBehavior: Clip.antiAlias,
-                width: 4.0.s,
-                decoration: BoxDecoration(
-                  color: context.theme.appColors.primaryAccent,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(4.0.s),
-                    bottomRight: Radius.circular(4.0.s),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Container(
+              clipBehavior: Clip.antiAlias,
+              width: 4.0.s,
+              decoration: BoxDecoration(
+                color: context.theme.appColors.primaryAccent,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(4.0.s),
+                  bottomRight: Radius.circular(4.0.s),
+                ),
+              ),
+            ),
+            SizedBox(width: 12.0.s),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FeedItemHeader(
+                    pubkey: article.pubkey,
+                    trailing: const Row(
+                      children: [
+                        BookmarkButton(id: 'test_article_id'),
+                        FeedItemMenu(),
+                      ],
+                    ),
                   ),
-                ),
+                  SizedBox(height: 10.0.s),
+                  ArticleImage(
+                    imageUrl: article.data.image,
+                    minutesToRead: _calculateReadingTime(article.data.content),
+                  ),
+                  SizedBox(height: 10.0.s),
+                  ArticleFooter(text: article.data.title ?? ''),
+                ],
               ),
-              SizedBox(width: 12.0.s),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FeedItemHeader(
-                      pubkey: article.pubkey,
-                      trailing: const Row(
-                        children: [
-                          BookmarkButton(id: 'test_article_id'),
-                          FeedItemMenu(),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10.0.s),
-                    ArticleImage(
-                      imageUrl: article.data.image,
-                      minutesToRead: _calculateReadingTime(article.data.content),
-                    ),
-                    SizedBox(height: 10.0.s),
-                    ArticleFooter(text: article.data.title ?? ''),
-                  ],
-                ),
-              ),
-              SizedBox(width: 16.0.s),
-            ],
-          ),
+            ),
+            SizedBox(width: 16.0.s),
+          ],
         ),
       ),
     );

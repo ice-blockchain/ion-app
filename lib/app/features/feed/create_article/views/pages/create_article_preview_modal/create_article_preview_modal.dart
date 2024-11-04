@@ -8,6 +8,9 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_arcticle_topics_item.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_arcticle_visibility_item.dart';
+import 'package:ion/app/features/feed/data/models/article/article_data.dart';
+import 'package:ion/app/features/feed/views/components/article/article.dart';
+import 'package:ion/app/features/feed/views/components/article/mocked_data.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -19,6 +22,8 @@ class CreateArticlePreviewModal extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingValue = 20.0.s;
 
+    final article = ArticleEntity.fromEventMessage(mockedArticleEvent);
+
     return SheetContent(
       bottomPadding: 0,
       body: Column(
@@ -28,21 +33,12 @@ class CreateArticlePreviewModal extends ConsumerWidget {
             onBackPress: () {},
           ),
           const HorizontalSeparator(),
-          Container(
-            color: Colors.blue,
-            width: double.infinity,
-            height: 300,
+          Padding(
+            padding: EdgeInsets.only(bottom: 12.0.s),
+            child: Article(article: article),
           ),
           const HorizontalSeparator(),
           SizedBox(height: 40.0.s),
-          // Expanded(
-          //   child: ScreenSideOffset.small(
-          //     child: TextEditor(
-          //       textEditorController,
-          //     ),
-          //   ),
-          // ),
-
           const SelectArticleTopicsItem(),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 20.0.s),
