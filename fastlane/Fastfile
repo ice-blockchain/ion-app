@@ -47,14 +47,14 @@ platform :ios do
             git_url: MATCH_GIT_URL
         )
 
+        print 'foo--'
+        print ENV["sigh_#{APP_ID}_#{sign_type}_profile-name"]
+        print '--foo'
+
         update_code_signing_settings(
             path: "./ios/Runner.xcodeproj",
-            profile_name: 'match AdHoc io.ion.app.staging'
+            profile_name: ENV["sigh_#{APP_ID}_#{sign_type}_profile-name"]
         )
-
-        # sh("../scripts/generate_ios_export_options.sh --signType adhoc --bundleId io.ion.app.staging --outputPath ios/ExportOptions.plist")
-
-        # sh("flutter build ipa --release --build-number=173 --build-name=9.9.9 --export-options-plist=ios/ExportOptions.plist")
     end
 
     desc "Deploy iOS app"
