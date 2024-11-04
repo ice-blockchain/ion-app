@@ -29,6 +29,6 @@ class FeedPosts extends HookConsumerWidget {
       return const PostListSkeleton();
     }
 
-    return PostList(posts: posts.data.items.toList());
+    return PostList(entities: posts.data.items.toList());
   }
 }

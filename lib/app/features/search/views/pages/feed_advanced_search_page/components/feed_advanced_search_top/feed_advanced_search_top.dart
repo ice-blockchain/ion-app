@@ -27,7 +27,7 @@ class FeedAdvancedSearchTop extends HookConsumerWidget {
             title: context.i18n.feed_nothing_found,
           );
         }
-        return CustomScrollView(slivers: [PostList(posts: posts)]);
+        return CustomScrollView(slivers: [PostList(entities: posts)]);
       },
       orElse: () => const CustomScrollView(slivers: [PostListSkeleton()]),
     );

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/data/models/article/article_data.dart';
+import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
@@ -14,18 +16,20 @@ part 'feed_posts_data_source_provider.g.dart';
 
 @riverpod
 List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
-  final filters = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
-  final filterRelays = ref.watch(feedFilterRelaysProvider(filters)).valueOrNull;
+  final filters = ref.watch(feedCurrentFilterProvider);
+  final filterRelays = ref.watch(feedFilterRelaysProvider(filters.filter)).valueOrNull;
 
   if (filterRelays != null) {
     final dataSources = filterRelays.entries
         .map(
           (entry) => EntitiesDataSource(
             actionSource: ActionSourceRelayUrl(entry.key),
-            entityFilter: (entity) => entity is PostEntity,
+            entityFilter: (entity) => entity is PostEntity || entity is ArticleEntity,
             requestFilter: RequestFilter(
-              kinds: const [PostEntity.kind],
-              authors: filters == FeedFilter.following ? entry.value : null,
+              kinds: filters.category == FeedCategory.articles
+                  ? const [ArticleEntity.kind]
+                  : const [PostEntity.kind],
+              authors: filters.filter == FeedFilter.following ? entry.value : null,
               limit: 10,
             ),
           ),
