@@ -80,12 +80,21 @@ class IONIdentityWallets {
         pageToken: pageToken,
       );
 
-  Future<PseudoNetworkSignatureResponse> generateSignature(
+  Future<PseudoNetworkSignatureResponse> generateMessageSignature(
     String walletId,
     String message,
   ) =>
       _generateSignatureService.generateMessageSignature(
         walletId: walletId,
         message: message,
+      );
+
+  Future<PseudoNetworkSignatureResponse> generateHashSignature(
+    String walletId,
+    String hash,
+  ) =>
+      _generateSignatureService.generateHashSignature(
+        walletId: walletId,
+        hash: hash,
       );
 }

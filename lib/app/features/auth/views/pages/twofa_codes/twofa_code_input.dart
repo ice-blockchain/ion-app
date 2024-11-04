@@ -11,10 +11,16 @@ import 'package:ion/app/hooks/use_countdown.dart';
 import 'package:ion/app/utils/validators.dart';
 
 class TwoFaCodeInput extends StatelessWidget {
-  const TwoFaCodeInput({required this.controller, required this.twoFaType, super.key});
+  const TwoFaCodeInput({
+    required this.controller,
+    required this.twoFaType,
+    this.onRequestCode,
+    super.key,
+  });
 
   final TextEditingController controller;
   final TwoFaType twoFaType;
+  final VoidCallback? onRequestCode;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,7 @@ class TwoFaCodeInput extends StatelessWidget {
       scrollPadding: EdgeInsets.only(bottom: 200.0.s),
       keyboardType: TextInputType.number,
       suffixIcon: switch (twoFaType) {
-        TwoFaType.email || TwoFaType.sms => const SendButton(),
+        TwoFaType.email || TwoFaType.sms => SendButton(onRequestCode: onRequestCode),
         TwoFaType.auth => null,
       },
     );
@@ -41,7 +47,12 @@ class TwoFaCodeInput extends StatelessWidget {
 }
 
 class SendButton extends HookWidget {
-  const SendButton({super.key});
+  const SendButton({
+    this.onRequestCode,
+    super.key,
+  });
+
+  final VoidCallback? onRequestCode;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +73,7 @@ class SendButton extends HookWidget {
           )
         : TextInputTextButton(
             onPressed: () {
+              onRequestCode?.call();
               isSent.value = true;
               startCountdown();
             },

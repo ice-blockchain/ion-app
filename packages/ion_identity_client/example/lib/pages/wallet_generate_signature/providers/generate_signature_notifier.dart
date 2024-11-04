@@ -17,7 +17,7 @@ class GenerateSignatureNotifier extends _$GenerateSignatureNotifier {
     state = await AsyncValue.guard(() async {
       final username = ref.read(currentUsernameNotifierProvider) ?? '';
       final ionIdentity = await ref.read(ionIdentityProvider.future);
-      return ionIdentity(username: username).wallets.generateSignature(walletId, message);
+      return ionIdentity(username: username).wallets.generateMessageSignature(walletId, message);
     });
   }
 }

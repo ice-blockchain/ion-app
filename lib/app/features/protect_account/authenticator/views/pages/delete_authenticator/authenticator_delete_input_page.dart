@@ -49,14 +49,18 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
     );
   }
 
-  void _onConfirm(WidgetRef ref, BuildContext context) {
+  Future<void> _onConfirm(WidgetRef ref, BuildContext context) async {
     // TODO: temporary logic to simulate the success or
     // failure of the deletion of the authenticator
     if (Random().nextBool() == true) {
-      ref.read(securityAccountControllerProvider.notifier).toggleAuthenticator(value: false);
-      AuthenticatorDeleteSuccessRoute().push<void>(context);
+      final _ = await ref.refresh(securityAccountControllerProvider.future);
+      if (!context.mounted) {
+        return;
+      }
+
+      await AuthenticatorDeleteSuccessRoute().push<void>(context);
     } else {
-      showSimpleBottomSheet<void>(
+      await showSimpleBottomSheet<void>(
         context: context,
         child: const TwoFaTryAgainPage(),
       );

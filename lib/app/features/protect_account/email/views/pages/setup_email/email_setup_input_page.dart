@@ -1,22 +1,28 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
-class EmailSetupInputPage extends HookWidget {
+class EmailSetupInputPage extends HookConsumerWidget {
   const EmailSetupInputPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
     final formKey = useRef(GlobalKey<FormState>());
     final emailController = useTextEditingController.fromValue(TextEditingValue.empty);
@@ -38,7 +44,7 @@ class EmailSetupInputPage extends HookWidget {
                       hasRightDivider: true,
                       icons: [TwoFaType.email.iconAsset.icon()],
                     ),
-                    labelText: TwoFaType.email.getDisplayName(context),
+                    labelText: context.i18n.two_fa_email_address,
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) => (value?.isEmpty ?? false) ? '' : null,
@@ -50,13 +56,24 @@ class EmailSetupInputPage extends HookWidget {
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   label: Text(locale.button_next),
-                  onPressed: () {
-                    if (formKey.value.currentState?.validate() ?? false) {
+                  onPressed: () async {
+                    final isFormValid = formKey.value.currentState?.validate() ?? false;
+                    if (!isFormValid) {
+                      return;
+                    }
+
+                    await _requestTwoFACode(ref, emailController.text);
+
+                    if (!context.mounted) {
+                      return;
+                    }
+
+                    unawaited(
                       EmailSetupRoute(
                         step: EmailSetupSteps.confirmation,
                         email: emailController.text,
-                      ).push<void>(context);
-                    }
+                      ).push<void>(context),
+                    );
                   },
                 ),
               ],
@@ -65,5 +82,18 @@ class EmailSetupInputPage extends HookWidget {
         },
       ),
     );
+  }
+
+  Future<void> _requestTwoFACode(WidgetRef ref, String email) async {
+    final currentUser = ref.read(currentIdentityKeyNameSelectorProvider);
+    if (currentUser == null) {
+      return;
+    }
+
+    final ionIdentity = await ref.read(ionIdentityProvider.future);
+
+    await ionIdentity(username: currentUser)
+        .auth
+        .requestTwoFACode(twoFAType: TwoFAType.email(email));
   }
 }

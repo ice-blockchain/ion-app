@@ -89,7 +89,7 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
     GlobalKey<FormState>? formKey,
   ) {
     if (formKey?.currentState?.validate() ?? false) {
-      ref.read(securityAccountControllerProvider.notifier).toggleAuthenticator(value: true);
+      ref.invalidate(securityAccountControllerProvider);
       _navigateToNextStep(context);
     }
   }

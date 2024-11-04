@@ -10,6 +10,7 @@ import 'package:ion/app/features/protect_account/authenticator/data/model/authen
 import 'package:ion/app/features/protect_account/components/secure_account_option.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
+import 'package:ion/app/features/protect_account/secure_account/data/models/security_methods.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -22,7 +23,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final securityController = ref.watch(securityAccountControllerProvider);
+    final securityMethods = ref.watch(securityAccountControllerProvider).valueOrNull;
     final locale = context.i18n;
 
     return SheetContent(
@@ -57,7 +58,8 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () => BackupOptionsRoute().push<void>(context),
-                  isEnabled: securityController.isBackupEnabled,
+                  isEnabled: securityMethods?.isBackupEnabled ?? false,
+                  isLoading: securityMethods?.isBackupEnabled == null,
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
@@ -66,7 +68,8 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () => EmailSetupRoute(step: EmailSetupSteps.input).push<void>(context),
-                  isEnabled: securityController.isEmailEnabled,
+                  isEnabled: securityMethods?.isEmailEnabled ?? false,
+                  isLoading: securityMethods?.isEmailEnabled == null,
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
@@ -74,11 +77,9 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                   icon: Assets.svg.iconLoginAuthcode.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  isEnabled: securityController.isAuthenticatorEnabled,
-                  onTap: () => securityController.isAuthenticatorEnabled
-                      ? AuthenticatorInitialDeleteRoute().push<void>(context)
-                      : AuthenticatorSetupRoute(step: AuthenticatorSetupSteps.options)
-                          .push<void>(context),
+                  isEnabled: securityMethods?.isAuthenticatorEnabled ?? false,
+                  isLoading: securityMethods?.isAuthenticatorEnabled == null,
+                  onTap: () => _onAuthenticatorPressed(context, securityMethods),
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
@@ -87,7 +88,8 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   onTap: () => PhoneSetupRoute(step: PhoneSetupSteps.input).push<void>(context),
-                  isEnabled: securityController.isPhoneEnabled,
+                  isEnabled: securityMethods?.isPhoneEnabled ?? false,
+                  isLoading: securityMethods?.isPhoneEnabled == null,
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],
@@ -96,5 +98,20 @@ class SecureAccountOptionsPage extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _onAuthenticatorPressed(BuildContext context, SecurityMethods? securityMethods) {
+    if (securityMethods == null) {
+      return;
+    }
+
+    if (!(securityMethods.isEmailEnabled || securityMethods.isPhoneEnabled)) {
+      SecureAccountErrorRoute().push<void>(context);
+      return;
+    }
+
+    securityMethods.isAuthenticatorEnabled
+        ? AuthenticatorInitialDeleteRoute().push<void>(context)
+        : AuthenticatorSetupRoute(step: AuthenticatorSetupSteps.options).push<void>(context);
   }
 }

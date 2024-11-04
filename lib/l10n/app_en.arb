@@ -71,6 +71,7 @@
   "two_fa_desc": "Please enter your confirmation code below",
   "two_fa_select": "Select option {number}",
   "two_fa_email": "Email code",
+  "two_fa_email_address": "Email address",
   "two_fa_sms": "SMS code",
   "two_fa_auth": "Authenticator code",
   "two_fa_code_confirmation": "Please enter the code sent to",

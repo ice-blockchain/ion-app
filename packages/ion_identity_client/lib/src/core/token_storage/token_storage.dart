@@ -124,7 +124,7 @@ class TokenStorage {
         tokensMap.map(
           (key, value) => MapEntry(
             key,
-            Authentication.fromJson(value as JsonObject),
+            value == null ? Authentication.empty() : Authentication.fromJson(value as JsonObject),
           ),
         ),
       ),

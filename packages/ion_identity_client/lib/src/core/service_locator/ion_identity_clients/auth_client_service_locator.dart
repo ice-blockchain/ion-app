@@ -5,6 +5,7 @@ import 'package:ion_identity_client/src/auth/services/create_recovery_credential
 import 'package:ion_identity_client/src/auth/services/create_recovery_credentials/data_sources/create_recovery_credentials_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/data_sources/delegated_login_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
+import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_user_id_service.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
@@ -12,7 +13,10 @@ import 'package:ion_identity_client/src/auth/services/recover_user/data_sources/
 import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/register/data_sources/register_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/register/register_service.dart';
+import 'package:ion_identity_client/src/auth/services/twofa/data_sources/twofa_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/twofa/twofa_service.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/user_action_signer_service_locator.dart';
+import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/wallets_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 
@@ -44,6 +48,7 @@ class AuthClientServiceLocator {
         config: config,
         signer: signer,
       ),
+      twoFAService: twoFA(username: username, config: config, signer: signer),
       delegatedLoginService: delegatedLogin(config: config),
       tokenStorage: IONIdentityServiceLocator.tokenStorage(),
     );
@@ -126,4 +131,28 @@ class AuthClientServiceLocator {
       tokenStorage: IONIdentityServiceLocator.tokenStorage(),
     );
   }
+
+  TwoFAService twoFA({
+    required String username,
+    required IONIdentityConfig config,
+    required PasskeysSigner signer,
+  }) {
+    return TwoFAService(
+      username: username,
+      dataSource: TwoFADataSource(
+        networkClient: IONIdentityServiceLocator.networkClient(config: config),
+        tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      ),
+      wallets: WalletsClientServiceLocator().wallets(
+        username: username,
+        config: config,
+        signer: signer,
+      ),
+      extractUserIdService: extractUserId(),
+    );
+  }
+
+  ExtractUserIdService extractUserId() => ExtractUserIdService(
+        tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      );
 }

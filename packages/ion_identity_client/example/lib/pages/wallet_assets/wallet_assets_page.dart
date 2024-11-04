@@ -67,7 +67,7 @@ class _Body extends HookConsumerWidget {
 
   String _getErrorMessage(BuildContext context, Object error) {
     return switch (error) {
-          IONException(:final message) => message,
+          IONIdentityException(:final message) => message,
           _ => null,
         } ??
         'Unknown error';

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 sealed class IONException implements Exception {
-  IONException(this.code, this.message);
+  const IONException(this.code, this.message);
 
   final int code;
   final String message;
@@ -46,4 +46,8 @@ class IncorrectEventTagException extends IONException {
 
 class MainWalletNotFoundException extends IONException {
   MainWalletNotFoundException() : super(10008, 'Main wallet not found');
+}
+
+class UnauthenticatedException extends IONException {
+  const UnauthenticatedException() : super(10009, 'Unauthenticated');
 }
