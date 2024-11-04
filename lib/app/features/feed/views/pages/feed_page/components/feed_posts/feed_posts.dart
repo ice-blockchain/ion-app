@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.dart';
-import 'package:ion/app/features/feed/views/components/post_list/post_list.dart';
-import 'package:ion/app/features/feed/views/components/post_list/post_list_skeleton.dart';
+import 'package:ion/app/features/feed/views/components/entities_list/entities_list.dart';
+import 'package:ion/app/features/feed/views/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
@@ -14,7 +14,7 @@ class FeedPosts extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(feedPostsDataSourceProvider);
-    final posts = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entities = ref.watch(entitiesPagedDataProvider(dataSource));
 
     useOnInit(
       () {
@@ -25,10 +25,10 @@ class FeedPosts extends HookConsumerWidget {
       [dataSource],
     );
 
-    if (posts == null) {
-      return const PostListSkeleton();
+    if (entities == null) {
+      return const EntitiesListSkeleton();
     }
 
-    return PostList(entities: posts.data.items.toList());
+    return EntitiesList(entities: entities.data.items.toList());
   }
 }

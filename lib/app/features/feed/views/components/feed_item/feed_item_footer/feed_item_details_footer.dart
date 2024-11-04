@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_footer/post_details_action_button.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_details_action_button.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 
-class PostDetailsFooter extends StatelessWidget {
-  const PostDetailsFooter({
+class FeedItemDetailsFooter extends StatelessWidget {
+  const FeedItemDetailsFooter({
     required this.postEntity,
     super.key,
   });
@@ -29,10 +29,10 @@ class PostDetailsFooter extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.0.s),
-        PostFooter(
+        FeedItemFooter(
           postEntity: postEntity,
           bottomPadding: 12.0.s,
-          actionBuilder: (context, child, onPressed) => PostDetailsActionButton(
+          actionBuilder: (context, child, onPressed) => FeedItemDetailsActionButton(
             onPressed: onPressed,
             child: child,
           ),

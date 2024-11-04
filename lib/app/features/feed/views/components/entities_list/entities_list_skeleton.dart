@@ -7,8 +7,8 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 
-class PostListSkeleton extends StatelessWidget {
-  const PostListSkeleton({
+class EntitiesListSkeleton extends StatelessWidget {
+  const EntitiesListSkeleton({
     super.key,
   });
 

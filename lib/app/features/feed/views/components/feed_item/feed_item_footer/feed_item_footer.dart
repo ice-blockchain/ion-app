@@ -9,7 +9,7 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_footer/post_action_button.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_action_button.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -19,8 +19,8 @@ typedef ActionIconBuilder = Widget Function(
   VoidCallback onPressed,
 );
 
-class PostFooter extends HookConsumerWidget {
-  PostFooter({
+class FeedItemFooter extends HookConsumerWidget {
+  FeedItemFooter({
     required this.postEntity,
     this.actionBuilder,
     double? bottomPadding,
@@ -63,7 +63,7 @@ class PostFooter extends HookConsumerWidget {
 
     void onIceStroke() => HapticFeedback.lightImpact();
 
-    final commentsActionIcon = PostActionButton(
+    final commentsActionIcon = FeedItemActionButton(
       icon: Assets.svg.iconBlockComment.icon(
         size: 14.0.s,
       ),
@@ -75,7 +75,7 @@ class PostFooter extends HookConsumerWidget {
       activeColor: activeColor,
     );
 
-    final repostsActionIcon = PostActionButton(
+    final repostsActionIcon = FeedItemActionButton(
       icon: Assets.svg.iconBlockRepost.icon(
         size: 14.0.s,
       ),
@@ -88,7 +88,7 @@ class PostFooter extends HookConsumerWidget {
       activeColor: activeColor,
     );
 
-    final likesActionIcon = PostActionButton(
+    final likesActionIcon = FeedItemActionButton(
       icon: Assets.svg.iconVideoLikeOff.icon(
         size: 18.0.s,
         color: context.theme.appColors.onTertararyBackground,
@@ -102,7 +102,7 @@ class PostFooter extends HookConsumerWidget {
       activeColor: context.theme.appColors.attentionRed,
     );
 
-    final iceActionIcon = PostActionButton(
+    final iceActionIcon = FeedItemActionButton(
       icon: Assets.svg.iconButtonIceStroke.icon(
         size: 16.0.s,
         color: context.theme.appColors.onTertararyBackground,
@@ -111,7 +111,7 @@ class PostFooter extends HookConsumerWidget {
       activeColor: activeColor,
     );
 
-    final shareActionIcon = PostActionButton(
+    final shareActionIcon = FeedItemActionButton(
       icon: Assets.svg.iconBlockShare.icon(
         size: 14.0.s,
       ),

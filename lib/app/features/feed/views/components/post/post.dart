@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_header.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_menu/feed_item_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_footer/post_footer.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_header/post_header.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_menu/post_menu.dart';
 
 class Post extends StatelessWidget {
   const Post({
@@ -27,10 +27,10 @@ class Post extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          header ?? PostHeader(pubkey: postEntity.pubkey, trailing: const PostMenu()),
+          header ?? FeedItemHeader(pubkey: postEntity.pubkey, trailing: const FeedItemMenu()),
           PostBody(postEntity: postEntity),
           SizedBox(height: 10.0.s),
-          footer ?? PostFooter(postEntity: postEntity),
+          footer ?? FeedItemFooter(postEntity: postEntity),
         ],
       ),
     );
