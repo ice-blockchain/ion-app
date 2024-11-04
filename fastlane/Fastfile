@@ -48,6 +48,7 @@ platform :ios do
         )
 
         update_code_signing_settings(
+            path: "./ios/Runner.xcodeproj",
             profile_name: 'match AdHoc io.ion.app.staging'
         )
 
