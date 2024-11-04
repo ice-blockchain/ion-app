@@ -7,13 +7,13 @@ import 'package:ion/app/features/feed/views/components/article/components/articl
 
 class ArticleImage extends StatelessWidget {
   const ArticleImage({
-    required this.imageUrl,
-    super.key,
+    this.imageUrl,
     this.minutesToRead,
     this.minutesToReadAlignment = Alignment.bottomRight,
+    super.key,
   });
 
-  final String imageUrl;
+  final String? imageUrl;
 
   final int? minutesToRead;
 
@@ -28,10 +28,12 @@ class ArticleImage extends StatelessWidget {
         children: [
           AspectRatio(
             aspectRatio: 343 / 210,
-            child: CachedNetworkImage(
-              imageUrl: imageUrl,
-              fit: BoxFit.fitWidth,
-            ),
+            child: imageUrl != null
+                ? CachedNetworkImage(
+                    imageUrl: imageUrl!,
+                    fit: BoxFit.fitWidth,
+                  )
+                : const ColoredBox(color: Colors.grey),
           ),
           if (minutesToRead != null)
             ReadTimeTile(
