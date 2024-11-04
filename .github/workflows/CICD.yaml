@@ -178,16 +178,16 @@ jobs:
           fi
           echo "APP_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
           echo "BUILD_NUMBER=$(echo $((GITHUB_RUN_NUMBER)))" >> $GITHUB_ENV
+      - name: Fetch code signing identity (${{env.IOS_SIGN_TYPE}})
+        id: fetch_code_identity
+        run: |
+          cd main-repo
+          bundle exec fastlane ios fetch_code_identity sign_type:$IOS_SIGN_TYPE
       - name: Build iOS App (v${{ env.APP_VERSION }} build:${{ env.BUILD_NUMBER }})
         id: build-app
         run: |
           cd main-repo
-          flutter build ipa --release --no-codesign --build-number=$BUILD_NUMBER --build-name=$APP_VERSION
-      - name: Sign iOS App (${{env.IOS_SIGN_TYPE}})
-        id: sign-app
-        run: |
-          cd main-repo
-          bundle exec fastlane ios sign sign_type:$IOS_SIGN_TYPE
+          flutter build ipa --release --build-number=$BUILD_NUMBER --build-name=$APP_VERSION --export-options-plist=ios/ExportOptions.plist
       - name: Deploy iOS App to ${{env.DEPLOY_TARGET}}
         id: deploy-app
         run: |

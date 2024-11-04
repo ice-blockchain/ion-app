@@ -29,12 +29,11 @@ def ensure_temp_keychain(name, password)
 end
 
 platform :ios do
-    desc "Sign iOS app"
-    lane :sign do |options|
+    desc "Fetch code signing identity"
+    lane :fetch_code_identity do |options|
         temp_keystore_user = 'match_keystore_user'
         temp_keystore_password = 'match_keystore_password'
         sign_type = options[:sign_type]
-        export_method = sign_type == "appstore" ? "app-store" : "ad-hoc"
 
         ensure_temp_keychain(temp_keystore_user, temp_keystore_password)
 
@@ -47,20 +46,14 @@ platform :ios do
             api_key_path: "./fastlane/keys/appstore-connect-key.json",
             git_url: MATCH_GIT_URL
         )
-
-        gym(
-            skip_build_archive: true,
-            project: "./ios/Runner.xcodeproj",
-            archive_path: "./build/ios/archive/Runner.xcarchive",
-            output_directory: "./build/ios/",
-            export_method: export_method,
-            export_team_id: APPLE_DEVELOPMENT_TEAM,
-        )
     end
 
     desc "Deploy iOS app"
     lane :deploy do |options|
         deploy_retry = 0
+        pattern = File.join(File.dirname(__FILE__), "../build/ios/ipa/*.ipa")
+        first_match = Dir.glob(pattern).first
+        ipa_path = File.absolute_path(first_match) if first_match
 
         begin
             case options[:target]
@@ -68,7 +61,7 @@ platform :ios do
                 pilot(
                     app_identifier: APP_ID,
                     team_id: APPLE_DEVELOPMENT_TEAM,
-                    ipa: "./build/ios/Runner.ipa",
+                    ipa: ipa_path,
                     skip_waiting_for_build_processing: true,
                     api_key_path: "./fastlane/keys/appstore-connect-key.json",
                     skip_submission: true,
@@ -78,7 +71,7 @@ platform :ios do
             when "firebase"
                 firebase_app_distribution(
                     app: FIREBASE_IOS_APP_ID,
-                    ipa_path: "./build/ios/Runner.ipa",
+                    ipa_path: ipa_path,
                     firebase_cli_token: FIREBASE_DISTRIBUTION_TOKEN,
                     release_notes: options[:release_notes] || git_branch,
                     groups: "Internal-testers",

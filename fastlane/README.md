@@ -15,13 +15,13 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
-### ios sign
+### ios fetch_code_identity
 
 ```sh
-[bundle exec] fastlane ios sign
+[bundle exec] fastlane ios fetch_code_identity
 ```
 
-Sign iOS app
+Fetch code signing identity
 
 ### ios deploy
 
