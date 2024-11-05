@@ -4,6 +4,7 @@ import 'package:ion/app/exceptions/exceptions.dart' as ion_exceptions;
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/protect_account/secure_account/data/models/security_methods.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
+import 'package:ion/app/utils/predicates.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,9 +25,10 @@ class SecurityAccountController extends _$SecurityAccountController {
     final twoFaOptions = userDetails.twoFaOptions ?? [];
 
     return SecurityMethods(
-      isEmailEnabled: twoFaOptions.contains(const TwoFAType.email().option),
-      isPhoneEnabled: twoFaOptions.contains(const TwoFAType.sms().option),
-      isAuthenticatorEnabled: twoFaOptions.contains(const TwoFAType.authenticator().option),
+      isEmailEnabled: twoFaOptions.any(Predicates.startsWith(const TwoFAType.email().option)),
+      isPhoneEnabled: twoFaOptions.any(Predicates.startsWith(const TwoFAType.sms().option)),
+      isAuthenticatorEnabled:
+          twoFaOptions.any(Predicates.startsWith(const TwoFAType.authenticator().option)),
     );
   }
 
