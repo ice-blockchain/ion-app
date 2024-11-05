@@ -9,6 +9,7 @@ import 'package:ion/app/features/feed/views/components/article/components/articl
 import 'package:ion/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_header.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_menu/feed_item_menu.dart';
+import 'package:ion/app/utils/algorithm.dart';
 
 class Article extends ConsumerWidget {
   const Article({
@@ -53,7 +54,7 @@ class Article extends ConsumerWidget {
                   SizedBox(height: 10.0.s),
                   ArticleImage(
                     imageUrl: article.data.image,
-                    minutesToRead: _calculateReadingTime(article.data.content),
+                    minutesToRead: calculateReadingTime(article.data.content),
                   ),
                   SizedBox(height: 10.0.s),
                   ArticleFooter(text: article.data.title ?? ''),
@@ -65,11 +66,5 @@ class Article extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  int _calculateReadingTime(String content) {
-    const wordsPerMinute = 200;
-    final words = content.split(' ').length;
-    return (words / wordsPerMinute).ceil();
   }
 }

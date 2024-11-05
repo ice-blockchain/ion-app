@@ -64,7 +64,6 @@ class SelectArticleTopicsItem extends ConsumerWidget {
                 alignment: Alignment.centerLeft,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
                   padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultMediumMargin),
                   itemCount: selectedTopics.length,
                   separatorBuilder: (context, index) => SizedBox(width: 12.0.s),
@@ -83,6 +82,9 @@ class SelectArticleTopicsItem extends ConsumerWidget {
                     ),
                     child: Text(
                       selectedTopics[index].getTitle(context),
+                      style: context.theme.appTextThemes.caption2.copyWith(
+                        color: context.theme.appColors.primaryText,
+                      ),
                     ),
                   ),
                 ),

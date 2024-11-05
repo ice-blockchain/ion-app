@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/topic_type.dart';
+import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/providers/article/select_topics_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -26,7 +26,7 @@ class TopicSelectModal extends HookConsumerWidget {
     final filteredTopics = useMemoized(
       () {
         final query = searchValue.value.toLowerCase();
-        return TopicType.values.where((topic) {
+        return ArticleTopic.values.where((topic) {
           final title = topic.getTitle(context).toLowerCase();
           return title.contains(query);
         }).toList();
@@ -34,7 +34,7 @@ class TopicSelectModal extends HookConsumerWidget {
       [searchValue.value],
     );
 
-    void toggleTopicSelection(TopicType topic) {
+    void toggleTopicSelection(ArticleTopic topic) {
       final notifier = ref.read(selectTopicsProvider.notifier);
       if (selectedTopics.contains(topic)) {
         notifier.selectTopics = List.from(selectedTopics)..remove(topic);
@@ -65,7 +65,10 @@ class TopicSelectModal extends HookConsumerWidget {
                     ),
                   ),
               ],
-              title: Text(context.i18n.topics_title),
+              title: Text(
+                context.i18n.topics_title,
+                style: context.theme.appTextThemes.subtitle,
+              ),
             ),
             automaticallyImplyLeading: false,
             toolbarHeight: NavigationAppBar.modalHeaderHeight,

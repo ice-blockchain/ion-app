@@ -30,20 +30,16 @@ class CreateArticlePreviewModal extends ConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.article_preview_title),
-            onBackPress: () {},
           ),
           const HorizontalSeparator(),
-          Padding(
-            padding: EdgeInsets.only(bottom: 12.0.s),
-            child: Article(article: article),
-          ),
+          Article(article: article),
+          SizedBox(height: 12.0.s),
           const HorizontalSeparator(),
           SizedBox(height: 40.0.s),
           const SelectArticleTopicsItem(),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.0.s),
-            child: const HorizontalSeparator(),
-          ),
+          SizedBox(height: 20.0.s),
+          const HorizontalSeparator(),
+          SizedBox(height: 20.0.s),
           const SelectArticleVisibilityItem(),
           const Spacer(),
           Align(

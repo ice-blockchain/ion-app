@@ -13,7 +13,9 @@ class ArticleListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      // onTap: () => ArticleDetailsRoute(articleId: articleId).push<void>(context),
+      onTap: () => {
+        //TODO: handle ArticleDetailsRoute push / screen open
+      },
       child: Article(article: article),
     );
   }
