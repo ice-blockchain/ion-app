@@ -12,7 +12,7 @@ class ExtractUserIdService {
 
   final TokenStorage tokenStorage;
 
-  String? extractUserId({
+  String extractUserId({
     required String username,
   }) {
     final token = tokenStorage.getToken(username: username)?.token;
@@ -23,19 +23,21 @@ class ExtractUserIdService {
     return _extractUserIdFromToken(token);
   }
 
-  String? _extractUserIdFromToken(String token) {
+  String _extractUserIdFromToken(String token) {
     try {
       final parts = token.split('.');
-      if (parts.length < 2) return null;
+      if (parts.length < 2) throw const FormatException('Failed to extract userId from token');
 
       final payload = parts[1];
       final normalized = base64Url.normalize(payload);
       final decoded = utf8.decode(base64Url.decode(normalized));
       final json = jsonDecode(decoded) as Map<String, dynamic>;
 
-      return json['https://custom/app_metadata']?['userId'] as String?;
+      return json['https://custom/app_metadata']?['userId'] as String;
+    } on FormatException {
+      rethrow;
     } catch (_) {
-      return null;
+      throw const FormatException('Failed to extract userId from token');
     }
   }
 }

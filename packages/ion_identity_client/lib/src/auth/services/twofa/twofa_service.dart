@@ -28,9 +28,6 @@ class TwoFAService {
     required Map<String, String>? verificationCodes,
   }) async {
     final userId = _extractUserIdService.extractUserId(username: username);
-    if (userId == null) {
-      throw const UnauthenticatedException();
-    }
     final base64Signature = await _generateSignature(userId);
 
     await _dataSource.requestTwoFACode(
@@ -46,9 +43,6 @@ class TwoFAService {
 
   Future<void> verifyTwoFA(TwoFAType twoFAType) async {
     final userId = _extractUserIdService.extractUserId(username: username);
-    if (userId == null) {
-      throw const UnauthenticatedException();
-    }
 
     await _dataSource.verifyTwoFA(
       username: username,

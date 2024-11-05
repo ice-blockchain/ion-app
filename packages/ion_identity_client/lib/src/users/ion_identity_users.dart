@@ -23,10 +23,6 @@ class IONIdentityUsers {
 
   Future<UserDetails> currentUserDetails() async {
     final userId = _extractUserIdService.extractUserId(username: username);
-    if (userId == null) {
-      throw const UnauthenticatedException();
-    }
-
     return _getUserDetailsService.details(userId: userId);
   }
 
