@@ -110,8 +110,10 @@ class SecureAccountOptionsPage extends ConsumerWidget {
       return;
     }
 
-    securityMethods.isAuthenticatorEnabled
-        ? AuthenticatorInitialDeleteRoute().push<void>(context)
-        : AuthenticatorSetupRoute(step: AuthenticatorSetupSteps.options).push<void>(context);
+    if (securityMethods.isAuthenticatorEnabled) {
+      AuthenticatorInitialDeleteRoute().push<void>(context);
+    } else {
+      AuthenticatorSetupRoute(step: AuthenticatorSetupSteps.options).push<void>(context);
+    }
   }
 }
