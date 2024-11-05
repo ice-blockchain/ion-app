@@ -40,7 +40,6 @@ class NewChatModal extends ConsumerWidget {
                       child: SearchInput(
                         controller: searchController,
                         textInputAction: TextInputAction.search,
-                        onTextChanged: (String text) {},
                       ),
                     ),
                   ],

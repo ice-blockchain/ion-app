@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" fill="none" viewBox="0 0 65 65">
+  <rect width="63.5" height="63.5" x=".75" y=".75" stroke="url(#a)" stroke-width="1.5" rx="19.25"/>
+  <defs>
+    <radialGradient id="a" cx="0" cy="0" r="1" gradientTransform="rotate(90 0 32.5) scale(32.5)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EF1D4F"/>
+      <stop offset=".214" stop-color="#FF9F0E"/>
+      <stop offset=".474" stop-color="#FFBB0E"/>
+      <stop offset=".766" stop-color="#FF012F"/>
+    </radialGradient>
+  </defs>
+</svg>
