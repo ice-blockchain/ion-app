@@ -8,12 +8,14 @@ class StoryProgressSegment extends StatelessWidget {
   const StoryProgressSegment({
     required this.isActive,
     required this.storyProgress,
+    required this.isPreviousStory,
     this.margin,
     super.key,
   });
 
   final bool isActive;
   final double storyProgress;
+  final bool isPreviousStory;
   final EdgeInsetsGeometry? margin;
 
   @override
@@ -28,7 +30,7 @@ class StoryProgressSegment extends StatelessWidget {
       ),
       child: StoryProgressFill(
         isActive: isActive,
-        storyProgress: storyProgress,
+        storyProgress: isPreviousStory ? 1.0 : storyProgress,
       ),
     );
   }
