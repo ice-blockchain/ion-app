@@ -30,6 +30,7 @@ class StoryProgressBarContainer extends ConsumerWidget {
               story: entry.value,
               isActive: index <= currentStoryIndex,
               isCurrent: index == currentStoryIndex,
+              isPreviousStory: index < currentStoryIndex,
               onCompleted: onStoryCompleted,
               margin: index > 0 ? EdgeInsets.only(left: 4.0.s) : null,
             ),

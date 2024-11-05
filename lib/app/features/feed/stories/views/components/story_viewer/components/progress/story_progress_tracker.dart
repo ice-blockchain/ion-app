@@ -14,6 +14,7 @@ class StoryProgressTracker extends HookConsumerWidget {
     required this.story,
     required this.isActive,
     required this.isCurrent,
+    required this.isPreviousStory,
     required this.onCompleted,
     this.margin,
     super.key,
@@ -22,6 +23,7 @@ class StoryProgressTracker extends HookConsumerWidget {
   final Story story;
   final bool isActive;
   final bool isCurrent;
+  final bool isPreviousStory;
   final VoidCallback onCompleted;
   final EdgeInsetsGeometry? margin;
 
@@ -37,7 +39,9 @@ class StoryProgressTracker extends HookConsumerWidget {
     useEffect(
       () {
         if (storyProgress.isCompleted) {
-          onCompleted();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            onCompleted();
+          });
         }
         return null;
       },
@@ -47,6 +51,7 @@ class StoryProgressTracker extends HookConsumerWidget {
     return StoryProgressSegment(
       isActive: isActive,
       storyProgress: isActive ? storyProgress.progress : 0.0,
+      isPreviousStory: isPreviousStory,
       margin: margin,
     );
   }
