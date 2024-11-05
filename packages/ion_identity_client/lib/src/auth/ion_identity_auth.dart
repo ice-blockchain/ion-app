@@ -6,6 +6,7 @@ import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_
 import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/register/register_service.dart';
+import 'package:ion_identity_client/src/auth/services/twofa/twofa_service.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 
 /// A class that handles user authentication processes, including user registration,
@@ -26,6 +27,7 @@ class IONIdentityAuth {
     required this.createRecoveryCredentialsService,
     required this.recoverUserService,
     required this.delegatedLoginService,
+    required this.twoFAService,
   });
 
   final RegisterService registerService;
@@ -33,6 +35,7 @@ class IONIdentityAuth {
   final CreateRecoveryCredentialsService createRecoveryCredentialsService;
   final RecoverUserService recoverUserService;
   final DelegatedLoginService delegatedLoginService;
+  final TwoFAService twoFAService;
 
   final String username;
   final TokenStorage tokenStorage;
@@ -60,4 +63,15 @@ class IONIdentityAuth {
 
   Future<UserToken> delegatedLogin() async =>
       delegatedLoginService.delegatedLogin(username: username);
+
+  Future<void> requestTwoFACode({
+    required TwoFAType twoFAType,
+    Map<String, String>? verificationCodes,
+  }) =>
+      twoFAService.requestTwoFACode(
+        twoFAType: twoFAType,
+        verificationCodes: verificationCodes,
+      );
+
+  Future<void> verifyTwoFA(TwoFAType twoFAType) => twoFAService.verifyTwoFA(twoFAType);
 }

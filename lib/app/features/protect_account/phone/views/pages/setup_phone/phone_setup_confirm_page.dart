@@ -68,7 +68,7 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
                   label: Text(locale.button_confirm),
                   onPressed: () {
                     if (formKey.value.currentState?.validate() ?? false) {
-                      ref.read(securityAccountControllerProvider.notifier).togglePhone(value: true);
+                      ref.invalidate(securityAccountControllerProvider);
                       PhoneSetupRoute(step: PhoneSetupSteps.success).push<void>(context);
                     }
                   },

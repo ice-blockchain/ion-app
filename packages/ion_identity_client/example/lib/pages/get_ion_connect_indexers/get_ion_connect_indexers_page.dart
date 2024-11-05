@@ -13,7 +13,7 @@ class GetIONConnectIndexersPage extends HookConsumerWidget {
     final userIdController = useTextEditingController();
     useListenable(userIdController);
 
-    final indexers = ref.watch(ionConnectIndexersNotifierProvider);
+    final indexers = ref.watch(indexersNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +40,7 @@ class GetIONConnectIndexersPage extends HookConsumerWidget {
           ElevatedButton(
             onPressed: () {
               ref
-                  .read(ionConnectIndexersNotifierProvider.notifier)
+                  .read(indexersNotifierProvider.notifier)
                   .fetchIONConnectIndexers(userIdController.text);
             },
             child: const Text('Get indexers'),

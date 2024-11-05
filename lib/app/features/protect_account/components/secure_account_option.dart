@@ -1,26 +1,40 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class SecureAccountOption extends StatelessWidget {
+class SecureAccountOption extends ConsumerWidget {
   const SecureAccountOption({
     required this.title,
     required this.icon,
     required this.onTap,
     required this.isEnabled,
+    this.isLoading = false,
     super.key,
   });
+
   final String title;
   final Widget icon;
   final VoidCallback onTap;
   final bool isEnabled;
+  final bool isLoading;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLightTheme = ref.watch(appThemeModeProvider) == ThemeMode.light;
+
+    final trailingIcon = isEnabled
+        ? Assets.svg.iconDappCheck.icon(
+            color: context.theme.appColors.success,
+          )
+        : Assets.svg.iconArrowRight.icon();
+
     return ListItem(
       title: Text(title),
       backgroundColor: context.theme.appColors.tertararyBackground,
@@ -35,12 +49,10 @@ class SecureAccountOption extends StatelessWidget {
         onPressed: () {},
         icon: icon,
       ),
-      trailing: isEnabled
-          ? Assets.svg.iconDappCheck.icon(
-              color: context.theme.appColors.success,
-            )
-          : Assets.svg.iconArrowRight.icon(),
-      onTap: onTap,
+      trailing: isLoading
+          ? IONLoadingIndicator(type: isLightTheme ? IndicatorType.dark : IndicatorType.light)
+          : trailingIcon,
+      onTap: isLoading ? null : onTap,
     );
   }
 }

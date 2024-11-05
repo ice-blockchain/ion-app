@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'pseudo_network_signature_response.dart';
+part of 'generate_signature_response.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,13 +14,13 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-PseudoNetworkSignatureResponse _$PseudoNetworkSignatureResponseFromJson(
+GenerateSignatureResponse _$GenerateSignatureResponseFromJson(
     Map<String, dynamic> json) {
-  return _PseudoNetworkSignatureResponse.fromJson(json);
+  return _GenerateSignatureResponse.fromJson(json);
 }
 
 /// @nodoc
-mixin _$PseudoNetworkSignatureResponse {
+mixin _$GenerateSignatureResponse {
   String get id => throw _privateConstructorUsedError;
   String get walletId => throw _privateConstructorUsedError;
   String get network => throw _privateConstructorUsedError;
@@ -31,23 +31,21 @@ mixin _$PseudoNetworkSignatureResponse {
   DateTime get dateRequested => throw _privateConstructorUsedError;
   DateTime get dateSigned => throw _privateConstructorUsedError;
 
-  /// Serializes this PseudoNetworkSignatureResponse to a JSON map.
+  /// Serializes this GenerateSignatureResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of PseudoNetworkSignatureResponse
+  /// Create a copy of GenerateSignatureResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $PseudoNetworkSignatureResponseCopyWith<PseudoNetworkSignatureResponse>
-      get copyWith => throw _privateConstructorUsedError;
+  $GenerateSignatureResponseCopyWith<GenerateSignatureResponse> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $PseudoNetworkSignatureResponseCopyWith<$Res> {
-  factory $PseudoNetworkSignatureResponseCopyWith(
-          PseudoNetworkSignatureResponse value,
-          $Res Function(PseudoNetworkSignatureResponse) then) =
-      _$PseudoNetworkSignatureResponseCopyWithImpl<$Res,
-          PseudoNetworkSignatureResponse>;
+abstract class $GenerateSignatureResponseCopyWith<$Res> {
+  factory $GenerateSignatureResponseCopyWith(GenerateSignatureResponse value,
+          $Res Function(GenerateSignatureResponse) then) =
+      _$GenerateSignatureResponseCopyWithImpl<$Res, GenerateSignatureResponse>;
   @useResult
   $Res call(
       {String id,
@@ -64,17 +62,17 @@ abstract class $PseudoNetworkSignatureResponseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$PseudoNetworkSignatureResponseCopyWithImpl<$Res,
-        $Val extends PseudoNetworkSignatureResponse>
-    implements $PseudoNetworkSignatureResponseCopyWith<$Res> {
-  _$PseudoNetworkSignatureResponseCopyWithImpl(this._value, this._then);
+class _$GenerateSignatureResponseCopyWithImpl<$Res,
+        $Val extends GenerateSignatureResponse>
+    implements $GenerateSignatureResponseCopyWith<$Res> {
+  _$GenerateSignatureResponseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of PseudoNetworkSignatureResponse
+  /// Create a copy of GenerateSignatureResponse
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -129,7 +127,7 @@ class _$PseudoNetworkSignatureResponseCopyWithImpl<$Res,
     ) as $Val);
   }
 
-  /// Create a copy of PseudoNetworkSignatureResponse
+  /// Create a copy of GenerateSignatureResponse
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -141,12 +139,12 @@ class _$PseudoNetworkSignatureResponseCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$PseudoNetworkSignatureResponseImplCopyWith<$Res>
-    implements $PseudoNetworkSignatureResponseCopyWith<$Res> {
-  factory _$$PseudoNetworkSignatureResponseImplCopyWith(
-          _$PseudoNetworkSignatureResponseImpl value,
-          $Res Function(_$PseudoNetworkSignatureResponseImpl) then) =
-      __$$PseudoNetworkSignatureResponseImplCopyWithImpl<$Res>;
+abstract class _$$GenerateSignatureResponseImplCopyWith<$Res>
+    implements $GenerateSignatureResponseCopyWith<$Res> {
+  factory _$$GenerateSignatureResponseImplCopyWith(
+          _$GenerateSignatureResponseImpl value,
+          $Res Function(_$GenerateSignatureResponseImpl) then) =
+      __$$GenerateSignatureResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -165,16 +163,16 @@ abstract class _$$PseudoNetworkSignatureResponseImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$PseudoNetworkSignatureResponseImplCopyWithImpl<$Res>
-    extends _$PseudoNetworkSignatureResponseCopyWithImpl<$Res,
-        _$PseudoNetworkSignatureResponseImpl>
-    implements _$$PseudoNetworkSignatureResponseImplCopyWith<$Res> {
-  __$$PseudoNetworkSignatureResponseImplCopyWithImpl(
-      _$PseudoNetworkSignatureResponseImpl _value,
-      $Res Function(_$PseudoNetworkSignatureResponseImpl) _then)
+class __$$GenerateSignatureResponseImplCopyWithImpl<$Res>
+    extends _$GenerateSignatureResponseCopyWithImpl<$Res,
+        _$GenerateSignatureResponseImpl>
+    implements _$$GenerateSignatureResponseImplCopyWith<$Res> {
+  __$$GenerateSignatureResponseImplCopyWithImpl(
+      _$GenerateSignatureResponseImpl _value,
+      $Res Function(_$GenerateSignatureResponseImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of PseudoNetworkSignatureResponse
+  /// Create a copy of GenerateSignatureResponse
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -189,7 +187,7 @@ class __$$PseudoNetworkSignatureResponseImplCopyWithImpl<$Res>
     Object? dateRequested = null,
     Object? dateSigned = null,
   }) {
-    return _then(_$PseudoNetworkSignatureResponseImpl(
+    return _then(_$GenerateSignatureResponseImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -232,9 +230,8 @@ class __$$PseudoNetworkSignatureResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PseudoNetworkSignatureResponseImpl
-    implements _PseudoNetworkSignatureResponse {
-  const _$PseudoNetworkSignatureResponseImpl(
+class _$GenerateSignatureResponseImpl implements _GenerateSignatureResponse {
+  const _$GenerateSignatureResponseImpl(
       {required this.id,
       required this.walletId,
       required this.network,
@@ -247,9 +244,8 @@ class _$PseudoNetworkSignatureResponseImpl
       : _requestBody = requestBody,
         _signature = signature;
 
-  factory _$PseudoNetworkSignatureResponseImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$PseudoNetworkSignatureResponseImplFromJson(json);
+  factory _$GenerateSignatureResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GenerateSignatureResponseImplFromJson(json);
 
   @override
   final String id;
@@ -284,14 +280,14 @@ class _$PseudoNetworkSignatureResponseImpl
 
   @override
   String toString() {
-    return 'PseudoNetworkSignatureResponse(id: $id, walletId: $walletId, network: $network, requester: $requester, requestBody: $requestBody, status: $status, signature: $signature, dateRequested: $dateRequested, dateSigned: $dateSigned)';
+    return 'GenerateSignatureResponse(id: $id, walletId: $walletId, network: $network, requester: $requester, requestBody: $requestBody, status: $status, signature: $signature, dateRequested: $dateRequested, dateSigned: $dateSigned)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$PseudoNetworkSignatureResponseImpl &&
+            other is _$GenerateSignatureResponseImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.walletId, walletId) ||
                 other.walletId == walletId) &&
@@ -323,40 +319,37 @@ class _$PseudoNetworkSignatureResponseImpl
       dateRequested,
       dateSigned);
 
-  /// Create a copy of PseudoNetworkSignatureResponse
+  /// Create a copy of GenerateSignatureResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$PseudoNetworkSignatureResponseImplCopyWith<
-          _$PseudoNetworkSignatureResponseImpl>
-      get copyWith => __$$PseudoNetworkSignatureResponseImplCopyWithImpl<
-          _$PseudoNetworkSignatureResponseImpl>(this, _$identity);
+  _$$GenerateSignatureResponseImplCopyWith<_$GenerateSignatureResponseImpl>
+      get copyWith => __$$GenerateSignatureResponseImplCopyWithImpl<
+          _$GenerateSignatureResponseImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PseudoNetworkSignatureResponseImplToJson(
+    return _$$GenerateSignatureResponseImplToJson(
       this,
     );
   }
 }
 
-abstract class _PseudoNetworkSignatureResponse
-    implements PseudoNetworkSignatureResponse {
-  const factory _PseudoNetworkSignatureResponse(
-          {required final String id,
-          required final String walletId,
-          required final String network,
-          required final Requester requester,
-          required final Map<String, dynamic> requestBody,
-          required final String status,
-          required final Map<String, dynamic> signature,
-          required final DateTime dateRequested,
-          required final DateTime dateSigned}) =
-      _$PseudoNetworkSignatureResponseImpl;
+abstract class _GenerateSignatureResponse implements GenerateSignatureResponse {
+  const factory _GenerateSignatureResponse(
+      {required final String id,
+      required final String walletId,
+      required final String network,
+      required final Requester requester,
+      required final Map<String, dynamic> requestBody,
+      required final String status,
+      required final Map<String, dynamic> signature,
+      required final DateTime dateRequested,
+      required final DateTime dateSigned}) = _$GenerateSignatureResponseImpl;
 
-  factory _PseudoNetworkSignatureResponse.fromJson(Map<String, dynamic> json) =
-      _$PseudoNetworkSignatureResponseImpl.fromJson;
+  factory _GenerateSignatureResponse.fromJson(Map<String, dynamic> json) =
+      _$GenerateSignatureResponseImpl.fromJson;
 
   @override
   String get id;
@@ -377,11 +370,10 @@ abstract class _PseudoNetworkSignatureResponse
   @override
   DateTime get dateSigned;
 
-  /// Create a copy of PseudoNetworkSignatureResponse
+  /// Create a copy of GenerateSignatureResponse
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PseudoNetworkSignatureResponseImplCopyWith<
-          _$PseudoNetworkSignatureResponseImpl>
+  _$$GenerateSignatureResponseImplCopyWith<_$GenerateSignatureResponseImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/auth_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
 import 'package:ion_identity_client/src/users/ion_connect_indexers/data_sources/ion_connect_indexers_data_source.dart';
 import 'package:ion_identity_client/src/users/ion_connect_indexers/get_user_connect_indexers_service.dart';
@@ -24,6 +25,7 @@ class UsersClientServiceLocator {
     required IONIdentityConfig config,
   }) =>
       IONIdentityUsers(
+        username,
         _userDetails(
           username: username,
           config: config,
@@ -36,6 +38,7 @@ class UsersClientServiceLocator {
           username: username,
           config: config,
         ),
+        AuthClientServiceLocator().extractUserId(),
       );
 
   UserDetailsService _userDetails({

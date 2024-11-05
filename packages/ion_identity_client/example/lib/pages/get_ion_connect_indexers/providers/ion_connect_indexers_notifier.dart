@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'ion_connect_indexers_notifier.g.dart';
 
 @riverpod
-class IONConnectIndexersNotifier extends _$IONConnectIndexersNotifier {
+class IndexersNotifier extends _$IndexersNotifier {
   @override
   FutureOr<List<String>?> build() async {
     return null;

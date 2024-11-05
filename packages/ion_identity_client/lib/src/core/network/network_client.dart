@@ -80,6 +80,24 @@ class NetworkClient {
     );
   }
 
+  Future<Result> put<Result>(
+    String path, {
+    required Decoder<Result> decoder,
+    JsonObject queryParams = const {},
+    JsonObject headers = const {},
+    Object? data,
+  }) async {
+    return _makeRequest(
+      request: () => dio.put<JsonObject>(
+        path,
+        queryParameters: queryParams,
+        data: data,
+        options: Options(headers: headers),
+      ),
+      decoder: decoder,
+    );
+  }
+
   /// A private method that executes the provided [request] function, handles
   /// potential errors, and decodes the JSON response using the provided [decoder].
   ///

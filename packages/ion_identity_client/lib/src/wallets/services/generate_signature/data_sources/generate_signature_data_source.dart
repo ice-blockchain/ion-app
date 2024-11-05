@@ -4,10 +4,10 @@ import 'dart:convert';
 
 import 'package:ion_identity_client/src/core/types/http_method.dart';
 import 'package:ion_identity_client/src/signer/types/user_action_signing_request.dart';
-import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/models/pseudo_network_generate_signature_request.dart';
+import 'package:ion_identity_client/src/wallets/services/generate_signature/models/generate_signature_request.dart';
 
-class PseudoNetworkGenerateSignatureDataSource {
-  const PseudoNetworkGenerateSignatureDataSource();
+class GenerateSignatureDataSource {
+  const GenerateSignatureDataSource();
 
   static const generateSignaturePath = '/wallets/%s/signatures';
 

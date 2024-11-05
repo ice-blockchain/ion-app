@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pseudo_network_generate_signature_request.dart';
+part of 'generate_signature_request.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

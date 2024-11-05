@@ -7,10 +7,14 @@ part 'authentication.g.dart';
 
 @freezed
 class Authentication with _$Authentication {
-  factory Authentication({
+  const factory Authentication({
     required String token,
     required String refreshToken,
   }) = _Authentication;
+
+  const Authentication._();
+
+  factory Authentication.empty() => const Authentication(token: '', refreshToken: '');
 
   factory Authentication.fromJson(Map<String, dynamic> json) => _$AuthenticationFromJson(json);
 }

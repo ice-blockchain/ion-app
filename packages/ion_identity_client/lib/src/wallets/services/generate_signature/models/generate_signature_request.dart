@@ -2,8 +2,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'pseudo_network_generate_signature_request.freezed.dart';
-part 'pseudo_network_generate_signature_request.g.dart';
+part 'generate_signature_request.freezed.dart';
+part 'generate_signature_request.g.dart';
 
 @freezed
 class SignatureRequestHash with _$SignatureRequestHash {

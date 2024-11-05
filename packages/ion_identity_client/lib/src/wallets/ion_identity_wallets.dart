@@ -2,12 +2,12 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
+import 'package:ion_identity_client/src/wallets/services/generate_signature/generate_signature_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_history/get_wallet_history_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/get_wallet_nfts_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/get_wallet_transfer_requests_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
-import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/pseudo_network_generate_signature_service.dart';
 
 /// A class that handles operations related to user wallets, such as listing the wallets
 /// associated with a specific user.
@@ -27,7 +27,7 @@ class IONIdentityWallets {
     required GetWalletNftsService getWalletNftsService,
     required GetWalletHistoryService getWalletHistoryService,
     required GetWalletTransferRequestsService getWalletTransferRequestsService,
-    required PseudoNetworkGenerateSignatureService generateSignatureService,
+    required GenerateSignatureService generateSignatureService,
   })  : _createWalletService = createWalletService,
         _getWalletsService = getWalletsService,
         _getWalletAssetsService = getWalletAssetsService,
@@ -44,7 +44,7 @@ class IONIdentityWallets {
   final GetWalletNftsService _getWalletNftsService;
   final GetWalletHistoryService _getWalletHistoryService;
   final GetWalletTransferRequestsService _getWalletTransferRequestsService;
-  final PseudoNetworkGenerateSignatureService _generateSignatureService;
+  final GenerateSignatureService _generateSignatureService;
 
   Future<Wallet> createWallet({
     required String network,
@@ -80,12 +80,21 @@ class IONIdentityWallets {
         pageToken: pageToken,
       );
 
-  Future<PseudoNetworkSignatureResponse> generateSignature(
+  Future<GenerateSignatureResponse> generateMessageSignature(
     String walletId,
     String message,
   ) =>
       _generateSignatureService.generateMessageSignature(
         walletId: walletId,
         message: message,
+      );
+
+  Future<GenerateSignatureResponse> generateHashSignature(
+    String walletId,
+    String hash,
+  ) =>
+      _generateSignatureService.generateHashSignature(
+        walletId: walletId,
+        hash: hash,
       );
 }
