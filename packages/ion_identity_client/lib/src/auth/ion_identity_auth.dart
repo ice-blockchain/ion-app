@@ -64,7 +64,7 @@ class IONIdentityAuth {
   Future<UserToken> delegatedLogin() async =>
       delegatedLoginService.delegatedLogin(username: username);
 
-  Future<void> requestTwoFACode({
+  Future<String?> requestTwoFACode({
     required TwoFAType twoFAType,
     Map<String, String>? verificationCodes,
   }) =>

@@ -23,14 +23,14 @@ class TwoFAService {
   final IONIdentityWallets _wallets;
   final ExtractUserIdService _extractUserIdService;
 
-  Future<void> requestTwoFACode({
+  Future<String?> requestTwoFACode({
     required TwoFAType twoFAType,
     required Map<String, String>? verificationCodes,
   }) async {
     final userId = _extractUserIdService.extractUserId(username: username);
     final base64Signature = await _generateSignature(userId);
 
-    await _dataSource.requestTwoFACode(
+    final response = await _dataSource.requestTwoFACode(
       signature: base64Signature,
       username: username,
       userId: userId,
@@ -39,6 +39,8 @@ class TwoFAService {
       email: twoFAType.emailOrNull,
       phoneNumber: twoFAType.phoneNumberOrNull,
     );
+
+    return _extractCodeFromResponse(response);
   }
 
   Future<void> verifyTwoFA(TwoFAType twoFAType) async {
@@ -68,5 +70,18 @@ class TwoFAService {
     final base64Signature = base64Encode(utf8.encode('$signature:$timestamp:$userId'));
 
     return base64Signature;
+  }
+
+  String? _extractCodeFromResponse(Map<String, dynamic> response) {
+    if (response.isEmpty) {
+      return null;
+    }
+
+    final url = response['TOTPAuthenticatorURL'] as String?;
+    if (url == null) {
+      return null;
+    }
+
+    return Uri.parse(url).queryParameters['secret'];
   }
 }

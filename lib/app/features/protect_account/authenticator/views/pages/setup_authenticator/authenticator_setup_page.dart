@@ -13,9 +13,11 @@ import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_h
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/step_pages.dart';
+import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class AuthenticatorSetupPage extends HookConsumerWidget {
   const AuthenticatorSetupPage(this.step, {super.key});
@@ -25,6 +27,7 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useState<GlobalKey<FormState>?>(null);
+    final codeController = useRef<TextEditingController?>(null);
 
     return SheetContent(
       body: CustomScrollView(
@@ -58,7 +61,10 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
                     AuthenticatorSetupSteps.options => AuthenticatorOptionsPage(onTap: (type) {}),
                     AuthenticatorSetupSteps.instruction => const AuthenticatorInstructionsPage(),
                     AuthenticatorSetupSteps.confirmation => AuthenticatorCodeConfirmPage(
-                        onFormKeySet: (key) => formKey.value = key,
+                        onFormInitialized: (controller, key) {
+                          codeController.value = controller;
+                          formKey.value = key;
+                        },
                       ),
                     AuthenticatorSetupSteps.success => const AuthenticatorSuccessPage(),
                   },
@@ -70,7 +76,12 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
                     mainAxisSize: MainAxisSize.max,
                     label: Text(step.getButtonText(context)),
                     onPressed: () => step == AuthenticatorSetupSteps.confirmation
-                        ? _validateAndProceed(context, ref, formKey.value)
+                        ? _validateAndProceed(
+                            context,
+                            ref,
+                            formKey.value,
+                            codeController.value?.text ?? '',
+                          )
                         : _navigateToNextStep(context),
                   ),
                 ),
@@ -83,15 +94,25 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
     );
   }
 
-  void _validateAndProceed(
+  Future<void> _validateAndProceed(
     BuildContext context,
     WidgetRef ref,
     GlobalKey<FormState>? formKey,
-  ) {
-    if (formKey?.currentState?.validate() ?? false) {
-      ref.invalidate(securityAccountControllerProvider);
-      _navigateToNextStep(context);
+    String code,
+  ) async {
+    final isFormValid = formKey?.currentState?.validate() ?? false;
+    if (!isFormValid) {
+      return;
     }
+
+    await validateTwoFACode(ref, TwoFAType.authenticator(code));
+    ref.invalidate(securityAccountControllerProvider);
+
+    if (!context.mounted) {
+      return;
+    }
+
+    _navigateToNextStep(context);
   }
 
   void _navigateToNextStep(BuildContext context) {

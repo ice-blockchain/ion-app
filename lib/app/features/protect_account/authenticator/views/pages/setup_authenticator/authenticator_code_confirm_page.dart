@@ -11,10 +11,10 @@ import 'package:ion/generated/assets.gen.dart';
 
 class AuthenticatorCodeConfirmPage extends HookWidget {
   const AuthenticatorCodeConfirmPage({
-    required this.onFormKeySet,
+    required this.onFormInitialized,
     super.key,
   });
-  final void Function(GlobalKey<FormState>) onFormKeySet;
+  final void Function(TextEditingController, GlobalKey<FormState>) onFormInitialized;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class AuthenticatorCodeConfirmPage extends HookWidget {
 
     useOnInit(
       () {
-        onFormKeySet(formKey.value);
+        onFormInitialized(controller, formKey.value);
       },
       [],
     );
