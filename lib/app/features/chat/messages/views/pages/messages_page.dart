@@ -27,7 +27,7 @@ class MessagesPage extends StatelessWidget {
         backgroundColor: context.theme.appColors.secondaryBackground,
         body: SafeArea(
           minimum: EdgeInsets.only(
-            bottom: MediaQuery.of(context).padding.bottom > 0 ? 24.0.s : 8.0.s,
+            bottom: MediaQuery.of(context).padding.bottom > 0 ? 17.0.s : 0,
           ),
           bottom: false,
           child: Column(
