@@ -27,21 +27,19 @@ class TrendingVideos extends HookConsumerWidget {
       <Object?>[],
     );
     final listOverlay = ref.watch(trendingVideosOverlayNotifierProvider);
-    return Padding(
-      padding: EdgeInsets.only(bottom: 18.0.s),
-      child: Column(
-        children: [
-          SectionHeader(
-            onPress: () {},
-            title: context.i18n.feed_trending_videos,
-            leadingIcon: const VideosIcon(),
-          ),
-          if (loading.value)
-            TrendingVideosListSkeleton(listOverlay: listOverlay)
-          else
-            TrendingVideosList(listOverlay: listOverlay),
-        ],
-      ),
+    return Column(
+      children: [
+        SectionHeader(
+          onPress: () {},
+          title: context.i18n.feed_trending_videos,
+          leadingIcon: const VideosIcon(),
+        ),
+        if (loading.value)
+          TrendingVideosListSkeleton(listOverlay: listOverlay)
+        else
+          TrendingVideosList(listOverlay: listOverlay),
+        SizedBox(height: 18.0.s),
+      ],
     );
   }
 }

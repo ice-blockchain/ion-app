@@ -18,21 +18,13 @@ class TrendingVideosList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: listOverlay.itemSize.height,
-      child: LoadMoreBuilder(
-        slivers: const [],
-        hasMore: true,
-        onLoadMore: () async {
-          print('VIDEOS LOAD MORE');
-          await Future.delayed(const Duration(seconds: 4));
-        },
-        builder: (context, slivers) {
-          return ListView.separated(
-            padding: EdgeInsets.symmetric(
-              horizontal: ScreenSideOffset.defaultSmallMargin,
-            ),
-            scrollDirection: Axis.horizontal,
+    return LoadMoreBuilder(
+      slivers: [
+        SliverPadding(
+          padding: EdgeInsets.symmetric(
+            horizontal: ScreenSideOffset.defaultSmallMargin,
+          ),
+          sliver: SliverList.separated(
             itemCount: trendingVideos.length,
             separatorBuilder: (BuildContext context, int index) {
               return const TrendingVideosListSeparator();
@@ -43,8 +35,20 @@ class TrendingVideosList extends StatelessWidget {
                 itemSize: listOverlay.itemSize,
               );
             },
-          );
-        },
+          ),
+        ),
+      ],
+      hasMore: true,
+      onLoadMore: () async {
+        print('VIDEOS LOAD MORE');
+        await Future.delayed(const Duration(seconds: 4));
+      },
+      builder: (context, slivers) => SizedBox(
+        height: listOverlay.itemSize.height,
+        child: CustomScrollView(
+          scrollDirection: Axis.horizontal,
+          slivers: slivers,
+        ),
       ),
     );
   }
