@@ -36,10 +36,9 @@ class ChatMainModalPage extends StatelessWidget {
               return FeedModalItem(
                 feedType: type,
                 onTap: () {
-                  final createFlowRouteLocation = _getCreateFlowRouteLocation(type);
                   context
                     ..go(GoRouterState.of(context).currentTab.baseRouteLocation)
-                    ..go(createFlowRouteLocation);
+                    ..go(NewChatModalRoute().location);
                 },
               );
             },
@@ -47,13 +46,5 @@ class ChatMainModalPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _getCreateFlowRouteLocation(ConversationType type) {
-    return switch (type) {
-      ConversationType.private => DeleteConversationRoute(conversationId: '1').location,
-      ConversationType.group => DeleteConversationRoute(conversationId: '2').location,
-      ConversationType.channel => DeleteConversationRoute(conversationId: '3').location,
-    };
   }
 }
