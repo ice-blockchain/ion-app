@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class SecureAccountOption extends StatelessWidget {
+class SecureAccountOption extends ConsumerWidget {
   const SecureAccountOption({
     required this.title,
     required this.icon,
@@ -24,8 +26,8 @@ class SecureAccountOption extends StatelessWidget {
   final bool isLoading;
 
   @override
-  Widget build(BuildContext context) {
-    final isLightTheme = Theme.of(context).brightness == Brightness.light;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLightTheme = ref.watch(appThemeModeProvider) == ThemeMode.light;
 
     final trailingIcon = isEnabled
         ? Assets.svg.iconDappCheck.icon(

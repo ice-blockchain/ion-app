@@ -44,7 +44,7 @@ class EmailSetupInputPage extends HookConsumerWidget {
                       hasRightDivider: true,
                       icons: [TwoFaType.email.iconAsset.icon()],
                     ),
-                    labelText: context.i18n.two_fa_email_address,
+                    labelText: context.i18n.common_email_address,
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) => (value?.isEmpty ?? false) ? '' : null,
