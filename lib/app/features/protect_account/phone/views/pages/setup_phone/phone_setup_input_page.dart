@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -9,11 +11,13 @@ import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/countries.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
 import 'package:ion/app/features/protect_account/phone/provider/country_provider.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/countries/country_code_input.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/utils/validators.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class PhoneSetupInputPage extends HookConsumerWidget {
   const PhoneSetupInputPage({super.key});
@@ -66,14 +70,25 @@ class PhoneSetupInputPage extends HookConsumerWidget {
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   label: Text(locale.button_next),
-                  onPressed: () {
-                    if (formKey.value.currentState?.validate() ?? false) {
-                      final fullPhoneNumber = '${country.iddCode}${phoneController.text.trim()}';
+                  onPressed: () async {
+                    final isFormValid = formKey.value.currentState?.validate() ?? false;
+                    if (!isFormValid) {
+                      return;
+                    }
+
+                    final fullPhoneNumber = '${country.iddCode}${phoneController.text.trim()}';
+                    await requestTwoFACode(ref, TwoFAType.sms(fullPhoneNumber));
+
+                    if (!context.mounted) {
+                      return;
+                    }
+
+                    unawaited(
                       PhoneSetupRoute(
                         step: PhoneSetupSteps.confirmation,
                         phone: fullPhoneNumber,
-                      ).push<void>(context);
-                    }
+                      ).push<void>(context),
+                    );
                   },
                 ),
               ],

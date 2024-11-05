@@ -9,6 +9,7 @@ export 'src/auth/services/twofa/models/twofa_type.dart';
 export 'src/core/types/ion_exception.dart';
 export 'src/core/types/user_token.dart';
 export 'src/ion_identity.dart';
+export 'src/ion_identity_client.dart';
 export 'src/ion_identity_config.dart';
 export 'src/users/ion_connect_indexers/models/ion_connect_indexers_response.dart';
 export 'src/users/set_ion_connect_relays/models/set_ion_connect_relays_response.dart';

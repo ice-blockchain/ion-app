@@ -12,10 +12,9 @@ import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/router/app_routes.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class EmailSetupInputPage extends HookConsumerWidget {
@@ -62,7 +61,7 @@ class EmailSetupInputPage extends HookConsumerWidget {
                       return;
                     }
 
-                    await _requestTwoFACode(ref, emailController.text);
+                    await requestTwoFACode(ref, TwoFAType.email(emailController.text));
 
                     if (!context.mounted) {
                       return;
@@ -82,18 +81,5 @@ class EmailSetupInputPage extends HookConsumerWidget {
         },
       ),
     );
-  }
-
-  Future<void> _requestTwoFACode(WidgetRef ref, String email) async {
-    final currentUser = ref.read(currentIdentityKeyNameSelectorProvider);
-    if (currentUser == null) {
-      return;
-    }
-
-    final ionIdentity = await ref.read(ionIdentityProvider.future);
-
-    await ionIdentity(username: currentUser)
-        .auth
-        .requestTwoFACode(twoFAType: TwoFAType.email(email));
   }
 }
