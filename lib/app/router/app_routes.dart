@@ -22,6 +22,7 @@ import 'package:ion/app/features/chat/messages/views/pages/messages_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/chat_main_page.dart';
+import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';

@@ -10,6 +10,7 @@ class ChatRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<DeleteConversationRoute>(path: 'delete/:conversationId'),
+        TypedGoRoute<NewChatModalRoute>(path: 'new-chat'),
       ],
     ),
   ];
@@ -47,4 +48,12 @@ class ChatAdvancedSearchRoute extends BaseRouteData {
         );
 
   final String query;
+}
+
+class NewChatModalRoute extends BaseRouteData {
+  NewChatModalRoute()
+      : super(
+          child: const NewChatModal(),
+          type: IceRouteType.bottomSheet,
+        );
 }
