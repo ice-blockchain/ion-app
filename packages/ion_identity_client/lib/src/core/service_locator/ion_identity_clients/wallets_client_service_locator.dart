@@ -7,6 +7,8 @@ import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/wallets/ion_identity_wallets.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/data_sources/create_wallet_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/generate_signature/data_sources/generate_signature_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/generate_signature/generate_signature_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/data_sources/get_wallet_assets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_history/data_sources/get_wallet_history_data_source.dart';
@@ -17,8 +19,6 @@ import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_req
 import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/get_wallet_transfer_requests_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/data_sources/get_wallets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
-import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/data_sources/pseudo_network_generate_signature_data_source.dart';
-import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/pseudo_network_generate_signature_service.dart';
 
 class WalletsClientServiceLocator {
   factory WalletsClientServiceLocator() {
@@ -137,14 +137,14 @@ class WalletsClientServiceLocator {
     );
   }
 
-  PseudoNetworkGenerateSignatureService generateSignature({
+  GenerateSignatureService generateSignature({
     required String username,
     required IONIdentityConfig config,
     required PasskeysSigner signer,
   }) {
-    return PseudoNetworkGenerateSignatureService(
+    return GenerateSignatureService(
       username: username,
-      dataSource: const PseudoNetworkGenerateSignatureDataSource(),
+      dataSource: const GenerateSignatureDataSource(),
       userActionSigner: UserActionSignerServiceLocator().userActionSigner(
         config: config,
         signer: signer,

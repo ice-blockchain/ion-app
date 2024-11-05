@@ -3,12 +3,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion_identity_client/src/wallets/models/requester.dart';
 
-part 'pseudo_network_signature_response.freezed.dart';
-part 'pseudo_network_signature_response.g.dart';
+part 'generate_signature_response.freezed.dart';
+part 'generate_signature_response.g.dart';
 
 @freezed
-class PseudoNetworkSignatureResponse with _$PseudoNetworkSignatureResponse {
-  const factory PseudoNetworkSignatureResponse({
+class GenerateSignatureResponse with _$GenerateSignatureResponse {
+  const factory GenerateSignatureResponse({
     required String id,
     required String walletId,
     required String network,
@@ -18,8 +18,8 @@ class PseudoNetworkSignatureResponse with _$PseudoNetworkSignatureResponse {
     required Map<String, dynamic> signature,
     required DateTime dateRequested,
     required DateTime dateSigned,
-  }) = _PseudoNetworkSignatureResponse;
+  }) = _GenerateSignatureResponse;
 
-  factory PseudoNetworkSignatureResponse.fromJson(Map<String, dynamic> json) =>
-      _$PseudoNetworkSignatureResponseFromJson(json);
+  factory GenerateSignatureResponse.fromJson(Map<String, dynamic> json) =>
+      _$GenerateSignatureResponseFromJson(json);
 }

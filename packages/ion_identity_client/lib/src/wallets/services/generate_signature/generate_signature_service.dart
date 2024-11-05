@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
-import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/data_sources/pseudo_network_generate_signature_data_source.dart';
-import 'package:ion_identity_client/src/wallets/services/pseudo_network_generate_signature/models/pseudo_network_signature_response.dart';
+import 'package:ion_identity_client/src/wallets/services/generate_signature/data_sources/generate_signature_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/generate_signature/models/generate_signature_response.dart';
 
-class PseudoNetworkGenerateSignatureService {
-  PseudoNetworkGenerateSignatureService({
+class GenerateSignatureService {
+  GenerateSignatureService({
     required this.username,
-    required PseudoNetworkGenerateSignatureDataSource dataSource,
+    required GenerateSignatureDataSource dataSource,
     required UserActionSigner userActionSigner,
   })  : _dataSource = dataSource,
         _userActionSigner = userActionSigner;
 
   final String username;
-  final PseudoNetworkGenerateSignatureDataSource _dataSource;
+  final GenerateSignatureDataSource _dataSource;
   final UserActionSigner _userActionSigner;
 
-  Future<PseudoNetworkSignatureResponse> generateHashSignature({
+  Future<GenerateSignatureResponse> generateHashSignature({
     required String walletId,
     required String hash,
     String? externalId,
@@ -31,11 +31,11 @@ class PseudoNetworkGenerateSignatureService {
 
     return _userActionSigner.execute(
       request,
-      PseudoNetworkSignatureResponse.fromJson,
+      GenerateSignatureResponse.fromJson,
     );
   }
 
-  Future<PseudoNetworkSignatureResponse> generateMessageSignature({
+  Future<GenerateSignatureResponse> generateMessageSignature({
     required String walletId,
     required String message,
     String? externalId,
@@ -50,7 +50,7 @@ class PseudoNetworkGenerateSignatureService {
 
     return _userActionSigner.execute(
       request,
-      PseudoNetworkSignatureResponse.fromJson,
+      GenerateSignatureResponse.fromJson,
     );
   }
 }
