@@ -2,6 +2,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/data/models/article/article_data.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 
@@ -12,11 +13,14 @@ class ArticleListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      onTap: () => {
-        //TODO: handle ArticleDetailsRoute push / screen open
-      },
-      child: Article(article: article),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 12.0.s),
+      child: GestureDetector(
+        onTap: () => {
+          //TODO: handle ArticleDetailsRoute push / screen open
+        },
+        child: Article(article: article),
+      ),
     );
   }
 }
