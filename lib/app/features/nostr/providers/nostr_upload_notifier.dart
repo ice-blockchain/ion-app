@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/file_storage_metadata.dart';
@@ -61,7 +60,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
       throw UserRelaysNotFoundException();
     }
     //TODO: switch to userRelays.list.random.url when using our relays
-    final relayUrl = userRelays.first.data.list.random.url; // 'wss://nostr.build';
+    const relayUrl = 'wss://nostr.build'; /*userRelays.first.data.list.random.url;*/
 
     try {
       final parsedRelayUrl = Uri.parse(relayUrl);
