@@ -60,7 +60,8 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
     if (userRelays.isEmpty) {
       throw UserRelaysNotFoundException();
     }
-    final relayUrl = userRelays.first.data.list.random.url;
+    //TODO: switch to userRelays.list.random.url when using our relays
+    final relayUrl = userRelays.first.data.list.random.url; // 'wss://nostr.build';
 
     try {
       final parsedRelayUrl = Uri.parse(relayUrl);
@@ -74,7 +75,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
       final response = await ref.read(dioProvider).getUri<Map<String, dynamic>>(metadataUri);
       return FileStorageMetadata.fromJson(response.data!).apiUrl;
     } catch (error) {
-      throw Exception('Failed to get file storage url $error');
+      throw GetFileStorageUrlException(error);
     }
   }
 

@@ -22,16 +22,7 @@ class LoginForm extends HookConsumerWidget {
     final authState = ref.watch(authProvider);
     final loginActionState = ref.watch(loginActionNotifierProvider);
 
-    ref.listen(loginActionNotifierProvider, (_, next) {
-      if (next.hasError && next.error != null) {
-        showDialog<void>(
-          context: context,
-          builder: (context) => AlertDialog(
-            content: Text(next.error.toString()),
-          ),
-        );
-      }
-    });
+    ref.displayErrors(loginActionNotifierProvider, context);
 
     return Form(
       key: formKey.value,

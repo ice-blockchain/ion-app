@@ -28,10 +28,13 @@ class SelectLanguages extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final finishNotifier = ref.watch(onboardingCompleteNotifierProvider);
+    ref.displayErrors(onboardingCompleteNotifierProvider, context);
+
     final (selectedLanguages, toggleLanguageSelection) = useSelectedState(
       ref.watch(onboardingDataProvider).languages ??
           [ref.watch(localePreferredLanguageProvider).isoCode],
     );
+
     final userIdentity = ref.watch(currentUserIdentityProvider).valueOrNull;
     final searchQuery = useState('');
     final languages = useLanguages(query: searchQuery.value);
