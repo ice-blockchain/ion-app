@@ -91,7 +91,7 @@ class UserDelegationManager extends _$UserDelegationManager {
 
     final signResponse = await ionIdentity(username: currentIdentityKeyName)
         .wallets
-        .generateMessageSignature(mainWallet.id, eventId);
+        .generateHashSignature(mainWallet.id, eventId);
 
     final signaturePrefix =
         '${mainWallet.signingKey.scheme}/${mainWallet.signingKey.curve}'.toLowerCase();
