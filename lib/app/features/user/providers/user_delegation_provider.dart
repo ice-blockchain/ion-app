@@ -91,7 +91,7 @@ class UserDelegationManager extends _$UserDelegationManager {
 
     final signResponse = await ionIdentity(username: currentIdentityKeyName)
         .wallets
-        .generateMessageSignature(mainWallet.id, eventId);
+        .generateHashSignature(mainWallet.id, eventId);
 
     final signaturePrefix =
         '${mainWallet.signingKey.scheme}/${mainWallet.signingKey.curve}'.toLowerCase();
@@ -101,7 +101,7 @@ class UserDelegationManager extends _$UserDelegationManager {
     final signature = '$signaturePrefix:$signatureBody';
 
     // TODO:still using mock because damus do not accept this kind of signatures
-    final fakeSignature = mockedTonWalletKeystore.sign(message: eventId);
+    final fakeSignature = (await ref.read(mockedMainWalletProvider.future)).sign(message: eventId);
 
     return EventMessage(
       id: eventId,

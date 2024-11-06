@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 extension DebounceExtension on Ref {
@@ -21,5 +22,21 @@ extension DebounceExtension on Ref {
     });
 
     return completer.future;
+  }
+}
+
+extension DisplayErrorsExtension on WidgetRef {
+  void displayErrors<T>(ProviderListenable<AsyncValue<T>> provider) {
+    listen(provider, (_, next) {
+      final isCurrentRoute = ModalRoute.of(context)?.isCurrent ?? false;
+      if (!next.isLoading && next.hasError && next.error != null && isCurrentRoute) {
+        showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(next.error.toString()),
+          ),
+        );
+      }
+    });
   }
 }

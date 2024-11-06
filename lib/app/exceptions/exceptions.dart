@@ -51,3 +51,8 @@ class MainWalletNotFoundException extends IONException {
 class UnauthenticatedException extends IONException {
   const UnauthenticatedException() : super(10009, 'Unauthenticated');
 }
+
+class GetFileStorageUrlException extends IONException {
+  GetFileStorageUrlException(dynamic error)
+      : super(10010, 'Failed to get file storage url: $error');
+}

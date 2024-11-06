@@ -25,13 +25,9 @@ Future<Wallet?> mainWallet(Ref ref) async {
     throw MainWalletNotFoundException();
   }
 
-  // TODO:take `mainWallet` when signing with TON is implemented and remove this 'temp-main'
-  var tempMainWallet = wallets.firstWhereOrNull((wallet) => wallet.name == 'temp-main');
-  tempMainWallet ??= await ionIdentity(username: currentIdentityKeyName)
-      .wallets
-      .createWallet(network: 'KeyEdDSA', name: 'temp-main');
   // TODO: still using mocked wallet because damus do not accept non default signatures
-  return tempMainWallet.copyWith(
-    signingKey: tempMainWallet.signingKey.copyWith(publicKey: mockedTonWalletKeystore.publicKey),
+  return mainWallet.copyWith(
+    signingKey: mainWallet.signingKey
+        .copyWith(publicKey: (await ref.read(mockedMainWalletProvider.future)).publicKey),
   );
 }

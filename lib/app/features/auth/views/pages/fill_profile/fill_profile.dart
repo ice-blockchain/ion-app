@@ -5,9 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/fill_profile_notifier.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
@@ -37,12 +35,14 @@ class FillProfile extends HookConsumerWidget {
       TextEditingValue(text: onboardingData.name ?? ''),
     );
 
+    ref.displayErrors(fillProfileNotifierProvider);
+
     final onSubmit = useCallback(() async {
       if (formKey.currentState!.validate()) {
         await ref
             .read(fillProfileNotifierProvider.notifier)
             .submit(nickname: nicknameController.text, displayName: nameController.text);
-        if (context.mounted) {
+        if (context.mounted && !ref.read(fillProfileNotifierProvider).hasError) {
           await SelectLanguagesRoute().push<void>(context);
         }
       }
