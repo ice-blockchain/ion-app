@@ -26,8 +26,8 @@ Raw<VideoPlayerController> videoController(
         ..setLooping(looping)
         ..setVolume(0); // required for web - https://developer.chrome.com/blog/autoplay/
       if (autoPlay) controller.play();
+      ref.notifyListeners();
     }
-    ref.notifyListeners();
   }
 
   controller
