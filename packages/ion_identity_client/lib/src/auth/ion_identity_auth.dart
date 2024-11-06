@@ -74,4 +74,10 @@ class IONIdentityAuth {
       );
 
   Future<void> verifyTwoFA(TwoFAType twoFAType) => twoFAService.verifyTwoFA(twoFAType);
+
+  Future<void> deleteTwoFA(
+    TwoFAType twoFAType, [
+    List<TwoFAType> verificationCodes = const [],
+  ]) =>
+      twoFAService.deleteTwoFA(twoFAType, verificationCodes);
 }

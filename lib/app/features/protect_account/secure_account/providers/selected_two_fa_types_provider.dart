@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_two_fa_types_provider.freezed.dart';
@@ -23,19 +22,19 @@ class AuthenticatorDeleteState with _$AuthenticatorDeleteState {
 class AuthenticatorDeleteOptions extends _$AuthenticatorDeleteOptions {
   @override
   AuthenticatorDeleteState build() {
-    // TODO: temporary logic to simulate the options available to delete the authenticator
-    final optionsAmount = Random().nextInt(2) + 1;
+    final securityMethods = ref.watch(securityAccountControllerProvider).requireValue;
+    final optionsAmount = securityMethods.enabledTypes.length;
+
     return AuthenticatorDeleteState(
       optionsAmount: optionsAmount,
-      availableOptions: TwoFaType.values.toSet(),
+      availableOptions: securityMethods.enabledTypes.toSet(),
       selectedValues: List.generate(optionsAmount, (_) => null),
     );
   }
 
   void updateSelectedTwoFaOption(int index, TwoFaType? newValue) {
     final oldValue = state.selectedValues[index];
-    final newSelectedValues = List<TwoFaType?>.from(state.selectedValues);
-    newSelectedValues[index] = newValue;
+    final newSelectedValues = List<TwoFaType?>.from(state.selectedValues)..[index] = newValue;
 
     var newAvailableOptions = state.availableOptions;
     if (oldValue != null) {

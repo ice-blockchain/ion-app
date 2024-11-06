@@ -16,7 +16,14 @@ class TwoFADataSource {
   final NetworkClient networkClient;
   final TokenStorage tokenStorage;
 
+  /// {userID}, {twoFAOption}
   static const twoFaPath = '/v1/users/%s/2fa/%s/verification-requests';
+
+  /// {userID}, {twoFAOption}, {twoFAOptionValue}
+  static const deleteTwoFaPath = '/v1/users/%s/2fa/%s/values/%s';
+
+  static const queryOption = 'twoFAOptionVerificationValue';
+  static const queryValue = 'twoFAOptionVerificationCode';
 
   Future<Map<String, dynamic>> requestTwoFACode({
     required String username,
@@ -64,6 +71,42 @@ class TwoFADataSource {
       sprintf(twoFaPath, [userId, twoFAOption]),
       queryParams: {'code': code},
       headers: RequestHeaders.getAuthorizationHeaders(token: token, username: username),
+      decoder: (response) => response,
+    );
+  }
+
+  Future<void> deleteTwoFA({
+    required String signature,
+    required String username,
+    required String userId,
+    required TwoFAType twoFAType,
+    List<TwoFAType> verificationCodes = const [],
+  }) async {
+    final token = tokenStorage.getToken(username: username)?.token;
+    if (token == null) {
+      throw const UnauthenticatedException();
+    }
+
+    final query = verificationCodes
+        .map(
+          (e) => '$queryOption=${e.option}&$queryValue=${e.value!}',
+        )
+        .join('&');
+    final uri = Uri.parse(networkClient.dio.options.baseUrl)
+        .resolveUri(
+          Uri(
+            path: sprintf(deleteTwoFaPath, [userId, twoFAType.option, 0]),
+            query: query,
+          ),
+        )
+        .toString();
+
+    return networkClient.delete<void>(
+      uri,
+      headers: {
+        ...RequestHeaders.getAuthorizationHeaders(token: token, username: username),
+        RequestHeaders.ionIdentityUserAction: signature,
+      },
       decoder: (response) => response,
     );
   }

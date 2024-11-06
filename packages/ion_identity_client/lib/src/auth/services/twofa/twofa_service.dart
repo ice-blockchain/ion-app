@@ -54,6 +54,22 @@ class TwoFAService {
     );
   }
 
+  Future<void> deleteTwoFA(
+    TwoFAType twoFAType, [
+    List<TwoFAType> verificationCodes = const [],
+  ]) async {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    final base64Signature = await _generateSignature(userId);
+
+    await _dataSource.deleteTwoFA(
+      signature: base64Signature,
+      username: username,
+      userId: userId,
+      twoFAType: twoFAType,
+      verificationCodes: verificationCodes,
+    );
+  }
+
   Future<String> _generateSignature(String userId) async {
     final timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     final mainWallet = (await _wallets.getWallets()).first;
