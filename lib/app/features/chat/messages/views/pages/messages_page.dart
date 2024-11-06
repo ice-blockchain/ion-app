@@ -20,7 +20,7 @@ import 'package:ion/app/services/keyboard/keyboard.dart';
 
 const String hasPrivacyModalShownKey = 'hasPrivacyModalShownKey';
 
-class MessagesPage extends HookConsumerWidget {
+class MessagesPage extends ConsumerWidget {
   const MessagesPage({super.key});
 
   @override

@@ -2,7 +2,7 @@
 
 part of '../messaging_bottom_bar.dart';
 
-class _AudioRecordButton extends HookConsumerWidget {
+class _AudioRecordButton extends ConsumerWidget {
   const _AudioRecordButton();
 
   @override

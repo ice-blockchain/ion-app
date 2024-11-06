@@ -2,7 +2,7 @@
 
 part of '../messaging_bottom_bar.dart';
 
-class _RecordingOverlay extends HookConsumerWidget {
+class _RecordingOverlay extends ConsumerWidget {
   const _RecordingOverlay({
     required this.paddingBottom,
   });

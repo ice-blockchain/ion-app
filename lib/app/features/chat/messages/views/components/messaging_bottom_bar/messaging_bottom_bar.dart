@@ -16,7 +16,7 @@ part './components/audio_record_button.dart';
 part './components/recording_overlay.dart';
 part './components/send_button.dart';
 
-class MessagingBottomBar extends HookConsumerWidget {
+class MessagingBottomBar extends ConsumerWidget {
   const MessagingBottomBar({
     super.key,
   });
