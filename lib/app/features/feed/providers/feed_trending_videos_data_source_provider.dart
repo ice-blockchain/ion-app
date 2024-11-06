@@ -18,19 +18,18 @@ List<EntitiesDataSource>? feedTrendingVideosDataSource(Ref ref) {
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters)).valueOrNull;
 
   if (filterRelays != null) {
-    final dataSources = filterRelays.entries
-        .map(
-          (entry) => EntitiesDataSource(
-            actionSource: ActionSourceRelayUrl(entry.key),
-            entityFilter: (entity) => entity is PostEntity,
-            requestFilter: RequestFilter(
-              kinds: const [PostEntity.kind],
-              authors: filters == FeedFilter.following ? entry.value : null,
-              limit: 10,
-            ),
+    final dataSources = [
+      for (final entry in filterRelays.entries)
+        EntitiesDataSource(
+          actionSource: ActionSourceRelayUrl(entry.key),
+          entityFilter: (entity) => entity is PostEntity,
+          requestFilter: RequestFilter(
+            kinds: const [PostEntity.kind],
+            authors: filters == FeedFilter.following ? entry.value : null,
+            limit: 10,
           ),
-        )
-        .toList();
+        ),
+    ];
 
     return dataSources;
   }

@@ -20,21 +20,20 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters.filter)).valueOrNull;
 
   if (filterRelays != null) {
-    final dataSources = filterRelays.entries
-        .map(
-          (entry) => EntitiesDataSource(
-            actionSource: ActionSourceRelayUrl(entry.key),
-            entityFilter: (entity) => entity is PostEntity || entity is ArticleEntity,
-            requestFilter: RequestFilter(
-              kinds: filters.category == FeedCategory.articles
-                  ? const [ArticleEntity.kind]
-                  : const [PostEntity.kind],
-              authors: filters.filter == FeedFilter.following ? entry.value : null,
-              limit: 10,
-            ),
+    final dataSources = [
+      for (final entry in filterRelays.entries)
+        EntitiesDataSource(
+          actionSource: ActionSourceRelayUrl(entry.key),
+          entityFilter: (entity) => entity is PostEntity || entity is ArticleEntity,
+          requestFilter: RequestFilter(
+            kinds: filters.category == FeedCategory.articles
+                ? const [ArticleEntity.kind]
+                : const [PostEntity.kind],
+            authors: filters.filter == FeedFilter.following ? entry.value : null,
+            limit: 10,
           ),
-        )
-        .toList();
+        ),
+    ];
 
     return dataSources;
   }

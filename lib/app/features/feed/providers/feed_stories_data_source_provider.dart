@@ -16,19 +16,18 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
   final filterRelays = ref.watch(feedFilterRelaysProvider(FeedFilter.following)).valueOrNull;
 
   if (filterRelays != null) {
-    final dataSources = filterRelays.entries
-        .map(
-          (entry) => EntitiesDataSource(
-            actionSource: ActionSourceRelayUrl(entry.key),
-            entityFilter: (entity) => entity is PostEntity,
-            requestFilter: RequestFilter(
-              kinds: const [PostEntity.kind],
-              authors: entry.value,
-              limit: 10,
-            ),
+    final dataSources = [
+      for (final entry in filterRelays.entries)
+        EntitiesDataSource(
+          actionSource: ActionSourceRelayUrl(entry.key),
+          entityFilter: (entity) => entity is PostEntity,
+          requestFilter: RequestFilter(
+            kinds: const [PostEntity.kind],
+            authors: entry.value,
+            limit: 10,
           ),
-        )
-        .toList();
+        ),
+    ];
 
     return dataSources;
   }
