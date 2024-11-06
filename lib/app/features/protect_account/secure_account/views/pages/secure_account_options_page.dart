@@ -75,7 +75,7 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
                   icon: Assets.svg.iconFieldEmail.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  onTap: () => EmailSetupRoute(step: EmailSetupSteps.input).push<void>(context),
+                  onTap: () => _onEmailPressed(context, securityMethods),
                   isEnabled: securityMethods?.isEmailEnabled ?? false,
                   isLoading: isLoading,
                 ),
@@ -95,7 +95,7 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
                   icon: Assets.svg.iconFieldPhone.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  onTap: () => PhoneSetupRoute(step: PhoneSetupSteps.input).push<void>(context),
+                  onTap: () => _onPhonePressed(context, securityMethods),
                   isEnabled: securityMethods?.isPhoneEnabled ?? false,
                   isLoading: isLoading,
                 ),
@@ -106,6 +106,18 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _onEmailPressed(BuildContext context, SecurityMethods? securityMethods) {
+    if (securityMethods == null) {
+      return;
+    }
+
+    if (securityMethods.isEmailEnabled) {
+      EmailDeleteRoute().push<void>(context);
+    } else {
+      EmailSetupRoute(step: EmailSetupSteps.input).push<void>(context);
+    }
   }
 
   void _onAuthenticatorPressed(BuildContext context, SecurityMethods? securityMethods) {
@@ -119,9 +131,21 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
     }
 
     if (securityMethods.isAuthenticatorEnabled) {
-      AuthenticatorInitialDeleteRoute().push<void>(context);
+      AuthenticatorDeleteRoute().push<void>(context);
     } else {
       AuthenticatorSetupRoute(step: AuthenticatorSetupSteps.options).push<void>(context);
+    }
+  }
+
+  void _onPhonePressed(BuildContext context, SecurityMethods? securityMethods) {
+    if (securityMethods == null) {
+      return;
+    }
+
+    if (securityMethods.isPhoneEnabled) {
+      PhoneDeleteRoute().push<void>(context);
+    } else {
+      PhoneSetupRoute(step: PhoneSetupSteps.input).push<void>(context);
     }
   }
 }

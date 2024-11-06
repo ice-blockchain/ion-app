@@ -10,19 +10,20 @@ import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_try_again/twofa_try_again_page.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/adapter/twofa_type_adapter.dart';
-import 'package:ion/app/features/protect_account/authenticator/providers/delete_authenticator_notifier.dart';
-import 'package:ion/app/features/protect_account/authenticator/providers/request_twofa_code_notifier.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
-class AuthenticatorDeleteInputPage extends HookConsumerWidget {
-  const AuthenticatorDeleteInputPage({
+class DeleteTwoFAInputStep extends HookConsumerWidget {
+  const DeleteTwoFAInputStep({
     required this.twoFaTypes,
+    required this.onDeleteSuccess,
     super.key,
   });
 
   final List<TwoFaType> twoFaTypes;
+  final VoidCallback onDeleteSuccess;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,7 +36,7 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
         type: useTextEditingController.fromValue(TextEditingValue.empty),
     };
 
-    _listenDeleteAuthenticatorResult(context, ref);
+    _listenDeleteTwoFAResult(context, ref);
 
     return ScreenSideOffset.large(
       child: Form(
@@ -84,7 +85,7 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
     BuildContext context,
     Map<TwoFaType, TextEditingController> controllers,
   ) {
-    ref.read(deleteAuthenticatorNotifierProvider.notifier).deleteAuthenticator(
+    ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
       const TwoFAType.authenticator(),
       [
         for (final e in controllers.entries) TwoFaTypeAdapter(e.key, e.value.text).twoFAType,
@@ -92,8 +93,8 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
     );
   }
 
-  void _listenDeleteAuthenticatorResult(BuildContext context, WidgetRef ref) {
-    ref.listen(deleteAuthenticatorNotifierProvider, (prev, next) {
+  void _listenDeleteTwoFAResult(BuildContext context, WidgetRef ref) {
+    ref.listen(deleteTwoFANotifierProvider, (prev, next) {
       if (prev?.isLoading != true) {
         return;
       }
@@ -107,7 +108,7 @@ class AuthenticatorDeleteInputPage extends HookConsumerWidget {
       }
 
       if (next.hasValue) {
-        AuthenticatorDeleteSuccessRoute().push<void>(context);
+        onDeleteSuccess();
       }
     });
   }

@@ -2,20 +2,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/components/card/rounded_card.dart';
+import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class AuthenticatorInitialDeletePage extends StatelessWidget {
-  const AuthenticatorInitialDeletePage({super.key});
+class EmailDeleteSuccessPage extends StatelessWidget {
+  const EmailDeleteSuccessPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +23,19 @@ class AuthenticatorInitialDeletePage extends StatelessWidget {
 
     return SheetContent(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           NavigationAppBar.modal(
-            title: Text(locale.two_fa_option_authenticator),
+            showBackButton: false,
+            actions: [
+              NavigationCloseButton(
+                onPressed: () => WalletRoute().go(context),
+              ),
+            ],
           ),
           AuthHeader(
             topOffset: 34.0.s,
-            title: locale.two_fa_option_authenticator,
+            title: locale.two_fa_option_email,
             titleStyle: context.theme.appTextThemes.headline2,
             descriptionStyle: context.theme.appTextThemes.body2.copyWith(
               color: context.theme.appColors.secondaryText,
@@ -38,37 +44,20 @@ class AuthenticatorInitialDeletePage extends StatelessWidget {
               icon: Assets.svg.icon2faAuthsetup.icon(size: 36.0.s),
             ),
           ),
-          SizedBox(height: 42.0.s),
-          ScreenSideOffset.large(
-            child: RoundedCard.filled(
-              padding: EdgeInsets.symmetric(
-                vertical: 80.0.s,
-                horizontal: 12.0.s,
-              ),
-              child: Column(
-                children: [
-                  Assets.svg.actionWalletGoogleauth.icon(size: 80.0.s),
-                  SizedBox(height: 20.0.s),
-                  Text(
-                    locale.authenticator_is_linked_to_account,
-                    textAlign: TextAlign.center,
-                    style: context.theme.appTextThemes.caption2.copyWith(
-                      color: context.theme.appColors.secondaryText,
-                    ),
-                  ),
-                ],
-              ),
+          const Spacer(),
+          ScreenSideOffset.medium(
+            child: InfoCard(
+              iconAsset: Assets.svg.actionWalletConfirmemail,
+              title: locale.common_congratulations,
+              description: locale.two_fa_delete_email_success,
             ),
           ),
           const Spacer(),
           ScreenSideOffset.large(
             child: Button(
-              type: ButtonType.outlined,
               mainAxisSize: MainAxisSize.max,
-              label: Text(locale.button_delete),
-              onPressed: () => AuthenticatorDeleteRoute(
-                step: AuthenticatorDeleteSteps.select,
-              ).push<void>(context),
+              label: Text(locale.button_back_to_security),
+              onPressed: () => SecureAccountOptionsRoute().replace(context),
             ),
           ),
           ScreenBottomOffset(margin: 36.0.s),

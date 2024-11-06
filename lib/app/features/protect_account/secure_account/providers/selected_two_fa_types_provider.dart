@@ -10,22 +10,22 @@ part 'selected_two_fa_types_provider.freezed.dart';
 part 'selected_two_fa_types_provider.g.dart';
 
 @freezed
-class AuthenticatorDeleteState with _$AuthenticatorDeleteState {
-  factory AuthenticatorDeleteState({
+class DeleteTwoFAOptionsState with _$DeleteTwoFAOptionsState {
+  factory DeleteTwoFAOptionsState({
     required int optionsAmount,
     required Set<TwoFaType> availableOptions,
     required List<TwoFaType?> selectedValues,
-  }) = _AuthenticatorDeleteState;
+  }) = _DeleteTwoFAOptionsState;
 }
 
 @riverpod
-class AuthenticatorDeleteOptions extends _$AuthenticatorDeleteOptions {
+class DeleteTwoFAOptionsNotifier extends _$DeleteTwoFAOptionsNotifier {
   @override
-  AuthenticatorDeleteState build() {
+  DeleteTwoFAOptionsState build(TwoFaType twoFaType) {
     final securityMethods = ref.watch(securityAccountControllerProvider).requireValue;
     final optionsAmount = securityMethods.enabledTypes.length;
 
-    return AuthenticatorDeleteState(
+    return DeleteTwoFAOptionsState(
       optionsAmount: optionsAmount,
       availableOptions: securityMethods.enabledTypes.toSet(),
       selectedValues: List.generate(optionsAmount, (_) => null),
@@ -52,7 +52,7 @@ class AuthenticatorDeleteOptions extends _$AuthenticatorDeleteOptions {
 }
 
 @riverpod
-Set<TwoFaType> selectedTwoFaOptions(Ref ref) {
-  final state = ref.watch(authenticatorDeleteOptionsProvider);
+Set<TwoFaType> selectedTwoFaOptions(Ref ref, TwoFaType twoFaType) {
+  final state = ref.watch(deleteTwoFAOptionsNotifierProvider(twoFaType));
   return state.selectedValues.whereType<TwoFaType>().toSet();
 }

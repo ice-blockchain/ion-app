@@ -4,23 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-enum AuthenticatorDeleteSteps {
-  select,
-  input;
-
-  String getAppBarTitle(BuildContext context) {
-    return switch (this) {
-      AuthenticatorDeleteSteps.select => context.i18n.common_step_1,
-      AuthenticatorDeleteSteps.input => context.i18n.common_step_2,
-    };
-  }
-
-  double get progressValue => switch (this) {
-        AuthenticatorDeleteSteps.select => 0.25,
-        AuthenticatorDeleteSteps.input => 0.9,
-      };
-}
-
 enum AuthenticatorSetupSteps {
   options,
   instruction,
