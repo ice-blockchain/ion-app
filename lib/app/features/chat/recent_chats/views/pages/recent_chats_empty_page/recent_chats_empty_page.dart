@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/constants/ui.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatsEmptyPage extends StatelessWidget {
@@ -15,7 +16,13 @@ class RecentChatsEmptyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SearchInput(),
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => ChatSimpleSearchRoute().push<void>(context),
+          child: const IgnorePointer(
+            child: SearchInput(),
+          ),
+        ),
         Padding(
           padding: EdgeInsets.only(top: 210.0.s),
           child: Column(
@@ -35,7 +42,9 @@ class RecentChatsEmptyPage extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  NewChatModalRoute().push<void>(context);
+                },
                 child: Padding(
                   padding: EdgeInsets.all(UiConstants.hitSlop),
                   child: Text(

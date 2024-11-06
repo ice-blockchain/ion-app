@@ -6,6 +6,9 @@ import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
+part 'components/chat_menu_item.dart';
+part 'components/chat_menu_item_seperator.dart';
+
 class MessagingContextMenu extends StatelessWidget {
   const MessagingContextMenu({super.key});
 
@@ -22,54 +25,38 @@ class MessagingContextMenu extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 4.0.s),
                 child: Column(
                   children: [
-                    ChatMenuItem(
-                      label: 'Share',
+                    _ChatMenuItem(
+                      label: context.i18n.button_share,
                       icon: Assets.svg.iconButtonShare.icon(
                         size: iconSize,
                         color: context.theme.appColors.quaternaryText,
                       ),
                       onPressed: closeMenu,
                     ),
-                    Container(
-                      height: 0.5.s,
-                      width: double.infinity,
-                      color: context.theme.appColors.onTerararyFill,
-                    ),
-                    ChatMenuItem(
-                      label: 'Mute',
+                    _ChatMenuItemSeperator(),
+                    _ChatMenuItem(
+                      label: context.i18n.button_mute,
                       icon: Assets.svg.iconChannelMute
                           .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                       onPressed: closeMenu,
                     ),
-                    Container(
-                      height: 0.5.s,
-                      width: double.infinity,
-                      color: context.theme.appColors.onTerararyFill,
-                    ),
-                    ChatMenuItem(
-                      label: 'Block',
+                    _ChatMenuItemSeperator(),
+                    _ChatMenuItem(
+                      label: context.i18n.button_block,
                       icon: Assets.svg.iconPhofileBlockuser
                           .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                       onPressed: closeMenu,
                     ),
-                    Container(
-                      height: 0.5.s,
-                      width: double.infinity,
-                      color: context.theme.appColors.onTerararyFill,
-                    ),
-                    ChatMenuItem(
-                      label: 'Report',
+                    _ChatMenuItemSeperator(),
+                    _ChatMenuItem(
+                      label: context.i18n.button_report,
                       icon: Assets.svg.iconBlockClose3
                           .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                       onPressed: closeMenu,
                     ),
-                    Container(
-                      height: 0.5.s,
-                      width: double.infinity,
-                      color: context.theme.appColors.onTerararyFill,
-                    ),
-                    ChatMenuItem(
-                      label: 'Delete',
+                    _ChatMenuItemSeperator(),
+                    _ChatMenuItem(
+                      label: context.i18n.button_delete,
                       labelColor: context.theme.appColors.attentionRed,
                       icon: Assets.svg.iconBlockDelete
                           .icon(size: iconSize, color: context.theme.appColors.attentionRed),
@@ -84,53 +71,6 @@ class MessagingContextMenu extends StatelessWidget {
       ),
       child: Assets.svg.iconMorePopup.icon(
         color: context.theme.appColors.onTertararyBackground,
-      ),
-    );
-  }
-}
-
-class ChatMenuItem extends StatelessWidget {
-  const ChatMenuItem({
-    required this.label,
-    required this.icon,
-    required this.onPressed,
-    this.labelColor,
-    super.key,
-  });
-
-  final String label;
-  final Widget icon;
-  final VoidCallback onPressed;
-  final Color? labelColor;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.theme.appColors;
-    final textStyles = context.theme.appTextThemes;
-
-    return InkWell(
-      onTap: onPressed,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 8.0.s),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth: 99.0.s,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  label,
-                  style: textStyles.subtitle3.copyWith(
-                    color: labelColor ?? colors.primaryText,
-                  ),
-                ),
-              ),
-              icon,
-            ],
-          ),
-        ),
       ),
     );
   }

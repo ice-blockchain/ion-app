@@ -5,10 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/audio_loading_indicator.dart';
+import 'package:ion/app/features/chat/messages/views/components/audio_loading_indicator/audio_loading_indicator.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
+
+part './components/cancel_record_button.dart';
+part './components/delete_audio_button.dart';
+part './components/duration_text.dart';
+part './components/pause_audio_button.dart';
+part './components/play_audio_button.dart';
+part './components/recording_indicator.dart';
 
 class BottomBarRecordingView extends HookConsumerWidget {
   const BottomBarRecordingView({
@@ -24,17 +31,17 @@ class BottomBarRecordingView extends HookConsumerWidget {
       PlayerController(),
     );
     final playerState = useState<PlayerState?>(null);
-
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
-
     final duration = useState('00:00');
 
-    final playerWaveStyle = PlayerWaveStyle(
-      liveWaveColor: context.theme.appColors.primaryText,
-      fixedWaveColor: context.theme.appColors.sheetLine,
-      seekLineColor: Colors.transparent,
-      waveThickness: 1.0.s,
-      spacing: 1.5.s,
+    final playerWaveStyle = useMemoized(
+      () => PlayerWaveStyle(
+        liveWaveColor: context.theme.appColors.primaryText,
+        fixedWaveColor: context.theme.appColors.sheetLine,
+        seekLineColor: Colors.transparent,
+        waveThickness: 1.0.s,
+        spacing: 1.5.s,
+      ),
     );
 
     useEffect(
@@ -85,18 +92,7 @@ class BottomBarRecordingView extends HookConsumerWidget {
       child: Row(
         children: [
           if (bottomBarState.isVoicePaused) ...[
-            GestureDetector(
-              onTap: () {
-                ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
-              },
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(12.0.s, 4.0.s, 4.0.s, 4.0.s),
-                child: Assets.svg.iconBlockDelete.icon(
-                  color: context.theme.appColors.primaryText,
-                  size: 24.0.s,
-                ),
-              ),
-            ),
+            const DeleteAudioButton(),
             SizedBox(width: 6.0.s),
             Expanded(
               child: Container(
@@ -110,27 +106,9 @@ class BottomBarRecordingView extends HookConsumerWidget {
                     if (playerState.value == null) ...[
                       const AudioLoadingIndicator(),
                     ] else if (playerState.value!.isPlaying) ...[
-                      GestureDetector(
-                        onTap: () {
-                          playerController.value.pausePlayer();
-                        },
-                        child: Assets.svg.iconVideoPause.icon(
-                          color: context.theme.appColors.primaryAccent,
-                          size: 24.0.s,
-                        ),
-                      ),
+                      PlayAudioButton(playerController: playerController),
                     ] else
-                      GestureDetector(
-                        onTap: () {
-                          playerController.value.startPlayer(
-                            finishMode: FinishMode.pause,
-                          );
-                        },
-                        child: Assets.svg.iconVideoPlay.icon(
-                          color: context.theme.appColors.primaryAccent,
-                          size: 24.0.s,
-                        ),
-                      ),
+                      PauseAudioButton(playerController: playerController),
                     SizedBox(width: 6.0.s),
                     AudioFileWaveforms(
                       playerController: playerController.value,
@@ -142,48 +120,17 @@ class BottomBarRecordingView extends HookConsumerWidget {
                       playerWaveStyle: playerWaveStyle,
                     ),
                     const Spacer(),
-                    Text(
-                      duration.value,
-                      style: context.theme.appTextThemes.body2.copyWith(
-                        color: context.theme.appColors.primaryText,
-                      ),
-                    ),
+                    DurationText(duration: duration.value),
                   ],
                 ),
               ),
             ),
           ] else ...[
-            Padding(
-              padding: EdgeInsets.only(left: 16.0.s),
-              child: GestureDetector(
-                onTap: () {
-                  recorderController.value.stop();
-                  ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
-                },
-                child: Text(
-                  'Cancel',
-                  style: context.theme.appTextThemes.body2.copyWith(
-                    color: context.theme.appColors.primaryAccent,
-                  ),
-                ),
-              ),
-            ),
+            CancelRecordButton(recorderController: recorderController),
             const Spacer(),
-            Container(
-              width: 4.0.s,
-              height: 4.0.s,
-              decoration: BoxDecoration(
-                color: context.theme.appColors.attentionRed,
-                borderRadius: BorderRadius.circular(12.0.s),
-              ),
-            ),
+            const RecordingRedIndicator(),
             SizedBox(width: 4.0.s),
-            Text(
-              duration.value,
-              style: context.theme.appTextThemes.body2.copyWith(
-                color: context.theme.appColors.primaryText,
-              ),
-            ),
+            DurationText(duration: duration.value),
           ],
           SizedBox(width: 62.0.s),
         ],

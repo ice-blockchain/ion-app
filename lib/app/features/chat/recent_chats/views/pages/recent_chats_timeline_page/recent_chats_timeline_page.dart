@@ -20,7 +20,9 @@ class RecentChatsTimelinePage extends StatelessWidget {
             background: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () => ChatSimpleSearchRoute().push<void>(context),
-              child: const IgnorePointer(child: SearchInput()),
+              child: const IgnorePointer(
+                child: SearchInput(),
+              ),
             ),
           ),
           toolbarHeight: SearchInput.height,

@@ -1,26 +1,30 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/messages/views/components/chat_date_header_text/chat_date_header_text.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/audio_message/audio_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/emoji_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/money_receive_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/money_request_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/photo_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/pool_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/profile_share_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/simple_text_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/url_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/video_message.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_types/emoji_message/emoji_message.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_types/money_message/money_message.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_types/photo_message/photo_message.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_types/poll_message/poll_message.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_types/profile_share_message/profile_share_message.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_types/text_message/text_message.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_types/url_preview_message/url_preview_message.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_types/video_message/video_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_header/messaging_header.dart';
+import 'package:ion/app/features/chat/models/money_message_type.dart';
 import 'package:ion/app/services/keyboard/keyboard.dart';
 
-class MessagesPage extends StatelessWidget {
+const String hasPrivacyModalShownKey = 'hasPrivacyModalShownKey';
+
+class MessagesPage extends HookConsumerWidget {
   const MessagesPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () => hideKeyboard(context),
       child: Scaffold(
@@ -33,6 +37,7 @@ class MessagesPage extends StatelessWidget {
           child: Column(
             children: [
               const MessagingHeader(),
+              // const MessagingEmptyView(),
               Expanded(
                 child: ColoredBox(
                   color: context.theme.appColors.primaryBackground,
@@ -40,35 +45,17 @@ class MessagesPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       switch (index) {
                         case 0:
-                          return Column(
+                          return const Column(
                             children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 6.0.s,
-                                  vertical: 1.0.s,
-                                ),
-                                margin: EdgeInsets.symmetric(
-                                  vertical: 12.0.s,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: context.theme.appColors.secondaryBackground,
-                                  borderRadius: BorderRadius.circular(16.0.s),
-                                ),
-                                child: Text(
-                                  '8 October',
-                                  style: context.theme.appTextThemes.caption3.copyWith(
-                                    color: context.theme.appColors.onTertararyBackground,
-                                  ),
-                                ),
-                              ),
-                              const SimpleTextMessage(
+                              ChatDateHeaderText(),
+                              TextMessage(
                                 message: 'Hello there!',
                                 isMe: true,
                               ),
                             ],
                           );
                         case 1:
-                          return const SimpleTextMessage(
+                          return const TextMessage(
                             message: 'How are you doing?',
                             isMe: false,
                           );
@@ -79,7 +66,7 @@ class MessagesPage extends StatelessWidget {
                         case 4:
                           return const PhotoMessage(
                             isMe: true,
-                            imageUrl: 'https://picsum.photos/500/300',
+                            imageUrl: 'https://picsum.photos/700/900',
                             message: 'Check this out!',
                           );
                         case 5:
@@ -115,9 +102,12 @@ class MessagesPage extends StatelessWidget {
                             isMe: true,
                           );
                         case 10:
-                          return const UrlMessage(isMe: true, url: 'https://www.ice.io/');
+                          return const UrlPreviewMessage(isMe: true, url: 'https://www.ice.io/');
                         case 11:
-                          return const UrlMessage(isMe: false, url: 'https://www.google.com/');
+                          return const UrlPreviewMessage(
+                            isMe: false,
+                            url: 'https://www.ice.io/',
+                          );
                         case 12:
                           return const ProfileShareMessage(
                             isMe: true,
@@ -135,19 +125,39 @@ class MessagesPage extends StatelessWidget {
                             isMe: true,
                           );
                         case 16:
-                          return const MoneyReceiveMessage(
+                          return const MoneyMessage(
+                            type: MoneyMessageType.receive,
                             isMe: true,
+                            amount: 100,
+                            equivalentUsd: 12,
+                            chain: 'Ice Open Network',
                           );
                         case 17:
-                          return const MoneyReceiveMessage(
+                          return const MoneyMessage(
+                            type: MoneyMessageType.receive,
                             isMe: false,
+                            amount: 1450,
+                            equivalentUsd: 120,
+                            chain: 'ETH',
                           );
                         case 18:
-                          return const MoneyRequestMessage(isMe: true);
+                          return const MoneyMessage(
+                            isMe: true,
+                            type: MoneyMessageType.request,
+                            amount: 4333,
+                            equivalentUsd: 120,
+                            chain: 'VET',
+                          );
                         case 19:
-                          return const MoneyRequestMessage(isMe: false);
+                          return const MoneyMessage(
+                            isMe: false,
+                            type: MoneyMessageType.request,
+                            amount: 100,
+                            equivalentUsd: 12,
+                            chain: 'BTC',
+                          );
                         default:
-                          return const SimpleTextMessage(
+                          return const TextMessage(
                             message: 'Hello there!',
                             isMe: true,
                           );
