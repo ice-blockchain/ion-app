@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/audio_message.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_types/audio_message/audio_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/emoji_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/money_receive_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/money_request_message.dart';
@@ -104,13 +104,13 @@ class MessagesPage extends StatelessWidget {
                           );
                         case 8:
                           return const AudioMessage(
-                            '1121',
+                            '112133',
                             audioUrl: 'https://www2.cs.uic.edu/~i101/SoundFiles/preamble10.wav',
                             isMe: false,
                           );
                         case 9:
                           return const AudioMessage(
-                            '111',
+                            '111333',
                             audioUrl: 'https://www2.cs.uic.edu/~i101/SoundFiles/preamble10.wav',
                             isMe: true,
                           );

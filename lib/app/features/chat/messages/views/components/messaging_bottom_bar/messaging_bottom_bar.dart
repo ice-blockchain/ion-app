@@ -18,7 +18,7 @@ class MessagingBottomBar extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomBarState = ref.watch(messaingBottomBarActiveStateProvider);
+    final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
 
     return Stack(
       alignment: Alignment.center,
@@ -42,7 +42,7 @@ class ActionButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomBarState = ref.watch(messaingBottomBarActiveStateProvider);
+    final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
     final paddingBottom = useState<double>(0);
 
     Widget subButton() {
@@ -51,7 +51,7 @@ class ActionButton extends HookConsumerWidget {
         case MessagingBottomBarState.voicePaused:
           return SendButton(
             onSend: () {
-              ref.read(messaingBottomBarActiveStateProvider.notifier).setText();
+              ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
             },
           );
         case MessagingBottomBarState.voice:
@@ -69,13 +69,13 @@ class ActionButton extends HookConsumerWidget {
       child: GestureDetector(
         onLongPressStart: (details) {
           if (!bottomBarState.isVoice) {
-            ref.read(messaingBottomBarActiveStateProvider.notifier).setVoice();
+            ref.read(messagingBottomBarActiveStateProvider.notifier).setVoice();
             HapticFeedback.lightImpact();
           }
         },
         onTap: () {
           if (bottomBarState.isVoice) {
-            ref.read(messaingBottomBarActiveStateProvider.notifier).setText();
+            ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
           }
         },
         onLongPressMoveUpdate: (details) {
@@ -87,7 +87,7 @@ class ActionButton extends HookConsumerWidget {
         },
         onLongPressEnd: (details) {
           if (paddingBottom.value > 20) {
-            ref.read(messaingBottomBarActiveStateProvider.notifier).setVoiceLocked();
+            ref.read(messagingBottomBarActiveStateProvider.notifier).setVoiceLocked();
             paddingBottom.value = 0;
           }
           // if (bottomBarState.isVoice) {
@@ -166,7 +166,7 @@ class ActiveRecordingOverlay extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bottomBarState = ref.watch(messaingBottomBarActiveStateProvider);
+    final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
 
     final scale = paddingBottom < 20
         ? 1.0
@@ -197,7 +197,7 @@ class ActiveRecordingOverlay extends HookConsumerWidget {
               if (bottomBarState.isVoiceLocked)
                 GestureDetector(
                   onTap: () {
-                    ref.read(messaingBottomBarActiveStateProvider.notifier).setVoicePaused();
+                    ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
                   },
                   child: Padding(
                     padding: EdgeInsets.only(top: 8.0.s),
