@@ -23,4 +23,16 @@ class MessaingBottomBarActiveState extends _$MessaingBottomBarActiveState {
   void setMore() {
     state = MessagingBottomBarState.more;
   }
+
+  void setHasText() {
+    state = MessagingBottomBarState.hasText;
+  }
+
+  void setVoiceLocked() {
+    state = MessagingBottomBarState.voiceLocked;
+  }
+
+  void setVoicePaused() {
+    state = MessagingBottomBarState.voicePaused;
+  }
 }

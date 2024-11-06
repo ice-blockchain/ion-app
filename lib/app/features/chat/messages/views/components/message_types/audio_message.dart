@@ -107,13 +107,25 @@ class AudioMessage extends HookWidget {
                 child: playerState.value == null
                     ? const AudioLoadingIndicator()
                     : playerState.value!.isPlaying
-                        ? Assets.svg.iconVideoPause.icon(
-                            size: 20.0.s,
-                            color: context.theme.appColors.primaryAccent,
+                        ? GestureDetector(
+                            onTap: () {
+                              playerController.value.pausePlayer();
+                            },
+                            child: Assets.svg.iconVideoPause.icon(
+                              size: 20.0.s,
+                              color: context.theme.appColors.primaryAccent,
+                            ),
                           )
-                        : Assets.svg.iconVideoPlay.icon(
-                            size: 20.0.s,
-                            color: context.theme.appColors.primaryAccent,
+                        : GestureDetector(
+                            onTap: () {
+                              playerController.value.startPlayer(
+                                finishMode: FinishMode.pause,
+                              );
+                            },
+                            child: Assets.svg.iconVideoPlay.icon(
+                              size: 20.0.s,
+                              color: context.theme.appColors.primaryAccent,
+                            ),
                           ),
               ),
             ),
