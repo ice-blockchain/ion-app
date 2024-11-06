@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessagingEmptyView extends StatelessWidget {
@@ -29,10 +30,15 @@ class MessagingEmptyView extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 9.0.s),
-              Text(
-                context.i18n.button_learn_more,
-                style: context.theme.appTextThemes.caption.copyWith(
-                  color: context.theme.appColors.primaryAccent,
+              GestureDetector(
+                onTap: () {
+                  ChatLearnMoreModalRoute().push<void>(context);
+                },
+                child: Text(
+                  context.i18n.button_learn_more,
+                  style: context.theme.appTextThemes.caption.copyWith(
+                    color: context.theme.appColors.primaryAccent,
+                  ),
                 ),
               ),
             ],

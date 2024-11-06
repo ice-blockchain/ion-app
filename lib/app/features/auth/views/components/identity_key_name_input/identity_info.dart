@@ -22,7 +22,7 @@ class IdentityInfo extends StatelessWidget {
       children: [
         NavigationAppBar.modal(
           showBackButton: false,
-          title: Text(context.i18n.identity_key_name_title),
+          title: Text(context.i18n.common_information),
           actions: [NavigationCloseButton(onPressed: () => context.pop())],
         ),
         Padding(

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/mesage_timestamp.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper.dart';
+import 'package:ion/app/features/chat/messages/views/components/mesage_timestamp/mesage_timestamp.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/utils/username.dart';
 
 class ProfileShareMessage extends StatelessWidget {
@@ -72,7 +72,7 @@ class ProfileShareMessage extends StatelessWidget {
                     label: Padding(
                       padding: EdgeInsets.only(bottom: 2.0.s),
                       child: Text(
-                        'Write a message',
+                        context.i18n.chat_profile_share_button,
                         style: context.theme.appTextThemes.caption2.copyWith(
                           color: context.theme.appColors.primaryText,
                         ),

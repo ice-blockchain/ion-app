@@ -34,14 +34,20 @@ class ChatMainAppBar extends ConsumerWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        IconButton(
-          padding: EdgeInsets.zero,
-          icon: Assets.svg.iconEditLink.icon(
-            size: NavigationAppBar.actionButtonSide,
+        AnimatedOpacity(
+          opacity: editMode ? 0 : 1,
+          duration: const Duration(milliseconds: 200),
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            icon: Assets.svg.iconEditLink.icon(
+              size: NavigationAppBar.actionButtonSide,
+            ),
+            onPressed: () {
+              if (!editMode) {
+                NewChatModalRoute().push<void>(context);
+              }
+            },
           ),
-          onPressed: () {
-            NewChatModalRoute().push<void>(context);
-          },
         ),
       ],
     );

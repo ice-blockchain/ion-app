@@ -7,6 +7,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
+part './components/more_content_view/more_content_view.dart';
+
 class BottomBarInitialView extends HookConsumerWidget {
   const BottomBarInitialView({
     super.key,
@@ -16,6 +18,7 @@ class BottomBarInitialView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = useTextEditingController();
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
+    final controllerFocusNode = useFocusNode();
 
     useEffect(
       () {
@@ -38,8 +41,10 @@ class BottomBarInitialView extends HookConsumerWidget {
     useEffect(
       () {
         if (bottomBarState.isText) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
             controller.clear();
+            // await Future<void>.delayed(const Duration(milliseconds: 500));
+            FocusScope.of(context).requestFocus(controllerFocusNode);
           });
         }
         return null;
@@ -47,114 +52,94 @@ class BottomBarInitialView extends HookConsumerWidget {
       [bottomBarState.isText],
     );
 
-    return Container(
-      color: context.theme.appColors.onPrimaryAccent,
-      constraints: BoxConstraints(
-        minHeight: 48.0.s,
-      ),
-      padding: EdgeInsets.fromLTRB(8.0.s, 8.0.s, 44.0.s, 8.0.s),
-      child: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(4.0.s),
-            child: Assets.svg.iconChatAttatch.icon(
-              color: context.theme.appColors.primaryText,
-              size: 24.0.s,
-            ),
-          ),
-          SizedBox(width: 6.0.s),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              style: context.theme.appTextThemes.body2.copyWith(
-                color: context.theme.appColors.primaryText,
-              ),
-              maxLines: null,
-              textInputAction: TextInputAction.newline,
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 7.0.s,
-                  horizontal: 12.0.s,
-                ),
-                fillColor: context.theme.appColors.onSecondaryBackground,
-                filled: true,
-                hintText: 'Write a message...',
-                hintStyle: context.theme.appTextThemes.body2.copyWith(
-                  color: context.theme.appColors.quaternaryText,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18.0.s),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              onSubmitted: (value) => controller.clear(),
-            ),
-          ),
-          SizedBox(width: 6.0.s),
-          AnimatedPadding(
-            duration: const Duration(milliseconds: 200),
-            padding: bottomBarState.isHasText ? EdgeInsets.only(right: 4.0.s) : EdgeInsets.zero,
-            child: Padding(
-              padding: EdgeInsets.all(4.0.s),
-              child: Assets.svg.iconCameraOpen.icon(
-                color: context.theme.appColors.primaryText,
-                size: 24.0.s,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// class RecordVoiceButton extends ConsumerWidget {
-//   const RecordVoiceButton({
-//     super.key,
-//   });
-
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     return GestureDetector(
-//       onLongPress: () {
-//         ref.read(messaingBottomBarActiveStateProvider.notifier).setVoice();
-//         HapticFeedback.lightImpact();
-//       },
-//       child: Padding(
-//         padding: EdgeInsets.all(4.0.s),
-//         child: Assets.svg.iconChatMicrophone.icon(
-//           color: context.theme.appColors.primaryText,
-//           size: 24.0.s,
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-class SendButton extends StatelessWidget {
-  const SendButton({
-    required this.onSend,
-    super.key,
-  });
-
-  final VoidCallback onSend;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onSend,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 4.0.s, vertical: 4.0.s),
-        decoration: BoxDecoration(
-          color: context.theme.appColors.primaryAccent,
-          borderRadius: BorderRadius.circular(12.0.s),
-        ),
-        child: Assets.svg.iconChatSendmessage.icon(
+    return Column(
+      children: [
+        Container(
           color: context.theme.appColors.onPrimaryAccent,
-          size: 24.0.s,
+          constraints: BoxConstraints(
+            minHeight: 48.0.s,
+          ),
+          padding: EdgeInsets.fromLTRB(8.0.s, 8.0.s, 44.0.s, 8.0.s),
+          child: Row(
+            children: [
+              if (bottomBarState.isMore)
+                GestureDetector(
+                  onTap: () async {
+                    ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(4.0.s),
+                    child: Assets.svg.iconChatKeyboard.icon(
+                      color: context.theme.appColors.primaryText,
+                      size: 24.0.s,
+                    ),
+                  ),
+                )
+              else
+                GestureDetector(
+                  onTap: () async {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    await Future<void>.delayed(const Duration(milliseconds: 700));
+                    ref.read(messagingBottomBarActiveStateProvider.notifier).setMore();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(4.0.s),
+                    child: Assets.svg.iconChatAttatch.icon(
+                      color: context.theme.appColors.primaryText,
+                      size: 24.0.s,
+                    ),
+                  ),
+                ),
+              SizedBox(width: 6.0.s),
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  focusNode: controllerFocusNode,
+                  style: context.theme.appTextThemes.body2.copyWith(
+                    color: context.theme.appColors.primaryText,
+                  ),
+                  onTap: () {
+                    ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                  },
+                  maxLines: null,
+                  textInputAction: TextInputAction.newline,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 7.0.s,
+                      horizontal: 12.0.s,
+                    ),
+                    fillColor: context.theme.appColors.onSecondaryBackground,
+                    filled: true,
+                    hintText: context.i18n.messaging_textfiled_placeholder,
+                    hintStyle: context.theme.appTextThemes.body2.copyWith(
+                      color: context.theme.appColors.quaternaryText,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18.0.s),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  onSubmitted: (value) => controller.clear(),
+                ),
+              ),
+              SizedBox(width: 6.0.s),
+              AnimatedPadding(
+                duration: const Duration(milliseconds: 200),
+                padding: bottomBarState.isHasText ? EdgeInsets.only(right: 4.0.s) : EdgeInsets.zero,
+                child: Padding(
+                  padding: EdgeInsets.all(4.0.s),
+                  child: Assets.svg.iconCameraOpen.icon(
+                    color: context.theme.appColors.primaryText,
+                    size: 24.0.s,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+        if (bottomBarState.isMore) const _MoreContentView(),
+      ],
     );
   }
 }
