@@ -19,7 +19,6 @@ import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_s
 import 'package:ion/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
@@ -35,8 +34,6 @@ class DiscoverCreators extends HookConsumerWidget {
     ref.displayErrors(onboardingCompleteNotifierProvider);
 
     final (selectedCreators, toggleCreatorSelection) = useSelectedState(<UserMetadataEntity>[]);
-
-    useOnInit(ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities, [dataSource]);
 
     final mayContinue = selectedCreators.isNotEmpty;
 

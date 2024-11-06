@@ -24,11 +24,15 @@ class EntitiesDataSource with _$EntitiesDataSource {
 
 @freezed
 class EntitiesPagedDataState with _$EntitiesPagedDataState {
-  const factory EntitiesPagedDataState({
+  factory EntitiesPagedDataState({
     required List<EntitiesDataSource> dataSources,
     // Processing pagination params per data source
     required Paged<NostrEntity, Map<ActionSource, PaginationParams>> data,
   }) = _EntitiesPagedDataState;
+
+  EntitiesPagedDataState._();
+
+  bool get hasMore => data.pagination.values.any((params) => params.hasMore);
 }
 
 @riverpod
@@ -36,6 +40,8 @@ class EntitiesPagedData extends _$EntitiesPagedData {
   @override
   EntitiesPagedDataState? build(List<EntitiesDataSource>? dataSources) {
     if (dataSources != null) {
+      Future.microtask(fetchEntities);
+
       return EntitiesPagedDataState(
         dataSources: dataSources,
         data: Paged.data(
