@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -16,19 +15,36 @@ class BottomBarInitialView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = useTextEditingController();
-
-    final hasText = useState(false);
+    final bottomBarState = ref.watch(messaingBottomBarActiveStateProvider);
 
     useEffect(
       () {
         void listener() {
-          hasText.value = controller.text.isNotEmpty;
+          if (controller.text.isEmpty) {
+            ref.read(messaingBottomBarActiveStateProvider.notifier).setText();
+          } else {
+            ref.read(messaingBottomBarActiveStateProvider.notifier).setHasText();
+          }
         }
 
-        controller.addListener(listener);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          controller.addListener(listener);
+        });
         return () => controller.removeListener(listener);
       },
       [],
+    );
+
+    useEffect(
+      () {
+        if (bottomBarState.isText) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            controller.clear();
+          });
+        }
+        return null;
+      },
+      [bottomBarState.isText],
     );
 
     return Container(
@@ -36,7 +52,7 @@ class BottomBarInitialView extends HookConsumerWidget {
       constraints: BoxConstraints(
         minHeight: 48.0.s,
       ),
-      padding: EdgeInsets.fromLTRB(8.0.s, 8.0.s, 14.0.s, 8.0.s),
+      padding: EdgeInsets.fromLTRB(8.0.s, 8.0.s, 44.0.s, 8.0.s),
       child: Row(
         children: [
           Padding(
@@ -76,51 +92,45 @@ class BottomBarInitialView extends HookConsumerWidget {
             ),
           ),
           SizedBox(width: 6.0.s),
-          Padding(
-            padding: EdgeInsets.all(4.0.s),
-            child: Assets.svg.iconCameraOpen.icon(
-              color: context.theme.appColors.primaryText,
-              size: 24.0.s,
+          AnimatedPadding(
+            duration: const Duration(milliseconds: 200),
+            padding: bottomBarState.isHasText ? EdgeInsets.only(right: 4.0.s) : EdgeInsets.zero,
+            child: Padding(
+              padding: EdgeInsets.all(4.0.s),
+              child: Assets.svg.iconCameraOpen.icon(
+                color: context.theme.appColors.primaryText,
+                size: 24.0.s,
+              ),
             ),
           ),
-          SizedBox(width: 6.0.s),
-          if (hasText.value)
-            SendButton(
-              onSend: () {
-                ref.read(messaingBottomBarActiveStateProvider.notifier).setText();
-                controller.clear();
-              },
-            )
-          else
-            const RecordVoiceButton(),
         ],
       ),
     );
   }
 }
 
-class RecordVoiceButton extends ConsumerWidget {
-  const RecordVoiceButton({
-    super.key,
-  });
+// class RecordVoiceButton extends ConsumerWidget {
+//   const RecordVoiceButton({
+//     super.key,
+//   });
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      onLongPress: () {
-        ref.read(messaingBottomBarActiveStateProvider.notifier).setVoice();
-        HapticFeedback.lightImpact();
-      },
-      child: Padding(
-        padding: EdgeInsets.all(4.0.s),
-        child: Assets.svg.iconChatMicrophone.icon(
-          color: context.theme.appColors.primaryText,
-          size: 24.0.s,
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     return GestureDetector(
+//       onLongPress: () {
+//         ref.read(messaingBottomBarActiveStateProvider.notifier).setVoice();
+//         HapticFeedback.lightImpact();
+//       },
+//       child: Padding(
+//         padding: EdgeInsets.all(4.0.s),
+//         child: Assets.svg.iconChatMicrophone.icon(
+//           color: context.theme.appColors.primaryText,
+//           size: 24.0.s,
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class SendButton extends StatelessWidget {
   const SendButton({
