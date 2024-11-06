@@ -29,7 +29,11 @@ extension DisplayErrorsExtension on WidgetRef {
   void displayErrors<T>(ProviderListenable<AsyncValue<T>> provider) {
     listen(provider, (_, next) {
       final isCurrentRoute = ModalRoute.of(context)?.isCurrent ?? false;
-      if (!next.isLoading && next.hasError && next.error != null && isCurrentRoute) {
+      if (!next.isLoading &&
+          next.hasError &&
+          next.error != null &&
+          isCurrentRoute &&
+          context.mounted) {
         showDialog<void>(
           context: context,
           builder: (context) => AlertDialog(
