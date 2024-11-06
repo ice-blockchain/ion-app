@@ -5,6 +5,7 @@ part of 'app_routes.dart';
 class FeedRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<PostDetailsRoute>(path: 'post/:postId'),
+    TypedGoRoute<ArticleDetailsRoute>(path: 'article/:articleId'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
     TypedGoRoute<ProfileRoute>(path: 'profile/:pubkey', routes: ProfileRoutes.routes),
@@ -33,6 +34,15 @@ class FeedRoutes {
       ],
     ),
   ];
+}
+
+class ArticleDetailsRoute extends BaseRouteData {
+  ArticleDetailsRoute({required this.articleId})
+      : super(
+          child: ArticleDetailsPage(articleId: articleId),
+        );
+
+  final String articleId;
 }
 
 class PostDetailsRoute extends BaseRouteData {
