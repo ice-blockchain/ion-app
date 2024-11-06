@@ -101,7 +101,7 @@ class UserDelegationManager extends _$UserDelegationManager {
     final signature = '$signaturePrefix:$signatureBody';
 
     // TODO:still using mock because damus do not accept this kind of signatures
-    final fakeSignature = mockedTonWalletKeystore.sign(message: eventId);
+    final fakeSignature = (await ref.read(mockedMainWalletProvider.future)).sign(message: eventId);
 
     return EventMessage(
       id: eventId,

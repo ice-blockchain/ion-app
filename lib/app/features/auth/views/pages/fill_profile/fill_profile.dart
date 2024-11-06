@@ -35,7 +35,7 @@ class FillProfile extends HookConsumerWidget {
       TextEditingValue(text: onboardingData.name ?? ''),
     );
 
-    ref.displayErrors(fillProfileNotifierProvider, context);
+    ref.displayErrors(fillProfileNotifierProvider);
 
     final onSubmit = useCallback(() async {
       if (formKey.currentState!.validate()) {

@@ -26,9 +26,10 @@ extension DebounceExtension on Ref {
 }
 
 extension DisplayErrorsExtension on WidgetRef {
-  void displayErrors<T>(ProviderListenable<AsyncValue<T>> provider, BuildContext context) {
+  void displayErrors<T>(ProviderListenable<AsyncValue<T>> provider) {
     listen(provider, (_, next) {
-      if (!next.isLoading && next.hasError && next.error != null) {
+      final isCurrentRoute = ModalRoute.of(context)?.isCurrent ?? false;
+      if (!next.isLoading && next.hasError && next.error != null && isCurrentRoute) {
         showDialog<void>(
           context: context,
           builder: (context) => AlertDialog(

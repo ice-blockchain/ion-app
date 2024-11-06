@@ -27,6 +27,7 @@ Future<Wallet?> mainWallet(Ref ref) async {
 
   // TODO: still using mocked wallet because damus do not accept non default signatures
   return mainWallet.copyWith(
-    signingKey: mainWallet.signingKey.copyWith(publicKey: mockedTonWalletKeystore.publicKey),
+    signingKey: mainWallet.signingKey
+        .copyWith(publicKey: (await ref.read(mockedMainWalletProvider.future)).publicKey),
   );
 }

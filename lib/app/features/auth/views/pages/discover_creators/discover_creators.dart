@@ -32,7 +32,7 @@ class DiscoverCreators extends HookConsumerWidget {
     final dataSource = ref.watch(contentCreatorsDataSourceProvider);
     final contentCreators = ref.watch(entitiesPagedDataProvider(dataSource));
 
-    ref.displayErrors(onboardingCompleteNotifierProvider, context);
+    ref.displayErrors(onboardingCompleteNotifierProvider);
 
     final (selectedCreators, toggleCreatorSelection) = useSelectedState(<UserMetadataEntity>[]);
 
