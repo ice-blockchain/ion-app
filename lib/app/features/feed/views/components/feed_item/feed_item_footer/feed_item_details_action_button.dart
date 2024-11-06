@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-class PostDetailsActionButton extends StatelessWidget {
-  const PostDetailsActionButton({
+class FeedItemDetailsActionButton extends StatelessWidget {
+  const FeedItemDetailsActionButton({
     required this.onPressed,
     required this.child,
     super.key,

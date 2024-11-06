@@ -1,59 +1,70 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/article/components/article_header/article_header.dart';
+import 'package:ion/app/features/feed/data/models/article/article_data.dart';
+import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
 import 'package:ion/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
-import 'package:ion/app/features/user/model/user_metadata.dart';
-import 'package:ion/app/utils/username.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_header.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_menu/feed_item_menu.dart';
+import 'package:ion/app/utils/algorithm.dart';
 
-class Article extends StatelessWidget {
+class Article extends ConsumerWidget {
   const Article({
-    required this.id,
-    required this.userMetadata,
-    required this.publishedAt,
-    required this.imageUrl,
-    required this.minutesToRead,
-    required this.title,
+    required this.article,
     super.key,
   });
 
-  final String id;
-
-  final UserMetadata userMetadata;
-
-  final DateTime publishedAt;
-
-  final String imageUrl;
-
-  final int minutesToRead;
-
-  final String title;
+  final ArticleEntity article;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListItem.user(
-          title: Text(userMetadata.displayName),
-          subtitle: Text(prefixUsername(username: userMetadata.name, context: context)),
-          profilePicture: userMetadata.picture,
-          verifiedBadge: userMetadata.verified,
-          ntfAvatar: userMetadata.nft,
-          timeago: publishedAt,
-          onTap: () {},
-          trailing: const BookmarkButton(id: 'test_article_id'),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ColoredBox(
+      color: context.theme.appColors.onPrimaryAccent,
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Container(
+              clipBehavior: Clip.antiAlias,
+              width: 4.0.s,
+              decoration: BoxDecoration(
+                color: context.theme.appColors.primaryAccent,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(4.0.s),
+                  bottomRight: Radius.circular(4.0.s),
+                ),
+              ),
+            ),
+            SizedBox(width: 12.0.s),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FeedItemHeader(
+                    pubkey: article.pubkey,
+                    trailing: const Row(
+                      children: [
+                        BookmarkButton(id: 'test_article_id'),
+                        FeedItemMenu(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10.0.s),
+                  ArticleImage(
+                    imageUrl: article.data.image,
+                    minutesToRead: calculateReadingTime(article.data.content),
+                  ),
+                  SizedBox(height: 10.0.s),
+                  ArticleFooter(text: article.data.title ?? ''),
+                ],
+              ),
+            ),
+            SizedBox(width: 16.0.s),
+          ],
         ),
-        SizedBox(height: 10.0.s),
-        ArticleImage(
-          imageUrl: imageUrl,
-          minutesToRead: minutesToRead,
-        ),
-        SizedBox(height: 16.0.s),
-        ArticleHeader(text: title),
-      ],
+      ),
     );
   }
 }

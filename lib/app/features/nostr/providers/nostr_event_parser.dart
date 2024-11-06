@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/data/models/article/article_data.dart';
 import 'package:ion/app/features/feed/data/models/post/post_data.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';
@@ -19,6 +20,7 @@ class EventParser {
     return switch (eventMessage.kind) {
       UserMetadataEntity.kind => UserMetadataEntity.fromEventMessage(eventMessage),
       PostEntity.kind => PostEntity.fromEventMessage(eventMessage),
+      ArticleEntity.kind => ArticleEntity.fromEventMessage(eventMessage),
       UserRelaysEntity.kind => UserRelaysEntity.fromEventMessage(eventMessage),
       FollowListEntity.kind => FollowListEntity.fromEventMessage(eventMessage),
       InterestSetEntity.kind => InterestSetEntity.fromEventMessage(eventMessage),

@@ -7,11 +7,11 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_menu/post_menu_item.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_menu/feed_item_menu_item.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class PostMenu extends StatelessWidget {
-  const PostMenu({super.key});
+class FeedItemMenu extends StatelessWidget {
+  const FeedItemMenu({super.key});
 
   static double get iconSize => 20.0.s;
 
@@ -22,7 +22,7 @@ class PostMenu extends StatelessWidget {
       menuBuilder: (closeMenu) => Column(
         children: [
           OverlayMenuContainer(
-            child: PostMenuItem(
+            child: FeedItemMenuItem(
               label: context.i18n.post_menu_not_interested,
               icon: Assets.svg.iconNotinterested.icon(size: iconSize),
               onPressed: closeMenu,
@@ -32,17 +32,17 @@ class PostMenu extends StatelessWidget {
           OverlayMenuContainer(
             child: Column(
               children: [
-                PostMenuItem(
+                FeedItemMenuItem(
                   label: context.i18n.post_menu_follow_nickname('nickname'),
                   icon: Assets.svg.iconFollowuser.icon(size: iconSize),
                   onPressed: closeMenu,
                 ),
-                PostMenuItem(
+                FeedItemMenuItem(
                   label: context.i18n.post_menu_block_nickname('nickname'),
                   icon: Assets.svg.iconBlock.icon(size: iconSize),
                   onPressed: closeMenu,
                 ),
-                PostMenuItem(
+                FeedItemMenuItem(
                   label: context.i18n.post_menu_report_post,
                   icon: Assets.svg.iconReport.icon(size: iconSize),
                   onPressed: closeMenu,

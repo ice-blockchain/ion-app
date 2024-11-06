@@ -10,7 +10,7 @@ import 'package:ion/app/features/feed/data/models/post/post_data.dart';
 import 'package:ion/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_header/post_header.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_header.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
@@ -64,7 +64,7 @@ class CommentPostModal extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(16.0.s),
                         ),
                         child: Post(
-                          header: PostHeader(pubkey: post.pubkey),
+                          header: FeedItemHeader(pubkey: post.pubkey),
                           footer: const SizedBox.shrink(),
                           postEntity: post,
                         ),
