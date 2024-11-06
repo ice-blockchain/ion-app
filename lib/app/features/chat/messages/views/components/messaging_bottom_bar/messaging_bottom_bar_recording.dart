@@ -25,7 +25,7 @@ class BottomBarRecordingView extends HookConsumerWidget {
     );
     final playerState = useState<PlayerState?>(null);
 
-    final bottomBarState = ref.watch(messaingBottomBarActiveStateProvider);
+    final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
 
     final duration = useState('00:00');
 
@@ -87,7 +87,7 @@ class BottomBarRecordingView extends HookConsumerWidget {
           if (bottomBarState.isVoicePaused) ...[
             GestureDetector(
               onTap: () {
-                ref.read(messaingBottomBarActiveStateProvider.notifier).setText();
+                ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
               },
               child: Padding(
                 padding: EdgeInsets.fromLTRB(12.0.s, 4.0.s, 4.0.s, 4.0.s),
@@ -158,7 +158,7 @@ class BottomBarRecordingView extends HookConsumerWidget {
               child: GestureDetector(
                 onTap: () {
                   recorderController.value.stop();
-                  ref.read(messaingBottomBarActiveStateProvider.notifier).setText();
+                  ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
                 },
                 child: Text(
                   'Cancel',

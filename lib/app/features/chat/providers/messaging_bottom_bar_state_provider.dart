@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'messaging_bottom_bar_state_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class MessaingBottomBarActiveState extends _$MessaingBottomBarActiveState {
+class MessagingBottomBarActiveState extends _$MessagingBottomBarActiveState {
   @override
   MessagingBottomBarState build() {
     return MessagingBottomBarState.text;

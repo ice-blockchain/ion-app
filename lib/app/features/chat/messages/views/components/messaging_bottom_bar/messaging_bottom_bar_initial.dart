@@ -15,15 +15,15 @@ class BottomBarInitialView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = useTextEditingController();
-    final bottomBarState = ref.watch(messaingBottomBarActiveStateProvider);
+    final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
 
     useEffect(
       () {
         void listener() {
           if (controller.text.isEmpty) {
-            ref.read(messaingBottomBarActiveStateProvider.notifier).setText();
+            ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
           } else {
-            ref.read(messaingBottomBarActiveStateProvider.notifier).setHasText();
+            ref.read(messagingBottomBarActiveStateProvider.notifier).setHasText();
           }
         }
 
