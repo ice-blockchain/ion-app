@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -24,58 +22,59 @@ class StoryShareModal extends HookWidget {
     final (selectedContacts, toggleContactSelection) = useSelectedState<String>();
 
     return SheetContent(
-      body: Column(
+      body: Stack(
         children: [
-          NavigationAppBar.modal(
-            title: Text(context.i18n.share_via),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: ScreenSideOffset.defaultSmallMargin,
-              vertical: 8.0.s,
-            ),
-            child: SearchInput(
-              onTextChanged: (value) {},
-            ),
-          ),
-          Expanded(
-            child: StoryShareContactList(
-              selectedContacts: selectedContacts,
-              toggleContactSelection: toggleContactSelection,
-            ),
-          ),
-          if (selectedContacts.isNotEmpty)
-            Column(
-              children: [
-                const HorizontalSeparator(),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 44.0.s,
-                    vertical: 16.0.s,
-                  ),
-                  child: Button(
-                    mainAxisSize: MainAxisSize.max,
-                    label: Text(context.i18n.button_send),
-                    onPressed: () {
-                      // TODO: Implement send logic
-                      context.pop();
-                    },
-                  ),
+          Column(
+            children: [
+              NavigationAppBar.modal(
+                title: Text(context.i18n.share_via),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ScreenSideOffset.defaultSmallMargin,
+                  vertical: 8.0.s,
                 ),
-              ],
-            )
-                .animate(target: selectedContacts.isNotEmpty ? 1 : 0)
-                .fade(duration: 300.ms)
-                .slideY(begin: 0.5, end: 0, duration: 300.ms)
-          else
-            Column(
-              children: [
-                const HorizontalSeparator(),
-                SizedBox(height: 16.0.s),
-                const ShareActionButtons(),
-              ],
+                child: SearchInput(
+                  onTextChanged: (value) {},
+                ),
+              ),
+              Expanded(
+                child: StoryShareContactList(
+                  selectedContacts: selectedContacts,
+                  toggleContactSelection: toggleContactSelection,
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: ColoredBox(
+              color: context.theme.appColors.secondaryBackground,
+              child: Column(
+                children: [
+                  const HorizontalSeparator(),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: selectedContacts.isNotEmpty ? 44.0.s : 22.0.s,
+                      right: selectedContacts.isNotEmpty ? 44.0.s : 22.0.s,
+                      top: 16.0.s,
+                      bottom: selectedContacts.isNotEmpty ? 16.0.s : 0.0.s,
+                    ),
+                    child: selectedContacts.isNotEmpty
+                        ? Button(
+                            mainAxisSize: MainAxisSize.max,
+                            label: Text(context.i18n.button_send),
+                            onPressed: () {},
+                          )
+                        : const ShareActionButtons(),
+                  ),
+                  ScreenBottomOffset(margin: 20.0.s),
+                ],
+              ),
             ),
-          ScreenBottomOffset(margin: 16.0.s),
+          ),
         ],
       ),
     );
