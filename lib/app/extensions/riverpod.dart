@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/core/views/pages/error_modal.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 extension DebounceExtension on Ref {
   Future<void> debounce({Duration duration = const Duration(milliseconds: 300)}) {
@@ -34,11 +36,9 @@ extension DisplayErrorsExtension on WidgetRef {
           next.error != null &&
           isCurrentRoute &&
           context.mounted) {
-        showDialog<void>(
+        showSimpleBottomSheet<void>(
           context: context,
-          builder: (context) => AlertDialog(
-            content: Text(next.error.toString()),
-          ),
+          child: ErrorModal(error: next.error!),
         );
       }
     });
