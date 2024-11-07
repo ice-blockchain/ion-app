@@ -74,12 +74,6 @@ class ArticleData implements EventSerializable {
       }
     }
 
-    final publishedAtTag = eventMessage.tags.firstWhere(
-      (tag) => tag.isNotEmpty && tag[0] == 'published_at',
-      orElse: () => [],
-    );
-    if (publishedAtTag.length > 1) {}
-
     return ArticleData(
       title: title,
       image: image,

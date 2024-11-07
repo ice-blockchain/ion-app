@@ -23,7 +23,9 @@ class UserRelaysEntity with _$UserRelaysEntity implements CacheableEntity, Nostr
   /// https://github.com/nostr-protocol/nips/blob/master/65.md
   factory UserRelaysEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
+      if (eventMessage.kind != kind) {
+        throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      }
     }
 
     return UserRelaysEntity(

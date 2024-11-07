@@ -25,7 +25,9 @@ class UserDelegationEntity with _$UserDelegationEntity implements CacheableEntit
   /// https://github.com/nostr-protocol/nips/pull/1482/files
   factory UserDelegationEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
+      if (eventMessage.kind != kind) {
+        throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      }
     }
 
     return UserDelegationEntity(
