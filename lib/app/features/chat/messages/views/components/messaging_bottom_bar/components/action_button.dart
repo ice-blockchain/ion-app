@@ -1,9 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of '../messaging_bottom_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/components/components.dart';
+import 'package:ion/app/features/chat/model/messaging_bottom_bar_state.dart';
+import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.dart';
 
-class _ActionButton extends HookConsumerWidget {
-  const _ActionButton();
+class ActionButton extends HookConsumerWidget {
+  const ActionButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,7 +21,7 @@ class _ActionButton extends HookConsumerWidget {
       switch (bottomBarState) {
         case MessagingBottomBarState.hasText:
         case MessagingBottomBarState.voicePaused:
-          return _SendButton(
+          return SendButton(
             onSend: () {
               ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
             },
@@ -24,7 +31,7 @@ class _ActionButton extends HookConsumerWidget {
           return AudioRecordingButton(paddingBottom: paddingBottom.value);
         case MessagingBottomBarState.text:
         case MessagingBottomBarState.more:
-          return const _AudioRecordButton();
+          return const AudioRecordButton();
       }
     }
 

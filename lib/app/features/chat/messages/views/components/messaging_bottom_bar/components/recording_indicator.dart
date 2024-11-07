@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of '../messaging_bottom_bar_recording.dart';
+import 'package:flutter/material.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class RecordingRedIndicator extends StatelessWidget {
   const RecordingRedIndicator({

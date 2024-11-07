@@ -25,68 +25,75 @@ class ProfileShareMessage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Avatar(
-                        size: 40.0.s,
-                        imageUrl:
-                            'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-                      ),
-                      SizedBox(width: 8.0.s),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'John Doe',
-                            style: context.theme.appTextThemes.subtitle3.copyWith(
-                              color: isMe
-                                  ? context.theme.appColors.onPrimaryAccent
-                                  : context.theme.appColors.primaryText,
-                            ),
-                          ),
-                          Text(
-                            prefixUsername(context: context, username: 'johndoe'),
-                            style: context.theme.appTextThemes.body2.copyWith(
-                              color: isMe
-                                  ? context.theme.appColors.onPrimaryAccent
-                                  : context.theme.appColors.onTertararyBackground,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8.0.s),
-                  Button.compact(
-                    type: ButtonType.outlined,
-                    backgroundColor: context.theme.appColors.tertararyBackground,
-                    onPressed: () {},
-                    minimumSize: Size(120.0.s, 32.0.s),
-                    label: Padding(
-                      padding: EdgeInsets.only(bottom: 2.0.s),
-                      child: Text(
-                        context.i18n.chat_profile_share_button,
-                        style: context.theme.appTextThemes.caption2.copyWith(
-                          color: context.theme.appColors.primaryText,
-                        ),
-                      ),
+              _ProfileDetailView(isMe: isMe),
+              SizedBox(height: 8.0.s),
+              Button.compact(
+                type: ButtonType.outlined,
+                backgroundColor: context.theme.appColors.tertararyBackground,
+                onPressed: () {},
+                minimumSize: Size(120.0.s, 32.0.s),
+                label: Padding(
+                  padding: EdgeInsets.only(bottom: 2.0.s),
+                  child: Text(
+                    context.i18n.chat_profile_share_button,
+                    style: context.theme.appTextThemes.caption2.copyWith(
+                      color: context.theme.appColors.primaryText,
                     ),
                   ),
-                ],
+                ),
               ),
-              SizedBox(width: 16.0.s),
-              MessageTimeStamp(isMe: isMe),
             ],
           ),
+          SizedBox(width: 16.0.s),
+          MessageTimeStamp(isMe: isMe),
         ],
       ),
+    );
+  }
+}
+
+class _ProfileDetailView extends StatelessWidget {
+  const _ProfileDetailView({
+    required this.isMe,
+  });
+
+  final bool isMe;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Avatar(
+          size: 40.0.s,
+          imageUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+        ),
+        SizedBox(width: 8.0.s),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'John Doe',
+              style: context.theme.appTextThemes.subtitle3.copyWith(
+                color: isMe
+                    ? context.theme.appColors.onPrimaryAccent
+                    : context.theme.appColors.primaryText,
+              ),
+            ),
+            Text(
+              prefixUsername(context: context, username: 'johndoe'),
+              style: context.theme.appTextThemes.body2.copyWith(
+                color: isMe
+                    ? context.theme.appColors.onPrimaryAccent
+                    : context.theme.appColors.onTertararyBackground,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

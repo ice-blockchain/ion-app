@@ -3,18 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/chat_date_header_text/chat_date_header_text.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/audio_message/audio_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/emoji_message/emoji_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/money_message/money_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/photo_message/photo_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/poll_message/poll_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/profile_share_message/profile_share_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/text_message/text_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/url_preview_message/url_preview_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/video_message/video_message.dart';
-import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/messaging_bottom_bar.dart';
-import 'package:ion/app/features/chat/messages/views/components/messaging_header/messaging_header.dart';
+import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/app/services/keyboard/keyboard.dart';
 
