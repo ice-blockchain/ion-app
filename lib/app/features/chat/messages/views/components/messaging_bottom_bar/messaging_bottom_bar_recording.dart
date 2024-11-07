@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/audio_loading_indicator/audio_loading_indicator.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.dart';
+import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -72,10 +73,11 @@ class BottomBarRecordingView extends HookConsumerWidget {
             if (path == null) {
               return;
             }
-            playerController.value.preparePlayer(
-              path: path,
-              noOfSamples: playerWaveStyle.getSamplesForWidth(169.0.s),
-            );
+            ref.read(audioWavePlaybackServiceProvider).preparePlayer(
+                  path,
+                  playerController.value,
+                  playerWaveStyle,
+                );
           });
         }
         return null;

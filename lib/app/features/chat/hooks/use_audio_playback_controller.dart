@@ -6,7 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 ///
 /// Hook to use the [PlayerController] of the waveforms audio player.
 ///
-PlayerController useAudioPlaybackController() {
+PlayerController useAudioWavePlaybackController() {
   final controller = useMemoized(PlayerController.new);
   useEffect(
     () {
