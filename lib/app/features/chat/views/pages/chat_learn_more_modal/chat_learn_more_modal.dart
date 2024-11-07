@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -24,26 +25,28 @@ class ChatLearnMoreModal extends ConsumerWidget {
             title: Text(context.i18n.common_information),
             actions: [NavigationCloseButton(onPressed: () => context.pop())],
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(27.0.s, 13.0.s, 27.0.s, 16.0.s),
-            child: Column(
-              children: [
-                Assets.svg.walletIconChatEncription.icon(size: 80.0.s),
-                SizedBox(height: 10.0.s),
-                Text(
-                  context.i18n.chat_learn_more_modal_title,
-                  style: context.theme.appTextThemes.title,
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 10.0.s),
-                Text(
-                  context.i18n.chat_learn_more_modal_description,
-                  style: context.theme.appTextThemes.body2.copyWith(
-                    color: context.theme.appColors.secondaryText,
+          ScreenSideOffset.medium(
+            child: Padding(
+              padding: EdgeInsets.only(top: 13.0.s, bottom: 16.0.s),
+              child: Column(
+                children: [
+                  Assets.svg.walletIconChatEncription.icon(size: 80.0.s),
+                  SizedBox(height: 10.0.s),
+                  Text(
+                    context.i18n.chat_learn_more_modal_title,
+                    style: context.theme.appTextThemes.title,
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                  SizedBox(height: 10.0.s),
+                  Text(
+                    context.i18n.chat_learn_more_modal_description,
+                    style: context.theme.appTextThemes.body2.copyWith(
+                      color: context.theme.appColors.secondaryText,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

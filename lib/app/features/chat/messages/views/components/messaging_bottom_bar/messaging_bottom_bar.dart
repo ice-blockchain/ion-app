@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/messaging_bottom_bar_initial.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/messaging_bottom_bar_recording.dart';
-import 'package:ion/app/features/chat/models/messaging_bottom_bar_state.dart';
+import 'package:ion/app/features/chat/model/messaging_bottom_bar_state.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/models/conversation_type.dart';
-import 'package:ion/app/features/feed/views/pages/feed_main_modal/components/feed_modal_item.dart';
+import 'package:ion/app/features/chat/model/conversation_type.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class ChatMainModalPage extends StatelessWidget {
@@ -33,8 +33,8 @@ class ChatMainModalPage extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               final type = menuItems[index];
 
-              return FeedModalItem(
-                feedType: type,
+              return MainModalItem(
+                item: type,
                 onTap: () {
                   context
                     ..go(GoRouterState.of(context).currentTab.baseRouteLocation)

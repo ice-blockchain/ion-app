@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/main_modal_list_item.dart';
+import 'package:ion/app/router/model/main_modal_list_item.dart';
 
-class FeedModalItem extends StatelessWidget {
-  const FeedModalItem({
-    required this.feedType,
+class MainModalItem extends StatelessWidget {
+  const MainModalItem({
+    required this.item,
     required this.onTap,
     super.key,
   });
 
-  final MainModalListItem feedType;
+  final MainModalListItem item;
   final VoidCallback onTap;
 
   @override
@@ -23,13 +23,13 @@ class FeedModalItem extends StatelessWidget {
         padding: EdgeInsets.only(top: 2.0.s, bottom: 1.0.s),
         child: ListItem(
           title: Text(
-            feedType.getDisplayName(context),
+            item.getDisplayName(context),
             style: context.theme.appTextThemes.subtitle2.copyWith(
               color: context.theme.appColors.primaryText,
             ),
           ),
           subtitle: Text(
-            feedType.getDescription(context),
+            item.getDescription(context),
             style: context.theme.appTextThemes.caption.copyWith(
               color: context.theme.appColors.tertararyText,
             ),
@@ -41,10 +41,11 @@ class FeedModalItem extends StatelessWidget {
               height: 42.0.s,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: feedType.getIconColor(context),
+                color: item.getIconColor(context),
               ),
               child: Center(
-                child: feedType.iconAsset.icon(size: 24.0.s, color: Colors.white),
+                child: item.iconAsset
+                    .icon(size: 24.0.s, color: context.theme.appColors.onPrimaryAccent),
               ),
             ),
           ),

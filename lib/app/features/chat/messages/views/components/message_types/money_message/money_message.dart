@@ -7,7 +7,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/mesage_timestamp/mesage_timestamp.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
-import 'package:ion/app/features/chat/models/money_message_type.dart';
+import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 part 'components/amount_display.dart';

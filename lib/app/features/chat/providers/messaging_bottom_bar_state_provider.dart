@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/chat/models/messaging_bottom_bar_state.dart';
+import 'package:ion/app/features/chat/model/messaging_bottom_bar_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'messaging_bottom_bar_state_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class MessagingBottomBarActiveState extends _$MessagingBottomBarActiveState {
   @override
   MessagingBottomBarState build() {

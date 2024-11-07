@@ -20,7 +20,7 @@ class _ChatMenuItem extends StatelessWidget {
     final colors = context.theme.appColors;
     final textStyles = context.theme.appTextThemes;
 
-    return InkWell(
+    return GestureDetector(
       onTap: onPressed,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 8.0.s),
