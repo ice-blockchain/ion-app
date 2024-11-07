@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of '../../messaging_bottom_bar_initial.dart';
+import 'package:flutter/material.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 final double moreContentHeight = 206.0.s;
 
-class _MoreContentView extends StatelessWidget {
-  const _MoreContentView();
+class MoreContentView extends StatelessWidget {
+  const MoreContentView({super.key});
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -28,62 +28,7 @@ class PollResultMessage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.0.s),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              final option = mockPoll.options[index];
-
-              final percentage = option.votes /
-                  mockPoll.options.map((e) => e.votes).reduce((value, element) => value + element);
-              return Stack(
-                alignment: Alignment.centerLeft,
-                children: [
-                  Expanded(
-                    child: LinearProgressIndicator(
-                      value: percentage,
-                      minHeight: 28.0.s,
-                      borderRadius: BorderRadius.circular(12.0.s),
-                      backgroundColor: Colors.transparent,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        isMe
-                            ? context.theme.appColors.darkBlue
-                            : context.theme.appColors.onTerararyFill,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 12.0.s,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          option.option,
-                          style: context.theme.appTextThemes.caption2.copyWith(
-                            color: isMe
-                                ? context.theme.appColors.onPrimaryAccent
-                                : context.theme.appColors.primaryText,
-                          ),
-                        ),
-                        Text(
-                          '${(percentage * 100).toInt()}%',
-                          style: context.theme.appTextThemes.caption2.copyWith(
-                            color: isMe
-                                ? context.theme.appColors.onPrimaryAccent
-                                : context.theme.appColors.primaryText,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            },
-            separatorBuilder: (context, index) => SizedBox(height: 10.0.s),
-            itemCount: mockPoll.options.length,
-          ),
+          _PollItemList(isMe: isMe),
           SizedBox(height: 10.0.s),
           Text(
             'Votes: 2  •  Left: 1 day 2 hours',
@@ -100,6 +45,72 @@ class PollResultMessage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _PollItemList extends StatelessWidget {
+  const _PollItemList({
+    required this.isMe,
+  });
+
+  final bool isMe;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final option = mockPoll.options[index];
+
+        final percentage = option.votes /
+            mockPoll.options.map((e) => e.votes).reduce((value, element) => value + element);
+        return Stack(
+          alignment: Alignment.centerLeft,
+          children: [
+            Expanded(
+              child: LinearProgressIndicator(
+                value: percentage,
+                minHeight: 28.0.s,
+                borderRadius: BorderRadius.circular(12.0.s),
+                backgroundColor: Colors.transparent,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  isMe ? context.theme.appColors.darkBlue : context.theme.appColors.onTerararyFill,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 12.0.s,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    option.option,
+                    style: context.theme.appTextThemes.caption2.copyWith(
+                      color: isMe
+                          ? context.theme.appColors.onPrimaryAccent
+                          : context.theme.appColors.primaryText,
+                    ),
+                  ),
+                  Text(
+                    '${(percentage * 100).toInt()}%',
+                    style: context.theme.appTextThemes.caption2.copyWith(
+                      color: isMe
+                          ? context.theme.appColors.onPrimaryAccent
+                          : context.theme.appColors.primaryText,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+      separatorBuilder: (context, index) => SizedBox(height: 10.0.s),
+      itemCount: mockPoll.options.length,
     );
   }
 }
