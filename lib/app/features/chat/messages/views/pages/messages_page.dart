@@ -15,7 +15,7 @@ import 'package:ion/app/features/chat/messages/views/components/message_types/ur
 import 'package:ion/app/features/chat/messages/views/components/message_types/video_message/video_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_header/messaging_header.dart';
-import 'package:ion/app/features/chat/models/money_message_type.dart';
+import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/app/services/keyboard/keyboard.dart';
 
 const String hasPrivacyModalShownKey = 'hasPrivacyModalShownKey';

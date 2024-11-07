@@ -7,10 +7,10 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ion/app/features/feed/views/pages/feed_main_modal/components/feed_modal_item.dart';
 import 'package:ion/app/features/wallet/model/feed_type.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class FeedMainModalPage extends StatelessWidget {
@@ -39,8 +39,8 @@ class FeedMainModalPage extends StatelessWidget {
               if (type == FeedType.story) {
                 return PermissionAwareWidget(
                   permissionType: Permission.camera,
-                  builder: (_, onPressed) => FeedModalItem(
-                    feedType: type,
+                  builder: (_, onPressed) => MainModalItem(
+                    item: type,
                     onTap: onPressed,
                   ),
                   onGranted: () => StoryRecordRoute().push<void>(context),
@@ -49,8 +49,8 @@ class FeedMainModalPage extends StatelessWidget {
                 );
               }
 
-              return FeedModalItem(
-                feedType: type,
+              return MainModalItem(
+                item: type,
                 onTap: () {
                   final createFlowRouteLocation = _getCreateFlowRouteLocation(type);
                   context
