@@ -32,11 +32,13 @@ class Env extends _$Env {
         .toList();
   }
 
-  String get(EnvVariable variable) {
-    return dotenv.get(variable.name);
-  }
+  T get<T>(EnvVariable variable) {
+    final value = dotenv.get(variable.name);
 
-  bool getBoolean(EnvVariable variable) {
-    return get(variable).toLowerCase() == 'true';
+    if (T == bool) {
+      return (value.toLowerCase() == 'true') as T;
+    }
+
+    return value as T;
   }
 }
