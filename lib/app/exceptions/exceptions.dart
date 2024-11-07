@@ -32,9 +32,9 @@ class UserIndexersNotFoundException extends IONException {
 
 class IncorrectEventKindException extends IONException {
   IncorrectEventKindException({
-    required int actual,
-    required int expected,
-  }) : super(10006, 'Incorrect event with kind $actual, expected $expected');
+    required String eventId,
+    required int kind,
+  }) : super(10006, 'Incorrect event $eventId, expected kind $kind');
 }
 
 class IncorrectEventTagException extends IONException {
@@ -55,4 +55,14 @@ class UnauthenticatedException extends IONException {
 class GetFileStorageUrlException extends IONException {
   GetFileStorageUrlException(dynamic error)
       : super(10010, 'Failed to get file storage url: $error');
+}
+
+class IncorrectEventTagsException extends IONException {
+  IncorrectEventTagsException({required String eventId})
+      : super(100011, 'Incorrect event $eventId tags');
+}
+
+class UnknownEventException extends IONException {
+  UnknownEventException({required String eventId, required int kind})
+      : super(100012, 'Unknown event $eventId with kind $kind');
 }
