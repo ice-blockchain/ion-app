@@ -12,6 +12,7 @@ enum EnvVariable {
   ION_ANDROID_APP_ID,
   ION_IOS_APP_ID,
   ION_ORIGIN,
+  SHOW_DEBUG_INFO,
 }
 
 @Riverpod(keepAlive: true)
@@ -33,5 +34,9 @@ class Env extends _$Env {
 
   String get(EnvVariable variable) {
     return dotenv.get(variable.name);
+  }
+
+  bool getBoolean(EnvVariable variable) {
+    return get(variable).toLowerCase() == 'true';
   }
 }

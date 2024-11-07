@@ -380,6 +380,8 @@
   "error_screenshots_arent_secure_description": "Anyone who has access to your keys can use your assets. We recommend writing with your hands.",
   "error_nickname_invalid": "Only letters, numbers, and dots are allowed",
   "error_general_title": "Something went wrong",
+  "error_general_description": "An unexpected error occurred. Please try again later. {info}",
+  "error_general_error_code": "Error code: {error}",
   "warning_avoid_storing_keys": "Avoid storing keys on any device to prevent losing access to funds in case of a hack",
   "warning_authenticator_setup": "Save and keep your key safe in case it is lost",
   "authenticator_setup_title": "Authenticator setup",
