@@ -67,6 +67,7 @@ class CreatePostModal extends HookConsumerWidget {
       child: SheetContent(
         topPadding: 0,
         body: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             NavigationAppBar.modal(
               title: Text(context.i18n.create_post_modal_title),
@@ -75,29 +76,27 @@ class CreatePostModal extends HookConsumerWidget {
               },
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child: ScreenSideOffset.small(
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Avatar(
-                            size: 30.0.s,
-                            imageUrl:
-                                'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-                          ),
-                          SizedBox(width: 10.0.s),
-                          Expanded(
-                            child: TextEditor(
-                              textEditorController,
-                              placeholder: context.i18n.create_post_modal_placeholder,
-                            ),
-                          ),
-                        ],
+              child: ScreenSideOffset.small(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Avatar(
+                      size: 30.0.s,
+                      imageUrl:
+                          'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+                    ),
+                    SizedBox(width: 10.0.s),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 6.0.s),
+                        child: TextEditor(
+                          textEditorController,
+                          placeholder: context.i18n.create_post_modal_placeholder,
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

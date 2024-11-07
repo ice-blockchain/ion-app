@@ -486,5 +486,6 @@
   "topic_world": "World",
   "topics_add": "Add",
   "topics_title": "Topics",
-  "article_preview_title": "Article preview"
+  "article_preview_title": "Article preview",
+  "article_page_title": "Article"
 }
