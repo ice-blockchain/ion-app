@@ -1,26 +1,23 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:io';
-
 import 'package:audio_waveforms/audio_waveforms.dart';
-import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/hooks/use_audio_playback_controller.dart';
 import 'package:ion/app/features/chat/messages/views/components/audio_loading_indicator/audio_loading_indicator.dart';
 import 'package:ion/app/features/chat/messages/views/components/mesage_timestamp/mesage_timestamp.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
-import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 part 'components/audio_wave_form_display.dart';
 part 'components/play_pause_button.dart';
 
-class AudioMessage extends HookWidget {
+class AudioMessage extends HookConsumerWidget {
   const AudioMessage(
     this.id, {
     required this.audioUrl,
@@ -33,10 +30,10 @@ class AudioMessage extends HookWidget {
   final String id;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
     final audioPlaybackState = useState<PlayerState?>(null);
-    final audioPlaybackController = useAudioPlaybackController();
+    final audioPlaybackController = useAudioWavePlaybackController();
 
     final playerWaveStyle = useMemoized(
       () => PlayerWaveStyle(
@@ -52,13 +49,12 @@ class AudioMessage extends HookWidget {
 
     useEffect(
       () {
-        _initializePlayer(
-          audioPlaybackController,
-          id,
-          audioUrl,
-          playerWaveStyle,
-          audioPlaybackState,
-        );
+        ref.read(audioWavePlaybackServiceProvider).initializePlayer(
+              id,
+              audioUrl,
+              audioPlaybackController,
+              playerWaveStyle,
+            );
 
         // Listen to player state changes
         audioPlaybackController.onPlayerStateChanged.listen((event) {
@@ -102,42 +98,5 @@ class AudioMessage extends HookWidget {
         ),
       ),
     );
-  }
-}
-
-Future<void> _initializePlayer(
-  PlayerController audioPlaybackController,
-  String id,
-  String audioUrl,
-  PlayerWaveStyle playerWaveStyle,
-  ValueNotifier<PlayerState?> audioPlaybackState,
-) async {
-  Future<void> preparePlayer(String path) async {
-    try {
-      await audioPlaybackController.preparePlayer(
-        path: path,
-        noOfSamples: playerWaveStyle.getSamplesForWidth(158.0.s),
-      );
-    } catch (e, s) {
-      Logger.log('Error preparing player', error: e, stackTrace: s);
-    }
-  }
-
-  try {
-    final documentsDir = await getApplicationDocumentsDirectory();
-    final cachePath = '${documentsDir.path}/$id';
-    final file = File(cachePath);
-
-    if (file.existsSync()) {
-      await preparePlayer(cachePath);
-    } else {
-      final savedFilePath = await FileSaver.instance.saveFile(
-        name: id,
-        link: LinkDetails(link: audioUrl),
-      );
-      await preparePlayer(savedFilePath);
-    }
-  } catch (e, s) {
-    Logger.log('Error initializing player', error: e, stackTrace: s);
   }
 }
