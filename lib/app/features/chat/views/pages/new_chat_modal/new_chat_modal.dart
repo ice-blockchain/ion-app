@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -14,13 +12,11 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class NewChatModal extends ConsumerWidget {
+class NewChatModal extends StatelessWidget {
   const NewChatModal({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final searchController = useTextEditingController();
-
+  Widget build(BuildContext context) {
     return SheetContent(
       topPadding: 0,
       body: Column(
@@ -34,11 +30,10 @@ class NewChatModal extends ConsumerWidget {
           ScreenSideOffset.small(
             child: Column(
               children: [
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: SearchInput(
-                        controller: searchController,
                         textInputAction: TextInputAction.search,
                       ),
                     ),
