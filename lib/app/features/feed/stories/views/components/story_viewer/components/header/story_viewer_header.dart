@@ -1,13 +1,20 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/header.dart';
+import 'package:ion/app/utils/username.dart';
 
 class StoryViewerHeader extends StatelessWidget {
-  const StoryViewerHeader({required this.currentStory, super.key});
+  const StoryViewerHeader({
+    required this.currentStory,
+    super.key,
+  });
+
   final Story currentStory;
 
   @override
@@ -16,20 +23,29 @@ class StoryViewerHeader extends StatelessWidget {
       top: 14.0.s,
       left: 16.0.s,
       right: 22.0.s,
-      child: Row(
-        children: [
-          Avatar(
-            imageUrl: currentStory.data.imageUrl,
-            size: 30.0.s,
+      child: ListItem.user(
+        profilePicture: currentStory.data.imageUrl,
+        title: Text(
+          currentStory.data.author,
+          style: context.theme.appTextThemes.subtitle3.copyWith(
+            color: context.theme.appColors.onPrimaryAccent,
           ),
-          SizedBox(width: 8.0.s),
-          Expanded(
-            child: UserInfo(author: currentStory.data.author),
+        ),
+        subtitle: Text(
+          prefixUsername(
+            username: currentStory.data.author,
+            context: context,
           ),
-          HeaderActions(
-            story: currentStory,
+          style: context.theme.appTextThemes.caption.copyWith(
+            color: context.theme.appColors.onPrimaryAccent,
           ),
-        ],
+        ),
+        iceBadge: Random().nextBool(),
+        verifiedBadge: Random().nextBool(),
+        trailing: HeaderActions(story: currentStory),
+        backgroundColor: Colors.transparent,
+        contentPadding: EdgeInsets.zero,
+        constraints: BoxConstraints(minHeight: 30.0.s),
       ),
     );
   }
