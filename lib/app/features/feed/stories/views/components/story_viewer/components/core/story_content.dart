@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_viewer_header.dart';
 
 class StoryContent extends HookConsumerWidget {
   const StoryContent({

@@ -5,5 +5,4 @@ export 'story_content.dart';
 export 'story_gesture_handler.dart';
 export 'story_input_field.dart';
 export 'story_viewer_action_buttons.dart';
-export 'story_viewer_header.dart';
 export 'user_story_page_view.dart';
