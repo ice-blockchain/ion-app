@@ -6,11 +6,13 @@ class _MetaDataPreview extends StatelessWidget {
   const _MetaDataPreview({
     required this.meta,
     required this.url,
+    required this.favIconUrl,
     required this.isMe,
   });
 
   final OgpData meta;
   final String url;
+  final String favIconUrl;
   final bool isMe;
 
   @override
@@ -39,7 +41,8 @@ class _MetaDataPreview extends StatelessWidget {
                   _MetaImage(
                     imageUrl: resolveImageUrl(url, meta.image!),
                   ),
-                if (meta.siteName != null) _MetaSiteInfo(meta.siteName!, url: url, isMe: isMe),
+                if (meta.siteName != null)
+                  _MetaSiteInfo(meta.siteName!, favIconUrl: favIconUrl, isMe: isMe),
                 if (meta.title != null) _MetaTitle(meta.title!, isMe: isMe),
                 if (meta.description != null) _MetaDescription(meta.description!, isMe: isMe),
                 Align(
@@ -86,12 +89,12 @@ class _MetaImage extends StatelessWidget {
 class _MetaSiteInfo extends StatelessWidget {
   const _MetaSiteInfo(
     this.siteName, {
-    required this.url,
+    required this.favIconUrl,
     required this.isMe,
   });
 
   final String siteName;
-  final String url;
+  final String favIconUrl;
   final bool isMe;
 
   @override
@@ -101,7 +104,7 @@ class _MetaSiteInfo extends StatelessWidget {
       child: Row(
         children: [
           CachedNetworkImage(
-            imageUrl: resolveFavIconUrl(url),
+            imageUrl: favIconUrl,
             width: 16.0.s,
             height: 16.0.s,
             errorWidget: (context, url, error) => const SizedBox.shrink(),
@@ -118,10 +121,6 @@ class _MetaSiteInfo extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String resolveFavIconUrl(String baseUrl) {
-    return '${Uri.parse(baseUrl).origin}/favicon.ico';
   }
 }
 
