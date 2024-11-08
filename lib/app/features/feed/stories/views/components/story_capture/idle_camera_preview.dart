@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/story_control_button.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class IdleCameraPreview extends ConsumerWidget {
@@ -42,13 +47,26 @@ class IdleCameraPreview extends ConsumerWidget {
             onPressed: () => ref.read(cameraControllerNotifierProvider.notifier).switchCamera(),
           ),
         ),
-        // TODO: Implement the open gallery button
         Positioned(
           bottom: 30.0.s,
           left: 16.0.s,
-          child: StoryControlButton(
-            icon: Assets.svg.iconGalleryOpen.icon(color: context.theme.appColors.onPrimaryAccent),
-            onPressed: () {},
+          child: PermissionAwareWidget(
+            permissionType: Permission.photos,
+            onGranted: () async {
+              if (context.mounted) {
+                final mediaFiles = await MediaPickerRoute().push<List<MediaFile>>(context);
+
+                if (mediaFiles != null && mediaFiles.isNotEmpty) {}
+              }
+            },
+            requestDialog: PermissionRequestSheet.fromType(context, Permission.photos),
+            settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
+            builder: (context, onPressed) => StoryControlButton(
+              onPressed: onPressed,
+              icon: Assets.svg.iconGalleryOpen.icon(
+                color: context.theme.appColors.onPrimaryAccent,
+              ),
+            ),
           ),
         ),
       ],
