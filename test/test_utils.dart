@@ -2,6 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:meta/meta.dart';
 
 /// A testing utility which creates a [ProviderContainer] and automatically
 /// disposes it at the end of the test.
@@ -21,4 +22,16 @@ ProviderContainer createContainer({
   addTearDown(container.dispose);
 
   return container;
+}
+
+@isTestGroup
+void parameterizedGroup<T>(Object description, List<T> testData, void Function(T t) tester) {
+  group(
+    description,
+    () {
+      for (final t in testData) {
+        tester(t);
+      }
+    },
+  );
 }

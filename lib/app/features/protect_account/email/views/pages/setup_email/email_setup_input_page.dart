@@ -15,6 +15,7 @@ import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/utils/validators.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class EmailSetupInputPage extends HookConsumerWidget {
@@ -46,7 +47,7 @@ class EmailSetupInputPage extends HookConsumerWidget {
                     labelText: context.i18n.common_email_address,
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
-                    validator: (value) => (value?.isEmpty ?? false) ? '' : null,
+                    validator: (value) => Validators.isInvalidEmail(value) ? '' : null,
                     textInputAction: TextInputAction.done,
                     scrollPadding: EdgeInsets.only(bottom: 200.0.s),
                   ),

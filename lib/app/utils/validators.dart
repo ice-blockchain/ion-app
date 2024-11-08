@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:dlibphonenumber/dlibphonenumber.dart';
 import 'package:email_validator/email_validator.dart';
 
 class Validators {
@@ -32,5 +33,16 @@ class Validators {
 
   static bool isInvalidNumber(String? value) {
     return isEmpty(value) || double.tryParse(value!) == null;
+  }
+
+  static bool isValidPhoneNumber(String? countryCode, String? phoneNumber) {
+    try {
+      return !isEmpty(phoneNumber) &&
+          PhoneNumberUtil.instance.isPossibleNumber(
+            PhoneNumberUtil.instance.parse('$countryCode$phoneNumber', null),
+          );
+    } catch (e) {
+      return false;
+    }
   }
 }

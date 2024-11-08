@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/coin_data.dart';
 import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
-import 'package:ion/app/utils/address.dart';
+import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CoinAddressTile extends HookConsumerWidget {
