@@ -14,8 +14,9 @@ Future<Raw<IONIdentity>> ionIdentity(Ref ref) async {
   await ref.watch(envProvider.future);
   final envController = ref.watch(envProvider.notifier);
 
-  final appId = envController
-      .get(Platform.isAndroid ? EnvVariable.ION_ANDROID_APP_ID : EnvVariable.ION_IOS_APP_ID);
+  final appId = envController.get<String>(
+    Platform.isAndroid ? EnvVariable.ION_ANDROID_APP_ID : EnvVariable.ION_IOS_APP_ID,
+  );
 
   final config = IONIdentityConfig(
     appId: appId,
