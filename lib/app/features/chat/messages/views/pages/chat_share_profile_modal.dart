@@ -10,8 +10,8 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class ShareProfileModal extends StatelessWidget {
-  const ShareProfileModal({super.key});
+class ChatShareProfileModal extends StatelessWidget {
+  const ChatShareProfileModal({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class ShareProfileModal extends StatelessWidget {
         children: [
           NavigationAppBar.modal(
             showBackButton: false,
-            title: Text(context.i18n.new_chat_modal_title),
+            title: Text(context.i18n.chat_profile_share_modal_title),
             actions: [NavigationCloseButton(onPressed: () => context.pop())],
           ),
           SizedBox(height: 9.0.s),

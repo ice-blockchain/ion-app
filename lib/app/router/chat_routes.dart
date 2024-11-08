@@ -71,7 +71,7 @@ class ChatLearnMoreModalRoute extends BaseRouteData {
 class ShareProfileModalRoute extends BaseRouteData {
   ShareProfileModalRoute()
       : super(
-          child: const ShareProfileModal(),
+          child: const ChatShareProfileModal(),
           type: IceRouteType.bottomSheet,
         );
 }
