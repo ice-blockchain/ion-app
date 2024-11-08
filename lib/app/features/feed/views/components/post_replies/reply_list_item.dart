@@ -2,7 +2,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_header.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/router/app_routes.dart';

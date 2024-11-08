@@ -2,19 +2,19 @@
 
 import 'dart:math';
 
-import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:nostr_dart/nostr_dart.dart';
 
 PostEntity generateFakePost() {
+  final keyStore = KeyStore.generate();
   final random = Random.secure();
-  final post = PostEntity(
-    id: random.nextInt(10000000).toString(),
-    pubkey: '91d0411861e83ab3353739bc9da3b33f24dbb741a0f524bdf2ab51648c6866e0',
-    createdAt: DateTime.now(),
-    data: PostData.fromRawContent(
-      rawContent: _fakeFeedMessages.elementAt(random.nextInt(_fakeFeedMessages.length)),
+  return PostEntity.fromEventMessage(
+    EventMessage.fromData(
+      signer: keyStore,
+      kind: PostEntity.kind,
+      content: _fakeFeedMessages.elementAt(random.nextInt(_fakeFeedMessages.length)),
     ),
   );
-  return post;
 }
 
 const _fakeFeedMessages = [
