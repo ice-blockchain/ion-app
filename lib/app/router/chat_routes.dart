@@ -12,6 +12,7 @@ class ChatRoutes {
         TypedGoRoute<DeleteConversationRoute>(path: 'delete/:conversationId'),
         TypedGoRoute<NewChatModalRoute>(path: 'new-chat'),
         TypedGoRoute<ChatLearnMoreModalRoute>(path: 'learn-more'),
+        TypedGoRoute<ShareProfileModalRoute>(path: 'share-profile'),
       ],
     ),
   ];
@@ -63,6 +64,14 @@ class ChatLearnMoreModalRoute extends BaseRouteData {
   ChatLearnMoreModalRoute()
       : super(
           child: const ChatLearnMoreModal(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ShareProfileModalRoute extends BaseRouteData {
+  ShareProfileModalRoute()
+      : super(
+          child: const ShareProfileModal(),
           type: IceRouteType.bottomSheet,
         );
 }

@@ -17,7 +17,6 @@ class BottomBarInitialView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = useTextEditingController();
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
-    final controllerFocusNode = useFocusNode();
 
     useEffect(
       () {
@@ -42,8 +41,6 @@ class BottomBarInitialView extends HookConsumerWidget {
         if (bottomBarState.isText) {
           WidgetsBinding.instance.addPostFrameCallback((_) async {
             controller.clear();
-            // await Future<void>.delayed(const Duration(milliseconds: 500));
-            FocusScope.of(context).requestFocus(controllerFocusNode);
           });
         }
         return null;
@@ -93,7 +90,6 @@ class BottomBarInitialView extends HookConsumerWidget {
               Expanded(
                 child: TextField(
                   controller: controller,
-                  focusNode: controllerFocusNode,
                   style: context.theme.appTextThemes.body2.copyWith(
                     color: context.theme.appColors.primaryText,
                   ),
