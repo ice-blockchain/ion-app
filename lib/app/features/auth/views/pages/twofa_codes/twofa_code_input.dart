@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -24,7 +26,7 @@ class TwoFaCodeInput extends StatelessWidget {
 
   final TextEditingController controller;
   final TwoFaType twoFaType;
-  final VoidCallback? onRequestCode;
+  final Future<void> Function()? onRequestCode;
   final bool isSending;
 
   @override
@@ -61,7 +63,7 @@ class SendButton extends HookConsumerWidget {
     super.key,
   });
 
-  final VoidCallback? onRequestCode;
+  final Future<void> Function()? onRequestCode;
   final bool isSending;
 
   @override
@@ -87,9 +89,10 @@ class SendButton extends HookConsumerWidget {
             ? IONLoadingIndicator(type: isLightTheme ? IndicatorType.dark : IndicatorType.light)
             : TextInputTextButton(
                 onPressed: () {
-                  onRequestCode?.call();
-                  isSent.value = true;
-                  startCountdown();
+                  onRequestCode?.call().then((_) {
+                    isSent.value = true;
+                    startCountdown();
+                  });
                 },
                 label: isSent.value ? context.i18n.button_retry : context.i18n.button_send,
               );

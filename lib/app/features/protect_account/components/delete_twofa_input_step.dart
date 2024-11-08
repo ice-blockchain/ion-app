@@ -27,16 +27,22 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isRequesting = ref.watch(requestTwoFaCodeNotifierProvider).isLoading;
+    final isRequesting = ref.watch(
+      requestTwoFaCodeNotifierProvider.select(
+        (value) => value.isLoading,
+      ),
+    );
 
     final formKey = useRef(GlobalKey<FormState>());
 
-    final controllers = {
-      for (final type in twoFaTypes)
-        type: useTextEditingController.fromValue(TextEditingValue.empty),
-    };
+    final controllers = useMemoized(
+      () => {
+        for (final type in twoFaTypes)
+          type: useTextEditingController.fromValue(TextEditingValue.empty),
+      },
+    );
 
-    _listenDeleteTwoFAResult(context, ref);
+    _listenDeleteTwoFAResult(ref);
 
     return ScreenSideOffset.large(
       child: Form(
@@ -52,8 +58,8 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
                     child: TwoFaCodeInput(
                       controller: controllers[twoFaType]!,
                       twoFaType: twoFaType,
-                      onRequestCode: () {
-                        ref
+                      onRequestCode: () async {
+                        await ref
                             .read(requestTwoFaCodeNotifierProvider.notifier)
                             .requestTwoFaCode(twoFaType);
                       },
@@ -66,12 +72,9 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
               mainAxisSize: MainAxisSize.max,
               label: Text(context.i18n.button_confirm),
               onPressed: () {
-                final isFormValid = formKey.value.currentState!.validate();
-                if (!isFormValid) {
-                  return;
+                if (formKey.value.currentState!.validate()) {
+                  _onConfirm(ref, controllers);
                 }
-
-                _onConfirm(ref, context, controllers);
               },
             ),
           ],
@@ -82,18 +85,18 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
 
   void _onConfirm(
     WidgetRef ref,
-    BuildContext context,
     Map<TwoFaType, TextEditingController> controllers,
   ) {
     ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
       const TwoFAType.authenticator(),
       [
-        for (final e in controllers.entries) TwoFaTypeAdapter(e.key, e.value.text).twoFAType,
+        for (final controller in controllers.entries)
+          TwoFaTypeAdapter(controller.key, controller.value.text).twoFAType,
       ],
     );
   }
 
-  void _listenDeleteTwoFAResult(BuildContext context, WidgetRef ref) {
+  void _listenDeleteTwoFAResult(WidgetRef ref) {
     ref.listen(deleteTwoFANotifierProvider, (prev, next) {
       if (prev?.isLoading != true) {
         return;
@@ -101,7 +104,7 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
 
       if (next.hasError) {
         showSimpleBottomSheet<void>(
-          context: context,
+          context: ref.context,
           child: const TwoFaTryAgainPage(),
         );
         return;

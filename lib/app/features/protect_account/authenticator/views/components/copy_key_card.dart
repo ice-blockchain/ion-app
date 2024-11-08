@@ -11,7 +11,8 @@ import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/services/clipboard/clipboard.dart';
+import 'package:ion/app/utils/clipboard.dart';
+import 'package:ion/app/utils/future.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
@@ -75,11 +76,10 @@ class CopyKeyCard extends HookConsumerWidget {
                 ? context.theme.appColors.success
                 : context.theme.appColors.strokeElements,
             onPressed: () {
-              code.value?.let(copyToClipboard);
+              if (code.value == null) return;
+              copyToClipboard(code.value!);
               isCopied.value = true;
-              Future<void>.delayed(const Duration(seconds: 3)).then((_) {
-                isCopied.value = false;
-              });
+              delayed(() => isCopied.value = false, after: 3.seconds);
             },
             label: Text(
               isCopied.value ? context.i18n.wallet_copied : context.i18n.wallet_copy,
