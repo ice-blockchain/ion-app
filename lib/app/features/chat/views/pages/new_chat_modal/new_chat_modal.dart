@@ -30,50 +30,22 @@ class NewChatModal extends StatelessWidget {
           ScreenSideOffset.small(
             child: Column(
               children: [
-                const Row(
-                  children: [
-                    Expanded(
-                      child: SearchInput(
-                        textInputAction: TextInputAction.search,
-                      ),
-                    ),
-                  ],
+                const SearchInput(
+                  textInputAction: TextInputAction.search,
                 ),
                 SizedBox(height: 12.0.s),
                 Row(
                   children: [
-                    Expanded(
-                      child: Button.compact(
-                        leadingIcon: Assets.svg.iconSearchGroups.icon(
-                          size: 16.0.s,
-                          color: context.theme.appColors.primaryAccent,
-                        ),
-                        type: ButtonType.outlined,
-                        onPressed: () {},
-                        label: Text(
-                          context.i18n.new_chat_modal_new_group_button,
-                          style: context.theme.appTextThemes.body.copyWith(
-                            color: context.theme.appColors.primaryText,
-                          ),
-                        ),
-                      ),
+                    _HeaderButton(
+                      icon: Assets.svg.iconSearchGroups,
+                      title: context.i18n.new_chat_modal_new_group_button,
+                      onTap: () {},
                     ),
                     SizedBox(width: 20.0.s),
-                    Expanded(
-                      child: Button.compact(
-                        leadingIcon: Assets.svg.iconSearchChannel.icon(
-                          size: 16.0.s,
-                          color: context.theme.appColors.primaryAccent,
-                        ),
-                        type: ButtonType.outlined,
-                        onPressed: () {},
-                        label: Text(
-                          context.i18n.new_chat_modal_new_channel_button,
-                          style: context.theme.appTextThemes.body.copyWith(
-                            color: context.theme.appColors.primaryText,
-                          ),
-                        ),
-                      ),
+                    _HeaderButton(
+                      icon: Assets.svg.iconSearchChannel,
+                      title: context.i18n.new_chat_modal_new_channel_button,
+                      onTap: () {},
                     ),
                   ],
                 ),
@@ -82,6 +54,38 @@ class NewChatModal extends StatelessWidget {
           ),
           const NewChatInitialView(),
         ],
+      ),
+    );
+  }
+}
+
+class _HeaderButton extends StatelessWidget {
+  const _HeaderButton({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
+
+  final String icon;
+  final String title;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Button.compact(
+        leadingIcon: icon.icon(
+          size: 16.0.s,
+          color: context.theme.appColors.primaryAccent,
+        ),
+        type: ButtonType.outlined,
+        onPressed: onTap,
+        label: Text(
+          title,
+          style: context.theme.appTextThemes.body.copyWith(
+            color: context.theme.appColors.primaryText,
+          ),
+        ),
       ),
     );
   }

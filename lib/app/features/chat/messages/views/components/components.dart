@@ -2,8 +2,8 @@
 
 export 'audio_loading_indicator/audio_loading_indicator.dart';
 export 'chat_date_header_text/chat_date_header_text.dart';
-export 'mesage_timestamp/mesage_timestamp.dart';
 export 'message_item_wrapper/message_item_wrapper.dart';
+export 'message_metadata/message_metadata.dart';
 export 'message_types/audio_message/audio_message.dart';
 export 'message_types/emoji_message/emoji_message.dart';
 export 'message_types/money_message/money_message.dart';

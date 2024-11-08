@@ -30,7 +30,7 @@ class _MessageWithTimestamp extends StatelessWidget {
               ),
             ),
           ),
-          MessageTimeStamp(isMe: isMe),
+          MessageMetaData(isMe: isMe),
         ],
       ),
     );

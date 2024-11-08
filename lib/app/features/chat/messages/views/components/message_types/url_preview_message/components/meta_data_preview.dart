@@ -44,7 +44,7 @@ class _MetaDataPreview extends StatelessWidget {
                 if (meta.description != null) _MetaDescription(meta.description!, isMe: isMe),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: MessageTimeStamp(isMe: isMe),
+                  child: MessageMetaData(isMe: isMe),
                 ),
               ],
             ),

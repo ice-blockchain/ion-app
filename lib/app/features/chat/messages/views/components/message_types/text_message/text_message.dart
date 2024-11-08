@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/mesage_timestamp/mesage_timestamp.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 
 class TextMessage extends StatelessWidget {
   const TextMessage({required this.message, required this.isMe, super.key});
@@ -33,7 +33,7 @@ class TextMessage extends StatelessWidget {
               ),
             ),
           ),
-          MessageTimeStamp(isMe: isMe),
+          MessageMetaData(isMe: isMe),
         ],
       ),
     );

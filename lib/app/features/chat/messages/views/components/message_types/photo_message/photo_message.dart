@@ -4,8 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/mesage_timestamp/mesage_timestamp.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 
 class PhotoMessage extends HookWidget {
   const PhotoMessage({
@@ -93,7 +93,7 @@ class _MessageContent extends StatelessWidget {
               ),
             ),
           ),
-          MessageTimeStamp(isMe: isMe),
+          MessageMetaData(isMe: isMe),
         ],
       ),
     );

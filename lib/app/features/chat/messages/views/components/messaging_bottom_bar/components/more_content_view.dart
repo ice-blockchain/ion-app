@@ -20,41 +20,20 @@ class MoreContentView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Column(
-                children: [
-                  Assets.svg.walletChatPhotos.icon(
-                    size: 48.0.s,
-                  ),
-                  SizedBox(width: 8.0.s),
-                  Text(
-                    context.i18n.common_photos,
-                    style: context.theme.appTextThemes.body2,
-                  ),
-                ],
+              _MoreContentItem(
+                iconPath: Assets.svg.walletChatPhotos,
+                title: context.i18n.common_photos,
+                onTap: () {},
               ),
-              Column(
-                children: [
-                  Assets.svg.walletChatCamera.icon(
-                    size: 48.0.s,
-                  ),
-                  SizedBox(width: 8.0.s),
-                  Text(
-                    context.i18n.common_camera,
-                    style: context.theme.appTextThemes.body2,
-                  ),
-                ],
+              _MoreContentItem(
+                iconPath: Assets.svg.walletChatCamera,
+                title: context.i18n.common_camera,
+                onTap: () {},
               ),
-              Column(
-                children: [
-                  Assets.svg.walletChatIonpay.icon(
-                    size: 48.0.s,
-                  ),
-                  SizedBox(width: 8.0.s),
-                  Text(
-                    context.i18n.common_ion_pay,
-                    style: context.theme.appTextThemes.body2,
-                  ),
-                ],
+              _MoreContentItem(
+                iconPath: Assets.svg.walletChatIonpay,
+                title: context.i18n.common_ion_pay,
+                onTap: () {},
               ),
             ],
           ),
@@ -62,43 +41,53 @@ class MoreContentView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Column(
-                children: [
-                  Assets.svg.walletChatPerson.icon(
-                    size: 48.0.s,
-                  ),
-                  SizedBox(width: 8.0.s),
-                  Text(
-                    context.i18n.common_profile,
-                    style: context.theme.appTextThemes.body2,
-                  ),
-                ],
+              _MoreContentItem(
+                iconPath: Assets.svg.walletChatPerson,
+                title: context.i18n.common_profile,
+                onTap: () {},
               ),
-              Column(
-                children: [
-                  Assets.svg.walletChatDocument.icon(
-                    size: 48.0.s,
-                  ),
-                  SizedBox(width: 8.0.s),
-                  Text(
-                    context.i18n.common_document,
-                    style: context.theme.appTextThemes.body2,
-                  ),
-                ],
+              _MoreContentItem(
+                iconPath: Assets.svg.walletChatDocument,
+                title: context.i18n.common_document,
+                onTap: () {},
               ),
-              Column(
-                children: [
-                  Assets.svg.walletChatPoll.icon(
-                    size: 48.0.s,
-                  ),
-                  SizedBox(width: 8.0.s),
-                  Text(
-                    context.i18n.common_poll,
-                    style: context.theme.appTextThemes.body2,
-                  ),
-                ],
+              _MoreContentItem(
+                iconPath: Assets.svg.walletChatPoll,
+                title: context.i18n.common_poll,
+                onTap: () {},
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MoreContentItem extends StatelessWidget {
+  const _MoreContentItem({
+    required this.iconPath,
+    required this.title,
+    required this.onTap,
+  });
+
+  final String iconPath;
+  final String title;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          iconPath.icon(
+            size: 48.0.s,
+          ),
+          SizedBox(width: 8.0.s),
+          Text(
+            title,
+            style: context.theme.appTextThemes.body2,
           ),
         ],
       ),

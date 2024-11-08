@@ -25,11 +25,15 @@ class _ListItemUser extends ListItem {
     bool ntfAvatar = false,
     super.isSelected,
     DateTime? timeago,
+
+    /// Pass a resized value (e.g., 30.0.s) instead of a raw value (e.g., 30.0)
+    /// to ensure proper scaling across different screen sizes.
+    double? avatarSize,
   }) : super(
           leading: leading ??
               (profilePicture != null || profilePictureWidget != null
                   ? Avatar(
-                      size: avatarSize,
+                      size: avatarSize ?? defaultavatarSize,
                       imageUrl: profilePicture,
                       badge: showProfilePictureIceBadge ? const _IceBadge() : null,
                       imageWidget: profilePictureWidget,
@@ -46,12 +50,12 @@ class _ListItemUser extends ListItem {
               if (iceBadge)
                 Padding(
                   padding: EdgeInsets.only(left: 4.0.s),
-                  child: Assets.svg.iconBadgeIcelogo.icon(size: badgeSize),
+                  child: Assets.svg.iconBadgeIcelogo.icon(size: defaultBadgeSize),
                 ),
               if (verifiedBadge)
                 Padding(
                   padding: EdgeInsets.only(left: 4.0.s),
-                  child: Assets.svg.iconBadgeVerify.icon(size: badgeSize),
+                  child: Assets.svg.iconBadgeVerify.icon(size: defaultBadgeSize),
                 ),
             ],
           ),
@@ -64,9 +68,9 @@ class _ListItemUser extends ListItem {
           ),
         );
 
-  static double get avatarSize => 30.0.s;
+  static double get defaultavatarSize => 30.0.s;
 
-  static double get badgeSize => 16.0.s;
+  static double get defaultBadgeSize => 16.0.s;
 
   @override
   Color _getBackgroundColor(BuildContext context) {

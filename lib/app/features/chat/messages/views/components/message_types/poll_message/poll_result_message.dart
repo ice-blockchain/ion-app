@@ -41,7 +41,7 @@ class PollResultMessage extends StatelessWidget {
           SizedBox(height: 4.0.s),
           Align(
             alignment: Alignment.centerRight,
-            child: MessageTimeStamp(isMe: isMe),
+            child: MessageMetaData(isMe: isMe),
           ),
         ],
       ),
@@ -64,53 +64,71 @@ class _PollItemList extends StatelessWidget {
       itemBuilder: (context, index) {
         final option = mockPoll.options[index];
 
-        final percentage = option.votes /
-            mockPoll.options.map((e) => e.votes).reduce((value, element) => value + element);
-        return Stack(
-          alignment: Alignment.centerLeft,
-          children: [
-            Expanded(
-              child: LinearProgressIndicator(
-                value: percentage,
-                minHeight: 28.0.s,
-                borderRadius: BorderRadius.circular(12.0.s),
-                backgroundColor: Colors.transparent,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  isMe ? context.theme.appColors.darkBlue : context.theme.appColors.onTerararyFill,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 12.0.s,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    option.option,
-                    style: context.theme.appTextThemes.caption2.copyWith(
-                      color: isMe
-                          ? context.theme.appColors.onPrimaryAccent
-                          : context.theme.appColors.primaryText,
-                    ),
-                  ),
-                  Text(
-                    '${(percentage * 100).toInt()}%',
-                    style: context.theme.appTextThemes.caption2.copyWith(
-                      color: isMe
-                          ? context.theme.appColors.onPrimaryAccent
-                          : context.theme.appColors.primaryText,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
+        return _PollResultItem(isMe: isMe, option: option);
       },
       separatorBuilder: (context, index) => SizedBox(height: 10.0.s),
       itemCount: mockPoll.options.length,
+    );
+  }
+}
+
+class _PollResultItem extends HookWidget {
+  const _PollResultItem({
+    required this.isMe,
+    required this.option,
+  });
+
+  final bool isMe;
+  final PollItem option;
+
+  @override
+  Widget build(BuildContext context) {
+    final percentage = useMemoized(() {
+      return option.votes /
+          mockPoll.options.map((e) => e.votes).reduce((value, element) => value + element);
+    });
+
+    return Stack(
+      alignment: Alignment.centerLeft,
+      children: [
+        Expanded(
+          child: LinearProgressIndicator(
+            value: percentage,
+            minHeight: 28.0.s,
+            borderRadius: BorderRadius.circular(12.0.s),
+            backgroundColor: Colors.transparent,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              isMe ? context.theme.appColors.darkBlue : context.theme.appColors.onTerararyFill,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            left: 12.0.s,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                option.option,
+                style: context.theme.appTextThemes.caption2.copyWith(
+                  color: isMe
+                      ? context.theme.appColors.onPrimaryAccent
+                      : context.theme.appColors.primaryText,
+                ),
+              ),
+              Text(
+                '${(percentage * 100).toInt()}%',
+                style: context.theme.appTextThemes.caption2.copyWith(
+                  color: isMe
+                      ? context.theme.appColors.onPrimaryAccent
+                      : context.theme.appColors.primaryText,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

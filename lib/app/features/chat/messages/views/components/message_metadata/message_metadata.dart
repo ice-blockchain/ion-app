@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class MessageTimeStamp extends StatelessWidget {
-  const MessageTimeStamp({
+class MessageMetaData extends StatelessWidget {
+  const MessageMetaData({
     required this.isMe,
     super.key,
   });

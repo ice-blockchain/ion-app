@@ -7,8 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/hooks/use_audio_playback_controller.dart';
 import 'package:ion/app/features/chat/messages/views/components/audio_loading_indicator/audio_loading_indicator.dart';
-import 'package:ion/app/features/chat/messages/views/components/mesage_timestamp/mesage_timestamp.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -93,7 +93,7 @@ class AudioMessage extends HookConsumerWidget {
               playerWaveStyle: playerWaveStyle,
               isMe: isMe,
             ),
-            MessageTimeStamp(isMe: isMe),
+            MessageMetaData(isMe: isMe),
           ],
         ),
       ),

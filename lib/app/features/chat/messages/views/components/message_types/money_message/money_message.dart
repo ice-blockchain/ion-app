@@ -5,8 +5,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/mesage_timestamp/mesage_timestamp.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -114,7 +114,7 @@ class MoneyMessage extends HookWidget {
           ),
           Align(
             alignment: Alignment.centerRight,
-            child: MessageTimeStamp(isMe: isMe),
+            child: MessageMetaData(isMe: isMe),
           ),
         ],
       ),

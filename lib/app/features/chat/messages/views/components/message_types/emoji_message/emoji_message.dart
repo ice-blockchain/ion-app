@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/mesage_timestamp/mesage_timestamp.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 
 class EmojiMessage extends StatelessWidget {
   const EmojiMessage({required this.emoji, required this.isMe, super.key});
@@ -25,7 +25,7 @@ class EmojiMessage extends StatelessWidget {
             emoji,
             style: context.theme.appTextThemes.headline1.copyWith(height: 1),
           ),
-          MessageTimeStamp(isMe: isMe),
+          MessageMetaData(isMe: isMe),
         ],
       ),
     );

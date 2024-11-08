@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/mesage_timestamp/mesage_timestamp.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/poll_message/mock.dart';
 
 part 'poll_result_message.dart';
@@ -66,7 +66,7 @@ class PollMessage extends HookWidget {
           SizedBox(height: 4.0.s),
           Align(
             alignment: Alignment.centerRight,
-            child: MessageTimeStamp(isMe: isMe),
+            child: MessageMetaData(isMe: isMe),
           ),
         ],
       ),

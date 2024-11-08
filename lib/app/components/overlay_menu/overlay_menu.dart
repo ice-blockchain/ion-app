@@ -24,6 +24,21 @@ class OverlayMenu extends HookWidget {
 
     useHideOnScroll(context, overlayPortalController);
 
+    final hideMenu = useCallback(
+      () {
+        animationController.reverse().whenComplete(overlayPortalController.hide);
+      },
+      [overlayPortalController],
+    );
+
+    final showMenu = useCallback(
+      () {
+        overlayPortalController.show();
+        animationController.forward();
+      },
+      [overlayPortalController],
+    );
+
     return OverlayPortal(
       controller: overlayPortalController,
       overlayChildBuilder: (_) {
@@ -31,9 +46,7 @@ class OverlayMenu extends HookWidget {
 
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
-          onTap: () {
-            animationController.reverse().whenComplete(overlayPortalController.hide);
-          },
+          onTap: hideMenu,
           child: Stack(
             children: [
               CompositedTransformFollower(
@@ -43,9 +56,7 @@ class OverlayMenu extends HookWidget {
                 child: ScaleTransition(
                   alignment: Alignment.topRight,
                   scale: scaleAnimation,
-                  child: menuBuilder(() {
-                    animationController.reverse().whenComplete(overlayPortalController.hide);
-                  }),
+                  child: menuBuilder(hideMenu),
                 ),
               ),
             ],
@@ -53,10 +64,7 @@ class OverlayMenu extends HookWidget {
         );
       },
       child: GestureDetector(
-        onTap: () {
-          overlayPortalController.show();
-          animationController.forward();
-        },
+        onTap: showMenu,
         child: CompositedTransformTarget(
           link: followLink,
           child: child,
