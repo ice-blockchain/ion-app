@@ -128,12 +128,14 @@ class TemplateTextThemes with _$TemplateTextThemes {
     TemplateTextTheme caption,
     TemplateTextTheme caption2,
     TemplateTextTheme caption3,
+    TemplateTextTheme caption4,
   ) = _TemplateTextThemes;
 
   factory TemplateTextThemes.fromJson(Map<String, dynamic> json) =>
       _$TemplateTextThemesFromJson(json);
 
   factory TemplateTextThemes.empty() => TemplateTextThemes(
+        TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),
         TemplateTextTheme.empty(),

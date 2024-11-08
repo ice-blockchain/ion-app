@@ -56,6 +56,7 @@ class ListItem extends StatelessWidget {
     bool ntfAvatar,
     bool isSelected,
     DateTime? timeago,
+    double? avatarSize,
   }) = _ListItemUser;
 
   factory ListItem.text({
