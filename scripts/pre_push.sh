@@ -1,6 +1,6 @@
 #!/bin/bash
 
-printf "\e[33;1m%s\e[0m\n" 'Pre-Commit'
+printf "\e[33;1m%s\e[0m\n" 'Pre-Push'
 
 # Format Code
 printf "\e[33;1m%s\e[0m\n" '=== Format Code ==='
@@ -62,5 +62,5 @@ fi
 printf "\e[33;1m%s\e[0m\n" 'Finished running Run Tests'
 printf '%s\n' "${avar}"
 
-# If we made it this far, the commit is allowed
+# If we made it this far, the commit is pushed
 exit 0
