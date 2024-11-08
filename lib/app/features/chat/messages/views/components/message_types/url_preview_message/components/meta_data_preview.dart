@@ -20,19 +20,7 @@ class _MetaDataPreview extends StatelessWidget {
     return IntrinsicHeight(
       child: Row(
         children: [
-          Container(
-            width: 2.0.s,
-            margin: EdgeInsets.only(right: 8.0.s),
-            decoration: BoxDecoration(
-              color: isMe
-                  ? context.theme.appColors.onPrimaryAccent
-                  : context.theme.appColors.primaryAccent,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(2.0.s),
-                bottomLeft: Radius.circular(2.0.s),
-              ),
-            ),
-          ),
+          _SideVerticalDivider(isMe: isMe),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,11 +44,29 @@ class _MetaDataPreview extends StatelessWidget {
       ),
     );
   }
+}
 
-  String resolveImageUrl(String baseUrl, String imageUrl) {
-    return imageUrl.startsWith('/')
-        ? Uri.parse(Uri.parse(baseUrl).origin + imageUrl).toString()
-        : imageUrl;
+class _SideVerticalDivider extends StatelessWidget {
+  const _SideVerticalDivider({
+    required this.isMe,
+  });
+
+  final bool isMe;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 2.0.s,
+      margin: EdgeInsets.only(right: 8.0.s),
+      decoration: BoxDecoration(
+        color:
+            isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryAccent,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(2.0.s),
+          bottomLeft: Radius.circular(2.0.s),
+        ),
+      ),
+    );
   }
 }
 
@@ -164,4 +170,10 @@ class _MetaDescription extends StatelessWidget {
       ),
     );
   }
+}
+
+String resolveImageUrl(String baseUrl, String imageUrl) {
+  return imageUrl.startsWith('/')
+      ? Uri.parse(Uri.parse(baseUrl).origin + imageUrl).toString()
+      : imageUrl;
 }
