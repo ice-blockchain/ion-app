@@ -8,12 +8,15 @@ import 'package:nostr_dart/nostr_dart.dart';
 PostEntity generateFakePost() {
   final keyStore = KeyStore.generate();
   final random = Random.secure();
-  return PostEntity.fromEventMessage(
+  final postEntity = PostEntity.fromEventMessage(
     EventMessage.fromData(
       signer: keyStore,
       kind: PostEntity.kind,
       content: _fakeFeedMessages.elementAt(random.nextInt(_fakeFeedMessages.length)),
     ),
+  );
+  return postEntity.copyWith(
+    pubkey: '5144fe88ff4253c6408ee89ce7fae6f501d84599bc5bd14014d08e489587d5af',
   );
 }
 
