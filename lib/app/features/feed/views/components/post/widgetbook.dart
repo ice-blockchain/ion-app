@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -13,43 +13,42 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
   type: Post,
 )
 Widget feedPostUseCase(BuildContext context) {
+  final keyStore = KeyStore.generate();
+
   return Scaffold(
     body: SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Post(
-            postEntity: PostEntity(
-              id: 'test_1',
-              pubkey: '',
-              createdAt: DateTime.now(),
-              data: PostData.fromRawContent(
-                rawContent: '''
-                ⏰ We expect tomorrow to pre-release our ice app on Android.\n⏳ For iOS, we 
-                are still waiting on @Apple to approve our app. If, for some reason, Apple 
-                will not approve the app in time for 4th April, iOS users will be able to use 
-                a mobile web light version.\n\nAll the best, ice Team''',
+            postEntity: PostEntity.fromEventMessage(
+              EventMessage.fromData(
+                signer: keyStore,
+                kind: PostEntity.kind,
+                content: '''
+                          ⏰ We expect tomorrow to pre-release our ice app on Android.\n⏳ For iOS, we 
+                          are still waiting on @Apple to approve our app. If, for some reason, Apple 
+                          will not approve the app in time for 4th April, iOS users will be able to use 
+                          a mobile web light version.\n\nAll the best, ice Team''',
               ),
             ),
           ),
           Post(
-            postEntity: PostEntity(
-              id: 'test_2',
-              pubkey: '',
-              createdAt: DateTime.now(),
-              data: PostData.fromRawContent(
-                rawContent:
+            postEntity: PostEntity.fromEventMessage(
+              EventMessage.fromData(
+                signer: keyStore,
+                kind: PostEntity.kind,
+                content:
                     'With one image from raw content https://image.nostr.build/33b1f85f04390349c3526cadc11eb1409b0f9c89bc7e1dbc0785361ed7382510.jpg',
               ),
             ),
           ),
           Post(
-            postEntity: PostEntity(
-              id: 'test_2',
-              pubkey: '',
-              createdAt: DateTime.now(),
-              data: PostData.fromRawContent(
-                rawContent:
+            postEntity: PostEntity.fromEventMessage(
+              EventMessage.fromData(
+                signer: keyStore,
+                kind: PostEntity.kind,
+                content:
                     'With multiple images from raw content https://image.nostr.build/33b1f85f04390349c3526cadc11eb1409b0f9c89bc7e1dbc0785361ed7382510.jpg https://m.primal.net/JGZx.jpg https://image.nostr.build/dafdbe5118aa32fbc225f814b450a1d7e981dd5cb1fcff37280c206fef86a8b8.jpg',
               ),
             ),
