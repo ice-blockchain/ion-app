@@ -35,12 +35,10 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
 
     final formKey = useRef(GlobalKey<FormState>());
 
-    final controllers = useMemoized(
-      () => {
-        for (final type in twoFaTypes)
-          type: useTextEditingController.fromValue(TextEditingValue.empty),
-      },
-    );
+    final controllers = {
+      for (final type in twoFaTypes)
+        type: useTextEditingController.fromValue(TextEditingValue.empty),
+    };
 
     _listenDeleteTwoFAResult(ref);
 

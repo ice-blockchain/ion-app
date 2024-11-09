@@ -24,7 +24,7 @@ class DeleteEmailSelectOptionsStep extends HookWidget {
     return DeleteTwoFAStepScaffold(
       progressValue: DeleteTwoFAStep.selectOptions.progressValue,
       title: DeleteTwoFAStep.selectOptions.getAppBarTitle(context),
-      headerIcon: Assets.svg.icon2faEmailVerification.icon(size: 36.0.s),
+      headerIcon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
       headerTitle: locale.two_fa_deleting_email_title,
       headerDescription: locale.two_fa_deleting_email_description,
       child: DeleteTwoFASelectOptionStep(

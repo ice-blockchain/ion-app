@@ -23,7 +23,7 @@ class DeleteEmailInputStep extends ConsumerWidget {
       title: DeleteTwoFAStep.input.getAppBarTitle(context),
       headerTitle: locale.two_fa_deleting_email_title,
       headerDescription: locale.two_fa_deleting_email_description,
-      headerIcon: Assets.svg.icon2faEmailVerification.icon(size: 36.0.s),
+      headerIcon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
       child: DeleteTwoFAInputStep(
         onDeleteSuccess: () => EmailDeleteSuccessRoute().push<void>(context),
         twoFaTypes: ref
