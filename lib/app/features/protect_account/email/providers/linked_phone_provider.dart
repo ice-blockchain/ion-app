@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/user_details_provider.dart';
+import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/app/utils/predicates.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -28,10 +29,6 @@ Future<String> linkedPhone(Ref ref) async {
       0;
 
   final phone = phones[phoneIndex];
-  if (phone.length <= 6) {
-    return phone;
-  }
-  final start = phone.substring(0, 5);
-  final end = phone.substring(phone.length - 2);
-  return '$start***$end';
+
+  return shortenPhoneNumber(phone);
 }

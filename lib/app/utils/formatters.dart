@@ -18,6 +18,13 @@ String shortenAddress(String address) {
       '${address.substring(address.length - 14, address.length)}';
 }
 
+String shortenPhoneNumber(String phoneNumber) {
+  final firstPart = phoneNumber.substring(0, 5);
+  final lastPart = phoneNumber.substring(phoneNumber.length - 2);
+
+  return '$firstPart...$lastPart';
+}
+
 String formatPhoneNumber(String countryCode, String phoneNumber) {
   return PhoneNumberUtil.instance.format(
     PhoneNumberUtil.instance.parse('$countryCode$phoneNumber', null),

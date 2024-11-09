@@ -22,4 +22,16 @@ void main() {
       },
     );
   });
+
+  parameterizedGroup('shortenPhoneNumber', [
+    (phoneNumber: '+1234567890', expected: '+1234...90'),
+  ], (t) {
+    test(
+      'shortenPhoneNumber(${t.phoneNumber})',
+      () {
+        final result = shortenPhoneNumber(t.phoneNumber);
+        expect(result, t.expected);
+      },
+    );
+  });
 }
