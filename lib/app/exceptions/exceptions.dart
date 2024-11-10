@@ -37,8 +37,8 @@ class IncorrectEventKindException extends IONException {
   }) : super(10006, 'Incorrect event $eventId, expected kind $kind');
 }
 
-class IncorrectEventTagException extends IONException {
-  IncorrectEventTagException({
+class IncorrectEventTagNameException extends IONException {
+  IncorrectEventTagNameException({
     required String actual,
     required String expected,
   }) : super(10007, 'Incorrect event tag $actual, expected $expected');
@@ -59,10 +59,14 @@ class GetFileStorageUrlException extends IONException {
 
 class IncorrectEventTagsException extends IONException {
   IncorrectEventTagsException({required String eventId})
-      : super(100011, 'Incorrect event $eventId tags');
+      : super(10011, 'Incorrect event $eventId tags');
 }
 
 class UnknownEventException extends IONException {
   UnknownEventException({required String eventId, required int kind})
-      : super(100012, 'Unknown event $eventId with kind $kind');
+      : super(10012, 'Unknown event $eventId with kind $kind');
+}
+
+class IncorrectEventTagException extends IONException {
+  IncorrectEventTagException({required String tag}) : super(10013, 'Incorrect event tag $tag');
 }
