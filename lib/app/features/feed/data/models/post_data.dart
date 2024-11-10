@@ -28,9 +28,7 @@ class PostEntity with _$PostEntity implements CacheableEntity, NostrEntity {
   /// https://github.com/nostr-protocol/nips/blob/master/01.md
   factory PostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      if (eventMessage.kind != kind) {
-        throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
-      }
+      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
 
     return PostEntity(
@@ -146,9 +144,16 @@ class QuotedEvent with _$QuotedEvent {
   /// https://github.com/nostr-protocol/nips/blob/master/18.md
   factory QuotedEvent.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
-      throw IncorrectEventTagException(actual: tag[0], expected: tagName);
+      throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
-    return QuotedEvent(eventId: tag[1], pubkey: tag[3]);
+    if (tag.length < 4) {
+      //TODO::uncomment and remove stub when using own relays
+      // throw IncorrectEventTagException(tag: tag.toString());
+    }
+    return QuotedEvent(
+      eventId: tag[1],
+      pubkey: /*tag[3]*/ '5e42daa682da9ad308e284b4a50b0967a23d6f352d2b819f40f0d9fa42a1b44d',
+    );
   }
 
   List<String> toTag() {
