@@ -8,8 +8,8 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'article_data.freezed.dart';
 
-@freezed
-class ArticleEntity with _$ArticleEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity {
   const factory ArticleEntity({
     required String id,
     required String pubkey,

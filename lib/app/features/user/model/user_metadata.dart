@@ -13,8 +13,8 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'user_metadata.freezed.dart';
 part 'user_metadata.g.dart';
 
-@freezed
-class UserMetadataEntity with _$UserMetadataEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements CacheableEntity {
   const factory UserMetadataEntity({
     required String id,
     required String pubkey,

@@ -11,8 +11,8 @@ part 'user_delegation.freezed.dart';
 
 enum DelegationStatus { active, inactive, revoked }
 
-@freezed
-class UserDelegationEntity with _$UserDelegationEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class UserDelegationEntity with _$UserDelegationEntity, NostrEntity implements CacheableEntity {
   const factory UserDelegationEntity({
     required String id,
     required String pubkey,

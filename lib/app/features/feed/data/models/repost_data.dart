@@ -9,8 +9,8 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'repost_data.freezed.dart';
 
-@freezed
-class RepostEntity with _$RepostEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
   const factory RepostEntity({
     required String id,
     required String pubkey,
