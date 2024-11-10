@@ -46,12 +46,13 @@ class ArticleDetailsRoute extends BaseRouteData {
 }
 
 class PostDetailsRoute extends BaseRouteData {
-  PostDetailsRoute({required this.postId})
+  PostDetailsRoute({required this.postId, required this.pubkey})
       : super(
-          child: PostDetailsPage(postId: postId),
+          child: PostDetailsPage(postId: postId, pubkey: pubkey),
         );
 
   final String postId;
+  final String pubkey;
 }
 
 class PostReplyModalRoute extends BaseRouteData {
