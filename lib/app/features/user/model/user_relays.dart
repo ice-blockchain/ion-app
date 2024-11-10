@@ -9,8 +9,8 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'user_relays.freezed.dart';
 
-@freezed
-class UserRelaysEntity with _$UserRelaysEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements CacheableEntity {
   const factory UserRelaysEntity({
     required String id,
     required String pubkey,

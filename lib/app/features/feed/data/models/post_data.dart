@@ -14,8 +14,8 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'post_data.freezed.dart';
 
-@freezed
-class PostEntity with _$PostEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
   const factory PostEntity({
     required String id,
     required String pubkey,
@@ -129,6 +129,11 @@ class PostData with _$PostData implements EventSerializable {
       return null;
     }
     return QuotedEvent.fromTag(qTag);
+  }
+
+  @override
+  String toString() {
+    return 'PostData(${content.map((match) => match.text).join()})';
   }
 }
 

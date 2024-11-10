@@ -9,8 +9,8 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'interests.freezed.dart';
 
-@freezed
-class InterestsEntity with _$InterestsEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEntity {
   const factory InterestsEntity({
     required String id,
     required String pubkey,

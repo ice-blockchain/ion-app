@@ -13,8 +13,8 @@ part 'interest_set.freezed.dart';
 
 enum InterestSetType { languages, unknown }
 
-@freezed
-class InterestSetEntity with _$InterestSetEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class InterestSetEntity with _$InterestSetEntity, NostrEntity implements CacheableEntity {
   const factory InterestSetEntity({
     required String id,
     required String pubkey,

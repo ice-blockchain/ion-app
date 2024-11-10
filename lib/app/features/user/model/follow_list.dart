@@ -9,8 +9,8 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'follow_list.freezed.dart';
 
-@freezed
-class FollowListEntity with _$FollowListEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class FollowListEntity with _$FollowListEntity, NostrEntity implements CacheableEntity {
   const factory FollowListEntity({
     required String id,
     required String pubkey,
