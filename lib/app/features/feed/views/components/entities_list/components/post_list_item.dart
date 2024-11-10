@@ -13,7 +13,7 @@ class PostListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => PostDetailsRoute(postId: post.id).push<void>(context),
+      onTap: () => PostDetailsRoute(postId: post.id, pubkey: post.pubkey).push<void>(context),
       child: Post(postEntity: post),
     );
   }
