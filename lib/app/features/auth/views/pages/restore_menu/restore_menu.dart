@@ -40,7 +40,7 @@ class RestoreMenuPage extends StatelessWidget {
                   title: context.i18n.restore_identity_type_credentials_title,
                   description: context.i18n.restore_identity_type_credentials_description,
                   onPressed: () {
-                    RestoreRecoveryKeysRoute().push<void>(context);
+                    RecoverUserRoute().push<void>(context);
                   },
                 ),
                 SizedBox(height: 12.0.s),

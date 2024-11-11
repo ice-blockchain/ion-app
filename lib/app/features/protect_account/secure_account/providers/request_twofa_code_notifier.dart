@@ -4,6 +4,7 @@ import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/adapter/twofa_type_adapter.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/user_details_provider.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
 import 'package:ion/app/utils/predicates.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -16,6 +17,10 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
   FutureOr<void> build() {}
 
   Future<void> requestTwoFaCode(TwoFaType twoFaType) async {
+    if (state.isLoading) {
+      return;
+    }
+
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
@@ -23,6 +28,27 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
       final twoFAType = await _getTwoFAType(twoFaType);
 
       await client.auth.requestTwoFACode(twoFAType: twoFAType);
+    });
+  }
+
+  Future<void> requestRecoveryTwoFaCode(
+    TwoFaType twoFaType,
+    String recoveryIdentityKeyName,
+  ) async {
+    if (state.isLoading) {
+      return;
+    }
+
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      final client = await ref.read(ionIdentityProvider.future);
+      final twoFAType = TwoFaTypeAdapter(twoFaType).twoFAType;
+
+      await client(username: '').auth.requestTwoFACode(
+            twoFAType: twoFAType,
+            recoveryIdentityKeyName: recoveryIdentityKeyName,
+          );
     });
   }
 

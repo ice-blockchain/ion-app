@@ -26,10 +26,12 @@ class RecoverUserService {
   Future<void> recoverUser({
     required String credentialId,
     required String recoveryKey,
+    required List<TwoFAType> twoFATypes,
   }) async {
     final userRegistrationChallenge = await dataSource.createDelegatedRecoveryChallenge(
       username: username,
       credentialId: credentialId,
+      twoFATypes: twoFATypes,
     );
 
     final attestation = await passkeySigner.register(userRegistrationChallenge);

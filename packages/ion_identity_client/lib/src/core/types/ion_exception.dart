@@ -26,6 +26,10 @@ class PasskeyValidationException extends IONIdentityException {
   const PasskeyValidationException() : super('Passkey validation failed');
 }
 
+class TwoFARequiredException extends IONIdentityException {
+  const TwoFARequiredException() : super('Two-factor authentication is required');
+}
+
 class UnknownIONIdentityException extends IONIdentityException {
   const UnknownIONIdentityException([super.message]);
 }

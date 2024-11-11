@@ -11,7 +11,7 @@ import 'package:ion/app/components/inputs/text_input/components/text_input_icons
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
+import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';

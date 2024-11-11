@@ -44,3 +44,35 @@ extension DisplayErrorsExtension on WidgetRef {
     });
   }
 }
+
+extension ListenResultExtension on WidgetRef {
+  void listenError<T>(
+    ProviderListenable<AsyncValue<T>> provider,
+    ValueChanged<Object?> onError,
+  ) {
+    listen(provider, (prev, next) {
+      if (prev?.isLoading != true || next.isLoading == true) {
+        return;
+      }
+
+      if (next.hasError) {
+        onError(next.error);
+      }
+    });
+  }
+
+  void listenSuccess<T>(
+    ProviderListenable<AsyncValue<T>> provider,
+    ValueChanged<T?> onSuccess,
+  ) {
+    listen(provider, (prev, next) {
+      if (prev?.isLoading != true || next.isLoading == true) {
+        return;
+      }
+
+      if (next.hasValue) {
+        onSuccess(next.value);
+      }
+    });
+  }
+}
