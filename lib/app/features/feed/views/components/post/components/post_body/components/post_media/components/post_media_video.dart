@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/video_preview_wrapper/video_preview_wrapper.dart';
+import 'package:ion/app/components/video_preview/video_preview.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
 
 class PostMediaVideo extends HookConsumerWidget {
@@ -21,6 +21,6 @@ class PostMediaVideo extends HookConsumerWidget {
         looping: true,
       ),
     );
-    return VideoPreviewWrapper(controller: videoController);
+    return VideoPreview(controller: videoController);
   }
 }
