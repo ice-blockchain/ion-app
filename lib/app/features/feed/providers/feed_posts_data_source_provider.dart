@@ -5,6 +5,7 @@ import 'package:ion/app/features/feed/data/models/article/article_data.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/feed/data/models/repost_data.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
@@ -24,11 +25,11 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
       for (final entry in filterRelays.entries)
         EntitiesDataSource(
           actionSource: ActionSourceRelayUrl(entry.key),
-          entityFilter: (entity) => entity is PostEntity || entity is ArticleEntity,
+          entityFilter: (entity) => entity is RepostEntity || entity is ArticleEntity,
           requestFilter: RequestFilter(
             kinds: filters.category == FeedCategory.articles
                 ? const [ArticleEntity.kind]
-                : const [PostEntity.kind],
+                : const [RepostEntity.kind], //TODO:TEMP
             authors: filters.filter == FeedFilter.following ? entry.value : null,
             limit: 10,
           ),
