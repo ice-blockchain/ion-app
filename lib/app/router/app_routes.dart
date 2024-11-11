@@ -18,13 +18,13 @@ import 'package:ion/app/features/auth/views/pages/turn_on_notifications/turn_on_
 import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_codes_page.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_options/twofa_options_page.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_success/twofa_success_page.dart';
-import 'package:ion/app/features/chat/messages/views/pages/chat_share_profile_modal.dart';
 import 'package:ion/app/features/chat/messages/views/pages/messages_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_learn_more_modal/chat_learn_more_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/chat_main_page.dart';
 import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.dart';
+import 'package:ion/app/features/contacts/pages/contacts_list_view.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
@@ -109,7 +109,6 @@ import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/com
 import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/receive_coin_modal_page.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/confirmation_sheet.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_result_sheet.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/contacts_list_view.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/send_coins_form.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/send_coin_modal_page.dart';
 import 'package:ion/app/features/wallet/views/pages/contact_modal_page/contact_modal_page.dart';

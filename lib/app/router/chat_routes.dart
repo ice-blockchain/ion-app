@@ -69,9 +69,15 @@ class ChatLearnMoreModalRoute extends BaseRouteData {
 }
 
 class ShareProfileModalRoute extends BaseRouteData {
-  ShareProfileModalRoute()
+  ShareProfileModalRoute({required this.title, this.action = ContactRouteAction.pop})
       : super(
-          child: const ChatShareProfileModal(),
+          child: ContactsListView(
+            appBarTitle: title,
+            action: action,
+          ),
           type: IceRouteType.bottomSheet,
         );
+
+  final String title;
+  final ContactRouteAction action;
 }
