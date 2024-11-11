@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 
 RegExp tagRegex(String tag, {bool isSingular = true}) {
   if (isSingular) {
-    return RegExp('\\[:$tag]');
+    return RegExp(r'(\[:' + tag + r'\])');
   } else {
     return RegExp('\\[\\[:$tag\\]\\](.*?)\\[\\[\\/:$tag\\]\\]');
   }

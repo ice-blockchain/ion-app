@@ -32,7 +32,7 @@ class FeedNavigation extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 12.0.s),
             child: NavigationButton(
-              onPressed: () => {},
+              onPressed: () => NotificationsHistoryRoute().push<void>(context),
               icon: Assets.svg.iconHomeNotification.icon(
                 color: context.theme.appColors.primaryText,
               ),

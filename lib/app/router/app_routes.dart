@@ -48,6 +48,7 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/article_d
 import 'package:ion/app/features/feed/views/pages/comment_post_modal/comment_post_modal.dart';
 import 'package:ion/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/feed_page.dart';
+import 'package:ion/app/features/feed/views/pages/notifications_history_page/notifications_history_page.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ion/app/features/feed/views/pages/post_reply_modal/post_reply_modal.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
