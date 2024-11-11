@@ -18,7 +18,7 @@ class ReplyList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dataSource = ref.watch(FeedPostsDataSourceProvider(postId: postId, pubkey: pubkey));
+    final dataSource = ref.watch(postRepliesDataSourceProvider(postId: postId, pubkey: pubkey));
     final entities = ref.watch(entitiesPagedDataProvider(dataSource));
 
     if (entities == null) {

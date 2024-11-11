@@ -22,7 +22,7 @@ class UserRelaysManager extends _$UserRelaysManager {
         createdAt: DateTime.now(),
         id: '',
         pubkey: pubkeys[index],
-        data: const UserRelaysData(list: [UserRelay(url: 'wss://relay.damus.io/')]),
+        data: const UserRelaysData(list: [UserRelay(url: 'wss://relay.nostr.band')]),
       );
     });
 

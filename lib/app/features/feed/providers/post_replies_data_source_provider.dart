@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'post_replies_data_source_provider.g.dart';
 
 @riverpod
-List<EntitiesDataSource>? feedPostsDataSource(
+List<EntitiesDataSource>? postRepliesDataSource(
   Ref ref, {
   required String postId,
   required String pubkey,
