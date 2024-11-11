@@ -3,7 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ion/app/components/url_preview_wrapper/url_preview_wrapper.dart';
+import 'package:ion/app/components/url_preview/url_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
@@ -21,7 +21,7 @@ class UrlPreviewMessage extends HookWidget {
     return MessageItemWrapper(
       isMe: isMe,
       contentPadding: EdgeInsets.all(8.0.s),
-      child: UrlPreviewWrapper(
+      child: UrlPreview(
         url: url,
         builder: (meta, favIconUrl) {
           return Column(

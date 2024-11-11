@@ -5,8 +5,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/services/browser/browser.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
-class UrlPreviewWrapper extends HookWidget {
-  const UrlPreviewWrapper({
+class UrlPreview extends HookWidget {
+  const UrlPreview({
     required this.url,
     required this.builder,
     super.key,

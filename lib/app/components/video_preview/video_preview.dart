@@ -8,8 +8,8 @@ import 'package:ion/generated/assets.gen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class VideoPreviewWrapper extends HookWidget {
-  const VideoPreviewWrapper({
+class VideoPreview extends HookWidget {
+  const VideoPreview({
     required this.controller,
     super.key,
   });

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/video_preview_wrapper/video_preview_wrapper.dart';
+import 'package:ion/app/components/video_preview/video_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
@@ -39,7 +39,7 @@ class VideoMessage extends HookConsumerWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12.0.s),
-            child: VideoPreviewWrapper(controller: videoController),
+            child: VideoPreview(controller: videoController),
           ),
           SizedBox(height: 8.0.s),
           _MessageWithTimestamp(
