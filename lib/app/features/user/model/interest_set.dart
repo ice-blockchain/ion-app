@@ -13,8 +13,8 @@ part 'interest_set.freezed.dart';
 
 enum InterestSetType { languages, unknown }
 
-@freezed
-class InterestSetEntity with _$InterestSetEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class InterestSetEntity with _$InterestSetEntity, NostrEntity implements CacheableEntity {
   const factory InterestSetEntity({
     required String id,
     required String pubkey,
@@ -27,7 +27,7 @@ class InterestSetEntity with _$InterestSetEntity implements CacheableEntity, Nos
   /// https://github.com/nostr-protocol/nips/blob/master/51.md#sets
   factory InterestSetEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
+      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
 
     return InterestSetEntity(

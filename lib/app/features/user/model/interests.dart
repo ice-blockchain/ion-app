@@ -9,8 +9,8 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'interests.freezed.dart';
 
-@freezed
-class InterestsEntity with _$InterestsEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEntity {
   const factory InterestsEntity({
     required String id,
     required String pubkey,
@@ -23,7 +23,7 @@ class InterestsEntity with _$InterestsEntity implements CacheableEntity, NostrEn
   /// https://github.com/nostr-protocol/nips/blob/master/51.md#standard-lists
   factory InterestsEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
+      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
 
     return InterestsEntity(

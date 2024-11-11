@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/data/models/trending_videos_overlay.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_separator.dart';

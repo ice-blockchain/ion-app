@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/features/feed/data/models/article/article_data.dart';
-import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/views/components/entities_list/components/article_list_item.dart';
 import 'package:ion/app/features/feed/views/components/entities_list/components/post_list_item.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';

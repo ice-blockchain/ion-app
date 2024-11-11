@@ -9,8 +9,8 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'user_relays.freezed.dart';
 
-@freezed
-class UserRelaysEntity with _$UserRelaysEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements CacheableEntity {
   const factory UserRelaysEntity({
     required String id,
     required String pubkey,
@@ -23,7 +23,7 @@ class UserRelaysEntity with _$UserRelaysEntity implements CacheableEntity, Nostr
   /// https://github.com/nostr-protocol/nips/blob/master/65.md
   factory UserRelaysEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
+      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
 
     return UserRelaysEntity(
@@ -82,7 +82,7 @@ class UserRelay with _$UserRelay {
 
   factory UserRelay.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
-      throw IncorrectEventTagException(actual: tag[0], expected: tagName);
+      throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
     return UserRelay(
       url: tag[1],

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_header.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_menu/feed_item_menu.dart';
@@ -27,7 +27,11 @@ class Post extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          header ?? FeedItemHeader(pubkey: postEntity.pubkey, trailing: const FeedItemMenu()),
+          header ??
+              FeedItemHeader(
+                pubkey: postEntity.pubkey,
+                trailing: FeedItemMenu(pubkey: postEntity.pubkey),
+              ),
           PostBody(postEntity: postEntity),
           SizedBox(height: 10.0.s),
           footer ?? FeedItemFooter(postEntity: postEntity),

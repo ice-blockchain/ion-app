@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/article/article_data.dart';
-import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/feed/data/models/repost_data.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';
 import 'package:ion/app/features/user/model/interest_set.dart';
@@ -26,7 +28,8 @@ class EventParser {
       InterestSetEntity.kind => InterestSetEntity.fromEventMessage(eventMessage),
       InterestsEntity.kind => InterestsEntity.fromEventMessage(eventMessage),
       UserDelegationEntity.kind => UserDelegationEntity.fromEventMessage(eventMessage),
-      _ => throw Exception('Unknown event with kind->${eventMessage.kind}')
+      RepostEntity.kind => RepostEntity.fromEventMessage(eventMessage),
+      _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     } as NostrEntity;
   }
 }

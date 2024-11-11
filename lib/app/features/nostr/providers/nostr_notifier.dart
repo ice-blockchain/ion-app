@@ -12,6 +12,7 @@ import 'package:ion/app/features/nostr/providers/relays_provider.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
 import 'package:nostr_dart/nostr_dart.dart' as nd;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -85,7 +86,11 @@ class NostrNotifier extends _$NostrNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
     await for (final event in requestEvents(requestMessage, actionSource: actionSource)) {
-      yield _parseAndCache(event);
+      try {
+        yield _parseAndCache(event);
+      } catch (error, stackTrace) {
+        Logger.log('Failed to process event ${event.id}', error: error, stackTrace: stackTrace);
+      }
     }
   }
 

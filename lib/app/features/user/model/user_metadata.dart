@@ -13,8 +13,8 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'user_metadata.freezed.dart';
 part 'user_metadata.g.dart';
 
-@freezed
-class UserMetadataEntity with _$UserMetadataEntity implements CacheableEntity, NostrEntity {
+@Freezed(equal: false)
+class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements CacheableEntity {
   const factory UserMetadataEntity({
     required String id,
     required String pubkey,
@@ -27,7 +27,7 @@ class UserMetadataEntity with _$UserMetadataEntity implements CacheableEntity, N
   /// https://github.com/nostr-protocol/nips/blob/master/01.md#kinds
   factory UserMetadataEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(actual: eventMessage.kind, expected: kind);
+      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
 
     return UserMetadataEntity(
