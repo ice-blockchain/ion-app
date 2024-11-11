@@ -52,6 +52,10 @@ class UnauthenticatedException extends IONException {
   const UnauthenticatedException() : super(10009, 'Unauthenticated');
 }
 
+class CurrentUserNotFoundException extends IONException {
+  const CurrentUserNotFoundException() : super(10010, 'Current user not found');
+}
+
 class GetFileStorageUrlException extends IONException {
   GetFileStorageUrlException(dynamic error)
       : super(10010, 'Failed to get file storage url: $error');

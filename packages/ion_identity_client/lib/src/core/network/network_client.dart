@@ -98,6 +98,24 @@ class NetworkClient {
     );
   }
 
+  Future<Result> delete<Result>(
+    String path, {
+    required Decoder<Result> decoder,
+    JsonObject queryParams = const {},
+    JsonObject headers = const {},
+    Object? data,
+  }) async {
+    return _makeRequest(
+      request: () => dio.delete<JsonObject>(
+        path,
+        queryParameters: queryParams,
+        data: data,
+        options: Options(headers: headers),
+      ),
+      decoder: decoder,
+    );
+  }
+
   /// A private method that executes the provided [request] function, handles
   /// potential errors, and decodes the JSON response using the provided [decoder].
   ///
@@ -111,6 +129,10 @@ class NetworkClient {
       final data = response.data;
 
       if (data == null) {
+        final statusCode = response.statusCode ?? 500;
+        if (statusCode >= 200 && statusCode < 300) {
+          return decoder(const {});
+        }
         throw ResponseFormatException(data);
       }
 

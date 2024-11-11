@@ -22,8 +22,9 @@ dependencies:
   cupertino_icons: ^1.0.6
   device_info_plus: ^10.1.2
   dio: ^5.7.0
+  dlibphonenumber: ^1.1.26
   dotted_border: ^2.1.0
-  email_validator: ^2.1.16
+  email_validator: ^3.0.0
   extended_text: ^14.1.0
   ffmpeg_helper: ^1.0.1
   ffmpeg_wasm: ^1.0.3
@@ -54,6 +55,7 @@ dependencies:
   json_annotation: ^4.8.1
   lottie: ^3.1.0
   markdown_quill: ^4.1.0
+  meta: ^1.15.0
   mocktail: ^1.0.4
   nostr_dart:
     git:

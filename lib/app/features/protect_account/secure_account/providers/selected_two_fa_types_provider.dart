@@ -1,41 +1,40 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_two_fa_types_provider.freezed.dart';
 part 'selected_two_fa_types_provider.g.dart';
 
 @freezed
-class AuthenticatorDeleteState with _$AuthenticatorDeleteState {
-  factory AuthenticatorDeleteState({
+class DeleteTwoFAOptionsState with _$DeleteTwoFAOptionsState {
+  factory DeleteTwoFAOptionsState({
     required int optionsAmount,
     required Set<TwoFaType> availableOptions,
     required List<TwoFaType?> selectedValues,
-  }) = _AuthenticatorDeleteState;
+  }) = _DeleteTwoFAOptionsState;
 }
 
 @riverpod
-class AuthenticatorDeleteOptions extends _$AuthenticatorDeleteOptions {
+class DeleteTwoFAOptionsNotifier extends _$DeleteTwoFAOptionsNotifier {
   @override
-  AuthenticatorDeleteState build() {
-    // TODO: temporary logic to simulate the options available to delete the authenticator
-    final optionsAmount = Random().nextInt(2) + 1;
-    return AuthenticatorDeleteState(
+  DeleteTwoFAOptionsState build(TwoFaType twoFaType) {
+    final securityMethods = ref.watch(securityAccountControllerProvider).requireValue;
+    final optionsAmount = securityMethods.enabledTypes.length;
+
+    return DeleteTwoFAOptionsState(
       optionsAmount: optionsAmount,
-      availableOptions: TwoFaType.values.toSet(),
+      availableOptions: securityMethods.enabledTypes.toSet(),
       selectedValues: List.generate(optionsAmount, (_) => null),
     );
   }
 
   void updateSelectedTwoFaOption(int index, TwoFaType? newValue) {
     final oldValue = state.selectedValues[index];
-    final newSelectedValues = List<TwoFaType?>.from(state.selectedValues);
-    newSelectedValues[index] = newValue;
+    final newSelectedValues = List<TwoFaType?>.from(state.selectedValues)..[index] = newValue;
 
     var newAvailableOptions = state.availableOptions;
     if (oldValue != null) {
@@ -53,7 +52,7 @@ class AuthenticatorDeleteOptions extends _$AuthenticatorDeleteOptions {
 }
 
 @riverpod
-Set<TwoFaType> selectedTwoFaOptions(Ref ref) {
-  final state = ref.watch(authenticatorDeleteOptionsProvider);
+Set<TwoFaType> selectedTwoFaOptions(Ref ref, TwoFaType twoFaType) {
+  final state = ref.watch(deleteTwoFAOptionsNotifierProvider(twoFaType));
   return state.selectedValues.whereType<TwoFaType>().toSet();
 }

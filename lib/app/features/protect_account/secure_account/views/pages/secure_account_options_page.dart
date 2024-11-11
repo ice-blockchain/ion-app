@@ -12,19 +12,27 @@ import 'package:ion/app/features/protect_account/email/data/model/email_steps.da
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
 import 'package:ion/app/features/protect_account/secure_account/data/models/security_methods.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/user_details_provider.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class SecureAccountOptionsPage extends ConsumerWidget {
+class SecureAccountOptionsPage extends HookConsumerWidget {
   const SecureAccountOptionsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final securityMethods = ref.watch(securityAccountControllerProvider).valueOrNull;
+    final securityMethodsState = ref.watch(securityAccountControllerProvider);
+    final securityMethods = securityMethodsState.valueOrNull;
+    final isLoading = securityMethodsState.isLoading;
     final locale = context.i18n;
+
+    useOnInit(() {
+      ref.invalidate(userDetailsProvider);
+    });
 
     return SheetContent(
       body: Column(
@@ -59,7 +67,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                   ),
                   onTap: () => BackupOptionsRoute().push<void>(context),
                   isEnabled: securityMethods?.isBackupEnabled ?? false,
-                  isLoading: securityMethods?.isBackupEnabled == null,
+                  isLoading: isLoading,
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
@@ -67,9 +75,9 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                   icon: Assets.svg.iconFieldEmail.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  onTap: () => EmailSetupRoute(step: EmailSetupSteps.input).push<void>(context),
+                  onTap: () => _onEmailPressed(context, securityMethods),
                   isEnabled: securityMethods?.isEmailEnabled ?? false,
-                  isLoading: securityMethods?.isEmailEnabled == null,
+                  isLoading: isLoading,
                 ),
                 SizedBox(height: 12.0.s),
                 SecureAccountOption(
@@ -78,7 +86,7 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                     color: context.theme.appColors.primaryAccent,
                   ),
                   isEnabled: securityMethods?.isAuthenticatorEnabled ?? false,
-                  isLoading: securityMethods?.isAuthenticatorEnabled == null,
+                  isLoading: isLoading,
                   onTap: () => _onAuthenticatorPressed(context, securityMethods),
                 ),
                 SizedBox(height: 12.0.s),
@@ -87,9 +95,9 @@ class SecureAccountOptionsPage extends ConsumerWidget {
                   icon: Assets.svg.iconFieldPhone.icon(
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  onTap: () => PhoneSetupRoute(step: PhoneSetupSteps.input).push<void>(context),
+                  onTap: () => _onPhonePressed(context, securityMethods),
                   isEnabled: securityMethods?.isPhoneEnabled ?? false,
-                  isLoading: securityMethods?.isPhoneEnabled == null,
+                  isLoading: isLoading,
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],
@@ -98,6 +106,18 @@ class SecureAccountOptionsPage extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _onEmailPressed(BuildContext context, SecurityMethods? securityMethods) {
+    if (securityMethods == null) {
+      return;
+    }
+
+    if (securityMethods.isEmailEnabled) {
+      EmailDeleteRoute().push<void>(context);
+    } else {
+      EmailSetupRoute(step: EmailSetupSteps.input).push<void>(context);
+    }
   }
 
   void _onAuthenticatorPressed(BuildContext context, SecurityMethods? securityMethods) {
@@ -111,9 +131,21 @@ class SecureAccountOptionsPage extends ConsumerWidget {
     }
 
     if (securityMethods.isAuthenticatorEnabled) {
-      AuthenticatorInitialDeleteRoute().push<void>(context);
+      AuthenticatorDeleteRoute().push<void>(context);
     } else {
       AuthenticatorSetupRoute(step: AuthenticatorSetupSteps.options).push<void>(context);
+    }
+  }
+
+  void _onPhonePressed(BuildContext context, SecurityMethods? securityMethods) {
+    if (securityMethods == null) {
+      return;
+    }
+
+    if (securityMethods.isPhoneEnabled) {
+      PhoneDeleteRoute().push<void>(context);
+    } else {
+      PhoneSetupRoute(step: PhoneSetupSteps.input).push<void>(context);
     }
   }
 }

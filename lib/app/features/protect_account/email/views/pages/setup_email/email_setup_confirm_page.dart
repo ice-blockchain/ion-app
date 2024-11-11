@@ -10,12 +10,11 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_code_input.dart';
+import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class EmailSetupConfirmPage extends HookConsumerWidget {
@@ -28,7 +27,7 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
     final locale = context.i18n;
     final theme = context.theme;
     final formKey = useRef(GlobalKey<FormState>());
-    final emailController = useTextEditingController.fromValue(TextEditingValue.empty);
+    final codeController = useTextEditingController.fromValue(TextEditingValue.empty);
 
     return Form(
       key: formKey.value,
@@ -48,9 +47,9 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: 22.0.s),
                   child: TwoFaCodeInput(
-                    controller: emailController,
+                    controller: codeController,
                     twoFaType: TwoFaType.email,
-                    onRequestCode: () => _requestTwoFACode(ref, emailController.text),
+                    onRequestCode: () => requestTwoFACode(ref, TwoFAType.email(email)),
                   ),
                 ),
                 const Spacer(),
@@ -63,7 +62,7 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
                       return;
                     }
 
-                    await _validateTwoFACode(ref, emailController.text);
+                    await validateTwoFACode(ref, TwoFAType.email(codeController.text));
                     final _ = await ref.refresh(securityAccountControllerProvider.future);
 
                     if (!context.mounted) {
@@ -81,29 +80,5 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
         },
       ),
     );
-  }
-
-  Future<void> _validateTwoFACode(WidgetRef ref, String code) async {
-    final currentUser = ref.read(currentIdentityKeyNameSelectorProvider);
-    if (currentUser == null) {
-      return;
-    }
-
-    final ionIdentity = await ref.read(ionIdentityProvider.future);
-
-    await ionIdentity(username: currentUser).auth.verifyTwoFA(TwoFAType.email(code));
-  }
-
-  Future<void> _requestTwoFACode(WidgetRef ref, String email) async {
-    final currentUser = ref.read(currentIdentityKeyNameSelectorProvider);
-    if (currentUser == null) {
-      return;
-    }
-
-    final ionIdentity = await ref.read(ionIdentityProvider.future);
-
-    await ionIdentity(username: currentUser)
-        .auth
-        .requestTwoFACode(twoFAType: TwoFAType.email(email));
   }
 }

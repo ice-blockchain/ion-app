@@ -15,11 +15,14 @@ class ProtectAccountRoutes {
     TypedGoRoute<ScreenshotSecurityAlertRoute>(path: '/screenshot-security-alert'),
     TypedGoRoute<RecoveryKeysErrorAlertRoute>(path: '/recovery-keys-error-alert'),
     TypedGoRoute<AuthenticatorSetupRoute>(path: '/authenticator-setup/:step'),
-    TypedGoRoute<AuthenticatorDeleteRoute>(path: '/authenticator-delete/:step'),
-    TypedGoRoute<AuthenticatorInitialDeleteRoute>(path: '/authenticator-initial-delete'),
+    TypedGoRoute<AuthenticatorDeleteRoute>(path: '/authenticator-delete'),
     TypedGoRoute<AuthenticatorDeleteSuccessRoute>(path: '/authenticator-delete-success'),
     TypedGoRoute<EmailSetupRoute>(path: '/email-setup/:step'),
+    TypedGoRoute<EmailDeleteRoute>(path: '/email-delete'),
+    TypedGoRoute<EmailDeleteSuccessRoute>(path: '/email-delete-success'),
     TypedGoRoute<PhoneSetupRoute>(path: '/phone-setup/:step'),
+    TypedGoRoute<PhoneDeleteRoute>(path: '/phone-delete'),
+    TypedGoRoute<PhoneDeleteSuccessRoute>(path: '/phone-delete-success'),
     TypedGoRoute<SelectCountriesRoute>(path: '/select-countries'),
   ];
 }
@@ -114,22 +117,12 @@ class AuthenticatorSetupRoute extends BaseRouteData {
   final AuthenticatorSetupSteps step;
 }
 
-class AuthenticatorInitialDeleteRoute extends BaseRouteData {
-  AuthenticatorInitialDeleteRoute()
-      : super(
-          child: const AuthenticatorInitialDeletePage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
 class AuthenticatorDeleteRoute extends BaseRouteData {
-  AuthenticatorDeleteRoute({required this.step})
+  AuthenticatorDeleteRoute()
       : super(
-          child: AuthenticatorDeletePage(step),
+          child: const AuthenticatorDeletePage(),
           type: IceRouteType.bottomSheet,
         );
-
-  final AuthenticatorDeleteSteps step;
 }
 
 class AuthenticatorDeleteSuccessRoute extends BaseRouteData {
@@ -151,6 +144,22 @@ class EmailSetupRoute extends BaseRouteData {
   String? email;
 }
 
+class EmailDeleteRoute extends BaseRouteData {
+  EmailDeleteRoute()
+      : super(
+          child: const EmailDeletePage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class EmailDeleteSuccessRoute extends BaseRouteData {
+  EmailDeleteSuccessRoute()
+      : super(
+          child: const EmailDeleteSuccessPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
 class PhoneSetupRoute extends BaseRouteData {
   PhoneSetupRoute({required this.step, this.phone})
       : super(
@@ -160,6 +169,22 @@ class PhoneSetupRoute extends BaseRouteData {
 
   final PhoneSetupSteps step;
   String? phone;
+}
+
+class PhoneDeleteRoute extends BaseRouteData {
+  PhoneDeleteRoute()
+      : super(
+          child: const PhoneDeletePage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class PhoneDeleteSuccessRoute extends BaseRouteData {
+  PhoneDeleteSuccessRoute()
+      : super(
+          child: const PhoneDeleteSuccessPage(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class SelectCountriesRoute extends BaseRouteData {

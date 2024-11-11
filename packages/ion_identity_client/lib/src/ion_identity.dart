@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
-import 'package:ion_identity_client/src/ion_identity_user_client.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 
 /// This class is an entry point for interacting with the API.Provids user-specific operations

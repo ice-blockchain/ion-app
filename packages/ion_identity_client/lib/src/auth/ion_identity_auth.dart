@@ -64,7 +64,7 @@ class IONIdentityAuth {
   Future<UserToken> delegatedLogin() async =>
       delegatedLoginService.delegatedLogin(username: username);
 
-  Future<void> requestTwoFACode({
+  Future<String?> requestTwoFACode({
     required TwoFAType twoFAType,
     Map<String, String>? verificationCodes,
   }) =>
@@ -74,4 +74,10 @@ class IONIdentityAuth {
       );
 
   Future<void> verifyTwoFA(TwoFAType twoFAType) => twoFAService.verifyTwoFA(twoFAType);
+
+  Future<void> deleteTwoFA(
+    TwoFAType twoFAType, [
+    List<TwoFAType> verificationCodes = const [],
+  ]) =>
+      twoFAService.deleteTwoFA(twoFAType, verificationCodes);
 }
