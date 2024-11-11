@@ -27,7 +27,11 @@ class Post extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          header ?? FeedItemHeader(pubkey: postEntity.pubkey, trailing: const FeedItemMenu()),
+          header ??
+              FeedItemHeader(
+                pubkey: postEntity.pubkey,
+                trailing: FeedItemMenu(pubkey: postEntity.pubkey),
+              ),
           PostBody(postEntity: postEntity),
           SizedBox(height: 10.0.s),
           footer ?? FeedItemFooter(postEntity: postEntity),

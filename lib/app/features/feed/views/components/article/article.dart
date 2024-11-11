@@ -44,10 +44,10 @@ class Article extends ConsumerWidget {
                 children: [
                   FeedItemHeader(
                     pubkey: article.pubkey,
-                    trailing: const Row(
+                    trailing: Row(
                       children: [
-                        BookmarkButton(id: 'test_article_id'),
-                        FeedItemMenu(),
+                        const BookmarkButton(id: 'test_article_id'),
+                        FeedItemMenu(pubkey: article.pubkey),
                       ],
                     ),
                   ),
