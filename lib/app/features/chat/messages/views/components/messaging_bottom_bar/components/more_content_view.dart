@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 final double moreContentHeight = 206.0.s;
@@ -47,10 +48,15 @@ class MoreContentView extends ConsumerWidget {
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatPerson,
                 title: context.i18n.common_profile,
-                onTap: () {
-                  ShareProfileModalRoute().push<void>(context).then((value) {
-                    ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
-                  });
+                onTap: () async {
+                  final contactId = await ShareProfileModalRoute(
+                    title: context.i18n.chat_profile_share_modal_title,
+                  ).push<String>(context);
+
+                  //TODO: use contactId to share profile
+                  Logger.log(contactId ?? 'No contact selected');
+
+                  ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
                 },
               ),
               _MoreContentItem(
