@@ -9,7 +9,6 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/providers/post_reply/reply_data_notifier.dart';
 import 'package:ion/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
@@ -22,11 +21,14 @@ import 'package:ion/generated/assets.gen.dart';
 
 class ReplyInputField extends HookConsumerWidget {
   const ReplyInputField({
-    required this.postEntity,
+    required this.postId,
+    required this.pubkey,
     super.key,
   });
 
-  final PostEntity postEntity;
+  final String postId;
+
+  final String pubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,7 +50,7 @@ class ReplyInputField extends HookConsumerWidget {
           if (hasFocus.value)
             Padding(
               padding: EdgeInsets.only(bottom: 12.0.s),
-              child: ReplyAuthorHeader(postEntity: postEntity),
+              child: ReplyAuthorHeader(postId: postId, pubkey: pubkey),
             ),
           SizedBox(
             // When we focus the TextField, a new child is added to the Column,
@@ -86,7 +88,7 @@ class ReplyInputField extends HookConsumerWidget {
                     if (hasFocus.value)
                       GestureDetector(
                         onTap: () async {
-                          await PostReplyModalRoute(postId: postEntity.id, showCollapseButton: true)
+                          await PostReplyModalRoute(postId: postId, showCollapseButton: true)
                               .push<void>(context);
                           textController.text = ref.read(replyDataNotifierProvider).text;
                         },

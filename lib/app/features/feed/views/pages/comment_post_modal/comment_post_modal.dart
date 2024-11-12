@@ -10,7 +10,8 @@ import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_header.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_author.dart';
+import 'package:ion/app/features/feed/views/components/post/components/quoted_post_frame/quoted_post_frame.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
@@ -55,18 +56,13 @@ class CommentPostModal extends ConsumerWidget {
                   children: [
                     const QuotePostCommentInput(),
                     Padding(
-                      padding: EdgeInsets.only(left: 40.0.s, top: 12.0.s),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: context.theme.appColors.onTerararyFill,
-                          ),
-                          borderRadius: BorderRadius.circular(16.0.s),
-                        ),
+                      padding: EdgeInsets.only(left: 40.0.s, top: 6.0.s),
+                      child: QuotedPostFrame(
                         child: Post(
-                          header: FeedItemHeader(pubkey: post.pubkey),
+                          postId: post.id,
+                          pubkey: post.pubkey,
+                          header: FeedItemAuthor(pubkey: post.pubkey),
                           footer: const SizedBox.shrink(),
-                          postEntity: post,
                         ),
                       ),
                     ),

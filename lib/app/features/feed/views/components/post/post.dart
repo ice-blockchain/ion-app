@@ -1,44 +1,57 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/feed/providers/post_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_header.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_author.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_menu/feed_item_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
+import 'package:ion/app/features/feed/views/components/post/components/quoted_post_frame/quoted_post_frame.dart';
+import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 
-class Post extends StatelessWidget {
+class Post extends ConsumerWidget {
   const Post({
-    required this.postEntity,
+    required this.postId,
+    required this.pubkey,
     this.header,
     this.footer,
     this.footerPadding,
     super.key,
   });
 
-  final PostEntity postEntity;
+  final String postId;
+  final String pubkey;
   final Widget? header;
   final Widget? footer;
   final double? footerPadding;
 
   @override
-  Widget build(BuildContext context) {
-    return ScreenSideOffset.small(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          header ??
-              FeedItemHeader(
-                pubkey: postEntity.pubkey,
-                trailing: FeedItemMenu(pubkey: postEntity.pubkey),
-              ),
-          PostBody(postEntity: postEntity),
-          SizedBox(height: footerPadding ?? 10.0.s),
-          footer ?? FeedItemFooter(postEntity: postEntity),
-        ],
-      ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final postEntity = ref.watch(postDataProvider(postId: postId, pubkey: pubkey)).valueOrNull;
+
+    if (postEntity == null) {
+      return const Skeleton(child: PostSkeleton());
+    }
+
+    final quotedEvent = postEntity.data.quotedEvent;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        header ??
+            FeedItemAuthor(
+              pubkey: pubkey,
+              trailing: FeedItemMenu(pubkey: pubkey),
+            ),
+        PostBody(postEntity: postEntity),
+        if (quotedEvent != null)
+          QuotedPostFrame(child: Post(postId: quotedEvent.eventId, pubkey: quotedEvent.pubkey)),
+        SizedBox(height: footerPadding ?? 10.0.s),
+        footer ?? FeedItemFooter(postId: postId),
+      ],
     );
   }
 }
