@@ -21,6 +21,7 @@ class FeedItemDetailsFooter extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        SizedBox(height: 10.0.s),
         Text(
           postDate,
           style: context.theme.appTextThemes.caption2.copyWith(

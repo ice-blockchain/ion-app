@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/post_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_author.dart';
@@ -18,7 +17,6 @@ class Post extends ConsumerWidget {
     required this.pubkey,
     this.header,
     this.footer,
-    this.footerPadding,
     super.key,
   });
 
@@ -26,7 +24,6 @@ class Post extends ConsumerWidget {
   final String pubkey;
   final Widget? header;
   final Widget? footer;
-  final double? footerPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,8 +45,14 @@ class Post extends ConsumerWidget {
             ),
         PostBody(postEntity: postEntity),
         if (quotedEvent != null)
-          QuotedPostFrame(child: Post(postId: quotedEvent.eventId, pubkey: quotedEvent.pubkey)),
-        SizedBox(height: footerPadding ?? 10.0.s),
+          QuotedPostFrame(
+            child: Post(
+              postId: quotedEvent.eventId,
+              pubkey: quotedEvent.pubkey,
+              header: FeedItemAuthor(pubkey: quotedEvent.pubkey),
+              footer: const SizedBox.shrink(),
+            ),
+          ),
         footer ?? FeedItemFooter(postId: postId),
       ],
     );

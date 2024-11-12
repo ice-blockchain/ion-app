@@ -23,12 +23,15 @@ class FeedItemFooter extends HookConsumerWidget {
     required this.postId,
     this.actionBuilder,
     double? bottomPadding,
+    double? topPadding,
     super.key,
-  }) : bottomPadding = bottomPadding ?? 16.0.s;
+  })  : bottomPadding = bottomPadding ?? 16.0.s,
+        topPadding = topPadding ?? 10.0.s;
 
   final String postId;
   final ActionIconBuilder? actionBuilder;
   final double bottomPadding;
+  final double topPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -118,7 +121,7 @@ class FeedItemFooter extends HookConsumerWidget {
     );
 
     return Padding(
-      padding: EdgeInsets.only(bottom: bottomPadding),
+      padding: EdgeInsets.only(bottom: bottomPadding, top: topPadding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

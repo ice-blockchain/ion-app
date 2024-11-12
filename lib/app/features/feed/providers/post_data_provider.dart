@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'post_data_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<PostEntity?> postData(
   Ref ref, {
   required String postId,
