@@ -6,11 +6,13 @@ class _MetaDataPreview extends StatelessWidget {
   const _MetaDataPreview({
     required this.meta,
     required this.url,
+    required this.favIconUrl,
     required this.isMe,
   });
 
   final OgpData meta;
   final String url;
+  final String favIconUrl;
   final bool isMe;
 
   @override
@@ -18,19 +20,7 @@ class _MetaDataPreview extends StatelessWidget {
     return IntrinsicHeight(
       child: Row(
         children: [
-          Container(
-            width: 2.0.s,
-            margin: EdgeInsets.only(right: 8.0.s),
-            decoration: BoxDecoration(
-              color: isMe
-                  ? context.theme.appColors.onPrimaryAccent
-                  : context.theme.appColors.primaryAccent,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(2.0.s),
-                bottomLeft: Radius.circular(2.0.s),
-              ),
-            ),
-          ),
+          _SideVerticalDivider(isMe: isMe),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +29,8 @@ class _MetaDataPreview extends StatelessWidget {
                   _MetaImage(
                     imageUrl: resolveImageUrl(url, meta.image!),
                   ),
-                if (meta.siteName != null) _MetaSiteInfo(meta.siteName!, url: url, isMe: isMe),
+                if (meta.siteName != null)
+                  _MetaSiteInfo(meta.siteName!, favIconUrl: favIconUrl, isMe: isMe),
                 if (meta.title != null) _MetaTitle(meta.title!, isMe: isMe),
                 if (meta.description != null) _MetaDescription(meta.description!, isMe: isMe),
                 Align(
@@ -53,11 +44,29 @@ class _MetaDataPreview extends StatelessWidget {
       ),
     );
   }
+}
 
-  String resolveImageUrl(String baseUrl, String imageUrl) {
-    return imageUrl.startsWith('/')
-        ? Uri.parse(Uri.parse(baseUrl).origin + imageUrl).toString()
-        : imageUrl;
+class _SideVerticalDivider extends StatelessWidget {
+  const _SideVerticalDivider({
+    required this.isMe,
+  });
+
+  final bool isMe;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 2.0.s,
+      margin: EdgeInsets.only(right: 8.0.s),
+      decoration: BoxDecoration(
+        color:
+            isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryAccent,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(2.0.s),
+          bottomLeft: Radius.circular(2.0.s),
+        ),
+      ),
+    );
   }
 }
 
@@ -86,12 +95,12 @@ class _MetaImage extends StatelessWidget {
 class _MetaSiteInfo extends StatelessWidget {
   const _MetaSiteInfo(
     this.siteName, {
-    required this.url,
+    required this.favIconUrl,
     required this.isMe,
   });
 
   final String siteName;
-  final String url;
+  final String favIconUrl;
   final bool isMe;
 
   @override
@@ -101,7 +110,7 @@ class _MetaSiteInfo extends StatelessWidget {
       child: Row(
         children: [
           CachedNetworkImage(
-            imageUrl: resolveFavIconUrl(url),
+            imageUrl: favIconUrl,
             width: 16.0.s,
             height: 16.0.s,
             errorWidget: (context, url, error) => const SizedBox.shrink(),
@@ -118,10 +127,6 @@ class _MetaSiteInfo extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String resolveFavIconUrl(String baseUrl) {
-    return '${Uri.parse(baseUrl).origin}/favicon.ico';
   }
 }
 
@@ -165,4 +170,10 @@ class _MetaDescription extends StatelessWidget {
       ),
     );
   }
+}
+
+String resolveImageUrl(String baseUrl, String imageUrl) {
+  return imageUrl.startsWith('/')
+      ? Uri.parse(Uri.parse(baseUrl).origin + imageUrl).toString()
+      : imageUrl;
 }

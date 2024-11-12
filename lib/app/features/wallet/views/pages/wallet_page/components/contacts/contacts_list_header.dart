@@ -6,8 +6,8 @@ import 'package:ion/app/constants/ui.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/contacts/pages/contacts_list_view.dart';
 import 'package:ion/app/features/wallet/model/contact_data.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/contacts_list_view.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class ContactListHeader extends StatelessWidget {
