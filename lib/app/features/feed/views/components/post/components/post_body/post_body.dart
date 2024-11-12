@@ -30,7 +30,7 @@ class PostBody extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (postMedia.isNotEmpty) PostMedia(media: postMedia),
+        if (postMedia.isNotEmpty) PostMedia(media: [...postMedia, ...postMedia]),
         Text(
           postText.toString(),
           style: context.theme.appTextThemes.body2.copyWith(

@@ -12,11 +12,14 @@ class NavigationBackButton extends StatelessWidget {
     this.onPress, {
     super.key,
     this.hideKeyboardOnBack = false,
+    this.icon,
   });
 
   final VoidCallback onPress;
 
   final bool hideKeyboardOnBack;
+
+  final Widget? icon;
 
   static double get iconSize => 24.0.s;
 
@@ -30,9 +33,10 @@ class NavigationBackButton extends StatelessWidget {
       child: IconButton(
         padding: EdgeInsets.zero,
         onPressed: () => hideKeyboardOnBack ? hideKeyboard(context, callback: onPress) : onPress(),
-        icon: Assets.svg.iconBackArrow.icon(
-          size: iconSize,
-        ),
+        icon: icon ??
+            Assets.svg.iconBackArrow.icon(
+              size: iconSize,
+            ),
       ),
     );
   }

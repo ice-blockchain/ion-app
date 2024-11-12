@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
+import 'package:ion/app/router/app_routes.dart';
 
 class PhotoMessage extends HookWidget {
   const PhotoMessage({
@@ -29,16 +30,26 @@ class PhotoMessage extends HookWidget {
     return MessageItemWrapper(
       isMe: isMe,
       contentPadding: EdgeInsets.all(padding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _PhotoContent(imageUrl: imageUrl),
-          SizedBox(height: 8.0.s),
-          _MessageContent(
-            message: message!,
-            isMe: isMe,
-          ),
-        ],
+      child: GestureDetector(
+        onTap: () {
+          PhotoMessagePreviewRoute(
+            photoUrls: [imageUrl],
+            message: message ?? '',
+            senderName: 'Selena Marquez',
+            sentAt: DateTime.now(),
+          ).push<void>(context);
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _PhotoContent(imageUrl: imageUrl),
+            SizedBox(height: 8.0.s),
+            _MessageContent(
+              message: message!,
+              isMe: isMe,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -55,10 +66,13 @@ class _PhotoContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(12.0.s),
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
-        width: PhotoMessage.maxWidth,
-        fit: BoxFit.cover,
+      child: Hero(
+        tag: imageUrl,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          width: PhotoMessage.maxWidth,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
