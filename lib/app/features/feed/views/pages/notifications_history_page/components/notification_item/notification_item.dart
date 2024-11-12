@@ -1,0 +1,73 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:flutter/material.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/notifications/notification_data.dart';
+import 'package:ion/app/features/feed/views/components/post/post.dart';
+import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/notification_info.dart';
+import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/notification_type_icon.dart';
+import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/user_avatar.dart';
+
+class NotificationItem extends StatelessWidget {
+  const NotificationItem({
+    required this.notificationData,
+    super.key,
+  });
+
+  final NotificationData notificationData;
+
+  static double get separator => 4.0.s;
+
+  static int get iconsCount => 10;
+
+  @override
+  Widget build(BuildContext context) {
+    final iconSize = ((MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultSmallMargin * 2) -
+            separator * (iconsCount - 1)) /
+        iconsCount;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 16.0.s),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ScreenSideOffset.small(
+            child: Row(
+              children: [
+                NotificationTypeIcon(
+                  notificationsType: notificationData.type,
+                  iconSize: iconSize,
+                ),
+                ...notificationData.pubkeys.take(iconsCount - 1).map((pubkey) {
+                  return Padding(
+                    padding: EdgeInsets.only(left: separator),
+                    child: UserAvatar(
+                      pubkey: pubkey,
+                      avatarSize: iconSize,
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 8.0.s,
+          ),
+          ScreenSideOffset.small(child: NotificationInfo(notificationData: notificationData)),
+          if (notificationData.postEntity != null) ...[
+            SizedBox(
+              height: 8.0.s,
+            ),
+            Post(
+              postEntity: notificationData.postEntity!,
+              footerPadding: 0,
+              header: const SizedBox.shrink(),
+              footer: const SizedBox.shrink(),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}

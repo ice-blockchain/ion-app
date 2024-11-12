@@ -5,6 +5,7 @@ part of 'app_routes.dart';
 class FeedRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<PostDetailsRoute>(path: 'post/:postId'),
+    TypedGoRoute<NotificationsHistoryRoute>(path: 'notifications-history'),
     TypedGoRoute<ArticleDetailsRoute>(path: 'article/:articleId'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
@@ -53,6 +54,13 @@ class PostDetailsRoute extends BaseRouteData {
 
   final String postId;
   final String pubkey;
+}
+
+class NotificationsHistoryRoute extends BaseRouteData {
+  NotificationsHistoryRoute()
+      : super(
+          child: const NotificationsHistoryPage(),
+        );
 }
 
 class PostReplyModalRoute extends BaseRouteData {

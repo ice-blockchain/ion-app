@@ -14,12 +14,14 @@ class Post extends StatelessWidget {
     required this.postEntity,
     this.header,
     this.footer,
+    this.footerPadding,
     super.key,
   });
 
   final PostEntity postEntity;
   final Widget? header;
   final Widget? footer;
+  final double? footerPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class Post extends StatelessWidget {
                 trailing: FeedItemMenu(pubkey: postEntity.pubkey),
               ),
           PostBody(postEntity: postEntity),
-          SizedBox(height: 10.0.s),
+          SizedBox(height: footerPadding ?? 10.0.s),
           footer ?? FeedItemFooter(postEntity: postEntity),
         ],
       ),
