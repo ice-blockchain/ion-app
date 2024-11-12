@@ -3,7 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/feed/data/models/notifications/notifications_type.dart';
 import 'package:ion/app/features/feed/data/models/notifications/time_unit_type.dart';
-import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 
 part 'notification_data.freezed.dart';
 

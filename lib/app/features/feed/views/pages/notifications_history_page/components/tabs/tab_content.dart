@@ -13,7 +13,7 @@ import 'package:ion/app/features/auth/providers/content_creators_data_source_pro
 import 'package:ion/app/features/feed/data/models/notifications/notification_data.dart';
 import 'package:ion/app/features/feed/data/models/notifications/notifications_tab_type.dart';
 import 'package:ion/app/features/feed/data/models/notifications/notifications_type.dart';
-import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/content_separator.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/notification_item.dart';
