@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
@@ -54,16 +53,25 @@ class PostData with _$PostData implements EventSerializable {
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
     QuotedEvent? quotedEvent,
+    List<RelatedEvent>? relatedEvents,
+    List<RelatedPubkey>? relatedPubkeys,
+    List<RelatedHashtag>? relatedHashtags,
   }) = _PostData;
 
   const PostData._();
 
   factory PostData.fromEventMessage(EventMessage eventMessage) {
     final parsedContent = TextParser(matchers: [const UrlMatcher()]).parse(eventMessage.content);
+    final tags = eventMessage.tags.fold<Map<String, List<List<String>>>>({}, (result, tag) {
+      return result..putIfAbsent(tag[0], () => []).add(tag);
+    });
     return PostData(
       content: parsedContent,
-      media: _buildMedia(eventMessage, parsedContent),
-      quotedEvent: _buildQuotedEvent(eventMessage),
+      media: _buildMedia(tags[MediaAttachment.tagName], parsedContent),
+      quotedEvent: _buildQuotedEvent(tags[QuotedEvent.tagName]),
+      relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
+      relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
     );
   }
 
@@ -73,14 +81,24 @@ class PostData with _$PostData implements EventSerializable {
       signer: signer,
       kind: PostEntity.kind,
       content: content.map((match) => match.text).join(),
+      tags: [
+        if (quotedEvent != null) quotedEvent!.toTag(),
+        if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
+        if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
+        if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
+      ],
     );
   }
 
   static Map<String, MediaAttachment> _buildMedia(
-    EventMessage eventMessage,
+    List<List<String>>? imetaTags,
     List<TextMatch> parsedContent,
   ) {
-    final imeta = _parseImeta(eventMessage);
+    if (imetaTags == null) {
+      return {};
+    }
+
+    final imeta = _parseImeta(imetaTags);
 
     final media = parsedContent.fold<Map<String, MediaAttachment>>(
       {},
@@ -111,10 +129,9 @@ class PostData with _$PostData implements EventSerializable {
   /// imeta may include any field specified by NIP 94.
   ///
   /// Source: https://github.com/nostr-protocol/nips/blob/master/92.md
-  static Map<String, MediaAttachment> _parseImeta(EventMessage eventMessage) {
-    final tags = eventMessage.tags;
+  static Map<String, MediaAttachment> _parseImeta(List<List<String>> imetaTags) {
     final imeta = <String, MediaAttachment>{};
-    for (final tag in tags) {
+    for (final tag in imetaTags) {
       if (tag[0] == 'imeta') {
         final mediaAttachment = MediaAttachment.fromTag(tag);
         imeta[mediaAttachment.url] = mediaAttachment;
@@ -123,12 +140,11 @@ class PostData with _$PostData implements EventSerializable {
     return imeta;
   }
 
-  static QuotedEvent? _buildQuotedEvent(EventMessage eventMessage) {
-    final qTag = eventMessage.tags.firstWhereOrNull((tag) => tag[0] == QuotedEvent.tagName);
-    if (qTag == null) {
+  static QuotedEvent? _buildQuotedEvent(List<List<String>>? qTags) {
+    if (qTags == null) {
       return null;
     }
-    return QuotedEvent.fromTag(qTag);
+    return QuotedEvent.fromTag(qTags.first);
   }
 
   @override
@@ -166,4 +182,90 @@ class QuotedEvent with _$QuotedEvent {
   }
 
   static const String tagName = 'q';
+}
+
+@freezed
+class RelatedPubkey with _$RelatedPubkey {
+  const factory RelatedPubkey({
+    required String value,
+  }) = _RelatedPubkey;
+
+  const RelatedPubkey._();
+
+  /// https://github.com/nostr-protocol/nips/blob/master/10.md#the-p-tag
+  factory RelatedPubkey.fromTag(List<String> tag) {
+    if (tag[0] != tagName) {
+      throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
+    }
+    if (tag.length < 2) {
+      throw IncorrectEventTagException(tag: tag.toString());
+    }
+    return RelatedPubkey(value: tag[1]);
+  }
+
+  List<String> toTag() {
+    return [tagName, value];
+  }
+
+  static const String tagName = 'p';
+}
+
+enum RelatedEventMarker { reply, root, mention }
+
+@freezed
+class RelatedEvent with _$RelatedEvent {
+  const factory RelatedEvent({
+    required String eventId,
+    required String pubkey,
+    required RelatedEventMarker marker,
+  }) = _RelatedEvent;
+
+  const RelatedEvent._();
+
+  /// https://github.com/nostr-protocol/nips/blob/master/10.md#marked-e-tags-preferred
+  factory RelatedEvent.fromTag(List<String> tag) {
+    if (tag[0] != tagName) {
+      throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
+    }
+    if (tag.length < 5) {
+      throw IncorrectEventTagException(tag: tag.toString());
+    }
+    return RelatedEvent(
+      eventId: tag[1],
+      marker: RelatedEventMarker.values.byName(tag[3]),
+      pubkey: tag[4],
+    );
+  }
+
+  List<String> toTag() {
+    return [tagName, eventId, '', marker.name, pubkey];
+  }
+
+  static const String tagName = 'e';
+}
+
+@freezed
+class RelatedHashtag with _$RelatedHashtag {
+  const factory RelatedHashtag({
+    required String value,
+  }) = _RelatedHashtag;
+
+  const RelatedHashtag._();
+
+  /// https://github.com/nostr-protocol/nips/blob/master/24.md#tags
+  factory RelatedHashtag.fromTag(List<String> tag) {
+    if (tag[0] != tagName) {
+      throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
+    }
+    if (tag.length < 2) {
+      throw IncorrectEventTagException(tag: tag.toString());
+    }
+    return RelatedHashtag(value: tag[1]);
+  }
+
+  List<String> toTag() {
+    return [tagName, value];
+  }
+
+  static const String tagName = 't';
 }
