@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,6 +13,8 @@ import 'package:ion/app/features/auth/providers/content_creators_data_source_pro
 import 'package:ion/app/features/feed/data/models/notifications/notification_data.dart';
 import 'package:ion/app/features/feed/data/models/notifications/notifications_tab_type.dart';
 import 'package:ion/app/features/feed/data/models/notifications/notifications_type.dart';
+import 'package:ion/app/features/feed/data/models/post/post_data.dart';
+import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/content_separator.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/notification_item.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/tabs/mock_data.dart';
@@ -75,9 +79,14 @@ class TabContent extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(contentCreatorsDataSourceProvider);
+    final feedPostsDataSource = ref.watch(feedPostsDataSourceProvider);
     final contentCreators = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entities = ref.watch(entitiesPagedDataProvider(feedPostsDataSource));
 
-    if (contentCreators == null || contentCreators.data.items.isEmpty) {
+    if (contentCreators == null ||
+        contentCreators.data.items.isEmpty ||
+        entities == null ||
+        entities.data.items.isEmpty) {
       return ListItemsLoadingState(
         itemsCount: 7,
         itemHeight: 106.0.s,
@@ -86,16 +95,34 @@ class TabContent extends HookConsumerWidget {
       );
     }
 
-    final getMockedNotificationData = useCallback(
-      (NotificationData data) => data.copyWith(
-        userPubkeys: contentCreators.data.items
-            .whereType<UserMetadataEntity>()
-            .take(data.userPubkeys.length)
-            .map((entity) => entity.pubkey)
-            .toList(),
-      ),
+    final mockedPosts = useMemoized(
+      () => entities.data.items.whereType<PostEntity>().take(10).toList(),
       [contentCreators],
     );
+
+    final getMockedNotificationData = useCallback(
+      (NotificationData data) {
+        final random = Random();
+        final dataWithUpdatedPubKeys = data.copyWith(
+          userPubkeys: contentCreators.data.items
+              .whereType<UserMetadataEntity>()
+              .take(data.userPubkeys.length)
+              .map((entity) => entity.pubkey)
+              .toList(),
+        );
+        if ((data.type == NotificationsType.repost ||
+                data.type == NotificationsType.share ||
+                data.type == NotificationsType.reply) &&
+            mockedPosts.isNotEmpty) {
+          return dataWithUpdatedPubKeys.copyWith(
+            postEntity: mockedPosts[random.nextInt(mockedPosts.length)],
+          );
+        }
+        return dataWithUpdatedPubKeys;
+      },
+      [contentCreators, mockedPosts],
+    );
+
     final notifications = _getMockedNotifications(getMockedNotificationData);
 
     if (notifications.isEmpty) {
