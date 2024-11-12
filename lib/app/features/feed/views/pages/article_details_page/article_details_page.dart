@@ -58,10 +58,16 @@ class ArticleDetailsPage extends HookConsumerWidget {
           final currentScroll = scrollController.offset;
           final viewportWidth = MediaQuery.of(context).size.width;
 
-          final scrollFraction = (currentScroll / maxScroll).clamp(0.0, 1.0);
-          ref.read(indicatorWidthProvider.notifier).state =
-              viewportWidth * (0.05 + (0.95 * scrollFraction));
+          if (maxScroll == 0) {
+            ref.read(indicatorWidthProvider.notifier).state = viewportWidth;
+          } else {
+            final scrollFraction = (currentScroll / maxScroll).clamp(0.0, 1.0);
+            ref.read(indicatorWidthProvider.notifier).state =
+                viewportWidth * (0.05 + (0.95 * scrollFraction));
+          }
         }
+
+        WidgetsBinding.instance.addPostFrameCallback((_) => onScroll());
 
         scrollController.addListener(onScroll);
         return () => scrollController.removeListener(onScroll);
