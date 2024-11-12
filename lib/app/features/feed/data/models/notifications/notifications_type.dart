@@ -34,35 +34,35 @@ enum NotificationsType {
 
   String getDescription(
     BuildContext context,
-    List<String> userPubkeys,
+    List<String> pubkeys,
   ) {
     switch (this) {
       case NotificationsType.follow:
-        if (userPubkeys.length == 1) {
+        if (pubkeys.length == 1) {
           return context.i18n.notifications_followed_one;
         }
-        if (userPubkeys.length == 2) {
+        if (pubkeys.length == 2) {
           return context.i18n.notifications_followed_two;
         }
-        return context.i18n.notifications_followed_many(userPubkeys.length - 1);
+        return context.i18n.notifications_followed_many(pubkeys.length - 1);
       case NotificationsType.like:
-        if (userPubkeys.length == 1) {
+        if (pubkeys.length == 1) {
           return context.i18n.notifications_liked_one;
         }
-        if (userPubkeys.length == 2) {
+        if (pubkeys.length == 2) {
           return context.i18n.notifications_liked_two;
         }
-        return context.i18n.notifications_liked_many(userPubkeys.length - 1);
+        return context.i18n.notifications_liked_many(pubkeys.length - 1);
       case NotificationsType.reply:
         return context.i18n.notifications_reply;
       case NotificationsType.likeReply:
-        if (userPubkeys.length == 1) {
+        if (pubkeys.length == 1) {
           return context.i18n.notifications_liked_reply_one;
         }
-        if (userPubkeys.length == 2) {
+        if (pubkeys.length == 2) {
           return context.i18n.notifications_liked_reply_two;
         }
-        return context.i18n.notifications_liked_reply_many(userPubkeys.length - 1);
+        return context.i18n.notifications_liked_reply_many(pubkeys.length - 1);
       case NotificationsType.share:
         return context.i18n.notifications_share;
       case NotificationsType.repost:

@@ -17,20 +17,18 @@ class NotificationItem extends StatelessWidget {
 
   final NotificationData notificationData;
 
-  static double get padding => ScreenSideOffset.defaultSmallMargin;
-
   static double get separator => 4.0.s;
 
   static int get iconsCount => 10;
 
   @override
   Widget build(BuildContext context) {
-    final iconSize =
-        ((MediaQuery.of(context).size.width - padding * 2) - separator * (iconsCount - 1)) /
-            iconsCount;
+    final iconSize = ((MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultSmallMargin * 2) -
+            separator * (iconsCount - 1)) /
+        iconsCount;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: padding),
+      padding: EdgeInsets.symmetric(vertical: 16.0.s),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,7 +39,7 @@ class NotificationItem extends StatelessWidget {
                   notificationsType: notificationData.type,
                   iconSize: iconSize,
                 ),
-                ...notificationData.userPubkeys.take(iconsCount - 1).map((pubkey) {
+                ...notificationData.pubkeys.take(iconsCount - 1).map((pubkey) {
                   return Padding(
                     padding: EdgeInsets.only(left: separator),
                     child: UserAvatar(

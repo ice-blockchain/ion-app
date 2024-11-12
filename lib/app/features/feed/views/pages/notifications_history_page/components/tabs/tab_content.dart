@@ -104,9 +104,9 @@ class TabContent extends HookConsumerWidget {
       (NotificationData data) {
         final random = Random();
         final dataWithUpdatedPubKeys = data.copyWith(
-          userPubkeys: contentCreators.data.items
+          pubkeys: contentCreators.data.items
               .whereType<UserMetadataEntity>()
-              .take(data.userPubkeys.length)
+              .take(data.pubkeys.length)
               .map((entity) => entity.pubkey)
               .toList(),
         );

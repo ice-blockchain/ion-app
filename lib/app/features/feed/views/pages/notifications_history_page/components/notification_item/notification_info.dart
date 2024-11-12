@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/data/models/notifications/notification_dat
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/l10n/i10n.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class NotificationInfo extends HookConsumerWidget {
   const NotificationInfo({
@@ -21,7 +22,8 @@ class NotificationInfo extends HookConsumerWidget {
 
   TextSpan _getDateTextSpan(BuildContext context) {
     return TextSpan(
-      text: ' • ${notificationData.timeUnitType.getTitle(context, notificationData.timeValue)}',
+      text:
+          ' • ${timeago.format(notificationData.timestamp, locale: 'en_short').replaceFirst('~', '')}',
       style: context.theme.appTextThemes.body2.copyWith(
         color: context.theme.appColors.tertararyText,
       ),
@@ -30,9 +32,8 @@ class NotificationInfo extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userDatas = notificationData.userPubkeys
-        .take(notificationData.userPubkeys.length == 2 ? 2 : 1)
-        .map((pubkey) {
+    final userDatas =
+        notificationData.pubkeys.take(notificationData.pubkeys.length == 2 ? 2 : 1).map((pubkey) {
       return ref.watch(userMetadataProvider(pubkey)).valueOrNull;
     }).toList();
 
@@ -50,10 +51,10 @@ class NotificationInfo extends HookConsumerWidget {
 
     final newTapRecognizers = <TapGestureRecognizer>[];
     final textSpan = replaceString(
-      notificationData.type.getDescription(context, notificationData.userPubkeys),
+      notificationData.type.getDescription(context, notificationData.pubkeys),
       tagRegex('username'),
       (String text, int index) {
-        final pubkey = notificationData.userPubkeys[index];
+        final pubkey = notificationData.pubkeys[index];
         final userData = userDatas[index];
         if (userData == null) {
           return const TextSpan(text: '');
