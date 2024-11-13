@@ -137,7 +137,7 @@ class _GalleryTitle extends StatelessWidget {
   }
 }
 
-class _PhotoCarouselSlider extends StatelessWidget {
+class _PhotoCarouselSlider extends HookWidget {
   const _PhotoCarouselSlider({
     required this.activeIndex,
     required this.photoUrls,
@@ -148,7 +148,24 @@ class _PhotoCarouselSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = useRef(CarouselController());
+
+    useEffect(
+      () {
+        controller.value.addListener(() {
+          final offset = controller.value.offset;
+          final screenWidth = MediaQuery.sizeOf(context).width;
+          final index = (offset / screenWidth).round();
+          activeIndex.value = index + 1;
+        });
+
+        return controller.value.dispose;
+      },
+      [],
+    );
+
     return CarouselView(
+      controller: controller.value,
       itemExtent: double.infinity,
       backgroundColor: context.theme.appColors.primaryText,
       shape: const RoundedRectangleBorder(),
