@@ -19,7 +19,6 @@ import 'package:ion/app/features/auth/views/pages/twofa_codes/twofa_codes_page.d
 import 'package:ion/app/features/auth/views/pages/twofa_options/twofa_options_page.dart';
 import 'package:ion/app/features/auth/views/pages/twofa_success/twofa_success_page.dart';
 import 'package:ion/app/features/chat/messages/views/pages/messages_page.dart';
-import 'package:ion/app/features/chat/messages/views/pages/photo_message_preview_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_learn_more_modal/chat_learn_more_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
@@ -29,6 +28,7 @@ import 'package:ion/app/features/contacts/pages/contacts_list_view.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
+import 'package:ion/app/features/core/views/pages/photo_gallery_page.dart';
 import 'package:ion/app/features/core/views/pages/splash_page.dart';
 import 'package:ion/app/features/core/views/photo_gallery_page/photo_gallery_page.dart';
 import 'package:ion/app/features/dapps/views/categories/apps/apps.dart';

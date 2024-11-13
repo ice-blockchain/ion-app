@@ -81,26 +81,3 @@ class ShareProfileModalRoute extends BaseRouteData {
   final String title;
   final ContactRouteAction action;
 }
-
-@TypedGoRoute<PhotoMessagePreviewRoute>(path: '/photo-preview')
-class PhotoMessagePreviewRoute extends BaseRouteData {
-  PhotoMessagePreviewRoute({
-    required this.message,
-    required this.senderName,
-    required this.sentAt,
-    this.photoUrls = const [],
-  }) : super(
-          child: PhotoMessagePreviewPage(
-            photoUrls: photoUrls,
-            message: message,
-            senderName: senderName,
-            sentAt: sentAt,
-          ),
-          type: IceRouteType.fade,
-        );
-
-  final List<String> photoUrls;
-  final String message;
-  final String senderName;
-  final DateTime sentAt;
-}

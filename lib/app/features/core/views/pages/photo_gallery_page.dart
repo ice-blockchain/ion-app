@@ -4,6 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
+import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_seperator.dart';
+import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
+import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -12,17 +16,17 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_back_but
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class PhotoMessagePreviewPage extends HookWidget {
-  const PhotoMessagePreviewPage({
+class PhotoGalleryPage extends HookWidget {
+  const PhotoGalleryPage({
     required this.photoUrls,
-    required this.message,
+    required this.title,
     required this.senderName,
     required this.sentAt,
     super.key,
   });
 
   final List<String> photoUrls;
-  final String message;
+  final String title;
   final String senderName;
   final DateTime sentAt;
 
@@ -49,32 +53,26 @@ class PhotoMessagePreviewPage extends HookWidget {
             color: context.theme.appColors.onPrimaryAccent,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Assets.svg.iconMorePopup.icon(
-              size: NavigationAppBar.actionButtonSide,
-              color: context.theme.appColors.onPrimaryAccent,
-            ),
-            onPressed: () {},
-          ),
+        actions: const [
+          _ContextMenu(),
         ],
       ),
       body: Column(
         children: [
           Expanded(
-            child: _ImageCarouselSlider(activeIndex: activeIndex, photoUrls: photoUrls),
+            child: _PhotoCarouselSlider(activeIndex: activeIndex, photoUrls: photoUrls),
           ),
           ScreenSideOffset.small(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 60.0.s),
-                _MessageBody(message: message),
+                _GalleryTitle(message: title),
                 SizedBox(height: 24.0.s),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _MessageMeta(senderName: senderName, sentAt: sentAt),
+                    _PhotoMeta(senderName: senderName, sentAt: sentAt),
                     Assets.svg.iconChatReplymessage.icon(
                       size: 20.0.s,
                       color: context.theme.appColors.onPrimaryAccent,
@@ -91,8 +89,8 @@ class PhotoMessagePreviewPage extends HookWidget {
   }
 }
 
-class _MessageMeta extends StatelessWidget {
-  const _MessageMeta({
+class _PhotoMeta extends StatelessWidget {
+  const _PhotoMeta({
     required this.senderName,
     required this.sentAt,
   });
@@ -112,7 +110,6 @@ class _MessageMeta extends StatelessWidget {
           ),
         ),
         Text(
-          // sentAt.format(context),
           formatMessageTimestamp(sentAt),
           style: context.theme.appTextThemes.caption2.copyWith(
             color: context.theme.appColors.onPrimaryAccent,
@@ -123,8 +120,8 @@ class _MessageMeta extends StatelessWidget {
   }
 }
 
-class _MessageBody extends StatelessWidget {
-  const _MessageBody({
+class _GalleryTitle extends StatelessWidget {
+  const _GalleryTitle({
     required this.message,
   });
 
@@ -141,8 +138,8 @@ class _MessageBody extends StatelessWidget {
   }
 }
 
-class _ImageCarouselSlider extends StatelessWidget {
-  const _ImageCarouselSlider({
+class _PhotoCarouselSlider extends StatelessWidget {
+  const _PhotoCarouselSlider({
     required this.activeIndex,
     required this.photoUrls,
   });
@@ -172,6 +169,66 @@ class _ImageCarouselSlider extends StatelessWidget {
           ),
         );
       }).toList(),
+    );
+  }
+}
+
+class _ContextMenu extends StatelessWidget {
+  const _ContextMenu();
+
+  static double get iconSize => 20.0.s;
+
+  @override
+  Widget build(BuildContext context) {
+    return OverlayMenu(
+      menuBuilder: (closeMenu) => Column(
+        children: [
+          OverlayMenuContainer(
+            child: IntrinsicWidth(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 4.0.s),
+                child: Column(
+                  children: [
+                    OverlayMenuItem(
+                      label: context.i18n.button_share,
+                      icon: Assets.svg.iconButtonShare.icon(
+                        size: iconSize,
+                        color: context.theme.appColors.quaternaryText,
+                      ),
+                      onPressed: closeMenu,
+                    ),
+                    const OverlayMenuItemSeperator(),
+                    OverlayMenuItem(
+                      label: context.i18n.button_save,
+                      icon: Assets.svg.iconSecurityDownload
+                          .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                      onPressed: closeMenu,
+                    ),
+                    const OverlayMenuItemSeperator(),
+                    OverlayMenuItem(
+                      label: context.i18n.button_report,
+                      icon: Assets.svg.iconBlockClose3
+                          .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                      onPressed: closeMenu,
+                    ),
+                    const OverlayMenuItemSeperator(),
+                    OverlayMenuItem(
+                      label: context.i18n.button_delete,
+                      labelColor: context.theme.appColors.attentionRed,
+                      icon: Assets.svg.iconBlockDelete
+                          .icon(size: iconSize, color: context.theme.appColors.attentionRed),
+                      onPressed: closeMenu,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      child: Assets.svg.iconMorePopup.icon(
+        color: context.theme.appColors.onPrimaryAccent,
+      ),
     );
   }
 }
