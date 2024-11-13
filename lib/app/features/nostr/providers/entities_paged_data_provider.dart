@@ -17,7 +17,7 @@ part 'entities_paged_data_provider.freezed.dart';
 class EntitiesDataSource with _$EntitiesDataSource {
   const factory EntitiesDataSource({
     required ActionSource actionSource,
-    required RequestFilter requestFilter,
+    required List<RequestFilter> requestFilters,
     required bool Function(NostrEntity entity) entityFilter,
   }) = _EntitiesDataSource;
 }
@@ -85,12 +85,12 @@ class EntitiesPagedData extends _$EntitiesPagedData {
       return MapEntry(dataSource.actionSource, PaginationParams(hasMore: false));
     }
 
-    final requestMessage = RequestMessage()
-      ..addFilter(
-        dataSource.requestFilter.copyWith(
-          until: () => paginationParams.until,
-        ),
+    final requestMessage = RequestMessage();
+    for (final filter in dataSource.requestFilters) {
+      requestMessage.addFilter(
+        filter.copyWith(until: () => paginationParams.until),
       );
+    }
 
     final entitiesStream = ref.read(nostrNotifierProvider.notifier).requestEntities(
           requestMessage,

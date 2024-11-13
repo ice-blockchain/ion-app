@@ -27,13 +27,15 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
           actionSource: ActionSourceRelayUrl(entry.key),
           entityFilter: (entity) =>
               entity is PostEntity || entity is RepostEntity || entity is ArticleEntity,
-          requestFilter: RequestFilter(
-            kinds: filters.category == FeedCategory.articles
-                ? const [ArticleEntity.kind]
-                : const [PostEntity.kind, RepostEntity.kind],
-            authors: filters.filter == FeedFilter.following ? entry.value : null,
-            limit: 10,
-          ),
+          requestFilters: [
+            RequestFilter(
+              kinds: filters.category == FeedCategory.articles
+                  ? const [ArticleEntity.kind]
+                  : const [PostEntity.kind, RepostEntity.kind],
+              authors: filters.filter == FeedFilter.following ? entry.value : null,
+              limit: 10,
+            ),
+          ],
         ),
     ];
 

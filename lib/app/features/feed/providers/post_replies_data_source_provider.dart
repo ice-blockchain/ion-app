@@ -19,11 +19,13 @@ List<EntitiesDataSource>? postRepliesDataSource(
     EntitiesDataSource(
       actionSource: ActionSourceUser(pubkey),
       entityFilter: (entity) => entity is PostEntity,
-      requestFilter: RequestFilter(
-        kinds: const [PostEntity.kind],
-        e: [postId],
-        limit: 10,
-      ),
+      requestFilters: [
+        RequestFilter(
+          kinds: const [PostEntity.kind],
+          e: [postId],
+          limit: 10,
+        ),
+      ],
     ),
   ];
 
