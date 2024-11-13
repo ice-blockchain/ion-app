@@ -8,8 +8,8 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class FeedItemReposted extends ConsumerWidget {
-  const FeedItemReposted({required this.pubkey, super.key});
+class RepostAuthorHeader extends ConsumerWidget {
+  const RepostAuthorHeader({required this.pubkey, super.key});
 
   final String pubkey;
 
