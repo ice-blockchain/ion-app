@@ -62,6 +62,7 @@ dependencies:
       url: https://github.com/ice-blockchain/nostr-dart.git
       ref: 0.0.6
   ogp_data_extract: ^0.1.4
+  package_info_plus: ^4.2.0
   path: ^1.9.0
   path_provider: ^2.1.4
   permission_handler: ^11.3.0

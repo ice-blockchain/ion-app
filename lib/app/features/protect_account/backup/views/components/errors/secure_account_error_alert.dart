@@ -13,7 +13,9 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SecureAccountErrorAlert extends StatelessWidget {
-  const SecureAccountErrorAlert({super.key});
+  const SecureAccountErrorAlert({required this.pubkey, super.key});
+
+  final String pubkey;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class SecureAccountErrorAlert extends StatelessWidget {
             title: Text(locale.protect_account_header_security),
             actions: [
               NavigationCloseButton(
-                onPressed: () => WalletRoute().go(context),
+                onPressed: () => ProfileRoute(pubkey: pubkey).go(context),
               ),
             ],
           ),

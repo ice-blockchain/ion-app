@@ -15,6 +15,12 @@ class ProfileRoutes {
         TypedGoRoute<PaymentSelectionRoute>(path: 'payment-selector'),
         TypedGoRoute<SendCoinsFormRoute>(path: 'send-coins-form'),
         TypedGoRoute<RequestCoinsFormRoute>(path: 'request-coins-form'),
+        TypedGoRoute<SettingsRoute>(path: 'settings'),
+        TypedGoRoute<ProfileSettingsRoute>(path: 'profile-settings'),
+        TypedGoRoute<AppLanguagesRoute>(path: 'app-language'),
+        TypedGoRoute<ContentLanguagesRoute>(path: 'content-language'),
+        TypedGoRoute<ConfirmLogoutRoute>(path: 'confirm-logout'),
+        ...ProtectAccountRoutes.routes,
       ],
     ),
   ];
@@ -170,5 +176,55 @@ class RequestCoinsFormRoute extends BaseRouteData {
 
   final NetworkType networkType;
   final String coinId;
+  final String pubkey;
+}
+
+class SettingsRoute extends BaseRouteData {
+  SettingsRoute({required this.pubkey})
+      : super(
+          child: SettingsModal(pubkey: pubkey),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String pubkey;
+}
+
+class AppLanguagesRoute extends BaseRouteData {
+  AppLanguagesRoute({required this.pubkey})
+      : super(
+          child: const AppLanguageModal(),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String pubkey;
+}
+
+class ContentLanguagesRoute extends BaseRouteData {
+  ContentLanguagesRoute({required this.pubkey})
+      : super(
+          child: const ContentLanguageModal(),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String pubkey;
+}
+
+class ProfileSettingsRoute extends BaseRouteData {
+  ProfileSettingsRoute({required this.pubkey})
+      : super(
+          child: ProfileSettingsModal(pubkey: pubkey),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String pubkey;
+}
+
+class ConfirmLogoutRoute extends BaseRouteData {
+  ConfirmLogoutRoute({required this.pubkey})
+      : super(
+          child: ConfirmLogoutModal(pubkey: pubkey),
+          type: IceRouteType.bottomSheet,
+        );
+
   final String pubkey;
 }

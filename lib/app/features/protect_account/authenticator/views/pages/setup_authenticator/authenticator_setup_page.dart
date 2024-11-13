@@ -20,8 +20,9 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class AuthenticatorSetupPage extends HookConsumerWidget {
-  const AuthenticatorSetupPage(this.step, {super.key});
+  const AuthenticatorSetupPage(this.step, {required this.pubkey, super.key});
 
+  final String pubkey;
   final AuthenticatorSetupSteps step;
 
   @override
@@ -35,7 +36,7 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
           SliverAppBarWithProgress(
             progressValue: step == AuthenticatorSetupSteps.success ? null : step.progressValue,
             title: step.getAppBarTitle(context),
-            onClose: () => WalletRoute().go(context),
+            onClose: () => ProfileRoute(pubkey: pubkey).go(context),
             showBackButton: step != AuthenticatorSetupSteps.success,
             showProgress: step != AuthenticatorSetupSteps.success,
           ),
@@ -124,7 +125,7 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
     };
 
     nextStep == null
-        ? SecureAccountOptionsRoute().replace(context)
-        : AuthenticatorSetupRoute(step: nextStep).push<void>(context);
+        ? SecureAccountOptionsRoute(pubkey: pubkey).replace(context)
+        : AuthenticatorSetupRoute(step: nextStep, pubkey: pubkey).push<void>(context);
   }
 }

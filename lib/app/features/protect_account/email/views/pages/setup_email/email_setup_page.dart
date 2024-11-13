@@ -13,8 +13,14 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class EmailSetupPage extends StatelessWidget {
-  const EmailSetupPage(this.step, this.email, {super.key});
+  const EmailSetupPage({
+    required this.pubkey,
+    required this.step,
+    required this.email,
+    super.key,
+  });
 
+  final String pubkey;
   final EmailSetupSteps step;
   final String? email;
 
@@ -26,7 +32,7 @@ class EmailSetupPage extends StatelessWidget {
           SliverAppBarWithProgress(
             progressValue: step.progressValue,
             title: step.getAppBarTitle(context),
-            onClose: () => WalletRoute().go(context),
+            onClose: () => ProfileRoute(pubkey: pubkey).go(context),
             showBackButton: step != EmailSetupSteps.success,
             showProgress: step != EmailSetupSteps.success,
           ),
@@ -48,9 +54,10 @@ class EmailSetupPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: switch (step) {
-                    EmailSetupSteps.input => const EmailSetupInputPage(),
-                    EmailSetupSteps.confirmation => EmailSetupConfirmPage(email: email!),
-                    EmailSetupSteps.success => const EmailSetupSuccessPage(),
+                    EmailSetupSteps.input => EmailSetupInputPage(pubkey: pubkey),
+                    EmailSetupSteps.confirmation =>
+                      EmailSetupConfirmPage(pubkey: pubkey, email: email!),
+                    EmailSetupSteps.success => EmailSetupSuccessPage(pubkey: pubkey),
                   },
                 ),
                 ScreenBottomOffset(margin: 36.0.s),

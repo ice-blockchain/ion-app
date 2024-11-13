@@ -14,8 +14,11 @@ import 'package:ion/generated/assets.gen.dart';
 
 class RecoveryKeysSuccessPage extends StatelessWidget {
   const RecoveryKeysSuccessPage({
+    required this.pubkey,
     super.key,
   });
+
+  final String pubkey;
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +26,13 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
 
     return SheetContent(
       body: AuthScrollContainer(
-        showBackButton: false,
         titleStyle: context.theme.appTextThemes.headline2,
         descriptionStyle: context.theme.appTextThemes.body2.copyWith(
           color: context.theme.appColors.secondaryText,
         ),
         actions: [
           NavigationCloseButton(
-            onPressed: () => WalletRoute().go(context),
+            onPressed: () => ProfileRoute(pubkey: pubkey).go(context),
           ),
         ],
         title: locale.backup_option_with_recovery_keys_title,
@@ -54,7 +56,7 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
             margin: 36.0.s,
             child: ScreenSideOffset.large(
               child: Button(
-                onPressed: () => SecureAccountOptionsRoute().replace(context),
+                onPressed: () => SecureAccountOptionsRoute(pubkey: pubkey).replace(context),
                 label: Text(locale.button_back_to_security),
                 mainAxisSize: MainAxisSize.max,
               ),

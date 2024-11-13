@@ -7,7 +7,9 @@ import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BackupRecoveryKeysModal extends StatelessWidget {
-  const BackupRecoveryKeysModal({super.key});
+  const BackupRecoveryKeysModal({required this.pubkey, super.key});
+
+  final String pubkey;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class BackupRecoveryKeysModal extends StatelessWidget {
       description: context.i18n.secure_your_recovery_keys_description,
       iconAsset: Assets.svg.actionWalletLock,
       buttonText: context.i18n.button_lets_start,
-      onPressed: () => CreateRecoveryKeyRoute().push<void>(context),
+      onPressed: () => CreateRecoveryKeyRoute(pubkey: pubkey).push<void>(context),
     );
   }
 }

@@ -14,11 +14,13 @@ class ActionButton extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onTap,
+    this.trailing,
     super.key,
   });
 
   final Widget icon;
   final String label;
+  final Widget? trailing;
   final VoidCallback onTap;
 
   @override
@@ -35,7 +37,17 @@ class ActionButton extends StatelessWidget {
         onPressed: onTap,
         icon: icon,
       ),
-      title: Text(label, style: context.theme.appTextThemes.body),
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(label, style: context.theme.appTextThemes.body),
+          ),
+          if (trailing != null) ...[
+            SizedBox(width: 16.0.s),
+            trailing!,
+          ],
+        ],
+      ),
       trailing: Assets.svg.iconArrowRight.icon(color: context.theme.appColors.primaryText),
       backgroundColor: context.theme.appColors.tertararyBackground,
     );

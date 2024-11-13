@@ -9,6 +9,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/user_list_item.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class Header extends ConsumerWidget {
@@ -50,7 +51,15 @@ class Header extends ConsumerWidget {
                   ),
                 ),
               ),
-              if (!isCurrentUserProfile)
+              if (isCurrentUserProfile)
+                HeaderAction(
+                  onPressed: () {
+                    SettingsRoute(pubkey: pubkey).push<void>(context);
+                  },
+                  assetName: Assets.svg.iconProfileSettings,
+                  opacity: opacity,
+                )
+              else
                 ContextMenu(
                   pubkey: pubkey,
                   opacity: opacity,

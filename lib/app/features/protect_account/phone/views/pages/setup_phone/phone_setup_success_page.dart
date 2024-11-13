@@ -9,7 +9,9 @@ import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class PhoneSetupSuccessPage extends StatelessWidget {
-  const PhoneSetupSuccessPage({super.key});
+  const PhoneSetupSuccessPage({required this.pubkey, super.key});
+
+  final String pubkey;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class PhoneSetupSuccessPage extends StatelessWidget {
           child: Button(
             mainAxisSize: MainAxisSize.max,
             label: Text(locale.button_back_to_security),
-            onPressed: () => SecureAccountOptionsRoute().replace(context),
+            onPressed: () => SecureAccountOptionsRoute(pubkey: pubkey).replace(context),
           ),
         ),
       ],

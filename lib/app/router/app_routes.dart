@@ -94,6 +94,11 @@ import 'package:ion/app/features/user/pages/profile_page/pages/request_coins_for
 import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/select_coin_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/send_coins_form_modal/send_coin_form_modal.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/settings/app_language_modal.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/settings/content_language_modal.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/settings/logout_confirm_modal.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/settings/profile_settings_modal.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/settings/settings_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/switch_account_modal.dart';
@@ -209,11 +214,6 @@ class AppShellRouteData extends StatefulShellRouteData {
   }
 }
 
-@TypedShellRoute<ModalShellRouteData>(
-  routes: [
-    ...ProtectAccountRoutes.routes,
-  ],
-)
 class ModalShellRouteData extends ShellRouteData {
   const ModalShellRouteData();
 
@@ -232,8 +232,10 @@ class ModalShellRouteData extends ShellRouteData {
       barrierColor: context.theme.appColors.backgroundSheet,
       transitionCurve: Easing.standardDecelerate,
       swipeDismissible: true,
-      swipeDismissSensitivity:
-          SwipeDismissSensitivity(minFlingVelocityRatio: 3, minDragDistance: 300.0.s),
+      swipeDismissSensitivity: SwipeDismissSensitivity(
+        minFlingVelocityRatio: 3,
+        minDragDistance: 300.0.s,
+      ),
     );
   }
 }
@@ -261,7 +263,8 @@ class DappsRoute extends BaseRouteData {
 
 @TypedGoRoute<ErrorRoute>(path: '/error')
 class ErrorRoute extends BaseRouteData {
-  ErrorRoute({this.$extra}) : super(child: ErrorPage(error: $extra ?? Exception('Unknown error')));
+  ErrorRoute({this.$extra})
+      : super(child: ErrorPage(error: $extra ?? Exception('Unknown error')));
 
   final Exception? $extra;
 }
@@ -330,7 +333,8 @@ class DAppsRoute extends BaseRouteData {
 }
 
 class DAppsListRoute extends BaseRouteData {
-  DAppsListRoute({required this.$extra}) : super(child: DAppsList(payload: $extra));
+  DAppsListRoute({required this.$extra})
+      : super(child: DAppsList(payload: $extra));
 
   final AppsRouteData $extra;
 }

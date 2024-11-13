@@ -12,8 +12,13 @@ import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class CreateRecoveryKeySuccessState extends StatelessWidget {
-  const CreateRecoveryKeySuccessState({required this.recoveryData, super.key});
+  const CreateRecoveryKeySuccessState({
+    required this.pubkey,
+    required this.recoveryData,
+    super.key,
+  });
 
+  final String pubkey;
   final CreateRecoveryCredentialsSuccess recoveryData;
 
   @override
@@ -46,7 +51,8 @@ class CreateRecoveryKeySuccessState extends StatelessWidget {
           Button(
             mainAxisSize: MainAxisSize.max,
             label: Text(locale.button_continue),
-            onPressed: () => ValidateRecoveryKeyRoute().push<void>(context),
+            onPressed: () =>
+                ValidateRecoveryKeyRoute(pubkey: pubkey).push<void>(context),
           ),
         ],
       ),

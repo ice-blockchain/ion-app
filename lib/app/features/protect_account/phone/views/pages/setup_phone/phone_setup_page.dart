@@ -13,8 +13,14 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class PhoneSetupPage extends StatelessWidget {
-  const PhoneSetupPage(this.step, this.phone, {super.key});
+  const PhoneSetupPage({
+    required this.pubkey,
+    required this.step,
+    required this.phone,
+    super.key,
+  });
 
+  final String pubkey;
   final PhoneSetupSteps step;
   final String? phone;
 
@@ -26,7 +32,7 @@ class PhoneSetupPage extends StatelessWidget {
           SliverAppBarWithProgress(
             progressValue: step.progressValue,
             title: step.getAppBarTitle(context),
-            onClose: () => WalletRoute().go(context),
+            onClose: () => ProfileRoute(pubkey: pubkey).go(context),
             showBackButton: step != PhoneSetupSteps.success,
             showProgress: step != PhoneSetupSteps.success,
           ),
@@ -48,9 +54,10 @@ class PhoneSetupPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: switch (step) {
-                    PhoneSetupSteps.input => const PhoneSetupInputPage(),
-                    PhoneSetupSteps.confirmation => PhoneSetupConfirmPage(phone: phone!),
-                    PhoneSetupSteps.success => const PhoneSetupSuccessPage(),
+                    PhoneSetupSteps.input => PhoneSetupInputPage(pubkey: pubkey),
+                    PhoneSetupSteps.confirmation =>
+                      PhoneSetupConfirmPage(pubkey: pubkey, phone: phone!),
+                    PhoneSetupSteps.success => PhoneSetupSuccessPage(pubkey: pubkey),
                   },
                 ),
                 ScreenBottomOffset(margin: 36.0.s),

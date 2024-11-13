@@ -12,7 +12,9 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SecureAccountModal extends StatelessWidget {
-  const SecureAccountModal({super.key});
+  const SecureAccountModal({required this.pubkey, super.key});
+
+  final String pubkey;
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +25,10 @@ class SecureAccountModal extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
-            showBackButton: false,
             title: Text(locale.protect_account_header_security),
             actions: [
               NavigationCloseButton(
-                onPressed: () => WalletRoute().go(context),
+                onPressed: () => ProfileRoute(pubkey: pubkey).go(context),
               ),
             ],
           ),
@@ -39,7 +40,8 @@ class SecureAccountModal extends StatelessWidget {
                 InfoCard(
                   iconAsset: Assets.svg.actionWalletSecureaccount,
                   title: locale.protect_account_title_secure_account,
-                  description: locale.protect_account_description_secure_account,
+                  description:
+                      locale.protect_account_description_secure_account,
                 ),
                 SizedBox(height: 32.0.s),
                 Button(
@@ -48,7 +50,8 @@ class SecureAccountModal extends StatelessWidget {
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
                   label: Text(locale.protect_account_button),
-                  onPressed: () => SecureAccountOptionsRoute().push<void>(context),
+                  onPressed: () => SecureAccountOptionsRoute(pubkey: pubkey)
+                      .push<void>(context),
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],

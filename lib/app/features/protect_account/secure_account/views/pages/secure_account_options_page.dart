@@ -39,11 +39,10 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
-            showBackButton: false,
             title: Text(locale.protect_account_header_security),
             actions: [
               NavigationCloseButton(
-                onPressed: () => WalletRoute().go(context),
+                onPressed: () => ProfileRoute(pubkey: pubkey).go(context),
               ),
             ],
           ),

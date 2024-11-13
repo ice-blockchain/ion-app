@@ -12,7 +12,9 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BackupOptionsPage extends StatelessWidget {
-  const BackupOptionsPage({super.key});
+  const BackupOptionsPage({required this.pubkey, super.key});
+
+  final String pubkey;
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +25,10 @@ class BackupOptionsPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
-            showBackButton: false,
             title: Text(locale.protect_account_header_security),
             actions: [
               NavigationCloseButton(
-                onPressed: () => WalletRoute().go(context),
+                onPressed: () => ProfileRoute(pubkey: pubkey).go(context),
               ),
             ],
           ),
@@ -74,7 +75,7 @@ class BackupOptionsPage extends StatelessWidget {
                   icon: Assets.svg.walletLoginRecovery.icon(
                     size: 48.0.s,
                   ),
-                  onTap: () => BackupRecoveryKeysRoute().push<void>(context),
+                  onTap: () => BackupRecoveryKeysRoute(pubkey: pubkey).push<void>(context),
                 ),
                 ScreenBottomOffset(margin: 32.0.s),
               ],

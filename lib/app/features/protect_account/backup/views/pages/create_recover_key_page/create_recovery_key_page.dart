@@ -17,16 +17,18 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CreateRecoveryKeyPage extends StatelessWidget {
-  const CreateRecoveryKeyPage({super.key});
+  const CreateRecoveryKeyPage({required this.pubkey, super.key});
+
+  final String pubkey;
 
   @override
   Widget build(BuildContext context) {
-    return const SheetContent(
+    return SheetContent(
       body: Column(
         children: [
-          _NavBar(),
-          _Header(),
-          _Body(),
+          _NavBar(pubkey: pubkey),
+          const _Header(),
+          _Body(pubkey: pubkey),
         ],
       ),
     );
@@ -34,14 +36,16 @@ class CreateRecoveryKeyPage extends StatelessWidget {
 }
 
 class _NavBar extends StatelessWidget {
-  const _NavBar();
+  const _NavBar({required this.pubkey});
+
+  final String pubkey;
 
   @override
   Widget build(BuildContext context) {
     return NavigationAppBar.modal(
       actions: [
         NavigationCloseButton(
-          onPressed: () => WalletRoute().go(context),
+          onPressed: () => ProfileRoute(pubkey: pubkey).go(context),
         ),
       ],
     );
@@ -74,7 +78,9 @@ class _Header extends StatelessWidget {
 }
 
 class _Body extends HookConsumerWidget {
-  const _Body();
+  const _Body({required this.pubkey});
+
+  final String pubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -91,7 +97,10 @@ class _Body extends HookConsumerWidget {
       return const CreateRecoveryKeyErrorState();
     }
     if (recoveryData.hasValue) {
-      return CreateRecoveryKeySuccessState(recoveryData: recoveryData.requireValue!);
+      return CreateRecoveryKeySuccessState(
+        pubkey: pubkey,
+        recoveryData: recoveryData.requireValue!,
+      );
     }
 
     return const CreateRecoveryKeyLoadingState();

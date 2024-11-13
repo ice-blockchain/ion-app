@@ -18,8 +18,9 @@ import 'package:ion/app/router/app_routes.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class EmailSetupConfirmPage extends HookConsumerWidget {
-  const EmailSetupConfirmPage({required this.email, super.key});
+  const EmailSetupConfirmPage({required this.pubkey, required this.email, super.key});
 
+  final String pubkey;
   final String email;
 
   @override
@@ -70,7 +71,10 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
                     }
 
                     unawaited(
-                      EmailSetupRoute(step: EmailSetupSteps.success).push<void>(context),
+                      EmailSetupRoute(
+                        pubkey: pubkey,
+                        step: EmailSetupSteps.success,
+                      ).push<void>(context),
                     );
                   },
                 ),
