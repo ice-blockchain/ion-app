@@ -35,7 +35,9 @@ class _PlayPauseButton extends StatelessWidget {
           valueListenable: audioPlaybackState,
           builder: (context, state, child) {
             if (state == null) {
-              return const AudioLoadingIndicator();
+              return const IONLoadingIndicator(
+                type: IndicatorType.dark,
+              );
             }
             return state.isPlaying
                 ? Assets.svg.iconVideoPause.icon(
