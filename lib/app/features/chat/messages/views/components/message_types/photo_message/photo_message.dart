@@ -64,10 +64,10 @@ class _PhotoContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12.0.s),
-      child: Hero(
-        tag: imageUrl,
+    return Hero(
+      tag: imageUrl,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.0.s),
         child: CachedNetworkImage(
           imageUrl: imageUrl,
           width: PhotoMessage.maxWidth,

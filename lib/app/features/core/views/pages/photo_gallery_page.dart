@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
@@ -60,13 +59,13 @@ class PhotoGalleryPage extends HookWidget {
       body: Column(
         children: [
           Expanded(
-            child: _PhotoCarouselSlider(activeIndex: activeIndex, photoUrls: photoUrls),
+            child:
+                Center(child: _PhotoCarouselSlider(activeIndex: activeIndex, photoUrls: photoUrls)),
           ),
           ScreenSideOffset.small(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 60.0.s),
                 _GalleryTitle(message: title),
                 SizedBox(height: 24.0.s),
                 Row(
@@ -149,26 +148,22 @@ class _PhotoCarouselSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: double.infinity,
-        enableInfiniteScroll: false,
-        viewportFraction: 1,
-        onPageChanged: (index, reason) {
-          activeIndex.value = index + 1;
-        },
-      ),
-      items: photoUrls.map((photoUrl) {
+    return CarouselView(
+      itemExtent: double.infinity,
+      backgroundColor: context.theme.appColors.primaryText,
+      shape: const RoundedRectangleBorder(),
+      padding: EdgeInsets.zero,
+      children: List.generate(photoUrls.length, (index) {
         return Hero(
-          tag: photoUrl,
+          tag: photoUrls[index],
           child: CachedNetworkImage(
-            imageUrl: photoUrl,
+            imageUrl: photoUrls[index],
             fit: BoxFit.contain,
             width: double.infinity,
             height: double.infinity,
           ),
         );
-      }).toList(),
+      }),
     );
   }
 }
