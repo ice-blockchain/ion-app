@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/components/topics_carousel/topics_carousel.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
+import 'package:ion/app/features/feed/views/components/topics_carousel/topics_carousel.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_section_header.dart';
 
 class ArticleDetailsTopics extends StatelessWidget {

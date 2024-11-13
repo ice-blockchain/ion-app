@@ -21,11 +21,7 @@ class ArticlesCarouselItem extends StatelessWidget {
       children: [
         UserInfo(
           pubkey: article.pubkey,
-          trailing: Row(
-            children: [
-              UserInfoMenu(pubkey: article.pubkey),
-            ],
-          ),
+          trailing: UserInfoMenu(pubkey: article.pubkey),
         ),
         Flexible(
           child: Row(

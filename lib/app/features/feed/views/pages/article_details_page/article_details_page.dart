@@ -56,7 +56,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
 
           final maxScroll = scrollController.position.maxScrollExtent;
           final currentScroll = scrollController.offset;
-          final viewportWidth = MediaQuery.of(context).size.width;
+          final viewportWidth = MediaQuery.sizeOf(context).width;
 
           if (maxScroll == 0) {
             ref.read(indicatorWidthProvider.notifier).state = viewportWidth;

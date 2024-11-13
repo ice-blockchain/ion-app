@@ -20,24 +20,21 @@ class ArticleDetailsSectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Text(
-              title,
-              style: context.theme.appTextThemes.subtitle.copyWith(
-                color: context.theme.appColors.primaryText,
-              ),
-            ),
-            SizedBox(width: 4.0.s),
-            if (count != null && count! > 0)
-              Text(
-                '($count)',
-                style: context.theme.appTextThemes.subtitle.copyWith(
-                  color: context.theme.appColors.quaternaryText,
-                ),
-              ),
-          ],
+        Text(
+          title,
+          style: context.theme.appTextThemes.subtitle.copyWith(
+            color: context.theme.appColors.primaryText,
+          ),
         ),
+        SizedBox(width: 4.0.s),
+        if (count != null && count! > 0)
+          Text(
+            '($count)',
+            style: context.theme.appTextThemes.subtitle.copyWith(
+              color: context.theme.appColors.quaternaryText,
+            ),
+          ),
+        const Spacer(),
         if (trailing != null) trailing!,
       ],
     );

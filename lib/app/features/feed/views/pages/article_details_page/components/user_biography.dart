@@ -41,11 +41,7 @@ class UserBiography extends StatelessWidget {
           SizedBox(height: 10.0.s),
           UserInfo(
             pubkey: article.pubkey,
-            trailing: Row(
-              children: [
-                UserInfoMenu(pubkey: article.pubkey),
-              ],
-            ),
+            trailing: UserInfoMenu(pubkey: article.pubkey),
           ),
           SizedBox(height: 10.0.s),
           ProfileAbout(pubkey: article.pubkey),
