@@ -35,7 +35,7 @@ class Header extends ConsumerWidget {
                 onPressed: () {
                   Navigator.of(context).pop(true);
                 },
-                assetName: Assets.svg.iconChatBack,
+                assetName: Assets.svg.iconProfileBack,
                 opacity: opacity,
               ),
               Expanded(

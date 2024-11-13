@@ -24,7 +24,7 @@ class Header extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              assetName: Assets.svg.iconChatBack,
+              assetName: Assets.svg.iconProfileBack,
             ),
             const Spacer(),
             HeaderAction(
