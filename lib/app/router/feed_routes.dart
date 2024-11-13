@@ -177,13 +177,15 @@ class CreateVideoRoute extends BaseRouteData {
 }
 
 class MediaPickerRoute extends BaseRouteData {
-  MediaPickerRoute()
+  MediaPickerRoute({this.maxSelection = 5})
       : super(
-          child: const MediaPickerPage(
-            maxSelection: 5,
+          child: MediaPickerPage(
+            maxSelection: maxSelection,
           ),
           type: IceRouteType.bottomSheet,
         );
+
+  final int maxSelection;
 }
 
 class ArticlePreviewRoute extends BaseRouteData {
@@ -223,7 +225,7 @@ class FeedSearchLanguagesRoute extends BaseRouteData {
 @TypedGoRoute<StoryRecordRoute>(
   path: '/story-record',
   routes: [
-    TypedGoRoute<StoryPreviewRoute>(path: 'story-preview/:videoPath'),
+    TypedGoRoute<StoryPreviewRoute>(path: 'story-preview/:path'),
   ],
 )
 class StoryRecordRoute extends BaseRouteData {
@@ -231,13 +233,14 @@ class StoryRecordRoute extends BaseRouteData {
 }
 
 class StoryPreviewRoute extends BaseRouteData {
-  StoryPreviewRoute({required this.videoPath})
+  StoryPreviewRoute({required this.path, required this.storyType})
       : super(
-          child: StoryPreviewPage(videoPath: videoPath),
+          child: StoryPreviewPage(path: path, type: storyType),
           type: IceRouteType.slideFromLeft,
         );
 
-  final String videoPath;
+  final String path;
+  final StoryType storyType;
 }
 
 @TypedGoRoute<StoryViewerRoute>(

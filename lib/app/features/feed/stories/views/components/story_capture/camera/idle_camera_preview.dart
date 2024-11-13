@@ -8,7 +8,8 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_capture/story_control_button.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/story_control_button.dart';
+import 'package:ion/app/features/feed/stories/views/pages/story_preview_page.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
@@ -54,9 +55,15 @@ class IdleCameraPreview extends ConsumerWidget {
             permissionType: Permission.photos,
             onGranted: () async {
               if (context.mounted) {
-                final mediaFiles = await MediaPickerRoute().push<List<MediaFile>>(context);
+                final mediaFiles =
+                    await MediaPickerRoute(maxSelection: 1).push<List<MediaFile>>(context);
 
-                if (mediaFiles != null && mediaFiles.isNotEmpty) {}
+                if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
+                  await StoryPreviewRoute(
+                    path: mediaFiles.first.path,
+                    storyType: StoryType.image,
+                  ).push<void>(context);
+                }
               }
             },
             requestDialog: PermissionRequestSheet.fromType(context, Permission.photos),

@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_capture/inner_capture_circle.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_capture/story_circular_progress_indicator.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_capture/progress/inner_capture_circle.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_capture/progress/story_circular_progress_indicator.dart';
 
 class StoryCaptureButton extends StatelessWidget {
   const StoryCaptureButton({
