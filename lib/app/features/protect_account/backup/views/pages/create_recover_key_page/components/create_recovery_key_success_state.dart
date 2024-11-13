@@ -51,8 +51,7 @@ class CreateRecoveryKeySuccessState extends StatelessWidget {
           Button(
             mainAxisSize: MainAxisSize.max,
             label: Text(locale.button_continue),
-            onPressed: () =>
-                ValidateRecoveryKeyRoute(pubkey: pubkey).push<void>(context),
+            onPressed: () => ValidateRecoveryKeyRoute(pubkey: pubkey).push<void>(context),
           ),
         ],
       ),

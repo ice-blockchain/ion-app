@@ -263,8 +263,7 @@ class DappsRoute extends BaseRouteData {
 
 @TypedGoRoute<ErrorRoute>(path: '/error')
 class ErrorRoute extends BaseRouteData {
-  ErrorRoute({this.$extra})
-      : super(child: ErrorPage(error: $extra ?? Exception('Unknown error')));
+  ErrorRoute({this.$extra}) : super(child: ErrorPage(error: $extra ?? Exception('Unknown error')));
 
   final Exception? $extra;
 }
@@ -333,8 +332,7 @@ class DAppsRoute extends BaseRouteData {
 }
 
 class DAppsListRoute extends BaseRouteData {
-  DAppsListRoute({required this.$extra})
-      : super(child: DAppsList(payload: $extra));
+  DAppsListRoute({required this.$extra}) : super(child: DAppsList(payload: $extra));
 
   final AppsRouteData $extra;
 }

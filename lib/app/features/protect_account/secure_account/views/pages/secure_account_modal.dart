@@ -40,8 +40,7 @@ class SecureAccountModal extends StatelessWidget {
                 InfoCard(
                   iconAsset: Assets.svg.actionWalletSecureaccount,
                   title: locale.protect_account_title_secure_account,
-                  description:
-                      locale.protect_account_description_secure_account,
+                  description: locale.protect_account_description_secure_account,
                 ),
                 SizedBox(height: 32.0.s),
                 Button(
@@ -50,8 +49,7 @@ class SecureAccountModal extends StatelessWidget {
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
                   label: Text(locale.protect_account_button),
-                  onPressed: () => SecureAccountOptionsRoute(pubkey: pubkey)
-                      .push<void>(context),
+                  onPressed: () => SecureAccountOptionsRoute(pubkey: pubkey).push<void>(context),
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],

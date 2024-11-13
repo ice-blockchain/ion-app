@@ -59,8 +59,7 @@ class AuthenticatorDeleteSuccessPage extends StatelessWidget {
             child: Button(
               mainAxisSize: MainAxisSize.max,
               label: Text(locale.button_back_to_security),
-              onPressed: () =>
-                  SecureAccountOptionsRoute(pubkey: pubkey).replace(context),
+              onPressed: () => SecureAccountOptionsRoute(pubkey: pubkey).replace(context),
             ),
           ),
           ScreenBottomOffset(margin: 36.0.s),
