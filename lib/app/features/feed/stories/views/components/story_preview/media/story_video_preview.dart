@@ -9,13 +9,13 @@ import 'package:ion/app/features/feed/stories/providers/story_camera_provider.da
 import 'package:video_player/video_player.dart';
 
 class StoryVideoPreview extends ConsumerWidget {
-  const StoryVideoPreview({required this.videoPath, super.key});
+  const StoryVideoPreview({required this.path, super.key});
 
-  final String videoPath;
+  final String path;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final assetFilePathAsync = ref.watch(assetFilePathProvider(videoPath));
+    final assetFilePathAsync = ref.watch(assetFilePathProvider(path));
 
     return LayoutBuilder(
       builder: (context, constraints) {
