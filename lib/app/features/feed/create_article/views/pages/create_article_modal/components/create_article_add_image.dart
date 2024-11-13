@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
@@ -35,47 +36,61 @@ class CreateArticleAddImage extends HookConsumerWidget {
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
       builder: (context, onPressed) => GestureDetector(
         onTap: onPressed,
-        child: Container(
-          width: 180.0.s,
-          height: 100.0.s,
-          color: context.theme.appColors.tertararyBackground,
-          alignment: Alignment.center,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12.0.s),
-            child: Consumer(
-              builder: (context, ref, _) {
-                final assetEntityAsync =
-                    ref.watch(assetEntityProvider(selectedImage.value?.path ?? ''));
+        child: ScreenSideOffset.small(
+          child: AspectRatio(
+            aspectRatio: 343 / 210,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: context.theme.appColors.tertararyBackground,
+                image: DecorationImage(
+                  image: Assets.images.article.imagePlaceholder.image().image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Consumer(
+                builder: (context, ref, _) {
+                  final assetEntityAsync =
+                      ref.watch(assetEntityProvider(selectedImage.value?.path ?? ''));
 
-                return assetEntityAsync.maybeWhen(
-                  data: (asset) {
-                    if (asset == null) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Assets.svg.iconArticleAddcover.icon(size: 24.0.s),
-                          SizedBox(height: 6.0.s),
-                          Text(
-                            context.i18n.create_article_add_cover,
-                            style: context.theme.appTextThemes.body2.copyWith(
-                              color: context.theme.appColors.primaryAccent,
+                  return assetEntityAsync.maybeWhen(
+                    data: (asset) {
+                      if (asset == null) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 36.0.s,
+                              height: 36.0.s,
+                              decoration: BoxDecoration(
+                                color: context.theme.appColors.primaryAccent,
+                                borderRadius: BorderRadius.circular(18.0.s),
+                              ),
+                              alignment: Alignment.center,
+                              child: Assets.svg.iconLoginCamera.icon(size: 24.0.s),
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 7.0.s),
+                            Text(
+                              context.i18n.create_article_add_cover,
+                              style: context.theme.appTextThemes.body2.copyWith(
+                                color: context.theme.appColors.primaryText,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return Image(
+                        image: AssetEntityImageProvider(
+                          asset,
+                          isOriginal: false,
+                          thumbnailSize: const ThumbnailSize.square(300),
+                        ),
+                        fit: BoxFit.cover,
                       );
-                    }
-                    return Image(
-                      image: AssetEntityImageProvider(
-                        asset,
-                        isOriginal: false,
-                        thumbnailSize: const ThumbnailSize.square(300),
-                      ),
-                      fit: BoxFit.cover,
-                    );
-                  },
-                  orElse: SizedBox.shrink,
-                );
-              },
+                    },
+                    orElse: SizedBox.shrink,
+                  );
+                },
+              ),
             ),
           ),
         ),

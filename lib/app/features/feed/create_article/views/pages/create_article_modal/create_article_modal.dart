@@ -68,7 +68,12 @@ class CreateArticleModal extends HookConsumerWidget {
             ),
             const CreateArticleAddImage(),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
+              padding: EdgeInsets.only(
+                left: ScreenSideOffset.defaultSmallMargin,
+                right: ScreenSideOffset.defaultSmallMargin,
+                top: ScreenSideOffset.defaultSmallMargin,
+                bottom: 6.0.s,
+              ),
               child: TextField(
                 controller: titleController,
                 style: context.theme.appTextThemes.headline2.copyWith(
@@ -77,7 +82,7 @@ class CreateArticleModal extends HookConsumerWidget {
                 decoration: InputDecoration(
                   hintText: context.i18n.create_article_title_placeholder,
                   hintStyle: context.theme.appTextThemes.headline2.copyWith(
-                    color: context.theme.appColors.quaternaryText,
+                    color: context.theme.appColors.tertararyText,
                   ),
                   border: InputBorder.none,
                 ),
@@ -87,6 +92,7 @@ class CreateArticleModal extends HookConsumerWidget {
               child: ScreenSideOffset.small(
                 child: TextEditor(
                   textEditorController,
+                  placeholder: context.i18n.create_article_story_placeholder,
                 ),
               ),
             ),
