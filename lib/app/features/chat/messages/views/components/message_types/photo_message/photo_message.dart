@@ -32,9 +32,9 @@ class PhotoMessage extends HookWidget {
       contentPadding: EdgeInsets.all(padding),
       child: GestureDetector(
         onTap: () {
-          PhotoMessagePreviewRoute(
+          PhotoGalleryRoute(
             photoUrls: [imageUrl],
-            message: message ?? '',
+            title: message ?? '',
             senderName: 'Selena Marquez',
             sentAt: DateTime.now(),
           ).push<void>(context);
