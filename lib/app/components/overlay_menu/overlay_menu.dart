@@ -9,11 +9,15 @@ class OverlayMenu extends HookWidget {
   const OverlayMenu({
     required this.child,
     required this.menuBuilder,
+    this.onOpen,
+    this.onClose,
     super.key,
   });
 
   final Widget child;
   final Widget Function(VoidCallback closeMenu) menuBuilder;
+  final VoidCallback? onOpen;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,12 @@ class OverlayMenu extends HookWidget {
 
     final hideMenu = useCallback(
       () {
-        animationController.reverse().whenComplete(overlayPortalController.hide);
+        animationController.reverse().whenComplete(() {
+          overlayPortalController.hide();
+          if (onClose != null) {
+            onClose?.call();
+          }
+        });
       },
       [overlayPortalController],
     );
@@ -35,6 +44,9 @@ class OverlayMenu extends HookWidget {
       () {
         overlayPortalController.show();
         animationController.forward();
+        if (onOpen != null) {
+          onOpen?.call();
+        }
       },
       [overlayPortalController],
     );

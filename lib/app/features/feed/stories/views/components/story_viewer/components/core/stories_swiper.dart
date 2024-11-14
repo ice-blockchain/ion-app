@@ -56,11 +56,6 @@ class StoriesSwiper extends StatelessWidget {
                 onStoryPageChanged(storyIndex);
               }
             },
-            onPausedChanged: (paused) {
-              if (isCurrentUser) {
-                onPausedChanged(paused);
-              }
-            },
             onNextStory: onNextStory,
             onPreviousStory: onPreviousStory,
             onNextUser: () {

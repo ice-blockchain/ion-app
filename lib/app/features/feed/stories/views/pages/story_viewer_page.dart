@@ -28,8 +28,6 @@ class StoryViewerPage extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (!context.mounted) return;
-
         storyViewingState.whenOrNull(
           ready: (users, currentUserIndex, _) {
             if (userPageController.hasClients) {

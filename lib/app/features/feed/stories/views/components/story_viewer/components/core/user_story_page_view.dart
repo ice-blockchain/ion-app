@@ -15,7 +15,6 @@ class UserStoryPageView extends StatelessWidget {
     required this.onPreviousStory,
     required this.onNextUser,
     required this.onPreviousUser,
-    required this.onPausedChanged,
     super.key,
   });
 
@@ -27,7 +26,6 @@ class UserStoryPageView extends StatelessWidget {
   final VoidCallback onPreviousStory;
   final VoidCallback onNextUser;
   final VoidCallback onPreviousUser;
-  final ValueChanged<bool> onPausedChanged;
 
   @override
   Widget build(BuildContext context) {

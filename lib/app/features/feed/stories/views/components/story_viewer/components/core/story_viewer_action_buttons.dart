@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -33,8 +34,14 @@ class StoryViewerActionButtons extends ConsumerWidget {
             icon: Assets.svg.iconBlockShare.icon(
               color: context.theme.appColors.onPrimaryAccent,
             ),
-            onPressed: () {
-              StoryContactsShareRoute().push<void>(context);
+            onPressed: () async {
+              ref.read(storyPauseControllerProvider.notifier).paused = true;
+
+              await StoryContactsShareRoute().push<void>(context);
+
+              if (context.mounted) {
+                ref.read(storyPauseControllerProvider.notifier).paused = false;
+              }
             },
           ),
           SizedBox(height: 16.0.s),
