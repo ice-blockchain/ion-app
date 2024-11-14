@@ -502,6 +502,7 @@
   "messaging_textfiled_placeholder": "Write a message...",
   "chat_learn_more_modal_title": "Privacy First, Always",
   "chat_learn_more_modal_description": "Your chats are private and encrypted by default. We prioritize your privacy, and your conversations are protected with end-to-end encryption.",
+  "chat_add_poll_title": "New poll",
   "notification_video_loading": "Your video is loading...",
   "notification_story_loading": "Your story is loading...",
   "notification_post_loading": "Your post is loading...",

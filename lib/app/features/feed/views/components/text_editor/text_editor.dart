@@ -66,7 +66,6 @@ class TextEditorState extends ConsumerState<TextEditor> {
                 TextEditorSingleImageBuilder(),
                 TextEditorPollBuilder(
                   controller: widget.controller,
-                  ref: ref,
                 ),
                 TextEditorSeparatorBuilder(),
                 TextEditorCodeBuilder(),

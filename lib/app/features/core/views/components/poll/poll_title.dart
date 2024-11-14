@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/poll/poll_title_notifier.dart';
+import 'package:ion/app/features/core/providers/poll/poll_title_notifier.dart';
 
 class PollTitle extends HookConsumerWidget {
-  const PollTitle({super.key});
+  const PollTitle({required this.autoFocus, super.key});
+  final bool autoFocus;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,6 +30,7 @@ class PollTitle extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: 4.0.s),
       child: TextField(
+        autofocus: autoFocus,
         controller: textController,
         onChanged: (value) {
           ref.read(pollTitleNotifierProvider.notifier).onTextChanged(value);
