@@ -141,7 +141,6 @@ flutter:
     - assets/images/logo/
     - assets/images/qr_code/
     - assets/images/notifications/
-    - assets/images/article/
 
 flutter_gen:
   output: lib/generated/
