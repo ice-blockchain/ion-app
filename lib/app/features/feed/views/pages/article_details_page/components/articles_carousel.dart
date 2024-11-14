@@ -30,7 +30,7 @@ class ArticlesCarousel extends ConsumerWidget {
           itemCount: articleIds!.length,
           separatorBuilder: (context, index) => SizedBox(width: 16.0.s),
           itemBuilder: (context, index) => Container(
-            width: MediaQuery.of(context).size.width * 0.83,
+            width: MediaQuery.sizeOf(context).width * 0.83,
             alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
               color: context.theme.appColors.onPrimaryAccent,
