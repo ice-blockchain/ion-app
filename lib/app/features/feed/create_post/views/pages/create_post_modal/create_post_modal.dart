@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
@@ -21,6 +22,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/markdown_parser/markdown_parser.dart';
+import 'package:ion/app/utils/validators.dart';
 
 class CreatePostModal extends HookConsumerWidget {
   const CreatePostModal({super.key});
@@ -44,21 +46,20 @@ class CreatePostModal extends HookConsumerWidget {
     final pollTitle = ref.watch(pollTitleNotifierProvider);
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
 
-    bool isPollValid() {
-      return pollTitle.text.trim().isNotEmpty &&
-          pollAnswers.length >= 2 &&
-          pollAnswers.every(
-            (answer) => answer.text.trim().isNotEmpty && answer.text.trim().length <= 25,
+    final isSendButtonEnabled = useMemoized(
+      () {
+        if (hasPoll) {
+          final isPoolValid = Validators.isPollValid(
+            pollTitle.text,
+            pollAnswers.map((answer) => answer.text).toList(),
           );
-    }
-
-    bool isSendButtonEnabled() {
-      if (hasPoll) {
-        return isPollValid();
-      } else {
-        return hasContent;
-      }
-    }
+          return isPoolValid;
+        } else {
+          return hasContent;
+        }
+      },
+      [hasPoll, hasContent],
+    );
 
     return BackHardwareButtonInterceptor(
       onBackPress: (context) async {
@@ -116,7 +117,7 @@ class CreatePostModal extends HookConsumerWidget {
                       ToolbarBoldButton(textEditorController: textEditorController),
                     ],
                     trailing: ToolbarSendButton(
-                      enabled: isSendButtonEnabled(),
+                      enabled: isSendButtonEnabled,
                       onPressed: () {
                         generateMarkdownFromDelta(textEditorController.document.toDelta());
                         context.pop();

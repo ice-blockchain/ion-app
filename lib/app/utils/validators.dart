@@ -45,4 +45,12 @@ class Validators {
       return false;
     }
   }
+
+  static bool isPollValid(String pollTitle, List<String> pollAnswers) {
+    return pollTitle.trim().isNotEmpty &&
+        pollAnswers.length >= 2 &&
+        pollAnswers.every(
+          (answer) => answer.trim().isNotEmpty && answer.trim().length <= 25,
+        );
+  }
 }
