@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/topics_carousel/topics_carousel.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/topic_select_modal/topic_select_modal.dart';
 import 'package:ion/app/features/feed/providers/article/select_topics_provider.dart';
@@ -58,38 +59,7 @@ class SelectArticleTopicsItem extends ConsumerWidget {
         if (selectedTopics.isNotEmpty)
           Padding(
             padding: EdgeInsets.only(top: 10.0.s),
-            child: SizedBox(
-              height: 30.0.s,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultMediumMargin),
-                  itemCount: selectedTopics.length,
-                  separatorBuilder: (context, index) => SizedBox(width: 12.0.s),
-                  itemBuilder: (context, index) => Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: context.theme.appColors.tertararyBackground,
-                      borderRadius: BorderRadius.all(Radius.circular(10.0.s)),
-                      border: Border.all(
-                        width: 1.0.s,
-                        color: context.theme.appColors.onTerararyFill,
-                      ),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.0.s,
-                    ),
-                    child: Text(
-                      selectedTopics[index].getTitle(context),
-                      style: context.theme.appTextThemes.caption2.copyWith(
-                        color: context.theme.appColors.primaryText,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            child: TopicsCarousel(topics: selectedTopics),
           ),
       ],
     );

@@ -38,7 +38,6 @@ class ArticleDetailsHeader extends ConsumerWidget {
                   imageUrl: article.data.image,
                   minutesToRead: calculateReadingTime(article.data.content),
                 ),
-                SizedBox(height: 10.0.s),
                 FeedItemHeader(
                   pubkey: article.pubkey,
                   trailing: FollowButton(onPressed: () {}, following: false),
