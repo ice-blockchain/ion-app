@@ -15,9 +15,7 @@ Widget feedPostUseCase(BuildContext context) {
 
   return Scaffold(
     body: Center(
-      child: Article(
-        article: article,
-      ),
+      child: Article(articleId: article.id, pubkey: article.pubkey),
     ),
   );
 }

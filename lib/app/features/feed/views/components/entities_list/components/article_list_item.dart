@@ -17,8 +17,12 @@ class ArticleListItem extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 12.0.s),
       child: GestureDetector(
-        onTap: () => ArticleDetailsRoute(articleId: article.id).push<void>(context),
-        child: Article(article: article),
+        onTap: () =>
+            ArticleDetailsRoute(articleId: article.id, pubkey: article.pubkey).push<void>(context),
+        child: Article(
+          articleId: article.id,
+          pubkey: article.pubkey,
+        ),
       ),
     );
   }
