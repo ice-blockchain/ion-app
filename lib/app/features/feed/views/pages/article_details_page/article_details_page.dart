@@ -103,7 +103,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     Container(color: context.theme.appColors.primaryBackground, height: 8.0.s),
                     SizedBox(height: 20.0.s),
                     ScreenSideOffset.small(
-                      child: UserBiography(pubKey: articleEntity.pubkey),
+                      child: UserBiography(pubkey: articleEntity.pubkey),
                     ),
                     SizedBox(height: 4.0.s),
                     const ArticleDetailsTopics(),
