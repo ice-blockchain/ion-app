@@ -85,7 +85,6 @@ class Poll extends ConsumerWidget {
         ),
         if (onRemove != null)
           PollCloseButton(
-            // onClosePress: () => removeBlock(controller, node),
             onClosePress: onRemove!,
           ),
       ],
