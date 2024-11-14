@@ -8,18 +8,19 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_arcticle_topics_item.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_arcticle_visibility_item.dart';
-import 'package:ion/app/features/feed/data/models/article/article_data.dart';
+import 'package:ion/app/features/feed/data/models/article_data.dart';
+import 'package:ion/app/features/feed/providers/article_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/article/mocked_data.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CreateArticlePreviewModal extends ConsumerWidget {
+class CreateArticlePreviewModal extends StatelessWidget {
   const CreateArticlePreviewModal({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final paddingValue = 20.0.s;
 
     final article = ArticleEntity.fromEventMessage(mockedArticleEvent);
@@ -32,7 +33,13 @@ class CreateArticlePreviewModal extends ConsumerWidget {
             title: Text(context.i18n.article_preview_title),
           ),
           const HorizontalSeparator(),
-          Article(article: article),
+          ProviderScope(
+            overrides: [
+              articleDataProvider(articleId: article.id, pubkey: article.pubkey)
+                  .overrideWith((_) => article),
+            ],
+            child: Article(articleId: article.id, pubkey: article.pubkey),
+          ),
           SizedBox(height: 12.0.s),
           const HorizontalSeparator(),
           SizedBox(height: 40.0.s),

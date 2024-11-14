@@ -4,24 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/article/article_data.dart';
+import 'package:ion/app/features/feed/providers/article_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ArticleDetailsPage extends ConsumerWidget {
   const ArticleDetailsPage({
     required this.articleId,
+    required this.pubkey,
     super.key,
   });
 
   final String articleId;
 
+  final String pubkey;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final articleEntity =
-        ref.watch(nostrCacheProvider.select(cacheSelector<ArticleEntity>(articleId)));
+        ref.watch(articleDataProvider(articleId: articleId, pubkey: pubkey)).valueOrNull;
 
     if (articleEntity == null) {
       return const SizedBox.shrink();
@@ -47,7 +49,8 @@ class ArticleDetailsPage extends ConsumerWidget {
               slivers: [
                 SliverToBoxAdapter(
                   child: Article(
-                    article: articleEntity,
+                    articleId: articleEntity.id,
+                    pubkey: articleEntity.pubkey,
                   ),
                 ),
               ],

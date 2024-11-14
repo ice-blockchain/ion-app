@@ -23,11 +23,13 @@ List<EntitiesDataSource>? feedTrendingVideosDataSource(Ref ref) {
         EntitiesDataSource(
           actionSource: ActionSourceRelayUrl(entry.key),
           entityFilter: (entity) => entity is PostEntity,
-          requestFilter: RequestFilter(
-            kinds: const [PostEntity.kind],
-            authors: filters == FeedFilter.following ? entry.value : null,
-            limit: 10,
-          ),
+          requestFilters: [
+            RequestFilter(
+              kinds: const [PostEntity.kind],
+              authors: filters == FeedFilter.following ? entry.value : null,
+              limit: 10,
+            ),
+          ],
         ),
     ];
 

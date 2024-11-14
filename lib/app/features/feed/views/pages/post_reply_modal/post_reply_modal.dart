@@ -13,7 +13,7 @@ import 'package:ion/app/features/feed/providers/post_reply/send_reply_request_no
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
-import 'package:ion/app/features/feed/views/components/post_replies/replying_to.dart';
+import 'package:ion/app/features/feed/views/components/replying_to/replying_to.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/feed/views/pages/post_reply_modal/components/expanded_reply_input_field.dart';

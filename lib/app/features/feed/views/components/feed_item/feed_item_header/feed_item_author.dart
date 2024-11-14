@@ -11,8 +11,8 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/utils/username.dart';
 
-class FeedItemHeader extends ConsumerWidget {
-  const FeedItemHeader({
+class FeedItemAuthor extends ConsumerWidget {
+  const FeedItemAuthor({
     required this.pubkey,
     super.key,
     this.trailing,

@@ -38,12 +38,13 @@ class FeedRoutes {
 }
 
 class ArticleDetailsRoute extends BaseRouteData {
-  ArticleDetailsRoute({required this.articleId})
+  ArticleDetailsRoute({required this.articleId, required this.pubkey})
       : super(
-          child: ArticleDetailsPage(articleId: articleId),
+          child: ArticleDetailsPage(articleId: articleId, pubkey: pubkey),
         );
 
   final String articleId;
+  final String pubkey;
 }
 
 class PostDetailsRoute extends BaseRouteData {

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/widgets.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -12,9 +13,14 @@ class PostListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO:
+    // wait for 10002 to be in cache before showing the UI when "side effects" are impl
+    // process 20002 in the feed provider to fetch 10002
     return GestureDetector(
       onTap: () => PostDetailsRoute(postId: post.id, pubkey: post.pubkey).push<void>(context),
-      child: Post(postEntity: post),
+      child: ScreenSideOffset.small(
+        child: Post(pubkey: post.pubkey, postId: post.id),
+      ),
     );
   }
 }

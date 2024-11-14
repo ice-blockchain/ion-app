@@ -21,11 +21,13 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
         EntitiesDataSource(
           actionSource: ActionSourceRelayUrl(entry.key),
           entityFilter: (entity) => entity is PostEntity,
-          requestFilter: RequestFilter(
-            kinds: const [PostEntity.kind],
-            authors: entry.value,
-            limit: 10,
-          ),
+          requestFilters: [
+            RequestFilter(
+              kinds: const [PostEntity.kind],
+              authors: entry.value,
+              limit: 10,
+            ),
+          ],
         ),
     ];
 

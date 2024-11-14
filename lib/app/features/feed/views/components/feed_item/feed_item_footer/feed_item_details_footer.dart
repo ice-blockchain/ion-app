@@ -2,17 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_details_action_button.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 
 class FeedItemDetailsFooter extends StatelessWidget {
   const FeedItemDetailsFooter({
-    required this.postEntity,
+    required this.postId,
     super.key,
   });
 
-  final PostEntity postEntity;
+  final String postId;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +21,7 @@ class FeedItemDetailsFooter extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        SizedBox(height: 10.0.s),
         Text(
           postDate,
           style: context.theme.appTextThemes.caption2.copyWith(
@@ -30,7 +30,7 @@ class FeedItemDetailsFooter extends StatelessWidget {
         ),
         SizedBox(height: 12.0.s),
         FeedItemFooter(
-          postEntity: postEntity,
+          postId: postId,
           bottomPadding: 12.0.s,
           actionBuilder: (context, child, onPressed) => FeedItemDetailsActionButton(
             onPressed: onPressed,

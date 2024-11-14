@@ -1,35 +1,43 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
-import 'package:ion/app/features/feed/views/components/post_replies/replying_to.dart';
+import 'package:ion/app/features/feed/views/components/replying_to/replying_to.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/utils/username.dart';
 
-class ReplyAuthorHeader extends StatelessWidget {
+class ReplyAuthorHeader extends ConsumerWidget {
   const ReplyAuthorHeader({
-    required this.postEntity,
+    required this.postId,
+    required this.pubkey,
     super.key,
   });
 
-  final PostEntity postEntity;
+  final String postId;
+
+  final String pubkey;
 
   @override
-  Widget build(BuildContext context) {
-    const postAuthorName = 'markpoland';
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentUserMetadata = ref.watch(currentUserMetadataProvider).valueOrNull;
+    final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
+
+    if (currentUserMetadata == null || userMetadata == null) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ListItem.user(
-          title: const Text('Arnold Grey'),
-          subtitle: const Text('@arnoldgrey'),
-          profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-          iceBadge: true,
-          verifiedBadge: true,
+          title: Text(currentUserMetadata.data.displayName),
+          subtitle: Text(prefixUsername(username: currentUserMetadata.data.name, context: context)),
+          profilePicture: currentUserMetadata.data.picture,
         ),
         SizedBox(height: 6.0.s),
-        const ReplyingTo(name: postAuthorName),
+        ReplyingTo(name: prefixUsername(username: userMetadata.data.name, context: context)),
       ],
     );
   }

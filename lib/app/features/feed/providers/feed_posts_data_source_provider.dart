@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/data/models/article/article_data.dart';
+import 'package:ion/app/features/feed/data/models/article_data.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
+import 'package:ion/app/features/feed/data/models/generic_repost.dart';
 import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/feed/data/models/repost_data.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
@@ -20,22 +22,59 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters.filter)).valueOrNull;
 
   if (filterRelays != null) {
-    final dataSources = [
+    return [
       for (final entry in filterRelays.entries)
-        EntitiesDataSource(
-          actionSource: ActionSourceRelayUrl(entry.key),
-          entityFilter: (entity) => entity is PostEntity || entity is ArticleEntity,
-          requestFilter: RequestFilter(
-            kinds: filters.category == FeedCategory.articles
-                ? const [ArticleEntity.kind]
-                : const [PostEntity.kind],
-            authors: filters.filter == FeedFilter.following ? entry.value : null,
-            limit: 10,
-          ),
-        ),
+        switch (filters.category) {
+          FeedCategory.articles => _buildArticlesDataSource(
+              actionSource: ActionSourceRelayUrl(entry.key),
+              authors: filters.filter == FeedFilter.following ? entry.value : null,
+            ),
+          _ => _buildPostsDataSource(
+              actionSource: ActionSourceRelayUrl(entry.key),
+              authors: filters.filter == FeedFilter.following ? entry.value : null,
+            )
+        },
     ];
-
-    return dataSources;
   }
   return null;
+}
+
+EntitiesDataSource _buildArticlesDataSource({
+  required ActionSource actionSource,
+  required List<String>? authors,
+}) {
+  return EntitiesDataSource(
+    actionSource: actionSource,
+    entityFilter: (entity) => entity is ArticleEntity || entity is GenericRepostEntity,
+    requestFilters: [
+      RequestFilter(
+        kinds: const [ArticleEntity.kind],
+        authors: authors,
+        limit: 10,
+      ),
+      RequestFilter(
+        kinds: const [GenericRepostEntity.kind],
+        authors: authors,
+        k: [ArticleEntity.kind.toString()],
+        limit: 10,
+      ),
+    ],
+  );
+}
+
+EntitiesDataSource _buildPostsDataSource({
+  required ActionSource actionSource,
+  required List<String>? authors,
+}) {
+  return EntitiesDataSource(
+    actionSource: actionSource,
+    entityFilter: (entity) => entity is PostEntity || entity is RepostEntity,
+    requestFilters: [
+      RequestFilter(
+        kinds: const [PostEntity.kind, RepostEntity.kind],
+        authors: authors,
+        limit: 10,
+      ),
+    ],
+  );
 }

@@ -7,30 +7,30 @@ import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-part 'repost_data.freezed.dart';
+part 'generic_repost.freezed.dart';
 
 @Freezed(equal: false)
-class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
-  const factory RepostEntity({
+class GenericRepostEntity with _$GenericRepostEntity, NostrEntity implements CacheableEntity {
+  const factory GenericRepostEntity({
     required String id,
     required String pubkey,
     required DateTime createdAt,
-    required RepostData data,
-  }) = _RepostEntity;
+    required GenericRepostData data,
+  }) = _GenericRepostEntity;
 
-  const RepostEntity._();
+  const GenericRepostEntity._();
 
-  /// https://github.com/nostr-protocol/nips/blob/master/18.md
-  factory RepostEntity.fromEventMessage(EventMessage eventMessage) {
+  /// https://github.com/nostr-protocol/nips/blob/master/18.md#generic-reposts
+  factory GenericRepostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
 
-    return RepostEntity(
+    return GenericRepostEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       createdAt: eventMessage.createdAt,
-      data: RepostData.fromEventMessage(eventMessage),
+      data: GenericRepostData.fromEventMessage(eventMessage),
     );
   }
 
@@ -38,23 +38,25 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
   String get cacheKey => id;
 
   @override
-  Type get cacheType => RepostEntity;
+  Type get cacheType => GenericRepostEntity;
 
-  static const int kind = 6;
+  static const int kind = 16;
 }
 
 @freezed
-class RepostData with _$RepostData implements EventSerializable {
-  const factory RepostData({
+class GenericRepostData with _$GenericRepostData implements EventSerializable {
+  const factory GenericRepostData({
     required String eventId,
     required String pubkey,
-  }) = _RepostData;
+    required int kind,
+  }) = _GenericRepostData;
 
-  const RepostData._();
+  const GenericRepostData._();
 
-  factory RepostData.fromEventMessage(EventMessage eventMessage) {
+  factory GenericRepostData.fromEventMessage(EventMessage eventMessage) {
     String? eventId;
     String? pubkey;
+    int? kind;
 
     for (final tag in eventMessage.tags) {
       if (tag.isNotEmpty) {
@@ -63,17 +65,20 @@ class RepostData with _$RepostData implements EventSerializable {
             eventId = tag[1];
           case 'p':
             pubkey = tag[1];
+          case 'k':
+            kind = int.tryParse(tag[1]);
         }
       }
     }
 
-    if (eventId == null || pubkey == null) {
+    if (eventId == null || pubkey == null || kind == null) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 
-    return RepostData(
+    return GenericRepostData(
       eventId: eventId,
       pubkey: pubkey,
+      kind: kind,
     );
   }
 
@@ -81,11 +86,12 @@ class RepostData with _$RepostData implements EventSerializable {
   EventMessage toEventMessage(EventSigner signer) {
     return EventMessage.fromData(
       signer: signer,
-      kind: RepostEntity.kind,
+      kind: GenericRepostEntity.kind,
       content: '',
       tags: [
         ['p', pubkey],
         ['e', eventId],
+        ['k', kind.toString()],
       ],
     );
   }

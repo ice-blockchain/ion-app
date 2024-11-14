@@ -60,7 +60,7 @@ dependencies:
   nostr_dart:
     git:
       url: https://github.com/ice-blockchain/nostr-dart.git
-      ref: 0.0.5
+      ref: 0.0.6
   ogp_data_extract: ^0.1.4
   path: ^1.9.0
   path_provider: ^2.1.4

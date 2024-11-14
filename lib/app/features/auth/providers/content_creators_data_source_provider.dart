@@ -15,10 +15,12 @@ List<EntitiesDataSource> contentCreatorsDataSource(Ref ref) {
     EntitiesDataSource(
       actionSource: const ActionSourceIndexers(),
       entityFilter: (entity) => entity is UserMetadataEntity,
-      requestFilter: const RequestFilter(
-        kinds: [UserMetadataEntity.kind],
-        limit: 20,
-      ),
+      requestFilters: [
+        const RequestFilter(
+          kinds: [UserMetadataEntity.kind],
+          limit: 20,
+        ),
+      ],
     ),
   ];
 }

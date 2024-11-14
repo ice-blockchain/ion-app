@@ -31,15 +31,13 @@ class _ListItemUser extends ListItem {
     double? avatarSize,
   }) : super(
           leading: leading ??
-              (profilePicture != null || profilePictureWidget != null
-                  ? Avatar(
-                      size: avatarSize ?? defaultavatarSize,
-                      imageUrl: profilePicture,
-                      badge: showProfilePictureIceBadge ? const _IceBadge() : null,
-                      imageWidget: profilePictureWidget,
-                      hexagon: ntfAvatar,
-                    )
-                  : null),
+              Avatar(
+                size: avatarSize ?? defaultAvatarSize,
+                imageUrl: profilePicture,
+                badge: showProfilePictureIceBadge ? const _IceBadge() : null,
+                imageWidget: profilePictureWidget,
+                hexagon: ntfAvatar,
+              ),
           borderRadius: borderRadius ?? BorderRadius.zero,
           contentPadding: contentPadding ?? EdgeInsets.zero,
           leadingPadding: leadingPadding ?? EdgeInsets.only(right: 8.0.s),
@@ -68,7 +66,7 @@ class _ListItemUser extends ListItem {
           ),
         );
 
-  static double get defaultavatarSize => 30.0.s;
+  static double get defaultAvatarSize => 30.0.s;
 
   static double get defaultBadgeSize => 16.0.s;
 

@@ -8,7 +8,6 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_action_button.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -21,15 +20,18 @@ typedef ActionIconBuilder = Widget Function(
 
 class FeedItemFooter extends HookConsumerWidget {
   FeedItemFooter({
-    required this.postEntity,
+    required this.postId,
     this.actionBuilder,
     double? bottomPadding,
+    double? topPadding,
     super.key,
-  }) : bottomPadding = bottomPadding ?? 16.0.s;
+  })  : bottomPadding = bottomPadding ?? 16.0.s,
+        topPadding = topPadding ?? 10.0.s;
 
-  final PostEntity postEntity;
+  final String postId;
   final ActionIconBuilder? actionBuilder;
   final double bottomPadding;
+  final double topPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,13 +43,13 @@ class FeedItemFooter extends HookConsumerWidget {
 
     void onToggleComment() {
       HapticFeedback.lightImpact();
-      PostReplyModalRoute(postId: postEntity.id).push<void>(context);
+      PostReplyModalRoute(postId: postId).push<void>(context);
       isCommentActive.value = !isCommentActive.value;
     }
 
     void onToggleRepost() {
       HapticFeedback.lightImpact();
-      RepostOptionsModalRoute(postId: postEntity.id).push<void>(context);
+      RepostOptionsModalRoute(postId: postId).push<void>(context);
       isReposted.value = !isReposted.value;
     }
 
@@ -58,7 +60,7 @@ class FeedItemFooter extends HookConsumerWidget {
 
     void onShareOptions() {
       HapticFeedback.lightImpact();
-      SharePostModalRoute(postId: postEntity.id).push<void>(context);
+      SharePostModalRoute(postId: postId).push<void>(context);
     }
 
     void onIceStroke() => HapticFeedback.lightImpact();
@@ -119,7 +121,7 @@ class FeedItemFooter extends HookConsumerWidget {
     );
 
     return Padding(
-      padding: EdgeInsets.only(bottom: bottomPadding),
+      padding: EdgeInsets.only(bottom: bottomPadding, top: topPadding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
