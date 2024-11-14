@@ -27,6 +27,13 @@ class StoryGestureHandler extends HookConsumerWidget {
     return GestureDetector(
       onTapDown: (details) => tapPosition.value = details.globalPosition,
       onTap: () {
+        final isKeyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
+
+        if (isKeyboardVisible) {
+          FocusManager.instance.primaryFocus?.unfocus();
+          return;
+        }
+
         final screenWidth = MediaQuery.sizeOf(context).width;
         final isLeftSide = (tapPosition.value?.dx ?? 0) < screenWidth / 2;
 
