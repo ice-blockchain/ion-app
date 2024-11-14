@@ -2,7 +2,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-
 import 'package:ion/app/extensions/build_context.dart';
 
 /// Converts a timestamp to a more readable date string, with special handling
@@ -110,4 +109,18 @@ String formatMessageTimestamp(DateTime dateTime) {
 
   // Otherwise, show full date with year
   return DateFormat('dd/MM/yyyy').format(dateTime); // Example: 17/10/2023
+}
+
+/// Formats a [DateTime] object into a string in the format "MMMM d, yyyy".
+///
+/// Example:
+/// ```dart
+/// DateTime date = DateTime(2023, 6, 16);
+/// String formattedDate = formatDateToMonthDayYear(date); // "June 16, 2023"
+/// ```
+///
+/// [date]: The DateTime object to be formatted.
+/// Returns a formatted string based on the format "MMMM d, yyyy".
+String formatDateToMonthDayYear(DateTime date) {
+  return DateFormat('MMMM d, yyyy').format(date);
 }

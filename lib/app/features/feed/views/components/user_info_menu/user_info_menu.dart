@@ -8,14 +8,13 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_menu/feed_item_menu_item.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_menu/follow_feed_menu_item.dart';
+import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu_item.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class FeedItemMenu extends ConsumerWidget {
-  const FeedItemMenu({required this.pubkey, super.key});
+class UserInfoMenu extends ConsumerWidget {
+  const UserInfoMenu({required this.pubkey, super.key});
 
   static double get iconSize => 20.0.s;
 
@@ -34,7 +33,7 @@ class FeedItemMenu extends ConsumerWidget {
       menuBuilder: (closeMenu) => Column(
         children: [
           OverlayMenuContainer(
-            child: FeedItemMenuItem(
+            child: UserInfoMenuItem(
               label: context.i18n.post_menu_not_interested,
               icon: Assets.svg.iconNotinterested.icon(size: iconSize),
               onPressed: closeMenu,
@@ -44,13 +43,17 @@ class FeedItemMenu extends ConsumerWidget {
           OverlayMenuContainer(
             child: Column(
               children: [
-                FollowFeedMenuItem(userMetadata: userMetadata),
-                FeedItemMenuItem(
+                UserInfoMenuItem(
+                  label: context.i18n.post_menu_follow_nickname(userMetadata.data.name),
+                  icon: Assets.svg.iconFollowuser.icon(size: iconSize),
+                  onPressed: closeMenu,
+                ),
+                UserInfoMenuItem(
                   label: context.i18n.post_menu_block_nickname(userMetadata.data.name),
                   icon: Assets.svg.iconBlock.icon(size: iconSize),
                   onPressed: closeMenu,
                 ),
-                FeedItemMenuItem(
+                UserInfoMenuItem(
                   label: context.i18n.post_menu_report_post,
                   icon: Assets.svg.iconReport.icon(size: iconSize),
                   onPressed: closeMenu,

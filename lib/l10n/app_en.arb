@@ -443,6 +443,9 @@
   "create_post_modal_title": "New post",
   "create_post_modal_placeholder": "What’s happening?",
   "create_article_nav_title": "New article",
+  "create_article_title_placeholder": "Title",
+  "create_article_add_cover": "Add cover image",
+  "create_article_story_placeholder": "Write your story...",
   "create_story_nav_title": "Add a story",
   "create_video_nav_title": "Add video",
   "gallery_add_photo_title": "Add photo",
@@ -547,5 +550,6 @@
   "topics_add": "Add",
   "topics_title": "Topics",
   "article_preview_title": "Article preview",
-  "article_page_title": "Article"
+  "article_page_title": "Article",
+  "article_page_from_author": "from {name}"
 }

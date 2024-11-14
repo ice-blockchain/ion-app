@@ -68,7 +68,7 @@ class PostDetailsPage extends HookConsumerWidget {
                     child: Post(
                       postId: postId,
                       pubkey: pubkey,
-                      footer: FeedItemDetailsFooter(postId: postId),
+                      footer: FeedItemDetailsFooter(entityId: postId),
                     ),
                   ),
                 ),

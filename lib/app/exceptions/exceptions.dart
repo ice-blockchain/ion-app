@@ -74,3 +74,8 @@ class UnknownEventException extends IONException {
 class IncorrectEventTagException extends IONException {
   IncorrectEventTagException({required String tag}) : super(10013, 'Incorrect event tag $tag');
 }
+
+class QuillParseException extends IONException {
+  const QuillParseException(dynamic error)
+      : super(10011, 'Invalid content format for Quill Delta: $error');
+}

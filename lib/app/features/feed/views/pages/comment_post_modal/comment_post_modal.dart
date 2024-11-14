@@ -10,11 +10,11 @@ import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_author.dart';
 import 'package:ion/app/features/feed/views/components/post/components/quoted_post_frame/quoted_post_frame.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
+import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/pages/comment_post_modal/components/quote_post_comment_input.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
@@ -61,7 +61,7 @@ class CommentPostModal extends ConsumerWidget {
                         child: Post(
                           postId: post.id,
                           pubkey: post.pubkey,
-                          header: FeedItemAuthor(pubkey: post.pubkey),
+                          header: UserInfo(pubkey: post.pubkey),
                           footer: const SizedBox.shrink(),
                         ),
                       ),
