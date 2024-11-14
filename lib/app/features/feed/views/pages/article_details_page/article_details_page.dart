@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/component
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_section_header.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_topics.dart';
+import 'package:ion/app/features/feed/views/pages/article_details_page/components/articles_carousel.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -102,6 +103,18 @@ class ArticleDetailsPage extends ConsumerWidget {
                         onTap: () {},
                         child: Assets.svg.iconButtonNext.icon(),
                       ),
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0.s),
+                    child: const ArticlesCarousel(
+                      articleIds: [
+                        'fdsfds',
+                        'fdsfdsfsdfsd',
+                        'fdsfdsfsd',
+                      ],
                     ),
                   ),
                 ),

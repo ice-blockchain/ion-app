@@ -7,7 +7,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article/article_data.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/feed_item_header.dart';
+import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/utils/algorithm.dart';
 
 class ArticleDetailsHeader extends ConsumerWidget {
@@ -38,9 +38,15 @@ class ArticleDetailsHeader extends ConsumerWidget {
                   imageUrl: article.data.image,
                   minutesToRead: calculateReadingTime(article.data.content),
                 ),
-                FeedItemHeader(
+                SizedBox(
+                  height: 12.0.s,
+                ),
+                UserInfo(
                   pubkey: article.pubkey,
                   trailing: FollowButton(onPressed: () {}, following: false),
+                ),
+                SizedBox(
+                  height: 24.0.s,
                 ),
               ],
             ),
