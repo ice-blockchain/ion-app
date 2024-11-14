@@ -26,54 +26,6 @@ class ProfileSettingsModal extends ConsumerWidget {
     final contentLanguages = Language.values.take(3).toList();
 
     final primaryColor = context.theme.appColors.primaryAccent;
-    final items = <Widget>[
-      ActionButton(
-        icon: Assets.svg.iconProfileUser.icon(
-          color: primaryColor,
-        ),
-        label: context.i18n.profile_settings_profile_edit,
-        onTap: () {
-          context
-            ..go(ProfileRoute(pubkey: pubkey).location)
-            ..go(ProfileEditRoute(pubkey: pubkey).location);
-        },
-      ),
-      ActionButton(
-        icon: Assets.svg.iconSelectLanguage.icon(
-          color: primaryColor,
-        ),
-        label: context.i18n.profile_settings_app_language,
-        trailing: Text(
-          appLanguage.name,
-          style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
-        ),
-        onTap: () {
-          AppLanguagesRoute(pubkey: pubkey).push<void>(context);
-        },
-      ),
-      ActionButton(
-        icon: Assets.svg.iconSelectLanguage.icon(
-          color: primaryColor,
-        ),
-        label: context.i18n.profile_settings_content_language,
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              contentLanguages.first.name,
-              style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
-            ),
-            if (contentLanguages.length > 1) ...[
-              SizedBox(width: 12.0.s),
-              _NumericLabel(value: '+ ${contentLanguages.length - 1}'),
-            ],
-          ],
-        ),
-        onTap: () {
-          ContentLanguagesRoute(pubkey: pubkey).push<void>(context);
-        },
-      ),
-    ];
 
     return SheetContent(
       body: Column(
@@ -90,13 +42,57 @@ class ProfileSettingsModal extends ConsumerWidget {
             ],
           ),
           ScreenSideOffset.small(
-            child: ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              itemCount: items.length,
-              itemBuilder: (context, i) => items[i],
-              separatorBuilder: (context, _) => SizedBox(height: 9.0.s),
+            child: Column(
+              children: [
+                ActionButton(
+                  icon: Assets.svg.iconProfileUser.icon(
+                    color: primaryColor,
+                  ),
+                  label: context.i18n.profile_settings_profile_edit,
+                  onTap: () {
+                    context
+                      ..go(ProfileRoute(pubkey: pubkey).location)
+                      ..go(ProfileEditRoute(pubkey: pubkey).location);
+                  },
+                ),
+                ActionButton(
+                  icon: Assets.svg.iconSelectLanguage.icon(
+                    color: primaryColor,
+                  ),
+                  label: context.i18n.profile_settings_app_language,
+                  trailing: Text(
+                    appLanguage.name,
+                    style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
+                  ),
+                  onTap: () {
+                    AppLanguagesRoute(pubkey: pubkey).push<void>(context);
+                  },
+                ),
+                ActionButton(
+                  icon: Assets.svg.iconSelectLanguage.icon(
+                    color: primaryColor,
+                  ),
+                  label: context.i18n.profile_settings_content_language,
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        contentLanguages.first.name,
+                        style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
+                      ),
+                      if (contentLanguages.length > 1) ...[
+                        SizedBox(width: 12.0.s),
+                        _RemainingLanguagesLabel(
+                          value: contentLanguages.length - 1,
+                        ),
+                      ],
+                    ],
+                  ),
+                  onTap: () {
+                    ContentLanguagesRoute(pubkey: pubkey).push<void>(context);
+                  },
+                ),
+              ],
             ),
           ),
           ScreenBottomOffset(margin: 32.0.s),
@@ -106,10 +102,10 @@ class ProfileSettingsModal extends ConsumerWidget {
   }
 }
 
-class _NumericLabel extends StatelessWidget {
-  const _NumericLabel({required this.value});
+class _RemainingLanguagesLabel extends StatelessWidget {
+  const _RemainingLanguagesLabel({required this.value});
 
-  final String value;
+  final int value;
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +116,7 @@ class _NumericLabel extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        value,
+        context.i18n.profile_settings_remaining_content_languages_number(value),
         style: context.theme.appTextThemes.caption
             .copyWith(color: context.theme.appColors.primaryAccent),
       ),

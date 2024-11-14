@@ -240,6 +240,7 @@
   "profile_settings_profile_edit": "Edit profile",
   "profile_settings_app_language": "dApp language",
   "profile_settings_content_language": "Content language",
+  "profile_settings_remaining_content_languages_number": "+ {number}",
   "app_language_title": "App language",
   "app_language_description": "You’ll be shown the app in the selected language",
   "confirm_logout_title": "Log out {username}?",

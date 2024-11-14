@@ -52,9 +52,7 @@ class ConfirmLogoutModal extends ConsumerWidget {
                     minimumSize: buttonMinimalSize,
                   ),
                 ),
-                SizedBox(
-                  width: 15.0.s,
-                ),
+                SizedBox(width: 15.0.s),
                 Expanded(
                   child: Button.compact(
                     label: Text(context.i18n.button_log_out),
