@@ -64,10 +64,10 @@ class _SoundButton extends ConsumerWidget {
     return story.maybeWhen(
       video: (data, muteState) => StoryControlButton(
         icon: muteState == MuteState.muted
-            ? Assets.svg.iconChannelUnmute.icon(
+            ? Assets.svg.iconChannelMute.icon(
                 color: context.theme.appColors.onPrimaryAccent,
               )
-            : Assets.svg.iconChannelMute.icon(
+            : Assets.svg.iconChannelUnmute.icon(
                 color: context.theme.appColors.onPrimaryAccent,
               ),
         onPressed: () => ref.read(storyViewingControllerProvider.notifier).toggleMute(data.id),

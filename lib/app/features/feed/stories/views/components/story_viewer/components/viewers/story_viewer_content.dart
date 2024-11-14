@@ -20,7 +20,10 @@ class StoryViewerContent extends StatelessWidget {
       borderRadius: BorderRadius.circular(16.0.s),
       child: story.maybeWhen(
         image: (data) => ImageStoryViewer(path: data.contentUrl),
-        video: (data, muteState) => VideoStoryViewer(videoPath: data.contentUrl),
+        video: (data, muteState) => VideoStoryViewer(
+          videoPath: data.contentUrl,
+          muteState: muteState,
+        ),
         orElse: () => const CenteredLoadingIndicator(),
       ),
     );
