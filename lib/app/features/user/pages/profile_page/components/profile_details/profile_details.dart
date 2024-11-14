@@ -11,7 +11,7 @@ import 'package:ion/app/features/user/pages/profile_page/components/profile_deta
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions/edit_profile_actions.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions/profile_actions.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_followers.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/profile_details/user_info/user_info.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/user_info/user_info_summary.dart';
 
 class ProfileDetails extends ConsumerWidget {
   const ProfileDetails({
@@ -47,7 +47,7 @@ class ProfileDetails extends ConsumerWidget {
           SizedBox(height: 12.0.s),
           ProfileAbout(pubkey: pubkey),
           SizedBox(height: 12.0.s),
-          UserInfo(pubkey: pubkey),
+          UserInfoSummary(pubkey: pubkey),
         ],
       ),
     );

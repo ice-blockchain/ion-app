@@ -7,6 +7,7 @@ import 'package:ion/app/features/feed/views/components/article/mocked_data.dart'
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_about.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/user_info/user_info_summary.dart';
 
 class UserBiography extends StatelessWidget {
   const UserBiography({required this.pubKey, super.key});
@@ -32,19 +33,14 @@ class UserBiography extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(
-            'Software Engineer  •  Tech Junkie  •  Technologies  •  Golang Coder  •  Uniswap Lover',
-            style: context.theme.appTextThemes.caption2.copyWith(
-              color: context.theme.appColors.quaternaryText,
-            ),
-          ),
-          SizedBox(height: 10.0.s),
           UserInfo(
             pubkey: article.pubkey,
             trailing: UserInfoMenu(pubkey: article.pubkey),
           ),
-          SizedBox(height: 10.0.s),
+          SizedBox(height: 12.0.s),
           ProfileAbout(pubkey: article.pubkey),
+          SizedBox(height: 12.0.s),
+          UserInfoSummary(pubkey: article.pubkey),
         ],
       ),
     );

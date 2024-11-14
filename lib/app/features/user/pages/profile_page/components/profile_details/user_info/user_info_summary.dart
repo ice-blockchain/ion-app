@@ -11,8 +11,8 @@ import 'package:ion/app/features/user/providers/follow_list_provider.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class UserInfo extends HookConsumerWidget {
-  const UserInfo({
+class UserInfoSummary extends HookConsumerWidget {
+  const UserInfoSummary({
     required this.pubkey,
     super.key,
   });
