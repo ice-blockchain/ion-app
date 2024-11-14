@@ -1,0 +1,21 @@
+## Description
+<!-- Briefly explain the purpose of this PR and what it accomplishes. -->
+
+## Additional Notes
+<!-- Add any extra context or relevant information here. -->
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Refactoring
+- [ ] Documentation
+- [ ] Chore
+
+## Screenshots (if applicable)
+<!-- Include screenshots to demonstrate any UI changes. -->
+<!-- <img width="180" alt="image" src="image_url_here"> -->
+
+## Figma Link (if applicable)
+<!-- Add a link to the Figma design here if relevant to the PR. -->
+
