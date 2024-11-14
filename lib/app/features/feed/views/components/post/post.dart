@@ -5,11 +5,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/features/feed/providers/post_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_menu/feed_item_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/components/quoted_post_frame/quoted_post_frame.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
+import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 
 class Post extends ConsumerWidget {
   const Post({
@@ -41,7 +41,7 @@ class Post extends ConsumerWidget {
         header ??
             UserInfo(
               pubkey: pubkey,
-              trailing: FeedItemMenu(pubkey: pubkey),
+              trailing: UserInfoMenu(pubkey: pubkey),
             ),
         PostBody(postEntity: postEntity),
         if (quotedEvent != null)

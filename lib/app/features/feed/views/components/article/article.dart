@@ -8,9 +8,9 @@ import 'package:ion/app/features/feed/providers/article_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
 import 'package:ion/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_menu/feed_item_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
+import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/utils/algorithm.dart';
 
 class Article extends ConsumerWidget {
@@ -59,7 +59,7 @@ class Article extends ConsumerWidget {
                     trailing: Row(
                       children: [
                         const BookmarkButton(id: 'test_article_id'),
-                        FeedItemMenu(pubkey: pubkey),
+                        UserInfoMenu(pubkey: pubkey),
                       ],
                     ),
                   ),

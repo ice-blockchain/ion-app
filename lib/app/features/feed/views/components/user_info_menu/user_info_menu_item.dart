@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-class FeedItemMenuItem extends StatelessWidget {
-  const FeedItemMenuItem({
+class UserInfoMenuItem extends StatelessWidget {
+  const UserInfoMenuItem({
     required this.label,
     required this.icon,
     required this.onPressed,

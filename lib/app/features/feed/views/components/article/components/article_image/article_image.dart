@@ -31,7 +31,7 @@ class ArticleImage extends StatelessWidget {
             child: imageUrl != null
                 ? CachedNetworkImage(
                     imageUrl: imageUrl!,
-                    fit: BoxFit.fitWidth,
+                    fit: BoxFit.fill,
                   )
                 : const ColoredBox(color: Colors.grey),
           ),

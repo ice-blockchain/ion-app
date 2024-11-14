@@ -131,6 +131,18 @@ class ArticleDetailsPage extends ConsumerWidget {
                     ),
                   ),
                 ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0.s),
+                    child: const ArticlesCarousel(
+                      articleIds: [
+                        'fdsfds',
+                        'fdsfdsfsdfsd',
+                        'fdsfdsfsd',
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
