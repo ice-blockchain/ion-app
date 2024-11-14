@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/article_content.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/providers/article_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_details_action_button.dart';
@@ -72,10 +73,7 @@ class ArticleDetailsPage extends ConsumerWidget {
                     ArticleDetailsHeader(
                       article: articleEntity,
                     ),
-                    Container(
-                      color: Colors.green,
-                      height: 200,
-                    ),
+                    ScreenSideOffset.small(child: const ArticleContent()),
                     const ArticleDetailsTopics(),
                     ScreenSideOffset.small(
                       child: FeedItemFooter(
