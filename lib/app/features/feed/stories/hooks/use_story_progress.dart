@@ -43,42 +43,38 @@ StoryProgress useStoryProgress({
         progress.value = 0.0;
         isCompleted.value = false;
         animationController.reset();
+
         return null;
       }
 
       void handleProgress() {
         story.map(
-          video: (_) => _handleVideoProgress(
-            videoController,
-            progress,
-            isCompleted,
-          ),
           image: (_) => _handleImageProgress(
             animationController,
             progress,
             isCompleted,
           ),
+          video: (_) => _handleVideoProgress(
+            videoController,
+            progress,
+            isCompleted,
+          ),
         );
       }
 
-      VoidCallback? cleanup;
-
-      if (story is VideoStory) {
-        cleanup = _setupVideoController(
+      return story.map(
+        image: (_) => _setupAnimationController(
+          animationController,
+          handleProgress,
+          isPaused,
+        ),
+        video: (_) => _setupVideoController(
           videoController,
           handleProgress,
           isCurrent,
           isPaused,
-        );
-      } else {
-        cleanup = _setupAnimationController(
-          animationController,
-          handleProgress,
-          isPaused,
-        );
-      }
-
-      return cleanup;
+        ),
+      );
     },
     [isCurrent, videoController, story.data.id, isPaused],
   );
