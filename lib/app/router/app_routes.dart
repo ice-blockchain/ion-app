@@ -29,7 +29,6 @@ import 'package:ion/app/features/contacts/pages/contacts_list_view.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
-import 'package:ion/app/features/core/views/pages/photo_gallery_page.dart';
 import 'package:ion/app/features/core/views/pages/splash_page.dart';
 import 'package:ion/app/features/core/views/photo_gallery_page/photo_gallery_page.dart';
 import 'package:ion/app/features/dapps/views/categories/apps/apps.dart';
