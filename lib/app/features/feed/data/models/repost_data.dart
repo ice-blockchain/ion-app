@@ -35,7 +35,7 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
   }
 
   @override
-  String get cacheKey => pubkey;
+  String get cacheKey => id;
 
   @override
   Type get cacheType => RepostEntity;

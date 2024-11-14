@@ -35,7 +35,7 @@ class GenericRepostEntity with _$GenericRepostEntity, NostrEntity implements Cac
   }
 
   @override
-  String get cacheKey => pubkey;
+  String get cacheKey => id;
 
   @override
   Type get cacheType => GenericRepostEntity;
