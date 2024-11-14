@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/views/components/text_editor/text_editor_p
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_section_header.dart';
+import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/articles_carousel.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/user_biography.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/hooks/use_scroll_indicator.dart';
@@ -104,7 +105,9 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     ScreenSideOffset.small(
                       child: UserBiography(pubKey: articleEntity.pubkey),
                     ),
-                    SizedBox(height: 16.0.s),
+                    SizedBox(height: 4.0.s),
+                    const ArticleDetailsTopics(),
+                    SizedBox(height: 4.0.s),
                     ScreenSideOffset.small(
                       child: ArticleDetailsSectionHeader(
                         title: context.i18n.article_page_from_author('Alicia Twen'),

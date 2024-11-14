@@ -35,7 +35,7 @@ class TopicsCarousel extends ConsumerWidget {
           itemBuilder: (context, index) => Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: context.theme.appColors.tertararyBackground,
+              color: context.theme.appColors.secondaryBackground,
               borderRadius: BorderRadius.all(Radius.circular(10.0.s)),
               border: Border.all(
                 width: 1.0.s,
