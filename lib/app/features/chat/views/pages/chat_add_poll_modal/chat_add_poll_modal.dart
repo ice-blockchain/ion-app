@@ -3,19 +3,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/poll/poll.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/poll/poll_answers_provider.dart';
-import 'package:ion/app/features/feed/providers/poll/poll_title_notifier.dart';
+import 'package:ion/app/features/core/providers/poll/poll_answers_provider.dart';
+import 'package:ion/app/features/core/providers/poll/poll_title_notifier.dart';
+import 'package:ion/app/features/core/views/components/poll/poll.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class ChatAddPollModal extends HookConsumerWidget {
+class ChatAddPollModal extends ConsumerWidget {
   const ChatAddPollModal({super.key});
 
   @override
