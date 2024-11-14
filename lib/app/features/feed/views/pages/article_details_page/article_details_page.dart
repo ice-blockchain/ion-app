@@ -5,11 +5,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/providers/article_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_details_action_button.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
+import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_section_header.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_topics.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -87,6 +89,31 @@ class ArticleDetailsPage extends ConsumerWidget {
                       actionBuilder: (context, child, onPressed) => FeedItemDetailsActionButton(
                         onPressed: onPressed,
                         child: child,
+                      ),
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: ScreenSideOffset.small(
+                    child: ArticleDetailsSectionHeader(
+                      title: context.i18n.article_page_from_author('Alicia Twen'),
+                      count: 10,
+                      trailing: GestureDetector(
+                        onTap: () {},
+                        child: Assets.svg.iconButtonNext.icon(),
+                      ),
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: ScreenSideOffset.small(
+                    child: ArticleDetailsSectionHeader(
+                      title: ArticleTopic.values[0]
+                          .toString(), //TODO: replace with first topic from articleEntity
+                      count: 3,
+                      trailing: GestureDetector(
+                        onTap: () {},
+                        child: Assets.svg.iconButtonNext.icon(),
                       ),
                     ),
                   ),

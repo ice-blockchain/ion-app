@@ -547,5 +547,6 @@
   "topics_add": "Add",
   "topics_title": "Topics",
   "article_preview_title": "Article preview",
-  "article_page_title": "Article"
+  "article_page_title": "Article",
+  "article_page_from_author": "From @{name}"
 }
