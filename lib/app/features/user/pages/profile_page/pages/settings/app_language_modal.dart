@@ -1,24 +1,25 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.dart';
 import 'package:ion/app/features/core/views/pages/language_selector_page.dart';
 
-class AppLanguageModal extends HookConsumerWidget {
+class AppLanguageModal extends ConsumerWidget {
   const AppLanguageModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Replace with localization implementation
-    final selectedLanguage = useState<String?>(null);
+    final locale = ref.watch(appLocaleProvider);
 
     return LanguageSelectorPage(
       title: context.i18n.app_language_title,
       description: context.i18n.app_language_description,
-      toggleLanguageSelection: (language) => selectedLanguage.value = language,
-      selectedLanguages: selectedLanguage.value == null ? [] : [selectedLanguage.value!],
+      toggleLanguageSelection: (languageCode) {
+        ref.read(appLocaleProvider.notifier).locale = Locale(languageCode);
+      },
+      selectedLanguages: [locale.languageCode.toLowerCase()],
     );
   }
 }

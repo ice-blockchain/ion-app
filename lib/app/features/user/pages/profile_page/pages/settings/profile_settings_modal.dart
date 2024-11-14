@@ -7,6 +7,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/language.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/components/action_button/action_button.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -21,10 +22,7 @@ class ProfileSettingsModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Watch selected content languages
-    final appLanguage = Language.values.first;
     final contentLanguages = Language.values.take(3).toList();
-
     final primaryColor = context.theme.appColors.primaryAccent;
 
     return SheetContent(
@@ -43,6 +41,7 @@ class ProfileSettingsModal extends ConsumerWidget {
           ),
           ScreenSideOffset.small(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 ActionButton(
                   icon: Assets.svg.iconProfileUser.icon(
@@ -61,7 +60,7 @@ class ProfileSettingsModal extends ConsumerWidget {
                   ),
                   label: context.i18n.profile_settings_app_language,
                   trailing: Text(
-                    appLanguage.name,
+                    ref.watch(localePreferredLanguageProvider).name,
                     style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
                   ),
                   onTap: () {

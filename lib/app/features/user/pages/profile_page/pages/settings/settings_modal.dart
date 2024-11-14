@@ -5,10 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/constants/links.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/app_info_provider.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/components/action_button/action_button.dart';
-import 'package:ion/app/features/user/providers/app_info_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -24,64 +25,6 @@ class SettingsModal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final iconColor = context.theme.appColors.primaryAccent;
-    final actions = <Widget>[
-      ActionButton(
-        icon: Assets.svg.iconProfileUser.icon(
-          color: iconColor,
-        ),
-        label: context.i18n.profile_settings_profile,
-        onTap: () {
-          ProfileSettingsRoute(pubkey: pubkey).push<void>(context);
-        },
-      ),
-      ActionButton(
-        icon: Assets.svg.linearSecurityShielduser.icon(
-          color: iconColor,
-        ),
-        label: context.i18n.profile_settings_security,
-        onTap: () {
-          SecureAccountOptionsRoute(pubkey: pubkey).push<void>(context);
-        },
-      ),
-      ActionButton(
-        icon: Assets.svg.iconProfilePrivacy.icon(
-          color: iconColor,
-        ),
-        label: context.i18n.profile_settings_privacy,
-        onTap: () {},
-      ),
-      ActionButton(
-        icon: Assets.svg.iconHomeNotification.icon(
-          color: iconColor,
-        ),
-        label: context.i18n.profile_settings_push_notifications,
-        onTap: () {},
-      ),
-      ActionButton(
-        icon: Assets.svg.iconProfilePrivacypolicy.icon(
-          color: iconColor,
-        ),
-        label: context.i18n.profile_settings_privacy_policy,
-        onTap: () => openUrlInAppBrowser(Links.privacy),
-      ),
-      ActionButton(
-        icon: Assets.svg.iconProfileTerms.icon(
-          color: iconColor,
-        ),
-        label: context.i18n.profile_settings_terms_conditions,
-        onTap: () => openUrlInAppBrowser(Links.terms),
-      ),
-      ActionButton(
-        icon: Assets.svg.iconMenuLogout.icon(
-          color: context.theme.appColors.attentionRed,
-        ),
-        label: context.i18n.profile_settings_logout,
-        onTap: () {
-          ConfirmLogoutRoute(pubkey: pubkey).push<void>(context);
-        },
-      ),
-      const _AppInfoWidget(),
-    ];
 
     return SheetContent(
       body: Column(
@@ -97,13 +40,67 @@ class SettingsModal extends ConsumerWidget {
             ],
           ),
           ScreenSideOffset.small(
-            child: ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              itemCount: actions.length,
-              itemBuilder: (context, i) => actions[i],
-              separatorBuilder: (context, _) => SizedBox(height: 9.0.s),
+            child: SeparatedColumn(
+              separator: SizedBox(height: 9.0.s),
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ActionButton(
+                  icon: Assets.svg.iconProfileUser.icon(
+                    color: iconColor,
+                  ),
+                  label: context.i18n.profile_settings_profile,
+                  onTap: () {
+                    ProfileSettingsRoute(pubkey: pubkey).push<void>(context);
+                  },
+                ),
+                ActionButton(
+                  icon: Assets.svg.linearSecurityShielduser.icon(
+                    color: iconColor,
+                  ),
+                  label: context.i18n.profile_settings_security,
+                  onTap: () {
+                    SecureAccountOptionsRoute(pubkey: pubkey).push<void>(context);
+                  },
+                ),
+                ActionButton(
+                  icon: Assets.svg.iconProfilePrivacy.icon(
+                    color: iconColor,
+                  ),
+                  label: context.i18n.profile_settings_privacy,
+                  onTap: () {},
+                ),
+                ActionButton(
+                  icon: Assets.svg.iconHomeNotification.icon(
+                    color: iconColor,
+                  ),
+                  label: context.i18n.profile_settings_push_notifications,
+                  onTap: () {},
+                ),
+                ActionButton(
+                  icon: Assets.svg.iconProfilePrivacypolicy.icon(
+                    color: iconColor,
+                  ),
+                  label: context.i18n.profile_settings_privacy_policy,
+                  onTap: () => openUrlInAppBrowser(Links.privacy),
+                ),
+                ActionButton(
+                  icon: Assets.svg.iconProfileTerms.icon(
+                    color: iconColor,
+                  ),
+                  label: context.i18n.profile_settings_terms_conditions,
+                  onTap: () => openUrlInAppBrowser(Links.terms),
+                ),
+                ActionButton(
+                  icon: Assets.svg.iconMenuLogout.icon(
+                    color: context.theme.appColors.attentionRed,
+                  ),
+                  label: context.i18n.profile_settings_logout,
+                  onTap: () {
+                    ConfirmLogoutRoute(pubkey: pubkey).push<void>(context);
+                  },
+                ),
+                const _AppInfoWidget(),
+              ],
             ),
           ),
           ScreenBottomOffset(margin: 32.0.s),
