@@ -3,13 +3,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/header.dart';
 import 'package:ion/app/utils/username.dart';
 
-class StoryViewerHeader extends StatelessWidget {
+class StoryViewerHeader extends HookWidget {
   const StoryViewerHeader({
     required this.currentStory,
     super.key,
@@ -19,6 +20,9 @@ class StoryViewerHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iceBadgeState = useState(Random().nextBool());
+    final verifiedBadgeState = useState(Random().nextBool());
+
     return Positioned(
       top: 14.0.s,
       left: 16.0.s,
@@ -40,8 +44,8 @@ class StoryViewerHeader extends StatelessWidget {
             color: context.theme.appColors.onPrimaryAccent,
           ),
         ),
-        iceBadge: Random().nextBool(),
-        verifiedBadge: Random().nextBool(),
+        iceBadge: iceBadgeState.value,
+        verifiedBadge: verifiedBadgeState.value,
         trailing: HeaderActions(story: currentStory),
         backgroundColor: Colors.transparent,
         contentPadding: EdgeInsets.zero,

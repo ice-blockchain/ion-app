@@ -7,8 +7,14 @@ import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/viewers/viewers.dart';
 
 class StoryViewerContent extends StatelessWidget {
-  const StoryViewerContent({required this.story, super.key});
+  const StoryViewerContent({
+    required this.story,
+    required this.isPaused,
+    super.key,
+  });
+
   final Story story;
+  final bool isPaused;
 
   @override
   Widget build(BuildContext context) {

@@ -13,12 +13,12 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 class StoryContent extends HookConsumerWidget {
   const StoryContent({
     required this.story,
-    required this.isVideoPlaying,
+    required this.isPaused,
     super.key,
   });
 
   final Story story;
-  final bool isVideoPlaying;
+  final bool isPaused;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +32,10 @@ class StoryContent extends HookConsumerWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          StoryViewerContent(story: story),
+          StoryViewerContent(
+            story: story,
+            isPaused: isPaused,
+          ),
           StoryViewerHeader(currentStory: story),
           KeyboardVisibilityBuilder(
             builder: (context, isKeyboardVisible) {

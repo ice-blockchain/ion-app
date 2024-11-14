@@ -16,6 +16,7 @@ class StoryProgressTracker extends HookConsumerWidget {
     required this.isCurrent,
     required this.isPreviousStory,
     required this.onCompleted,
+    required this.isPaused,
     this.margin,
     super.key,
   });
@@ -24,6 +25,7 @@ class StoryProgressTracker extends HookConsumerWidget {
   final bool isActive;
   final bool isCurrent;
   final bool isPreviousStory;
+  final bool isPaused;
   final VoidCallback onCompleted;
   final EdgeInsetsGeometry? margin;
 
@@ -34,6 +36,7 @@ class StoryProgressTracker extends HookConsumerWidget {
       story: story,
       isCurrent: isCurrent,
       videoController: videoController,
+      isPaused: isPaused,
     );
 
     useEffect(

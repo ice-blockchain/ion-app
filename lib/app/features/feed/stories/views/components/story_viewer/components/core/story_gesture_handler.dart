@@ -36,8 +36,8 @@ class StoryGestureHandler extends HookConsumerWidget {
           onTapRight();
         }
       },
-      onLongPress: onLongPressStart,
-      onLongPressEnd: (_) => onLongPressEnd,
+      onLongPressStart: (_) => onLongPressStart(),
+      onLongPressEnd: (_) => onLongPressEnd(),
       child: child,
     );
   }

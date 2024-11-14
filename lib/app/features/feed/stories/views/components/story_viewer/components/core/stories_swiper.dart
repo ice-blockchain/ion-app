@@ -16,6 +16,7 @@ class StoriesSwiper extends StatelessWidget {
     required this.onStoryPageChanged,
     required this.onNextStory,
     required this.onPreviousStory,
+    required this.onPausedChanged,
     super.key,
   });
 
@@ -27,6 +28,7 @@ class StoriesSwiper extends StatelessWidget {
   final ValueChanged<int> onStoryPageChanged;
   final VoidCallback onNextStory;
   final VoidCallback onPreviousStory;
+  final ValueChanged<bool> onPausedChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,11 @@ class StoriesSwiper extends StatelessWidget {
             onStoryPageChanged: (storyIndex) {
               if (isCurrentUser) {
                 onStoryPageChanged(storyIndex);
+              }
+            },
+            onPausedChanged: (paused) {
+              if (isCurrentUser) {
+                onPausedChanged(paused);
               }
             },
             onNextStory: onNextStory,
