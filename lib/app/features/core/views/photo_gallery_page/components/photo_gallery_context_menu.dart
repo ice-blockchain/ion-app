@@ -1,15 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/material.dart';
-import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
-import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_seperator.dart';
-import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
-import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
-import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/generated/assets.gen.dart';
+part of 'components.dart';
 
-class MessagingContextMenu extends StatelessWidget {
-  const MessagingContextMenu({super.key});
+class PhotoGalleryContextMenu extends StatelessWidget {
+  const PhotoGalleryContextMenu({super.key});
 
   static double get iconSize => 20.0.s;
 
@@ -34,15 +28,8 @@ class MessagingContextMenu extends StatelessWidget {
                     ),
                     const OverlayMenuItemSeperator(),
                     OverlayMenuItem(
-                      label: context.i18n.button_mute,
-                      icon: Assets.svg.iconChannelMute
-                          .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                      onPressed: closeMenu,
-                    ),
-                    const OverlayMenuItemSeperator(),
-                    OverlayMenuItem(
-                      label: context.i18n.button_block,
-                      icon: Assets.svg.iconPhofileBlockuser
+                      label: context.i18n.button_save,
+                      icon: Assets.svg.iconSecurityDownload
                           .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                       onPressed: closeMenu,
                     ),
@@ -69,7 +56,7 @@ class MessagingContextMenu extends StatelessWidget {
         ],
       ),
       child: Assets.svg.iconMorePopup.icon(
-        color: context.theme.appColors.onTertararyBackground,
+        color: context.theme.appColors.onPrimaryAccent,
       ),
     );
   }

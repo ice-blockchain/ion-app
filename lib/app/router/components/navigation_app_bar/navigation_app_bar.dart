@@ -19,6 +19,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onBackPress,
     this.actions,
     this.leading,
+    this.backgroundColor,
     super.key,
   });
 
@@ -28,6 +29,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     VoidCallback? onBackPress,
     List<Widget>? actions,
     Widget? leading,
+    Color? backgroundColor,
     Key? key,
   }) =>
       NavigationAppBar(
@@ -37,6 +39,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
         actions: actions,
         useScreenTopOffset: true,
         leading: leading,
+        backgroundColor: backgroundColor,
         key: key,
       );
 
@@ -73,6 +76,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final bool useScreenTopOffset;
   final Widget? leading;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +103,7 @@ class NavigationAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
 
     final Widget appBar = Container(
-      color: context.theme.appColors.secondaryBackground,
+      color: backgroundColor ?? context.theme.appColors.secondaryBackground,
       height: useScreenTopOffset ? screenHeaderHeight : modalHeaderHeight,
       child: Padding(
         padding: EdgeInsets.symmetric(

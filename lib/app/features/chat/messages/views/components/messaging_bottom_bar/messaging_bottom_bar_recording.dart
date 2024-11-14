@@ -4,8 +4,8 @@ import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.dart';
@@ -99,7 +99,9 @@ class BottomBarRecordingView extends HookConsumerWidget {
                 child: Row(
                   children: [
                     if (playerState.value == null) ...[
-                      const AudioLoadingIndicator(),
+                      const IONLoadingIndicator(
+                        type: IndicatorType.dark,
+                      ),
                     ] else if (playerState.value!.isPlaying) ...[
                       PlayAudioButton(playerController: playerController),
                     ] else

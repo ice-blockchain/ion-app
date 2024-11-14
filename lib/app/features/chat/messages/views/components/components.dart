@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-export 'audio_loading_indicator/audio_loading_indicator.dart';
 export 'chat_date_header_text/chat_date_header_text.dart';
 export 'message_item_wrapper/message_item_wrapper.dart';
 export 'message_metadata/message_metadata.dart';

@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of '../messages_context_menu.dart';
+import 'package:flutter/material.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
-class _ChatMenuItem extends StatelessWidget {
-  const _ChatMenuItem({
+class OverlayMenuItem extends StatelessWidget {
+  const OverlayMenuItem({
     required this.label,
     required this.icon,
     required this.onPressed,
+    super.key,
     this.labelColor,
   });
 

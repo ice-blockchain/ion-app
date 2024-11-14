@@ -29,6 +29,7 @@ import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
 import 'package:ion/app/features/core/views/pages/splash_page.dart';
+import 'package:ion/app/features/core/views/photo_gallery_page/photo_gallery_page.dart';
 import 'package:ion/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ion/app/features/dapps/views/pages/dapp_details/dapp_details_modal.dart';
 import 'package:ion/app/features/dapps/views/pages/dapps.dart';
@@ -348,4 +349,27 @@ class DAppDetailsRoute extends BaseRouteData {
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')
 class CompressTestRoute extends BaseRouteData {
   CompressTestRoute() : super(child: const CompressTestPage());
+}
+
+@TypedGoRoute<PhotoGalleryRoute>(path: '/photo-gallery')
+class PhotoGalleryRoute extends BaseRouteData {
+  PhotoGalleryRoute({
+    required this.title,
+    required this.senderName,
+    required this.sentAt,
+    this.photoUrls = const [],
+  }) : super(
+          child: PhotoGalleryPage(
+            photoUrls: photoUrls,
+            title: title,
+            senderName: senderName,
+            sentAt: sentAt,
+          ),
+          type: IceRouteType.fade,
+        );
+
+  final List<String> photoUrls;
+  final String title;
+  final String senderName;
+  final DateTime sentAt;
 }

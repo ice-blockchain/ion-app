@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of '../messages_context_menu.dart';
+import 'package:flutter/material.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
-class _ChatMenuItemSeperator extends StatelessWidget {
+class OverlayMenuItemSeperator extends StatelessWidget {
+  const OverlayMenuItemSeperator({super.key});
   @override
   Widget build(BuildContext context) {
     return Container(
