@@ -53,7 +53,7 @@ class Post extends ConsumerWidget {
               footer: const SizedBox.shrink(),
             ),
           ),
-        footer ?? FeedItemFooter(postId: postId),
+        footer ?? FeedItemFooter(entityId: postId),
       ],
     );
   }

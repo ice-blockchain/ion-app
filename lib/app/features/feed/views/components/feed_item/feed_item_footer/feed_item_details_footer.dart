@@ -7,11 +7,11 @@ import 'package:ion/app/features/feed/views/components/feed_item/feed_item_foote
 
 class FeedItemDetailsFooter extends StatelessWidget {
   const FeedItemDetailsFooter({
-    required this.postId,
+    required this.entityId,
     super.key,
   });
 
-  final String postId;
+  final String entityId;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class FeedItemDetailsFooter extends StatelessWidget {
         ),
         SizedBox(height: 12.0.s),
         FeedItemFooter(
-          postId: postId,
+          entityId: entityId,
           bottomPadding: 12.0.s,
           actionBuilder: (context, child, onPressed) => FeedItemDetailsActionButton(
             onPressed: onPressed,

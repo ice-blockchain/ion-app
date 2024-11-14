@@ -20,7 +20,7 @@ typedef ActionIconBuilder = Widget Function(
 
 class FeedItemFooter extends HookConsumerWidget {
   FeedItemFooter({
-    required this.postId,
+    required this.entityId,
     this.actionBuilder,
     double? bottomPadding,
     double? topPadding,
@@ -28,7 +28,7 @@ class FeedItemFooter extends HookConsumerWidget {
   })  : bottomPadding = bottomPadding ?? 16.0.s,
         topPadding = topPadding ?? 10.0.s;
 
-  final String postId;
+  final String entityId;
   final ActionIconBuilder? actionBuilder;
   final double bottomPadding;
   final double topPadding;
@@ -43,13 +43,13 @@ class FeedItemFooter extends HookConsumerWidget {
 
     void onToggleComment() {
       HapticFeedback.lightImpact();
-      PostReplyModalRoute(postId: postId).push<void>(context);
+      PostReplyModalRoute(postId: entityId).push<void>(context);
       isCommentActive.value = !isCommentActive.value;
     }
 
     void onToggleRepost() {
       HapticFeedback.lightImpact();
-      RepostOptionsModalRoute(postId: postId).push<void>(context);
+      RepostOptionsModalRoute(postId: entityId).push<void>(context);
       isReposted.value = !isReposted.value;
     }
 
@@ -60,7 +60,7 @@ class FeedItemFooter extends HookConsumerWidget {
 
     void onShareOptions() {
       HapticFeedback.lightImpact();
-      SharePostModalRoute(postId: postId).push<void>(context);
+      SharePostModalRoute(postId: entityId).push<void>(context);
     }
 
     void onIceStroke() => HapticFeedback.lightImpact();
