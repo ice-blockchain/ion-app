@@ -8,7 +8,6 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/providers/article_data_provider.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_details_action_button.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
@@ -97,13 +96,11 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     ScreenSideOffset.small(
                       child: FeedItemFooter(
                         entityId: articleEntity.id,
-                        bottomPadding: 20.0.s,
-                        actionBuilder: (context, child, onPressed) => FeedItemDetailsActionButton(
-                          onPressed: onPressed,
-                          child: child,
-                        ),
+                        bottomPadding: 10.0.s,
                       ),
                     ),
+                    Container(color: context.theme.appColors.primaryBackground, height: 8.0.s),
+                    SizedBox(height: 20.0.s),
                     ScreenSideOffset.small(
                       child: UserBiography(pubKey: articleEntity.pubkey),
                     ),

@@ -45,9 +45,6 @@ class ArticleDetailsHeader extends ConsumerWidget {
                   pubkey: article.pubkey,
                   trailing: FollowButton(onPressed: () {}, following: false),
                 ),
-                SizedBox(
-                  height: 24.0.s,
-                ),
               ],
             ),
           ),
