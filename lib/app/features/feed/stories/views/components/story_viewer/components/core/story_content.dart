@@ -7,25 +7,45 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_viewer_header.dart';
 
 class StoryContent extends HookConsumerWidget {
   const StoryContent({
     required this.story,
-    required this.isPaused,
     super.key,
   });
 
   final Story story;
-  final bool isPaused;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final emojiState = ref.watch(emojiReactionsControllerProvider);
-    final textController = useTextEditingController.fromValue(
-      TextEditingValue.empty,
+    final textController = useTextEditingController();
+
+    final keyboardVisibilityController = useMemoized(KeyboardVisibilityController.new);
+
+    final isKeyboardVisible = useStream(
+          keyboardVisibilityController.onChange,
+          initialData: keyboardVisibilityController.isVisible,
+        ).data ??
+        false;
+
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            ref.read(storyPauseControllerProvider.notifier).paused = isKeyboardVisible;
+          }
+        });
+        return null;
+      },
+      [isKeyboardVisible],
     );
+
+    final bottomPadding =
+        isKeyboardVisible ? MediaQuery.of(context).viewInsets.bottom - 30.0.s : 16.0.s;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
@@ -34,31 +54,23 @@ class StoryContent extends HookConsumerWidget {
         children: [
           StoryViewerContent(
             story: story,
-            isPaused: isPaused,
           ),
           StoryViewerHeader(currentStory: story),
-          KeyboardVisibilityBuilder(
-            builder: (context, isKeyboardVisible) {
-              final bottomPadding =
-                  isKeyboardVisible ? MediaQuery.of(context).viewInsets.bottom - 30.0.s : 16.0.s;
-
-              return Stack(
-                children: [
-                  StoryInputField(
-                    controller: textController,
-                    bottomPadding: bottomPadding,
-                  ),
-                  StoryViewerActionButtons(
-                    story: story,
-                    bottomPadding: bottomPadding,
-                  ),
-                  if (isKeyboardVisible)
-                    StoryReactionOverlay(
-                      textController: textController,
-                    ),
-                ],
-              );
-            },
+          Stack(
+            children: [
+              StoryInputField(
+                controller: textController,
+                bottomPadding: bottomPadding,
+              ),
+              StoryViewerActionButtons(
+                story: story,
+                bottomPadding: bottomPadding,
+              ),
+              if (isKeyboardVisible)
+                StoryReactionOverlay(
+                  textController: textController,
+                ),
+            ],
           ),
           if (emojiState.showNotification && emojiState.selectedEmoji != null)
             StoryReactionNotification(

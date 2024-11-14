@@ -11,14 +11,12 @@ class StoryProgressBarContainer extends ConsumerWidget {
     required this.stories,
     required this.currentStoryIndex,
     required this.onStoryCompleted,
-    required this.isPaused,
     super.key,
   });
 
   final List<Story> stories;
   final int currentStoryIndex;
   final VoidCallback onStoryCompleted;
-  final bool isPaused;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,7 +31,6 @@ class StoryProgressBarContainer extends ConsumerWidget {
               isActive: index <= currentStoryIndex,
               isCurrent: index == currentStoryIndex,
               isPreviousStory: index < currentStoryIndex,
-              isPaused: isPaused,
               onCompleted: onStoryCompleted,
               margin: index > 0 ? EdgeInsets.only(left: 4.0.s) : null,
             ),

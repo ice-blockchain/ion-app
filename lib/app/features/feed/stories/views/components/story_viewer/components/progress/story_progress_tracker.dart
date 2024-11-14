@@ -6,8 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_story_progress.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/progress/progress.dart';
-import 'package:video_player/video_player.dart';
 
 class StoryProgressTracker extends HookConsumerWidget {
   const StoryProgressTracker({
@@ -16,7 +16,6 @@ class StoryProgressTracker extends HookConsumerWidget {
     required this.isCurrent,
     required this.isPreviousStory,
     required this.onCompleted,
-    required this.isPaused,
     this.margin,
     super.key,
   });
@@ -25,25 +24,36 @@ class StoryProgressTracker extends HookConsumerWidget {
   final bool isActive;
   final bool isCurrent;
   final bool isPreviousStory;
-  final bool isPaused;
   final VoidCallback onCompleted;
   final EdgeInsetsGeometry? margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videoController = _getVideoController(ref);
+    final isPaused = ref.watch(storyPauseControllerProvider);
+
+    final videoController = story.whenOrNull(
+      video: (data, _) => ref.watch(
+        videoControllerProvider(
+          data.contentUrl,
+          autoPlay: isCurrent,
+        ),
+      ),
+    );
+
     final storyProgress = useStoryProgress(
       story: story,
       isCurrent: isCurrent,
-      videoController: videoController,
       isPaused: isPaused,
+      videoController: videoController,
     );
 
     useEffect(
       () {
         if (storyProgress.isCompleted) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            onCompleted();
+            if (context.mounted) {
+              onCompleted();
+            }
           });
         }
         return null;
@@ -56,17 +66,6 @@ class StoryProgressTracker extends HookConsumerWidget {
       storyProgress: isActive ? storyProgress.progress : 0.0,
       isPreviousStory: isPreviousStory,
       margin: margin,
-    );
-  }
-
-  VideoPlayerController? _getVideoController(WidgetRef ref) {
-    if (story is! VideoStory) return null;
-
-    return ref.watch(
-      videoControllerProvider(
-        story.data.contentUrl,
-        autoPlay: isCurrent,
-      ),
     );
   }
 }

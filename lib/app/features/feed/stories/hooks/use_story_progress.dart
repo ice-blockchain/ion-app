@@ -48,13 +48,11 @@ StoryProgress useStoryProgress({
 
       void handleProgress() {
         story.map(
-          video: (_) => videoController != null
-              ? _handleVideoProgress(
-                  videoController,
-                  progress,
-                  isCompleted,
-                )
-              : null,
+          video: (_) => _handleVideoProgress(
+            videoController,
+            progress,
+            isCompleted,
+          ),
           image: (_) => _handleImageProgress(
             animationController,
             progress,
@@ -63,19 +61,24 @@ StoryProgress useStoryProgress({
         );
       }
 
-      return story.map(
-        image: (_) => _setupAnimationController(
-          animationController,
-          handleProgress,
-          isPaused,
-        ),
-        video: (_) => _setupVideoController(
+      VoidCallback? cleanup;
+
+      if (story is VideoStory) {
+        cleanup = _setupVideoController(
           videoController,
           handleProgress,
           isCurrent,
           isPaused,
-        ),
-      );
+        );
+      } else {
+        cleanup = _setupAnimationController(
+          animationController,
+          handleProgress,
+          isPaused,
+        );
+      }
+
+      return cleanup;
     },
     [isCurrent, videoController, story, isPaused],
   );
@@ -87,11 +90,11 @@ StoryProgress useStoryProgress({
 }
 
 void _handleVideoProgress(
-  VideoPlayerController controller,
+  VideoPlayerController? controller,
   ValueNotifier<double> progress,
   ValueNotifier<bool> isCompleted,
 ) {
-  if (!controller.value.isInitialized) return;
+  if (controller == null || !controller.value.isInitialized) return;
 
   final position = controller.value.position;
   final duration = controller.value.duration;

@@ -28,6 +28,8 @@ class StoryViewerPage extends HookConsumerWidget {
 
     useEffect(
       () {
+        if (!context.mounted) return;
+
         storyViewingState.whenOrNull(
           ready: (users, currentUserIndex, _) {
             if (userPageController.hasClients) {
@@ -72,9 +74,10 @@ class StoryViewerPage extends HookConsumerWidget {
                   SizedBox(height: 28.0.s),
                   StoryProgressBarContainer(
                     stories: currentUser.stories,
-                    isPaused: currentPauseState.value,
                     currentStoryIndex: currentStoryIndex,
                     onStoryCompleted: () {
+                      if (!context.mounted) return;
+
                       if (storyViewingState.hasNextStory) {
                         storyViewingController.moveToNextStory();
                       } else if (storyViewingState.hasNextUser) {
