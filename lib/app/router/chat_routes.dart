@@ -13,6 +13,7 @@ class ChatRoutes {
         TypedGoRoute<NewChatModalRoute>(path: 'new-chat'),
         TypedGoRoute<ChatLearnMoreModalRoute>(path: 'learn-more'),
         TypedGoRoute<ShareProfileModalRoute>(path: 'share-profile'),
+        TypedGoRoute<ChatAddPollModalRoute>(path: 'add-poll'),
       ],
     ),
   ];
@@ -80,4 +81,12 @@ class ShareProfileModalRoute extends BaseRouteData {
 
   final String title;
   final ContactRouteAction action;
+}
+
+class ChatAddPollModalRoute extends BaseRouteData {
+  ChatAddPollModalRoute()
+      : super(
+          child: const ChatAddPollModal(),
+          type: IceRouteType.bottomSheet,
+        );
 }

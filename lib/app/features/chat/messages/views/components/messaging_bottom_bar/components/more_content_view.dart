@@ -67,7 +67,10 @@ class MoreContentView extends ConsumerWidget {
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatPoll,
                 title: context.i18n.common_poll,
-                onTap: () {},
+                onTap: () {
+                  ChatAddPollModalRoute().push<void>(context);
+                  ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                },
               ),
             ],
           ),
