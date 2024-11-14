@@ -35,7 +35,7 @@ class CreateArticleAddImage extends HookConsumerWidget {
       requestDialog: PermissionRequestSheet.fromType(context, Permission.photos),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
       builder: (context, onPressed) => GestureDetector(
-        onTap: onPressed,
+        onTap: selectedImage.value == null ? onPressed : null,
         child: ScreenSideOffset.small(
           child: AspectRatio(
             aspectRatio: 343 / 210,
@@ -47,49 +47,68 @@ class CreateArticleAddImage extends HookConsumerWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              child: Consumer(
-                builder: (context, ref, _) {
-                  final assetEntityAsync =
-                      ref.watch(assetEntityProvider(selectedImage.value?.path ?? ''));
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0.s),
+                child: Consumer(
+                  builder: (context, ref, _) {
+                    final assetEntityAsync =
+                        ref.watch(assetEntityProvider(selectedImage.value?.path ?? ''));
 
-                  return assetEntityAsync.maybeWhen(
-                    data: (asset) {
-                      if (asset == null) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 36.0.s,
-                              height: 36.0.s,
-                              decoration: BoxDecoration(
-                                color: context.theme.appColors.primaryAccent,
-                                borderRadius: BorderRadius.circular(18.0.s),
+                    return assetEntityAsync.maybeWhen(
+                      data: (asset) {
+                        if (asset == null) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 36.0.s,
+                                height: 36.0.s,
+                                decoration: BoxDecoration(
+                                  color: context.theme.appColors.primaryAccent,
+                                  borderRadius: BorderRadius.circular(18.0.s),
+                                ),
+                                alignment: Alignment.center,
+                                child: Assets.svg.iconLoginCamera.icon(size: 24.0.s),
                               ),
-                              alignment: Alignment.center,
-                              child: Assets.svg.iconLoginCamera.icon(size: 24.0.s),
+                              SizedBox(height: 7.0.s),
+                              Text(
+                                context.i18n.create_article_add_cover,
+                                style: context.theme.appTextThemes.body2.copyWith(
+                                  color: context.theme.appColors.primaryText,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return Stack(
+                          children: [
+                            Positioned.fill(
+                              child: Image(
+                                image: AssetEntityImageProvider(
+                                  asset,
+                                  isOriginal: false,
+                                  thumbnailSize: const ThumbnailSize.square(300),
+                                ),
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                            SizedBox(height: 7.0.s),
-                            Text(
-                              context.i18n.create_article_add_cover,
-                              style: context.theme.appTextThemes.body2.copyWith(
-                                color: context.theme.appColors.primaryText,
+                            Positioned(
+                              top: 0.0.s,
+                              right: 0.0.s,
+                              child: IconButton(
+                                onPressed: () {
+                                  selectedImage.value = null;
+                                },
+                                icon: Assets.svg.iconFieldClearall.icon(size: 20.0.s),
                               ),
                             ),
                           ],
                         );
-                      }
-                      return Image(
-                        image: AssetEntityImageProvider(
-                          asset,
-                          isOriginal: false,
-                          thumbnailSize: const ThumbnailSize.square(300),
-                        ),
-                        fit: BoxFit.cover,
-                      );
-                    },
-                    orElse: SizedBox.shrink,
-                  );
-                },
+                      },
+                      orElse: SizedBox.shrink,
+                    );
+                  },
+                ),
               ),
             ),
           ),
