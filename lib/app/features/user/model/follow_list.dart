@@ -37,10 +37,9 @@ class FollowListEntity with _$FollowListEntity, NostrEntity implements Cacheable
   List<String> get pubkeys => data.list.map((followee) => followee.pubkey).toList();
 
   @override
-  String get cacheKey => pubkey;
+  String get cacheKey => cacheKeyBuilder(pubkey: pubkey);
 
-  @override
-  Type get cacheType => FollowListEntity;
+  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
   static const int kind = 3;
 }

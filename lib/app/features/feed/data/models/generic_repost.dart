@@ -35,10 +35,9 @@ class GenericRepostEntity with _$GenericRepostEntity, NostrEntity implements Cac
   }
 
   @override
-  String get cacheKey => id;
+  String get cacheKey => cacheKeyBuilder(id: id);
 
-  @override
-  Type get cacheType => GenericRepostEntity;
+  static String cacheKeyBuilder({required String id}) => id;
 
   static const int kind = 16;
 }

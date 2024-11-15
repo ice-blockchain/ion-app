@@ -35,10 +35,9 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
   }
 
   @override
-  String get cacheKey => id;
+  String get cacheKey => cacheKeyBuilder(id: id);
 
-  @override
-  Type get cacheType => RepostEntity;
+  static String cacheKeyBuilder({required String id}) => id;
 
   static const int kind = 6;
 }

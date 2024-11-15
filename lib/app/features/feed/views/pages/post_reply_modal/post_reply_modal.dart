@@ -35,7 +35,9 @@ class PostReplyModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postEntity = ref.watch(nostrCacheProvider.select(cacheSelector<PostEntity>(postId)));
+    final postEntity = ref.watch(
+      nostrCacheProvider.select(cacheSelector<PostEntity>(PostEntity.cacheKeyBuilder(id: postId))),
+    );
 
     if (postEntity == null) {
       return const SizedBox.shrink();

@@ -33,10 +33,9 @@ class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity
   }
 
   @override
-  String get cacheKey => id;
+  String get cacheKey => cacheKeyBuilder(id: id);
 
-  @override
-  Type get cacheType => ArticleEntity;
+  static String cacheKeyBuilder({required String id}) => id;
 
   static const kind = 30023;
 }

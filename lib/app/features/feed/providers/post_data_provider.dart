@@ -16,7 +16,9 @@ Future<PostEntity?> postData(
   required String postId,
   required String pubkey,
 }) async {
-  final post = ref.watch(nostrCacheProvider.select(cacheSelector<PostEntity>(postId)));
+  final post = ref.watch(
+    nostrCacheProvider.select(cacheSelector<PostEntity>(PostEntity.cacheKeyBuilder(id: postId))),
+  );
   if (post != null) {
     return post;
   }

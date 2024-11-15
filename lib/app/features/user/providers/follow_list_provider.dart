@@ -15,7 +15,10 @@ part 'follow_list_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<FollowListEntity?> followList(Ref ref, String pubkey) async {
-  final followList = ref.watch(nostrCacheProvider.select(cacheSelector<FollowListEntity>(pubkey)));
+  final followList = ref.watch(
+    nostrCacheProvider
+        .select(cacheSelector<FollowListEntity>(FollowListEntity.cacheKeyBuilder(pubkey: pubkey))),
+  );
   if (followList != null) {
     return followList;
   }

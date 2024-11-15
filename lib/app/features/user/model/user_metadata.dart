@@ -39,10 +39,9 @@ class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements Cache
   }
 
   @override
-  String get cacheKey => pubkey;
+  String get cacheKey => cacheKeyBuilder(pubkey: pubkey);
 
-  @override
-  Type get cacheType => UserMetadataEntity;
+  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
   static const int kind = 0;
 }

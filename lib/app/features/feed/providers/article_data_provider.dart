@@ -16,7 +16,10 @@ Future<ArticleEntity?> articleData(
   required String articleId,
   required String pubkey,
 }) async {
-  final article = ref.watch(nostrCacheProvider.select(cacheSelector<ArticleEntity>(articleId)));
+  final article = ref.watch(
+    nostrCacheProvider
+        .select(cacheSelector<ArticleEntity>(ArticleEntity.cacheKeyBuilder(id: articleId))),
+  );
   if (article != null) {
     return article;
   }

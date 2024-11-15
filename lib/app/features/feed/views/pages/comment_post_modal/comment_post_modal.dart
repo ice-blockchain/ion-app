@@ -31,7 +31,9 @@ class CommentPostModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final post = ref.watch(nostrCacheProvider.select(cacheSelector<PostEntity>(postId)));
+    final post = ref.watch(
+      nostrCacheProvider.select(cacheSelector<PostEntity>(PostEntity.cacheKeyBuilder(id: postId))),
+    );
 
     if (post == null) return const SizedBox.shrink();
 

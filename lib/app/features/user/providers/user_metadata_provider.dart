@@ -13,8 +13,11 @@ part 'user_metadata_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<UserMetadataEntity?> userMetadata(Ref ref, String pubkey) async {
-  final userMetadata =
-      ref.watch(nostrCacheProvider.select(cacheSelector<UserMetadataEntity>(pubkey)));
+  final userMetadata = ref.watch(
+    nostrCacheProvider.select(
+      cacheSelector<UserMetadataEntity>(UserMetadataEntity.cacheKeyBuilder(pubkey: pubkey)),
+    ),
+  );
   if (userMetadata != null) {
     return userMetadata;
   }

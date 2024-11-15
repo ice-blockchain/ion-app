@@ -37,10 +37,9 @@ class UserDelegationEntity with _$UserDelegationEntity, NostrEntity implements C
   }
 
   @override
-  String get cacheKey => pubkey;
+  String get cacheKey => cacheKeyBuilder(pubkey: pubkey);
 
-  @override
-  Type get cacheType => UserDelegationEntity;
+  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
   static const int kind = 10100;
 }
