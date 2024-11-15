@@ -29,7 +29,6 @@ class RecoverUserPage extends HookConsumerWidget {
 
     return ProviderScope(
       overrides: [
-        // ignore: scoped_providers_should_specify_dependencies
         availableTwoFaTypesProvider.overrideWithValue(TwoFaType.values),
       ],
       child: switch (step.value) {

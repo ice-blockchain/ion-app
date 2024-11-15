@@ -18,7 +18,6 @@ class PhoneDeletePage extends HookWidget {
 
     return ProviderScope(
       overrides: [
-        // ignore: scoped_providers_should_specify_dependencies
         availableTwoFaTypesProvider.overrideWith(securityMethodsEnabledTypes),
       ],
       child: switch (step.value) {

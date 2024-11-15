@@ -18,7 +18,6 @@ class SelectTwoFAOptionsState with _$SelectTwoFAOptionsState {
   }) = _SelectTwoFAOptionsState;
 }
 
-// ignore: provider_dependencies
 @Riverpod(dependencies: [availableTwoFaTypes])
 class SelectedTwoFAOptionsNotifier extends _$SelectedTwoFAOptionsNotifier {
   @override
@@ -53,7 +52,7 @@ Set<TwoFaType> selectedTwoFaOptions(Ref ref) {
   return state.selectedValues.whereType<TwoFaType>().toSet();
 }
 
-@riverpod
+@Riverpod(dependencies: [])
 List<TwoFaType> availableTwoFaTypes(Ref ref) =>
     throw UnimplementedError('availableTwoFaTypesProvider must be overridden');
 
