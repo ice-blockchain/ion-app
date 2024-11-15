@@ -5,17 +5,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
-import 'package:ion/app/features/wallet/providers/contacts_data_provider.dart';
 import 'package:ion/app/features/wallet/providers/filtered_wallet_coins_provider.dart';
 import 'package:ion/app/features/wallet/providers/filtered_wallet_nfts_provider.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_header.dart';
-import 'package:ion/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/header/header.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab.dart';
@@ -23,9 +19,7 @@ import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_header.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
-import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 
 class WalletPage extends HookConsumerWidget {
@@ -34,17 +28,6 @@ class WalletPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-    final hasContactsPermission = ref.watch(hasPermissionProvider(Permission.contacts));
-
-    useOnInit(() {
-      if (hasContactsPermission) {
-        ref.read(contactsDataNotifierProvider.notifier).fetchContacts();
-      } else {
-        AllowAccessRoute().go(context);
-      }
-    }, <Object?>[
-      hasContactsPermission,
-    ]);
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
@@ -90,7 +73,6 @@ class WalletPage extends HookConsumerWidget {
             child: Column(
               children: [
                 const Balance(),
-                const ContactsList(),
                 Delimiter(
                   padding: EdgeInsets.only(
                     top: 16.0.s,
