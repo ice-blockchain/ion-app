@@ -49,12 +49,15 @@ class Post extends ConsumerWidget {
         SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
         if (quotedEvent != null)
-          QuotedPostFrame(
-            child: Post(
-              postId: quotedEvent.eventId,
-              pubkey: quotedEvent.pubkey,
-              header: UserInfo(pubkey: quotedEvent.pubkey),
-              footer: const SizedBox.shrink(),
+          Padding(
+            padding: EdgeInsets.only(top: 6.0.s),
+            child: QuotedPostFrame(
+              child: Post(
+                postId: quotedEvent.eventId,
+                pubkey: quotedEvent.pubkey,
+                header: UserInfo(pubkey: quotedEvent.pubkey),
+                footer: const SizedBox.shrink(),
+              ),
             ),
           ),
         footer ?? FeedItemFooter(entityId: postId, pubkey: pubkey, kind: PostEntity.kind),

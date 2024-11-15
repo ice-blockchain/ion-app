@@ -80,6 +80,7 @@ extension NotificationDataExtension on NotificationData {
         return switch (contentType) {
           ContentType.reply => locale.notification_reply_sent,
           ContentType.repost => locale.notification_repost_successful,
+          ContentType.post => locale.notification_post_successful,
           _ => throw ArgumentError('No success state for $contentType')
         };
       },

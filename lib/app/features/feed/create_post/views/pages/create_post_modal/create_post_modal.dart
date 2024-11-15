@@ -11,6 +11,9 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/poll/poll_answers_provider.dart';
 import 'package:ion/app/features/core/providers/poll/poll_title_notifier.dart';
+import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.dart';
+import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.dart';
+import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
@@ -22,21 +25,10 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/markdown_parser/markdown_parser.dart';
 import 'package:ion/app/utils/validators.dart';
 
 class CreatePostModal extends HookConsumerWidget {
   const CreatePostModal({super.key});
-
-  Future<void> _showCancelCreationModal(BuildContext context) async {
-    await showSimpleBottomSheet<void>(
-      context: context,
-      child: CancelCreationModal(
-        title: context.i18n.cancel_creation_post_title,
-        onCancel: () => Navigator.of(context).pop(),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,6 +39,9 @@ class CreatePostModal extends HookConsumerWidget {
     final userMetadata = ref.watch(currentUserMetadataProvider);
     final pollTitle = ref.watch(pollTitleNotifierProvider);
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
+    final isSubmitLoading = ref.watch(createPostNotifierProvider).isLoading;
+
+    ref.displayErrors(createPostNotifierProvider);
 
     final isSendButtonEnabled = useMemoized(
       () {
@@ -64,9 +59,7 @@ class CreatePostModal extends HookConsumerWidget {
     );
 
     return BackHardwareButtonInterceptor(
-      onBackPress: (context) async {
-        await _showCancelCreationModal(context);
-      },
+      onBackPress: _showCancelCreationModal,
       child: SheetContent(
         topPadding: 0,
         body: Column(
@@ -74,9 +67,7 @@ class CreatePostModal extends HookConsumerWidget {
           children: [
             NavigationAppBar.modal(
               title: Text(context.i18n.create_post_modal_title),
-              onBackPress: () async {
-                await _showCancelCreationModal(context);
-              },
+              onBackPress: () => _showCancelCreationModal(context),
             ),
             Expanded(
               child: ScreenSideOffset.small(
@@ -118,11 +109,10 @@ class CreatePostModal extends HookConsumerWidget {
                       ToolbarBoldButton(textEditorController: textEditorController),
                     ],
                     trailing: ToolbarSendButton(
-                      enabled: isSendButtonEnabled,
-                      onPressed: () {
-                        generateMarkdownFromDelta(textEditorController.document.toDelta());
-                        context.pop();
-                      },
+                      loading: isSubmitLoading,
+                      enabled: isSendButtonEnabled && !isSubmitLoading,
+                      onPressed: () =>
+                          _submit(ref, content: textEditorController.document.toPlainText()),
                     ),
                   ),
                 ),
@@ -132,5 +122,26 @@ class CreatePostModal extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _showCancelCreationModal(BuildContext context) async {
+    await showSimpleBottomSheet<void>(
+      context: context,
+      child: CancelCreationModal(
+        title: context.i18n.cancel_creation_post_title,
+        onCancel: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
+  Future<void> _submit(WidgetRef ref, {required String content}) async {
+    await ref.read(createPostNotifierProvider.notifier).create(content: content);
+
+    if (!ref.read(createPostNotifierProvider).hasError) {
+      if (ref.context.mounted) {
+        ref.context.pop();
+      }
+      ref.read(contentNotificationControllerProvider.notifier).showSuccess(ContentType.post);
+    }
   }
 }
