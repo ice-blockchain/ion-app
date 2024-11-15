@@ -8,7 +8,6 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/async_value_listener.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_details_footer.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/components/reply_input_field/reply_input_field.dart';
@@ -65,11 +64,15 @@ class PostDetailsPage extends HookConsumerWidget {
                 ),
                 SliverToBoxAdapter(
                   child: ScreenSideOffset.small(
+<<<<<<< HEAD
                     child: Post(
                       postId: postId,
                       pubkey: pubkey,
                       footer: FeedItemDetailsFooter(entityId: postId),
                     ),
+=======
+                    child: Post(postId: postId, pubkey: pubkey),
+>>>>>>> be14a547 (feat: add repost action, change counters UI)
                   ),
                 ),
                 SliverToBoxAdapter(child: FeedListSeparator()),

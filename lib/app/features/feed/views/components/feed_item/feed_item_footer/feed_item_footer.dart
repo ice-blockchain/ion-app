@@ -12,16 +12,11 @@ import 'package:ion/app/features/feed/views/components/feed_item/feed_item_foote
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-typedef ActionIconBuilder = Widget Function(
-  BuildContext context,
-  Widget child,
-  VoidCallback onPressed,
-);
-
 class FeedItemFooter extends HookConsumerWidget {
   FeedItemFooter({
     required this.entityId,
-    this.actionBuilder,
+    required this.pubkey,
+    required this.kind,
     double? bottomPadding,
     double? topPadding,
     super.key,
@@ -29,7 +24,8 @@ class FeedItemFooter extends HookConsumerWidget {
         topPadding = topPadding ?? 10.0.s;
 
   final String entityId;
-  final ActionIconBuilder? actionBuilder;
+  final String pubkey;
+  final int kind;
   final double bottomPadding;
   final double topPadding;
 
@@ -49,7 +45,7 @@ class FeedItemFooter extends HookConsumerWidget {
 
     void onToggleRepost() {
       HapticFeedback.lightImpact();
-      RepostOptionsModalRoute(postId: entityId).push<void>(context);
+      RepostOptionsModalRoute(entityId: entityId, pubkey: pubkey, kind: kind).push<void>(context);
       isReposted.value = !isReposted.value;
     }
 
@@ -125,60 +121,28 @@ class FeedItemFooter extends HookConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _ActionIcon(
-            onPressed: onToggleComment,
-            actionBuilder: actionBuilder,
+          GestureDetector(
+            onTap: onToggleComment,
             child: commentsActionIcon,
           ),
-          _ActionIcon(
-            onPressed: onToggleRepost,
-            actionBuilder: actionBuilder,
+          GestureDetector(
+            onTap: onToggleRepost,
             child: repostsActionIcon,
           ),
-          _ActionIcon(
-            onPressed: onToggleLike,
-            actionBuilder: actionBuilder,
+          GestureDetector(
+            onTap: onToggleLike,
             child: likesActionIcon,
           ),
-          _ActionIcon(
-            onPressed: onIceStroke,
-            actionBuilder: actionBuilder,
+          GestureDetector(
+            onTap: onIceStroke,
             child: iceActionIcon,
           ),
-          _ActionIcon(
-            onPressed: onShareOptions,
-            actionBuilder: actionBuilder,
+          GestureDetector(
+            onTap: onShareOptions,
             child: shareActionIcon,
           ),
         ],
       ),
     );
-  }
-}
-
-class _ActionIcon extends StatelessWidget {
-  const _ActionIcon({
-    required this.child,
-    required this.onPressed,
-    this.actionBuilder,
-  });
-
-  final Widget child;
-  final VoidCallback onPressed;
-  final ActionIconBuilder? actionBuilder;
-
-  @override
-  Widget build(BuildContext context) {
-    return actionBuilder == null
-        ? InkResponse(
-            onTap: onPressed,
-            splashFactory: InkRipple.splashFactory,
-            child: child,
-          )
-        : actionBuilder!(
-            context,
-            child,
-            onPressed,
-          );
   }
 }

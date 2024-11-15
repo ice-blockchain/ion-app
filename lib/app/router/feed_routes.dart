@@ -16,7 +16,7 @@ class FeedRoutes {
     ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:postId'),
+        TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options'),
         TypedGoRoute<CommentPostModalRoute>(path: 'comment-post/:postId'),
         TypedGoRoute<PostReplyModalRoute>(path: 'reply-to-post/:postId'),
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
@@ -88,13 +88,18 @@ class CommentPostModalRoute extends BaseRouteData {
 }
 
 class RepostOptionsModalRoute extends BaseRouteData {
-  RepostOptionsModalRoute({required this.postId})
-      : super(
-          child: RepostOptionsModal(postId: postId),
+  RepostOptionsModalRoute({
+    required this.entityId,
+    required this.pubkey,
+    required this.kind,
+  }) : super(
+          child: RepostOptionsModal(entityId: entityId, pubkey: pubkey, kind: kind),
           type: IceRouteType.bottomSheet,
         );
 
-  final String postId;
+  final String entityId;
+  final String pubkey;
+  final int kind;
 }
 
 class SharePostModalRoute extends BaseRouteData {

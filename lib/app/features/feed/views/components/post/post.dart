@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/providers/post_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
@@ -53,7 +54,7 @@ class Post extends ConsumerWidget {
               footer: const SizedBox.shrink(),
             ),
           ),
-        footer ?? FeedItemFooter(entityId: postId),
+        footer ?? FeedItemFooter(entityId: postId, pubkey: pubkey, kind: PostEntity.kind),
       ],
     );
   }
