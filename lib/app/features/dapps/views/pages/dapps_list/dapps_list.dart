@@ -8,10 +8,10 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/dapps/model/dapp_data.dart';
 import 'package:ion/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ion/app/features/dapps/views/categories/apps/apps.dart';
-import 'package:ion/app/features/dapps/views/components/grid_item/grid_item.dart';
+import 'package:ion/app/features/dapps/views/pages/dapps_list/dapps_list_item.dart';
+import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -25,14 +25,12 @@ class DAppsList extends HookConsumerWidget {
     final searchText = useState('');
     final apps = ref.watch(dappsDataProvider).valueOrNull ?? [];
 
-    final filteredApps = searchText.value.isEmpty
+    final searchLower = searchText.value.toLowerCase().trim();
+    final filteredApps = searchLower.isEmpty
         ? apps
-        : apps.where((DAppData app) {
-            final searchLower = searchText.value.toLowerCase().trim();
-            final titleLower = app.title.toLowerCase();
-
-            return titleLower.contains(searchLower);
-          }).toList();
+        : apps
+            .where((app) => app.title.toLowerCase().contains(searchLower))
+            .toList();
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
@@ -49,32 +47,27 @@ class DAppsList extends HookConsumerWidget {
                   children: [
                     if (payload.isSearchVisible ?? false)
                       SearchInput(
-                        onTextChanged: (String value) => searchText.value = value,
+                        onTextChanged: (String value) =>
+                            searchText.value = value,
                       ),
                     Expanded(
-                      child: Container(
-                        child: apps.isEmpty
-                            ? EmptyList(
-                                asset: Assets.svg.walletIconWalletEmptyfavourites,
-                                title: context.i18n.dapps_favourites_empty_title,
-                              )
-                            : ListView.builder(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 10.0.s,
+                      child: apps.isEmpty
+                          ? EmptyList(
+                              asset: Assets.svg.walletIconWalletEmptyfavourites,
+                              title: context.i18n.dapps_favourites_empty_title,
+                            )
+                          : filteredApps.isEmpty
+                              ? NothingIsFound(
+                                  title: context.i18n.search_nothing_found,
+                                )
+                              : ListView.builder(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 10.0.s,
+                                  ),
+                                  itemCount: filteredApps.length,
+                                  itemBuilder: (_, int index) =>
+                                      DAppsListItem(app: filteredApps[index]),
                                 ),
-                                itemCount: filteredApps.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final app = filteredApps[index];
-                                  return Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 5.5.s),
-                                    child: GridItem(
-                                      dAppData: app,
-                                      showIsFavourite: true,
-                                    ),
-                                  );
-                                },
-                              ),
-                      ),
                     ),
                   ],
                 ),

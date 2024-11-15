@@ -27,7 +27,12 @@ class ManageWalletsModal extends StatelessWidget {
           children: [
             NavigationAppBar.modal(
               title: Text(context.i18n.wallet_manage_wallets),
-              actions: const [NavigationCloseButton()],
+              actions: [
+                NavigationCloseButton(
+                  onPressed: () =>
+                      Navigator.of(context, rootNavigator: true).pop(),
+                ),
+              ],
             ),
             SizedBox(
               height: 9.0.s,
@@ -45,7 +50,8 @@ class ManageWalletsModal extends StatelessWidget {
             ),
             ScreenSideOffset.small(
               child: WalletsList(
-                itemBuilder: (walletData) => ManageWalletTile(walletId: walletData.id),
+                itemBuilder: (walletData) =>
+                    ManageWalletTile(walletId: walletData.id),
               ),
             ),
             SizedBox(height: MediaQuery.paddingOf(context).bottom + 16.0.s),

@@ -78,6 +78,7 @@ import 'package:ion/app/features/protect_account/secure_account/views/pages/secu
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_options_page.dart';
 import 'package:ion/app/features/search/views/pages/chat_advanced_search_page/chat_advanced_search_page.dart';
 import 'package:ion/app/features/search/views/pages/chat_simple_search_page/chat_simple_search_page.dart';
+import 'package:ion/app/features/search/views/pages/dapps_simple_search_page/dapps_simple_search_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/feed_advanced_search_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filters_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_search_languages_page/feed_search_languages_page.dart';
@@ -144,8 +145,8 @@ part 'dapps_routes.dart';
 part 'feed_routes.dart';
 part 'profile_routes.dart';
 part 'protect_account_routes.dart';
-part 'wallet_routes.dart';
 part 'settings_routes.dart';
+part 'wallet_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
 final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');
@@ -267,7 +268,12 @@ class SelfProfileRoute extends BaseRouteData {
 
 @TypedGoRoute<ErrorRoute>(path: '/error')
 class ErrorRoute extends BaseRouteData {
-  ErrorRoute({this.$extra}) : super(child: ErrorPage(error: $extra ?? Exception('Unknown error')));
+  ErrorRoute({this.$extra})
+      : super(
+          child: ErrorPage(
+            error: $extra ?? Exception('Unknown error'),
+          ),
+        );
 
   final Exception? $extra;
 }

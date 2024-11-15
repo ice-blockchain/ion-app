@@ -10,8 +10,8 @@ import 'package:ion/app/features/dapps/providers/dapps_provider.dart';
 import 'package:ion/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ion/app/features/dapps/views/categories/featured.dart';
 import 'package:ion/app/features/dapps/views/components/categories/categories.dart';
+import 'package:ion/app/features/dapps/views/components/dapps_header/dapps_header.dart';
 import 'package:ion/app/features/dapps/views/components/favourites/favourites.dart';
-import 'package:ion/app/features/dapps/views/components/wallet_header/wallet_header.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
@@ -31,8 +31,8 @@ class DAppsPage extends HookConsumerWidget {
         controller: scrollController,
         slivers: [
           CollapsingAppBar(
-            height: WalletHeader.height,
-            child: const WalletHeader(),
+            height: DAppsHeader.height,
+            child: const DAppsHeader(),
           ),
           SliverToBoxAdapter(
             child: Column(

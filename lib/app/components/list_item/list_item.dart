@@ -8,6 +8,7 @@ import 'package:timeago_flutter/timeago_flutter.dart';
 
 part './variants/list_item_text_with_icon.dart';
 part './variants/list_item_user.dart';
+part './variants/list_item_dapp.dart';
 
 class ListItem extends StatelessWidget {
   ListItem({
@@ -59,6 +60,26 @@ class ListItem extends StatelessWidget {
     double? avatarSize,
   }) = _ListItemUser;
 
+  factory ListItem.dapp({
+    required Widget title,
+    required Widget subtitle,
+    Key? key,
+    Widget? leading,
+    Widget? trailing,
+    BoxBorder? border,
+    BorderRadius? borderRadius,
+    EdgeInsetsGeometry? contentPadding,
+    EdgeInsetsGeometry? leadingPadding,
+    EdgeInsetsGeometry? trailingPadding,
+    BoxConstraints? constraints,
+    Color? backgroundColor,
+    VoidCallback? onTap,
+    String? profilePicture,
+    Widget? profilePictureWidget,
+    bool verifiedBadge,
+    bool isSelected,
+  }) = _ListItemDApp;
+
   factory ListItem.text({
     required Widget title,
     required String value,
@@ -91,7 +112,8 @@ class ListItem extends StatelessWidget {
   final VoidCallback? onTap;
   final bool? isSelected;
 
-  static BorderRadius get defaultBorderRadius => BorderRadius.all(Radius.circular(16.0.s));
+  static BorderRadius get defaultBorderRadius =>
+      BorderRadius.all(Radius.circular(16.0.s));
 
   static EdgeInsets get defaultContentPadding =>
       EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 8.0.s);
@@ -100,7 +122,8 @@ class ListItem extends StatelessWidget {
 
   static EdgeInsets get defaultTrailingPadding => EdgeInsets.only(left: 10.0.s);
 
-  static BoxConstraints get defaultConstraints => BoxConstraints(minHeight: 60.0.s);
+  static BoxConstraints get defaultConstraints =>
+      BoxConstraints(minHeight: 60.0.s);
 
   @override
   Widget build(BuildContext context) {

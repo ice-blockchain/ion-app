@@ -19,6 +19,8 @@ class NavigationCloseButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed ??
           () {
+            /// TODO(@ion-endymion): replace it with [Navigator.of(context, rootNavigator: true).pop()]
+            /// after test this approach with other modals
             final state = GoRouterState.of(context);
             context.go(state.currentTab.baseRouteLocation);
           },
