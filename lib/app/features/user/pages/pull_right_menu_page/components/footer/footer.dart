@@ -23,7 +23,7 @@ class Footer extends StatelessWidget {
           children: [
             FooterAction(
               onPressed: () {},
-              icon: Assets.svg.iconProfileSettings.icon(),
+              icon: Assets.svg.iconWalletSettings.icon(),
               label: context.i18n.profile_privacy,
             ),
             FooterAction(
