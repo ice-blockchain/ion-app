@@ -18,6 +18,7 @@ import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_tex
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -43,6 +44,7 @@ class CreatePostModal extends HookConsumerWidget {
     final hasContent = useTextEditorHasContent(textEditorController);
     final hasPoll = useHasPoll(textEditorController);
 
+    final userMetadata = ref.watch(currentUserMetadataProvider);
     final pollTitle = ref.watch(pollTitleNotifierProvider);
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
 
@@ -84,8 +86,7 @@ class CreatePostModal extends HookConsumerWidget {
                   children: [
                     Avatar(
                       size: 30.0.s,
-                      imageUrl:
-                          'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+                      imageUrl: userMetadata.valueOrNull?.data.picture,
                     ),
                     SizedBox(width: 10.0.s),
                     Expanded(
