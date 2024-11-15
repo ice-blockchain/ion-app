@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/providers/post_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
@@ -39,11 +40,13 @@ class Post extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: 12.0.s),
         header ??
             UserInfo(
               pubkey: pubkey,
               trailing: UserInfoMenu(pubkey: pubkey),
             ),
+        SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
         if (quotedEvent != null)
           QuotedPostFrame(

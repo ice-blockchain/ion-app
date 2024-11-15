@@ -64,15 +64,7 @@ class PostDetailsPage extends HookConsumerWidget {
                 ),
                 SliverToBoxAdapter(
                   child: ScreenSideOffset.small(
-<<<<<<< HEAD
-                    child: Post(
-                      postId: postId,
-                      pubkey: pubkey,
-                      footer: FeedItemDetailsFooter(entityId: postId),
-                    ),
-=======
                     child: Post(postId: postId, pubkey: pubkey),
->>>>>>> be14a547 (feat: add repost action, change counters UI)
                   ),
                 ),
                 SliverToBoxAdapter(child: FeedListSeparator()),
