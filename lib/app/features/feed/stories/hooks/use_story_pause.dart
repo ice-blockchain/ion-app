@@ -27,15 +27,13 @@ void _handleImageProgress(bool isPaused, AnimationController controller) {
   }
 }
 
+```suggestion
 void _handleVideoProgress(bool isPaused, VideoPlayerController? controller) {
   if (controller == null) return;
-  if (isPaused) {
-    if (controller.value.isPlaying) {
-      controller.pause();
-    }
-  } else {
-    if (!controller.value.isPlaying) {
-      controller.play();
-    }
+
+  if (isPaused && controller.value.isPlaying) {
+    controller.pause();
+  } else if (!isPaused && !controller.value.isPlaying) {
+    controller.play();
   }
 }
