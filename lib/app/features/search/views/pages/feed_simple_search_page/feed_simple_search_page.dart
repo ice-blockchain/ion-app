@@ -34,9 +34,7 @@ class FeedSimpleSearchPage extends ConsumerWidget {
               loading: usersSearchResults.isLoading,
               onSubmitted: (String query) {
                 FeedAdvancedSearchRoute(query: query).go(context);
-                ref
-                    .read(feedSearchHistoryProvider.notifier)
-                    .addQueryToTheHistory(query);
+                ref.read(feedSearchHistoryProvider.notifier).addQueryToTheHistory(query);
               },
               onTextChanged: (String text) {
                 FeedSimpleSearchRoute(query: text).replace(context);
@@ -52,13 +50,10 @@ class FeedSimpleSearchPage extends ConsumerWidget {
                           pubKeys: history.pubKeys,
                           queries: history.queries,
                           onSelectQuery: (String query) {
-                            FeedSimpleSearchRoute(query: query)
-                                .replace(context);
+                            FeedSimpleSearchRoute(query: query).replace(context);
                           },
                           onClearHistory: () {
-                            ref
-                                .read(feedSearchHistoryProvider.notifier)
-                                .clear();
+                            ref.read(feedSearchHistoryProvider.notifier).clear();
                           },
                         )
                   : pubKeys.isEmpty

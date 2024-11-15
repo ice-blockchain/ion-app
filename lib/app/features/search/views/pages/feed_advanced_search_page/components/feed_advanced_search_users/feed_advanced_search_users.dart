@@ -31,8 +31,7 @@ class FeedAdvancedSearchUsers extends HookConsumerWidget {
 
         return ListView.separated(
           itemCount: pubKeys.length,
-          itemBuilder: (context, index) =>
-              FeedAdvancedSearchUserListItem(pubKey: pubKeys[index]),
+          itemBuilder: (context, index) => FeedAdvancedSearchUserListItem(pubKey: pubKeys[index]),
           separatorBuilder: (_, __) => FeedListSeparator(),
         );
       },

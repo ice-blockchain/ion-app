@@ -21,8 +21,7 @@ class DAppsSearchResults extends StatelessWidget {
           vertical: 10.0.s,
         ),
         itemCount: apps.length,
-        itemBuilder: (BuildContext _, int index) =>
-            DAppsSearchResultsListItem(app: apps[index]),
+        itemBuilder: (BuildContext _, int index) => DAppsSearchResultsListItem(app: apps[index]),
       ),
     );
   }

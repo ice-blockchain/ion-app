@@ -22,8 +22,7 @@ class DAppsSearchResultsListItem extends ConsumerWidget {
       child: ScreenSideOffset.small(
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () =>
-              DAppDetailsRoute(dappId: app.identifier).push<void>(context),
+          onTap: () => DAppDetailsRoute(dappId: app.identifier).push<void>(context),
           child: ListItem.dapp(
             title: Text(app.title),
             subtitle: Text(app.description ?? ''),

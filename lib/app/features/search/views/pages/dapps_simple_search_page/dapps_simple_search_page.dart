@@ -49,13 +49,10 @@ class DAppsSimpleSearchPage extends ConsumerWidget {
                           pubKeys: history.pubKeys,
                           queries: history.queries,
                           onSelectQuery: (String query) {
-                            FeedSimpleSearchRoute(query: query)
-                                .replace(context);
+                            FeedSimpleSearchRoute(query: query).replace(context);
                           },
                           onClearHistory: () {
-                            ref
-                                .read(feedSearchHistoryProvider.notifier)
-                                .clear();
+                            ref.read(feedSearchHistoryProvider.notifier).clear();
                           },
                         )
                   : apps.isEmpty

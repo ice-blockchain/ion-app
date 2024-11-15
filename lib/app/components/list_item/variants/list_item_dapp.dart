@@ -38,8 +38,7 @@ class _ListItemDApp extends ListItem {
               if (verifiedBadge)
                 Padding(
                   padding: EdgeInsets.only(left: 4.0.s),
-                  child:
-                      Assets.svg.iconBadgeVerify.icon(size: defaultBadgeSize),
+                  child: Assets.svg.iconBadgeVerify.icon(size: defaultBadgeSize),
                 ),
             ],
           ),

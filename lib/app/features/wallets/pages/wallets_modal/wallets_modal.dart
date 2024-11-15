@@ -29,8 +29,7 @@ class WalletsModal extends StatelessWidget {
               title: Text(context.i18n.wallet_wallets),
               actions: [
                 NavigationCloseButton(
-                  onPressed: () =>
-                      Navigator.of(context, rootNavigator: true).pop(),
+                  onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
                 ),
               ],
             ),

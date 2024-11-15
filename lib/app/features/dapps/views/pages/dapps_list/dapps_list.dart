@@ -28,9 +28,7 @@ class DAppsList extends HookConsumerWidget {
     final searchLower = searchText.value.toLowerCase().trim();
     final filteredApps = searchLower.isEmpty
         ? apps
-        : apps
-            .where((app) => app.title.toLowerCase().contains(searchLower))
-            .toList();
+        : apps.where((app) => app.title.toLowerCase().contains(searchLower)).toList();
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
@@ -47,8 +45,7 @@ class DAppsList extends HookConsumerWidget {
                   children: [
                     if (payload.isSearchVisible ?? false)
                       SearchInput(
-                        onTextChanged: (String value) =>
-                            searchText.value = value,
+                        onTextChanged: (String value) => searchText.value = value,
                       ),
                     Expanded(
                       child: apps.isEmpty

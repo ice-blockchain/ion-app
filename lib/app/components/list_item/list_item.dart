@@ -112,8 +112,7 @@ class ListItem extends StatelessWidget {
   final VoidCallback? onTap;
   final bool? isSelected;
 
-  static BorderRadius get defaultBorderRadius =>
-      BorderRadius.all(Radius.circular(16.0.s));
+  static BorderRadius get defaultBorderRadius => BorderRadius.all(Radius.circular(16.0.s));
 
   static EdgeInsets get defaultContentPadding =>
       EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 8.0.s);
@@ -122,8 +121,7 @@ class ListItem extends StatelessWidget {
 
   static EdgeInsets get defaultTrailingPadding => EdgeInsets.only(left: 10.0.s);
 
-  static BoxConstraints get defaultConstraints =>
-      BoxConstraints(minHeight: 60.0.s);
+  static BoxConstraints get defaultConstraints => BoxConstraints(minHeight: 60.0.s);
 
   @override
   Widget build(BuildContext context) {
