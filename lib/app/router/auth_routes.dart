@@ -15,10 +15,8 @@ class AuthRoutes {
         TypedGoRoute<SignUpPasswordRoute>(path: '$authPrefix/sign-up-password'),
         TypedGoRoute<RestoreMenuRoute>(path: '$authPrefix/restore-menu'),
         TypedGoRoute<RestoreCredsRoute>(path: '$authPrefix/restore-creds'),
-        TypedGoRoute<RestoreRecoveryKeysRoute>(path: '$authPrefix/recovery-keys'),
-        TypedGoRoute<TwoFaCodesRoute>(path: '$authPrefix/twofa-codes'),
-        TypedGoRoute<TwoFaOptionsRoute>(path: '$authPrefix/twofa-options'),
-        TypedGoRoute<TwoFaSuccessRoute>(path: '$authPrefix/twofa-success'),
+        TypedGoRoute<RecoverUserRoute>(path: '$authPrefix/recover-user'),
+        TypedGoRoute<RecoverUserSuccessRoute>(path: '$authPrefix/recover-user-success'),
         TypedGoRoute<SelectLanguagesRoute>(path: '$onboardingPrefix/select-languages'),
         TypedGoRoute<FillProfileRoute>(path: '$onboardingPrefix/fill-profile'),
         TypedGoRoute<DiscoverCreatorsRoute>(path: '$onboardingPrefix/discover-creators'),
@@ -68,27 +66,10 @@ class RestoreCredsRoute extends BaseRouteData {
         );
 }
 
-class TwoFaCodesRoute extends BaseRouteData {
-  TwoFaCodesRoute({required this.$extra})
+class RecoverUserSuccessRoute extends BaseRouteData {
+  RecoverUserSuccessRoute()
       : super(
-          child: TwoFaCodesPage(twoFaTypes: $extra),
-          type: IceRouteType.bottomSheet,
-        );
-  final Set<TwoFaType> $extra;
-}
-
-class TwoFaOptionsRoute extends BaseRouteData {
-  TwoFaOptionsRoute()
-      : super(
-          child: const TwoFaOptionsPage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class TwoFaSuccessRoute extends BaseRouteData {
-  TwoFaSuccessRoute()
-      : super(
-          child: const TwoFaSuccessPage(),
+          child: const RecoverUserSuccessPage(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -125,8 +106,8 @@ class NotificationsRoute extends BaseRouteData {
         );
 }
 
-class RestoreRecoveryKeysRoute extends BaseRouteData {
-  RestoreRecoveryKeysRoute()
+class RecoverUserRoute extends BaseRouteData {
+  RecoverUserRoute()
       : super(
           child: const RecoverUserPage(),
           type: IceRouteType.bottomSheet,

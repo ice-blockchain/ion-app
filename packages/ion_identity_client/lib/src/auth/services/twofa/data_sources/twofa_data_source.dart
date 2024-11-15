@@ -29,13 +29,13 @@ class TwoFADataSource {
     required String username,
     required String userId,
     required String twoFAOption,
-    required Map<String, String>? verificationCodes,
-    required String signature,
+    Map<String, String>? verificationCodes,
+    String? signature,
     String? email,
     String? phoneNumber,
   }) async {
     final token = tokenStorage.getToken(username: username)?.token;
-    if (token == null) {
+    if (token == null && signature != null) {
       throw const UnauthenticatedException();
     }
 
@@ -48,10 +48,12 @@ class TwoFADataSource {
     return networkClient.put(
       sprintf(twoFaPath, [userId, twoFAOption]),
       data: body.toJson(),
-      headers: {
-        ...RequestHeaders.getAuthorizationHeaders(token: token, username: username),
-        RequestHeaders.ionIdentityUserAction: signature,
-      },
+      headers: token == null
+          ? {}
+          : {
+              ...RequestHeaders.getAuthorizationHeaders(token: token, username: username),
+              RequestHeaders.ionIdentityUserAction: signature,
+            },
       decoder: (response) => response,
     );
   }

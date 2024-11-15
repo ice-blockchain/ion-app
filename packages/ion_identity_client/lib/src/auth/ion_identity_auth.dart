@@ -50,10 +50,12 @@ class IONIdentityAuth {
   Future<void> recoverUser({
     required String credentialId,
     required String recoveryKey,
+    List<TwoFAType> twoFATypes = const [],
   }) =>
       recoverUserService.recoverUser(
         credentialId: credentialId,
         recoveryKey: recoveryKey,
+        twoFATypes: twoFATypes,
       );
 
   Future<void> logOut() async {
@@ -67,10 +69,12 @@ class IONIdentityAuth {
   Future<String?> requestTwoFACode({
     required TwoFAType twoFAType,
     Map<String, String>? verificationCodes,
+    String? recoveryIdentityKeyName,
   }) =>
       twoFAService.requestTwoFACode(
         twoFAType: twoFAType,
         verificationCodes: verificationCodes,
+        recoveryIdentityKeyName: recoveryIdentityKeyName,
       );
 
   Future<void> verifyTwoFA(TwoFAType twoFAType) => twoFAService.verifyTwoFA(twoFAType);

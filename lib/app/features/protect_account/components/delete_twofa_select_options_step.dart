@@ -6,7 +6,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
-import 'package:ion/app/features/auth/views/pages/twofa_options/twofa_option_selector.dart';
+import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_option_selector.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.dart';
 
 class DeleteTwoFASelectOptionStep extends ConsumerWidget {
@@ -23,7 +23,7 @@ class DeleteTwoFASelectOptionStep extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final optionsState = ref.watch(deleteTwoFAOptionsNotifierProvider(twoFaType));
+    final optionsState = ref.watch(selectedTwoFAOptionsNotifierProvider);
 
     return ScreenSideOffset.large(
       child: Form(
@@ -41,7 +41,7 @@ class DeleteTwoFASelectOptionStep extends ConsumerWidget {
                     optionIndex: option + 1,
                     onSaved: (value) {
                       ref
-                          .read(deleteTwoFAOptionsNotifierProvider(twoFaType).notifier)
+                          .read(selectedTwoFAOptionsNotifierProvider.notifier)
                           .updateSelectedTwoFaOption(option, value);
                     },
                   ),

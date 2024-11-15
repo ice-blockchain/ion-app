@@ -11,3 +11,7 @@ extension ThemeGetter on BuildContext {
 extension I18nGetter on BuildContext {
   I18n get i18n => I18n.of(this)!;
 }
+
+extension NavigatorExt on BuildContext {
+  bool get isCurrentRoute => ModalRoute.of(this)?.isCurrent ?? false;
+}

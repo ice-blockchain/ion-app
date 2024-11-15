@@ -10,24 +10,24 @@ part 'selected_two_fa_types_provider.freezed.dart';
 part 'selected_two_fa_types_provider.g.dart';
 
 @freezed
-class DeleteTwoFAOptionsState with _$DeleteTwoFAOptionsState {
-  factory DeleteTwoFAOptionsState({
+class SelectTwoFAOptionsState with _$SelectTwoFAOptionsState {
+  factory SelectTwoFAOptionsState({
     required int optionsAmount,
     required Set<TwoFaType> availableOptions,
     required List<TwoFaType?> selectedValues,
-  }) = _DeleteTwoFAOptionsState;
+  }) = _SelectTwoFAOptionsState;
 }
 
-@riverpod
-class DeleteTwoFAOptionsNotifier extends _$DeleteTwoFAOptionsNotifier {
+@Riverpod(dependencies: [availableTwoFaTypes])
+class SelectedTwoFAOptionsNotifier extends _$SelectedTwoFAOptionsNotifier {
   @override
-  DeleteTwoFAOptionsState build(TwoFaType twoFaType) {
-    final securityMethods = ref.watch(securityAccountControllerProvider).requireValue;
-    final optionsAmount = securityMethods.enabledTypes.length;
+  SelectTwoFAOptionsState build() {
+    final availableTwoFATypes = ref.watch(availableTwoFaTypesProvider);
+    final optionsAmount = availableTwoFATypes.length;
 
-    return DeleteTwoFAOptionsState(
+    return SelectTwoFAOptionsState(
       optionsAmount: optionsAmount,
-      availableOptions: securityMethods.enabledTypes.toSet(),
+      availableOptions: availableTwoFATypes.toSet(),
       selectedValues: List.generate(optionsAmount, (_) => null),
     );
   }
@@ -36,23 +36,27 @@ class DeleteTwoFAOptionsNotifier extends _$DeleteTwoFAOptionsNotifier {
     final oldValue = state.selectedValues[index];
     final newSelectedValues = List<TwoFaType?>.from(state.selectedValues)..[index] = newValue;
 
-    var newAvailableOptions = state.availableOptions;
-    if (oldValue != null) {
-      newAvailableOptions = newAvailableOptions.union({oldValue});
-    }
-    if (newValue != null) {
-      newAvailableOptions = newAvailableOptions.difference({newValue});
-    }
-
     state = state.copyWith(
       selectedValues: newSelectedValues,
-      availableOptions: newAvailableOptions,
+      availableOptions: {
+        ...state.availableOptions,
+        if (oldValue != null) oldValue,
+      }..remove(newValue),
     );
   }
 }
 
-@riverpod
-Set<TwoFaType> selectedTwoFaOptions(Ref ref, TwoFaType twoFaType) {
-  final state = ref.watch(deleteTwoFAOptionsNotifierProvider(twoFaType));
+@Riverpod(dependencies: [SelectedTwoFAOptionsNotifier])
+Set<TwoFaType> selectedTwoFaOptions(Ref ref) {
+  final state = ref.watch(selectedTwoFAOptionsNotifierProvider);
   return state.selectedValues.whereType<TwoFaType>().toSet();
+}
+
+@Riverpod(dependencies: [])
+List<TwoFaType> availableTwoFaTypes(Ref ref) =>
+    throw UnimplementedError('availableTwoFaTypesProvider must be overridden');
+
+@riverpod
+List<TwoFaType> securityMethodsEnabledTypes(Ref ref) {
+  return ref.watch(securityAccountControllerProvider).requireValue.enabledTypes;
 }

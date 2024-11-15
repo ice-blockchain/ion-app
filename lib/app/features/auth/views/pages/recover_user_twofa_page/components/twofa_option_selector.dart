@@ -7,7 +7,7 @@ import 'package:ion/app/components/drop_down_menu/drop_down_menu.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
-import 'package:ion/app/features/auth/views/pages/twofa_options/twofa_options_selector_button.dart';
+import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_options_selector_button.dart';
 
 class TwoFaOptionSelector extends HookWidget {
   const TwoFaOptionSelector({

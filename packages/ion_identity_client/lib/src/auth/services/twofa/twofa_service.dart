@@ -26,7 +26,17 @@ class TwoFAService {
   Future<String?> requestTwoFACode({
     required TwoFAType twoFAType,
     required Map<String, String>? verificationCodes,
+    String? recoveryIdentityKeyName,
   }) async {
+    if (recoveryIdentityKeyName != null) {
+      await _dataSource.requestTwoFACode(
+        username: recoveryIdentityKeyName,
+        userId: recoveryIdentityKeyName,
+        twoFAOption: twoFAType.option,
+      );
+      return null;
+    }
+
     final userId = _extractUserIdService.extractUserId(username: username);
     final base64Signature = await _generateSignature(userId);
 
