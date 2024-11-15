@@ -54,7 +54,7 @@ class Header extends ConsumerWidget {
               if (isCurrentUserProfile)
                 HeaderAction(
                   onPressed: () {
-                    SettingsRoute(pubkey: pubkey).push<void>(context);
+                    SettingsRoute().push<void>(context);
                   },
                   assetName: Assets.svg.iconProfileSettings,
                   opacity: opacity,

@@ -9,9 +9,7 @@ import 'package:ion/app/router/app_routes.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class ValidateRecoveryKeyPage extends ConsumerWidget {
-  const ValidateRecoveryKeyPage({required this.pubkey, super.key});
-
-  final String pubkey;
+  const ValidateRecoveryKeyPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,8 +17,7 @@ class ValidateRecoveryKeyPage extends ConsumerWidget {
 
     return RecoveryKeysInputContainer(
       validator: (value, property) => _validateProperty(value, property, recoveryResult!),
-      onContinuePressed: (_, __, ___) =>
-          RecoveryKeysSuccessRoute(pubkey: pubkey).push<void>(context),
+      onContinuePressed: (_, __, ___) => RecoveryKeysSuccessRoute().push<void>(context),
     );
   }
 

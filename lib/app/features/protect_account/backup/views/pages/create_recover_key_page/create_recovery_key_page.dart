@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
@@ -17,35 +18,32 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CreateRecoveryKeyPage extends StatelessWidget {
-  const CreateRecoveryKeyPage({required this.pubkey, super.key});
-
-  final String pubkey;
+  const CreateRecoveryKeyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SheetContent(
+    return const SheetContent(
       body: Column(
         children: [
-          _NavBar(pubkey: pubkey),
-          const _Header(),
-          _Body(pubkey: pubkey),
+          _NavBar(),
+          _Header(),
+          _Body(),
         ],
       ),
     );
   }
 }
 
-class _NavBar extends StatelessWidget {
-  const _NavBar({required this.pubkey});
-
-  final String pubkey;
+class _NavBar extends ConsumerWidget {
+  const _NavBar();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
     return NavigationAppBar.modal(
       actions: [
         NavigationCloseButton(
-          onPressed: () => ProfileRoute(pubkey: pubkey).go(context),
+          onPressed: () => ProfileRoute(pubkey: currentPubkey).go(context),
         ),
       ],
     );
@@ -78,9 +76,7 @@ class _Header extends StatelessWidget {
 }
 
 class _Body extends HookConsumerWidget {
-  const _Body({required this.pubkey});
-
-  final String pubkey;
+  const _Body();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -97,10 +93,7 @@ class _Body extends HookConsumerWidget {
       return const CreateRecoveryKeyErrorState();
     }
     if (recoveryData.hasValue) {
-      return CreateRecoveryKeySuccessState(
-        pubkey: pubkey,
-        recoveryData: recoveryData.requireValue!,
-      );
+      return CreateRecoveryKeySuccessState(recoveryData: recoveryData.requireValue!);
     }
 
     return const CreateRecoveryKeyLoadingState();

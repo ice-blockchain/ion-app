@@ -83,6 +83,11 @@ import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/fe
 import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filters_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_search_languages_page/feed_search_languages_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_simple_search_page/feed_simple_search_page.dart';
+import 'package:ion/app/features/settings/views/app_language_modal.dart';
+import 'package:ion/app/features/settings/views/content_language_modal.dart';
+import 'package:ion/app/features/settings/views/logout_confirm_modal.dart';
+import 'package:ion/app/features/settings/views/profile_settings_modal.dart';
+import 'package:ion/app/features/settings/views/settings_modal.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/model/user_category_type.dart';
@@ -94,11 +99,6 @@ import 'package:ion/app/features/user/pages/profile_page/pages/request_coins_for
 import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/select_coin_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/send_coins_form_modal/send_coin_form_modal.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/settings/app_language_modal.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/settings/content_language_modal.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/settings/logout_confirm_modal.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/settings/profile_settings_modal.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/settings/settings_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/switch_account_modal.dart';
@@ -143,6 +143,7 @@ part 'feed_routes.dart';
 part 'profile_routes.dart';
 part 'protect_account_routes.dart';
 part 'wallet_routes.dart';
+part 'settings_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
 final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');

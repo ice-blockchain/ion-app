@@ -33,7 +33,7 @@ class LinksList extends ConsumerWidget {
           LinksListTile(
             iconAssetName: Assets.svg.iconProfileUser,
             iconTintColor: context.theme.appColors.orangePeel,
-            title: context.i18n.profile_profile,
+            title: context.i18n.common_profile,
             subtitle: context.i18n.profile_profile_desc,
             onTap: () {
               ProfileRoute(pubkey: currentPubkey).push<void>(context);

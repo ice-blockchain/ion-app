@@ -32,6 +32,7 @@ class FeedRoutes {
         TypedGoRoute<StoryContactsShareRoute>(path: 'story-contacts-share'),
         TypedGoRoute<ArticlePreviewRoute>(path: 'article-preview'),
         TypedGoRoute<AddTopicsRoute>(path: 'add-topics'),
+        ...SettingsRoutes.routes,
       ],
     ),
   ];

@@ -21,9 +21,7 @@ import 'package:ion/app/utils/validators.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class PhoneSetupInputPage extends HookConsumerWidget {
-  const PhoneSetupInputPage({required this.pubkey, super.key});
-
-  final String pubkey;
+  const PhoneSetupInputPage({super.key});
 
   static const int minPhoneLength = 5;
   static const int maxPhoneLength = 15;
@@ -54,8 +52,7 @@ class PhoneSetupInputPage extends HookConsumerWidget {
                     prefixIcon: CountryCodeInput(
                       country: country,
                       onTap: () async {
-                        final data =
-                            await SelectCountriesRoute(pubkey: pubkey).push<Country>(context);
+                        final data = await SelectCountriesRoute().push<Country>(context);
 
                         if (data != null) {
                           ref.read(selectedCountryProvider.notifier).country = data;
@@ -92,7 +89,6 @@ class PhoneSetupInputPage extends HookConsumerWidget {
 
                     unawaited(
                       PhoneSetupRoute(
-                        pubkey: pubkey,
                         step: PhoneSetupSteps.confirmation,
                         phone: phoneNumber,
                       ).push<void>(context),

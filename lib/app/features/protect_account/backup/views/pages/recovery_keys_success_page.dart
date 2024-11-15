@@ -1,28 +1,28 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class RecoveryKeysSuccessPage extends StatelessWidget {
+class RecoveryKeysSuccessPage extends ConsumerWidget {
   const RecoveryKeysSuccessPage({
-    required this.pubkey,
     super.key,
   });
 
-  final String pubkey;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
     return SheetContent(
       body: AuthScrollContainer(
@@ -32,7 +32,7 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
         ),
         actions: [
           NavigationCloseButton(
-            onPressed: () => ProfileRoute(pubkey: pubkey).go(context),
+            onPressed: () => ProfileRoute(pubkey: currentPubkey).go(context),
           ),
         ],
         title: locale.backup_option_with_recovery_keys_title,
@@ -56,7 +56,7 @@ class RecoveryKeysSuccessPage extends StatelessWidget {
             margin: 36.0.s,
             child: ScreenSideOffset.large(
               child: Button(
-                onPressed: () => SecureAccountOptionsRoute(pubkey: pubkey).replace(context),
+                onPressed: () => SecureAccountOptionsRoute().replace(context),
                 label: Text(locale.button_back_to_security),
                 mainAxisSize: MainAxisSize.max,
               ),

@@ -28,7 +28,7 @@ class ActionButton extends StatelessWidget {
     return ListItem(
       onTap: onTap,
       leading: Button.icon(
-        backgroundColor: context.theme.appColors.onSecondaryBackground,
+        backgroundColor: context.theme.appColors.secondaryBackground,
         borderColor: context.theme.appColors.onTerararyFill,
         borderRadius: BorderRadius.all(
           Radius.circular(10.0.s),

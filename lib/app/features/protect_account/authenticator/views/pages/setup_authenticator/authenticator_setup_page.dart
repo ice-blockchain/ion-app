@@ -9,6 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
@@ -20,15 +21,15 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class AuthenticatorSetupPage extends HookConsumerWidget {
-  const AuthenticatorSetupPage(this.step, {required this.pubkey, super.key});
+  const AuthenticatorSetupPage(this.step, {super.key});
 
-  final String pubkey;
   final AuthenticatorSetupSteps step;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useState<GlobalKey<FormState>?>(null);
     final codeController = useRef<TextEditingController?>(null);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
     return SheetContent(
       body: CustomScrollView(
@@ -36,7 +37,7 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
           SliverAppBarWithProgress(
             progressValue: step == AuthenticatorSetupSteps.success ? null : step.progressValue,
             title: step.getAppBarTitle(context),
-            onClose: () => ProfileRoute(pubkey: pubkey).go(context),
+            onClose: () => ProfileRoute(pubkey: currentPubkey).go(context),
             showBackButton: step != AuthenticatorSetupSteps.success,
             showProgress: step != AuthenticatorSetupSteps.success,
           ),
@@ -125,7 +126,7 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
     };
 
     nextStep == null
-        ? SecureAccountOptionsRoute(pubkey: pubkey).replace(context)
-        : AuthenticatorSetupRoute(step: nextStep, pubkey: pubkey).push<void>(context);
+        ? SecureAccountOptionsRoute().replace(context)
+        : AuthenticatorSetupRoute(step: nextStep).push<void>(context);
   }
 }

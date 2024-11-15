@@ -19,9 +19,7 @@ import 'package:ion/app/utils/validators.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class EmailSetupInputPage extends HookConsumerWidget {
-  const EmailSetupInputPage({required this.pubkey, super.key});
-
-  final String pubkey;
+  const EmailSetupInputPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,7 +70,6 @@ class EmailSetupInputPage extends HookConsumerWidget {
 
                     unawaited(
                       EmailSetupRoute(
-                        pubkey: pubkey,
                         step: EmailSetupSteps.confirmation,
                         email: emailController.text,
                       ).push<void>(context),
