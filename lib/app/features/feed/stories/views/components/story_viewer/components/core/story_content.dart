@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_viewer_header.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryContent extends HookConsumerWidget {
   const StoryContent({
@@ -23,24 +24,10 @@ class StoryContent extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final emojiState = ref.watch(emojiReactionsControllerProvider);
     final textController = useTextEditingController();
+    final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
 
-    final keyboardVisibilityController = useMemoized(KeyboardVisibilityController.new);
-
-    final isKeyboardVisible = useStream(
-          keyboardVisibilityController.onChange,
-          initialData: keyboardVisibilityController.isVisible,
-        ).data ??
-        false;
-
-    useEffect(
-      () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (context.mounted) {
-            ref.read(storyPauseControllerProvider.notifier).paused = isKeyboardVisible;
-          }
-        });
-        return null;
-      },
+    useOnInit(
+      () => ref.read(storyPauseControllerProvider.notifier).paused = isKeyboardVisible,
       [isKeyboardVisible],
     );
 

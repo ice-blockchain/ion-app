@@ -32,9 +32,7 @@ class OverlayMenu extends HookWidget {
       () {
         animationController.reverse().whenComplete(() {
           overlayPortalController.hide();
-          if (onClose != null) {
-            onClose?.call();
-          }
+          onClose?.call();
         });
       },
       [overlayPortalController],
@@ -44,9 +42,7 @@ class OverlayMenu extends HookWidget {
       () {
         overlayPortalController.show();
         animationController.forward();
-        if (onOpen != null) {
-          onOpen?.call();
-        }
+        onOpen?.call();
       },
       [overlayPortalController],
     );

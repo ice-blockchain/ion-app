@@ -42,9 +42,7 @@ class StoryViewerActionButtons extends ConsumerWidget {
 
               await StoryContactsShareRoute().push<void>(context);
 
-              if (context.mounted) {
-                ref.read(storyPauseControllerProvider.notifier).paused = false;
-              }
+              ref.read(storyPauseControllerProvider.notifier).paused = false;
             },
           ),
           SizedBox(height: 16.0.s),

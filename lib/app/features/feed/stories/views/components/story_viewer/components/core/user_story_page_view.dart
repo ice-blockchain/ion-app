@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/story_content.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/story_gesture_handler.dart';
@@ -31,11 +32,13 @@ class UserStoryPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentStory = user.stories[currentStoryIndex];
 
-    return StoryGestureHandler(
-      onTapLeft: () => currentStoryIndex > 0 ? onPreviousStory() : onPreviousUser(),
-      onTapRight: () => currentStoryIndex < user.stories.length - 1 ? onNextStory() : onNextUser(),
-      child: StoryContent(
-        story: currentStory,
+    return KeyboardVisibilityProvider(
+      child: StoryGestureHandler(
+        onTapLeft: () => currentStoryIndex > 0 ? onPreviousStory() : onPreviousUser(),
+        onTapRight: () => currentStoryIndex < user.stories.length - 1 ? onNextStory() : onNextUser(),
+        child: StoryContent(
+          story: currentStory,
+        ),
       ),
     );
   }

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_story_progress.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/progress/progress.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryProgressTracker extends HookConsumerWidget {
   const StoryProgressTracker({
@@ -47,16 +47,11 @@ class StoryProgressTracker extends HookConsumerWidget {
       videoController: videoController,
     );
 
-    useEffect(
+    useOnInit(
       () {
         if (storyProgress.isCompleted) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (context.mounted) {
-              onCompleted();
-            }
-          });
+          onCompleted();
         }
-        return null;
       },
       [storyProgress.isCompleted],
     );

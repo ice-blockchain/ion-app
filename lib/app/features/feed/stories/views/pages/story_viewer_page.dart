@@ -74,8 +74,6 @@ class StoryViewerPage extends HookConsumerWidget {
                     stories: currentUser.stories,
                     currentStoryIndex: currentStoryIndex,
                     onStoryCompleted: () {
-                      if (!context.mounted) return;
-
                       if (storyViewingState.hasNextStory) {
                         storyViewingController.moveToNextStory();
                       } else if (storyViewingState.hasNextUser) {
