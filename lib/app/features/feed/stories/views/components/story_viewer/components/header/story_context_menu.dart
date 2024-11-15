@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/report_user_modal/report_user_modal.dart';
@@ -38,6 +39,8 @@ class StoryContextMenu extends HookConsumerWidget {
     );
 
     return OverlayMenu(
+      onOpen: () => ref.read(storyPauseControllerProvider.notifier).paused = true,
+      onClose: () => ref.read(storyPauseControllerProvider.notifier).paused = false,
       menuBuilder: (closeMenu) => OverlayMenuContainer(
         child: IntrinsicWidth(
           child: Column(

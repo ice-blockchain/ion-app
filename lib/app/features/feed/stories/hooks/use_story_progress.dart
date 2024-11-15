@@ -18,6 +18,7 @@ class StoryProgress {
 StoryProgress useStoryProgress({
   required Story story,
   required bool isCurrent,
+  required bool isPaused,
   required VideoPlayerController? videoController,
 }) {
   final progress = useState<double>(0);
@@ -28,23 +29,33 @@ StoryProgress useStoryProgress({
 
   useEffect(
     () {
+      progress.value = 0.0;
+      isCompleted.value = false;
+      animationController.reset();
+      return null;
+    },
+    [story.data.id],
+  );
+
+  useEffect(
+    () {
       if (!isCurrent) {
         progress.value = 0.0;
         isCompleted.value = false;
+        animationController.reset();
+
         return null;
       }
 
       void handleProgress() {
         story.map(
-          video: (_) => videoController != null
-              ? _handleVideoProgress(
-                  videoController,
-                  progress,
-                  isCompleted,
-                )
-              : null,
           image: (_) => _handleImageProgress(
             animationController,
+            progress,
+            isCompleted,
+          ),
+          video: (_) => _handleVideoProgress(
+            videoController,
             progress,
             isCompleted,
           ),
@@ -55,15 +66,17 @@ StoryProgress useStoryProgress({
         image: (_) => _setupAnimationController(
           animationController,
           handleProgress,
+          isPaused,
         ),
         video: (_) => _setupVideoController(
           videoController,
           handleProgress,
           isCurrent,
+          isPaused,
         ),
       );
     },
-    [isCurrent, videoController, story],
+    [isCurrent, videoController, story.data.id, isPaused],
   );
 
   return StoryProgress(
@@ -73,11 +86,11 @@ StoryProgress useStoryProgress({
 }
 
 void _handleVideoProgress(
-  VideoPlayerController controller,
+  VideoPlayerController? controller,
   ValueNotifier<double> progress,
   ValueNotifier<bool> isCompleted,
 ) {
-  if (!controller.value.isInitialized) return;
+  if (controller == null || !controller.value.isInitialized) return;
 
   final position = controller.value.position;
   final duration = controller.value.duration;
@@ -102,25 +115,39 @@ VoidCallback? _setupVideoController(
   VideoPlayerController? controller,
   VoidCallback handleProgress,
   bool isCurrent,
+  bool isPaused,
 ) {
   if (controller == null) return null;
 
   controller.addListener(handleProgress);
 
-  if (isCurrent) {
-    controller.play();
+  if (isCurrent && !isPaused) {
+    if (!controller.value.isPlaying) {
+      controller.play();
+    }
+  } else {
+    controller.pause();
   }
+
   return () => controller.removeListener(handleProgress);
 }
 
 VoidCallback _setupAnimationController(
   AnimationController controller,
   VoidCallback handleProgress,
+  bool isPaused,
 ) {
-  controller
-    ..reset()
-    ..forward()
-    ..addListener(handleProgress);
+  controller.addListener(handleProgress);
+
+  if (!controller.isAnimating && !isPaused) {
+    if (controller.value == 0) {
+      controller.forward();
+    } else {
+      controller.forward(from: controller.value);
+    }
+  } else if (isPaused) {
+    controller.stop();
+  }
 
   return () => controller.removeListener(handleProgress);
 }

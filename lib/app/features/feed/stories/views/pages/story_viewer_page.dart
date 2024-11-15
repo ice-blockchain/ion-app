@@ -20,6 +20,8 @@ class StoryViewerPage extends HookConsumerWidget {
     final storyViewingController = ref.read(storyViewingControllerProvider.notifier);
     final storyViewingState = ref.watch(storyViewingControllerProvider);
 
+    final currentPauseState = useState(false);
+
     useOnInit(storyViewingController.loadStories);
 
     final userPageController = usePageController();
@@ -64,6 +66,7 @@ class StoryViewerPage extends HookConsumerWidget {
                       onStoryPageChanged: storyViewingController.moveToStoryIndex,
                       onNextStory: storyViewingController.moveToNextStory,
                       onPreviousStory: storyViewingController.moveToPreviousStory,
+                      onPausedChanged: (paused) => currentPauseState.value = paused,
                     ),
                   ),
                   SizedBox(height: 28.0.s),

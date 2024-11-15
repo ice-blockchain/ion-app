@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -30,11 +31,18 @@ class StoryViewerActionButtons extends ConsumerWidget {
           _SoundButton(story: story),
           SizedBox(height: 16.0.s),
           StoryControlButton(
+            borderRadius: 16.0.s,
+            iconPadding: 8.0.s,
             icon: Assets.svg.iconBlockShare.icon(
               color: context.theme.appColors.onPrimaryAccent,
+              size: 20.0.s,
             ),
-            onPressed: () {
-              StoryContactsShareRoute().push<void>(context);
+            onPressed: () async {
+              ref.read(storyPauseControllerProvider.notifier).paused = true;
+
+              await StoryContactsShareRoute().push<void>(context);
+
+              ref.read(storyPauseControllerProvider.notifier).paused = false;
             },
           ),
           SizedBox(height: 16.0.s),
@@ -56,12 +64,16 @@ class _SoundButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return story.maybeWhen(
       video: (data, muteState) => StoryControlButton(
+        borderRadius: 16.0.s,
+        iconPadding: 8.0.s,
         icon: muteState == MuteState.muted
-            ? Assets.svg.iconChannelUnmute.icon(
+            ? Assets.svg.iconChannelMute.icon(
                 color: context.theme.appColors.onPrimaryAccent,
+                size: 20.0.s,
               )
-            : Assets.svg.iconChannelMute.icon(
+            : Assets.svg.iconChannelUnmute.icon(
                 color: context.theme.appColors.onPrimaryAccent,
+                size: 20.0.s,
               ),
         onPressed: () => ref.read(storyViewingControllerProvider.notifier).toggleMute(data.id),
       ),
@@ -85,7 +97,12 @@ class _LikeButton extends ConsumerWidget {
         isLiked ? context.theme.appColors.attentionRed : context.theme.appColors.onPrimaryAccent;
 
     return StoryControlButton(
-      icon: icon.icon(color: color),
+      icon: icon.icon(
+        color: color,
+        size: 20.0.s,
+      ),
+      borderRadius: 16.0.s,
+      iconPadding: 8.0.s,
       onPressed: () => ref.read(storyViewingControllerProvider.notifier).toggleLike(story.data.id),
     );
   }

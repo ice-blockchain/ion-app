@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_story_progress.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/progress/progress.dart';
-import 'package:video_player/video_player.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryProgressTracker extends HookConsumerWidget {
   const StoryProgressTracker({
@@ -29,21 +29,29 @@ class StoryProgressTracker extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videoController = _getVideoController(ref);
+    final isPaused = ref.watch(storyPauseControllerProvider);
+
+    final videoController = story.whenOrNull(
+      video: (data, _) => ref.watch(
+        videoControllerProvider(
+          data.contentUrl,
+          autoPlay: isCurrent,
+        ),
+      ),
+    );
+
     final storyProgress = useStoryProgress(
       story: story,
       isCurrent: isCurrent,
+      isPaused: isPaused,
       videoController: videoController,
     );
 
-    useEffect(
+    useOnInit(
       () {
         if (storyProgress.isCompleted) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            onCompleted();
-          });
+          onCompleted();
         }
-        return null;
       },
       [storyProgress.isCompleted],
     );
@@ -53,17 +61,6 @@ class StoryProgressTracker extends HookConsumerWidget {
       storyProgress: isActive ? storyProgress.progress : 0.0,
       isPreviousStory: isPreviousStory,
       margin: margin,
-    );
-  }
-
-  VideoPlayerController? _getVideoController(WidgetRef ref) {
-    if (story is! VideoStory) return null;
-
-    return ref.watch(
-      videoControllerProvider(
-        story.data.contentUrl,
-        autoPlay: isCurrent,
-      ),
     );
   }
 }

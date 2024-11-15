@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/providers/video_player_provider.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/story_content.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/story_gesture_handler.dart';
 
-class UserStoryPageView extends ConsumerWidget {
+class UserStoryPageView extends StatelessWidget {
   const UserStoryPageView({
     required this.user,
     required this.isCurrentUser,
@@ -30,22 +29,16 @@ class UserStoryPageView extends ConsumerWidget {
   final VoidCallback onPreviousUser;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final currentStory = user.stories[currentStoryIndex];
-    final isVideoPlaying = currentStory is VideoStory;
 
-    return StoryGestureHandler(
-      onTapLeft: () => currentStoryIndex > 0 ? onPreviousStory() : onPreviousUser(),
-      onTapRight: () => currentStoryIndex < user.stories.length - 1 ? onNextStory() : onNextUser(),
-      onLongPressStart: () => isVideoPlaying
-          ? ref.read(videoControllerProvider(currentStory.data.contentUrl)).pause()
-          : null,
-      onLongPressEnd: () => isVideoPlaying
-          ? ref.read(videoControllerProvider(currentStory.data.contentUrl)).play()
-          : null,
-      child: StoryContent(
-        story: currentStory,
-        isVideoPlaying: isVideoPlaying,
+    return KeyboardVisibilityProvider(
+      child: StoryGestureHandler(
+        onTapLeft: () => currentStoryIndex > 0 ? onPreviousStory() : onPreviousUser(),
+        onTapRight: () => currentStoryIndex < user.stories.length - 1 ? onNextStory() : onNextUser(),
+        child: StoryContent(
+          story: currentStory,
+        ),
       ),
     );
   }
