@@ -27,7 +27,6 @@ void _handleImageProgress(bool isPaused, AnimationController controller) {
   }
 }
 
-```suggestion
 void _handleVideoProgress(bool isPaused, VideoPlayerController? controller) {
   if (controller == null) return;
 
