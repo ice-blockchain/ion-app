@@ -47,13 +47,12 @@ class ArticleDetailsRoute extends BaseRouteData {
 }
 
 class PostDetailsRoute extends BaseRouteData {
-  PostDetailsRoute({required this.postId, required this.pubkey})
+  PostDetailsRoute({required this.eventPointer})
       : super(
-          child: PostDetailsPage(postId: postId, pubkey: pubkey),
+          child: PostDetailsPage(eventPointer: eventPointer),
         );
 
-  final String postId;
-  final String pubkey;
+  final EventPointer eventPointer;
 }
 
 class NotificationsHistoryRoute extends BaseRouteData {
@@ -89,16 +88,14 @@ class CommentPostModalRoute extends BaseRouteData {
 
 class RepostOptionsModalRoute extends BaseRouteData {
   RepostOptionsModalRoute({
-    required this.entityId,
-    required this.pubkey,
+    required this.eventPointer,
     required this.kind,
   }) : super(
-          child: RepostOptionsModal(entityId: entityId, pubkey: pubkey, kind: kind),
+          child: RepostOptionsModal(eventPointer: eventPointer, kind: kind),
           type: IceRouteType.bottomSheet,
         );
 
-  final String entityId;
-  final String pubkey;
+  final EventPointer eventPointer;
   final int kind;
 }
 

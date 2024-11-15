@@ -18,14 +18,11 @@ import 'package:ion/generated/assets.gen.dart';
 
 class PostDetailsPage extends HookConsumerWidget {
   const PostDetailsPage({
-    required this.postId,
-    required this.pubkey,
+    required this.eventPointer,
     super.key,
   });
 
-  final String postId;
-
-  final String pubkey;
+  final EventPointer eventPointer;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

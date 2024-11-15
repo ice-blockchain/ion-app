@@ -94,7 +94,7 @@ class NostrNotifier extends _$NostrNotifier {
     }
   }
 
-  Future<T?> requestEntity<T>(
+  Future<T?> requestEntity<T extends NostrEntity>(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
@@ -146,7 +146,7 @@ class NostrNotifier extends _$NostrNotifier {
     final parser = ref.read(eventParserProvider);
     final entity = parser.parse(event);
     if (entity is CacheableEntity) {
-      ref.read(nostrCacheProvider.notifier).cache(entity as CacheableEntity);
+      ref.read(nostrCacheProvider.notifier).cache(entity);
     }
     return entity;
   }

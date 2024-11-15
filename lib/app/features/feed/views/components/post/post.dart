@@ -12,18 +12,17 @@ import 'package:ion/app/features/feed/views/components/post/components/quoted_po
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
+import 'package:ion/app/features/nostr/model/event_pointer.dart';
 
 class Post extends ConsumerWidget {
   const Post({
-    required this.postId,
-    required this.pubkey,
+    required this.eventPointer,
     this.header,
     this.footer,
     super.key,
   });
 
-  final String postId;
-  final String pubkey;
+  final EventPointer eventPointer;
   final Widget? header;
   final Widget? footer;
 
@@ -43,8 +42,8 @@ class Post extends ConsumerWidget {
         SizedBox(height: 12.0.s),
         header ??
             UserInfo(
-              pubkey: pubkey,
-              trailing: UserInfoMenu(pubkey: pubkey),
+              pubkey: eventPointer.pubkey,
+              trailing: UserInfoMenu(pubkey: eventPointer.pubkey),
             ),
         SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
@@ -53,14 +52,14 @@ class Post extends ConsumerWidget {
             padding: EdgeInsets.only(top: 6.0.s),
             child: QuotedPostFrame(
               child: Post(
-                postId: quotedEvent.eventId,
-                pubkey: quotedEvent.pubkey,
+                eventPointer:
+                    EventPointer(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey),
                 header: UserInfo(pubkey: quotedEvent.pubkey),
                 footer: const SizedBox.shrink(),
               ),
             ),
           ),
-        footer ?? FeedItemFooter(entityId: postId, pubkey: pubkey, kind: PostEntity.kind),
+        footer ?? FeedItemFooter(eventPointer: eventPointer, kind: PostEntity.kind),
       ],
     );
   }
