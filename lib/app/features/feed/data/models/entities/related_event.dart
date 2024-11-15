@@ -20,9 +20,6 @@ class RelatedEvent with _$RelatedEvent {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
-    if (tag.length < 5) {
-      throw IncorrectEventTagException(tag: tag.toString());
-    }
 
     if (tag.length < 5) {
       //TODO::uncomment and remove stub when using own relays

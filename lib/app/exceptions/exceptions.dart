@@ -77,5 +77,10 @@ class IncorrectEventTagException extends IONException {
 
 class QuillParseException extends IONException {
   const QuillParseException(dynamic error)
-      : super(10011, 'Invalid content format for Quill Delta: $error');
+      : super(10014, 'Invalid content format for Quill Delta: $error');
+}
+
+class UnsupportedRepostKindException extends IONException {
+  UnsupportedRepostKindException(int kind)
+      : super(10015, 'Reposting events of kind $kind is not supported');
 }
