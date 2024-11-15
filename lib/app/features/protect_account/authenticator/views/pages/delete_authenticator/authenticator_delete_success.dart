@@ -7,7 +7,6 @@ import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -22,7 +21,6 @@ class AuthenticatorDeleteSuccessPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
     return SheetContent(
       body: Column(
@@ -31,7 +29,7 @@ class AuthenticatorDeleteSuccessPage extends ConsumerWidget {
           NavigationAppBar.modal(
             actions: [
               NavigationCloseButton(
-                onPressed: () => ProfileRoute(pubkey: currentPubkey).go(context),
+                onPressed: Navigator.of(context, rootNavigator: true).pop,
               ),
             ],
           ),

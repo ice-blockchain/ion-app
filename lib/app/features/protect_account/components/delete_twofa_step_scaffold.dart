@@ -7,10 +7,8 @@ import 'package:ion/app/components/progress_bar/sliver_app_bar_with_progress.dar
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class DeleteTwoFAStepScaffold extends ConsumerWidget {
@@ -34,7 +32,6 @@ class DeleteTwoFAStepScaffold extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
     return SheetContent(
       body: CustomScrollView(
@@ -42,7 +39,7 @@ class DeleteTwoFAStepScaffold extends ConsumerWidget {
           SliverAppBarWithProgress(
             progressValue: progressValue,
             title: title,
-            onClose: () => ProfileRoute(pubkey: currentPubkey).go(context),
+            onClose: Navigator.of(context, rootNavigator: true).pop,
           ),
           SliverToBoxAdapter(
             child: AuthHeader(

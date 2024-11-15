@@ -5,12 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/sliver_app_bar_with_progress.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
 import 'package:ion/app/features/protect_account/phone/views/pages/setup_phone/step_pages.dart';
-import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -22,15 +20,13 @@ class PhoneSetupPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
-
     return SheetContent(
       body: CustomScrollView(
         slivers: [
           SliverAppBarWithProgress(
             progressValue: step.progressValue,
             title: step.getAppBarTitle(context),
-            onClose: () => ProfileRoute(pubkey: currentPubkey).go(context),
+            onClose: Navigator.of(context, rootNavigator: true).pop,
             showBackButton: step != PhoneSetupSteps.success,
             showProgress: step != PhoneSetupSteps.success,
           ),
