@@ -11,7 +11,7 @@ class RecoveryCredsStep extends ConsumerWidget {
     super.key,
   });
 
-  final void Function(String, String, String) onContinuePressed;
+  final void Function(String name, String id, String code) onContinuePressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

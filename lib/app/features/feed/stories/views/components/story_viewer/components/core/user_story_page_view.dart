@@ -35,7 +35,8 @@ class UserStoryPageView extends StatelessWidget {
     return KeyboardVisibilityProvider(
       child: StoryGestureHandler(
         onTapLeft: () => currentStoryIndex > 0 ? onPreviousStory() : onPreviousUser(),
-        onTapRight: () => currentStoryIndex < user.stories.length - 1 ? onNextStory() : onNextUser(),
+        onTapRight: () =>
+            currentStoryIndex < user.stories.length - 1 ? onNextStory() : onNextUser(),
         child: StoryContent(
           story: currentStory,
         ),
