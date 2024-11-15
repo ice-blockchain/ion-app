@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/backup_option.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -11,23 +13,23 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class BackupOptionsPage extends StatelessWidget {
+class BackupOptionsPage extends ConsumerWidget {
   const BackupOptionsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
-            showBackButton: false,
             title: Text(locale.protect_account_header_security),
             actions: [
               NavigationCloseButton(
-                onPressed: () => WalletRoute().go(context),
+                onPressed: () => ProfileRoute(pubkey: currentPubkey).go(context),
               ),
             ],
           ),

@@ -83,6 +83,11 @@ import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/fe
 import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filters_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_search_languages_page/feed_search_languages_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_simple_search_page/feed_simple_search_page.dart';
+import 'package:ion/app/features/settings/views/app_language_modal.dart';
+import 'package:ion/app/features/settings/views/content_language_modal.dart';
+import 'package:ion/app/features/settings/views/logout_confirm_modal.dart';
+import 'package:ion/app/features/settings/views/profile_settings_modal.dart';
+import 'package:ion/app/features/settings/views/settings_modal.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/model/user_category_type.dart';
@@ -138,6 +143,7 @@ part 'feed_routes.dart';
 part 'profile_routes.dart';
 part 'protect_account_routes.dart';
 part 'wallet_routes.dart';
+part 'settings_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
 final bottomBarNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tabNav');
@@ -209,11 +215,6 @@ class AppShellRouteData extends StatefulShellRouteData {
   }
 }
 
-@TypedShellRoute<ModalShellRouteData>(
-  routes: [
-    ...ProtectAccountRoutes.routes,
-  ],
-)
 class ModalShellRouteData extends ShellRouteData {
   const ModalShellRouteData();
 
@@ -232,8 +233,10 @@ class ModalShellRouteData extends ShellRouteData {
       barrierColor: context.theme.appColors.backgroundSheet,
       transitionCurve: Easing.standardDecelerate,
       swipeDismissible: true,
-      swipeDismissSensitivity:
-          SwipeDismissSensitivity(minFlingVelocityRatio: 3, minDragDistance: 300.0.s),
+      swipeDismissSensitivity: SwipeDismissSensitivity(
+        minFlingVelocityRatio: 3,
+        minDragDistance: 300.0.s,
+      ),
     );
   }
 }

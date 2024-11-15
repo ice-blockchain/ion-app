@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
@@ -33,15 +34,16 @@ class CreateRecoveryKeyPage extends StatelessWidget {
   }
 }
 
-class _NavBar extends StatelessWidget {
+class _NavBar extends ConsumerWidget {
   const _NavBar();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
     return NavigationAppBar.modal(
       actions: [
         NavigationCloseButton(
-          onPressed: () => WalletRoute().go(context),
+          onPressed: () => ProfileRoute(pubkey: currentPubkey).go(context),
         ),
       ],
     );

@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/sliver_app_bar_with_progress.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
@@ -12,21 +14,23 @@ import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class PhoneSetupPage extends StatelessWidget {
+class PhoneSetupPage extends ConsumerWidget {
   const PhoneSetupPage(this.step, this.phone, {super.key});
 
   final PhoneSetupSteps step;
   final String? phone;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
+
     return SheetContent(
       body: CustomScrollView(
         slivers: [
           SliverAppBarWithProgress(
             progressValue: step.progressValue,
             title: step.getAppBarTitle(context),
-            onClose: () => WalletRoute().go(context),
+            onClose: () => ProfileRoute(pubkey: currentPubkey).go(context),
             showBackButton: step != PhoneSetupSteps.success,
             showProgress: step != PhoneSetupSteps.success,
           ),
