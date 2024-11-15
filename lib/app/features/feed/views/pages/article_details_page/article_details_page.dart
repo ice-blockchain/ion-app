@@ -8,7 +8,6 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article_data.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
-import 'package:ion/app/features/feed/providers/article_data_provider.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
@@ -19,24 +18,23 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/component
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/articles_carousel.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/user_biography.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/hooks/use_scroll_indicator.dart';
+import 'package:ion/app/features/nostr/model/event_pointer.dart';
+import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ArticleDetailsPage extends HookConsumerWidget {
   const ArticleDetailsPage({
-    required this.articleId,
-    required this.pubkey,
+    required this.eventPointer,
     super.key,
   });
 
-  final String articleId;
-
-  final String pubkey;
+  final EventPointer eventPointer;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final articleEntity =
-        ref.watch(articleDataProvider(articleId: articleId, pubkey: pubkey)).valueOrNull;
+        ref.watch(nostrEntityProvider(eventPointer: eventPointer)).valueOrNull as ArticleEntity?;
 
     if (articleEntity == null) {
       return const SizedBox.shrink();
@@ -85,8 +83,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     const ArticleDetailsDateTopics(),
                     ScreenSideOffset.small(
                       child: FeedItemFooter(
-                        entityId: articleEntity.id,
-                        pubkey: articleEntity.pubkey,
+                        eventPointer: eventPointer,
                         kind: ArticleEntity.kind,
                         bottomPadding: 10.0.s,
                       ),

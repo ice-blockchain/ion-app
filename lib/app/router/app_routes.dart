@@ -53,6 +53,7 @@ import 'package:ion/app/features/feed/views/pages/post_reply_modal/post_reply_mo
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
 import 'package:ion/app/features/feed/views/pages/share_post_modal/share_post_modal.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
+import 'package:ion/app/features/nostr/model/event_pointer.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_page.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_success.dart';

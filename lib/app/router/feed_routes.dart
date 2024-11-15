@@ -4,7 +4,7 @@ part of 'app_routes.dart';
 
 class FeedRoutes {
   static const routes = <TypedRoute<RouteData>>[
-    TypedGoRoute<PostDetailsRoute>(path: 'post/:postId'),
+    TypedGoRoute<PostDetailsRoute>(path: 'post'),
     TypedGoRoute<NotificationsHistoryRoute>(path: 'notifications-history'),
     TypedGoRoute<ArticleDetailsRoute>(path: 'article/:articleId'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
@@ -39,7 +39,7 @@ class FeedRoutes {
 class ArticleDetailsRoute extends BaseRouteData {
   ArticleDetailsRoute({required this.articleId, required this.pubkey})
       : super(
-          child: ArticleDetailsPage(articleId: articleId, pubkey: pubkey),
+          child: ArticleDetailsPage(eventPointer: EventPointer(eventId: articleId, pubkey: pubkey)),
         );
 
   final String articleId;
@@ -47,12 +47,13 @@ class ArticleDetailsRoute extends BaseRouteData {
 }
 
 class PostDetailsRoute extends BaseRouteData {
-  PostDetailsRoute({required this.eventPointer})
+  PostDetailsRoute({required this.postId, required this.pubkey})
       : super(
-          child: PostDetailsPage(eventPointer: eventPointer),
+          child: PostDetailsPage(eventPointer: EventPointer(eventId: postId, pubkey: pubkey)),
         );
 
-  final EventPointer eventPointer;
+  final String postId;
+  final String pubkey;
 }
 
 class NotificationsHistoryRoute extends BaseRouteData {
@@ -88,14 +89,19 @@ class CommentPostModalRoute extends BaseRouteData {
 
 class RepostOptionsModalRoute extends BaseRouteData {
   RepostOptionsModalRoute({
-    required this.eventPointer,
+    required this.eventId,
+    required this.pubkey,
     required this.kind,
   }) : super(
-          child: RepostOptionsModal(eventPointer: eventPointer, kind: kind),
+          child: RepostOptionsModal(
+            eventPointer: EventPointer(eventId: eventId, pubkey: pubkey),
+            kind: kind,
+          ),
           type: IceRouteType.bottomSheet,
         );
 
-  final EventPointer eventPointer;
+  final String eventId;
+  final String pubkey;
   final int kind;
 }
 

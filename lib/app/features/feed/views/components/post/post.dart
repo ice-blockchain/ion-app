@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/post_data.dart';
-import 'package:ion/app/features/feed/providers/post_data_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/components/quoted_post_frame/quoted_post_frame.dart';
@@ -28,7 +28,8 @@ class Post extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postEntity = ref.watch(postDataProvider(postId: postId, pubkey: pubkey)).valueOrNull;
+    final postEntity =
+        ref.watch(nostrEntityProvider(eventPointer: eventPointer)).valueOrNull as PostEntity?;
 
     if (postEntity == null) {
       return const Skeleton(child: PostSkeleton());

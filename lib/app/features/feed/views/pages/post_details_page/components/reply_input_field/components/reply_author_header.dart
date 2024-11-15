@@ -10,12 +10,9 @@ import 'package:ion/app/utils/username.dart';
 
 class ReplyAuthorHeader extends ConsumerWidget {
   const ReplyAuthorHeader({
-    required this.postId,
     required this.pubkey,
     super.key,
   });
-
-  final String postId;
 
   final String pubkey;
 

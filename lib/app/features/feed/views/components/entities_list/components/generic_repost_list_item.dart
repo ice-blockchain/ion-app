@@ -7,6 +7,7 @@ import 'package:ion/app/features/feed/data/models/article_data.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/repost_author_header.dart';
+import 'package:ion/app/features/nostr/model/event_pointer.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class GenericRepostListItem extends StatelessWidget {
@@ -29,8 +30,7 @@ class GenericRepostListItem extends StatelessWidget {
             RepostAuthorHeader(pubkey: repost.pubkey),
             SizedBox(height: 6.0.s),
             Article(
-              articleId: repost.data.eventId,
-              pubkey: repost.data.pubkey,
+              eventPointer: EventPointer(eventId: repost.data.eventId, pubkey: repost.data.pubkey),
             ),
           ],
         ),

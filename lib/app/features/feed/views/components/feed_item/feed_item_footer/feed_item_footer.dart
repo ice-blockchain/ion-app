@@ -44,7 +44,11 @@ class FeedItemFooter extends HookConsumerWidget {
 
     void onToggleRepost() {
       HapticFeedback.lightImpact();
-      RepostOptionsModalRoute(eventPointer: eventPointer, kind: kind).push<void>(context);
+      RepostOptionsModalRoute(
+        eventId: eventPointer.eventId,
+        pubkey: eventPointer.pubkey,
+        kind: kind,
+      ).push<void>(context);
       isReposted.value = !isReposted.value;
     }
 

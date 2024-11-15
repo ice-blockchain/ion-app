@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/data/models/article_data.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
+import 'package:ion/app/features/nostr/model/event_pointer.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class ArticleListItem extends ConsumerWidget {
@@ -20,8 +21,7 @@ class ArticleListItem extends ConsumerWidget {
         onTap: () =>
             ArticleDetailsRoute(articleId: article.id, pubkey: article.pubkey).push<void>(context),
         child: Article(
-          articleId: article.id,
-          pubkey: article.pubkey,
+          eventPointer: EventPointer(eventId: article.id, pubkey: article.pubkey),
         ),
       ),
     );

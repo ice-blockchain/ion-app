@@ -5,6 +5,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/features/feed/data/models/repost_data.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_header/repost_author_header.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
+import 'package:ion/app/features/nostr/model/event_pointer.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class RepostListItem extends StatelessWidget {
@@ -21,7 +22,9 @@ class RepostListItem extends StatelessWidget {
         child: Column(
           children: [
             RepostAuthorHeader(pubkey: repost.pubkey),
-            Post(postId: repost.data.eventId, pubkey: repost.data.pubkey),
+            Post(
+              eventPointer: EventPointer(eventId: repost.data.eventId, pubkey: repost.data.pubkey),
+            ),
           ],
         ),
       ),

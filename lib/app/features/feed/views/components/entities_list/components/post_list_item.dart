@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
+import 'package:ion/app/features/nostr/model/event_pointer.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class PostListItem extends StatelessWidget {
@@ -19,7 +20,7 @@ class PostListItem extends StatelessWidget {
     return GestureDetector(
       onTap: () => PostDetailsRoute(postId: post.id, pubkey: post.pubkey).push<void>(context),
       child: ScreenSideOffset.small(
-        child: Post(pubkey: post.pubkey, postId: post.id),
+        child: Post(eventPointer: EventPointer(pubkey: post.pubkey, eventId: post.id)),
       ),
     );
   }

@@ -16,6 +16,7 @@ import 'package:ion/app/features/feed/views/components/text_editor/components/ga
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/pages/comment_post_modal/components/quote_post_comment_input.dart';
+import 'package:ion/app/features/nostr/model/event_pointer.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -61,8 +62,7 @@ class CommentPostModal extends ConsumerWidget {
                       padding: EdgeInsets.only(left: 40.0.s, top: 6.0.s),
                       child: QuotedPostFrame(
                         child: Post(
-                          postId: post.id,
-                          pubkey: post.pubkey,
+                          eventPointer: EventPointer(eventId: post.id, pubkey: post.pubkey),
                           header: UserInfo(pubkey: post.pubkey),
                           footer: const SizedBox.shrink(),
                         ),

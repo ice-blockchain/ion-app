@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/components/reply_input_field/reply_input_field.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/components/reply_list/reply_list.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/components/reply_sent_notification/reply_sent_notification.dart';
+import 'package:ion/app/features/nostr/model/event_pointer.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -61,16 +62,16 @@ class PostDetailsPage extends HookConsumerWidget {
                 ),
                 SliverToBoxAdapter(
                   child: ScreenSideOffset.small(
-                    child: Post(postId: postId, pubkey: pubkey),
+                    child: Post(eventPointer: eventPointer),
                   ),
                 ),
                 SliverToBoxAdapter(child: FeedListSeparator()),
-                ReplyList(postId: postId, pubkey: pubkey),
+                ReplyList(eventPointer: eventPointer),
               ],
             ),
           ),
           const HorizontalSeparator(),
-          ReplyInputField(postId: postId, pubkey: pubkey),
+          ReplyInputField(eventPointer: eventPointer),
         ],
       ),
     );
