@@ -55,7 +55,10 @@ class StoryContent extends HookConsumerWidget {
           StoryViewerContent(
             story: story,
           ),
-          StoryViewerHeader(currentStory: story),
+          StoryViewerHeader(
+            pubkey: 'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
+            currentStory: story,
+          ),
           Stack(
             children: [
               StoryInputField(
