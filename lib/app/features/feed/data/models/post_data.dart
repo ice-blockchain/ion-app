@@ -9,6 +9,7 @@ import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ion/app/services/text_parser/matchers/hashtag_matcher.dart';
 import 'package:ion/app/services/text_parser/matchers/url_matcher.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
@@ -75,6 +76,19 @@ class PostData with _$PostData implements EventSerializable {
       relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
+    );
+  }
+
+  factory PostData.fromRawContent(String content) {
+    final parsedContent = TextParser(matchers: [const UrlMatcher()]).parse(content);
+    final hashtags = parsedContent
+        .where((match) => match.matcherType is HashtagMatcher)
+        .map((match) => RelatedHashtag(value: match.text))
+        .toList();
+    return PostData(
+      content: parsedContent,
+      relatedHashtags: hashtags,
+      media: {},
     );
   }
 

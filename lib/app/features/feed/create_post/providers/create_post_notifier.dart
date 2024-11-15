@@ -17,8 +17,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      // final data = PostData.fromRawContent(content: content);
-      // await ref.read(nostrNotifierProvider.notifier).sendEntityData(data);
+      final data = PostData.fromRawContent(content);
+      await ref.read(nostrNotifierProvider.notifier).sendEntityData(data);
     });
   }
 }
