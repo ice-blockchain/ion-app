@@ -33,9 +33,7 @@ class ProfileSettingsModal extends ConsumerWidget {
             title: Text(context.i18n.common_profile),
             actions: [
               NavigationCloseButton(
-                onPressed: () {
-                  ProfileRoute(pubkey: pubkey).go(context);
-                },
+                onPressed: Navigator.of(context, rootNavigator: true).pop,
               ),
             ],
           ),
