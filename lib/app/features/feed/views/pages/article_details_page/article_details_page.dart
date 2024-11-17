@@ -18,23 +18,23 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/component
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/articles_carousel.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/user_biography.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/hooks/use_scroll_indicator.dart';
-import 'package:ion/app/features/nostr/model/event_pointer.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ArticleDetailsPage extends HookConsumerWidget {
   const ArticleDetailsPage({
-    required this.eventPointer,
+    required this.eventReference,
     super.key,
   });
 
-  final EventPointer eventPointer;
+  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articleEntity =
-        ref.watch(nostrEntityProvider(eventPointer: eventPointer)).valueOrNull as ArticleEntity?;
+    final articleEntity = ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull
+        as ArticleEntity?;
 
     if (articleEntity == null) {
       return const SizedBox.shrink();
@@ -83,7 +83,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     const ArticleDetailsDateTopics(),
                     ScreenSideOffset.small(
                       child: FeedItemFooter(
-                        eventPointer: eventPointer,
+                        eventReference: eventReference,
                         kind: ArticleEntity.kind,
                         bottomPadding: 10.0.s,
                       ),

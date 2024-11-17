@@ -4,9 +4,9 @@ part of 'app_routes.dart';
 
 class FeedRoutes {
   static const routes = <TypedRoute<RouteData>>[
-    TypedGoRoute<PostDetailsRoute>(path: 'post'),
+    TypedGoRoute<PostDetailsRoute>(path: 'post/:eventReference'),
     TypedGoRoute<NotificationsHistoryRoute>(path: 'notifications-history'),
-    TypedGoRoute<ArticleDetailsRoute>(path: 'article/:articleId'),
+    TypedGoRoute<ArticleDetailsRoute>(path: 'article/:eventReference'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
     TypedShellRoute<ModalShellRouteData>(
@@ -16,7 +16,7 @@ class FeedRoutes {
     ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options'),
+        TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:eventReference'),
         TypedGoRoute<CommentPostModalRoute>(path: 'comment-post/:postId'),
         TypedGoRoute<PostReplyModalRoute>(path: 'reply-to-post/:postId'),
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
@@ -37,23 +37,23 @@ class FeedRoutes {
 }
 
 class ArticleDetailsRoute extends BaseRouteData {
-  ArticleDetailsRoute({required this.articleId, required this.pubkey})
+  ArticleDetailsRoute({required this.eventReference})
       : super(
-          child: ArticleDetailsPage(eventPointer: EventPointer(eventId: articleId, pubkey: pubkey)),
+          child: ArticleDetailsPage(
+            eventReference: EventReference.fromString(eventReference),
+          ),
         );
 
-  final String articleId;
-  final String pubkey;
+  final String eventReference;
 }
 
 class PostDetailsRoute extends BaseRouteData {
-  PostDetailsRoute({required this.postId, required this.pubkey})
+  PostDetailsRoute({required this.eventReference})
       : super(
-          child: PostDetailsPage(eventPointer: EventPointer(eventId: postId, pubkey: pubkey)),
+          child: PostDetailsPage(eventReference: EventReference.fromString(eventReference)),
         );
 
-  final String postId;
-  final String pubkey;
+  final String eventReference;
 }
 
 class NotificationsHistoryRoute extends BaseRouteData {
@@ -89,19 +89,17 @@ class CommentPostModalRoute extends BaseRouteData {
 
 class RepostOptionsModalRoute extends BaseRouteData {
   RepostOptionsModalRoute({
-    required this.eventId,
-    required this.pubkey,
+    required this.eventReference,
     required this.kind,
   }) : super(
           child: RepostOptionsModal(
-            eventPointer: EventPointer(eventId: eventId, pubkey: pubkey),
+            eventReference: EventReference.fromString(eventReference),
             kind: kind,
           ),
           type: IceRouteType.bottomSheet,
         );
 
-  final String eventId;
-  final String pubkey;
+  final String eventReference;
   final int kind;
 }
 

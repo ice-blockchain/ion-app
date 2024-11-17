@@ -84,3 +84,8 @@ class UnsupportedRepostKindException extends IONException {
   UnsupportedRepostKindException(int kind)
       : super(10015, 'Reposting events of kind $kind is not supported');
 }
+
+class EventNotFoundException extends IONException {
+  EventNotFoundException({required String eventId, required String pubkey})
+      : super(10015, 'Event with id $eventId not found for pubkey $pubkey');
+}

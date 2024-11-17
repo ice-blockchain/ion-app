@@ -13,17 +13,17 @@ import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/components/reply_input_field/reply_input_field.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/components/reply_list/reply_list.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/components/reply_sent_notification/reply_sent_notification.dart';
-import 'package:ion/app/features/nostr/model/event_pointer.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class PostDetailsPage extends HookConsumerWidget {
   const PostDetailsPage({
-    required this.eventPointer,
+    required this.eventReference,
     super.key,
   });
 
-  final EventPointer eventPointer;
+  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,16 +62,16 @@ class PostDetailsPage extends HookConsumerWidget {
                 ),
                 SliverToBoxAdapter(
                   child: ScreenSideOffset.small(
-                    child: Post(eventPointer: eventPointer),
+                    child: Post(eventReference: eventReference),
                   ),
                 ),
                 SliverToBoxAdapter(child: FeedListSeparator()),
-                ReplyList(eventPointer: eventPointer),
+                ReplyList(eventReference: eventReference),
               ],
             ),
           ),
           const HorizontalSeparator(),
-          ReplyInputField(eventPointer: eventPointer),
+          ReplyInputField(eventReference: eventReference),
         ],
       ),
     );

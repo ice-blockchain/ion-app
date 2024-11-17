@@ -11,7 +11,7 @@ import 'package:ion/app/features/feed/create_article/views/pages/create_article_
 import 'package:ion/app/features/feed/data/models/article_data.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/article/mocked_data.dart';
-import 'package:ion/app/features/nostr/model/event_pointer.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -25,7 +25,7 @@ class CreateArticlePreviewModal extends StatelessWidget {
     final paddingValue = 20.0.s;
 
     final article = ArticleEntity.fromEventMessage(mockedArticleEvent);
-    final eventPointer = EventPointer(eventId: article.id, pubkey: article.pubkey);
+    final eventReference = EventReference(eventId: article.id, pubkey: article.pubkey);
 
     return SheetContent(
       bottomPadding: 0,
@@ -37,9 +37,9 @@ class CreateArticlePreviewModal extends StatelessWidget {
           const HorizontalSeparator(),
           ProviderScope(
             overrides: [
-              nostrEntityProvider(eventPointer: eventPointer).overrideWith((_) => article),
+              nostrEntityProvider(eventReference: eventReference).overrideWith((_) => article),
             ],
-            child: Article(eventPointer: eventPointer),
+            child: Article(eventReference: eventReference),
           ),
           SizedBox(height: 12.0.s),
           const HorizontalSeparator(),

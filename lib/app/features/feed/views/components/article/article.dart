@@ -11,22 +11,22 @@ import 'package:ion/app/features/feed/views/components/article/components/bookma
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
-import 'package:ion/app/features/nostr/model/event_pointer.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
 import 'package:ion/app/utils/algorithm.dart';
 
 class Article extends ConsumerWidget {
   const Article({
-    required this.eventPointer,
+    required this.eventReference,
     super.key,
   });
 
-  final EventPointer eventPointer;
+  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articleEntity =
-        ref.watch(nostrEntityProvider(eventPointer: eventPointer)).valueOrNull as ArticleEntity?;
+    final articleEntity = ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull
+        as ArticleEntity?;
 
     if (articleEntity == null) {
       return const Skeleton(child: PostSkeleton());
@@ -54,11 +54,11 @@ class Article extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   UserInfo(
-                    pubkey: eventPointer.pubkey,
+                    pubkey: eventReference.pubkey,
                     trailing: Row(
                       children: [
                         const BookmarkButton(id: 'test_article_id'),
-                        UserInfoMenu(pubkey: eventPointer.pubkey),
+                        UserInfoMenu(pubkey: eventReference.pubkey),
                       ],
                     ),
                   ),

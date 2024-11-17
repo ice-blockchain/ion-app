@@ -16,17 +16,17 @@ import 'package:ion/app/features/feed/views/components/actions_toolbar_button/ac
 import 'package:ion/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/components/reply_input_field/components/reply_author_header.dart';
-import 'package:ion/app/features/nostr/model/event_pointer.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ReplyInputField extends HookConsumerWidget {
   const ReplyInputField({
-    required this.eventPointer,
+    required this.eventReference,
     super.key,
   });
 
-  final EventPointer eventPointer;
+  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,7 +48,7 @@ class ReplyInputField extends HookConsumerWidget {
           if (hasFocus.value)
             Padding(
               padding: EdgeInsets.only(bottom: 12.0.s),
-              child: ReplyAuthorHeader(pubkey: eventPointer.pubkey),
+              child: ReplyAuthorHeader(pubkey: eventReference.pubkey),
             ),
           SizedBox(
             // When we focus the TextField, a new child is added to the Column,
@@ -87,7 +87,7 @@ class ReplyInputField extends HookConsumerWidget {
                       GestureDetector(
                         onTap: () async {
                           await PostReplyModalRoute(
-                            postId: eventPointer.eventId,
+                            postId: eventReference.eventId,
                             showCollapseButton: true,
                           ).push<void>(context);
                           textController.text = ref.read(replyDataNotifierProvider).text;

@@ -12,24 +12,24 @@ import 'package:ion/app/features/feed/views/components/post/components/quoted_po
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
-import 'package:ion/app/features/nostr/model/event_pointer.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
 
 class Post extends ConsumerWidget {
   const Post({
-    required this.eventPointer,
+    required this.eventReference,
     this.header,
     this.footer,
     super.key,
   });
 
-  final EventPointer eventPointer;
+  final EventReference eventReference;
   final Widget? header;
   final Widget? footer;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final postEntity =
-        ref.watch(nostrEntityProvider(eventPointer: eventPointer)).valueOrNull as PostEntity?;
+        ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull as PostEntity?;
 
     if (postEntity == null) {
       return const Skeleton(child: PostSkeleton());
@@ -43,8 +43,8 @@ class Post extends ConsumerWidget {
         SizedBox(height: 12.0.s),
         header ??
             UserInfo(
-              pubkey: eventPointer.pubkey,
-              trailing: UserInfoMenu(pubkey: eventPointer.pubkey),
+              pubkey: eventReference.pubkey,
+              trailing: UserInfoMenu(pubkey: eventReference.pubkey),
             ),
         SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
@@ -53,14 +53,14 @@ class Post extends ConsumerWidget {
             padding: EdgeInsets.only(top: 6.0.s),
             child: QuotedPostFrame(
               child: Post(
-                eventPointer:
-                    EventPointer(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey),
+                eventReference:
+                    EventReference(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey),
                 header: UserInfo(pubkey: quotedEvent.pubkey),
                 footer: const SizedBox.shrink(),
               ),
             ),
           ),
-        footer ?? FeedItemFooter(eventPointer: eventPointer, kind: PostEntity.kind),
+        footer ?? FeedItemFooter(eventReference: eventReference, kind: PostEntity.kind),
       ],
     );
   }

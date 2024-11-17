@@ -5,7 +5,7 @@ import 'package:ion/app/features/feed/data/models/article_data.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.dart';
 import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/data/models/repost_data.dart';
-import 'package:ion/app/features/nostr/model/event_pointer.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,16 +17,20 @@ class RepostNotifier extends _$RepostNotifier {
   FutureOr<void> build() {}
 
   Future<void> repost({
-    required EventPointer eventPointer,
+    required EventReference eventReference,
     required int kind,
   }) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
       final data = switch (kind) {
-        PostEntity.kind => RepostData(eventId: eventPointer.eventId, pubkey: eventPointer.pubkey),
+        PostEntity.kind =>
+          RepostData(eventId: eventReference.eventId, pubkey: eventReference.pubkey),
         ArticleEntity.kind => GenericRepostData(
-            eventId: eventPointer.eventId, pubkey: eventPointer.pubkey, kind: ArticleEntity.kind),
+            eventId: eventReference.eventId,
+            pubkey: eventReference.pubkey,
+            kind: ArticleEntity.kind,
+          ),
         _ => throw UnsupportedRepostKindException(kind),
       };
 

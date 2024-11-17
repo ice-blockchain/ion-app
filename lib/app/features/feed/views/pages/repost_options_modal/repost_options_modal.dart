@@ -11,7 +11,7 @@ import 'package:ion/app/features/feed/content_notification/data/models/content_n
 import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.dart';
 import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.dart';
-import 'package:ion/app/features/nostr/model/event_pointer.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -20,12 +20,12 @@ import 'package:ion/generated/assets.gen.dart';
 
 class RepostOptionsModal extends ConsumerWidget {
   const RepostOptionsModal({
-    required this.eventPointer,
+    required this.eventReference,
     required this.kind,
     super.key,
   });
 
-  final EventPointer eventPointer;
+  final EventReference eventReference;
   final int kind;
 
   @override
@@ -52,7 +52,7 @@ class RepostOptionsModal extends ConsumerWidget {
                 onPressed: () async {
                   await ref
                       .read(repostNotifierProvider.notifier)
-                      .repost(eventPointer: eventPointer, kind: kind);
+                      .repost(eventReference: eventReference, kind: kind);
                   if (!ref.read(repostNotifierProvider).hasError) {
                     if (context.mounted) {
                       context.pop();
@@ -76,7 +76,7 @@ class RepostOptionsModal extends ConsumerWidget {
                   type: ButtonType.secondary,
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
-                    CommentPostModalRoute(postId: eventPointer.eventId).pushReplacement(context);
+                    CommentPostModalRoute(postId: eventReference.eventId).pushReplacement(context);
                   },
                   leadingIcon: Assets.svg.iconFeedQuote.icon(size: 18.0.s),
                   leadingIconOffset: 12.0.s,
