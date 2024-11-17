@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -58,9 +60,10 @@ class PostSubmitButton extends HookConsumerWidget {
       enabled: isSubmitButtonEnabled && !isSubmitLoading,
       onPressed: () async {
         await ref.read(createPostNotifierProvider.notifier).create(
-            content: textEditorController.document.toPlainText(),
-            parentEvent: parentEvent,
-            quotedEvent: quotedEvent);
+              content: textEditorController.document.toPlainText(),
+              parentEvent: parentEvent,
+              quotedEvent: quotedEvent,
+            );
 
         if (!ref.read(createPostNotifierProvider).hasError) {
           if (ref.context.mounted) {

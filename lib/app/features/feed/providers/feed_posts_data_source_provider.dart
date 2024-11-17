@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/feed/data/models/article_data.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
@@ -20,6 +21,7 @@ part 'feed_posts_data_source_provider.g.dart';
 List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
   final filters = ref.watch(feedCurrentFilterProvider);
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters.filter)).valueOrNull;
+  final foo = ref.watch(currentPubkeySelectorProvider);
 
   if (filterRelays != null) {
     return [
@@ -31,7 +33,7 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
             ),
           _ => _buildPostsDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
-              authors: filters.filter == FeedFilter.following ? entry.value : null,
+              authors: [foo!],
             )
         },
     ];
