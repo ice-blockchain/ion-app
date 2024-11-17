@@ -18,7 +18,6 @@ class FeedRoutes {
       routes: [
         TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:eventReference'),
         TypedGoRoute<CommentPostModalRoute>(path: 'comment-post/:postId'),
-        TypedGoRoute<PostReplyModalRoute>(path: 'reply-to-post/:postId'),
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
         TypedGoRoute<CreatePostRoute>(path: 'create-post'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
@@ -63,19 +62,19 @@ class NotificationsHistoryRoute extends BaseRouteData {
         );
 }
 
-class PostReplyModalRoute extends BaseRouteData {
-  PostReplyModalRoute({
-    required this.postId,
-    this.showCollapseButton = false,
-  }) : super(
-          type: IceRouteType.bottomSheet,
-          child: PostReplyModal(postId: postId, showCollapseButton: showCollapseButton),
-        );
+// class PostReplyModalRoute extends BaseRouteData {
+//   PostReplyModalRoute({
+//     required this.postId,
+//     this.showCollapseButton = false,
+//   }) : super(
+//           type: IceRouteType.bottomSheet,
+//           child: PostReplyModal(postId: postId, showCollapseButton: showCollapseButton),
+//         );
 
-  final String postId;
+//   final String postId;
 
-  final bool showCollapseButton;
-}
+//   final bool showCollapseButton;
+// }
 
 class CommentPostModalRoute extends BaseRouteData {
   CommentPostModalRoute({required this.postId})
@@ -151,11 +150,18 @@ class SwitchAccountRoute extends BaseRouteData {
 }
 
 class CreatePostRoute extends BaseRouteData {
-  CreatePostRoute()
+  CreatePostRoute({this.parentEvent, this.showCollapseButton = false})
       : super(
-          child: const CreatePostModal(),
+          child: CreatePostModal(
+            parentEvent: parentEvent != null ? EventReference.fromString(parentEvent) : null,
+            showCollapseButton: showCollapseButton,
+          ),
           type: IceRouteType.bottomSheet,
         );
+
+  final String? parentEvent;
+
+  final bool showCollapseButton;
 }
 
 class CreateArticleRoute extends BaseRouteData {

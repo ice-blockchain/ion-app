@@ -55,30 +55,24 @@ class TextEditorState extends ConsumerState<TextEditor> {
         _mentionsHashtagsHandler.removeOverlay();
       }
     });
-    return Column(
-      children: [
-        Expanded(
-          child: QuillEditor.basic(
+    return QuillEditor.basic(
+      controller: widget.controller,
+      focusNode: _focusNode,
+      configurations: QuillEditorConfigurations(
+        embedBuilders: [
+          TextEditorSingleImageBuilder(),
+          TextEditorPollBuilder(
             controller: widget.controller,
-            focusNode: _focusNode,
-            configurations: QuillEditorConfigurations(
-              embedBuilders: [
-                TextEditorSingleImageBuilder(),
-                TextEditorPollBuilder(
-                  controller: widget.controller,
-                ),
-                TextEditorSeparatorBuilder(),
-                TextEditorCodeBuilder(),
-              ],
-              autoFocus: true,
-              placeholder: widget.placeholder,
-              customStyles: getCustomStyles(context),
-              floatingCursorDisabled: true,
-              customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
-            ),
           ),
-        ),
-      ],
+          TextEditorSeparatorBuilder(),
+          TextEditorCodeBuilder(),
+        ],
+        autoFocus: true,
+        placeholder: widget.placeholder,
+        customStyles: getCustomStyles(context),
+        floatingCursorDisabled: true,
+        customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
+      ),
     );
   }
 }

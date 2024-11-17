@@ -86,8 +86,8 @@ class ReplyInputField extends HookConsumerWidget {
                     if (hasFocus.value)
                       GestureDetector(
                         onTap: () async {
-                          await PostReplyModalRoute(
-                            postId: eventReference.eventId,
+                          await CreatePostRoute(
+                            parentEvent: eventReference.toString(),
                             showCollapseButton: true,
                           ).push<void>(context);
                           textController.text = ref.read(replyDataNotifierProvider).text;

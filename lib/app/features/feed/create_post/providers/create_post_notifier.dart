@@ -40,6 +40,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         }
         data = data.copyWith(
           relatedEvents: [
+            //TODO::!!
             RelatedEvent(
               eventId: parentEvent.eventId,
               pubkey: parentEvent.pubkey,
