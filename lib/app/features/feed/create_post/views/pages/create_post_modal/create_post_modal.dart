@@ -3,13 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/back_hardware_button_interceptor/back_hardware_button_interceptor.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/reply_data_notifier.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/collaple_button.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/current_user_avatar.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/post_submit_button.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/quoted_entity.dart';
@@ -19,7 +20,6 @@ import 'package:ion/app/features/feed/views/components/text_editor/text_editor.d
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -43,7 +43,11 @@ class CreatePostModal extends HookConsumerWidget {
     final textEditorController =
         useQuillController(defaultText: ref.watch(replyDataNotifierProvider));
 
-    final currentUserPicture = ref.watch(currentUserMetadataProvider).valueOrNull?.data.picture;
+    final createOption = parentEvent != null
+        ? CreatePostOption.reply
+        : quotedEvent != null
+            ? CreatePostOption.quote
+            : CreatePostOption.plain;
 
     Future<void> onBack() async =>
         textEditorController.document.isEmpty() ? context.pop() : _showCancelCreationModal(context);
@@ -55,13 +59,7 @@ class CreatePostModal extends HookConsumerWidget {
         body: Column(
           children: [
             NavigationAppBar.modal(
-              title: Text(
-                parentEvent != null
-                    ? context.i18n.post_reply
-                    : quotedEvent != null
-                        ? context.i18n.feed_write_comment
-                        : context.i18n.create_post_modal_title,
-              ),
+              title: Text(createOption.getTitle(context)),
               onBackPress: onBack,
               actions: [if (showCollapseButton) const CollapseButton()],
             ),
@@ -74,14 +72,14 @@ class CreatePostModal extends HookConsumerWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Avatar(size: 30.0.s, imageUrl: currentUserPicture),
+                          const CurrentUserAvatar(),
                           SizedBox(width: 10.0.s),
                           Expanded(
                             child: Padding(
                               padding: EdgeInsets.only(top: 6.0.s),
                               child: TextEditor(
                                 textEditorController,
-                                placeholder: context.i18n.create_post_modal_placeholder,
+                                placeholder: createOption.getPlaceholder(context),
                               ),
                             ),
                           ),
