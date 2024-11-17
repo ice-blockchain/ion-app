@@ -29,6 +29,12 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       //TODO:: upload media and add to event's mediaAttachment
       var data = PostData.fromRawContent(content);
 
+      if (quotedEvent != null) {
+        data = data.copyWith(
+          quotedEvent: QuotedEvent(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey),
+        );
+      }
+
       if (parentEvent != null) {
         final parentEntity =
             await ref.read(nostrEntityProvider(eventReference: parentEvent).future);
