@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/back_hardware_button_interceptor/back_hardware_button_interceptor.dart';
@@ -40,8 +41,11 @@ class CreatePostModal extends HookConsumerWidget {
 
     final currentUserPicture = ref.watch(currentUserMetadataProvider).valueOrNull?.data.picture;
 
+    Future<void> onBack() async =>
+        textEditorController.document.isEmpty() ? context.pop() : _showCancelCreationModal(context);
+
     return BackHardwareButtonInterceptor(
-      onBackPress: _showCancelCreationModal,
+      onBackPress: (_) => onBack(),
       child: SheetContent(
         topPadding: 0,
         body: Column(
@@ -52,7 +56,7 @@ class CreatePostModal extends HookConsumerWidget {
                     ? context.i18n.post_reply
                     : context.i18n.create_post_modal_title,
               ),
-              onBackPress: () => _showCancelCreationModal(context),
+              onBackPress: onBack,
               actions: [if (showCollapseButton) const CollapseButton()],
             ),
             Expanded(
@@ -101,7 +105,9 @@ class CreatePostModal extends HookConsumerWidget {
     );
   }
 
-  Future<void> _showCancelCreationModal(BuildContext context) async {
+  Future<void> _showCancelCreationModal(
+    BuildContext context,
+  ) async {
     await showSimpleBottomSheet<void>(
       context: context,
       child: CancelCreationModal(
