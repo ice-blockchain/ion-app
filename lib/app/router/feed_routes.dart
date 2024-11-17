@@ -17,7 +17,6 @@ class FeedRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:eventReference'),
-        TypedGoRoute<CommentPostModalRoute>(path: 'comment-post/:postId'),
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
         TypedGoRoute<CreatePostRoute>(path: 'create-post'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
@@ -60,30 +59,6 @@ class NotificationsHistoryRoute extends BaseRouteData {
       : super(
           child: const NotificationsHistoryPage(),
         );
-}
-
-// class PostReplyModalRoute extends BaseRouteData {
-//   PostReplyModalRoute({
-//     required this.postId,
-//     this.showCollapseButton = false,
-//   }) : super(
-//           type: IceRouteType.bottomSheet,
-//           child: PostReplyModal(postId: postId, showCollapseButton: showCollapseButton),
-//         );
-
-//   final String postId;
-
-//   final bool showCollapseButton;
-// }
-
-class CommentPostModalRoute extends BaseRouteData {
-  CommentPostModalRoute({required this.postId})
-      : super(
-          child: CommentPostModal(postId: postId),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final String postId;
 }
 
 class RepostOptionsModalRoute extends BaseRouteData {
@@ -150,16 +125,19 @@ class SwitchAccountRoute extends BaseRouteData {
 }
 
 class CreatePostRoute extends BaseRouteData {
-  CreatePostRoute({this.parentEvent, this.showCollapseButton = false})
+  CreatePostRoute({this.parentEvent, this.quotedEvent, this.showCollapseButton = false})
       : super(
           child: CreatePostModal(
             parentEvent: parentEvent != null ? EventReference.fromString(parentEvent) : null,
+            quotedEvent: quotedEvent != null ? EventReference.fromString(quotedEvent) : null,
             showCollapseButton: showCollapseButton,
           ),
           type: IceRouteType.bottomSheet,
         );
 
   final String? parentEvent;
+
+  final String? quotedEvent;
 
   final bool showCollapseButton;
 }

@@ -31,7 +31,7 @@ class ParentEntity extends ConsumerWidget {
     }
 
     if (nostrEntity is! PostEntity) {
-      return Text('Quoting events ${nostrEntity.runtimeType} is not supported yet');
+      return Text('Replying to ${nostrEntity.runtimeType} is not supported yet');
     }
 
     return Column(

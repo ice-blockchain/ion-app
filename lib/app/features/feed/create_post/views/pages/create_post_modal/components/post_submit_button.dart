@@ -16,9 +16,18 @@ import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/utils/validators.dart';
 
 class PostSubmitButton extends HookConsumerWidget {
-  const PostSubmitButton({required this.textEditorController, super.key});
+  const PostSubmitButton({
+    required this.textEditorController,
+    super.key,
+    this.parentEvent,
+    this.quotedEvent,
+  });
 
   final QuillController textEditorController;
+
+  final EventReference? parentEvent;
+
+  final EventReference? quotedEvent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,23 +53,22 @@ class PostSubmitButton extends HookConsumerWidget {
       [hasPoll, hasContent],
     );
 
-    final onSubmit = useCallback(({required String content, EventReference? parentEvent}) async {
-      await ref
-          .read(createPostNotifierProvider.notifier)
-          .create(content: content, parentEvent: parentEvent);
-
-      if (!ref.read(createPostNotifierProvider).hasError) {
-        if (ref.context.mounted) {
-          ref.context.pop();
-        }
-        ref.read(contentNotificationControllerProvider.notifier).showSuccess(ContentType.post);
-      }
-    });
-
     return ToolbarSendButton(
       loading: isSubmitLoading,
       enabled: isSubmitButtonEnabled && !isSubmitLoading,
-      onPressed: () => onSubmit(content: textEditorController.document.toPlainText()),
+      onPressed: () async {
+        await ref.read(createPostNotifierProvider.notifier).create(
+            content: textEditorController.document.toPlainText(),
+            parentEvent: parentEvent,
+            quotedEvent: quotedEvent);
+
+        if (!ref.read(createPostNotifierProvider).hasError) {
+          if (ref.context.mounted) {
+            ref.context.pop();
+          }
+          ref.read(contentNotificationControllerProvider.notifier).showSuccess(ContentType.post);
+        }
+      },
     );
   }
 }

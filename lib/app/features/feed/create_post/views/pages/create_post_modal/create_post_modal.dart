@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/create_post/providers/reply_data_notifier.
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/collaple_button.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/post_submit_button.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/quoted_entity.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
@@ -28,9 +29,12 @@ class CreatePostModal extends HookConsumerWidget {
     required this.showCollapseButton,
     super.key,
     this.parentEvent,
+    this.quotedEvent,
   });
 
   final EventReference? parentEvent;
+
+  final EventReference? quotedEvent;
 
   final bool showCollapseButton;
 
@@ -54,7 +58,9 @@ class CreatePostModal extends HookConsumerWidget {
               title: Text(
                 parentEvent != null
                     ? context.i18n.post_reply
-                    : context.i18n.create_post_modal_title,
+                    : quotedEvent != null
+                        ? context.i18n.feed_write_comment
+                        : context.i18n.create_post_modal_title,
               ),
               onBackPress: onBack,
               actions: [if (showCollapseButton) const CollapseButton()],
@@ -81,6 +87,7 @@ class CreatePostModal extends HookConsumerWidget {
                           ),
                         ],
                       ),
+                      if (quotedEvent != null) QuotedEntity(eventReference: quotedEvent!),
                     ],
                   ),
                 ),
@@ -96,7 +103,11 @@ class CreatePostModal extends HookConsumerWidget {
                   ToolbarItalicButton(textEditorController: textEditorController),
                   ToolbarBoldButton(textEditorController: textEditorController),
                 ],
-                trailing: PostSubmitButton(textEditorController: textEditorController),
+                trailing: PostSubmitButton(
+                  textEditorController: textEditorController,
+                  parentEvent: parentEvent,
+                  quotedEvent: quotedEvent,
+                ),
               ),
             ),
           ],

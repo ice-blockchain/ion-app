@@ -76,7 +76,8 @@ class RepostOptionsModal extends ConsumerWidget {
                   type: ButtonType.secondary,
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
-                    CommentPostModalRoute(postId: eventReference.eventId).pushReplacement(context);
+                    CreatePostRoute(quotedEvent: eventReference.toString())
+                        .pushReplacement(context);
                   },
                   leadingIcon: Assets.svg.iconFeedQuote.icon(size: 18.0.s),
                   leadingIconOffset: 12.0.s,
