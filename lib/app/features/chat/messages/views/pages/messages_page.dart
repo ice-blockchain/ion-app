@@ -45,7 +45,8 @@ class MessagesPage extends ConsumerWidget {
                           );
                         case 1:
                           return const TextMessage(
-                            message: 'How are you doing?',
+                            message:
+                                'How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing?How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing? How are you doing?',
                             isMe: false,
                           );
                         case 2:

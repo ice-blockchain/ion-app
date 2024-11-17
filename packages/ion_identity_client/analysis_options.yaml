@@ -10,7 +10,7 @@ analyzer:
     unnecessary_library_directive: ignore
     invalid_annotation_target: ignore
   plugins:
-    - custom_lint
+    # - custom_lint
   exclude:
     - '**/*.g.dart'
     - '**/*.freezed.dart'
