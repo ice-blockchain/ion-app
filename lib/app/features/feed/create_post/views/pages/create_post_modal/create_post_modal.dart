@@ -7,10 +7,10 @@ import 'package:ion/app/components/back_hardware_button_interceptor/back_hardwar
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/create_post/providers/reply_data_notifier.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/collaple_button.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/post_submit_button.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
@@ -35,8 +35,8 @@ class CreatePostModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textEditorController = useQuillController();
-    final hasPoll = useHasPoll(textEditorController);
+    final textEditorController =
+        useQuillController(defaultText: ref.watch(replyDataNotifierProvider));
 
     final currentUserPicture = ref.watch(currentUserMetadataProvider).valueOrNull?.data.picture;
 
@@ -87,10 +87,7 @@ class CreatePostModal extends HookConsumerWidget {
               child: ActionsToolbar(
                 actions: [
                   ToolbarImageButton(textEditorController: textEditorController),
-                  if (!hasPoll)
-                    ToolbarPollButton(
-                      textEditorController: textEditorController,
-                    ),
+                  ToolbarPollButton(textEditorController: textEditorController),
                   ToolbarRegularButton(textEditorController: textEditorController),
                   ToolbarItalicButton(textEditorController: textEditorController),
                   ToolbarBoldButton(textEditorController: textEditorController),

@@ -9,7 +9,7 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/feed/providers/post_reply/reply_data_notifier.dart';
+import 'package:ion/app/features/feed/create_post/providers/reply_data_notifier.dart';
 import 'package:ion/app/features/feed/providers/post_reply/send_reply_request_notifier.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
@@ -38,7 +38,7 @@ class ReplyInputField extends HookConsumerWidget {
     final hasFocus = useNodeFocused(focusNode);
 
     final textController = useTextEditingController(
-      text: ref.watch(replyDataNotifierProvider.select((data) => data.text)),
+      text: ref.watch(replyDataNotifierProvider),
     );
 
     return ScreenSideOffset.small(
@@ -71,7 +71,7 @@ class ReplyInputField extends HookConsumerWidget {
                         focusNode: focusNode,
                         controller: textController,
                         onChanged: (value) =>
-                            ref.read(replyDataNotifierProvider.notifier).onTextChanged(value),
+                            ref.read(replyDataNotifierProvider.notifier).text = value,
                         style: textThemes.body2,
                         decoration: InputDecoration(
                           hintText: context.i18n.post_reply_hint,
@@ -90,7 +90,7 @@ class ReplyInputField extends HookConsumerWidget {
                             parentEvent: eventReference.toString(),
                             showCollapseButton: true,
                           ).push<void>(context);
-                          textController.text = ref.read(replyDataNotifierProvider).text;
+                          textController.text = ref.read(replyDataNotifierProvider);
                         },
                         child: Assets.svg.iconReplysearchScale.icon(size: 20.0.s),
                       ),

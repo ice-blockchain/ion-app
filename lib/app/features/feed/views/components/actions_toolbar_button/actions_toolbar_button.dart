@@ -10,20 +10,22 @@ class ActionsToolbarButton extends StatelessWidget {
     super.key,
     this.iconSelected,
     this.selected = false,
+    this.enabled = true,
   });
 
   final VoidCallback onPressed;
   final String icon;
   final String? iconSelected;
   final bool selected;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: enabled ? onPressed : null,
       child: (selected && iconSelected != null ? iconSelected! : icon).icon(
         size: 24.0.s,
-        color: context.theme.appColors.primaryAccent,
+        color: enabled ? context.theme.appColors.primaryAccent : context.theme.appColors.sheetLine,
       ),
     );
   }
