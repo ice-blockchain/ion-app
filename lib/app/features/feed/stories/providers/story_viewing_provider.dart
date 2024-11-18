@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:collection/collection.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_viewing_provider.g.dart';
@@ -222,28 +224,47 @@ class StoryViewingController extends _$StoryViewingController {
   }
 
   Future<List<UserStories>> _fetchUserStories() async {
-    try {
-      await Future<void>.delayed(const Duration(seconds: 1));
+    final dataSource = ref.read(feedStoriesDataSourceProvider);
 
-      final groupedStories = groupBy<Story, String>(
-        stories,
-        (Story story) => story.data.authorId,
-      );
+    final entitiesPagedDataState = ref.read(entitiesPagedDataProvider(dataSource));
 
-      return groupedStories.entries.map<UserStories>((MapEntry<String, List<Story>> entry) {
-        final userStories = entry.value;
-        final firstStory = userStories.first;
+    final postEntities = entitiesPagedDataState?.data.items
+        .whereType<PostEntity>()
+        .where((post) => post.data.media.isNotEmpty)
+        .toList();
 
-        return UserStories(
-          userId: entry.key,
-          userName: firstStory.data.author,
-          userAvatar: firstStory.data.imageUrl,
-          stories: userStories,
-          isVerified: Random().nextBool(),
-        );
+    final groupedStories = groupBy<PostEntity, String>(
+      postEntities ?? [],
+      (post) => post.pubkey,
+    );
+
+    final userStoriesList = <UserStories>[];
+
+    for (final entry in groupedStories.entries) {
+      final pubkey = entry.key;
+      final userPosts = entry.value;
+
+      final userMetadata = await ref.read(userMetadataProvider(pubkey).future);
+
+      final validPosts = userPosts.where((post) {
+        final mediaAttachment = post.data.media.values.firstOrNull;
+        return mediaAttachment != null && _isValidMediaType(mediaAttachment.mediaType);
       }).toList();
-    } catch (e) {
-      throw Exception('Failed to fetch stories: $e');
+
+      if (validPosts.isEmpty) continue;
+
+      final userStories = UserStories.fromPosts(
+        pubkey,
+        validPosts,
+        userMetadata?.data,
+      );
+      userStoriesList.add(userStories);
     }
+
+    return userStoriesList;
+  }
+
+  bool _isValidMediaType(MediaType mediaType) {
+    return mediaType == MediaType.image || mediaType == MediaType.video;
   }
 }

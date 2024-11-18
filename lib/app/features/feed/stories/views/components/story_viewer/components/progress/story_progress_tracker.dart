@@ -34,7 +34,7 @@ class StoryProgressTracker extends HookConsumerWidget {
     final videoController = story.whenOrNull(
       video: (data, _) => ref.watch(
         videoControllerProvider(
-          data.contentUrl,
+          data.mediaUrl,
           autoPlay: isCurrent,
         ),
       ),

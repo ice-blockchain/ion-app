@@ -33,7 +33,7 @@ class StoryViewerHeader extends HookWidget {
       child: GestureDetector(
         onTap: () => ProfileRoute(pubkey: pubkey).go(context),
         child: ListItem.user(
-          profilePicture: currentStory.data.imageUrl,
+          profilePicture: currentStory.data.mediaUrl,
           title: Text(
             currentStory.data.author,
             style: context.theme.appTextThemes.subtitle3.copyWith(

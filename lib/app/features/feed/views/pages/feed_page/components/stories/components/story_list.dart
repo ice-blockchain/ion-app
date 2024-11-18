@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.dart';
@@ -10,8 +11,9 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/c
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 
-class StoryList extends StatelessWidget {
+class StoryList extends ConsumerWidget {
   const StoryList({
     required this.entities,
     super.key,
@@ -20,7 +22,9 @@ class StoryList extends StatelessWidget {
   final List<NostrEntity> entities;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final entities = this.entities;
+
     return SliverPadding(
       padding: EdgeInsets.symmetric(
         horizontal: ScreenSideOffset.defaultSmallMargin,
@@ -34,30 +38,38 @@ class StoryList extends StatelessWidget {
           if (index == 0) {
             return StoryListItem(
               imageUrl: 'https://i.pravatar.cc/150?u=@me',
-              label: 'you',
+              label: 'You',
               me: true,
               gradient: storyBorderGradients.first,
             );
           }
 
           final entity = entities[index - 1];
+
           if (entity is PostEntity) {
-            //TODO::use entity for data instead of mocked stories
+            final mediaAttachments = entity.data.media.values;
+
+            if (mediaAttachments.isEmpty) {
+              return const SizedBox.shrink();
+            }
+
+            final userMetadataAsync = ref.watch(userMetadataProvider(entity.pubkey));
+
+            return userMetadataAsync.maybeWhen(
+              orElse: () => const SizedBox.shrink(),
+              data: (userMetadata) {
+                final story = Story.fromPostEntity(entity, userMetadata?.data);
+
+                return StoryListItem(
+                  imageUrl: story.data.mediaUrl,
+                  label: story.data.author,
+                  gradient: storyBorderGradients[Random().nextInt(storyBorderGradients.length)],
+                );
+              },
+            );
           }
-          final story = Story.image(
-            data: StoryData(
-              id: index.toString(),
-              authorId: 'john',
-              author: 'Someone',
-              contentUrl: 'https://picsum.photos/500/800?random=$index',
-              imageUrl: 'https://i.pravatar.cc/150?u=@john_avatar$index',
-            ),
-          );
-          return StoryListItem(
-            imageUrl: story.data.imageUrl,
-            label: story.data.author,
-            gradient: storyBorderGradients[Random().nextInt(storyBorderGradients.length)],
-          );
+
+          return const SizedBox.shrink();
         },
       ),
     );

@@ -3,114 +3,113 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.dart';
 
 final random = Random();
 
-final List<Story> stories = [
-  const Story.image(
-    data: StoryData(
-      id: '1',
-      authorId: 'john',
-      author: 'you',
-      contentUrl: 'https://picsum.photos/500/800?random=1',
-      imageUrl: 'https://i.pravatar.cc/150?u=@john_avatar',
-      me: true,
-      nft: true,
-    ),
-  ),
-  Story.image(
-    data: StoryData(
-      id: '2',
-      authorId: 'mysterox',
-      author: '@mysterox',
-      contentUrl: 'https://picsum.photos/500/800?random=2',
-      imageUrl: 'https://i.pravatar.cc/150?u=@mysterox_avatar',
-      nft: random.nextBool(),
-      gradientIndex: random.nextInt(storyBorderGradients.length),
-    ),
-  ),
-  Story.image(
-    data: StoryData(
-      id: '3',
-      authorId: 'isaiah',
-      author: '@isaiah',
-      contentUrl: 'https://picsum.photos/500/800?random=3',
-      imageUrl: 'https://i.pravatar.cc/150?u=@isaiah_avatar',
-      nft: random.nextBool(),
-      gradientIndex: random.nextInt(storyBorderGradients.length),
-    ),
-  ),
-  Story.video(
-    data: StoryData(
-      id: '4',
-      authorId: 'isaiah',
-      author: '@isaiah',
-      contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_1.mp4',
-      imageUrl: 'https://i.pravatar.cc/150?u=@isaiah_avatar',
-      nft: random.nextBool(),
-      gradientIndex: random.nextInt(storyBorderGradients.length),
-    ),
-    muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
-  ),
-  Story.video(
-    data: StoryData(
-      id: '5',
-      authorId: 'jamison',
-      author: '@jamison',
-      contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_2.mp4',
-      imageUrl: 'https://i.pravatar.cc/150?u=@jamison_avatar',
-      nft: random.nextBool(),
-      gradientIndex: random.nextInt(storyBorderGradients.length),
-    ),
-    muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
-  ),
-  Story.image(
-    data: StoryData(
-      id: '6',
-      authorId: 'jamison',
-      author: '@jamison',
-      contentUrl: 'https://picsum.photos/500/800?random=6',
-      imageUrl: 'https://i.pravatar.cc/150?u=@jamison_avatar',
-      nft: random.nextBool(),
-      gradientIndex: random.nextInt(storyBorderGradients.length),
-    ),
-  ),
-  Story.image(
-    data: StoryData(
-      id: '7',
-      authorId: 'wendy',
-      author: '@wendy',
-      contentUrl: 'https://picsum.photos/500/800?random=7',
-      imageUrl: 'https://i.pravatar.cc/150?u=@wendy_avatar',
-      nft: random.nextBool(),
-      gradientIndex: random.nextInt(storyBorderGradients.length),
-    ),
-  ),
-  Story.video(
-    data: StoryData(
-      id: '8',
-      authorId: 'wendy',
-      author: '@wendy',
-      contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_2.mp4',
-      imageUrl: 'https://i.pravatar.cc/150?u=@wendy_avatar',
-      nft: random.nextBool(),
-      gradientIndex: random.nextInt(storyBorderGradients.length),
-    ),
-    muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
-  ),
-  Story.image(
-    data: StoryData(
-      id: '9',
-      authorId: 'wendy',
-      author: '@wendy',
-      contentUrl: 'https://picsum.photos/500/800?random=9',
-      imageUrl: 'https://i.pravatar.cc/150?u=@wendy_avatar',
-      nft: random.nextBool(),
-      gradientIndex: random.nextInt(storyBorderGradients.length),
-    ),
-  ),
-];
+// final List<Story> stories = [
+//   const Story.image(
+//     data: StoryData(
+//       id: '1',
+//       authorId: 'john',
+//       author: 'you',
+//       contentUrl: 'https://picsum.photos/500/800?random=1',
+//       imageUrl: 'https://i.pravatar.cc/150?u=@john_avatar',
+//       me: true,
+//       nft: true,
+//     ),
+//   ),
+//   Story.image(
+//     data: StoryData(
+//       id: '2',
+//       authorId: 'mysterox',
+//       author: '@mysterox',
+//       contentUrl: 'https://picsum.photos/500/800?random=2',
+//       imageUrl: 'https://i.pravatar.cc/150?u=@mysterox_avatar',
+//       nft: random.nextBool(),
+//       gradientIndex: random.nextInt(storyBorderGradients.length),
+//     ),
+//   ),
+//   Story.image(
+//     data: StoryData(
+//       id: '3',
+//       authorId: 'isaiah',
+//       author: '@isaiah',
+//       contentUrl: 'https://picsum.photos/500/800?random=3',
+//       imageUrl: 'https://i.pravatar.cc/150?u=@isaiah_avatar',
+//       nft: random.nextBool(),
+//       gradientIndex: random.nextInt(storyBorderGradients.length),
+//     ),
+//   ),
+//   Story.video(
+//     data: StoryData(
+//       id: '4',
+//       authorId: 'isaiah',
+//       author: '@isaiah',
+//       contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_1.mp4',
+//       imageUrl: 'https://i.pravatar.cc/150?u=@isaiah_avatar',
+//       nft: random.nextBool(),
+//       gradientIndex: random.nextInt(storyBorderGradients.length),
+//     ),
+//     muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
+//   ),
+//   Story.video(
+//     data: StoryData(
+//       id: '5',
+//       authorId: 'jamison',
+//       author: '@jamison',
+//       contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_2.mp4',
+//       imageUrl: 'https://i.pravatar.cc/150?u=@jamison_avatar',
+//       nft: random.nextBool(),
+//       gradientIndex: random.nextInt(storyBorderGradients.length),
+//     ),
+//     muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
+//   ),
+//   Story.image(
+//     data: StoryData(
+//       id: '6',
+//       authorId: 'jamison',
+//       author: '@jamison',
+//       contentUrl: 'https://picsum.photos/500/800?random=6',
+//       imageUrl: 'https://i.pravatar.cc/150?u=@jamison_avatar',
+//       nft: random.nextBool(),
+//       gradientIndex: random.nextInt(storyBorderGradients.length),
+//     ),
+//   ),
+//   Story.image(
+//     data: StoryData(
+//       id: '7',
+//       authorId: 'wendy',
+//       author: '@wendy',
+//       contentUrl: 'https://picsum.photos/500/800?random=7',
+//       imageUrl: 'https://i.pravatar.cc/150?u=@wendy_avatar',
+//       nft: random.nextBool(),
+//       gradientIndex: random.nextInt(storyBorderGradients.length),
+//     ),
+//   ),
+//   Story.video(
+//     data: StoryData(
+//       id: '8',
+//       authorId: 'wendy',
+//       author: '@wendy',
+//       contentUrl: 'https://www.exit109.com/~dnn/clips/RW20seconds_2.mp4',
+//       imageUrl: 'https://i.pravatar.cc/150?u=@wendy_avatar',
+//       nft: random.nextBool(),
+//       gradientIndex: random.nextInt(storyBorderGradients.length),
+//     ),
+//     muteState: random.nextBool() ? MuteState.muted : MuteState.unmuted,
+//   ),
+//   Story.image(
+//     data: StoryData(
+//       id: '9',
+//       authorId: 'wendy',
+//       author: '@wendy',
+//       contentUrl: 'https://picsum.photos/500/800?random=9',
+//       imageUrl: 'https://i.pravatar.cc/150?u=@wendy_avatar',
+//       nft: random.nextBool(),
+//       gradientIndex: random.nextInt(storyBorderGradients.length),
+//     ),
+//   ),
+// ];
 
 final storyBorderGradients = [
   const SweepGradient(

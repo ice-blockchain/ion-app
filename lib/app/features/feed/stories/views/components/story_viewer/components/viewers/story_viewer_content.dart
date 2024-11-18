@@ -19,9 +19,9 @@ class StoryViewerContent extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
       child: story.maybeWhen(
-        image: (data) => ImageStoryViewer(path: data.contentUrl),
+        image: (data) => ImageStoryViewer(path: data.mediaUrl),
         video: (data, muteState) => VideoStoryViewer(
-          videoPath: data.contentUrl,
+          videoPath: data.mediaUrl,
           muteState: muteState,
         ),
         orElse: () => const CenteredLoadingIndicator(),
