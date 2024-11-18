@@ -8,11 +8,10 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
-import 'package:ion/app/features/feed/create_post/providers/reply_data_notifier.dart';
+import 'package:ion/app/features/feed/create_post/views/components/post_submit_button/post_submit_button.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/collaple_button.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/current_user_avatar.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/post_submit_button.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/quoted_entity.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
@@ -30,18 +29,20 @@ class CreatePostModal extends HookConsumerWidget {
     super.key,
     this.parentEvent,
     this.quotedEvent,
+    this.content,
   });
 
   final EventReference? parentEvent;
 
   final EventReference? quotedEvent;
 
+  final String? content;
+
   final bool showCollapseButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textEditorController =
-        useQuillController(defaultText: ref.watch(replyDataNotifierProvider));
+    final textEditorController = useQuillController(defaultText: content);
 
     final createOption = parentEvent != null
         ? CreatePostOption.reply
@@ -61,7 +62,9 @@ class CreatePostModal extends HookConsumerWidget {
             NavigationAppBar.modal(
               title: Text(createOption.getTitle(context)),
               onBackPress: onBack,
-              actions: [if (showCollapseButton) const CollapseButton()],
+              actions: [
+                if (showCollapseButton) CollapseButton(textEditorController: textEditorController),
+              ],
             ),
             Expanded(
               child: SingleChildScrollView(

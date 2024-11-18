@@ -34,7 +34,7 @@ class ReplyAuthorHeader extends ConsumerWidget {
           profilePicture: currentUserMetadata.data.picture,
         ),
         SizedBox(height: 6.0.s),
-        ReplyingTo(name: prefixUsername(username: userMetadata.data.name, context: context)),
+        ReplyingTo(name: userMetadata.data.name),
       ],
     );
   }

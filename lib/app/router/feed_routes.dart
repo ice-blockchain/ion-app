@@ -125,11 +125,16 @@ class SwitchAccountRoute extends BaseRouteData {
 }
 
 class CreatePostRoute extends BaseRouteData {
-  CreatePostRoute({this.parentEvent, this.quotedEvent, this.showCollapseButton = false})
-      : super(
+  CreatePostRoute({
+    this.parentEvent,
+    this.quotedEvent,
+    this.content,
+    this.showCollapseButton = false,
+  }) : super(
           child: CreatePostModal(
             parentEvent: parentEvent != null ? EventReference.fromString(parentEvent) : null,
             quotedEvent: quotedEvent != null ? EventReference.fromString(quotedEvent) : null,
+            content: content,
             showCollapseButton: showCollapseButton,
           ),
           type: IceRouteType.bottomSheet,
@@ -138,6 +143,8 @@ class CreatePostRoute extends BaseRouteData {
   final String? parentEvent;
 
   final String? quotedEvent;
+
+  final String? content;
 
   final bool showCollapseButton;
 }
