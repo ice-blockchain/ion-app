@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -28,18 +29,22 @@ class SelectableOptionsGroup<T extends SelectableOption> extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final separatorPadding = EdgeInsets.symmetric(vertical: 12.0.s);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title, style: context.theme.appTextThemes.body),
-        SizedBox(height: 8.0.s),
+        SizedBox(height: 16.0.s),
         SeparatedColumn(
           mainAxisSize: MainAxisSize.min,
-          separator: const HorizontalSeparator(),
+          separator: Padding(
+            padding: EdgeInsets.symmetric(vertical: 12.0.s),
+            child: const HorizontalSeparator(),
+          ),
           children: options
               .map(
-                (e) => _OptionTile(
+                (e) => _OptionItem(
                   icon: e.getIcon(context),
                   title: e.getLabel(context),
                   onTap: () => onSelected(e),
@@ -49,14 +54,17 @@ class SelectableOptionsGroup<T extends SelectableOption> extends StatelessWidget
               )
               .toList(),
         ),
-        if (addSeparatorAfterLastItem) const HorizontalSeparator(),
+        if (addSeparatorAfterLastItem) Padding(
+          padding: separatorPadding.copyWith(bottom: 0),
+          child: const HorizontalSeparator(),
+        ),
       ],
     );
   }
 }
 
-class _OptionTile extends StatelessWidget {
-  const _OptionTile({
+class _OptionItem extends StatelessWidget {
+  const _OptionItem({
     required this.title,
     required this.isSelected,
     required this.onTap,
@@ -72,25 +80,29 @@ class _OptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      onTap: enabled ? onTap : null,
-      leading: Button.icon(
+    return SizedBox(
+      height: 36.0.s,
+      child: ListItem(
+        contentPadding: EdgeInsets.zero,
+        onTap: enabled ? onTap : null,
         backgroundColor: context.theme.appColors.secondaryBackground,
-        borderColor: context.theme.appColors.onTerararyFill,
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0.s),
+        leading: Button.icon(
+          backgroundColor: context.theme.appColors.secondaryBackground,
+          borderColor: context.theme.appColors.onTerararyFill,
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.0.s),
+          ),
+          size: 36.0.s,
+          onPressed: enabled ? onTap : () {},
+          icon: icon,
         ),
-        size: 36.0.s,
-        onPressed: enabled ? onTap : () {},
-        icon: icon,
+        title: Text(title, style: context.theme.appTextThemes.body),
+        trailing: isSelected
+            ? Assets.svg.iconBlockCheckboxOn.icon(
+                color: enabled ? null : context.theme.appColors.sheetLine,
+              )
+            : Assets.svg.iconBlockCheckboxOff.icon(),
       ),
-      title: Text(title, style: context.theme.appTextThemes.body),
-      trailing: isSelected
-          ? Assets.svg.iconBlockCheckboxOn.icon(
-              color: enabled ? null : context.theme.appColors.sheetLine,
-            )
-          : Assets.svg.iconBlockCheckboxOff.icon(),
     );
   }
 }
