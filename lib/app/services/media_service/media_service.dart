@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -161,6 +163,29 @@ class MediaService {
     }
 
     return null;
+  }
+
+  Future<({Uint8List imageBytes, Offset position, Size size})?> captureWidgetAsImage(
+    GlobalKey containerKey,
+  ) async {
+    try {
+      final renderObject = containerKey.currentContext?.findRenderObject();
+      if (renderObject is RenderRepaintBoundary) {
+        final image = renderObject.toImageSync(pixelRatio: 3);
+        final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+        if (byteData != null) {
+          final imageBytes = byteData.buffer.asUint8List();
+          final box = renderObject as RenderBox;
+          final position = box.localToGlobal(Offset.zero);
+          final size = box.size;
+          return (imageBytes: imageBytes, position: position, size: size);
+        }
+      }
+      return null;
+    } catch (e, st) {
+      Logger.log('Error capturing widget as image:', error: e, stackTrace: st);
+      return null;
+    }
   }
 }
 
