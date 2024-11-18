@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +12,7 @@ import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/recent_emoji_reactions_provider.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessageItemWrapper extends HookWidget {
@@ -58,15 +58,9 @@ class MessageItemWrapper extends HookWidget {
               );
             }
           }
-        } else {
-          if (kDebugMode) {
-            print('Error: RenderObject is not a RepaintBoundary');
-          }
         }
-      } catch (e) {
-        if (kDebugMode) {
-          print('Error capturing widget as image: $e');
-        }
+      } catch (e, st) {
+        Logger.log('Error capturing widget as image:', error: e, stackTrace: st);
       }
     }
 
@@ -138,15 +132,11 @@ class ReactDialog extends StatelessWidget {
         contextMenuHeight -
         MediaQuery.paddingOf(context).bottom;
 
-    print('overflowBottomSize: $overflowBottomSize');
-
     final topY = isHugeComponent
         ? null
         : overflowBottomSize < 0
             ? null
             : position.dy - emojiSectionHeight;
-
-    print('topY: $topY');
 
     return Stack(
       children: [
