@@ -120,6 +120,7 @@ class ReactDialog extends StatelessWidget {
         MediaQuery.paddingOf(context).top;
 
     final contentHeight = min(size.height, availableHeight);
+    final isHugeComponent = size.height > availableHeight;
 
     final bottomdY = position.dy + size.height;
 
@@ -131,17 +132,17 @@ class ReactDialog extends StatelessWidget {
 
     final overflowBottomSize = MediaQuery.sizeOf(context).height -
         // bottomdY -
-        (position.dy > 0 ? 0 : bottomdY) -
+        (position.dy > 0 ? (isHugeComponent ? 0 : bottomdY) : bottomdY) -
         contextMenuHeight -
         MediaQuery.paddingOf(context).bottom;
 
     print('overflowBottomSize: $overflowBottomSize');
 
-    final topY = size.height > availableHeight
+    final topY = isHugeComponent
         ? null
         : overflowBottomSize < 0
             ? null
-            : position.dy - emojiSectionHeight - contextMenuHeight;
+            : position.dy - emojiSectionHeight;
 
     print('topY: $topY');
 
@@ -161,7 +162,7 @@ class ReactDialog extends StatelessWidget {
           // top: overflowBottomSize < 0 ? null : position.dy - emojiSectionHeight
           top: topY,
           bottom: overflowBottomSize < 0
-              ? -1 * overflowBottomSize
+              ? MediaQuery.paddingOf(context).bottom
               : MediaQuery.paddingOf(context).bottom,
           // top: position.dy,
           child: Column(
