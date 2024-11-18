@@ -33,9 +33,14 @@ class TwoFAPage extends HookConsumerWidget {
               final currentUser = ref.watch(currentUsernameNotifierProvider);
               final ionIdentity = await ref.read(ionIdentityProvider.future);
 
-              ionIdentity(username: currentUser!)
-                  .auth
-                  .requestTwoFACode(twoFAType: TwoFAType.email(emailController.text));
+              ionIdentity(username: currentUser!).auth.requestTwoFACode(
+                    twoFAType: TwoFAType.email(emailController.text),
+                    onVerifyIdentity: (
+                            {required onBiometricsFlow,
+                            required onPasskeyFlow,
+                            required onPasswordFlow}) =>
+                        onPasskeyFlow(),
+                  );
             },
             child: const Text('Init TwoFA'),
           ),

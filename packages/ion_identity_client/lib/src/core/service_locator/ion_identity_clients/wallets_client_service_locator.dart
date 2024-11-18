@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_user_id_service.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/user_action_signer_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
@@ -19,6 +20,8 @@ import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_req
 import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/get_wallet_transfer_requests_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/data_sources/get_wallets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/data_sources/wallet_views_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/wallet_views_service.dart';
 
 class WalletsClientServiceLocator {
   factory WalletsClientServiceLocator() {
@@ -53,6 +56,13 @@ class WalletsClientServiceLocator {
         username: username,
         config: config,
         identitySigner: identitySigner,
+      ),
+      walletViewsService: walletViews(
+        username: username,
+        config: config,
+      ),
+      extractUserIdService: ExtractUserIdService(
+        tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       ),
     );
   }
@@ -148,6 +158,19 @@ class WalletsClientServiceLocator {
       userActionSigner: UserActionSignerServiceLocator().userActionSigner(
         config: config,
         identitySigner: identitySigner,
+      ),
+    );
+  }
+
+  WalletViewsService walletViews({
+    required String username,
+    required IONIdentityConfig config,
+  }) {
+    return WalletViewsService(
+      username,
+      WalletViewsDataSource(
+        IONIdentityServiceLocator.networkClient(config: config),
+        IONIdentityServiceLocator.tokenStorage(),
       ),
     );
   }
