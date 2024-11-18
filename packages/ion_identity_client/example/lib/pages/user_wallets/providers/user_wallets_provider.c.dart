@@ -5,7 +5,7 @@ import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_wallets_provider.g.dart';
+part 'user_wallets_provider.c.g.dart';
 
 @riverpod
 Future<List<Wallet>> userWallets(Ref ref, String username) async {
