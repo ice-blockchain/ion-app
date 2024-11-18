@@ -5,6 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
+import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_seperator.dart';
+import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -112,7 +115,7 @@ class ReactDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final emojiSectionHeight = 68.0.s;
-    final contextMenuHeight = 60.0.s;
+    final contextMenuHeight = 200.0.s;
     final availableHeight = MediaQuery.sizeOf(context).height -
         emojiSectionHeight -
         contextMenuHeight -
@@ -176,11 +179,7 @@ class ReactDialog extends StatelessWidget {
                 imageBytes,
               ),
               //mock context menu
-              Container(
-                height: 60.0.s,
-                width: size.width,
-                color: Colors.red,
-              ),
+              const ReactionOverlayMenu(),
             ],
           ),
         ),
@@ -290,6 +289,67 @@ class EmojiBar extends StatelessWidget {
             child: Assets.svg.iconBubleCorner.iconWithDimensions(width: 20.0.s, height: 14.0.s),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ReactionOverlayMenu extends StatelessWidget {
+  const ReactionOverlayMenu({super.key});
+
+  static double get iconSize => 20.0.s;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 4.0.s),
+      child: OverlayMenuContainer(
+        child: IntrinsicWidth(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.0.s),
+            child: Column(
+              children: [
+                OverlayMenuItem(
+                  label: context.i18n.button_share,
+                  icon: Assets.svg.iconButtonShare.icon(
+                    size: iconSize,
+                    color: context.theme.appColors.quaternaryText,
+                  ),
+                  onPressed: () {},
+                ),
+                const OverlayMenuItemSeperator(),
+                OverlayMenuItem(
+                  label: context.i18n.button_mute,
+                  icon: Assets.svg.iconChannelMute
+                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                  onPressed: () {},
+                ),
+                const OverlayMenuItemSeperator(),
+                OverlayMenuItem(
+                  label: context.i18n.button_block,
+                  icon: Assets.svg.iconPhofileBlockuser
+                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                  onPressed: () {},
+                ),
+                const OverlayMenuItemSeperator(),
+                OverlayMenuItem(
+                  label: context.i18n.button_report,
+                  icon: Assets.svg.iconBlockClose3
+                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                  onPressed: () {},
+                ),
+                const OverlayMenuItemSeperator(),
+                OverlayMenuItem(
+                  label: context.i18n.button_delete,
+                  labelColor: context.theme.appColors.attentionRed,
+                  icon: Assets.svg.iconBlockDelete
+                      .icon(size: iconSize, color: context.theme.appColors.attentionRed),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
