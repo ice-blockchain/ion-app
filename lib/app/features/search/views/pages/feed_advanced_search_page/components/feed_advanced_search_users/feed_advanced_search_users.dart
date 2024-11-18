@@ -25,7 +25,7 @@ class FeedAdvancedSearchUsers extends HookConsumerWidget {
       data: (pubKeys) {
         if (pubKeys == null || pubKeys.isEmpty) {
           return NothingIsFound(
-            title: context.i18n.feed_nothing_found,
+            title: context.i18n.search_nothing_found,
           );
         }
 

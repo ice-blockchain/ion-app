@@ -6,6 +6,7 @@ class DappsRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<DAppsRoute>(path: 'dapps'),
     TypedGoRoute<DAppsListRoute>(path: 'apps-list'),
+    TypedGoRoute<DAppsSimpleSearchRoute>(path: 'dapps-simple-search'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<DAppDetailsRoute>(path: 'dapps-details'),
@@ -31,4 +32,14 @@ class DAppDetailsRoute extends BaseRouteData {
           type: IceRouteType.bottomSheet,
         );
   final int dappId;
+}
+
+class DAppsSimpleSearchRoute extends BaseRouteData {
+  DAppsSimpleSearchRoute({this.query = ''})
+      : super(
+          child: DAppsSimpleSearchPage(query: query),
+          type: IceRouteType.fade,
+        );
+
+  final String query;
 }

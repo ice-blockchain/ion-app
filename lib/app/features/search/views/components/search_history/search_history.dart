@@ -3,25 +3,24 @@
 import 'package:flutter/widgets.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/search/views/components/feed_search_history/feed_search_history_user_list_item.dart';
-import 'package:ion/app/features/search/views/components/feed_search_history/search_history_query_list_item.dart';
 import 'package:ion/app/features/search/views/components/search_history/search_history_header.dart';
+import 'package:ion/app/features/search/views/components/search_history/search_history_query_list_item.dart';
 
 class SearchHistory extends StatelessWidget {
   const SearchHistory({
-    required this.pubKeys,
+    required this.itemCount,
+    required this.itemBuilder,
     required this.queries,
     required this.onSelectQuery,
     required this.onClearHistory,
     super.key,
   });
 
-  final List<String> pubKeys;
-
+  final int itemCount;
   final List<String> queries;
-
   final void Function(String query) onSelectQuery;
   final VoidCallback onClearHistory;
+  final NullableIndexedWidgetBuilder itemBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class SearchHistory extends StatelessWidget {
           SearchHistoryHeader(
             onClearHistory: onClearHistory,
           ),
-          if (pubKeys.isNotEmpty)
+          if (itemCount != 0)
             Padding(
               padding: EdgeInsets.only(top: 16.0.s),
               child: SizedBox(
@@ -40,10 +39,9 @@ class SearchHistory extends StatelessWidget {
                 child: ListView.separated(
                   padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
                   scrollDirection: Axis.horizontal,
-                  itemCount: pubKeys.length,
+                  itemCount: itemCount,
                   separatorBuilder: (context, index) => SizedBox(width: 12.0.s),
-                  itemBuilder: (context, index) =>
-                      FeedSearchHistoryUserListItem(pubKey: pubKeys[index]),
+                  itemBuilder: itemBuilder,
                 ),
               ),
             ),
@@ -54,7 +52,7 @@ class SearchHistory extends StatelessWidget {
                 itemCount: queries.length,
                 itemBuilder: (context, index) {
                   final query = queries[index];
-                  return FeedSearchHistoryQueryListItem(
+                  return SearchHistoryQueryListItem(
                     query: queries[index],
                     onTap: () {
                       onSelectQuery(query);

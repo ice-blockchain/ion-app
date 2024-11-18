@@ -8,6 +8,7 @@ import 'package:timeago_flutter/timeago_flutter.dart';
 
 part './variants/list_item_text_with_icon.dart';
 part './variants/list_item_user.dart';
+part './variants/list_item_dapp.dart';
 
 class ListItem extends StatelessWidget {
   ListItem({
@@ -58,6 +59,26 @@ class ListItem extends StatelessWidget {
     DateTime? timeago,
     double? avatarSize,
   }) = _ListItemUser;
+
+  factory ListItem.dapp({
+    required Widget title,
+    required Widget subtitle,
+    Key? key,
+    Widget? leading,
+    Widget? trailing,
+    BoxBorder? border,
+    BorderRadius? borderRadius,
+    EdgeInsetsGeometry? contentPadding,
+    EdgeInsetsGeometry? leadingPadding,
+    EdgeInsetsGeometry? trailingPadding,
+    BoxConstraints? constraints,
+    Color? backgroundColor,
+    VoidCallback? onTap,
+    String? profilePicture,
+    Widget? profilePictureWidget,
+    bool verifiedBadge,
+    bool isSelected,
+  }) = _ListItemDApp;
 
   factory ListItem.text({
     required Widget title,

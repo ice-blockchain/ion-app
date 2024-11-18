@@ -34,6 +34,9 @@ class UserPreferencesService {
       return _localStorage.setString(userKey, value as String);
     } else if (T == List<String>) {
       return _localStorage.setStringList(userKey, value as List<String>);
+    } else if (T == List<int>) {
+      final stringList = (value as List<int>).map((e) => e.toString()).toList();
+      return _localStorage.setStringList(userKey, stringList);
     } else {
       throw ArgumentError('Unsupported type: $T');
     }
@@ -49,6 +52,12 @@ class UserPreferencesService {
       return _localStorage.getString(userKey) as T?;
     } else if (T == List<String>) {
       return _localStorage.getStringList(userKey) as T?;
+    } else if (T == List<int>) {
+      final stringList = _localStorage.getStringList(userKey);
+      if (stringList != null) {
+        return stringList.map(int.parse).toList() as T?;
+      }
+      return null;
     } else {
       throw ArgumentError('Unsupported type: $T');
     }

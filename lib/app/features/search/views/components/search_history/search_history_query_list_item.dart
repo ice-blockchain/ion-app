@@ -6,8 +6,8 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class FeedSearchHistoryQueryListItem extends ConsumerWidget {
-  const FeedSearchHistoryQueryListItem({required this.query, required this.onTap, super.key});
+class SearchHistoryQueryListItem extends ConsumerWidget {
+  const SearchHistoryQueryListItem({required this.query, required this.onTap, super.key});
 
   final String query;
 
