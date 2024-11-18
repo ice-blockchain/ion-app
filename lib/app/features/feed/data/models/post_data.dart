@@ -79,7 +79,8 @@ class PostData with _$PostData implements EventSerializable {
   }
 
   factory PostData.fromRawContent(String content) {
-    final parsedContent = TextParser(matchers: [const UrlMatcher()]).parse(content);
+    final parsedContent =
+        TextParser(matchers: [const UrlMatcher(), const HashtagMatcher()]).parse(content);
     final hashtags = parsedContent
         .where((match) => match.matcherType is HashtagMatcher)
         .map((match) => RelatedHashtag(value: match.text))

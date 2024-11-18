@@ -6,10 +6,10 @@ import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_hashtag.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.dart';
 import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:ion/app/services/text_parser/matchers/hashtag_matcher.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,9 +25,16 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     required String content,
     EventReference? parentEvent,
     EventReference? quotedEvent,
-    List<MediaFile>? media,
+    List<String>? mediaIds,
   }) async {
     state = const AsyncValue.loading();
+
+    if (mediaIds != null) {
+      final assetEntities =
+          await Future.wait(mediaIds.map((id) => ref.read(assetEntityProvider(id).future)));
+
+      print(assetEntities);
+    }
 
     state = await AsyncValue.guard(() async {
       //TODO:upload media and add to event's mediaAttachment

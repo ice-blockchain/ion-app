@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/content_notification/data/models/content_n
 import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
@@ -59,10 +60,22 @@ class PostSubmitButton extends HookConsumerWidget {
       loading: isSubmitLoading,
       enabled: isSubmitButtonEnabled && !isSubmitLoading,
       onPressed: () async {
+        final imageIds = textEditorController.document.toDelta().operations.fold(<String>[],
+            (result, operation) {
+          final data = operation.data;
+          if (operation.isInsert &&
+              data is Map<String, dynamic> &&
+              data[textEditorSingleImageKey] is String) {
+            return [...result, data[textEditorSingleImageKey] as String];
+          }
+          return result;
+        });
+
         await ref.read(createPostNotifierProvider.notifier).create(
               content: textEditorController.document.toPlainText(),
               parentEvent: parentEvent,
               quotedEvent: quotedEvent,
+              mediaIds: imageIds,
             );
 
         if (!ref.read(createPostNotifierProvider).hasError) {
