@@ -104,7 +104,7 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
           bot: bot,
         ).toJson(),
       ),
-      tags: media.values.map((attachment) => attachment.toJson()).toList(),
+      tags: media.values.map((attachment) => attachment.toTag()).toList(),
     );
   }
 }

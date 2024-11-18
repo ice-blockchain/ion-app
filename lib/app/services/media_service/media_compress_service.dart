@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:cross_file/cross_file.dart';
 import 'package:ffmpeg_helper/ffmpeg_helper.dart';
@@ -100,7 +99,8 @@ class MediaCompressionService {
       final compressedImage = await compressImage(
         MediaFile(path: file!.path),
         quality: 100,
-        size: const Size(200, 200),
+        width: 200,
+        height: 200,
       );
 
       return compressedImage;
@@ -142,16 +142,27 @@ class MediaCompressionService {
   // In case of fallback we need to use avif instead of jpg
   Future<MediaFile> compressImage(
     MediaFile file, {
-    required Size size,
+    int? width,
+    int? height,
     int quality = 80,
     bool keepAspectRatio = true,
   }) async {
     try {
       final resizedBytes = await compute<ResizeImageParams, Uint8List>(
         (params) async {
-          return resizeImage(params.file, params.size, keepAspectRatio: params.keepAspectRatio);
+          return resizeImage(
+            params.file,
+            width: params.width,
+            height: params.height,
+            keepAspectRatio: params.keepAspectRatio,
+          );
         },
-        ResizeImageParams(file: XFile(file.path), size: size, keepAspectRatio: keepAspectRatio),
+        ResizeImageParams(
+          file: XFile(file.path),
+          width: width,
+          height: height,
+          keepAspectRatio: keepAspectRatio,
+        ),
       );
 
       if (resizedBytes.isEmpty) {
@@ -178,8 +189,8 @@ class MediaCompressionService {
       return MediaFile(
         path: savedFilePath,
         mimeType: output.contentType,
-        width: size.width.toInt(),
-        height: size.height.toInt(),
+        width: width,
+        height: height,
         name: fileName,
         size: output.sizeInBytes,
       );
@@ -189,7 +200,12 @@ class MediaCompressionService {
     }
   }
 
-  Future<Uint8List> resizeImage(XFile file, Size size, {bool keepAspectRatio = true}) async {
+  Future<Uint8List> resizeImage(
+    XFile file, {
+    int? width,
+    int? height,
+    bool keepAspectRatio = true,
+  }) async {
     try {
       final originalBytes = await file.readAsBytes();
       final decodedImage = img.decodeImage(originalBytes);
@@ -200,8 +216,8 @@ class MediaCompressionService {
 
       final resizedImage = img.copyResize(
         decodedImage,
-        width: size.width.toInt(),
-        height: size.height.toInt(),
+        width: width,
+        height: height,
         maintainAspect: keepAspectRatio,
       );
 
@@ -234,10 +250,12 @@ MediaCompressionService mediaCompressService(Ref ref) => MediaCompressionService
 class ResizeImageParams {
   ResizeImageParams({
     required this.file,
-    required this.size,
     required this.keepAspectRatio,
+    this.width,
+    this.height,
   });
   final XFile file;
-  final Size size;
+  final int? height;
+  final int? width;
   final bool keepAspectRatio;
 }

@@ -87,5 +87,13 @@ class UnsupportedRepostKindException extends IONException {
 
 class EventNotFoundException extends IONException {
   EventNotFoundException({required String eventId, required String pubkey})
-      : super(10015, 'Event with id $eventId not found for pubkey $pubkey');
+      : super(10016, 'Event with id $eventId not found for pubkey $pubkey');
+}
+
+class AssetEntityNotFoundException extends IONException {
+  AssetEntityNotFoundException() : super(10017, 'Asset entity not found');
+}
+
+class AssetEntityFileNotFoundException extends IONException {
+  AssetEntityFileNotFoundException() : super(10018, 'Asset entity file not found');
 }

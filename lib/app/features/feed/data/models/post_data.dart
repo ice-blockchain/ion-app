@@ -103,6 +103,7 @@ class PostData with _$PostData implements EventSerializable {
         if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
         if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
         if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
+        if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
       ],
     );
   }

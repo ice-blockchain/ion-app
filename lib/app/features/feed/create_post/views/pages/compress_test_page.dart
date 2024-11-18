@@ -155,7 +155,8 @@ class ImageCompressTab extends HookConsumerWidget {
         final pickedXFile = XFile(pickedFile.files.first.path!);
         final compressedFile = await ref.read(mediaCompressServiceProvider).compressImage(
               MediaFile(path: pickedXFile.path),
-              size: const Size(1280, 720),
+              width: 1280,
+              height: 720,
             );
 
         // Display the compressed image size in MB

@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'file_metadata.freezed.dart';
 
 /// https://github.com/nostr-protocol/nips/blob/master/94.md
 @freezed
-class FileMetadata with _$FileMetadata {
+class FileMetadata with _$FileMetadata implements EventSerializable {
   const factory FileMetadata({
     required String url,
     required String mimeType,
@@ -51,7 +52,8 @@ class FileMetadata with _$FileMetadata {
 
   const FileMetadata._();
 
-  EventMessage toEventMessage(KeyStore keyStore) {
+  @override
+  EventMessage toEventMessage(EventSigner keyStore) {
     final tags = [
       ['url', url],
       ['m', mimeType],

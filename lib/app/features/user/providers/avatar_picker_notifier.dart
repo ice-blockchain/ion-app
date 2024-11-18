@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/services/media_service/media_compress_service.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
@@ -40,7 +39,8 @@ class AvatarPickerNotifier extends _$AvatarPickerNotifier {
       state = AvatarPickerState.picked(file: croppedImage);
       final compressedImage = await compressService.compressImage(
         croppedImage,
-        size: const Size.square(720),
+        width: 720,
+        height: 720,
         quality: 70,
       );
       state = AvatarPickerState.compressed(file: compressedImage);
