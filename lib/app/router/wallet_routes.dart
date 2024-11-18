@@ -33,6 +33,7 @@ class WalletRoutes {
         TypedGoRoute<ManageCoinsRoute>(path: 'manage-coins'),
       ],
     ),
+    ...DappsRoutes.routes,
   ];
 
   static const nftSendRoutes = <TypedRoute<RouteData>>[

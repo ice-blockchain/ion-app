@@ -12,6 +12,7 @@ import 'package:ion/app/features/wallet/views/pages/wallet_page/components/tabs/
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header_tab.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class WalletTabsHeader extends ConsumerWidget {
@@ -38,7 +39,7 @@ class WalletTabsHeader extends ConsumerWidget {
         children: [
           WalletTabsHeaderTab(
             isActive: activeTab == WalletTabType.coins,
-            tabType: WalletTabType.coins,
+            title: WalletTabType.coins.getTitle(context),
             onTap: () => onTabSwitch(WalletTabType.coins),
           ),
           SizedBox(
@@ -46,8 +47,13 @@ class WalletTabsHeader extends ConsumerWidget {
           ),
           WalletTabsHeaderTab(
             isActive: activeTab == WalletTabType.nfts,
-            tabType: WalletTabType.nfts,
+            title: WalletTabType.nfts.getTitle(context),
             onTap: () => onTabSwitch(WalletTabType.nfts),
+          ),
+          WalletTabsHeaderTab(
+            isActive: false,
+            title: context.i18n.core_dapps,
+            onTap: () => DAppsRoute().push<void>(context),
           ),
           const Spacer(),
           const WalletTabsHeaderHideAction(),

@@ -4,6 +4,7 @@ part of 'app_routes.dart';
 
 class ProfileRoutes {
   static const routes = <TypedRoute<RouteData>>[
+    TypedGoRoute<ProfileRoute>(path: 'profile/:pubkey'),
     TypedGoRoute<ProfileEditRoute>(path: 'profile_edit'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [

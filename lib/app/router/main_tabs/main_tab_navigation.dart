@@ -79,12 +79,7 @@ class MainTabNavigation extends HookConsumerWidget {
   }
 
   Widget _getTabButton(TabItem tabItem, bool isSelected) {
-    return tabItem == TabItem.main
-        ? const MainTabButton()
-        : TabIcon(
-            icon: tabItem.icon,
-            isSelected: isSelected,
-          );
+    return tabItem.getIcon(isSelected: isSelected);
   }
 
   void _onTabPress(

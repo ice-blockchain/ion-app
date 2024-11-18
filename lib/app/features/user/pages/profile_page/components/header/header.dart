@@ -16,11 +16,13 @@ class Header extends ConsumerWidget {
   const Header({
     required this.pubkey,
     required this.opacity,
+    required this.showBackButton,
     super.key,
   });
 
   final String pubkey;
   final double opacity;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,13 +34,14 @@ class Header extends ConsumerWidget {
           height: HeaderAction.buttonSize,
           child: Row(
             children: [
-              HeaderAction(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                assetName: Assets.svg.iconProfileBack,
-                opacity: opacity,
-              ),
+              if (showBackButton)
+                HeaderAction(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  assetName: Assets.svg.iconProfileBack,
+                  opacity: opacity,
+                ),
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0.s),
