@@ -6,6 +6,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/dapps/model/dapp_data.dart';
+import 'package:ion/app/features/search/providers/dapps_search_history_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class DAppsSearchResultsListItem extends ConsumerWidget {
@@ -22,11 +23,13 @@ class DAppsSearchResultsListItem extends ConsumerWidget {
       child: ScreenSideOffset.small(
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => DAppDetailsRoute(dappId: app.identifier).push<void>(context),
+          onTap: () {
+            ref.read(dAppsSearchHistoryProvider.notifier).addDAppIdToTheHistory(app.identifier);
+            DAppDetailsRoute(dappId: app.identifier).push<void>(context);
+          },
           child: ListItem.dapp(
             title: Text(app.title),
             subtitle: Text(app.description ?? ''),
-            // TODO(@ice-endymain): Why app image from asset, not from url even for mocks?
             profilePictureWidget: Image.asset(
               app.iconImage,
               width: 48.0.s,

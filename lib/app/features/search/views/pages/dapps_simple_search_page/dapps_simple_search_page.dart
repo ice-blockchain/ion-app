@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/search/providers/dapps_search_history_provider.dart';
 import 'package:ion/app/features/search/providers/dapps_search_provider.dart';
-import 'package:ion/app/features/search/providers/feed_search_history_provider.dart'
-    show feedSearchHistoryProvider;
+import 'package:ion/app/features/search/views/components/dapps_search_history/dapps_search_history_list_item.dart';
 import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/features/search/views/components/search_history/search_history.dart';
 import 'package:ion/app/features/search/views/components/search_history_empty/search_history_empty.dart';
@@ -22,7 +22,7 @@ class DAppsSimpleSearchPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final history = ref.watch(feedSearchHistoryProvider);
+    final history = ref.watch(dAppsSearchHistoryProvider);
     final dAppsSearchResults = ref.watch(dAppsSearchProvider(query));
 
     return Scaffold(
@@ -32,34 +32,42 @@ class DAppsSimpleSearchPage extends ConsumerWidget {
             SearchNavigation(
               query: query,
               loading: dAppsSearchResults.isLoading,
-              onSubmitted: (String query) {
-                debugPrint('SearchNavigation query: $query');
-              },
               onTextChanged: (String text) {
                 DAppsSimpleSearchRoute(query: text).replace(context);
               },
             ),
             dAppsSearchResults.maybeWhen(
-              data: (apps) => apps == null
-                  ? history.pubKeys.isEmpty && history.queries.isEmpty
-                      ? SearchHistoryEmpty(
-                          title: context.i18n.dapps_search_empty,
-                        )
-                      : SearchHistory(
-                          pubKeys: history.pubKeys,
-                          queries: history.queries,
-                          onSelectQuery: (String query) {
-                            FeedSimpleSearchRoute(query: query).replace(context);
-                          },
-                          onClearHistory: () {
-                            ref.read(feedSearchHistoryProvider.notifier).clear();
-                          },
-                        )
-                  : apps.isEmpty
-                      ? NothingIsFound(
-                          title: context.i18n.search_nothing_found,
-                        )
-                      : DAppsSearchResults(apps: apps),
+              data: (apps) {
+                /// Since for dApps there is no additional search page,
+                /// the more appropriate way to save query history is to write is on dApps data load.
+                if (query.isNotEmpty) {
+                  ref.read(dAppsSearchHistoryProvider.notifier).addQueryToTheHistory(query);
+                }
+
+                return apps == null
+                    ? history.ids.isEmpty && history.queries.isEmpty
+                        ? SearchHistoryEmpty(
+                            title: context.i18n.dapps_search_empty,
+                          )
+                        : SearchHistory(
+                            itemCount: history.ids.length,
+                            queries: history.queries,
+                            onSelectQuery: (String query) {
+                              DAppsSimpleSearchRoute(query: query).replace(context);
+                            },
+                            onClearHistory: () {
+                              ref.read(dAppsSearchHistoryProvider.notifier).clear();
+                            },
+                            itemBuilder: (context, index) => DAppsSearchHistoryListItem(
+                              id: history.ids[index],
+                            ),
+                          )
+                    : apps.isEmpty
+                        ? NothingIsFound(
+                            title: context.i18n.search_nothing_found,
+                          )
+                        : DAppsSearchResults(apps: apps);
+              },
               orElse: SearchResultsSkeleton.new,
             ),
           ],

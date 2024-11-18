@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/search/providers/feed_search_history_provider.dart'
     show feedSearchHistoryProvider;
 import 'package:ion/app/features/search/providers/feed_search_users_provider.dart';
+import 'package:ion/app/features/search/views/components/feed_search_history/feed_search_history_user_list_item.dart';
 import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/features/search/views/components/search_history/search_history.dart';
 import 'package:ion/app/features/search/views/components/search_history_empty/search_history_empty.dart';
@@ -47,7 +48,7 @@ class FeedSimpleSearchPage extends ConsumerWidget {
                           title: context.i18n.feed_search_empty,
                         )
                       : SearchHistory(
-                          pubKeys: history.pubKeys,
+                          itemCount: history.pubKeys.length,
                           queries: history.queries,
                           onSelectQuery: (String query) {
                             FeedSimpleSearchRoute(query: query).replace(context);
@@ -55,6 +56,8 @@ class FeedSimpleSearchPage extends ConsumerWidget {
                           onClearHistory: () {
                             ref.read(feedSearchHistoryProvider.notifier).clear();
                           },
+                          itemBuilder: (context, index) =>
+                              FeedSearchHistoryUserListItem(pubKey: history.pubKeys[index]),
                         )
                   : pubKeys.isEmpty
                       ? NothingIsFound(

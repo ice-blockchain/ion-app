@@ -12,8 +12,8 @@ class SearchNavigation extends HookConsumerWidget {
   const SearchNavigation({
     required this.query,
     required this.loading,
-    required this.onSubmitted,
     required this.onTextChanged,
+    this.onSubmitted,
     super.key,
   });
 
@@ -21,7 +21,7 @@ class SearchNavigation extends HookConsumerWidget {
 
   final bool loading;
 
-  final void Function(String query) onSubmitted;
+  final void Function(String query)? onSubmitted;
   final void Function(String text) onTextChanged;
 
   @override
@@ -48,14 +48,15 @@ class SearchNavigation extends HookConsumerWidget {
               loading: loading,
               controller: searchController,
               focusNode: focusNode,
-              textInputAction: TextInputAction.search,
+              textInputAction:
+                  (onSubmitted != null) ? TextInputAction.search : TextInputAction.done,
               onCancelSearch: () {
                 context.pop();
               },
               onSubmitted: (String query) {
                 context.pop();
                 if (query.isNotEmpty) {
-                  onSubmitted(query);
+                  onSubmitted?.call(query);
                 }
               },
               onTextChanged: (String text) {
