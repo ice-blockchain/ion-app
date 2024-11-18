@@ -48,7 +48,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           }),
         );
         data = data.copyWith(
-          content: [...attachments.map((attachment) => TextMatch(attachment.url)), ...data.content],
+          content: [
+            ...attachments.map((attachment) => TextMatch('${attachment.url} ')),
+            ...data.content,
+          ],
           media: {for (final attachment in attachments) attachment.url: attachment},
         );
       }
