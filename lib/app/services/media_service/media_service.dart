@@ -166,10 +166,9 @@ class MediaService {
   }
 
   Future<({Uint8List imageBytes, Offset position, Size size})?> captureWidgetAsImage(
-    GlobalKey containerKey,
+    RenderObject renderObject,
   ) async {
     try {
-      final renderObject = containerKey.currentContext?.findRenderObject();
       if (renderObject is RenderRepaintBoundary) {
         final image = renderObject.toImageSync(pixelRatio: 3);
         final byteData = await image.toByteData(format: ui.ImageByteFormat.png);

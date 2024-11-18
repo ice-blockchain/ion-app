@@ -14,21 +14,21 @@ import 'package:ion/app/services/media_service/media_service.dart';
 
 class MessageReactionDialog extends HookConsumerWidget {
   const MessageReactionDialog({
-    required this.messagItemKey,
+    required this.renderObject,
     required this.isMe,
     super.key,
   });
   final bool isMe;
 
   /// The key of the message item to capture the image from widget tree
-  final GlobalKey messagItemKey;
+  final RenderObject renderObject;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final capturedImage = useFuture(
       useMemoized(
-        () => ref.read(mediaServiceProvider).captureWidgetAsImage(messagItemKey),
-        [messagItemKey],
+        () => ref.read(mediaServiceProvider).captureWidgetAsImage(renderObject),
+        [renderObject],
       ),
     );
 

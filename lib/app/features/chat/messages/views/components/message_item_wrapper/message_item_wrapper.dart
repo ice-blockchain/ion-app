@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reaction_dialog/message_reaction_dialog.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 class MessageItemWrapper extends HookWidget {
   const MessageItemWrapper({
@@ -27,17 +28,19 @@ class MessageItemWrapper extends HookWidget {
 
     final showReactDialog = useCallback(
       () {
-        // final capturedImage = await captureImage(messagItemKey);
-
-        showDialog<void>(
-          context: context,
-          barrierColor: Colors.transparent,
-          useSafeArea: false,
-          builder: (context) => MessageReactionDialog(
-            isMe: isMe,
-            messagItemKey: messagItemKey,
-          ),
-        );
+        try {
+          showDialog<void>(
+            context: context,
+            barrierColor: Colors.transparent,
+            useSafeArea: false,
+            builder: (context) => MessageReactionDialog(
+              isMe: isMe,
+              renderObject: messagItemKey.currentContext!.findRenderObject()!,
+            ),
+          );
+        } catch (e, st) {
+          Logger.log('Error showing message reaction dialog:', error: e, stackTrace: st);
+        }
       },
       [messagItemKey, isMe],
     );
