@@ -4,15 +4,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final indicatorWidthProvider = StateProvider<double>((ref) {
-  final screenWidth = PlatformDispatcher.instance.views.first.physicalSize.width /
-      PlatformDispatcher.instance.views.first.devicePixelRatio;
-  return screenWidth * 0.05;
-});
+double useScrollIndicator(ScrollController scrollController) {
+  final progress = useState<double>(0);
 
-void useScrollIndicator(BuildContext context, ScrollController scrollController, WidgetRef ref) {
   useEffect(
     () {
       void onScroll() {
@@ -20,14 +15,12 @@ void useScrollIndicator(BuildContext context, ScrollController scrollController,
 
         final maxScroll = scrollController.position.maxScrollExtent;
         final currentScroll = scrollController.offset;
-        final viewportWidth = MediaQuery.sizeOf(context).width;
 
-        if (maxScroll == 0) {
-          ref.read(indicatorWidthProvider.notifier).state = viewportWidth;
-        } else {
+        if (maxScroll > 0) {
           final scrollFraction = (currentScroll / maxScroll).clamp(0.0, 1.0);
-          ref.read(indicatorWidthProvider.notifier).state =
-              viewportWidth * (0.05 + (0.95 * scrollFraction));
+          progress.value = lerpDouble(progress.value, 0.05 + (0.95 * scrollFraction), 0.2)!;
+        } else {
+          progress.value = 0.05;
         }
       }
 
@@ -38,4 +31,6 @@ void useScrollIndicator(BuildContext context, ScrollController scrollController,
     },
     [scrollController],
   );
+
+  return progress.value;
 }

@@ -41,7 +41,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
     }
 
     final scrollController = useScrollController();
-    useScrollIndicator(context, scrollController, ref);
+    final progress = useScrollIndicator(scrollController);
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
@@ -59,14 +59,19 @@ class ArticleDetailsPage extends HookConsumerWidget {
         children: [
           Consumer(
             builder: (context, ref, child) {
-              final indicatorWidth = ref.watch(indicatorWidthProvider);
-              return Align(
-                alignment: Alignment.centerLeft,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  height: 1.0.s,
-                  width: indicatorWidth,
-                  color: context.theme.appColors.primaryAccent,
+              return SizedBox(
+                width: double.infinity,
+                height: 1.0.s,
+                child: AnimatedFractionallySizedBox(
+                  duration: const Duration(
+                    milliseconds: 100,
+                  ),
+                  widthFactor: progress,
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    height: 1.0.s,
+                    color: context.theme.appColors.primaryAccent,
+                  ),
                 ),
               );
             },
