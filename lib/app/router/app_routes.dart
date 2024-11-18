@@ -32,7 +32,6 @@ import 'package:ion/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ion/app/features/dapps/views/pages/dapp_details/dapp_details_modal.dart';
 import 'package:ion/app/features/dapps/views/pages/dapps.dart';
 import 'package:ion/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
-import 'package:ion/app/features/dapps/views/pages/dapps_main_modal/dapps_main_modal_page.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/create_article_modal.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/create_article_topics.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/create_article_preview_modal.dart';
@@ -93,6 +92,7 @@ import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/model/user_category_type.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/pages/category_select_modal/category_select_modal.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/profile_edit_page.dart';
+import 'package:ion/app/features/user/pages/profile_main_modal/profile_main_modal_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/follow_list_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/payment_selection_modal/payment_selection_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/request_coins_form_modal/request_coins_form_modal.dart';
@@ -100,6 +100,7 @@ import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/send_coins_form_modal/send_coin_form_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
+import 'package:ion/app/features/user/pages/profile_page/self_profile_page.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/switch_account_modal.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
@@ -139,6 +140,7 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 part 'app_routes.g.dart';
 part 'auth_routes.dart';
 part 'chat_routes.dart';
+part 'dapps_routes.dart';
 part 'feed_routes.dart';
 part 'profile_routes.dart';
 part 'protect_account_routes.dart';
@@ -175,21 +177,22 @@ final transitionObserver = NavigationSheetTransitionObserver();
     ),
     TypedStatefulShellBranch(
       routes: [
-        TypedGoRoute<DappsRoute>(
-          path: '/dapps',
+        TypedGoRoute<WalletRoute>(
+          path: '/wallet',
           routes: [
-            TypedGoRoute<DappsMainModalRoute>(path: 'main-modal'),
+            ...WalletRoutes.routes,
+            TypedGoRoute<WalletMainModalRoute>(path: 'main-modal'),
           ],
         ),
       ],
     ),
     TypedStatefulShellBranch(
       routes: [
-        TypedGoRoute<WalletRoute>(
-          path: '/wallet',
+        TypedGoRoute<SelfProfileRoute>(
+          path: '/self-profile',
           routes: [
-            ...WalletRoutes.routes,
-            TypedGoRoute<WalletMainModalRoute>(path: 'main-modal'),
+            ...ProfileRoutes.routes,
+            TypedGoRoute<ProfileMainModalRoute>(path: 'main-modal'),
           ],
         ),
       ],
@@ -258,8 +261,8 @@ class WalletRoute extends BaseRouteData {
   WalletRoute() : super(child: const WalletPage());
 }
 
-class DappsRoute extends BaseRouteData {
-  DappsRoute() : super(child: const DAppsPage());
+class SelfProfileRoute extends BaseRouteData {
+  SelfProfileRoute() : super(child: const SelfProfilePage());
 }
 
 @TypedGoRoute<ErrorRoute>(path: '/error')
@@ -293,10 +296,10 @@ class ChatMainModalRoute extends BaseRouteData {
         );
 }
 
-class DappsMainModalRoute extends BaseRouteData {
-  DappsMainModalRoute()
+class ProfileMainModalRoute extends BaseRouteData {
+  ProfileMainModalRoute()
       : super(
-          child: const DappsMainModalPage(),
+          child: const ProfileMainModalPage(),
           type: IceRouteType.mainModalSheet,
         );
 }
@@ -315,36 +318,6 @@ class WalletMainModalRoute extends BaseRouteData {
 )
 class MessagesRoute extends BaseRouteData {
   MessagesRoute() : super(child: const MessagesPage());
-}
-
-@TypedGoRoute<DAppsRoute>(
-  path: '/dapps',
-  routes: [
-    TypedGoRoute<DAppsListRoute>(path: 'apps-list'),
-    TypedShellRoute<ModalShellRouteData>(
-      routes: [
-        TypedGoRoute<DAppDetailsRoute>(path: 'dapps-details'),
-      ],
-    ),
-  ],
-)
-class DAppsRoute extends BaseRouteData {
-  DAppsRoute() : super(child: const DAppsPage());
-}
-
-class DAppsListRoute extends BaseRouteData {
-  DAppsListRoute({required this.$extra}) : super(child: DAppsList(payload: $extra));
-
-  final AppsRouteData $extra;
-}
-
-class DAppDetailsRoute extends BaseRouteData {
-  DAppDetailsRoute({required this.dappId})
-      : super(
-          child: DAppDetailsModal(dappId: dappId),
-          type: IceRouteType.bottomSheet,
-        );
-  final int dappId;
 }
 
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')

@@ -1,23 +1,36 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter/material.dart';
 import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/main_tabs/components/components.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum TabItem {
   feed,
   chat,
   main,
-  dapps,
-  wallet;
+  wallet,
+  profile;
 
   const TabItem();
 
-  String get icon => switch (this) {
-        TabItem.feed => Assets.svg.iconHomeOff,
-        TabItem.chat => Assets.svg.iconChatOff,
-        TabItem.main => Assets.images.logo.logoButton,
-        TabItem.dapps => Assets.svg.iconDappOff,
-        TabItem.wallet => Assets.svg.iconsWalletOff
+  Widget getIcon({required bool isSelected}) => switch (this) {
+        TabItem.feed => TabIcon(
+            icon: Assets.svg.iconHomeOff,
+            isSelected: isSelected,
+          ),
+        TabItem.chat => TabIcon(
+            icon: Assets.svg.iconChatOff,
+            isSelected: isSelected,
+          ),
+        TabItem.main => const MainTabButton(),
+        TabItem.wallet => TabIcon(
+            icon: Assets.svg.iconsWalletOff,
+            isSelected: isSelected,
+          ),
+        TabItem.profile => ProfileTabButton(
+            isSelected: isSelected,
+          ),
       };
 
   int get navigationIndex => index > TabItem.main.index ? index - 1 : index;
@@ -32,16 +45,16 @@ enum TabItem {
   String get baseRouteLocation => switch (this) {
         TabItem.feed => FeedRoute().location,
         TabItem.chat => ChatRoute().location,
-        TabItem.dapps => DappsRoute().location,
         TabItem.wallet => WalletRoute().location,
+        TabItem.profile => SelfProfileRoute().location,
         TabItem.main => '/',
       };
 
   String get mainModalLocation => switch (this) {
         TabItem.feed => FeedMainModalRoute().location,
         TabItem.chat => ChatMainModalRoute().location,
-        TabItem.dapps => DappsMainModalRoute().location,
         TabItem.wallet => WalletMainModalRoute().location,
+        TabItem.profile => ProfileMainModalRoute().location,
         TabItem.main => '/',
       };
 }

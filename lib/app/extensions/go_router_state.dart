@@ -11,8 +11,8 @@ extension GoRouterStateExtension on GoRouterState {
     return switch (matchedLocation) {
       final path when path.startsWith(FeedRoute().location) => TabItem.feed,
       final path when path.startsWith(ChatRoute().location) => TabItem.chat,
-      final path when path.startsWith(DappsRoute().location) => TabItem.dapps,
       final path when path.startsWith(WalletRoute().location) => TabItem.wallet,
+      final path when path.startsWith(SelfProfileRoute().location) => TabItem.profile,
       _ => TabItem.main,
     };
   }

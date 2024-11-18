@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/router/app_routes.dart';
 
 class PullRightMenuHandler extends StatelessWidget {
   const PullRightMenuHandler({
@@ -16,9 +15,7 @@ class PullRightMenuHandler extends StatelessWidget {
     return GestureDetector(
       onHorizontalDragEnd: (DragEndDetails details) {
         if (details.velocity.pixelsPerSecond.dx > 100 &&
-            details.velocity.pixelsPerSecond.dx > details.velocity.pixelsPerSecond.dy) {
-          PullRightMenuRoute().push<void>(context);
-        }
+            details.velocity.pixelsPerSecond.dx > details.velocity.pixelsPerSecond.dy) {}
       },
       child: child,
     );

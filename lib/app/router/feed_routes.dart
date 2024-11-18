@@ -9,8 +9,6 @@ class FeedRoutes {
     TypedGoRoute<ArticleDetailsRoute>(path: 'article/:articleId'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
-    TypedGoRoute<ProfileRoute>(path: 'profile/:pubkey', routes: ProfileRoutes.routes),
-    TypedGoRoute<PullRightMenuRoute>(path: 'pull-right-menu'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<SwitchAccountRoute>(path: 'switch-account'),

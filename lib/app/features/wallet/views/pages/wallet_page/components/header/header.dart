@@ -24,8 +24,8 @@ class Header extends StatelessWidget {
           Row(
             children: [
               NavigationButton(
-                onPressed: () {},
-                icon: Assets.svg.iconHeaderCopy.icon(
+                onPressed: () => DAppsRoute().push<void>(context),
+                icon: Assets.svg.iconDappOff.icon(
                   color: context.theme.appColors.primaryText,
                 ),
               ),

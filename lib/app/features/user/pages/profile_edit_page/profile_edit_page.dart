@@ -74,6 +74,7 @@ class ProfileEditPage extends HookConsumerWidget {
                                 children: [
                                   ProfileAvatar(
                                     pubkey: pubkey,
+                                    showAvatarPicker: true,
                                   ),
                                   SizedBox(height: paddingValue),
                                   NameInput(controller: nameController),

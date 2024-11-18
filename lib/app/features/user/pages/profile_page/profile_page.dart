@@ -22,10 +22,12 @@ import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_he
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
     required this.pubkey,
+    this.showBackButton = true,
     super.key,
   });
 
   final String pubkey;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -126,6 +128,7 @@ class ProfilePage extends HookConsumerWidget {
                 child: Header(
                   opacity: opacityValue.value,
                   pubkey: pubkey,
+                  showBackButton: showBackButton,
                 ),
               ),
             ),

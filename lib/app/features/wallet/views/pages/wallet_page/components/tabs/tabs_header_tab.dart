@@ -4,18 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/constants/ui.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
 class WalletTabsHeaderTab extends StatelessWidget {
   const WalletTabsHeaderTab({
     required this.isActive,
-    required this.tabType,
+    required this.title,
     required this.onTap,
     super.key,
   });
 
   final bool isActive;
-  final WalletTabType tabType;
+  final String title;
   final VoidCallback onTap;
 
   Color _getColor(BuildContext context) {
@@ -29,7 +28,7 @@ class WalletTabsHeaderTab extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Text(
-          tabType.getTitle(context),
+          title,
           style: context.theme.appTextThemes.title.copyWith(
             color: _getColor(context),
           ),
