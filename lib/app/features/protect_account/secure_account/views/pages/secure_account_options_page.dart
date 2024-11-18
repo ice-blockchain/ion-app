@@ -6,7 +6,6 @@ import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/features/protect_account/components/secure_account_option.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
@@ -26,7 +25,6 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
     final securityMethodsState = ref.watch(securityAccountControllerProvider);
     final securityMethods = securityMethodsState.valueOrNull;
     final isLoading = securityMethodsState.isLoading;
@@ -44,7 +42,7 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
             title: Text(locale.protect_account_header_security),
             actions: [
               NavigationCloseButton(
-                onPressed: () => ProfileRoute(pubkey: currentPubkey).go(context),
+                onPressed: Navigator.of(context, rootNavigator: true).pop,
               ),
             ],
           ),

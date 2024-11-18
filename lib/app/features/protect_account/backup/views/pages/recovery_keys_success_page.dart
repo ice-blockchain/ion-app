@@ -7,7 +7,6 @@ import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -22,7 +21,6 @@ class RecoveryKeysSuccessPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
     return SheetContent(
       body: AuthScrollContainer(
@@ -32,7 +30,7 @@ class RecoveryKeysSuccessPage extends ConsumerWidget {
         ),
         actions: [
           NavigationCloseButton(
-            onPressed: () => ProfileRoute(pubkey: currentPubkey).go(context),
+            onPressed: Navigator.of(context, rootNavigator: true).pop,
           ),
         ],
         title: locale.backup_option_with_recovery_keys_title,
