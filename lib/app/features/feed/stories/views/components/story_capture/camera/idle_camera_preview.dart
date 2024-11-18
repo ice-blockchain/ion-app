@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/core/providers/app_info_provider.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/story_control_button.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_preview_page.dart';
@@ -66,7 +67,11 @@ class IdleCameraPreview extends ConsumerWidget {
                 }
               }
             },
-            requestDialog: PermissionRequestSheet.fromType(context, Permission.photos),
+            requestDialog: PermissionRequestSheet.fromType(
+              context,
+              permissionType: Permission.photos,
+              appName: ref.watch(appInfoProvider).valueOrNull?.appName ?? '',
+            ),
             settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
             builder: (context, onPressed) => StoryControlButton(
               onPressed: onPressed,

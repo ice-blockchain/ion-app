@@ -11,6 +11,7 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
+import 'package:ion/app/features/core/providers/app_info_provider.dart';
 import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -58,7 +59,11 @@ class AvatarPicker extends ConsumerWidget {
                     );
               }
             },
-            requestDialog: PermissionRequestSheet.fromType(context, Permission.camera),
+            requestDialog: PermissionRequestSheet.fromType(
+              context,
+              permissionType: Permission.camera,
+              appName: ref.watch(appInfoProvider).valueOrNull?.appName ?? '',
+            ),
             settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
             builder: (context, onPressed) {
               return GestureDetector(

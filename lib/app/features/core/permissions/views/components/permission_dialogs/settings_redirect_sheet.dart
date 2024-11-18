@@ -27,25 +27,32 @@ class SettingsRedirectSheet extends StatelessWidget {
     BuildContext context,
     Permission permissionType,
   ) {
-    if (permissionType == Permission.photos) {
-      return SettingsRedirectSheet(
-        header: context.i18n.gallery_permission_headline,
-        title: context.i18n.gallery_no_access_title,
-        description: context.i18n.common_no_access_permission,
-        headerIconAsset: Assets.svg.iconPostGallerypermission,
-        iconAsset: Assets.svg.walletIconWalletNoaccess,
-      );
-    } else if (permissionType == Permission.camera) {
-      return SettingsRedirectSheet(
-        header: context.i18n.camera_permission_headline,
-        title: context.i18n.camera_no_access_title,
-        description: context.i18n.common_no_access_permission,
-        headerIconAsset: Assets.svg.iconPostCamerapermission,
-        iconAsset: Assets.svg.walletIconWalletNoaccesscamera,
-      );
-    }
-
-    throw Exception('UI is not implemented for the permission type $permissionType');
+    return switch (permissionType) {
+      Permission.photos => SettingsRedirectSheet(
+          header: context.i18n.gallery_permission_headline,
+          title: context.i18n.gallery_no_access_title,
+          description: context.i18n.common_no_access_permission,
+          headerIconAsset: Assets.svg.iconPostGallerypermission,
+          iconAsset: Assets.svg.walletIconWalletNoaccess,
+        ),
+      Permission.camera => SettingsRedirectSheet(
+          header: context.i18n.camera_permission_headline,
+          title: context.i18n.camera_no_access_title,
+          description: context.i18n.common_no_access_permission,
+          headerIconAsset: Assets.svg.iconPostCamerapermission,
+          iconAsset: Assets.svg.walletIconWalletNoaccesscamera,
+        ),
+      Permission.notifications => SettingsRedirectSheet(
+          header: context.i18n.push_notifications_permission_headline,
+          title: context.i18n.push_notifications_no_access_title,
+          description: context.i18n.push_notifications_no_access_description,
+          headerIconAsset: Assets.svg.iconPostCamerapermission,
+          iconAsset: Assets.svg.walletIconProfileDisablednotification,
+        ),
+      _ => throw Exception(
+          'UI is not implemented for the permission type $permissionType',
+        ),
+    };
   }
 
   final String header;

@@ -8,6 +8,7 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/core/providers/app_info_provider.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
@@ -64,7 +65,11 @@ class CameraCell extends HookConsumerWidget {
               },
             );
       },
-      requestDialog: PermissionRequestSheet.fromType(context, Permission.camera),
+      requestDialog: PermissionRequestSheet.fromType(
+        context,
+        permissionType: Permission.camera,
+        appName: ref.watch(appInfoProvider).valueOrNull?.appName ?? '',
+      ),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
       builder: (context, onPressed) {
         return SizedBox(

@@ -18,24 +18,30 @@ class PermissionRequestSheet extends StatelessWidget {
   });
 
   factory PermissionRequestSheet.fromType(
-    BuildContext context,
-    Permission permissionType,
-  ) {
-    if (permissionType == Permission.photos) {
-      return PermissionRequestSheet(
-        title: context.i18n.photo_library_require_access_title,
-        description: context.i18n.photo_library_require_access_description,
-        iconAsset: Assets.svg.walletIconWalletGelleryperm,
-      );
-    } else if (permissionType == Permission.camera) {
-      return PermissionRequestSheet(
-        title: context.i18n.camera_require_access_title,
-        description: context.i18n.camera_require_access_description,
-        iconAsset: Assets.svg.walletIconWalletCamera,
-      );
-    }
-
-    throw Exception('UI is not implemented for the permission type $permissionType');
+    BuildContext context, {
+    required Permission permissionType,
+    required String appName,
+  }) {
+    return switch (permissionType) {
+      Permission.photos => PermissionRequestSheet(
+          title: context.i18n.photo_library_require_access_title(appName),
+          description: context.i18n.photo_library_require_access_description,
+          iconAsset: Assets.svg.walletIconWalletGelleryperm,
+        ),
+      Permission.camera => PermissionRequestSheet(
+          title: context.i18n.camera_require_access_title(appName),
+          description: context.i18n.camera_require_access_description(appName),
+          iconAsset: Assets.svg.walletIconWalletCamera,
+        ),
+      Permission.notifications => PermissionRequestSheet(
+          title: context.i18n.push_notifications_require_access_title(appName),
+          description: context.i18n.push_notifications_require_access_description,
+          iconAsset: Assets.svg.walletIconWalletCamera,
+        ),
+      _ => throw Exception(
+          'UI is not implemented for the permission type $permissionType',
+        ),
+    };
   }
 
   final String title;

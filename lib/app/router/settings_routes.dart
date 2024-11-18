@@ -6,6 +6,8 @@ class SettingsRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<SettingsRoute>(path: 'settings'),
     TypedGoRoute<ProfileSettingsRoute>(path: 'profile-settings'),
+    TypedGoRoute<PrivacySettingsRoute>(path: 'privacy-settings'),
+    TypedGoRoute<PushNotificationsSettingsRoute>(path: 'push-notifications-settings'),
     TypedGoRoute<AppLanguagesRoute>(path: 'app-language'),
     TypedGoRoute<ContentLanguagesRoute>(path: 'content-language'),
     TypedGoRoute<ConfirmLogoutRoute>(path: 'confirm-logout'),
@@ -41,6 +43,22 @@ class ProfileSettingsRoute extends BaseRouteData {
   ProfileSettingsRoute()
       : super(
           child: const ProfileSettingsModal(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class PrivacySettingsRoute extends BaseRouteData {
+  PrivacySettingsRoute()
+      : super(
+          child: const PrivacySettingsModal(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class PushNotificationsSettingsRoute extends BaseRouteData {
+  PushNotificationsSettingsRoute()
+      : super(
+          child: const PushNotificationsSettings(),
           type: IceRouteType.bottomSheet,
         );
 }

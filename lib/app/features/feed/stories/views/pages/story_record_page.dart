@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/core/providers/app_info_provider.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_camera_state.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_recording_progress.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.dart';
@@ -48,7 +49,11 @@ class StoryRecordPage extends HookConsumerWidget {
     return PermissionAwareWidget(
       permissionType: Permission.camera,
       onGranted: () async => ref.read(cameraControllerNotifierProvider.notifier).resumeCamera(),
-      requestDialog: PermissionRequestSheet.fromType(context, Permission.camera),
+      requestDialog: PermissionRequestSheet.fromType(
+        context,
+        permissionType: Permission.camera,
+        appName: ref.watch(appInfoProvider).valueOrNull?.appName ?? '',
+      ),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
       builder: (context, _) {
         return Scaffold(

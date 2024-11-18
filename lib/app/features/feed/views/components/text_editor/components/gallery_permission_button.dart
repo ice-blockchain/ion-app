@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/core/providers/app_info_provider.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
@@ -28,7 +29,11 @@ class GalleryPermissionButton extends ConsumerWidget {
           onMediaSelected(mediaFiles);
         }
       },
-      requestDialog: PermissionRequestSheet.fromType(context, Permission.photos),
+      requestDialog: PermissionRequestSheet.fromType(
+        context,
+        permissionType: Permission.photos,
+        appName: ref.watch(appInfoProvider).valueOrNull?.appName ?? '',
+      ),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
       builder: (context, onPressed) {
         return ActionsToolbarButton(

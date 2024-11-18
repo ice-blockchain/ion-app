@@ -2,24 +2,26 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/core/providers/app_info_provider.dart';
 import 'package:ion/app/features/wallet/model/feed_type.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class FeedMainModalPage extends StatelessWidget {
+class FeedMainModalPage extends ConsumerWidget {
   const FeedMainModalPage({super.key});
 
   static const List<FeedType> feedTypeValues = FeedType.values;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
@@ -44,7 +46,11 @@ class FeedMainModalPage extends StatelessWidget {
                     onTap: onPressed,
                   ),
                   onGranted: () => StoryRecordRoute().push<void>(context),
-                  requestDialog: PermissionRequestSheet.fromType(context, Permission.camera),
+                  requestDialog: PermissionRequestSheet.fromType(
+                    context,
+                    permissionType: Permission.camera,
+                    appName: ref.watch(appInfoProvider).valueOrNull?.appName ?? '',
+                  ),
                   settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
                 );
               }
