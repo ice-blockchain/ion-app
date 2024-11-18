@@ -28,3 +28,4 @@ export 'src/wallets/services/get_wallet_history/models/wallet_history.c.dart';
 export 'src/wallets/services/get_wallet_nfts/models/wallet_nfts.c.dart';
 export 'src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_request.c.dart';
 export 'src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_requests.c.dart';
+export 'src/wallets/services/wallet_views/models/wallet_view.dart';

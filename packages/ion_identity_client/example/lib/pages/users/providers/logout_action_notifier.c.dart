@@ -3,7 +3,7 @@
 import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'logout_action_notifier.g.dart';
+part 'logout_action_notifier.c.g.dart';
 
 @riverpod
 class LogoutActionNotifier extends _$LogoutActionNotifier {
