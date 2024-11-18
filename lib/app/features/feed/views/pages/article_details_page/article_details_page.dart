@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/views/components/feed_item/feed_item_foote
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
+import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_progress_indicator.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_section_header.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/articles_carousel.dart';
@@ -41,7 +42,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
     }
 
     final scrollController = useScrollController();
-    useScrollIndicator(context, scrollController, ref);
+    final progress = useScrollIndicator(scrollController);
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
@@ -57,20 +58,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
       ),
       body: Column(
         children: [
-          Consumer(
-            builder: (context, ref, child) {
-              final indicatorWidth = ref.watch(indicatorWidthProvider);
-              return Align(
-                alignment: Alignment.centerLeft,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  height: 1.0.s,
-                  width: indicatorWidth,
-                  color: context.theme.appColors.primaryAccent,
-                ),
-              );
-            },
-          ),
+          ArticleDetailsProgressIndicator(progress: progress),
           Flexible(
             child: CustomScrollView(
               controller: scrollController,
