@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,14 +16,17 @@ import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
+import 'package:ion/app/features/feed/views/pages/app_update_modal/app_update_modal.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class FeedPage extends HookConsumerWidget {
   const FeedPage({super.key});
@@ -33,6 +38,21 @@ class FeedPage extends HookConsumerWidget {
     final feedHasMore = ref.watch(
       entitiesPagedDataProvider(ref.watch(feedPostsDataSourceProvider))
           .select((state) => (state?.hasMore).falseOrValue),
+    );
+
+    useOnInit(
+      () {
+        if (Random().nextBool()) {
+          showSimpleBottomSheet<void>(
+            isDismissible: false,
+            context: context,
+            child: const AppUpdateModal(
+              appUpdateType: AppUpdateType.updateRequired,
+            ),
+          );
+        }
+      },
+      <Object>[],
     );
 
     useScrollTopOnTabPress(context, scrollController: scrollController);

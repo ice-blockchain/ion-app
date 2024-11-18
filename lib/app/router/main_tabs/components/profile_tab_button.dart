@@ -20,7 +20,8 @@ class ProfileTabButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userPicture = ref.watch(currentUserMetadataProvider).valueOrNull?.data.picture;
+    final userPicture =
+        ref.watch(currentUserMetadataProvider.select((value) => value.valueOrNull?.data.picture));
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
