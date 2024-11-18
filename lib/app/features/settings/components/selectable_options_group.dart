@@ -54,10 +54,11 @@ class SelectableOptionsGroup<T extends SelectableOption> extends StatelessWidget
               )
               .toList(),
         ),
-        if (addSeparatorAfterLastItem) Padding(
-          padding: separatorPadding.copyWith(bottom: 0),
-          child: const HorizontalSeparator(),
-        ),
+        if (addSeparatorAfterLastItem)
+          Padding(
+            padding: separatorPadding.copyWith(bottom: 0),
+            child: const HorizontalSeparator(),
+          ),
       ],
     );
   }
