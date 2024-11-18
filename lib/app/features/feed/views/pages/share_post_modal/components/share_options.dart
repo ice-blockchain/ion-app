@@ -38,7 +38,7 @@ class ShareOptions extends StatelessWidget {
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconBookmarks.icon(size: iconSize, color: Colors.black),
-              label: context.i18n.feed_bookmark,
+              label: context.i18n.button_bookmark,
               onPressed: () {},
             ),
             _ShareOptionsMenuItem(

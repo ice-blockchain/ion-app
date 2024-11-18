@@ -4,12 +4,15 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_seperator.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/recent_emoji_reactions_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessageItemWrapper extends HookWidget {
@@ -47,6 +50,7 @@ class MessageItemWrapper extends HookWidget {
                 barrierColor: Colors.transparent,
                 useSafeArea: false,
                 builder: (context) => ReactDialog(
+                  isMe: isMe,
                   imageBytes: imageBytes,
                   position: position,
                   size: size,
@@ -69,7 +73,10 @@ class MessageItemWrapper extends HookWidget {
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: GestureDetector(
-        onLongPress: captureAndShowImage,
+        onLongPress: () {
+          HapticFeedback.mediumImpact();
+          captureAndShowImage();
+        },
         child: ScreenSideOffset.small(
           child: RepaintBoundary(
             key: containerKey,
@@ -103,19 +110,17 @@ class ReactDialog extends StatelessWidget {
     required this.imageBytes,
     required this.position,
     required this.size,
+    required this.isMe,
     super.key,
   });
   final Uint8List imageBytes;
   final Offset position;
   final Size size;
-
-  // static final emojiSectionHeight = 58.0.s;
-  // static final maxContentHeight = MediaQuery.sizeOf(context).height - emojiSectionHeight;
-
+  final bool isMe;
   @override
   Widget build(BuildContext context) {
-    final emojiSectionHeight = 68.0.s;
-    final contextMenuHeight = 200.0.s;
+    final emojiSectionHeight = 72.0.s;
+    final contextMenuHeight = 237.0.s;
     final availableHeight = MediaQuery.sizeOf(context).height -
         emojiSectionHeight -
         contextMenuHeight -
@@ -126,12 +131,6 @@ class ReactDialog extends StatelessWidget {
     final isHugeComponent = size.height > availableHeight;
 
     final bottomdY = position.dy + size.height;
-
-    print('MediaQuery.sizeOf(context).height: ${MediaQuery.sizeOf(context).height}');
-    print('availableHeight: $availableHeight');
-    print('position: ${position.dy}');
-    print('size: ${size.height}');
-    print('bottomdY: $bottomdY');
 
     final overflowBottomSize = MediaQuery.sizeOf(context).height -
         // bottomdY -
@@ -161,7 +160,8 @@ class ReactDialog extends StatelessWidget {
           ),
         ),
         Positioned(
-          left: position.dx,
+          left: isMe ? null : 16.0.s,
+          right: isMe ? 16.0.s : null,
           // top: overflowBottomSize < 0 ? null : position.dy - emojiSectionHeight
           top: topY,
           bottom: overflowBottomSize < 0
@@ -169,10 +169,10 @@ class ReactDialog extends StatelessWidget {
               : MediaQuery.paddingOf(context).bottom,
           // top: position.dy,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              EmojiBar(emojiSectionHeight: emojiSectionHeight),
+              EmojiBar(emojiSectionHeight: emojiSectionHeight, isMe: isMe),
               Image.memory(
                 height: contentHeight,
                 fit: BoxFit.fitHeight,
@@ -188,20 +188,24 @@ class ReactDialog extends StatelessWidget {
   }
 }
 
-class EmojiBar extends StatelessWidget {
+class EmojiBar extends ConsumerWidget {
   const EmojiBar({
     required this.emojiSectionHeight,
+    required this.isMe,
     super.key,
   });
 
   final double emojiSectionHeight;
-
+  final bool isMe;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recentEmojiReactions = ref.watch(recentEmojiReactionsProvider);
+
     return SizedBox(
       height: emojiSectionHeight,
+      width: MediaQuery.sizeOf(context).width - 32.0.s,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Container(
             decoration: BoxDecoration(
@@ -211,81 +215,49 @@ class EmojiBar extends StatelessWidget {
             padding: EdgeInsets.all(12.0.s),
             child: Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0.s),
-                  ),
-                  child: Text(
-                    '😍',
-                    style: context.theme.appTextThemes.headline1.copyWith(height: 1),
-                  ),
+                Row(
+                  children: recentEmojiReactions.map(
+                    (emoji) {
+                      return GestureDetector(
+                        onTap: () {
+                          ref.read(recentEmojiReactionsProvider.notifier).addEmoji(emoji);
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 6.0.s, horizontal: 10.0.s),
+                          margin: EdgeInsets.only(right: 14.0.s),
+                          decoration: BoxDecoration(
+                            color: context.theme.appColors.primaryBackground,
+                            borderRadius: BorderRadius.circular(20.0.s),
+                          ),
+                          child: Text(
+                            emoji,
+                            style: context.theme.appTextThemes.title.copyWith(height: 1),
+                          ),
+                        ),
+                      );
+                    },
+                  ).toList(),
                 ),
-                SizedBox(width: 14.0.s),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0.s),
-                  ),
-                  child: Text(
-                    '😍',
-                    style: context.theme.appTextThemes.headline1.copyWith(height: 1),
-                  ),
-                ),
-                SizedBox(width: 14.0.s),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0.s),
-                  ),
-                  child: Text(
-                    '😍',
-                    style: context.theme.appTextThemes.headline1.copyWith(height: 1),
-                  ),
-                ),
-                SizedBox(width: 14.0.s),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0.s),
-                  ),
-                  child: Text(
-                    '😍',
-                    style: context.theme.appTextThemes.headline1.copyWith(height: 1),
-                  ),
-                ),
-                SizedBox(width: 14.0.s),
-                Container(
-                  decoration: BoxDecoration(
-                    // color: context.theme.appColors.primaryAccent,
-                    borderRadius: BorderRadius.circular(20.0.s),
-                  ),
-                  child: Text(
-                    '😍',
-                    style: context.theme.appTextThemes.headline1.copyWith(height: 1),
-                  ),
-                ),
-                SizedBox(width: 14.0.s),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0.s),
-                  ),
-                  child: Text(
-                    '😍',
-                    style: context.theme.appTextThemes.headline1.copyWith(height: 1),
-                  ),
-                ),
-                SizedBox(width: 14.0.s),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0.s),
-                  ),
-                  child: Text(
-                    '😍',
-                    style: context.theme.appTextThemes.headline1.copyWith(height: 1),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 5.0.s, horizontal: 9.0.s),
+                    decoration: BoxDecoration(
+                      color: context.theme.appColors.primaryBackground,
+                      borderRadius: BorderRadius.circular(20.0.s),
+                    ),
+                    child: Assets.svg.iconPostAddanswer.icon(
+                      size: 20.0.s,
+                      color: context.theme.appColors.primaryAccent,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 20.0.s),
+            padding: EdgeInsets.symmetric(horizontal: 16.0.s),
             child: Assets.svg.iconBubleCorner.iconWithDimensions(width: 20.0.s, height: 14.0.s),
           ),
         ],
@@ -301,52 +273,62 @@ class ReactionOverlayMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 4.0.s),
-      child: OverlayMenuContainer(
-        child: IntrinsicWidth(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 4.0.s),
-            child: Column(
-              children: [
-                OverlayMenuItem(
-                  label: context.i18n.button_share,
-                  icon: Assets.svg.iconButtonShare.icon(
-                    size: iconSize,
-                    color: context.theme.appColors.quaternaryText,
+    return SizedBox(
+      height: 237.0.s,
+      child: Padding(
+        padding: EdgeInsets.only(top: 6.0.s),
+        child: OverlayMenuContainer(
+          child: IntrinsicWidth(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 4.0.s),
+              child: Column(
+                children: [
+                  OverlayMenuItem(
+                    label: context.i18n.button_reply,
+                    //TODO: update when design is ready
+                    icon: Assets.svg.iconChatReplymessage.icon(
+                      size: iconSize,
+                      color: context.theme.appColors.quaternaryText,
+                    ),
+                    onPressed: () {},
+                    verticalPadding: 12,
+                    minWidth: 140,
                   ),
-                  onPressed: () {},
-                ),
-                const OverlayMenuItemSeperator(),
-                OverlayMenuItem(
-                  label: context.i18n.button_mute,
-                  icon: Assets.svg.iconChannelMute
-                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                  onPressed: () {},
-                ),
-                const OverlayMenuItemSeperator(),
-                OverlayMenuItem(
-                  label: context.i18n.button_block,
-                  icon: Assets.svg.iconPhofileBlockuser
-                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                  onPressed: () {},
-                ),
-                const OverlayMenuItemSeperator(),
-                OverlayMenuItem(
-                  label: context.i18n.button_report,
-                  icon: Assets.svg.iconBlockClose3
-                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                  onPressed: () {},
-                ),
-                const OverlayMenuItemSeperator(),
-                OverlayMenuItem(
-                  label: context.i18n.button_delete,
-                  labelColor: context.theme.appColors.attentionRed,
-                  icon: Assets.svg.iconBlockDelete
-                      .icon(size: iconSize, color: context.theme.appColors.attentionRed),
-                  onPressed: () {},
-                ),
-              ],
+                  const OverlayMenuItemSeperator(),
+                  OverlayMenuItem(
+                    label: context.i18n.button_forward,
+                    verticalPadding: 12,
+                    icon: Assets.svg.iconFeedReplies
+                        .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                    onPressed: () {},
+                  ),
+                  const OverlayMenuItemSeperator(),
+                  OverlayMenuItem(
+                    label: context.i18n.button_copy,
+                    verticalPadding: 12,
+                    icon: Assets.svg.iconBlockCopyBlue
+                        .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                    onPressed: () {},
+                  ),
+                  const OverlayMenuItemSeperator(),
+                  OverlayMenuItem(
+                    label: context.i18n.button_bookmark,
+                    verticalPadding: 12,
+                    icon: Assets.svg.iconBookmarks
+                        .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                    onPressed: () {},
+                  ),
+                  const OverlayMenuItemSeperator(),
+                  OverlayMenuItem(
+                    label: context.i18n.button_delete,
+                    labelColor: context.theme.appColors.attentionRed,
+                    verticalPadding: 12,
+                    icon: Assets.svg.iconBlockDelete
+                        .icon(size: iconSize, color: context.theme.appColors.attentionRed),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             ),
           ),
         ),

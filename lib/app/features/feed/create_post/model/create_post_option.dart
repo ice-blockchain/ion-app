@@ -10,7 +10,7 @@ enum CreatePostOption {
 
   String getTitle(BuildContext context) {
     return switch (this) {
-      CreatePostOption.reply => context.i18n.post_reply,
+      CreatePostOption.reply => context.i18n.button_reply,
       CreatePostOption.quote => context.i18n.feed_write_comment,
       CreatePostOption.plain => context.i18n.create_post_modal_title,
     };
