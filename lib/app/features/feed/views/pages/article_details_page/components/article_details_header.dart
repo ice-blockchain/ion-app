@@ -22,32 +22,27 @@ class ArticleDetailsHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ColoredBox(
       color: context.theme.appColors.onPrimaryAccent,
-      child: IntrinsicHeight(
-        child: Expanded(
-          child: ScreenSideOffset.small(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  article.data.title ?? '',
-                  style: context.theme.appTextThemes.headline2
-                      .copyWith(color: context.theme.appColors.primaryText),
-                ),
-                SizedBox(height: 10.0.s),
-                ArticleImage(
-                  imageUrl: article.data.image,
-                  minutesToRead: calculateReadingTime(article.data.content),
-                ),
-                SizedBox(
-                  height: 12.0.s,
-                ),
-                UserInfo(
-                  pubkey: article.pubkey,
-                  trailing: FollowButton(onPressed: () {}, following: false),
-                ),
-              ],
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              article.data.title ?? '',
+              style: context.theme.appTextThemes.headline2
+                  .copyWith(color: context.theme.appColors.primaryText),
             ),
-          ),
+            SizedBox(height: 10.0.s),
+            ArticleImage(
+              imageUrl: article.data.image,
+              minutesToRead: calculateReadingTime(article.data.content),
+            ),
+            SizedBox(height: 12.0.s),
+            UserInfo(
+              pubkey: article.pubkey,
+              trailing: FollowButton(onPressed: () {}, following: false),
+            ),
+          ],
         ),
       ),
     );
