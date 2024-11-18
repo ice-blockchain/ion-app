@@ -76,7 +76,7 @@ class ReplyInputField extends HookConsumerWidget {
                           final content = await CreatePostRoute(
                             parentEvent: eventReference.toString(),
                             showCollapseButton: true,
-                            content: textEditorController.document.toPlainText(),
+                            content: textEditorController.document.toPlainText().trim(),
                           ).push<String>(context);
                           if (content != null) {
                             textEditorController
