@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/views/components/feed_item/feed_item_foote
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
+import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_progress_indicator.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_section_header.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/articles_carousel.dart';
@@ -57,25 +58,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
       ),
       body: Column(
         children: [
-          Consumer(
-            builder: (context, ref, child) {
-              return SizedBox(
-                width: double.infinity,
-                height: 1.0.s,
-                child: AnimatedFractionallySizedBox(
-                  duration: const Duration(
-                    milliseconds: 100,
-                  ),
-                  widthFactor: progress,
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    height: 1.0.s,
-                    color: context.theme.appColors.primaryAccent,
-                  ),
-                ),
-              );
-            },
-          ),
+          ArticleDetailsProgressIndicator(progress: progress),
           Flexible(
             child: CustomScrollView(
               controller: scrollController,

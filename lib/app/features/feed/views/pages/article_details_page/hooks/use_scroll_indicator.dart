@@ -1,7 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -10,7 +6,7 @@ double useScrollIndicator(ScrollController scrollController) {
 
   useEffect(
     () {
-      void onScroll() {
+      void calculateProgress() {
         if (!scrollController.hasClients) return;
 
         final maxScroll = scrollController.position.maxScrollExtent;
@@ -18,16 +14,24 @@ double useScrollIndicator(ScrollController scrollController) {
 
         if (maxScroll > 0) {
           final scrollFraction = (currentScroll / maxScroll).clamp(0.0, 1.0);
-          progress.value = lerpDouble(progress.value, 0.05 + (0.95 * scrollFraction), 0.2)!;
+          progress.value = 0.05 + (0.95 * scrollFraction);
         } else {
-          progress.value = 0.05;
+          progress.value = 1.0;
         }
       }
 
-      WidgetsBinding.instance.addPostFrameCallback((_) => onScroll());
+      void onInitialFrame() {
+        if (scrollController.hasClients && scrollController.position.maxScrollExtent > 0) {
+          calculateProgress();
+        } else {
+          WidgetsBinding.instance.addPostFrameCallback((_) => onInitialFrame());
+        }
+      }
 
-      scrollController.addListener(onScroll);
-      return () => scrollController.removeListener(onScroll);
+      WidgetsBinding.instance.addPostFrameCallback((_) => onInitialFrame());
+
+      scrollController.addListener(calculateProgress);
+      return () => scrollController.removeListener(calculateProgress);
     },
     [scrollController],
   );
