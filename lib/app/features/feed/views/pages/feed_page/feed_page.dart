@@ -30,6 +30,10 @@ class FeedPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
     final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
+    final feedHasMore = ref.watch(
+      entitiesPagedDataProvider(ref.watch(feedPostsDataSourceProvider))
+          .select((state) => (state?.hasMore).falseOrValue),
+    );
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
@@ -59,7 +63,7 @@ class FeedPage extends HookConsumerWidget {
       body: NotificationBarWrapper(
         child: LoadMoreBuilder(
           slivers: slivers,
-          hasMore: true,
+          hasMore: feedHasMore,
           onLoadMore: () => _onLoadMore(ref),
           builder: (context, slivers) {
             return PullToRefreshBuilder(
