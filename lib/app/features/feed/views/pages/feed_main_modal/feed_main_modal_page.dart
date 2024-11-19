@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
@@ -14,13 +13,13 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class FeedMainModalPage extends ConsumerWidget {
+class FeedMainModalPage extends StatelessWidget {
   const FeedMainModalPage({super.key});
 
   static const List<FeedType> feedTypeValues = FeedType.values;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
