@@ -253,11 +253,35 @@ class StoryViewingController extends _$StoryViewingController {
 
       if (validPosts.isEmpty) continue;
 
-      final userStories = UserStories.fromPosts(
-        pubkey,
-        validPosts,
-        userMetadata?.data,
+      final stories = validPosts.map((post) {
+        final mediaAttachment = post.data.media.values.first;
+        final storyData = StoryData(
+          id: post.id,
+          authorId: post.pubkey,
+          author: userMetadata?.data.displayName ?? '',
+          createdAt: post.createdAt,
+          mediaUrl: mediaAttachment.url,
+        );
+
+        if (mediaAttachment.mediaType == MediaType.image) {
+          return Story.image(
+            data: storyData,
+          );
+        } else {
+          return Story.video(
+            data: storyData,
+          );
+        }
+      }).toList();
+
+      final userStories = UserStories(
+        userId: pubkey,
+        userName: userMetadata?.data.displayName ?? '',
+        userAvatar: userMetadata?.data.picture ?? '',
+        stories: stories,
+        isVerified: userMetadata?.data.verified ?? false,
       );
+
       userStoriesList.add(userStories);
     }
 
