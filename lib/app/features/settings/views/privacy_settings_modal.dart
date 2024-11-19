@@ -12,7 +12,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class PrivacySettingsModal extends StatelessWidget {
+class PrivacySettingsModal extends HookWidget {
   const PrivacySettingsModal({super.key});
 
   @override
