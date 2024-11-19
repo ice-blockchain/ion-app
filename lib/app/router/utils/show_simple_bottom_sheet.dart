@@ -8,11 +8,14 @@ Future<T?> showSimpleBottomSheet<T>({
   required BuildContext context,
   required Widget child,
   bool useRootNavigator = true,
+  bool isDismissible = true,
 }) {
   return showModalBottomSheet<T>(
     useRootNavigator: useRootNavigator,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
+    isDismissible: isDismissible,
+    enableDrag: isDismissible,
     context: context,
     builder: (context) {
       return Column(
