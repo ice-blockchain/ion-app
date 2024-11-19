@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -13,7 +12,7 @@ import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class PostDetailsPage extends HookConsumerWidget {
+class PostDetailsPage extends StatelessWidget {
   const PostDetailsPage({
     required this.eventReference,
     super.key,
@@ -22,7 +21,7 @@ class PostDetailsPage extends HookConsumerWidget {
   final EventReference eventReference;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: NavigationAppBar.screen(
         title: Text(context.i18n.post_page_title),

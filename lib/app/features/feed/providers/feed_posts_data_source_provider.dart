@@ -21,7 +21,7 @@ part 'feed_posts_data_source_provider.g.dart';
 List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
   final filters = ref.watch(feedCurrentFilterProvider);
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters.filter)).valueOrNull;
-  final foo = ref.watch(currentPubkeySelectorProvider);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (filterRelays != null) {
     return [
@@ -31,9 +31,13 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
               actionSource: ActionSourceRelayUrl(entry.key),
               authors: filters.filter == FeedFilter.following ? entry.value : null,
             ),
-          _ => _buildPostsDataSource(
+          FeedCategory.videos => _buildPostsDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
-              authors: [foo!],
+              authors: [currentPubkey!], //TODO: temp for debug
+            ),
+          FeedCategory.feed => _buildPostsDataSource(
+              actionSource: ActionSourceRelayUrl(entry.key),
+              authors: filters.filter == FeedFilter.following ? entry.value : null,
             )
         },
     ];
