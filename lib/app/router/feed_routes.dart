@@ -20,7 +20,6 @@ class FeedRoutes {
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
         TypedGoRoute<CreatePostRoute>(path: 'create-post'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
-        TypedGoRoute<CreateStoryRoute>(path: 'create-story'),
         TypedGoRoute<CreateVideoRoute>(path: 'create-video'),
         TypedGoRoute<MediaPickerRoute>(path: 'media-picker'),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
@@ -150,14 +149,6 @@ class CreateArticleRoute extends BaseRouteData {
   CreateArticleRoute()
       : super(
           child: const CreateArticleModal(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class CreateStoryRoute extends BaseRouteData {
-  CreateStoryRoute()
-      : super(
-          child: const CreateStoryModal(),
           type: IceRouteType.bottomSheet,
         );
 }

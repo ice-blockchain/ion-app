@@ -12,10 +12,20 @@ import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
+enum MediaPickerType {
+  image,
+  video,
+}
+
 class MediaPickerPage extends HookConsumerWidget {
-  const MediaPickerPage({required this.maxSelection, super.key});
+  const MediaPickerPage({
+    required this.maxSelection,
+    this.type = MediaPickerType.image,
+    super.key,
+  });
 
   final int maxSelection;
+  final MediaPickerType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
