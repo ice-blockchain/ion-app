@@ -42,31 +42,32 @@ class PrivacySettingsModal extends HookConsumerWidget {
             ],
           ),
           ScreenSideOffset.small(
-            child: SeparatedColumn(
-              mainAxisSize: MainAxisSize.min,
-              separator: SizedBox(height: 16.0.s),
-              children: [
-                SelectableOptionsGroup(
-                  title: context.i18n.privacy_group_wallet_address_title,
-                  selected: [walletPrivacy.value],
-                  options: WalletAddressPrivacyOption.values,
-                  onSelected: (option) => walletPrivacy.value = option,
-                ),
-                SelectableOptionsGroup(
-                  title: context.i18n.privacy_group_who_can_message_you_title,
-                  selected: [messagingPrivacy.value],
-                  options: UserVisibilityPrivacyOption.values,
-                  onSelected: (option) => messagingPrivacy.value = option,
-                ),
-                SelectableOptionsGroup(
-                  title: context.i18n.privacy_group_who_can_invite_you_title,
-                  selected: [invitingPrivacy.value],
-                  options: UserVisibilityPrivacyOption.values,
-                  onSelected: (option) => invitingPrivacy.value = option,
-                  addSeparatorAfterLastItem: false,
-                ),
-                ScreenBottomOffset(margin: 32.0.s),
-              ],
+            child: ScreenBottomOffset(
+              margin: 32.0.s,
+              child: SeparatedColumn(
+                mainAxisSize: MainAxisSize.min,
+                separator: SelectableOptionsGroup.separator,
+                children: [
+                  SelectableOptionsGroup(
+                    title: context.i18n.privacy_group_wallet_address_title,
+                    selected: [walletPrivacy.value],
+                    options: WalletAddressPrivacyOption.values,
+                    onSelected: (option) => walletPrivacy.value = option,
+                  ),
+                  SelectableOptionsGroup(
+                    title: context.i18n.privacy_group_who_can_message_you_title,
+                    selected: [messagingPrivacy.value],
+                    options: UserVisibilityPrivacyOption.values,
+                    onSelected: (option) => messagingPrivacy.value = option,
+                  ),
+                  SelectableOptionsGroup(
+                    title: context.i18n.privacy_group_who_can_invite_you_title,
+                    selected: [invitingPrivacy.value],
+                    options: UserVisibilityPrivacyOption.values,
+                    onSelected: (option) => invitingPrivacy.value = option,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

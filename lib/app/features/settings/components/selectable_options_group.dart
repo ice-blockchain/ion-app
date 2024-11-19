@@ -15,7 +15,6 @@ class SelectableOptionsGroup<T extends SelectableOption> extends StatelessWidget
     required this.options,
     required this.selected,
     required this.onSelected,
-    this.addSeparatorAfterLastItem = true,
     this.enabled = true,
     super.key,
   });
@@ -24,12 +23,15 @@ class SelectableOptionsGroup<T extends SelectableOption> extends StatelessWidget
   final List<T> options;
   final List<T> selected;
   final void Function(T) onSelected;
-  final bool addSeparatorAfterLastItem;
   final bool enabled;
+
+  static final separator = Padding(
+    padding: EdgeInsets.symmetric(vertical: 12.0.s),
+    child: const HorizontalSeparator(),
+  );
 
   @override
   Widget build(BuildContext context) {
-    final separatorPadding = EdgeInsets.symmetric(vertical: 12.0.s);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,27 +40,19 @@ class SelectableOptionsGroup<T extends SelectableOption> extends StatelessWidget
         SizedBox(height: 16.0.s),
         SeparatedColumn(
           mainAxisSize: MainAxisSize.min,
-          separator: Padding(
-            padding: EdgeInsets.symmetric(vertical: 12.0.s),
-            child: const HorizontalSeparator(),
-          ),
+          separator: separator,
           children: options
               .map(
-                (e) => _OptionItem(
-                  icon: e.getIcon(context),
-                  title: e.getLabel(context),
-                  onTap: () => onSelected(e),
-                  isSelected: selected.contains(e),
+                (option) => _OptionItem(
+                  icon: option.getIcon(context),
+                  title: option.getLabel(context),
+                  onTap: () => onSelected(option),
+                  isSelected: selected.contains(option),
                   enabled: enabled,
                 ),
               )
               .toList(),
         ),
-        if (addSeparatorAfterLastItem)
-          Padding(
-            padding: separatorPadding.copyWith(bottom: 0),
-            child: const HorizontalSeparator(),
-          ),
       ],
     );
   }
@@ -81,29 +75,32 @@ class _OptionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 36.0.s,
-      child: ListItem(
-        contentPadding: EdgeInsets.zero,
-        onTap: enabled ? onTap : null,
+    return ListItem(
+      contentPadding: EdgeInsets.zero,
+      constraints: BoxConstraints(maxHeight: 36.0.s),
+      onTap: enabled ? onTap : null,
+      backgroundColor: context.theme.appColors.secondaryBackground,
+      leading: Button.icon(
         backgroundColor: context.theme.appColors.secondaryBackground,
-        leading: Button.icon(
-          backgroundColor: context.theme.appColors.secondaryBackground,
-          borderColor: context.theme.appColors.onTerararyFill,
-          borderRadius: BorderRadius.all(
-            Radius.circular(10.0.s),
-          ),
-          size: 36.0.s,
-          onPressed: enabled ? onTap : () {},
-          icon: icon,
+        borderColor: context.theme.appColors.onTerararyFill,
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0.s),
         ),
-        title: Text(title, style: context.theme.appTextThemes.body),
-        trailing: isSelected
-            ? Assets.svg.iconBlockCheckboxOn.icon(
-                color: enabled ? null : context.theme.appColors.sheetLine,
-              )
-            : Assets.svg.iconBlockCheckboxOff.icon(),
+        size: 36.0.s,
+        onPressed: enabled ? onTap : () {},
+        icon: icon,
       ),
+      title: Text(
+        title,
+        style: context.theme.appTextThemes.body.copyWith(
+          color: context.theme.appColors.primaryText,
+        ),
+      ),
+      trailing: isSelected
+          ? Assets.svg.iconBlockCheckboxOn.icon(
+              color: enabled ? null : context.theme.appColors.sheetLine,
+            )
+          : Assets.svg.iconBlockCheckboxOff.icon(),
     );
   }
 }

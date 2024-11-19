@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ion/app/features/core/providers/app_info_provider.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
@@ -31,10 +30,8 @@ class BannerPickerButton extends ConsumerWidget {
           onMediaSelected(mediaFiles?.first);
         }
       },
-      requestDialog: PermissionRequestSheet.fromType(
-        context,
-        permissionType: Permission.photos,
-        appName: ref.watch(appInfoProvider).valueOrNull?.appName ?? '',
+      requestDialog: const PermissionRequestSheet(
+        permission: Permission.photos,
       ),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
       builder: (context, onPressed) {

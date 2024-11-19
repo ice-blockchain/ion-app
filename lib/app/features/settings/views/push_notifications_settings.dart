@@ -8,14 +8,12 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
-import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
-import 'package:ion/app/features/core/providers/app_info_provider.dart';
 import 'package:ion/app/features/settings/components/selectable_options_group.dart';
 import 'package:ion/app/features/settings/model/push_notifications_options.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
@@ -64,55 +62,54 @@ class PushNotificationsSettings extends HookConsumerWidget {
             ],
           ),
           Expanded(
-            child: SingleChildScrollView(
-              child: ScreenSideOffset.small(
-                child: SeparatedColumn(
-                  mainAxisSize: MainAxisSize.min,
-                  separator: SizedBox(height: 16.0.s),
-                  children: [
-                    _DevicePermissionButton(
-                      hasPermission: hasNotificationsPermission,
-                      hasPermissionOnDeviceLevel: hasPermissionOnDeviceLevel,
-                      onChangeAppLevelPermission: () {
-                        appLevelPermissionNotifier.value = !appLevelPermissionNotifier.value;
-                      },
-                    ),
-                    const HorizontalSeparator(),
-                    SelectableOptionsGroup(
-                      title: context.i18n.push_notification_social_group_title,
-                      selected: socialNotifications,
-                      options: SocialNotificationOption.values,
-                      onSelected: toggleSocialNotification,
-                      enabled: hasNotificationsPermission,
-                    ),
-                    SelectableOptionsGroup(
-                      title: context.i18n.push_notification_chat_group_title,
-                      selected: chatNotifications,
-                      options: ChatNotificationOption.values,
-                      onSelected: toggleChatNotification,
-                      enabled: hasNotificationsPermission,
-                    ),
-                    SelectableOptionsGroup(
-                      title: context.i18n.push_notification_wallet_group_title,
-                      selected: walletNotifications,
-                      options: WalletNotificationOption.values,
-                      onSelected: toggleWalletNotification,
-                      enabled: hasNotificationsPermission,
-                    ),
-                    SelectableOptionsGroup(
-                      title: context.i18n.push_notification_system_group_title,
-                      selected: systemNotifications,
-                      options: SystemNotificationOption.values,
-                      onSelected: toggleSystemNotification,
-                      enabled: hasNotificationsPermission,
-                      addSeparatorAfterLastItem: false,
-                    ),
-                  ],
+            child: ScreenBottomOffset(
+              margin: 32.0.s,
+              child: SingleChildScrollView(
+                child: ScreenSideOffset.small(
+                  child: SeparatedColumn(
+                    separator: SelectableOptionsGroup.separator,
+                    children: [
+                      _DevicePermissionButton(
+                        hasPermission: hasNotificationsPermission,
+                        hasPermissionOnDeviceLevel: hasPermissionOnDeviceLevel,
+                        onChangeAppLevelPermission: () {
+                          appLevelPermissionNotifier.value = !appLevelPermissionNotifier.value;
+                        },
+                      ),
+                      SelectableOptionsGroup(
+                        title: context.i18n.push_notification_social_group_title,
+                        selected: socialNotifications,
+                        options: SocialNotificationOption.values,
+                        onSelected: toggleSocialNotification,
+                        enabled: hasNotificationsPermission,
+                      ),
+                      SelectableOptionsGroup(
+                        title: context.i18n.push_notification_chat_group_title,
+                        selected: chatNotifications,
+                        options: ChatNotificationOption.values,
+                        onSelected: toggleChatNotification,
+                        enabled: hasNotificationsPermission,
+                      ),
+                      SelectableOptionsGroup(
+                        title: context.i18n.push_notification_wallet_group_title,
+                        selected: walletNotifications,
+                        options: WalletNotificationOption.values,
+                        onSelected: toggleWalletNotification,
+                        enabled: hasNotificationsPermission,
+                      ),
+                      SelectableOptionsGroup(
+                        title: context.i18n.push_notification_system_group_title,
+                        selected: systemNotifications,
+                        options: SystemNotificationOption.values,
+                        onSelected: toggleSystemNotification,
+                        enabled: hasNotificationsPermission,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-          ScreenBottomOffset(margin: 32.0.s),
         ],
       ),
     );
@@ -132,43 +129,45 @@ class _DevicePermissionButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return PermissionAwareWidget(
-      permissionType: Permission.notifications,
-      requestDialog: PermissionRequestSheet.fromType(
-        context,
-        permissionType: Permission.notifications,
-        appName: ref.watch(appInfoProvider).valueOrNull?.appName ?? '',
-      ),
-      settingsDialog: SettingsRedirectSheet.fromType(
-        context,
-        Permission.notifications,
-      ),
-      onGranted: () {},
-      builder: (BuildContext context, VoidCallback onPressed) {
-        final onTap = hasPermissionOnDeviceLevel ? onChangeAppLevelPermission : onPressed;
+    return Column(
+      children: [
+        PermissionAwareWidget(
+          permissionType: Permission.notifications,
+          requestDialog: const PermissionRequestSheet(
+            permission: Permission.notifications,
+          ),
+          settingsDialog: SettingsRedirectSheet.fromType(
+            context,
+            Permission.notifications,
+          ),
+          onGranted: () {},
+          builder: (BuildContext context, VoidCallback onPressed) {
+            final onTap = hasPermissionOnDeviceLevel ? onChangeAppLevelPermission : onPressed;
 
-        return ListItem(
-          onTap: onTap,
-          title: Text(
-            context.i18n.push_notification_device_permission,
-          ),
-          leading: Button.icon(
-            backgroundColor: context.theme.appColors.secondaryBackground,
-            borderColor: context.theme.appColors.onTerararyFill,
-            borderRadius: BorderRadius.all(
-              Radius.circular(10.0.s),
-            ),
-            size: 36.0.s,
-            onPressed: onTap,
-            icon: Assets.svg.iconProfileDevicepermission.icon(
-              color: context.theme.appColors.primaryAccent,
-            ),
-          ),
-          trailing: hasPermission
-              ? Assets.svg.iconBlockCheckboxOn.icon()
-              : Assets.svg.iconBlockCheckboxOff.icon(),
-        );
-      },
+            return ListItem(
+              onTap: onTap,
+              title: Text(
+                context.i18n.push_notification_device_permission,
+              ),
+              leading: Button.icon(
+                backgroundColor: context.theme.appColors.secondaryBackground,
+                borderColor: context.theme.appColors.onTerararyFill,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10.0.s),
+                ),
+                size: 36.0.s,
+                onPressed: onTap,
+                icon: Assets.svg.iconProfileDevicepermission.icon(
+                  color: context.theme.appColors.primaryAccent,
+                ),
+              ),
+              trailing: hasPermission
+                  ? Assets.svg.iconBlockCheckboxOn.icon()
+                  : Assets.svg.iconBlockCheckboxOff.icon(),
+            );
+          },
+        ),
+      ],
     );
   }
 }

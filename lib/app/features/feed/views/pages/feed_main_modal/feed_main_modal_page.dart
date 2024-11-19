@@ -8,7 +8,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ion/app/features/core/providers/app_info_provider.dart';
 import 'package:ion/app/features/wallet/model/feed_type.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -46,10 +45,8 @@ class FeedMainModalPage extends ConsumerWidget {
                     onTap: onPressed,
                   ),
                   onGranted: () => StoryRecordRoute().push<void>(context),
-                  requestDialog: PermissionRequestSheet.fromType(
-                    context,
-                    permissionType: Permission.camera,
-                    appName: ref.watch(appInfoProvider).valueOrNull?.appName ?? '',
+                  requestDialog: const PermissionRequestSheet(
+                    permission: Permission.camera,
                   ),
                   settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
                 );
