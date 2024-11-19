@@ -79,6 +79,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       data = data.copyWith(relatedHashtags: _buildRelatedHashtags(data.content));
 
+      //TODO: check the event json according to notion when defined
       await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, data]);
     });
   }
