@@ -61,21 +61,16 @@ class PostSubmitButton extends HookConsumerWidget {
       loading: isSubmitLoading,
       enabled: isSubmitButtonEnabled && !isSubmitLoading,
       onPressed: () async {
-        final imageIds = textEditorController.document.toDelta().operations.fold(<String>[],
-            (result, operation) {
+        final imageIds = <String>[];
+        final operations = <Operation>[];
+        for (final operation in textEditorController.document.toDelta().operations) {
           final data = operation.data;
-          if (operation.isInsert &&
-              data is Map<String, dynamic> &&
-              data[textEditorSingleImageKey] is String) {
-            return [...result, data[textEditorSingleImageKey] as String];
+          if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
+            imageIds.add(data[textEditorSingleImageKey] as String);
+          } else {
+            operations.add(operation);
           }
-          return result;
-        });
-
-        final operations = textEditorController.document.toDelta().operations.where((operation) {
-          final data = operation.data;
-          return !(data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey));
-        }).toList();
+        }
 
         await ref.read(createPostNotifierProvider.notifier).create(
               content: Document.fromDelta(Delta.fromOperations(operations)).toPlainText(),
