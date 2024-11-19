@@ -116,7 +116,7 @@ class PushNotificationsSettings extends HookConsumerWidget {
   }
 }
 
-class _DevicePermissionButton extends ConsumerWidget {
+class _DevicePermissionButton extends StatelessWidget {
   const _DevicePermissionButton({
     required this.hasPermission,
     required this.hasPermissionOnDeviceLevel,
@@ -128,7 +128,7 @@ class _DevicePermissionButton extends ConsumerWidget {
   final bool hasPermission;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Column(
       children: [
         PermissionAwareWidget(
