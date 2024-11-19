@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -71,8 +72,13 @@ class PostSubmitButton extends HookConsumerWidget {
           return result;
         });
 
+        final operations = textEditorController.document.toDelta().operations.where((operation) {
+          final data = operation.data;
+          return !(data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey));
+        }).toList();
+
         await ref.read(createPostNotifierProvider.notifier).create(
-              content: textEditorController.document.toPlainText(),
+              content: Document.fromDelta(Delta.fromOperations(operations)).toPlainText(),
               parentEvent: parentEvent,
               quotedEvent: quotedEvent,
               mediaIds: imageIds,

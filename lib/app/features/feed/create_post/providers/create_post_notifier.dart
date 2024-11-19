@@ -35,7 +35,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      var data = PostData.fromRawContent(content);
+      var data = PostData.fromRawContent(content.trim());
       final files = <FileMetadata>[];
 
       if (mediaIds != null) {
