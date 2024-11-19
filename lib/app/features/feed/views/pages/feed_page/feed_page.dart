@@ -9,6 +9,8 @@ import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/app_update_type.dart';
+import 'package:ion/app/features/core/views/pages/app_update_modal.dart';
 import 'package:ion/app/features/feed/content_notification/views/components/notification_bar_wrapper.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
@@ -16,7 +18,6 @@ import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
-import 'package:ion/app/features/feed/views/pages/app_update_modal/app_update_modal.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
@@ -42,7 +43,7 @@ class FeedPage extends HookConsumerWidget {
 
     useOnInit(
       () {
-        if (Random().nextBool()) {
+        if (Random().nextInt(10) == 0) {
           showSimpleBottomSheet<void>(
             isDismissible: false,
             context: context,
