@@ -36,7 +36,12 @@ class SelectableOptionsGroup<T extends SelectableOption> extends StatelessWidget
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: context.theme.appTextThemes.body),
+        Text(
+          title,
+          style: context.theme.appTextThemes.body.copyWith(
+            color: context.theme.appColors.primaryText,
+          ),
+        ),
         SizedBox(height: 16.0.s),
         SeparatedColumn(
           mainAxisSize: MainAxisSize.min,
