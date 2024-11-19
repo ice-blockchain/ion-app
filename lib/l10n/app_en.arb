@@ -608,5 +608,14 @@
   "update_update_action": "Update now",
   "update_uptodate_title": "You are up to date",
   "update_uptodate_desc": "You are now using the latest version. Check all the changes below",
-  "update_uptodate_action": "View changelog"
+  "update_uptodate_action": "View changelog",
+  "emoji_category_smileys_people": "Smileys & People",
+  "emoji_category_animals_nature": "Animals & Nature",
+  "emoji_category_food_drink": "Food & Drink",
+  "emoji_category_activities": "Activities",
+  "emoji_category_travel_places": "Travel & Places",
+  "emoji_category_objects": "Objects",
+  "emoji_category_symbols": "Symbols",
+  "emoji_category_flags": "Flags",
+  "recent_emoji_reactions": "Recent reactions"
 }

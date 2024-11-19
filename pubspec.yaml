@@ -142,6 +142,8 @@ flutter:
     - assets/images/logo/
     - assets/images/qr_code/
     - assets/images/notifications/
+    - assets/emoji_data_sets/emojis-by-group.json
+    - assets/emoji_data_sets/emoji-keywords.json
 
 flutter_gen:
   output: lib/generated/

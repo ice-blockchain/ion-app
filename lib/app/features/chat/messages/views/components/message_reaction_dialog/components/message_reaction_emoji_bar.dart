@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/recent_emoji_reactions_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessageReactionEmojiBar extends ConsumerWidget {
@@ -72,7 +73,9 @@ class _ShowMoreEmojiButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        SearchEmojiRoute().push<void>(context);
+      },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 5.0.s, horizontal: 9.0.s),
         decoration: BoxDecoration(
