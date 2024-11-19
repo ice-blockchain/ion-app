@@ -39,10 +39,9 @@ class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements Cache
   }
 
   @override
-  String get cacheKey => pubkey;
+  String get cacheKey => cacheKeyBuilder(pubkey: pubkey);
 
-  @override
-  Type get cacheType => UserMetadataEntity;
+  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
   static const int kind = 0;
 }
@@ -105,7 +104,7 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
           bot: bot,
         ).toJson(),
       ),
-      tags: media.values.map((attachment) => attachment.toJson()).toList(),
+      tags: media.values.map((attachment) => attachment.toTag()).toList(),
     );
   }
 }

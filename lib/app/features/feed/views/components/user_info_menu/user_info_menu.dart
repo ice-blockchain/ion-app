@@ -22,8 +22,11 @@ class UserInfoMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata =
-        ref.watch(nostrCacheProvider.select(cacheSelector<UserMetadataEntity>(pubkey)));
+    final userMetadata = ref.watch(
+      nostrCacheProvider.select(
+        cacheSelector<UserMetadataEntity>(UserMetadataEntity.cacheKeyBuilder(pubkey: pubkey)),
+      ),
+    );
 
     if (userMetadata == null) {
       return const SizedBox.shrink();

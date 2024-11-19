@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/paged.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
@@ -99,7 +100,7 @@ class EntitiesPagedData extends _$EntitiesPagedData {
 
     DateTime? lastEventTime;
     await for (final entity in entitiesStream) {
-      if (dataSource.entityFilter(entity)) {
+      if (dataSource.entityFilter(entity) && !(state?.data.items.contains(entity)).falseOrValue) {
         lastEventTime = entity.createdAt;
         state = state?.copyWith(
           data: Paged.loading(

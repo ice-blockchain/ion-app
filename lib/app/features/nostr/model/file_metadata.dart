@@ -1,13 +1,49 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/nostr/model/event_serializable.dart';
+import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'file_metadata.freezed.dart';
 
-/// https://github.com/nostr-protocol/nips/blob/master/94.md
+@Freezed(equal: false)
+class FileMetadataEntity with _$FileMetadataEntity, NostrEntity implements CacheableEntity {
+  const factory FileMetadataEntity({
+    required String id,
+    required String pubkey,
+    required DateTime createdAt,
+    required FileMetadata data,
+  }) = _FileMetadataEntity;
+
+  const FileMetadataEntity._();
+
+  /// https://github.com/nostr-protocol/nips/blob/master/94.md
+  factory FileMetadataEntity.fromEventMessage(EventMessage eventMessage) {
+    if (eventMessage.kind != kind) {
+      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+    }
+
+    return FileMetadataEntity(
+      id: eventMessage.id,
+      pubkey: eventMessage.pubkey,
+      createdAt: eventMessage.createdAt,
+      data: FileMetadata.fromEventMessage(eventMessage),
+    );
+  }
+
+  @override
+  String get cacheKey => cacheKeyBuilder(id: id);
+
+  static String cacheKeyBuilder({required String id}) => id;
+
+  static const int kind = 1063;
+}
+
 @freezed
-class FileMetadata with _$FileMetadata {
+class FileMetadata with _$FileMetadata implements EventSerializable {
   const factory FileMetadata({
     required String url,
     required String mimeType,
@@ -49,9 +85,75 @@ class FileMetadata with _$FileMetadata {
     );
   }
 
+  factory FileMetadata.fromEventMessage(EventMessage eventMessage) {
+    String? url;
+    String? mimeType;
+    String? fileHash;
+    String? originalFileHash;
+    int? size;
+    String? dimension;
+    String? magnet;
+    String? torrentInfoHash;
+    String? blurhash;
+    String? thumb;
+    String? image;
+    String? summary;
+    String? alt;
+    for (final tag in eventMessage.tags) {
+      switch (tag[0]) {
+        case 'url':
+          url = tag[1];
+        case 'm':
+          mimeType = tag[1];
+        case 'x':
+          fileHash = tag[1];
+        case 'ox':
+          originalFileHash = tag[1];
+        case 'size':
+          size = int.tryParse(tag[1]);
+        case 'dim':
+          dimension = tag[1];
+        case 'magnet':
+          magnet = tag[1];
+        case 'i':
+          torrentInfoHash = tag[1];
+        case 'blurhash':
+          blurhash = tag[1];
+        case 'thumb':
+          thumb = tag[1];
+        case 'image':
+          image = tag[1];
+        case 'summary':
+          summary = tag[1];
+        case 'alt':
+          alt = tag[1];
+      }
+    }
+    if (url == null || mimeType == null || fileHash == null || originalFileHash == null) {
+      throw IncorrectEventTagsException(eventId: eventMessage.id);
+    }
+    return FileMetadata(
+      url: url,
+      mimeType: mimeType,
+      fileHash: fileHash,
+      originalFileHash: originalFileHash,
+      caption: eventMessage.id,
+      size: size,
+      dimension: dimension,
+      magnet: magnet,
+      torrentInfoHash: torrentInfoHash,
+      blurhash: blurhash,
+      thumb: thumb,
+      image: image,
+      summary: summary,
+      alt: alt,
+    );
+  }
+
   const FileMetadata._();
 
-  EventMessage toEventMessage(KeyStore keyStore) {
+  @override
+  EventMessage toEventMessage(EventSigner keyStore) {
     final tags = [
       ['url', url],
       ['m', mimeType],
@@ -70,11 +172,9 @@ class FileMetadata with _$FileMetadata {
 
     return EventMessage.fromData(
       signer: keyStore,
-      kind: kind,
+      kind: FileMetadataEntity.kind,
       tags: tags,
       content: caption,
     );
   }
-
-  static const int kind = 1063;
 }

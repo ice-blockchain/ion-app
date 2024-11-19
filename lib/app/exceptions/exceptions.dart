@@ -77,5 +77,23 @@ class IncorrectEventTagException extends IONException {
 
 class QuillParseException extends IONException {
   const QuillParseException(dynamic error)
-      : super(10011, 'Invalid content format for Quill Delta: $error');
+      : super(10014, 'Invalid content format for Quill Delta: $error');
+}
+
+class UnsupportedRepostKindException extends IONException {
+  UnsupportedRepostKindException(int kind)
+      : super(10015, 'Reposting events of kind $kind is not supported');
+}
+
+class EventNotFoundException extends IONException {
+  EventNotFoundException({required String eventId, required String pubkey})
+      : super(10016, 'Event with id $eventId not found for pubkey $pubkey');
+}
+
+class AssetEntityNotFoundException extends IONException {
+  AssetEntityNotFoundException() : super(10017, 'Asset entity not found');
+}
+
+class AssetEntityFileNotFoundException extends IONException {
+  AssetEntityFileNotFoundException() : super(10018, 'Asset entity file not found');
 }

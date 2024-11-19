@@ -9,27 +9,22 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_action_button.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-typedef ActionIconBuilder = Widget Function(
-  BuildContext context,
-  Widget child,
-  VoidCallback onPressed,
-);
-
 class FeedItemFooter extends HookConsumerWidget {
   FeedItemFooter({
-    required this.entityId,
-    this.actionBuilder,
+    required this.eventReference,
+    required this.kind,
     double? bottomPadding,
     double? topPadding,
     super.key,
   })  : bottomPadding = bottomPadding ?? 16.0.s,
         topPadding = topPadding ?? 10.0.s;
 
-  final String entityId;
-  final ActionIconBuilder? actionBuilder;
+  final EventReference eventReference;
+  final int kind;
   final double bottomPadding;
   final double topPadding;
 
@@ -43,13 +38,14 @@ class FeedItemFooter extends HookConsumerWidget {
 
     void onToggleComment() {
       HapticFeedback.lightImpact();
-      PostReplyModalRoute(postId: entityId).push<void>(context);
+      CreatePostRoute(parentEvent: eventReference.toString()).push<void>(context);
       isCommentActive.value = !isCommentActive.value;
     }
 
     void onToggleRepost() {
       HapticFeedback.lightImpact();
-      RepostOptionsModalRoute(postId: entityId).push<void>(context);
+      RepostOptionsModalRoute(eventReference: eventReference.toString(), kind: kind)
+          .push<void>(context);
       isReposted.value = !isReposted.value;
     }
 
@@ -60,7 +56,7 @@ class FeedItemFooter extends HookConsumerWidget {
 
     void onShareOptions() {
       HapticFeedback.lightImpact();
-      SharePostModalRoute(postId: entityId).push<void>(context);
+      SharePostModalRoute(postId: eventReference.eventId).push<void>(context);
     }
 
     void onIceStroke() => HapticFeedback.lightImpact();
@@ -125,60 +121,28 @@ class FeedItemFooter extends HookConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _ActionIcon(
-            onPressed: onToggleComment,
-            actionBuilder: actionBuilder,
+          GestureDetector(
+            onTap: onToggleComment,
             child: commentsActionIcon,
           ),
-          _ActionIcon(
-            onPressed: onToggleRepost,
-            actionBuilder: actionBuilder,
+          GestureDetector(
+            onTap: onToggleRepost,
             child: repostsActionIcon,
           ),
-          _ActionIcon(
-            onPressed: onToggleLike,
-            actionBuilder: actionBuilder,
+          GestureDetector(
+            onTap: onToggleLike,
             child: likesActionIcon,
           ),
-          _ActionIcon(
-            onPressed: onIceStroke,
-            actionBuilder: actionBuilder,
+          GestureDetector(
+            onTap: onIceStroke,
             child: iceActionIcon,
           ),
-          _ActionIcon(
-            onPressed: onShareOptions,
-            actionBuilder: actionBuilder,
+          GestureDetector(
+            onTap: onShareOptions,
             child: shareActionIcon,
           ),
         ],
       ),
     );
-  }
-}
-
-class _ActionIcon extends StatelessWidget {
-  const _ActionIcon({
-    required this.child,
-    required this.onPressed,
-    this.actionBuilder,
-  });
-
-  final Widget child;
-  final VoidCallback onPressed;
-  final ActionIconBuilder? actionBuilder;
-
-  @override
-  Widget build(BuildContext context) {
-    return actionBuilder == null
-        ? InkResponse(
-            onTap: onPressed,
-            splashFactory: InkRipple.splashFactory,
-            child: child,
-          )
-        : actionBuilder!(
-            context,
-            child,
-            onPressed,
-          );
   }
 }

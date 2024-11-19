@@ -16,7 +16,7 @@ class QuotedPostFrame extends StatelessWidget {
         border: Border.all(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0.s),
+        padding: EdgeInsets.only(left: 16.0.s, right: 16.0.s, bottom: 10.0.s),
         child: child,
       ),
     );

@@ -3,31 +3,33 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
-import 'package:ion/app/features/feed/providers/post_data_provider.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/components/quoted_post_frame/quoted_post_frame.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
 
 class Post extends ConsumerWidget {
   const Post({
-    required this.postId,
-    required this.pubkey,
+    required this.eventReference,
     this.header,
     this.footer,
     super.key,
   });
 
-  final String postId;
-  final String pubkey;
+  final EventReference eventReference;
   final Widget? header;
   final Widget? footer;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postEntity = ref.watch(postDataProvider(postId: postId, pubkey: pubkey)).valueOrNull;
+    final postEntity =
+        ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull as PostEntity?;
 
     if (postEntity == null) {
       return const Skeleton(child: PostSkeleton());
@@ -38,22 +40,27 @@ class Post extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: 12.0.s),
         header ??
             UserInfo(
-              pubkey: pubkey,
-              trailing: UserInfoMenu(pubkey: pubkey),
+              pubkey: eventReference.pubkey,
+              trailing: UserInfoMenu(pubkey: eventReference.pubkey),
             ),
+        SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
         if (quotedEvent != null)
-          QuotedPostFrame(
-            child: Post(
-              postId: quotedEvent.eventId,
-              pubkey: quotedEvent.pubkey,
-              header: UserInfo(pubkey: quotedEvent.pubkey),
-              footer: const SizedBox.shrink(),
+          Padding(
+            padding: EdgeInsets.only(top: 6.0.s),
+            child: QuotedPostFrame(
+              child: Post(
+                eventReference:
+                    EventReference(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey),
+                header: UserInfo(pubkey: quotedEvent.pubkey),
+                footer: const SizedBox.shrink(),
+              ),
             ),
           ),
-        footer ?? FeedItemFooter(entityId: postId),
+        footer ?? FeedItemFooter(eventReference: eventReference, kind: PostEntity.kind),
       ],
     );
   }

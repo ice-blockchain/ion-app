@@ -6,6 +6,7 @@ import 'package:ion/app/features/feed/data/models/article_data.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.dart';
 import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/data/models/repost_data.dart';
+import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';
 import 'package:ion/app/features/user/model/interest_set.dart';
@@ -31,6 +32,7 @@ class EventParser {
       UserDelegationEntity.kind => UserDelegationEntity.fromEventMessage(eventMessage),
       RepostEntity.kind => RepostEntity.fromEventMessage(eventMessage),
       GenericRepostEntity.kind => GenericRepostEntity.fromEventMessage(eventMessage),
+      FileMetadataEntity.kind => FileMetadataEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     } as NostrEntity;
   }

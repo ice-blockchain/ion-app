@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
+import 'package:ion/app/features/feed/data/models/entities/related_hashtag.dart';
+import 'package:ion/app/features/feed/data/models/entities/related_pubkey.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ion/app/services/text_parser/matchers/hashtag_matcher.dart';
 import 'package:ion/app/services/text_parser/matchers/url_matcher.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
@@ -40,10 +43,9 @@ class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
   }
 
   @override
-  String get cacheKey => id;
+  String get cacheKey => cacheKeyBuilder(id: id);
 
-  @override
-  Type get cacheType => PostEntity;
+  static String cacheKeyBuilder({required String id}) => id;
 
   static const kind = 1;
 }
@@ -54,16 +56,39 @@ class PostData with _$PostData implements EventSerializable {
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
     QuotedEvent? quotedEvent,
+    List<RelatedEvent>? relatedEvents,
+    List<RelatedPubkey>? relatedPubkeys,
+    List<RelatedHashtag>? relatedHashtags,
   }) = _PostData;
 
   const PostData._();
 
   factory PostData.fromEventMessage(EventMessage eventMessage) {
     final parsedContent = TextParser(matchers: [const UrlMatcher()]).parse(eventMessage.content);
+    final tags = eventMessage.tags.fold<Map<String, List<List<String>>>>({}, (result, tag) {
+      return result..putIfAbsent(tag[0], () => []).add(tag);
+    });
     return PostData(
       content: parsedContent,
-      media: _buildMedia(eventMessage, parsedContent),
-      quotedEvent: _buildQuotedEvent(eventMessage),
+      media: _buildMedia(tags[MediaAttachment.tagName], parsedContent),
+      quotedEvent: _buildQuotedEvent(tags[QuotedEvent.tagName]),
+      relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
+      relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
+    );
+  }
+
+  factory PostData.fromRawContent(String content) {
+    final parsedContent =
+        TextParser(matchers: [const UrlMatcher(), const HashtagMatcher()]).parse(content);
+    final hashtags = parsedContent
+        .where((match) => match.matcherType is HashtagMatcher)
+        .map((match) => RelatedHashtag(value: match.text))
+        .toList();
+    return PostData(
+      content: parsedContent,
+      relatedHashtags: hashtags,
+      media: {},
     );
   }
 
@@ -73,14 +98,25 @@ class PostData with _$PostData implements EventSerializable {
       signer: signer,
       kind: PostEntity.kind,
       content: content.map((match) => match.text).join(),
+      tags: [
+        if (quotedEvent != null) quotedEvent!.toTag(),
+        if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
+        if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
+        if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
+        if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+      ],
     );
   }
 
   static Map<String, MediaAttachment> _buildMedia(
-    EventMessage eventMessage,
+    List<List<String>>? imetaTags,
     List<TextMatch> parsedContent,
   ) {
-    final imeta = _parseImeta(eventMessage);
+    if (imetaTags == null) {
+      return {};
+    }
+
+    final imeta = _parseImeta(imetaTags);
 
     final media = parsedContent.fold<Map<String, MediaAttachment>>(
       {},
@@ -111,10 +147,9 @@ class PostData with _$PostData implements EventSerializable {
   /// imeta may include any field specified by NIP 94.
   ///
   /// Source: https://github.com/nostr-protocol/nips/blob/master/92.md
-  static Map<String, MediaAttachment> _parseImeta(EventMessage eventMessage) {
-    final tags = eventMessage.tags;
+  static Map<String, MediaAttachment> _parseImeta(List<List<String>> imetaTags) {
     final imeta = <String, MediaAttachment>{};
-    for (final tag in tags) {
+    for (final tag in imetaTags) {
       if (tag[0] == 'imeta') {
         final mediaAttachment = MediaAttachment.fromTag(tag);
         imeta[mediaAttachment.url] = mediaAttachment;
@@ -123,12 +158,11 @@ class PostData with _$PostData implements EventSerializable {
     return imeta;
   }
 
-  static QuotedEvent? _buildQuotedEvent(EventMessage eventMessage) {
-    final qTag = eventMessage.tags.firstWhereOrNull((tag) => tag[0] == QuotedEvent.tagName);
-    if (qTag == null) {
+  static QuotedEvent? _buildQuotedEvent(List<List<String>>? qTags) {
+    if (qTags == null) {
       return null;
     }
-    return QuotedEvent.fromTag(qTag);
+    return QuotedEvent.fromTag(qTags.first);
   }
 
   @override
@@ -157,7 +191,9 @@ class QuotedEvent with _$QuotedEvent {
     }
     return QuotedEvent(
       eventId: tag[1],
-      pubkey: /*tag[3]*/ '5e42daa682da9ad308e284b4a50b0967a23d6f352d2b819f40f0d9fa42a1b44d',
+      pubkey: /*tag[3]*/ tag.length < 4
+          ? '5e42daa682da9ad308e284b4a50b0967a23d6f352d2b819f40f0d9fa42a1b44d'
+          : tag[3],
     );
   }
 

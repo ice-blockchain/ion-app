@@ -4,9 +4,9 @@ part of 'app_routes.dart';
 
 class FeedRoutes {
   static const routes = <TypedRoute<RouteData>>[
-    TypedGoRoute<PostDetailsRoute>(path: 'post/:postId'),
+    TypedGoRoute<PostDetailsRoute>(path: 'post/:eventReference'),
     TypedGoRoute<NotificationsHistoryRoute>(path: 'notifications-history'),
-    TypedGoRoute<ArticleDetailsRoute>(path: 'article/:articleId'),
+    TypedGoRoute<ArticleDetailsRoute>(path: 'article/:eventReference'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
     TypedShellRoute<ModalShellRouteData>(
@@ -16,9 +16,7 @@ class FeedRoutes {
     ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:postId'),
-        TypedGoRoute<CommentPostModalRoute>(path: 'comment-post/:postId'),
-        TypedGoRoute<PostReplyModalRoute>(path: 'reply-to-post/:postId'),
+        TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:eventReference'),
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
         TypedGoRoute<CreatePostRoute>(path: 'create-post'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
@@ -37,23 +35,23 @@ class FeedRoutes {
 }
 
 class ArticleDetailsRoute extends BaseRouteData {
-  ArticleDetailsRoute({required this.articleId, required this.pubkey})
+  ArticleDetailsRoute({required this.eventReference})
       : super(
-          child: ArticleDetailsPage(articleId: articleId, pubkey: pubkey),
+          child: ArticleDetailsPage(
+            eventReference: EventReference.fromString(eventReference),
+          ),
         );
 
-  final String articleId;
-  final String pubkey;
+  final String eventReference;
 }
 
 class PostDetailsRoute extends BaseRouteData {
-  PostDetailsRoute({required this.postId, required this.pubkey})
+  PostDetailsRoute({required this.eventReference})
       : super(
-          child: PostDetailsPage(postId: postId, pubkey: pubkey),
+          child: PostDetailsPage(eventReference: EventReference.fromString(eventReference)),
         );
 
-  final String postId;
-  final String pubkey;
+  final String eventReference;
 }
 
 class NotificationsHistoryRoute extends BaseRouteData {
@@ -63,38 +61,20 @@ class NotificationsHistoryRoute extends BaseRouteData {
         );
 }
 
-class PostReplyModalRoute extends BaseRouteData {
-  PostReplyModalRoute({
-    required this.postId,
-    this.showCollapseButton = false,
-  }) : super(
-          type: IceRouteType.bottomSheet,
-          child: PostReplyModal(postId: postId, showCollapseButton: showCollapseButton),
-        );
-
-  final String postId;
-
-  final bool showCollapseButton;
-}
-
-class CommentPostModalRoute extends BaseRouteData {
-  CommentPostModalRoute({required this.postId})
-      : super(
-          child: CommentPostModal(postId: postId),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final String postId;
-}
-
 class RepostOptionsModalRoute extends BaseRouteData {
-  RepostOptionsModalRoute({required this.postId})
-      : super(
-          child: RepostOptionsModal(postId: postId),
+  RepostOptionsModalRoute({
+    required this.eventReference,
+    required this.kind,
+  }) : super(
+          child: RepostOptionsModal(
+            eventReference: EventReference.fromString(eventReference),
+            kind: kind,
+          ),
           type: IceRouteType.bottomSheet,
         );
 
-  final String postId;
+  final String eventReference;
+  final int kind;
 }
 
 class SharePostModalRoute extends BaseRouteData {
@@ -145,11 +125,28 @@ class SwitchAccountRoute extends BaseRouteData {
 }
 
 class CreatePostRoute extends BaseRouteData {
-  CreatePostRoute()
-      : super(
-          child: const CreatePostModal(),
+  CreatePostRoute({
+    this.parentEvent,
+    this.quotedEvent,
+    this.content,
+    this.showCollapseButton = false,
+  }) : super(
+          child: CreatePostModal(
+            parentEvent: parentEvent != null ? EventReference.fromString(parentEvent) : null,
+            quotedEvent: quotedEvent != null ? EventReference.fromString(quotedEvent) : null,
+            content: content,
+            showCollapseButton: showCollapseButton,
+          ),
           type: IceRouteType.bottomSheet,
         );
+
+  final String? parentEvent;
+
+  final String? quotedEvent;
+
+  final String? content;
+
+  final bool showCollapseButton;
 }
 
 class CreateArticleRoute extends BaseRouteData {

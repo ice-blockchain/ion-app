@@ -3,8 +3,8 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/content_notificaiton/data/models/content_notification_data.dart';
-import 'package:ion/app/features/feed/content_notificaiton/providers/content_notification_provider.dart';
+import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.dart';
+import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_camera_state.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';

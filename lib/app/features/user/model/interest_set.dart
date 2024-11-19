@@ -39,10 +39,10 @@ class InterestSetEntity with _$InterestSetEntity, NostrEntity implements Cacheab
   }
 
   @override
-  String get cacheKey => '$pubkey${data.type}';
+  String get cacheKey => cacheKeyBuilder(pubkey: pubkey, type: data.type);
 
-  @override
-  Type get cacheType => InterestSetEntity;
+  static String cacheKeyBuilder({required String pubkey, required InterestSetType type}) =>
+      '$kind:$type:$pubkey';
 
   static const int kind = 30015;
 }

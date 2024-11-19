@@ -20,15 +20,15 @@ class CurrentUserIdentity extends _$CurrentUserIdentity {
       final relaysSet = prefs.getBool('relays_set_$currentIdentityKeyName') ?? false;
       return UserIdentity(
         ionConnectIndexerRelays: [
-          'wss://relay.nostr.band',
-          'wss://relay.nostr.band',
-          'wss://relay.nostr.band',
+          'wss://relay.damus.io',
+          'wss://relay.damus.io',
+          'wss://relay.damus.io',
         ],
         ionConnectRelays: relaysSet
             ? [
-                'wss://relay.nostr.band',
-                'wss://relay.nostr.band',
-                'wss://relay.nostr.band',
+                'wss://relay.damus.io',
+                'wss://relay.damus.io',
+                'wss://relay.damus.io',
               ]
             : [],
         masterPubkey: 'some_key',
@@ -52,22 +52,22 @@ class CurrentUserIdentity extends _$CurrentUserIdentity {
     state = const AsyncData(
       UserIdentity(
         ionConnectIndexerRelays: [
-          'wss://relay.nostr.band',
-          'wss://relay.nostr.band',
-          'wss://relay.nostr.band',
+          'wss://relay.damus.io',
+          'wss://relay.damus.io',
+          'wss://relay.damus.io',
         ],
         ionConnectRelays: [
-          'wss://relay.nostr.band',
-          'wss://relay.nostr.band',
-          'wss://relay.nostr.band',
+          'wss://relay.damus.io',
+          'wss://relay.damus.io',
+          'wss://relay.damus.io',
         ],
         masterPubkey: 'some_key',
       ),
     );
     return [
-      'wss://relay.nostr.band',
-      'wss://relay.nostr.band',
-      'wss://relay.nostr.band',
+      'wss://relay.damus.io',
+      'wss://relay.damus.io',
+      'wss://relay.damus.io',
     ];
   }
 }

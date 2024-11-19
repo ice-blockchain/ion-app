@@ -35,10 +35,9 @@ class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEn
   }
 
   @override
-  String get cacheKey => pubkey;
+  String get cacheKey => cacheKeyBuilder(pubkey: pubkey);
 
-  @override
-  Type get cacheType => InterestsEntity;
+  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
   static const int kind = 10015;
 }

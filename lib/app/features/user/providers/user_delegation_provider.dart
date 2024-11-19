@@ -17,8 +17,11 @@ part 'user_delegation_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
-  final userDelegation =
-      ref.watch(nostrCacheProvider.select(cacheSelector<UserDelegationEntity>(pubkey)));
+  final userDelegation = ref.watch(
+    nostrCacheProvider.select(
+      cacheSelector<UserDelegationEntity>(UserDelegationEntity.cacheKeyBuilder(pubkey: pubkey)),
+    ),
+  );
   if (userDelegation != null) {
     return userDelegation;
   }

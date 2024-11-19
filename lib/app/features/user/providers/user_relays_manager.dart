@@ -22,7 +22,7 @@ class UserRelaysManager extends _$UserRelaysManager {
         createdAt: DateTime.now(),
         id: '',
         pubkey: pubkeys[index],
-        data: const UserRelaysData(list: [UserRelay(url: 'wss://relay.nostr.band')]),
+        data: const UserRelaysData(list: [UserRelay(url: 'wss://relay.damus.io')]),
       );
     });
 
@@ -30,7 +30,7 @@ class UserRelaysManager extends _$UserRelaysManager {
     // final pubkeysToFetch = <String>[];
 
     // for (final pubkey in pubkeys) {
-    //   final cached = ref.read(nostrCacheProvider.select(cacheSelector<UserRelaysEntity>(pubkey)));
+    //   final cached = ref.read(nostrCacheProvider.select(cacheSelector<UserRelaysEntity>(UserRelaysEntity.cacheKeyBuilder(pubkey: pubkey))));
     //   if (cached != null) {
     //     result.add(cached);
     //   } else {

@@ -105,7 +105,7 @@ class MediaAttachment {
     return MediaType.fromUrl(url);
   }
 
-  List<String> toJson() {
+  List<String> toTag() {
     return [
       tagName,
       'url $url',
