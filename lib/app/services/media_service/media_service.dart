@@ -65,7 +65,7 @@ class MediaService {
         size: size,
       );
 
-      final mediaFiles = assets.map((AssetEntity asset) {
+      final mediaFiles = assets.whereType<AssetEntity>().map((asset) {
         return MediaFile(
           path: asset.id,
           height: asset.height,
