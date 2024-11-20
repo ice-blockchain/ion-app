@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
@@ -21,12 +22,16 @@ enum NetworkListViewType {
 class NetworkListView extends ConsumerWidget {
   const NetworkListView({this.type = NetworkListViewType.send, super.key});
 
-  final NetworkListViewType? type;
-
-  static const List<NetworkType> networkTypeValues = NetworkType.values;
+  final NetworkListViewType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const networks = NetworkType.values;
+    final coinData = switch (type) {
+      NetworkListViewType.send => ref.watch(sendAssetFormControllerProvider()).selectedCoin!,
+      NetworkListViewType.receive => ref.watch(receiveCoinsFormControllerProvider).selectedCoin,
+    };
+
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -40,34 +45,34 @@ class NetworkListView extends ConsumerWidget {
               ],
             ),
           ),
-          ListView.separated(
-            shrinkWrap: true,
-            itemCount: networkTypeValues.length,
-            separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(
-                height: 12.0.s,
-              );
-            },
-            itemBuilder: (BuildContext context, int index) {
-              return ScreenSideOffset.small(
-                child: NetworkItem(
-                  networkType: networkTypeValues[index],
-                  onTap: () {
-                    if (type == NetworkListViewType.send) {
-                      ref
-                          .read(sendAssetFormControllerProvider().notifier)
-                          .setNetwork(networkTypeValues[index]);
-                      CoinsSendFormRoute().push<void>(context);
-                    } else {
-                      ref
-                          .read(receiveCoinsFormControllerProvider.notifier)
-                          .setNetwork(networkTypeValues[index]);
-                      ShareAddressRoute().push<void>(context);
-                    }
-                  },
-                ),
-              );
-            },
+          ScreenBottomOffset(
+            margin: 32.0.s,
+            child: ScreenSideOffset.small(
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: networks.length,
+                separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
+                itemBuilder: (BuildContext context, int index) {
+                  return NetworkItem(
+                    coinData: coinData,
+                    networkType: networks[index],
+                    onTap: () {
+                      if (type == NetworkListViewType.send) {
+                        ref
+                            .read(sendAssetFormControllerProvider().notifier)
+                            .setNetwork(networks[index]);
+                        CoinsSendFormRoute().push<void>(context);
+                      } else {
+                        ref
+                            .read(receiveCoinsFormControllerProvider.notifier)
+                            .setNetwork(networks[index]);
+                        ShareAddressRoute().push<void>(context);
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
           ),
         ],
       ),
