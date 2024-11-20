@@ -4,14 +4,16 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/header.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/utils/username.dart';
 
-class StoryViewerHeader extends HookWidget {
+class StoryViewerHeader extends HookConsumerWidget {
   const StoryViewerHeader({
     required this.pubkey,
     required this.currentStory,
@@ -22,41 +24,44 @@ class StoryViewerHeader extends HookWidget {
   final Story currentStory;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userMetadataEntity = ref.watch(userMetadataProvider(pubkey));
     final iceBadgeState = useState(Random().nextBool());
-    final verifiedBadgeState = useState(Random().nextBool());
 
-    return Positioned(
-      top: 14.0.s,
-      left: 16.0.s,
-      right: 22.0.s,
-      child: GestureDetector(
-        onTap: () => ProfileRoute(pubkey: pubkey).go(context),
-        child: ListItem.user(
-          profilePicture: currentStory.data.mediaUrl,
-          title: Text(
-            currentStory.data.author,
-            style: context.theme.appTextThemes.subtitle3.copyWith(
-              color: context.theme.appColors.onPrimaryAccent,
+    return userMetadataEntity.maybeWhen(
+      data: (userMetadata) => Positioned(
+        top: 14.0.s,
+        left: 16.0.s,
+        right: 22.0.s,
+        child: GestureDetector(
+          onTap: () => ProfileRoute(pubkey: pubkey).go(context),
+          child: ListItem.user(
+            profilePicture: userMetadata?.data.picture ?? '',
+            title: Text(
+              userMetadata?.data.name ?? '',
+              style: context.theme.appTextThemes.subtitle3.copyWith(
+                color: context.theme.appColors.onPrimaryAccent,
+              ),
             ),
+            subtitle: Text(
+              prefixUsername(
+                username: userMetadata?.data.displayName ?? '',
+                context: context,
+              ),
+              style: context.theme.appTextThemes.caption.copyWith(
+                color: context.theme.appColors.onPrimaryAccent,
+              ),
+            ),
+            iceBadge: iceBadgeState.value,
+            verifiedBadge: userMetadata?.data.verified ?? false,
+            trailing: HeaderActions(story: currentStory),
+            backgroundColor: Colors.transparent,
+            contentPadding: EdgeInsets.zero,
+            constraints: BoxConstraints(minHeight: 30.0.s),
           ),
-          subtitle: Text(
-            prefixUsername(
-              username: currentStory.data.author,
-              context: context,
-            ),
-            style: context.theme.appTextThemes.caption.copyWith(
-              color: context.theme.appColors.onPrimaryAccent,
-            ),
-          ),
-          iceBadge: iceBadgeState.value,
-          verifiedBadge: verifiedBadgeState.value,
-          trailing: HeaderActions(story: currentStory),
-          backgroundColor: Colors.transparent,
-          contentPadding: EdgeInsets.zero,
-          constraints: BoxConstraints(minHeight: 30.0.s),
         ),
       ),
+      orElse: () => const SizedBox.shrink(),
     );
   }
 }

@@ -241,10 +241,14 @@ class StoryPreviewRoute extends BaseRouteData {
 }
 
 @TypedGoRoute<StoryViewerRoute>(
-  path: '/story-viewing',
+  path: '/story-viewing/:pubkey',
 )
 class StoryViewerRoute extends BaseRouteData {
-  StoryViewerRoute() : super(child: const StoryViewerPage());
+  StoryViewerRoute({required this.pubkey})
+      : super(
+          child: StoryViewerPage(pubkey: pubkey),
+        );
+  final String pubkey;
 }
 
 class StoryContactsShareRoute extends BaseRouteData {

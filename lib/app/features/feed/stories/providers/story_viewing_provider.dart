@@ -16,7 +16,7 @@ class StoryViewingController extends _$StoryViewingController {
   @override
   StoryViewerState build() => const StoryViewerState.initial();
 
-  Future<void> loadStories() async {
+  Future<void> loadStories({String? startingPubkey}) async {
     state = const StoryViewerState.loading();
 
     try {
@@ -27,9 +27,17 @@ class StoryViewingController extends _$StoryViewingController {
         return;
       }
 
+      var initialUserIndex = 0;
+      if (startingPubkey != null) {
+        initialUserIndex = users.indexWhere((user) => user.userId == startingPubkey);
+        if (initialUserIndex == -1) {
+          initialUserIndex = 0;
+        }
+      }
+
       state = StoryViewerState.ready(
         users: users,
-        currentUserIndex: 0,
+        currentUserIndex: initialUserIndex,
         currentStoryIndex: 0,
       );
     } catch (e) {
@@ -225,16 +233,18 @@ class StoryViewingController extends _$StoryViewingController {
 
   Future<List<UserStories>> _fetchUserStories() async {
     final dataSource = ref.read(feedStoriesDataSourceProvider);
-
     final entitiesPagedDataState = ref.read(entitiesPagedDataProvider(dataSource));
 
-    final postEntities = entitiesPagedDataState?.data.items
-        .whereType<PostEntity>()
-        .where((post) => post.data.media.isNotEmpty)
-        .toList();
+    final postEntities = entitiesPagedDataState?.data.items.whereType<PostEntity>().where(
+          (post) {
+            final mediaAttachment = post.data.media.values.firstOrNull;
+            return mediaAttachment != null && _isValidMediaType(mediaAttachment.mediaType);
+          },
+        ).toList() ??
+        [];
 
     final groupedStories = groupBy<PostEntity, String>(
-      postEntities ?? [],
+      postEntities,
       (post) => post.pubkey,
     );
 
@@ -244,16 +254,11 @@ class StoryViewingController extends _$StoryViewingController {
       final pubkey = entry.key;
       final userPosts = entry.value;
 
+      if (userPosts.isEmpty) continue;
+
       final userMetadata = await ref.read(userMetadataProvider(pubkey).future);
 
-      final validPosts = userPosts.where((post) {
-        final mediaAttachment = post.data.media.values.firstOrNull;
-        return mediaAttachment != null && _isValidMediaType(mediaAttachment.mediaType);
-      }).toList();
-
-      if (validPosts.isEmpty) continue;
-
-      final stories = validPosts.map((post) {
+      final stories = userPosts.map((post) {
         final mediaAttachment = post.data.media.values.first;
         final storyData = StoryData(
           id: post.id,
@@ -263,15 +268,9 @@ class StoryViewingController extends _$StoryViewingController {
           mediaUrl: mediaAttachment.url,
         );
 
-        if (mediaAttachment.mediaType == MediaType.image) {
-          return Story.image(
-            data: storyData,
-          );
-        } else {
-          return Story.video(
-            data: storyData,
-          );
-        }
+        return mediaAttachment.mediaType == MediaType.image
+            ? Story.image(data: storyData)
+            : Story.video(data: storyData);
       }).toList();
 
       final userStories = UserStories(
@@ -288,7 +287,6 @@ class StoryViewingController extends _$StoryViewingController {
     return userStoriesList;
   }
 
-  bool _isValidMediaType(MediaType mediaType) {
-    return mediaType == MediaType.image || mediaType == MediaType.video;
-  }
+  bool _isValidMediaType(MediaType mediaType) =>
+      mediaType == MediaType.image || mediaType == MediaType.video;
 }

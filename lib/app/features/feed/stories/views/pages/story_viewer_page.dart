@@ -13,7 +13,12 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryViewerPage extends HookConsumerWidget {
-  const StoryViewerPage({super.key});
+  const StoryViewerPage({
+    required this.pubkey,
+    super.key,
+  });
+
+  final String pubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +27,9 @@ class StoryViewerPage extends HookConsumerWidget {
 
     final currentPauseState = useState(false);
 
-    useOnInit(storyViewingController.loadStories);
+    useOnInit(() {
+      storyViewingController.loadStories(startingPubkey: pubkey);
+    });
 
     final userPageController = usePageController();
 
