@@ -85,7 +85,9 @@ import 'package:ion/app/features/search/views/pages/feed_simple_search_page/feed
 import 'package:ion/app/features/settings/views/app_language_modal.dart';
 import 'package:ion/app/features/settings/views/content_language_modal.dart';
 import 'package:ion/app/features/settings/views/logout_confirm_modal.dart';
+import 'package:ion/app/features/settings/views/privacy_settings_modal.dart';
 import 'package:ion/app/features/settings/views/profile_settings_modal.dart';
+import 'package:ion/app/features/settings/views/push_notifications_settings.dart';
 import 'package:ion/app/features/settings/views/settings_modal.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';

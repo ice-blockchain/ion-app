@@ -48,7 +48,9 @@ class StoryRecordPage extends HookConsumerWidget {
     return PermissionAwareWidget(
       permissionType: Permission.camera,
       onGranted: () async => ref.read(cameraControllerNotifierProvider.notifier).resumeCamera(),
-      requestDialog: PermissionRequestSheet.fromType(context, Permission.camera),
+      requestDialog: const PermissionRequestSheet(
+        permission: Permission.camera,
+      ),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
       builder: (context, _) {
         return Scaffold(

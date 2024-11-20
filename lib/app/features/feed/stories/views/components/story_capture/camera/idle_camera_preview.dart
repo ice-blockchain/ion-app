@@ -66,7 +66,9 @@ class IdleCameraPreview extends ConsumerWidget {
                 }
               }
             },
-            requestDialog: PermissionRequestSheet.fromType(context, Permission.photos),
+            requestDialog: const PermissionRequestSheet(
+              permission: Permission.photos,
+            ),
             settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
             builder: (context, onPressed) => StoryControlButton(
               onPressed: onPressed,

@@ -64,7 +64,9 @@ class CameraCell extends HookConsumerWidget {
               },
             );
       },
-      requestDialog: PermissionRequestSheet.fromType(context, Permission.camera),
+      requestDialog: const PermissionRequestSheet(
+        permission: Permission.camera,
+      ),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
       builder: (context, onPressed) {
         return SizedBox(

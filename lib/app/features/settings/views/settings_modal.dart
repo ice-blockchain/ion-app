@@ -29,10 +29,12 @@ class SettingsModal extends ConsumerWidget {
       return switch (option) {
         SettingsAction.profile => () => ProfileSettingsRoute().push<void>(context),
         SettingsAction.security => () => SecureAccountOptionsRoute().push<void>(context),
+        SettingsAction.privacy => () => PrivacySettingsRoute().push<void>(context),
+        SettingsAction.pushNotifications => () =>
+            PushNotificationsSettingsRoute().push<void>(context),
         SettingsAction.privacyPolicy => () => openUrlInAppBrowser(Links.privacy),
         SettingsAction.termsConditions => () => openUrlInAppBrowser(Links.terms),
         SettingsAction.logout => () => ConfirmLogoutRoute(pubkey: pubkey).push<void>(context),
-        _ => () {}
       };
     }
 

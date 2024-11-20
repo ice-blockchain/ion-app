@@ -28,7 +28,9 @@ class GalleryPermissionButton extends ConsumerWidget {
           onMediaSelected(mediaFiles);
         }
       },
-      requestDialog: PermissionRequestSheet.fromType(context, Permission.photos),
+      requestDialog: const PermissionRequestSheet(
+        permission: Permission.photos,
+      ),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
       builder: (context, onPressed) {
         return ActionsToolbarButton(

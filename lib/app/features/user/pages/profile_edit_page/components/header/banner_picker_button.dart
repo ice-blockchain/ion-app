@@ -30,7 +30,9 @@ class BannerPickerButton extends ConsumerWidget {
           onMediaSelected(mediaFiles?.first);
         }
       },
-      requestDialog: PermissionRequestSheet.fromType(context, Permission.photos),
+      requestDialog: const PermissionRequestSheet(
+        permission: Permission.photos,
+      ),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
       builder: (context, onPressed) {
         return HeaderAction(

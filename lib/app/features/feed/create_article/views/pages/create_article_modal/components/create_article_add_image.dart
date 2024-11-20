@@ -33,7 +33,9 @@ class CreateArticleAddImage extends HookConsumerWidget {
           }
         }
       },
-      requestDialog: PermissionRequestSheet.fromType(context, Permission.photos),
+      requestDialog: const PermissionRequestSheet(
+        permission: Permission.photos,
+      ),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
       builder: (context, onPressed) => GestureDetector(
         onTap: selectedImage.value == null ? onPressed : null,
