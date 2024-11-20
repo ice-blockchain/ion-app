@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 part of '../message_reactions.dart';
 
 class _MessageReactionChip extends HookConsumerWidget {
