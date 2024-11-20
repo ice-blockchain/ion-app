@@ -6,6 +6,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class PhotoMessage extends HookWidget {
@@ -13,13 +15,14 @@ class PhotoMessage extends HookWidget {
     required this.isMe,
     required this.imageUrl,
     this.message,
+    this.reactions,
     super.key,
   });
 
   final bool isMe;
   final String? message;
   final String imageUrl;
-
+  final List<MessageReactionGroup>? reactions;
   static double get padding => 8.0.s;
   static double get maxWidth => MessageItemWrapper.maxWidth - padding * 2;
 
@@ -47,6 +50,7 @@ class PhotoMessage extends HookWidget {
             _MessageContent(
               message: message!,
               isMe: isMe,
+              reactions: reactions,
             ),
           ],
         ),
@@ -61,7 +65,6 @@ class _PhotoContent extends StatelessWidget {
   });
 
   final String imageUrl;
-
   @override
   Widget build(BuildContext context) {
     return Hero(
@@ -82,11 +85,12 @@ class _MessageContent extends StatelessWidget {
   const _MessageContent({
     required this.message,
     required this.isMe,
+    this.reactions,
   });
 
   final String message;
   final bool isMe;
-
+  final List<MessageReactionGroup>? reactions;
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
@@ -98,13 +102,19 @@ class _MessageContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
-            child: Text(
-              message,
-              style: context.theme.appTextThemes.body2.copyWith(
-                color: isMe
-                    ? context.theme.appColors.onPrimaryAccent
-                    : context.theme.appColors.primaryText,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  message,
+                  style: context.theme.appTextThemes.body2.copyWith(
+                    color: isMe
+                        ? context.theme.appColors.onPrimaryAccent
+                        : context.theme.appColors.primaryText,
+                  ),
+                ),
+                MessageReactions(reactions: reactions),
+              ],
             ),
           ),
           MessageMetaData(isMe: isMe),

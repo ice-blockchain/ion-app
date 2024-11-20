@@ -9,6 +9,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/hooks/use_audio_playback_controller.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -22,12 +24,14 @@ class AudioMessage extends HookConsumerWidget {
     this.id, {
     required this.audioUrl,
     required this.isMe,
+    this.reactions,
     super.key,
   });
 
   final bool isMe;
   final String audioUrl;
   final String id;
+  final List<MessageReactionGroup>? reactions;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,16 +86,26 @@ class AudioMessage extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _PlayPauseButton(
-              audioPlaybackController: audioPlaybackController,
-              audioPlaybackState: audioPlaybackState,
-            ),
-            SizedBox(width: 8.0.s),
-            _AudioWaveformDisplay(
-              audioPlaybackController: audioPlaybackController,
-              audioPlaybackState: audioPlaybackState,
-              playerWaveStyle: playerWaveStyle,
-              isMe: isMe,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    _PlayPauseButton(
+                      audioPlaybackController: audioPlaybackController,
+                      audioPlaybackState: audioPlaybackState,
+                    ),
+                    SizedBox(width: 8.0.s),
+                    _AudioWaveformDisplay(
+                      audioPlaybackController: audioPlaybackController,
+                      audioPlaybackState: audioPlaybackState,
+                      playerWaveStyle: playerWaveStyle,
+                      isMe: isMe,
+                    ),
+                  ],
+                ),
+                MessageReactions(reactions: reactions),
+              ],
             ),
             MessageMetaData(isMe: isMe),
           ],

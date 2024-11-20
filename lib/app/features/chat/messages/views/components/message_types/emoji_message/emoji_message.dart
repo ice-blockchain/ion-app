@@ -4,11 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 
 class EmojiMessage extends StatelessWidget {
-  const EmojiMessage({required this.emoji, required this.isMe, super.key});
+  const EmojiMessage({
+    required this.emoji,
+    required this.isMe,
+    this.reactions,
+    super.key,
+  });
   final bool isMe;
   final String emoji;
+  final List<MessageReactionGroup>? reactions;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +28,17 @@ class EmojiMessage extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: reactions == null ? CrossAxisAlignment.center : CrossAxisAlignment.end,
         children: [
-          Text(
-            emoji,
-            style: context.theme.appTextThemes.headline1.copyWith(height: 1),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                emoji,
+                style: context.theme.appTextThemes.headline1.copyWith(height: 1),
+              ),
+              MessageReactions(reactions: reactions),
+            ],
           ),
           MessageMetaData(isMe: isMe),
         ],

@@ -33,10 +33,6 @@ class _MetaDataPreview extends StatelessWidget {
                   _MetaSiteInfo(meta.siteName!, favIconUrl: favIconUrl, isMe: isMe),
                 if (meta.title != null) _MetaTitle(meta.title!, isMe: isMe),
                 if (meta.description != null) _MetaDescription(meta.description!, isMe: isMe),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: MessageMetaData(isMe: isMe),
-                ),
               ],
             ),
           ),

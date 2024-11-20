@@ -3,8 +3,9 @@
 part of 'poll_message.dart';
 
 class PollResultMessage extends StatelessWidget {
-  const PollResultMessage({required this.isMe, super.key});
+  const PollResultMessage({required this.isMe, super.key, this.reactions});
   final bool isMe;
+  final List<MessageReactionGroup>? reactions;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +40,13 @@ class PollResultMessage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 4.0.s),
-          Align(
-            alignment: Alignment.centerRight,
-            child: MessageMetaData(isMe: isMe),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              MessageReactions(reactions: reactions),
+              const Spacer(),
+              MessageMetaData(isMe: isMe),
+            ],
           ),
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/app/services/keyboard/keyboard.dart';
 
@@ -40,6 +41,7 @@ class MessagesPage extends ConsumerWidget {
                               TextMessage(
                                 message: 'Hello there!',
                                 isMe: true,
+                                reactions: mockReactionsSimple,
                               ),
                             ],
                           );
@@ -48,16 +50,25 @@ class MessagesPage extends ConsumerWidget {
                             message:
                                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
                             isMe: false,
+                            reactions: mockReactionsMany,
                           );
                         case 2:
-                          return const EmojiMessage(emoji: '😂', isMe: true);
+                          return const EmojiMessage(
+                            emoji: '😂',
+                            isMe: true,
+                            reactions: mockReactionsSimple,
+                          );
                         case 3:
-                          return const EmojiMessage(emoji: '🤔', isMe: false);
+                          return const EmojiMessage(
+                            emoji: '🤔',
+                            isMe: false,
+                          );
                         case 4:
                           return const PhotoMessage(
                             isMe: true,
                             imageUrl: 'https://picsum.photos/700/900',
                             message: 'Check this out!',
+                            reactions: mockReactionsMany,
                           );
                         case 5:
                           return const PhotoMessage(
@@ -78,12 +89,14 @@ class MessagesPage extends ConsumerWidget {
                             isMe: false,
                             videoUrl:
                                 'https://videos.pexels.com/video-files/5975407/5975407-hd_1080_1920_30fps.mp4',
+                            reactions: mockReactionsMany,
                           );
                         case 8:
                           return const AudioMessage(
                             '112133',
                             audioUrl: 'https://www2.cs.uic.edu/~i101/SoundFiles/preamble10.wav',
                             isMe: false,
+                            reactions: mockReactionsMany,
                           );
                         case 9:
                           return const AudioMessage(
@@ -97,10 +110,12 @@ class MessagesPage extends ConsumerWidget {
                           return const UrlPreviewMessage(
                             isMe: false,
                             url: 'https://www.ice.io/',
+                            reactions: mockReactionsMany,
                           );
                         case 12:
                           return const ProfileShareMessage(
                             isMe: true,
+                            reactions: mockReactionsSimple,
                           );
                         case 13:
                           return const ProfileShareMessage(
@@ -113,6 +128,7 @@ class MessagesPage extends ConsumerWidget {
                         case 15:
                           return const PollMessage(
                             isMe: true,
+                            reactions: mockReactionsMany,
                           );
                         case 16:
                           return const MoneyMessage(
@@ -129,6 +145,7 @@ class MessagesPage extends ConsumerWidget {
                             amount: 1450,
                             equivalentUsd: 120,
                             chain: 'ETH',
+                            reactions: mockReactionsMany,
                           );
                         case 18:
                           return const MoneyMessage(
@@ -150,6 +167,7 @@ class MessagesPage extends ConsumerWidget {
                           return const TextMessage(
                             message: 'Hello there!',
                             isMe: true,
+                            reactions: [],
                           );
                       }
                     },

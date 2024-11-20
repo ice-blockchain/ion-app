@@ -6,14 +6,17 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/url_preview/url_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
 part 'components/meta_data_preview.dart';
 
 class UrlPreviewMessage extends HookWidget {
-  const UrlPreviewMessage({required this.url, required this.isMe, super.key});
+  const UrlPreviewMessage({required this.url, required this.isMe, super.key, this.reactions});
   final bool isMe;
   final String url;
+  final List<MessageReactionGroup>? reactions;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +48,14 @@ class UrlPreviewMessage extends HookWidget {
                     isMe: isMe,
                   ),
                 ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  MessageReactions(reactions: reactions),
+                  const Spacer(),
+                  MessageMetaData(isMe: isMe),
+                ],
+              ),
             ],
           );
         },
