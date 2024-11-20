@@ -20,10 +20,7 @@ enum NetworkListViewType {
 }
 
 class NetworkListView extends ConsumerWidget {
-  const NetworkListView({
-    this.type = NetworkListViewType.send,
-    super.key,
-  });
+  const NetworkListView({this.type = NetworkListViewType.send, super.key});
 
   final NetworkListViewType type;
 
