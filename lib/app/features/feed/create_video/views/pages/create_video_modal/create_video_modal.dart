@@ -7,7 +7,10 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 
 class CreateVideoModal extends StatelessWidget {
-  const CreateVideoModal({required this.mediaFiles, super.key});
+  const CreateVideoModal({
+    required this.mediaFiles,
+    super.key,
+  });
 
   final List<MediaFile> mediaFiles;
 

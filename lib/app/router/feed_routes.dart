@@ -154,7 +154,7 @@ class CreateArticleRoute extends BaseRouteData {
 }
 
 class CreateVideoRoute extends BaseRouteData {
-  CreateVideoRoute({this.mediaFiles = const []})
+  CreateVideoRoute({this.mediaFiles = const <MediaFile>[]})
       : super(
           child: CreateVideoModal(
             mediaFiles: mediaFiles,
