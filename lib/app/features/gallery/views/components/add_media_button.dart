@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/constants/ui.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-class AddImagesButton extends StatelessWidget {
-  const AddImagesButton({
+class AddMediaButton extends StatelessWidget {
+  const AddMediaButton({
     required this.mediaCount,
     required this.onPressed,
     super.key,

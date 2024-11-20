@@ -96,7 +96,10 @@ class GalleryNotifier extends _$GalleryNotifier {
         );
       });
 
-      mediaSelectionNotifier.toggleSelection(mediaFile.path);
+      final currentState = state.value;
+      if (currentState == null) return;
+
+      mediaSelectionNotifier.toggleSelection(mediaFile.path, type: state.value!.type);
     }
   }
 }

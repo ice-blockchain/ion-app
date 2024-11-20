@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/features/gallery/providers/media_selection_provider.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
@@ -13,10 +14,12 @@ import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 class GalleryGridCell extends ConsumerWidget {
   const GalleryGridCell({
     required this.mediaFile,
+    this.type = MediaType.image,
     super.key,
   });
 
   final MediaFile mediaFile;
+  final MediaType type;
 
   static double get cellHeight => 120.0.s;
   static double get cellWidth => 122.0.s;
@@ -31,7 +34,9 @@ class GalleryGridCell extends ConsumerWidget {
       height: cellHeight,
       child: GestureDetector(
         onTap: () {
-          ref.read(mediaSelectionNotifierProvider.notifier).toggleSelection(mediaFile.path);
+          ref
+              .read(mediaSelectionNotifierProvider.notifier)
+              .toggleSelection(mediaFile.path, type: type);
         },
         child: assetEntityAsync.maybeWhen(
           data: (asset) {

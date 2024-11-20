@@ -41,6 +41,7 @@ class GalleryGridView extends StatelessWidget {
           return GalleryGridCell(
             key: ValueKey(mediaData.path),
             mediaFile: mediaData,
+            type: type,
           );
         },
         childCount: type == MediaType.image ? photosTotalCount : galleryState.mediaData.length,

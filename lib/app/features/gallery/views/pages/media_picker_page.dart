@@ -46,7 +46,7 @@ class MediaPickerPage extends HookConsumerWidget {
             style: context.theme.appTextThemes.subtitle,
           ),
           actions: [
-            AddImagesButton(
+            AddMediaButton(
               onPressed: () => context.pop(selectedMedia),
               mediaCount: selectedMedia.length,
             ),
