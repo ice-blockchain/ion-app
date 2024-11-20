@@ -58,7 +58,7 @@ class FeedMainModalPage extends StatelessWidget {
                     if (context.mounted) {
                       final mediaFiles = await MediaPickerRoute(pickerMediaType: MediaType.video)
                           .push<List<MediaFile>>(context);
-                      if (mediaFiles != null) {
+                      if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
                         await CreateVideoRoute(mediaFiles: mediaFiles).push<void>(context);
                       }
                     }
