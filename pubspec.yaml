@@ -88,8 +88,8 @@ dependencies:
 dev_dependencies:
   build_runner: ^2.4.13
   custom_lint: ^0.6.8
-  flutter_gen: ^5.3.1
-  flutter_gen_runner: ^5.3.1
+  flutter_gen: ^5.8.0
+  flutter_gen_runner: ^5.8.0
   flutter_hooks_lint: ^1.2.0
   flutter_launcher_icons: ^0.13.1
   flutter_test:
@@ -142,6 +142,8 @@ flutter:
     - assets/images/logo/
     - assets/images/qr_code/
     - assets/images/notifications/
+    - assets/emoji_data_sets/emojis-by-group.json
+    - assets/emoji_data_sets/emoji-keywords.json
 
 flutter_gen:
   output: lib/generated/

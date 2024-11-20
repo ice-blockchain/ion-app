@@ -1,25 +1,20 @@
 targets:
   $default:
-
     sources:
       exclude:
         - lib/app/network/models/parameters/**
-
     dependencies:
       - :network_parameters
-
   network_parameters:
-
     sources:
       include:
         - lib/app/network/models/parameters/**
-
     builders:
       json_serializable:
         options:
           create_to_json: true
           explicit_to_json: true
-
       freezed:
         options:
           to_json: true
+          

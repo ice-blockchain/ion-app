@@ -14,6 +14,7 @@ class ChatRoutes {
         TypedGoRoute<ChatLearnMoreModalRoute>(path: 'learn-more'),
         TypedGoRoute<ShareProfileModalRoute>(path: 'share-profile'),
         TypedGoRoute<ChatAddPollModalRoute>(path: 'add-poll'),
+        TypedGoRoute<SearchEmojiRoute>(path: 'search-emoji'),
       ],
     ),
   ];

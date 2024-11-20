@@ -96,7 +96,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
                     });
                   },
                   label: Text(
-                    isCopied.value ? context.i18n.wallet_copied : context.i18n.wallet_copy,
+                    isCopied.value ? context.i18n.wallet_copied : context.i18n.button_copy,
                     style: context.theme.appTextThemes.body.copyWith(
                       color: context.theme.appColors.primaryText,
                     ),
