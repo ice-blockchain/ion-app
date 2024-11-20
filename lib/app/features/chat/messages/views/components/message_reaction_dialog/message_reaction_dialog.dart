@@ -81,12 +81,10 @@ class MessageReactionDialog extends HookConsumerWidget {
         Positioned(
           left: isMe ? null : ScreenSideOffset.defaultSmallMargin,
           right: isMe ? ScreenSideOffset.defaultSmallMargin : null,
-          // top: overflowBottomSize < 0 ? null : position.dy - emojiSectionHeight
           top: topY,
           bottom: overflowBottomSize < 0
               ? MediaQuery.paddingOf(context).bottom
               : MediaQuery.paddingOf(context).bottom,
-          // top: position.dy,
           child: Column(
             crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
