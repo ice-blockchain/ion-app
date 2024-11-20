@@ -10,16 +10,17 @@ class OverlayMenuItem extends StatelessWidget {
     required this.onPressed,
     super.key,
     this.labelColor,
-    this.verticalPadding = 8.0,
-    this.minWidth = 99.0,
+    this.verticalPadding,
+    this.minWidth,
   });
 
   final String label;
   final Widget icon;
   final VoidCallback onPressed;
   final Color? labelColor;
-  final double verticalPadding;
-  final double minWidth;
+  final double? verticalPadding;
+  final double? minWidth;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.theme.appColors;
@@ -28,10 +29,10 @@ class OverlayMenuItem extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: verticalPadding.s),
+        padding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: verticalPadding ?? 8.0.s),
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minWidth: minWidth.s,
+            minWidth: minWidth ?? 99.0.s,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

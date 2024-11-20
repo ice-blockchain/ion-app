@@ -27,23 +27,21 @@ class MessageReactionContextMenu extends StatelessWidget {
                 children: [
                   OverlayMenuItem(
                     label: context.i18n.button_reply,
-                    //TODO: update when design is ready
-                    icon: Assets.svg.iconChatReplymessage.icon(
+                    icon: Assets.svg.iconChatReply.icon(
                       size: iconSize,
                       color: context.theme.appColors.quaternaryText,
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    minWidth: 140,
-                    verticalPadding: 12,
+                    minWidth: 140.0.s,
+                    verticalPadding: 12.0.s,
                   ),
                   const OverlayMenuItemSeperator(),
                   OverlayMenuItem(
                     label: context.i18n.button_forward,
-                    verticalPadding: 12,
-                    //TODO: update when design is ready
-                    icon: Assets.svg.iconFeedReplies
+                    verticalPadding: 12.0.s,
+                    icon: Assets.svg.iconChatForward
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -52,7 +50,7 @@ class MessageReactionContextMenu extends StatelessWidget {
                   const OverlayMenuItemSeperator(),
                   OverlayMenuItem(
                     label: context.i18n.button_copy,
-                    verticalPadding: 12,
+                    verticalPadding: 12.0.s,
                     icon: Assets.svg.iconBlockCopyBlue
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: () {
@@ -62,7 +60,7 @@ class MessageReactionContextMenu extends StatelessWidget {
                   const OverlayMenuItemSeperator(),
                   OverlayMenuItem(
                     label: context.i18n.button_bookmark,
-                    verticalPadding: 12,
+                    verticalPadding: 12.0.s,
                     icon: Assets.svg.iconBookmarks
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: () {
@@ -73,7 +71,7 @@ class MessageReactionContextMenu extends StatelessWidget {
                   OverlayMenuItem(
                     label: context.i18n.button_delete,
                     labelColor: context.theme.appColors.attentionRed,
-                    verticalPadding: 12,
+                    verticalPadding: 12.0.s,
                     icon: Assets.svg.iconBlockDelete
                         .icon(size: iconSize, color: context.theme.appColors.attentionRed),
                     onPressed: () {

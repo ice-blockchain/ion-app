@@ -13,7 +13,7 @@ class MessageReactionEmojiBar extends ConsumerWidget {
     required this.isMe,
     super.key,
   });
-  static final height = 72.0.s;
+  static double get height => 72.0.s;
 
   final bool isMe;
 
