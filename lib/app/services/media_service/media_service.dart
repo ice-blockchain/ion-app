@@ -64,15 +64,17 @@ class MediaService {
         page: page,
         size: size,
       );
-
-      final mediaFiles = assets.map((AssetEntity asset) {
-        return MediaFile(
-          path: asset.id,
-          height: asset.height,
-          width: asset.width,
-          mimeType: asset.mimeType,
-        );
-      }).toList();
+      final mediaFiles = assets
+          .map(
+            (asset) => MediaFile(
+              path: asset.id,
+              height: asset.height,
+              width: asset.width,
+              mimeType: asset.mimeType,
+            ),
+          )
+          .toList()
+          .cast<MediaFile>();
 
       return mediaFiles;
     } catch (e) {
