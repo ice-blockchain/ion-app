@@ -8,14 +8,10 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-
-enum MediaPickerType {
-  image,
-  video,
-}
 
 class MediaPickerPage extends HookConsumerWidget {
   const MediaPickerPage({
@@ -60,6 +56,7 @@ class MediaPickerPage extends HookConsumerWidget {
         pinned: true,
       ),
       GalleryGridview(
+        type: type,
         galleryState: galleryState.valueOrNull ??
             const GalleryState(
               mediaData: [],
