@@ -2,15 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
-import 'package:ion/app/features/gallery/views/components/video_cell.dart';
-import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 
-class GalleryGridview extends StatelessWidget {
-  const GalleryGridview({
+class GalleryGridView extends StatelessWidget {
+  const GalleryGridView({
     required this.galleryState,
-    this.type = MediaPickerType.image,
+    this.type = MediaType.image,
     super.key,
   });
 
@@ -18,8 +17,7 @@ class GalleryGridview extends StatelessWidget {
   static const _itemsPerRow = 3;
 
   final GalleryState galleryState;
-
-  final MediaPickerType type;
+  final MediaType type;
 
   @override
   Widget build(BuildContext context) {
@@ -33,24 +31,19 @@ class GalleryGridview extends StatelessWidget {
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          final mediaData = galleryState.mediaData[index - 1];
-
-          if (mediaData.mimeType == 'photo') {
-            if (index == 0) return const CameraCell();
-            return ImageCell(
-              key: ValueKey(mediaData.path),
-              mediaFile: mediaData,
-            );
-          } else if (mediaData.mimeType == 'video') {
-            return VideoCell(
-              key: ValueKey(mediaData.path),
-              mediaFile: mediaData,
-            );
+          if (index == 0 && type == MediaType.image) {
+            return const CameraCell();
           }
-          return null;
+
+          final adjustedIndex = type == MediaType.image ? index - 1 : index;
+
+          final mediaData = galleryState.mediaData[adjustedIndex];
+          return GalleryGridCell(
+            key: ValueKey(mediaData.path),
+            mediaFile: mediaData,
+          );
         },
-        childCount:
-            type == MediaPickerType.image ? photosTotalCount : galleryState.mediaData.length,
+        childCount: type == MediaType.image ? photosTotalCount : galleryState.mediaData.length,
       ),
     );
   }

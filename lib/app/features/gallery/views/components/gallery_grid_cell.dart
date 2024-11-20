@@ -10,8 +10,8 @@ import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
-class ImageCell extends ConsumerWidget {
-  const ImageCell({
+class GalleryGridCell extends ConsumerWidget {
+  const GalleryGridCell({
     required this.mediaFile,
     super.key,
   });
@@ -38,6 +38,8 @@ class ImageCell extends ConsumerWidget {
             if (asset == null) {
               return const ShimmerLoadingCell();
             }
+
+            print('asset: $asset');
 
             return Image(
               image: AssetEntityImageProvider(

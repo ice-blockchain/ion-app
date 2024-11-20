@@ -24,6 +24,7 @@ import 'package:ion/app/features/chat/views/pages/chat_main_page/chat_main_page.
 import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.dart';
 import 'package:ion/app/features/contacts/pages/contacts_list_view.dart';
 import 'package:ion/app/features/core/model/language.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
 import 'package:ion/app/features/core/views/pages/search_emoji_modal/search_emoji_modal.dart';
