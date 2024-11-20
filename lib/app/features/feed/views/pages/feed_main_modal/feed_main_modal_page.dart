@@ -58,7 +58,9 @@ class FeedMainModalPage extends StatelessWidget {
                     if (context.mounted) {
                       final mediaFiles = await MediaPickerRoute(pickerMediaType: MediaType.video)
                           .push<List<MediaFile>>(context);
-                      // implement onMediaSelected(mediaFiles);
+                      if (mediaFiles != null) {
+                        await CreateVideoRoute(mediaFiles: mediaFiles).push<void>(context);
+                      }
                     }
                   },
                   requestDialog: PermissionRequestSheet.fromType(context, Permission.photos),

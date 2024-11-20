@@ -154,11 +154,14 @@ class CreateArticleRoute extends BaseRouteData {
 }
 
 class CreateVideoRoute extends BaseRouteData {
-  CreateVideoRoute()
+  CreateVideoRoute({this.mediaFiles = const []})
       : super(
-          child: const CreateVideoModal(),
+          child: CreateVideoModal(
+            mediaFiles: mediaFiles,
+          ),
           type: IceRouteType.bottomSheet,
         );
+  final List<MediaFile> mediaFiles;
 }
 
 class MediaPickerRoute extends BaseRouteData {

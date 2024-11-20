@@ -39,8 +39,6 @@ class GalleryGridCell extends ConsumerWidget {
               return const ShimmerLoadingCell();
             }
 
-            print('asset: $asset');
-
             return Image(
               image: AssetEntityImageProvider(
                 asset,
