@@ -24,7 +24,6 @@ import 'package:ion/app/features/chat/views/pages/chat_main_page/chat_main_page.
 import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.dart';
 import 'package:ion/app/features/contacts/pages/contacts_list_view.dart';
 import 'package:ion/app/features/core/model/language.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
 import 'package:ion/app/features/core/views/pages/search_emoji_modal/search_emoji_modal.dart';
@@ -52,6 +51,7 @@ import 'package:ion/app/features/feed/views/pages/post_details_page/post_details
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
 import 'package:ion/app/features/feed/views/pages/share_post_modal/share_post_modal.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_page.dart';

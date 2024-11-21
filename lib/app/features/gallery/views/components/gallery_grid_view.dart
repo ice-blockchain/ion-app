@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 
 class GalleryGridView extends StatelessWidget {
   const GalleryGridView({
     required this.galleryState,
-    this.type = MediaType.image,
+    this.type = MediaPickerType.image,
     super.key,
   });
 
@@ -17,7 +17,7 @@ class GalleryGridView extends StatelessWidget {
   static const _itemsPerRow = 3;
 
   final GalleryState galleryState;
-  final MediaType type;
+  final MediaPickerType type;
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +31,11 @@ class GalleryGridView extends StatelessWidget {
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          if (index == 0 && type == MediaType.image) {
+          if (index == 0 && type == MediaPickerType.image) {
             return const CameraCell();
           }
 
-          final adjustedIndex = type == MediaType.image ? index - 1 : index;
+          final adjustedIndex = type == MediaPickerType.image ? index - 1 : index;
 
           final mediaData = galleryState.mediaData[adjustedIndex];
           return GalleryGridCell(
@@ -44,7 +44,8 @@ class GalleryGridView extends StatelessWidget {
             type: type,
           );
         },
-        childCount: type == MediaType.image ? photosTotalCount : galleryState.mediaData.length,
+        childCount:
+            type == MediaPickerType.image ? photosTotalCount : galleryState.mediaData.length,
       ),
     );
   }

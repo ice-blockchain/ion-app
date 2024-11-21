@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/features/gallery/providers/media_selection_provider.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
@@ -14,12 +14,12 @@ import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 class GalleryGridCell extends ConsumerWidget {
   const GalleryGridCell({
     required this.mediaFile,
-    this.type = MediaType.image,
+    this.type = MediaPickerType.image,
     super.key,
   });
 
   final MediaFile mediaFile;
-  final MediaType type;
+  final MediaPickerType type;
 
   static double get cellHeight => 120.0.s;
   static double get cellWidth => 122.0.s;

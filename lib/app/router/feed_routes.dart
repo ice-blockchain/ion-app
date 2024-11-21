@@ -162,7 +162,7 @@ class CreateVideoRoute extends BaseRouteData {
 }
 
 class MediaPickerRoute extends BaseRouteData {
-  MediaPickerRoute({this.maxSelection = 5, this.pickerMediaType = MediaType.image})
+  MediaPickerRoute({this.maxSelection = 5, this.pickerMediaType = MediaPickerType.image})
       : super(
           child: MediaPickerPage(
             maxSelection: maxSelection,
@@ -172,7 +172,7 @@ class MediaPickerRoute extends BaseRouteData {
         );
 
   final int maxSelection;
-  final MediaType pickerMediaType;
+  final MediaPickerType pickerMediaType;
 }
 
 class ArticlePreviewRoute extends BaseRouteData {

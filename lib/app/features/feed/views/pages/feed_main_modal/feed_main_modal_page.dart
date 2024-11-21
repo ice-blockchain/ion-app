@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/features/wallet/model/feed_type.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -56,7 +56,7 @@ class FeedMainModalPage extends StatelessWidget {
                   permissionType: Permission.photos,
                   onGranted: () async {
                     if (context.mounted) {
-                      await MediaPickerRoute(pickerMediaType: MediaType.video)
+                      await MediaPickerRoute(pickerMediaType: MediaPickerType.video)
                           .push<List<MediaFile>>(context);
                       if (context.mounted) {
                         await CreateVideoRoute().push<void>(context);

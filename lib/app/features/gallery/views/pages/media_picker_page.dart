@@ -5,10 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -16,12 +16,12 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 class MediaPickerPage extends HookConsumerWidget {
   const MediaPickerPage({
     required this.maxSelection,
-    this.type = MediaType.image,
+    this.type = MediaPickerType.image,
     super.key,
   });
 
   final int maxSelection;
-  final MediaType type;
+  final MediaPickerType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -11,7 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -51,11 +51,11 @@ class MediaService {
   Future<List<MediaFile>> fetchGalleryMedia({
     required int page,
     required int size,
-    required MediaType type,
+    required MediaPickerType type,
   }) async {
     try {
       final albums = await PhotoManager.getAssetPathList(
-        type: type == MediaType.image ? RequestType.image : RequestType.video,
+        type: type == MediaPickerType.image ? RequestType.image : RequestType.video,
       );
 
       if (albums.isEmpty) return [];

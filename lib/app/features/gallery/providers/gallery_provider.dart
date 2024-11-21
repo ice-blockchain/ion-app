@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ion/app/features/gallery/data/models/models.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -24,7 +24,7 @@ class GalleryNotifier extends _$GalleryNotifier {
   static const int _pageSize = 100;
 
   @override
-  Future<GalleryState> build({MediaType type = MediaType.image}) async {
+  Future<GalleryState> build({MediaPickerType type = MediaPickerType.image}) async {
     final mediaService = ref.watch(mediaServiceProvider);
     final hasPermission = ref.read(hasPermissionProvider(Permission.photos));
 
