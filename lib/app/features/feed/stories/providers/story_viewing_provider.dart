@@ -45,16 +45,16 @@ class StoryViewingController extends _$StoryViewingController {
 
   void moveToNextStory() {
     state.whenOrNull(
-      ready: (users, userIndex, storyIndex) {
+      ready: (userStories, userIndex, storyIndex) {
         if (state.hasNextStory) {
           state = StoryViewerState.ready(
-            userStories: users,
+            userStories: userStories,
             currentUserIndex: userIndex,
             currentStoryIndex: storyIndex + 1,
           );
         } else if (state.hasNextUser) {
           state = StoryViewerState.ready(
-            userStories: users,
+            userStories: userStories,
             currentUserIndex: userIndex + 1,
             currentStoryIndex: 0,
           );
@@ -65,17 +65,17 @@ class StoryViewingController extends _$StoryViewingController {
 
   void moveToPreviousStory() {
     state.whenOrNull(
-      ready: (users, userIndex, storyIndex) {
+      ready: (userStories, userIndex, storyIndex) {
         if (state.hasPreviousStory) {
           state = StoryViewerState.ready(
-            userStories: users,
+            userStories: userStories,
             currentUserIndex: userIndex,
             currentStoryIndex: storyIndex - 1,
           );
         } else if (state.hasPreviousUser) {
-          final previousUserStoriesCount = users[userIndex - 1].stories.length;
+          final previousUserStoriesCount = userStories[userIndex - 1].stories.length;
           state = StoryViewerState.ready(
-            userStories: users,
+            userStories: userStories,
             currentUserIndex: userIndex - 1,
             currentStoryIndex: previousUserStoriesCount - 1,
           );
@@ -86,10 +86,10 @@ class StoryViewingController extends _$StoryViewingController {
 
   void moveToUser(int userIndex) {
     state.whenOrNull(
-      ready: (users, _, __) {
-        if (userIndex >= 0 && userIndex < users.length) {
+      ready: (userStories, _, __) {
+        if (userIndex >= 0 && userIndex < userStories.length) {
           state = StoryViewerState.ready(
-            userStories: users,
+            userStories: userStories,
             currentUserIndex: userIndex,
             currentStoryIndex: 0,
           );
@@ -100,11 +100,10 @@ class StoryViewingController extends _$StoryViewingController {
 
   void moveToStoryIndex(int storyIndex) {
     state.whenOrNull(
-      ready: (users, userIndex, _) {
-        final userStories = users[userIndex];
-        if (storyIndex >= 0 && storyIndex < userStories.stories.length) {
+      ready: (userStories, userIndex, _) {
+        if (storyIndex >= 0 && storyIndex < userStories[userIndex].stories.length) {
           state = StoryViewerState.ready(
-            userStories: users,
+            userStories: userStories,
             currentUserIndex: userIndex,
             currentStoryIndex: storyIndex,
           );
@@ -115,10 +114,10 @@ class StoryViewingController extends _$StoryViewingController {
 
   void moveToNextUser() {
     state.whenOrNull(
-      ready: (users, userIndex, _) {
+      ready: (userStories, userIndex, _) {
         if (state.hasNextUser) {
           state = StoryViewerState.ready(
-            userStories: users,
+            userStories: userStories,
             currentUserIndex: userIndex + 1,
             currentStoryIndex: 0,
           );
@@ -129,11 +128,11 @@ class StoryViewingController extends _$StoryViewingController {
 
   void moveToPreviousUser() {
     state.whenOrNull(
-      ready: (users, userIndex, _) {
+      ready: (userStories, userIndex, _) {
         if (state.hasPreviousUser) {
-          final previousUserStoriesCount = users[userIndex - 1].stories.length;
+          final previousUserStoriesCount = userStories[userIndex - 1].stories.length;
           state = StoryViewerState.ready(
-            userStories: users,
+            userStories: userStories,
             currentUserIndex: userIndex - 1,
             currentStoryIndex: previousUserStoriesCount - 1,
           );
@@ -144,14 +143,14 @@ class StoryViewingController extends _$StoryViewingController {
 
   void moveToStory(int userIndex, int storyIndex) {
     state.whenOrNull(
-      ready: (users, _, __) {
-        final isValidUser = userIndex >= 0 && userIndex < users.length;
+      ready: (userStories, _, __) {
+        final isValidUser = userIndex >= 0 && userIndex < userStories.length;
         final isValidStory =
-            isValidUser && storyIndex >= 0 && storyIndex < users[userIndex].stories.length;
+            isValidUser && storyIndex >= 0 && storyIndex < userStories[userIndex].stories.length;
 
         if (isValidStory) {
           state = StoryViewerState.ready(
-            userStories: users,
+            userStories: userStories,
             currentUserIndex: userIndex,
             currentStoryIndex: storyIndex,
           );
@@ -165,11 +164,11 @@ class StoryViewingController extends _$StoryViewingController {
     if (currentStory == null) return;
 
     state.whenOrNull(
-      ready: (users, userIndex, storyIndex) {
-        final updatedUsers = users.map((user) {
-          if (!user.hasStoryWithId(storyId)) return user;
+      ready: (userStories, userIndex, storyIndex) {
+        final updatedUsers = userStories.map((userStory) {
+          if (!userStory.hasStoryWithId(storyId)) return userStory;
 
-          final updatedStories = user.stories
+          final updatedStories = userStory.stories
               .map(
                 (story) => story.maybeWhen(
                   video: (post, muteState, likeState) => post.id == storyId
@@ -185,7 +184,7 @@ class StoryViewingController extends _$StoryViewingController {
               )
               .toList();
 
-          return user.copyWith(stories: updatedStories);
+          return userStory.copyWith(stories: updatedStories);
         }).toList();
 
         state = StoryViewerState.ready(
@@ -202,8 +201,8 @@ class StoryViewingController extends _$StoryViewingController {
     if (currentStory == null) return;
 
     state.whenOrNull(
-      ready: (users, userIndex, storyIndex) {
-        final updatedUsers = users.map((user) {
+      ready: (userStorie, userIndex, storyIndex) {
+        final updatedUsers = userStorie.map((user) {
           if (!user.hasStoryWithId(storyId)) return user;
 
           final storyIndex = user.getStoryIndex(storyId);
