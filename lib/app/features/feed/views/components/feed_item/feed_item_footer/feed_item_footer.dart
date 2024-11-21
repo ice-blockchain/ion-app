@@ -8,9 +8,12 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/feed/data/models/event_count_result_data.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_action_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class FeedItemFooter extends HookConsumerWidget {
@@ -30,17 +33,10 @@ class FeedItemFooter extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isCommentActive = useState(false);
     final isReposted = useState(false);
     final isLiked = useState(false);
 
     final activeColor = context.theme.appColors.primaryAccent;
-
-    void onToggleComment() {
-      HapticFeedback.lightImpact();
-      CreatePostRoute(parentEvent: eventReference.toString()).push<void>(context);
-      isCommentActive.value = !isCommentActive.value;
-    }
 
     void onToggleRepost() {
       HapticFeedback.lightImpact();
@@ -58,20 +54,6 @@ class FeedItemFooter extends HookConsumerWidget {
       HapticFeedback.lightImpact();
       SharePostModalRoute(postId: eventReference.eventId).push<void>(context);
     }
-
-    void onIceStroke() => HapticFeedback.lightImpact();
-
-    final commentsActionIcon = FeedItemActionButton(
-      icon: Assets.svg.iconBlockComment.icon(
-        size: 14.0.s,
-      ),
-      activeIcon: Assets.svg.iconBlockCommenton.icon(
-        size: 14.0.s,
-      ),
-      value: '121k',
-      isActive: isCommentActive.value,
-      activeColor: activeColor,
-    );
 
     final repostsActionIcon = FeedItemActionButton(
       icon: Assets.svg.iconBlockRepost.icon(
@@ -100,15 +82,6 @@ class FeedItemFooter extends HookConsumerWidget {
       activeColor: context.theme.appColors.attentionRed,
     );
 
-    final iceActionIcon = FeedItemActionButton(
-      icon: Assets.svg.iconButtonIceStroke.icon(
-        size: 16.0.s,
-        color: context.theme.appColors.onTertararyBackground,
-      ),
-      value: '7',
-      activeColor: activeColor,
-    );
-
     final shareActionIcon = FeedItemActionButton(
       icon: Assets.svg.iconBlockShare.icon(
         size: 14.0.s,
@@ -121,27 +94,76 @@ class FeedItemFooter extends HookConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-            onTap: onToggleComment,
-            child: commentsActionIcon,
+          Flexible(child: CommentsButton(eventReference: eventReference)),
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: onToggleRepost,
+                  child: repostsActionIcon,
+                ),
+              ],
+            ),
           ),
-          GestureDetector(
-            onTap: onToggleRepost,
-            child: repostsActionIcon,
+          const Spacer(),
+          Flexible(
+            child: GestureDetector(
+              onTap: onToggleLike,
+              child: likesActionIcon,
+            ),
           ),
-          GestureDetector(
-            onTap: onToggleLike,
-            child: likesActionIcon,
-          ),
-          GestureDetector(
-            onTap: onIceStroke,
-            child: iceActionIcon,
-          ),
-          GestureDetector(
-            onTap: onShareOptions,
-            child: shareActionIcon,
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: onShareOptions,
+                  child: shareActionIcon,
+                ),
+              ],
+            ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CommentsButton extends ConsumerWidget {
+  const CommentsButton({required this.eventReference, super.key});
+
+  final EventReference eventReference;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final countEntity = ref.watch(
+      nostrCacheProvider.select(
+        cacheSelector<EventCountResultEntity<int>>(
+          EventCountResultEntity.cacheKeyBuilder(
+            key: eventReference.eventId,
+            type: EventCountResultType.replies,
+          ),
+        ),
+      ),
+    );
+
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        CreatePostRoute(parentEvent: eventReference.toString()).push<void>(context);
+      },
+      child: FeedItemActionButton(
+        icon: Assets.svg.iconBlockComment.icon(
+          size: 14.0.s,
+        ),
+        activeIcon: Assets.svg.iconBlockCommenton.icon(
+          size: 14.0.s,
+        ),
+        value: countEntity != null
+            ? formatDoubleCompact(countEntity.data.content)
+            : formatDoubleCompact(45311),
+        activeColor: context.theme.appColors.primaryAccent,
       ),
     );
   }

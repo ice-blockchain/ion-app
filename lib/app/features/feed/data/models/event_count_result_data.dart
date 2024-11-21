@@ -16,7 +16,7 @@ enum EventCountResultType {
   replies,
   reposts,
   quotes,
-  reactions,
+  reactions;
 }
 
 @Freezed(equal: false)
