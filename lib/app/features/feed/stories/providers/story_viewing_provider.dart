@@ -6,7 +6,6 @@ import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_viewing_provider.g.dart';
@@ -28,7 +27,7 @@ class StoryViewingController extends _$StoryViewingController {
       }
 
       var initialUserIndex = (startingPubkey != null)
-          ? stories.indexWhere((story) => story.userId == startingPubkey)
+          ? stories.indexWhere((story) => story.pubkey == startingPubkey)
           : -1;
 
       initialUserIndex = (initialUserIndex == -1) ? 0 : initialUserIndex;
@@ -159,70 +158,18 @@ class StoryViewingController extends _$StoryViewingController {
     );
   }
 
-  void toggleMute(String storyId) {
-    final currentStory = state.currentStory;
-    if (currentStory == null) return;
-
+  void toggleLike(String postId) {
     state.whenOrNull(
       ready: (userStories, userIndex, storyIndex) {
-        final updatedUsers = userStories.map((userStory) {
-          if (!userStory.hasStoryWithId(storyId)) return userStory;
+        final updatedUsers = userStories.map((user) {
+          final updatedPosts = user.stories.map((post) {
+            if (post.id == postId) {
+              // TODO: wait for event from post is ready to be liked
+            }
+            return post;
+          }).toList();
 
-          final updatedStories = userStory.stories
-              .map(
-                (story) => story.maybeWhen(
-                  video: (post, muteState, likeState) => post.id == storyId
-                      ? Story.video(
-                          post: post,
-                          muteState:
-                              muteState == MuteState.muted ? MuteState.unmuted : MuteState.muted,
-                          likeState: likeState,
-                        )
-                      : story,
-                  orElse: () => story,
-                ),
-              )
-              .toList();
-
-          return userStory.copyWith(stories: updatedStories);
-        }).toList();
-
-        state = StoryViewerState.ready(
-          userStories: updatedUsers,
-          currentUserIndex: userIndex,
-          currentStoryIndex: storyIndex,
-        );
-      },
-    );
-  }
-
-  void toggleLike(String storyId) {
-    final currentStory = state.currentStory;
-    if (currentStory == null) return;
-
-    state.whenOrNull(
-      ready: (userStorie, userIndex, storyIndex) {
-        final updatedUsers = userStorie.map((user) {
-          if (!user.hasStoryWithId(storyId)) return user;
-
-          final storyIndex = user.getStoryIndex(storyId);
-          if (storyIndex == -1) return user;
-
-          final story = user.stories[storyIndex];
-          final updatedStories = [...user.stories];
-          updatedStories[storyIndex] = story.when(
-            image: (post, likeState) => Story.image(
-              post: post,
-              likeState: likeState == LikeState.liked ? LikeState.notLiked : LikeState.liked,
-            ),
-            video: (post, muteState, likeState) => Story.video(
-              post: post,
-              muteState: muteState,
-              likeState: likeState == LikeState.liked ? LikeState.notLiked : LikeState.liked,
-            ),
-          );
-
-          return user.copyWith(stories: updatedStories);
+          return user.copyWith(stories: updatedPosts);
         }).toList();
 
         state = StoryViewerState.ready(
@@ -235,15 +182,13 @@ class StoryViewingController extends _$StoryViewingController {
   }
 
   Future<List<UserStories>> _fetchUserStories() async {
-    final dataSource = ref.read(feedStoriesDataSourceProvider);
-    final entitiesPagedDataState = ref.read(entitiesPagedDataProvider(dataSource));
+    final dataSource = ref.watch(feedStoriesDataSourceProvider);
+    final entitiesPagedDataState = ref.watch(entitiesPagedDataProvider(dataSource));
 
-    final postEntities = entitiesPagedDataState?.data.items.whereType<PostEntity>().where(
-          (post) {
-            final mediaAttachment = post.data.media.values.firstOrNull;
-            return mediaAttachment != null && _isValidMediaType(mediaAttachment.mediaType);
-          },
-        ).toList() ??
+    final postEntities = entitiesPagedDataState?.data.items.whereType<PostEntity>().where((post) {
+          final mediaType = post.data.media.values.firstOrNull?.mediaType;
+          return mediaType == MediaType.image || mediaType == MediaType.video;
+        }).toList() ??
         [];
 
     final groupedStories = groupBy<PostEntity, String>(
@@ -259,21 +204,9 @@ class StoryViewingController extends _$StoryViewingController {
 
       if (userPosts.isEmpty) continue;
 
-      final userMetadata = await ref.read(userMetadataProvider(pubkey).future);
-
-      final stories = userPosts.map((post) {
-        final mediaAttachment = post.data.media.values.first;
-        return mediaAttachment.mediaType == MediaType.image
-            ? Story.image(post: post)
-            : Story.video(post: post);
-      }).toList();
-
       final userStories = UserStories(
-        userId: pubkey,
-        userName: userMetadata?.data.displayName ?? '',
-        userAvatar: userMetadata?.data.picture ?? '',
-        stories: stories,
-        isVerified: userMetadata?.data.verified ?? false,
+        pubkey: pubkey,
+        stories: userPosts,
       );
 
       userStoriesList.add(userStories);
@@ -281,7 +214,4 @@ class StoryViewingController extends _$StoryViewingController {
 
     return userStoriesList;
   }
-
-  bool _isValidMediaType(MediaType mediaType) =>
-      mediaType == MediaType.image || mediaType == MediaType.video;
 }

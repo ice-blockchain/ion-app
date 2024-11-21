@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.dart';
 
 part 'story_viewer_state.freezed.dart';
@@ -49,7 +50,7 @@ sealed class StoryViewerState with _$StoryViewerState {
       ) ??
       false;
 
-  Story? get currentStory => whenOrNull(
+  PostEntity? get currentStory => whenOrNull(
         ready: (userStories, userIndex, storyIndex) => userStories[userIndex].stories[storyIndex],
       );
 

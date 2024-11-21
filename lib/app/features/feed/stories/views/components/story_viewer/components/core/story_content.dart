@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/stories/data/models/models.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
@@ -14,11 +14,11 @@ import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryContent extends HookConsumerWidget {
   const StoryContent({
-    required this.story,
+    required this.post,
     super.key,
   });
 
-  final Story story;
+  final PostEntity post;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,12 +40,9 @@ class StoryContent extends HookConsumerWidget {
         fit: StackFit.expand,
         children: [
           StoryViewerContent(
-            story: story,
+            post: post,
           ),
-          StoryViewerHeader(
-            pubkey: 'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
-            currentStory: story,
-          ),
+          StoryViewerHeader(currentPost: post),
           Stack(
             children: [
               StoryInputField(
@@ -53,7 +50,7 @@ class StoryContent extends HookConsumerWidget {
                 bottomPadding: bottomPadding,
               ),
               StoryViewerActionButtons(
-                story: story,
+                post: post,
                 bottomPadding: bottomPadding,
               ),
               if (isKeyboardVisible)

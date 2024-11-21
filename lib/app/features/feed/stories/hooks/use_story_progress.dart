@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:video_player/video_player.dart';
 
 class StoryProgress {
@@ -16,7 +17,7 @@ class StoryProgress {
 }
 
 StoryProgress useStoryProgress({
-  required Story story,
+  required PostEntity post,
   required bool isCurrent,
   required bool isPaused,
   required VideoPlayerController? videoController,
@@ -34,7 +35,7 @@ StoryProgress useStoryProgress({
       animationController.reset();
       return null;
     },
-    [story.post.id],
+    [post.id],
   );
 
   useEffect(
@@ -48,35 +49,51 @@ StoryProgress useStoryProgress({
       }
 
       void handleProgress() {
-        story.map(
-          image: (_) => _handleImageProgress(
-            animationController,
-            progress,
-            isCompleted,
-          ),
-          video: (_) => _handleVideoProgress(
-            videoController,
-            progress,
-            isCompleted,
-          ),
-        );
+        final media = post.data.primaryMedia;
+        if (media == null) return;
+
+        switch (media.mediaType) {
+          case MediaType.image:
+            _handleImageProgress(
+              animationController,
+              progress,
+              isCompleted,
+            );
+          case MediaType.video:
+            _handleVideoProgress(
+              videoController,
+              progress,
+              isCompleted,
+            );
+
+          case MediaType.unknown:
+        }
       }
 
-      return story.map(
-        image: (_) => _setupAnimationController(
-          animationController,
-          handleProgress,
-          isPaused,
-        ),
-        video: (_) => _setupVideoController(
-          videoController,
-          handleProgress,
-          isCurrent,
-          isPaused,
-        ),
-      );
+      final media = post.data.primaryMedia;
+      if (media == null) return null;
+
+      switch (media.mediaType) {
+        case MediaType.image:
+          return _setupAnimationController(
+            animationController,
+            handleProgress,
+            isPaused,
+          );
+        case MediaType.video:
+          return _setupVideoController(
+            videoController,
+            handleProgress,
+            isCurrent,
+            isPaused,
+          );
+
+        case MediaType.unknown:
+        
+      }
+      return null;
     },
-    [isCurrent, videoController, story.post.id, isPaused],
+    [isCurrent, videoController, post.id, isPaused],
   );
 
   return StoryProgress(

@@ -59,14 +59,14 @@ class StoryViewerPage extends HookConsumerWidget {
         body: SafeArea(
           child: storyViewingState.maybeWhen(
             orElse: () => const CenteredLoadingIndicator(),
-            ready: (users, currentUserIndex, currentStoryIndex) {
-              final currentUser = users[currentUserIndex];
+            ready: (userStories, currentUserIndex, currentStoryIndex) {
+              final userStory = userStories[currentUserIndex];
               return Column(
                 children: [
                   Expanded(
                     child: StoriesSwiper(
                       userPageController: userPageController,
-                      users: users,
+                      userStories: userStories,
                       currentUserIndex: currentUserIndex,
                       currentStoryIndex: currentStoryIndex,
                       onUserPageChanged: storyViewingController.moveToUser,
@@ -78,7 +78,7 @@ class StoryViewerPage extends HookConsumerWidget {
                   ),
                   SizedBox(height: 28.0.s),
                   StoryProgressBarContainer(
-                    stories: currentUser.stories,
+                    posts: userStory.stories,
                     currentStoryIndex: currentStoryIndex,
                     onStoryCompleted: () {
                       if (storyViewingState.hasNextStory) {

@@ -25,7 +25,7 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
             RequestFilter(
               kinds: const [PostEntity.kind],
               authors: entry.value,
-              limit: 10,
+              limit: 50,
             ),
           ],
         ),
