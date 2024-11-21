@@ -28,4 +28,6 @@ class ReactionsEntity with _$ReactionsEntity, NostrEntity implements CacheableEn
   static String cacheKeyBuilder({required String id}) => id;
 
   static const int kind = 7;
+
+  static const String likeSymbol = '+';
 }

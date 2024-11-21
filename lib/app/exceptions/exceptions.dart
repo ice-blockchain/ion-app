@@ -80,9 +80,9 @@ class QuillParseException extends IONException {
       : super(10014, 'Invalid content format for Quill Delta: $error');
 }
 
-class UnsupportedRepostKindException extends IONException {
-  UnsupportedRepostKindException(int kind)
-      : super(10015, 'Reposting events of kind $kind is not supported');
+class UnsupportedRepostException extends IONException {
+  UnsupportedRepostException({required String eventId})
+      : super(10015, 'Reposting events with $eventId is not supported');
 }
 
 class EventNotFoundException extends IONException {
