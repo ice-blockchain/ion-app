@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
-import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_provider.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_skeleton.dart';
@@ -16,27 +16,26 @@ class Stories extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dataSource = ref.watch(feedStoriesDataSourceProvider);
-    final storiesData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final stories = ref.watch(storiesProvider);
+
+    final storyHasMore = ref.watch(
+      entitiesPagedDataProvider(ref.watch(feedStoriesDataSourceProvider))
+          .select((state) => (state?.hasMore).falseOrValue),
+    );
 
     return Column(
       children: [
         SizedBox(height: 3.0.s),
-        if (storiesData == null)
+        if (stories == null)
           const StoryListSkeleton()
         else
           LoadMoreBuilder(
             slivers: [
               StoryList(
-                pubkeys: storiesData.data.items
-                    .whereType<PostEntity>()
-                    .where((entity) => entity.data.media.isNotEmpty)
-                    .map((entity) => entity.pubkey)
-                    .toSet()
-                    .toList(),
+                pubkeys: stories.map((story) => story.pubkey).toList(),
               ),
             ],
-            hasMore: storiesData.hasMore,
+            hasMore: storyHasMore,
             onLoadMore: () => _onLoadMore(ref),
             builder: (context, slivers) {
               return SizedBox(
