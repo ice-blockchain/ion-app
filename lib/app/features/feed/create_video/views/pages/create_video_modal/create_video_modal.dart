@@ -21,7 +21,7 @@ class CreateVideoModal extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
-            title: Text(context.i18n.create_video_nav_title),
+            title: Text(context.i18n.common_add_video),
           ),
           const Spacer(),
         ],

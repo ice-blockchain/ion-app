@@ -40,7 +40,7 @@ enum MediaType {
   String title(BuildContext context) {
     return switch (this) {
       MediaType.image => context.i18n.gallery_add_photo_title,
-      MediaType.video => context.i18n.gallery_add_video_title,
+      MediaType.video => context.i18n.common_add_video,
       MediaType.unknown => '',
     };
   }
