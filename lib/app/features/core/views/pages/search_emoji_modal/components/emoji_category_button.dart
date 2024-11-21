@@ -2,7 +2,7 @@
 
 part of '../search_emoji_modal.dart';
 
-class _EmojiCategoryButton extends HookConsumerWidget {
+class _EmojiCategoryButton extends StatelessWidget {
   const _EmojiCategoryButton({
     required this.category,
     required this.onPressed,
@@ -13,7 +13,7 @@ class _EmojiCategoryButton extends HookConsumerWidget {
   final VoidCallback onPressed;
   final bool isActive;
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
