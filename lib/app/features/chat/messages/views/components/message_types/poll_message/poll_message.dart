@@ -6,20 +6,23 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/poll_message/mock.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 
 part 'poll_result_message.dart';
 
 class PollMessage extends HookWidget {
-  const PollMessage({required this.isMe, super.key});
+  const PollMessage({required this.isMe, super.key, this.reactions});
   final bool isMe;
+  final List<MessageReactionGroup>? reactions;
 
   @override
   Widget build(BuildContext context) {
     final selectedId = useState<String?>(null);
 
     if (selectedId.value != null) {
-      return PollResultMessage(isMe: isMe);
+      return PollResultMessage(isMe: isMe, reactions: reactions);
     }
 
     return MessageItemWrapper(
@@ -64,9 +67,13 @@ class PollMessage extends HookWidget {
             itemCount: mockPoll.options.length,
           ),
           SizedBox(height: 4.0.s),
-          Align(
-            alignment: Alignment.centerRight,
-            child: MessageMetaData(isMe: isMe),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              MessageReactions(reactions: reactions),
+              const Spacer(),
+              MessageMetaData(isMe: isMe),
+            ],
           ),
         ],
       ),

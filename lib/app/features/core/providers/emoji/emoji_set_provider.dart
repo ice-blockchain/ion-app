@@ -48,7 +48,7 @@ class EmojiSearchQuery extends _$EmojiSearchQuery {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<List<EmojiGroup>> emojisFilteredByQuery(Ref ref) async {
   final emojiGroups = ref.watch(emojiGroupsProvider).valueOrNull;
   final keywords = ref.watch(emojiKeywordsProvider).valueOrNull;

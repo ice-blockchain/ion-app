@@ -1,30 +1,48 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/recent_emoji_reactions_provider.dart';
 import 'package:ion/app/features/core/model/emoji/emoji_category.dart';
+import 'package:ion/app/features/core/model/emoji/emoji_group.dart';
 import 'package:ion/app/features/core/providers/emoji/emoji_set_provider.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
-class SearchEmojiModal extends ConsumerWidget {
+part 'components/emoji_category_button.dart';
+part 'components/emojis_grid_view.dart';
+
+class SearchEmojiModal extends HookConsumerWidget {
   const SearchEmojiModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final emojiGroups = ref.watch(emojisFilteredByQueryProvider);
     final recentEmojiReactions = ref.read(recentEmojiReactionsProvider);
+    final activeCategory = useState<EmojiCategory>(EmojiCategory.recent);
+
+    final categoryKeys = useMemoized(
+      () => EmojiCategory.values.map((category) => GlobalKey()).toList(),
+      [],
+    );
+
+    final hasLoadedEmojis = useMemoized(
+      () => emojiGroups.hasValue && emojiGroups.value!.isNotEmpty,
+      [emojiGroups],
+    );
 
     return SheetContent(
       body: ScreenSideOffset.small(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
             NavigationAppBar.modal(
               title: const Text('Emoji'),
@@ -37,108 +55,126 @@ class SearchEmojiModal extends ConsumerWidget {
                 ),
               ],
             ),
+            _EmojiCategoryButtons(categoryKeys: categoryKeys, activeCategory: activeCategory),
             SearchInput(
               onTextChanged: (value) {
                 ref.read(emojiSearchQueryProvider.notifier).query = value;
               },
             ),
-            if (emojiGroups.hasValue)
+            if (hasLoadedEmojis)
               Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.only(top: 10.0.s, bottom: 10.0.s),
-                  itemCount: emojiGroups.value!.length,
-                  itemBuilder: (context, index) {
-                    final group = emojiGroups.value![index];
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(top: 16.0.s, bottom: 10.0.s),
+                  child: SeparatedColumn(
+                    separator: SizedBox(height: 24.0.s),
+                    children: EmojiCategory.values.map((category) {
+                      final emojis = _getEmojisByCategory(
+                        category,
+                        recentEmojiReactions,
+                        emojiGroups.value!,
+                      );
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (recentEmojiReactions.isNotEmpty && index == 0)
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 10.0.s),
-                                child: Text(
-                                  context.i18n.recent_emoji_reactions,
-                                  style: context.theme.appTextThemes.body2.copyWith(
-                                    color: context.theme.appColors.tertararyText,
-                                  ),
-                                ),
-                              ),
-                              GridView.count(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                crossAxisCount: 8,
-                                mainAxisSpacing: 16.0.s,
-                                crossAxisSpacing: 16.0.s,
-                                children: recentEmojiReactions
-                                    .map(
-                                      (reaction) => GestureDetector(
-                                        onTap: () {
-                                          ref
-                                              .read(recentEmojiReactionsProvider.notifier)
-                                              .addEmoji(reaction);
-                                          context.pop();
-                                        },
-                                        child: Text(
-                                          reaction,
-                                          style: context.theme.appTextThemes.headline1.copyWith(
-                                            height: 1,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ],
-                          ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 24.0.s, bottom: 10.0.s),
-                          child: Text(
-                            EmojiCategory.fromSlug(group.slug).getTitle(context),
-                            style: context.theme.appTextThemes.body2.copyWith(
-                              color: context.theme.appColors.tertararyText,
-                            ),
-                          ),
+                      if (emojis.isEmpty) {
+                        return const SizedBox();
+                      }
+
+                      return VisibilityDetector(
+                        key: categoryKeys[category.index],
+                        onVisibilityChanged: (visibility) {
+                          if (context.mounted) {
+                            _handleCategoryVisibilityChange(
+                              category,
+                              visibility.visibleFraction,
+                              activeCategory,
+                            );
+                          }
+                        },
+                        child: _EmojisGridView(
+                          emojis: emojis,
+                          title: category.getTitle(context),
                         ),
-                        GridView.count(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisCount: 8,
-                          mainAxisSpacing: 16.0.s,
-                          crossAxisSpacing: 16.0.s,
-                          children: group.emojis
-                              .map(
-                                (emoji) => Center(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      ref
-                                          .read(recentEmojiReactionsProvider.notifier)
-                                          .addEmoji(emoji.emoji);
-                                      context.pop();
-                                    },
-                                    child: Text(
-                                      emoji.emoji,
-                                      style: context.theme.appTextThemes.headline1.copyWith(
-                                        height: 1,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ],
-                    );
-                  },
+                      );
+                    }).toList(),
+                  ),
                 ),
-              ),
+              )
+            else
+              const Expanded(child: SizedBox()),
           ],
         ),
+      ),
+    );
+  }
+
+  void _handleCategoryVisibilityChange(
+    EmojiCategory category,
+    double visibleFraction,
+    ValueNotifier<EmojiCategory> activeCategory,
+  ) {
+    if (activeCategory.value == EmojiCategory.recent) {
+      if (category == EmojiCategory.recent && visibleFraction == 0) {
+        activeCategory.value = EmojiCategory.smileysPeople;
+      }
+      return;
+    }
+    if (visibleFraction > 0) {
+      activeCategory.value = category;
+    }
+  }
+
+  List<String> _getEmojisByCategory(
+    EmojiCategory category,
+    List<String> recentEmojiReactions,
+    List<EmojiGroup> emojiGroups,
+  ) {
+    List<String> emojis;
+
+    if (category == EmojiCategory.recent) {
+      emojis = recentEmojiReactions;
+    } else {
+      emojis = emojiGroups
+              .firstWhereOrNull(
+                (group) => group.slug == category.getSlug(),
+              )
+              ?.emojis
+              .map((emoji) => emoji.emoji)
+              .toList() ??
+          [];
+    }
+    return emojis;
+  }
+}
+
+class _EmojiCategoryButtons extends StatelessWidget {
+  const _EmojiCategoryButtons({
+    required this.categoryKeys,
+    required this.activeCategory,
+  });
+
+  final List<GlobalKey<State<StatefulWidget>>> categoryKeys;
+  final ValueNotifier<EmojiCategory> activeCategory;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 16.0.s, bottom: 12.0.s),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: EmojiCategory.values.map((category) {
+          return _EmojiCategoryButton(
+            category: category,
+            onPressed: () {
+              final key = categoryKeys[category.index];
+              final widgetContext = key.currentContext;
+
+              if (widgetContext != null) {
+                Scrollable.ensureVisible(widgetContext);
+                activeCategory.value = category;
+              }
+            },
+            isActive: activeCategory.value == category,
+          );
+        }).toList(),
       ),
     );
   }
