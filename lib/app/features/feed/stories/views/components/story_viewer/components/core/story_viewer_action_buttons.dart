@@ -63,7 +63,7 @@ class _SoundButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return story.maybeWhen(
-      video: (data, muteState) => StoryControlButton(
+      video: (data, muteState, likeState) => StoryControlButton(
         borderRadius: 16.0.s,
         iconPadding: 8.0.s,
         icon: muteState == MuteState.muted
@@ -91,7 +91,7 @@ class _LikeButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLiked = story.data.likeState == LikeState.liked;
+    final isLiked = story.likeState == LikeState.liked;
     final icon = isLiked ? Assets.svg.iconVideoLikeOn : Assets.svg.iconVideoLikeOff;
     final color =
         isLiked ? context.theme.appColors.attentionRed : context.theme.appColors.onPrimaryAccent;
@@ -103,7 +103,7 @@ class _LikeButton extends ConsumerWidget {
       ),
       borderRadius: 16.0.s,
       iconPadding: 8.0.s,
-      onPressed: () => ref.read(storyViewingControllerProvider.notifier).toggleLike(story.data.id),
+      onPressed: () => ref.read(storyViewingControllerProvider.notifier).toggleLike(story.post.id),
     );
   }
 }

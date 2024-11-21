@@ -34,7 +34,7 @@ StoryProgress useStoryProgress({
       animationController.reset();
       return null;
     },
-    [story.data.id],
+    [story.post.id],
   );
 
   useEffect(
@@ -76,7 +76,7 @@ StoryProgress useStoryProgress({
         ),
       );
     },
-    [isCurrent, videoController, story.data.id, isPaused],
+    [isCurrent, videoController, story.post.id, isPaused],
   );
 
   return StoryProgress(

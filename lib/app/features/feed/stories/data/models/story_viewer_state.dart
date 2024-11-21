@@ -10,7 +10,7 @@ sealed class StoryViewerState with _$StoryViewerState {
   const factory StoryViewerState.initial() = _StoryViewerStateInitial;
   const factory StoryViewerState.loading() = _StoryViewerStateLoading;
   const factory StoryViewerState.ready({
-    required List<UserStories> users,
+    required List<UserStories> userStories,
     required int currentUserIndex,
     required int currentStoryIndex,
   }) = _StoryViewerStateReady;
@@ -20,9 +20,14 @@ sealed class StoryViewerState with _$StoryViewerState {
 
   const StoryViewerState._();
 
+  int? get currentUserIndexOrNull => whenOrNull(
+        ready: (_, currentUserIndex, __) => currentUserIndex,
+      );
+
   bool get hasNextStory =>
       whenOrNull(
-        ready: (users, userIndex, storyIndex) => storyIndex < users[userIndex].stories.length - 1,
+        ready: (userStories, userIndex, storyIndex) =>
+            storyIndex < userStories[userIndex].stories.length - 1,
       ) ??
       false;
 
@@ -34,7 +39,7 @@ sealed class StoryViewerState with _$StoryViewerState {
 
   bool get hasNextUser =>
       whenOrNull(
-        ready: (users, userIndex, _) => userIndex < users.length - 1,
+        ready: (userStories, userIndex, _) => userIndex < userStories.length - 1,
       ) ??
       false;
 
@@ -45,10 +50,10 @@ sealed class StoryViewerState with _$StoryViewerState {
       false;
 
   Story? get currentStory => whenOrNull(
-        ready: (users, userIndex, storyIndex) => users[userIndex].stories[storyIndex],
+        ready: (userStories, userIndex, storyIndex) => userStories[userIndex].stories[storyIndex],
       );
 
   UserStories? get currentUser => whenOrNull(
-        ready: (users, userIndex, _) => users[userIndex],
+        ready: (userStories, userIndex, _) => userStories[userIndex],
       );
 }

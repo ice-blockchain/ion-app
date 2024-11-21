@@ -32,9 +32,9 @@ class StoryProgressTracker extends HookConsumerWidget {
     final isPaused = ref.watch(storyPauseControllerProvider);
 
     final videoController = story.whenOrNull(
-      video: (data, _) => ref.watch(
+      video: (post, muteState, likeState) => ref.watch(
         videoControllerProvider(
-          data.mediaUrl,
+          post.data.media.values.first.url,
           autoPlay: isCurrent,
         ),
       ),

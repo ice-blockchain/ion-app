@@ -31,70 +31,66 @@ class StoryListItem extends HookConsumerWidget {
 
   static double get borderSize => 2.0.s;
 
-  static const _defaultAvatarUrl = 'https://i.pravatar.cc/150?u=@me';
-  static const _defaultUserLabel = 'you';
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewed = useState(false);
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
     final userMetadataAsync = ref.watch(userMetadataProvider(pubkey));
 
     return userMetadataAsync.maybeWhen(
-      data: (userMetadata) => GestureDetector(
-        onTap: () {
-          if (userMetadata == null) return;
+      data: (userMetadata) {
+        if (userMetadata == null) return const SizedBox.shrink();
 
-          StoryViewerRoute(pubkey: pubkey).push<void>(context);
-        },
-        child: SizedBox(
-          width: width,
-          height: height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.bottomCenter,
-                children: [
-                  StoryColoredBorder(
-                    size: width,
-                    color: context.theme.appColors.strokeElements,
-                    gradient: viewed.value ? null : gradient,
-                    child: StoryColoredBorder(
-                      size: width - borderSize * 2,
-                      color: context.theme.appColors.secondaryBackground,
-                      child: Avatar(
-                        size: width - borderSize * 4,
-                        imageUrl: userMetadata?.data.picture ?? _defaultAvatarUrl,
+        final isCurrentUserPubkey = ref.watch(isCurrentUserSelectorProvider(userMetadata.pubkey));
+
+        return GestureDetector(
+          onTap: () => StoryViewerRoute(pubkey: pubkey).push<void>(context),
+          child: SizedBox(
+            width: width,
+            height: height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    StoryColoredBorder(
+                      size: width,
+                      color: context.theme.appColors.strokeElements,
+                      gradient: viewed.value ? null : gradient,
+                      child: StoryColoredBorder(
+                        size: width - borderSize * 2,
+                        color: context.theme.appColors.secondaryBackground,
+                        child: Avatar(
+                          size: width - borderSize * 4,
+                          imageUrl: userMetadata.data.picture,
+                        ),
                       ),
                     ),
-                  ),
-                  if (userMetadata?.pubkey == currentUserPubkey)
-                    Positioned(
-                      bottom: -plusSize / 2,
-                      child: PlusIcon(
-                        size: plusSize,
+                    if (isCurrentUserPubkey)
+                      Positioned(
+                        bottom: -plusSize / 2,
+                        child: PlusIcon(
+                          size: plusSize,
+                        ),
                       ),
-                    ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 2.0.s),
-                child: Text(
-                  userMetadata?.pubkey == currentUserPubkey
-                      ? _defaultUserLabel
-                      : userMetadata?.data.name ?? '',
-                  style: context.theme.appTextThemes.caption3.copyWith(
-                    color: context.theme.appColors.primaryText,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+                  ],
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 2.0.s),
+                  child: Text(
+                    isCurrentUserPubkey ? context.i18n.common_you : userMetadata.data.name,
+                    style: context.theme.appTextThemes.caption3.copyWith(
+                      color: context.theme.appColors.primaryText,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
       orElse: () => const SizedBox.shrink(),
     );
   }

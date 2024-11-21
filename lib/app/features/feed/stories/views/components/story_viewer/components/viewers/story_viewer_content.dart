@@ -16,14 +16,22 @@ class StoryViewerContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+   return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
       child: story.maybeWhen(
-        image: (data) => ImageStoryViewer(path: data.mediaUrl),
-        video: (data, muteState) => VideoStoryViewer(
-          videoPath: data.mediaUrl,
-          muteState: muteState,
-        ),
+        image: (post, likeState) {
+          final media = post.data.media.values.firstOrNull;
+          if (media == null) return const CenteredLoadingIndicator();
+          return ImageStoryViewer(path: media.url);
+        },
+        video: (post, muteState, likeState) {
+          final media = post.data.media.values.firstOrNull;
+          if (media == null) return const CenteredLoadingIndicator();
+          return VideoStoryViewer(
+            videoPath: media.url,
+            muteState: muteState,
+          );
+        },
         orElse: () => const CenteredLoadingIndicator(),
       ),
     );

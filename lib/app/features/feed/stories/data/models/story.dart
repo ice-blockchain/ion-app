@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 
 part 'story.freezed.dart';
 
@@ -23,42 +24,28 @@ class UserStories with _$UserStories {
 
   bool get hasStories => stories.isNotEmpty;
 
-  Story? getStoryById(String id) => stories.firstWhereOrNull((story) => story.data.id == id);
+  Story? getStoryById(String id) => stories.firstWhereOrNull((story) => story.post.id == id);
 
-  int getStoryIndex(String id) => stories.indexWhere((story) => story.data.id == id);
+  int getStoryIndex(String id) => stories.indexWhere((story) => story.post.id == id);
 
-  bool hasStoryWithId(String id) => stories.any((story) => story.data.id == id);
-}
-
-@freezed
-class StoryData with _$StoryData {
-  const factory StoryData({
-    required String id,
-    required String authorId,
-    required String author,
-    required String mediaUrl,
-    @Default(false) bool nft,
-    @Default(false) bool me,
-    DateTime? createdAt,
-    String? caption,
-    @Default(0) int gradientIndex,
-    @Default(LikeState.notLiked) LikeState likeState,
-  }) = _StoryData;
+  bool hasStoryWithId(String id) => stories.any((story) => story.post.id == id);
 }
 
 @freezed
 sealed class Story with _$Story {
   const factory Story.image({
-    required StoryData data,
+    required PostEntity post,
+    @Default(LikeState.notLiked) LikeState likeState,
   }) = ImageStory;
 
   const factory Story.video({
-    required StoryData data,
+    required PostEntity post,
     @Default(MuteState.unmuted) MuteState muteState,
+    @Default(LikeState.notLiked) LikeState likeState,
   }) = VideoStory;
 
   const Story._();
 
-  String get authorId => data.authorId;
-  String get mediaUrl => data.mediaUrl;
+  String get authorId => post.pubkey;
+  String get media => post.data.media.values.first.url;
 }

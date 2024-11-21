@@ -20,23 +20,21 @@ class StoryViewingController extends _$StoryViewingController {
     state = const StoryViewerState.loading();
 
     try {
-      final users = await _fetchUserStories();
+      final stories = await _fetchUserStories();
 
-      if (users.isEmpty) {
+      if (stories.isEmpty) {
         state = const StoryViewerState.error(message: 'No stories available');
         return;
       }
 
-      var initialUserIndex = 0;
-      if (startingPubkey != null) {
-        initialUserIndex = users.indexWhere((user) => user.userId == startingPubkey);
-        if (initialUserIndex == -1) {
-          initialUserIndex = 0;
-        }
-      }
+      var initialUserIndex = (startingPubkey != null)
+          ? stories.indexWhere((story) => story.userId == startingPubkey)
+          : -1;
+
+      initialUserIndex = (initialUserIndex == -1) ? 0 : initialUserIndex;
 
       state = StoryViewerState.ready(
-        users: users,
+        userStories: stories,
         currentUserIndex: initialUserIndex,
         currentStoryIndex: 0,
       );
@@ -50,13 +48,13 @@ class StoryViewingController extends _$StoryViewingController {
       ready: (users, userIndex, storyIndex) {
         if (state.hasNextStory) {
           state = StoryViewerState.ready(
-            users: users,
+            userStories: users,
             currentUserIndex: userIndex,
             currentStoryIndex: storyIndex + 1,
           );
         } else if (state.hasNextUser) {
           state = StoryViewerState.ready(
-            users: users,
+            userStories: users,
             currentUserIndex: userIndex + 1,
             currentStoryIndex: 0,
           );
@@ -70,14 +68,14 @@ class StoryViewingController extends _$StoryViewingController {
       ready: (users, userIndex, storyIndex) {
         if (state.hasPreviousStory) {
           state = StoryViewerState.ready(
-            users: users,
+            userStories: users,
             currentUserIndex: userIndex,
             currentStoryIndex: storyIndex - 1,
           );
         } else if (state.hasPreviousUser) {
           final previousUserStoriesCount = users[userIndex - 1].stories.length;
           state = StoryViewerState.ready(
-            users: users,
+            userStories: users,
             currentUserIndex: userIndex - 1,
             currentStoryIndex: previousUserStoriesCount - 1,
           );
@@ -91,7 +89,7 @@ class StoryViewingController extends _$StoryViewingController {
       ready: (users, _, __) {
         if (userIndex >= 0 && userIndex < users.length) {
           state = StoryViewerState.ready(
-            users: users,
+            userStories: users,
             currentUserIndex: userIndex,
             currentStoryIndex: 0,
           );
@@ -106,7 +104,7 @@ class StoryViewingController extends _$StoryViewingController {
         final userStories = users[userIndex];
         if (storyIndex >= 0 && storyIndex < userStories.stories.length) {
           state = StoryViewerState.ready(
-            users: users,
+            userStories: users,
             currentUserIndex: userIndex,
             currentStoryIndex: storyIndex,
           );
@@ -120,7 +118,7 @@ class StoryViewingController extends _$StoryViewingController {
       ready: (users, userIndex, _) {
         if (state.hasNextUser) {
           state = StoryViewerState.ready(
-            users: users,
+            userStories: users,
             currentUserIndex: userIndex + 1,
             currentStoryIndex: 0,
           );
@@ -135,7 +133,7 @@ class StoryViewingController extends _$StoryViewingController {
         if (state.hasPreviousUser) {
           final previousUserStoriesCount = users[userIndex - 1].stories.length;
           state = StoryViewerState.ready(
-            users: users,
+            userStories: users,
             currentUserIndex: userIndex - 1,
             currentStoryIndex: previousUserStoriesCount - 1,
           );
@@ -153,7 +151,7 @@ class StoryViewingController extends _$StoryViewingController {
 
         if (isValidStory) {
           state = StoryViewerState.ready(
-            users: users,
+            userStories: users,
             currentUserIndex: userIndex,
             currentStoryIndex: storyIndex,
           );
@@ -173,15 +171,16 @@ class StoryViewingController extends _$StoryViewingController {
 
           final updatedStories = user.stories
               .map(
-                (story) => story.map(
-                  image: (image) => image,
-                  video: (video) => video.data.id == storyId
-                      ? video.copyWith(
-                          muteState: video.muteState == MuteState.muted
-                              ? MuteState.unmuted
-                              : MuteState.muted,
+                (story) => story.maybeWhen(
+                  video: (post, muteState, likeState) => post.id == storyId
+                      ? Story.video(
+                          post: post,
+                          muteState:
+                              muteState == MuteState.muted ? MuteState.unmuted : MuteState.muted,
+                          likeState: likeState,
                         )
-                      : video,
+                      : story,
+                  orElse: () => story,
                 ),
               )
               .toList();
@@ -190,7 +189,7 @@ class StoryViewingController extends _$StoryViewingController {
         }).toList();
 
         state = StoryViewerState.ready(
-          users: updatedUsers,
+          userStories: updatedUsers,
           currentUserIndex: userIndex,
           currentStoryIndex: storyIndex,
         );
@@ -212,10 +211,15 @@ class StoryViewingController extends _$StoryViewingController {
 
           final story = user.stories[storyIndex];
           final updatedStories = [...user.stories];
-          updatedStories[storyIndex] = story.copyWith(
-            data: story.data.copyWith(
-              likeState:
-                  story.data.likeState == LikeState.liked ? LikeState.notLiked : LikeState.liked,
+          updatedStories[storyIndex] = story.when(
+            image: (post, likeState) => Story.image(
+              post: post,
+              likeState: likeState == LikeState.liked ? LikeState.notLiked : LikeState.liked,
+            ),
+            video: (post, muteState, likeState) => Story.video(
+              post: post,
+              muteState: muteState,
+              likeState: likeState == LikeState.liked ? LikeState.notLiked : LikeState.liked,
             ),
           );
 
@@ -223,7 +227,7 @@ class StoryViewingController extends _$StoryViewingController {
         }).toList();
 
         state = StoryViewerState.ready(
-          users: updatedUsers,
+          userStories: updatedUsers,
           currentUserIndex: userIndex,
           currentStoryIndex: storyIndex,
         );
@@ -260,17 +264,9 @@ class StoryViewingController extends _$StoryViewingController {
 
       final stories = userPosts.map((post) {
         final mediaAttachment = post.data.media.values.first;
-        final storyData = StoryData(
-          id: post.id,
-          authorId: post.pubkey,
-          author: userMetadata?.data.displayName ?? '',
-          createdAt: post.createdAt,
-          mediaUrl: mediaAttachment.url,
-        );
-
         return mediaAttachment.mediaType == MediaType.image
-            ? Story.image(data: storyData)
-            : Story.video(data: storyData);
+            ? Story.image(post: post)
+            : Story.video(post: post);
       }).toList();
 
       final userStories = UserStories(
