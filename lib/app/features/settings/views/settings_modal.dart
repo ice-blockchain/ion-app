@@ -80,7 +80,9 @@ class _AppInfoWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appInfo = ref.watch(appInfoProvider).valueOrNull;
     return Text(
-      appInfo == null ? '' : context.i18n.settings_app_version(appInfo.version),
+      appInfo == null
+          ? ''
+          : context.i18n.settings_app_version('${appInfo.version} (${appInfo.buildNumber})'),
       textAlign: TextAlign.center,
       style: context.theme.appTextThemes.caption3,
     );
