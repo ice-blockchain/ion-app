@@ -160,9 +160,7 @@ class CommentsButton extends ConsumerWidget {
         activeIcon: Assets.svg.iconBlockCommenton.icon(
           size: 14.0.s,
         ),
-        value: countEntity != null
-            ? formatDoubleCompact(countEntity.data.content)
-            : formatDoubleCompact(45311),
+        value: countEntity != null ? formatDoubleCompact(countEntity.data.content) : '',
         activeColor: context.theme.appColors.primaryAccent,
       ),
     );
