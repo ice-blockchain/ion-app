@@ -10,7 +10,7 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/utils/username.dart';
 
-class StoryViewerHeader extends HookConsumerWidget {
+class StoryViewerHeader extends ConsumerWidget {
   const StoryViewerHeader({
     required this.pubkey,
     required this.currentStory,
