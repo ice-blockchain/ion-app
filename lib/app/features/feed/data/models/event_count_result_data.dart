@@ -5,7 +5,11 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/reactions_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
 import 'package:ion/app/features/feed/data/models/event_count_request_data.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/feed/data/models/repost_data.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -19,6 +23,7 @@ enum EventCountResultType {
   reactions;
 }
 
+//TODO::move to subfolder entities folder
 @Freezed(equal: false)
 class EventCountResultEntity<T>
     with _$EventCountResultEntity<T>, NostrEntity
@@ -39,9 +44,10 @@ class EventCountResultEntity<T>
     }
 
     final data = EventCountResultData.fromEventMessage(eventMessage);
+    final type = data.getType();
     final summary = EventCountResultSummary(
-      key: data.key,
-      type: data.type,
+      key: data.getKey(type),
+      type: type,
       content: data.content as T,
     );
 
@@ -109,13 +115,32 @@ class EventCountResultData with _$EventCountResultData {
     );
   }
 
-  EventCountResultType get type {
-    //TODO:impl
-    return EventCountResultType.quotes;
+  EventCountResultType getType() {
+    final EventCountRequestData(:filter, :params) = request.data;
+    if (params.group == RelatedEventMarker.reply.toShortString() ||
+        params.group == RelatedEventMarker.root.toShortString()) {
+      return EventCountResultType.replies;
+    } else if (filter.kinds != null && filter.kinds!.contains(RepostEntity.kind)) {
+      return EventCountResultType.reposts;
+    } else if (params.group == QuotedEvent.tagName) {
+      return EventCountResultType.quotes;
+    } else if (filter.kinds != null && filter.kinds!.contains(ReactionsEntity.kind)) {
+      return EventCountResultType.reactions;
+    } else {
+      throw UnknownEventCountResultType(eventId: eventId);
+    }
   }
 
-  String get key {
-    //TODO:impl
-    return '';
+  String getKey(EventCountResultType type) {
+    final filter = request.data.filter;
+    final key = switch (type) {
+      EventCountResultType.quotes =>
+        filter.q != null && filter.q!.isNotEmpty ? filter.q!.first : null,
+      _ => filter.e != null && filter.e!.isNotEmpty ? filter.e!.first : null,
+    };
+    if (key == null) {
+      throw UnknownEventCountResultKey(eventId: eventId);
+    }
+    return key;
   }
 }

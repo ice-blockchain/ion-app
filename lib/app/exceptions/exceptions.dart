@@ -97,3 +97,13 @@ class AssetEntityNotFoundException extends IONException {
 class AssetEntityFileNotFoundException extends IONException {
   AssetEntityFileNotFoundException() : super(10018, 'Asset entity file not found');
 }
+
+class UnknownEventCountResultType extends IONException {
+  UnknownEventCountResultType({required String eventId})
+      : super(10019, 'Unknown EventCount result type $eventId');
+}
+
+class UnknownEventCountResultKey extends IONException {
+  UnknownEventCountResultKey({required String eventId})
+      : super(10020, 'Unknown EventCount result key $eventId');
+}
