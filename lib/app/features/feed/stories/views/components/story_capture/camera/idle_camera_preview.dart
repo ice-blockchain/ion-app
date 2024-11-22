@@ -57,7 +57,6 @@ class IdleCameraPreview extends ConsumerWidget {
               if (context.mounted) {
                 final mediaFiles =
                     await MediaPickerRoute(maxSelection: 1).push<List<MediaFile>>(context);
-
                 if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
                   await StoryPreviewRoute(
                     path: mediaFiles.first.path,

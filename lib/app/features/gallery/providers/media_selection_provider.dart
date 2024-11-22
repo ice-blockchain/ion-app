@@ -24,7 +24,7 @@ class MediaSelectionNotifier extends _$MediaSelectionNotifier {
   @override
   MediaSelectionState build() => const MediaSelectionState(selectedMedia: []);
 
-  void toggleSelection(String path, {MediaPickerType type = MediaPickerType.image}) {
+  void toggleSelection(String path, {MediaPickerType type = MediaPickerType.common}) {
     final maxSelection = ref.read(maxSelectionProvider);
     final isSelected = state.selectedMedia.any((media) => media.path == path);
 

@@ -24,7 +24,7 @@ class GalleryNotifier extends _$GalleryNotifier {
   static const int _pageSize = 100;
 
   @override
-  Future<GalleryState> build({MediaPickerType type = MediaPickerType.image}) async {
+  Future<GalleryState> build({MediaPickerType type = MediaPickerType.common}) async {
     final mediaService = ref.watch(mediaServiceProvider);
     final hasPermission = ref.read(hasPermissionProvider(Permission.photos));
 

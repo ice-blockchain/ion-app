@@ -16,7 +16,7 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 class MediaPickerPage extends HookConsumerWidget {
   const MediaPickerPage({
     required this.maxSelection,
-    this.type = MediaPickerType.image,
+    this.type = MediaPickerType.common,
     super.key,
   });
 

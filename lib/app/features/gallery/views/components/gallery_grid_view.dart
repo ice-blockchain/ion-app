@@ -9,7 +9,7 @@ import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 class GalleryGridView extends StatelessWidget {
   const GalleryGridView({
     required this.galleryState,
-    this.type = MediaPickerType.image,
+    this.type = MediaPickerType.common,
     super.key,
   });
 
@@ -21,7 +21,7 @@ class GalleryGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final photosTotalCount = galleryState.mediaData.length + 1; // +1 for CameraCell
+    final totalCount = galleryState.mediaData.length + 1; // +1 for CameraCell
 
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -31,21 +31,18 @@ class GalleryGridView extends StatelessWidget {
       ),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          if (index == 0 && type == MediaPickerType.image) {
+          if (index == 0) {
             return const CameraCell();
           }
 
-          final adjustedIndex = type == MediaPickerType.image ? index - 1 : index;
-
-          final mediaData = galleryState.mediaData[adjustedIndex];
+          final mediaData = galleryState.mediaData[index];
           return GalleryGridCell(
             key: ValueKey(mediaData.path),
             mediaFile: mediaData,
             type: type,
           );
         },
-        childCount:
-            type == MediaPickerType.image ? photosTotalCount : galleryState.mediaData.length,
+        childCount: totalCount,
       ),
     );
   }

@@ -55,7 +55,7 @@ class MediaService {
   }) async {
     try {
       final albums = await PhotoManager.getAssetPathList(
-        type: type == MediaPickerType.image ? RequestType.image : RequestType.video,
+        type: type.toRequestType(),
       );
 
       if (albums.isEmpty) return [];
