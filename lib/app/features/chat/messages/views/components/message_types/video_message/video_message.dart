@@ -30,27 +30,42 @@ class VideoMessage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
-    final videoController = ref.watch(
-      videoControllerProvider(videoUrl, looping: true),
-    );
+    final videoController = ref.watch(videoControllerProvider(videoUrl, looping: true));
+    final containerKey = useRef<GlobalKey>(GlobalKey());
+    final videoWidth = useState<double>(0);
 
     return MessageItemWrapper(
       isMe: isMe,
       contentPadding: EdgeInsets.all(padding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12.0.s),
-            child: VideoPreview(controller: videoController),
-          ),
-          SizedBox(height: 8.0.s),
-          _MessageWithTimestamp(
-            message: message ?? '',
-            isMe: isMe,
-            reactions: reactions,
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            /// Update the minimum width of the image based on the content container width
+            if (message == null && reactions == null) {
+              videoWidth.value = double.infinity;
+            } else {
+              videoWidth.value = containerKey.value.currentContext?.size?.width ?? 0;
+            }
+          });
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: 300.0.s, maxWidth: videoWidth.value),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0.s),
+                  child: VideoPreview(controller: videoController),
+                ),
+              ),
+              _MessageWithTimestamp(
+                key: containerKey.value,
+                message: message ?? '',
+                isMe: isMe,
+                reactions: reactions,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

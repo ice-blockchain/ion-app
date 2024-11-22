@@ -16,7 +16,7 @@ Raw<VideoPlayerController> videoController(
   bool autoPlay = false,
   bool looping = false,
 }) {
-  final controller = ref.read(videoPlayerControllerFactoryProvider).createController(sourcePath);
+  final controller = ref.read(videoPlayerControllerFactoryProvider(sourcePath)).createController();
   var isInitialized = false;
 
   void handleInitialized() {
@@ -43,7 +43,12 @@ Raw<VideoPlayerController> videoController(
 }
 
 class VideoPlayerControllerFactory {
-  VideoPlayerController createController(String sourcePath) {
+  const VideoPlayerControllerFactory({
+    required this.sourcePath,
+  });
+  final String sourcePath;
+
+  VideoPlayerController createController() {
     if (_isNetworkSource(sourcePath)) {
       return VideoPlayerController.networkUrl(Uri.parse(sourcePath));
     } else if (_isLocalFile(sourcePath)) {
@@ -62,6 +67,8 @@ class VideoPlayerControllerFactory {
 }
 
 @riverpod
-VideoPlayerControllerFactory videoPlayerControllerFactory(Ref ref) {
-  return VideoPlayerControllerFactory();
+VideoPlayerControllerFactory videoPlayerControllerFactory(Ref ref, String sourcePath) {
+  return VideoPlayerControllerFactory(
+    sourcePath: sourcePath,
+  );
 }
