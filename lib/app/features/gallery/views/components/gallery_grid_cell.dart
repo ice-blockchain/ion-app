@@ -66,7 +66,7 @@ class GalleryGridCell extends ConsumerWidget {
                           selectionOrder: selectionState.order.toString(),
                         ),
                       ),
-                      if (asset.duration != 0)
+                      if (asset.type == AssetType.video)
                         Positioned(
                           bottom: 4.0.s,
                           right: 4.0.s,
