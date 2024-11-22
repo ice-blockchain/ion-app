@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/date.dart';
 
 class DurationBadge extends StatelessWidget {
   const DurationBadge({
@@ -14,20 +15,23 @@ class DurationBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 20.0.s,
-      height: 20.0.s,
+      height: 13.0.s,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: context.theme.appColors.backgroundSheet,
-          shape: BoxShape.circle,
           borderRadius: BorderRadius.circular(6.0.s),
         ),
         child: Center(
-          child: Text(
-            '$duration',
-            style: context.theme.appTextThemes.caption.copyWith(
-              color: context.theme.appColors.secondaryBackground,
-              fontSize: 7.0.s,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 4.0.s,
+            ),
+            child: Text(
+              formatDuration(Duration(seconds: duration)),
+              style: context.theme.appTextThemes.caption.copyWith(
+                color: context.theme.appColors.secondaryBackground,
+                fontSize: 7.0.s,
+              ),
             ),
           ),
         ),

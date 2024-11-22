@@ -66,13 +66,14 @@ class GalleryGridCell extends ConsumerWidget {
                           selectionOrder: selectionState.order.toString(),
                         ),
                       ),
-                      Positioned(
-                        bottom: 4.0.s,
-                        right: 4.0.s,
-                        child: DurationBadge(
-                          duration: asset.duration,
+                      if (asset.duration != 0)
+                        Positioned(
+                          bottom: 4.0.s,
+                          right: 4.0.s,
+                          child: DurationBadge(
+                            duration: asset.duration,
+                          ),
                         ),
-                      ),
                     ],
                   );
                 } else {
