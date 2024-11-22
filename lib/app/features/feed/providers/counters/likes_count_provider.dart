@@ -22,6 +22,10 @@ int? likesCount(Ref ref, EventReference eventReference) {
     ),
   );
 
-  final content = reactionsCountEntity?.data.content as Map<String, dynamic>?;
-  return content?[ReactionsEntity.likeSymbol] as int?;
+  if (reactionsCountEntity == null) {
+    return null;
+  }
+
+  final content = reactionsCountEntity.data.content as Map<String, dynamic>;
+  return (content[ReactionsEntity.likeSymbol] ?? 0) as int;
 }
