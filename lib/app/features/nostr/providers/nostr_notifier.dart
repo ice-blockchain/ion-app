@@ -2,6 +2,7 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/mocked_counters.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
@@ -149,7 +150,7 @@ class NostrNotifier extends _$NostrNotifier {
     final entity = parser.parse(event);
     if (entity is CacheableEntity) {
       ref.read(nostrCacheProvider.notifier).cache(entity);
-      if (entity is PostEntity) {
+      if (entity is PostEntity || entity is ArticleEntity) {
         // TODO:remove when search query is used
         generateFakeCounters(ref, entity.id);
       }
