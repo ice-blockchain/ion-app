@@ -10,6 +10,7 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -27,7 +28,9 @@ class CreateArticleAddImage extends HookConsumerWidget {
       permissionType: Permission.photos,
       onGranted: () async {
         if (context.mounted) {
-          final mediaFiles = await MediaPickerRoute(maxSelection: 1).push<List<MediaFile>>(context);
+          final mediaFiles =
+              await MediaPickerRoute(maxSelection: 1, mediaPickerType: MediaPickerType.image)
+                  .push<List<MediaFile>>(context);
           if (mediaFiles != null && mediaFiles.isNotEmpty) {
             selectedImage.value = mediaFiles.first;
           }
