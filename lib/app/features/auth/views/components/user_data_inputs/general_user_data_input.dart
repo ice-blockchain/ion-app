@@ -11,7 +11,7 @@ class GeneralUserDataInput extends StatelessWidget {
     required this.prefixIconAssetName,
     required this.labelText,
     this.validator,
-    this.maxLines,
+    this.maxLines = 1,
     this.minLines,
     this.textInputAction,
     super.key,

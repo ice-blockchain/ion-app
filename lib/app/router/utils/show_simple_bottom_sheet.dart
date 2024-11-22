@@ -18,13 +18,16 @@ Future<T?> showSimpleBottomSheet<T>({
     enableDrag: isDismissible,
     context: context,
     builder: (context) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          SheetDragHandle(),
-          SheetShape(child: child),
-        ],
+      return PopScope(
+        canPop: isDismissible,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SheetDragHandle(),
+            SheetShape(child: child),
+          ],
+        ),
       );
     },
   );

@@ -17,11 +17,13 @@ class MediaPickerPage extends HookConsumerWidget {
   const MediaPickerPage({
     required this.maxSelection,
     this.type = MediaPickerType.common,
+    this.title,
     super.key,
   });
 
   final int maxSelection;
   final MediaPickerType type;
+  final String? title;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +34,7 @@ class MediaPickerPage extends HookConsumerWidget {
 
     useOnInit(
       () {
-        ref.read(maxSelectionProvider.notifier).update(maxSelection);
+        ref.read(mediaSelectionNotifierProvider.notifier).updateMaxSelection(maxSelection);
       },
       [maxSelection],
     );
@@ -42,7 +44,7 @@ class MediaPickerPage extends HookConsumerWidget {
         primary: false,
         flexibleSpace: NavigationAppBar.modal(
           title: Text(
-            type.title(context),
+            title ?? type.title(context),
             style: context.theme.appTextThemes.subtitle,
           ),
           actions: [

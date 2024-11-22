@@ -106,7 +106,7 @@ class BottomBarInitialView extends HookConsumerWidget {
                     ),
                     fillColor: context.theme.appColors.onSecondaryBackground,
                     filled: true,
-                    hintText: context.i18n.messaging_textfiled_placeholder,
+                    hintText: context.i18n.write_a_message,
                     hintStyle: context.theme.appTextThemes.body2.copyWith(
                       color: context.theme.appColors.quaternaryText,
                     ),
