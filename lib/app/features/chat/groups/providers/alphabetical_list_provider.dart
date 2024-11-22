@@ -2,8 +2,8 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/groups/model/alphabetical_list_item.dart';
-import 'package:ion/app/features/groups/model/user.dart';
+import 'package:ion/app/features/chat/groups/model/alphabetical_list_item.dart';
+import 'package:ion/app/features/chat/groups/model/user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'alphabetical_list_provider.g.dart';

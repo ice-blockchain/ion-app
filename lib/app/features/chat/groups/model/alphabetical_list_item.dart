@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/groups/model/user.dart';
+import 'package:ion/app/features/chat/groups/model/user.dart';
 
 part 'alphabetical_list_item.freezed.dart';
 

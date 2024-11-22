@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/groups/model/alphabetical_list_item.dart';
+import 'package:ion/app/features/chat/groups/model/alphabetical_list_item.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class AlphabeticalListItemWidget extends StatelessWidget {

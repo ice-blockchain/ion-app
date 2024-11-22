@@ -2,7 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/groups/model/user.dart';
+import 'package:ion/app/features/chat/groups/model/user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'group_search_participants_provider.g.dart';

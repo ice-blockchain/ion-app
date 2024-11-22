@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/groups/model/group_type.dart';
-import 'package:ion/app/features/groups/model/user.dart';
+import 'package:ion/app/features/chat/groups/model/group_type.dart';
+import 'package:ion/app/features/chat/groups/model/user.dart';
 
 part 'create_group_form_data.freezed.dart';
 
