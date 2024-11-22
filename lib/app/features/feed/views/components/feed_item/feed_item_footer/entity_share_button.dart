@@ -19,9 +19,7 @@ class EntityShareButton extends StatelessWidget {
         SharePostModalRoute(postId: eventReference.eventId).push<void>(context);
       },
       child: FeedItemActionButton(
-        icon: Assets.svg.iconBlockShare.icon(
-          size: 14.0.s,
-        ),
+        icon: Assets.svg.iconBlockShare.icon(size: 16.0.s),
         activeColor: context.theme.appColors.attentionRed,
       ),
     );

@@ -34,12 +34,8 @@ class EntityCommentsButton extends ConsumerWidget {
         CreatePostRoute(parentEvent: eventReference.toString()).push<void>(context);
       },
       child: FeedItemActionButton(
-        icon: Assets.svg.iconBlockComment.icon(
-          size: 14.0.s,
-        ),
-        activeIcon: Assets.svg.iconBlockCommenton.icon(
-          size: 14.0.s,
-        ),
+        icon: Assets.svg.iconBlockComment.icon(size: 16.0.s),
+        activeIcon: Assets.svg.iconBlockCommenton.icon(size: 16.0.s),
         value: countEntity != null ? formatDoubleCompact(countEntity.data.content as int) : '',
         activeColor: context.theme.appColors.primaryAccent,
       ),

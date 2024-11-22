@@ -35,11 +35,11 @@ class EntityLikesButton extends ConsumerWidget {
       onTap: HapticFeedback.lightImpact,
       child: FeedItemActionButton(
         icon: Assets.svg.iconVideoLikeOff.icon(
-          size: 18.0.s,
+          size: 16.0.s,
           color: context.theme.appColors.onTertararyBackground,
         ),
         activeIcon: Assets.svg.iconVideoLikeOn.icon(
-          size: 18.0.s,
+          size: 16.0.s,
           color: context.theme.appColors.attentionRed,
         ),
         value: numberOfLikes != null ? formatDoubleCompact(numberOfLikes as int) : '',

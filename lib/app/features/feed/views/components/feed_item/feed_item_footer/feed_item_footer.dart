@@ -33,19 +33,10 @@ class FeedItemFooter extends HookConsumerWidget {
         children: [
           Flexible(child: EntityCommentsButton(eventReference: eventReference)),
           Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [EntityRepostsButton(eventReference: eventReference)],
-            ),
+            child: EntityRepostsButton(eventReference: eventReference),
           ),
-          const Spacer(),
           Flexible(child: EntityLikesButton(eventReference: eventReference)),
-          Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [EntityShareButton(eventReference: eventReference)],
-            ),
-          ),
+          EntityShareButton(eventReference: eventReference),
         ],
       ),
     );

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
@@ -65,9 +66,7 @@ class PostData with _$PostData implements EventSerializable {
 
   factory PostData.fromEventMessage(EventMessage eventMessage) {
     final parsedContent = TextParser(matchers: [const UrlMatcher()]).parse(eventMessage.content);
-    final tags = eventMessage.tags.fold<Map<String, List<List<String>>>>({}, (result, tag) {
-      return result..putIfAbsent(tag[0], () => []).add(tag);
-    });
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     return PostData(
       content: parsedContent,
       media: _buildMedia(tags[MediaAttachment.tagName], parsedContent),

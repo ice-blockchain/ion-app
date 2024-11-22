@@ -45,16 +45,15 @@ class EntityRepostsButton extends ConsumerWidget {
         RepostOptionsModalRoute(eventReference: eventReference.toString()).push<void>(context);
       },
       child: FeedItemActionButton(
-        icon: Assets.svg.iconBlockRepost.icon(
-          size: 14.0.s,
-        ),
+        icon: Assets.svg.iconBlockRepost.icon(size: 16.0.s),
         activeIcon: Assets.svg.iconBlockRepost.icon(
-          size: 14.0.s,
+          size: 16.0.s,
           color: context.theme.appColors.primaryAccent,
         ),
         value: repostsCountEntity != null && quotesCountEntity != null
             ? formatDoubleCompact(
-                (repostsCountEntity.data.content as int) + (quotesCountEntity.data.content as int))
+                (repostsCountEntity.data.content as int) + (quotesCountEntity.data.content as int),
+              )
             : '',
         activeColor: context.theme.appColors.primaryAccent,
       ),

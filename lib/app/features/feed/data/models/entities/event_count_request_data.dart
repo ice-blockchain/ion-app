@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
@@ -57,9 +58,7 @@ class EventCountRequestData with _$EventCountRequestData implements EventSeriali
   const EventCountRequestData._();
 
   factory EventCountRequestData.fromEventMessage(EventMessage eventMessage) {
-    final tags = eventMessage.tags.fold<Map<String, List<List<String>>>>({}, (result, tag) {
-      return result..putIfAbsent(tag[0], () => []).add(tag);
-    });
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     return EventCountRequestData(
       filter: RequestFilter.fromJson(jsonDecode(eventMessage.content) as Map<String, dynamic>),
       params: EventCountRequestParams.fromTags(tags[EventCountRequestParams.tagName] ?? []),
