@@ -12,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'repost_notifier.g.dart';
 
-@riverpod
+@Riverpod(dependencies: [nostrEntity])
 class RepostNotifier extends _$RepostNotifier {
   @override
   FutureOr<void> build() {}

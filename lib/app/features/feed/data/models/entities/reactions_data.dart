@@ -3,7 +3,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 
 part 'reactions_data.freezed.dart';
 
@@ -18,7 +17,7 @@ class ReactionsEntity with _$ReactionsEntity, NostrEntity implements CacheableEn
   const ReactionsEntity._();
 
   /// https://github.com/nostr-protocol/nips/blob/master/25.md
-  factory ReactionsEntity.fromEventMessage(EventMessage eventMessage) {
+  factory ReactionsEntity.fromEventMessage() {
     throw UnimplementedError();
   }
 
