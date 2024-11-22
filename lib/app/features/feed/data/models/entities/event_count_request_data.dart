@@ -108,7 +108,7 @@ class EventCountRequestParams with _$EventCountRequestParams {
   List<List<String>> toTags() {
     return [
       if (group != null) [tagName, 'group', group!],
-      if (relay != null) [tagName, 'group', relay!],
+      if (relay != null) [tagName, 'relay', relay!],
     ];
   }
 
