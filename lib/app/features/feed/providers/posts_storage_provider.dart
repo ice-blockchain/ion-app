@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 PostEntity generateFakePost() {

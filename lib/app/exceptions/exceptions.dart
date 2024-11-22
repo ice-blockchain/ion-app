@@ -80,9 +80,9 @@ class QuillParseException extends IONException {
       : super(10014, 'Invalid content format for Quill Delta: $error');
 }
 
-class UnsupportedRepostKindException extends IONException {
-  UnsupportedRepostKindException(int kind)
-      : super(10015, 'Reposting events of kind $kind is not supported');
+class UnsupportedRepostException extends IONException {
+  UnsupportedRepostException({required String eventId})
+      : super(10015, 'Reposting events with $eventId is not supported');
 }
 
 class EventNotFoundException extends IONException {
@@ -96,4 +96,14 @@ class AssetEntityNotFoundException extends IONException {
 
 class AssetEntityFileNotFoundException extends IONException {
   AssetEntityFileNotFoundException() : super(10018, 'Asset entity file not found');
+}
+
+class UnknownEventCountResultType extends IONException {
+  UnknownEventCountResultType({required String eventId})
+      : super(10019, 'Unknown EventCount result type $eventId');
+}
+
+class UnknownEventCountResultKey extends IONException {
+  UnknownEventCountResultKey({required String eventId})
+      : super(10020, 'Unknown EventCount result key $eventId');
 }

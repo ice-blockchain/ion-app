@@ -2,10 +2,10 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/feed/data/models/article_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
-import 'package:ion/app/features/feed/data/models/repost_data.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';

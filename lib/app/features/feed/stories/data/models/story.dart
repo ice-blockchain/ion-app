@@ -2,13 +2,9 @@
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 
 part 'story.freezed.dart';
-
-enum LikeState { liked, notLiked }
-
-enum MuteState { muted, unmuted }
 
 @freezed
 class UserStories with _$UserStories {

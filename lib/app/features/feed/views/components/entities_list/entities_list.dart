@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/features/feed/data/models/article_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
-import 'package:ion/app/features/feed/data/models/repost_data.dart';
 import 'package:ion/app/features/feed/views/components/entities_list/components/article_list_item.dart';
 import 'package:ion/app/features/feed/views/components/entities_list/components/generic_repost_list_item.dart';
 import 'package:ion/app/features/feed/views/components/entities_list/components/post_list_item.dart';

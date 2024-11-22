@@ -2,7 +2,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/router/app_routes.dart';

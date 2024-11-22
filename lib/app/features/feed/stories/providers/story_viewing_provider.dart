@@ -9,7 +9,7 @@ part 'story_viewing_provider.g.dart';
 /// A controller for managing story viewing state and navigation in a story viewer interface.
 ///
 /// This controller maintains the state of currently viewed stories and provides methods
-/// to navigate between stories and users. 
+/// to navigate between stories and users.
 @riverpod
 class StoryViewingController extends _$StoryViewingController {
   @override
@@ -24,7 +24,8 @@ class StoryViewingController extends _$StoryViewingController {
       );
     }
 
-    var initialUserIndex = stories.indexWhere((userStories) => userStories.pubkey == startingPubkey);
+    var initialUserIndex =
+        stories.indexWhere((userStories) => userStories.pubkey == startingPubkey);
 
     initialUserIndex = (initialUserIndex == -1) ? 0 : initialUserIndex;
 
@@ -54,8 +55,7 @@ class StoryViewingController extends _$StoryViewingController {
         currentStoryIndex: state.currentStoryIndex - 1,
       );
     } else if (state.hasPreviousUser) {
-      final previousUserStoriesCount =
-          state.userStories[state.currentUserIndex - 1].stories.length;
+      final previousUserStoriesCount = state.userStories[state.currentUserIndex - 1].stories.length;
       state = state.copyWith(
         currentUserIndex: state.currentUserIndex - 1,
         currentStoryIndex: previousUserStoriesCount - 1,
@@ -73,8 +73,7 @@ class StoryViewingController extends _$StoryViewingController {
   }
 
   void moveToStoryIndex(int storyIndex) {
-    if (storyIndex >= 0 &&
-        storyIndex < state.userStories[state.currentUserIndex].stories.length) {
+    if (storyIndex >= 0 && storyIndex < state.userStories[state.currentUserIndex].stories.length) {
       state = state.copyWith(
         currentStoryIndex: storyIndex,
       );
@@ -92,9 +91,8 @@ class StoryViewingController extends _$StoryViewingController {
 
   void moveToStory(int userIndex, int storyIndex) {
     final isValidUser = userIndex >= 0 && userIndex < state.userStories.length;
-    final isValidStory = isValidUser &&
-        storyIndex >= 0 &&
-        storyIndex < state.userStories[userIndex].stories.length;
+    final isValidStory =
+        isValidUser && storyIndex >= 0 && storyIndex < state.userStories[userIndex].stories.length;
 
     if (isValidStory) {
       state = state.copyWith(

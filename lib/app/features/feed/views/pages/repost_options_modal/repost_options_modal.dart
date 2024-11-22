@@ -9,7 +9,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.dart';
 import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -21,12 +20,10 @@ import 'package:ion/generated/assets.gen.dart';
 class RepostOptionsModal extends ConsumerWidget {
   const RepostOptionsModal({
     required this.eventReference,
-    required this.kind,
     super.key,
   });
 
   final EventReference eventReference;
-  final int kind;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -52,7 +49,7 @@ class RepostOptionsModal extends ConsumerWidget {
                 onPressed: () async {
                   await ref
                       .read(repostNotifierProvider.notifier)
-                      .repost(eventReference: eventReference, kind: kind);
+                      .repost(eventReference: eventReference);
                   if (!ref.read(repostNotifierProvider).hasError) {
                     if (context.mounted) {
                       context.pop();
@@ -69,24 +66,21 @@ class RepostOptionsModal extends ConsumerWidget {
                 label: Text(context.i18n.feed_repost),
               ),
             ),
-            if (kind == PostEntity.kind) ...[
-              SizedBox(height: 16.0.s),
-              ScreenSideOffset.small(
-                child: Button(
-                  type: ButtonType.secondary,
-                  mainAxisSize: MainAxisSize.max,
-                  onPressed: () {
-                    CreatePostRoute(quotedEvent: eventReference.toString())
-                        .pushReplacement(context);
-                  },
-                  leadingIcon: Assets.svg.iconFeedQuote.icon(size: 18.0.s),
-                  leadingIconOffset: 12.0.s,
-                  label: Text(
-                    context.i18n.feed_quote_post,
-                  ),
+            SizedBox(height: 16.0.s),
+            ScreenSideOffset.small(
+              child: Button(
+                type: ButtonType.secondary,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  CreatePostRoute(quotedEvent: eventReference.toString()).pushReplacement(context);
+                },
+                leadingIcon: Assets.svg.iconFeedQuote.icon(size: 18.0.s),
+                leadingIconOffset: 12.0.s,
+                label: Text(
+                  context.i18n.feed_quote_post,
                 ),
               ),
-            ],
+            ),
             SizedBox(height: 20.0.s),
           ],
         ),
