@@ -9,20 +9,22 @@ part 'story_viewing_provider.g.dart';
 /// A controller for managing story viewing state and navigation in a story viewer interface.
 ///
 /// This controller maintains the state of currently viewed stories and provides methods
-/// to navigate between stories and users. It integrates with the [storiesProvider]
-/// to access story data.
-///
-/// Parameters:
-/// * [startingPubkey]: Optional public key to initialize the viewer with a specific user's stories
+/// to navigate between stories and users. 
 @riverpod
 class StoryViewingController extends _$StoryViewingController {
   @override
-  StoryViewerState build({String startingPubkey = ''}) {
-    final stories = ref.watch(storiesProvider) ?? [];
+  StoryViewerState build({required String startingPubkey}) {
+    final stories = ref.watch(storiesProvider);
 
-    var initialUserIndex = (startingPubkey.isNotEmpty)
-        ? stories.indexWhere((story) => story.pubkey == startingPubkey)
-        : -1;
+    if (stories == null || stories.isEmpty) {
+      return const StoryViewerState(
+        userStories: [],
+        currentUserIndex: 0,
+        currentStoryIndex: 0,
+      );
+    }
+
+    var initialUserIndex = stories.indexWhere((userStories) => userStories.pubkey == startingPubkey);
 
     initialUserIndex = (initialUserIndex == -1) ? 0 : initialUserIndex;
 

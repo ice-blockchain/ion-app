@@ -111,7 +111,9 @@ class _LikeButton extends ConsumerWidget {
       ),
       borderRadius: 16.0.s,
       iconPadding: 8.0.s,
-      onPressed: () => ref.read(storyViewingControllerProvider().notifier).toggleLike(post.id),
+      onPressed: () => ref
+          .read(storyViewingControllerProvider(startingPubkey: post.pubkey).notifier)
+          .toggleLike(post.id),
     );
   }
 }

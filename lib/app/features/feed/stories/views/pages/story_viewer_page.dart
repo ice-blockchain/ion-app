@@ -20,7 +20,8 @@ class StoryViewerPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyViewingController = ref.watch(storyViewingControllerProvider().notifier);
+    final storyViewingController =
+        ref.watch(storyViewingControllerProvider(startingPubkey: pubkey).notifier);
     final storyState = ref.watch(storyViewingControllerProvider(startingPubkey: pubkey));
 
     final currentPauseState = useState(false);

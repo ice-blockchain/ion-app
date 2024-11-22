@@ -35,12 +35,11 @@ class StoryListItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewed = useState(false);
     final userMetadataAsync = ref.watch(userMetadataProvider(pubkey));
+    final isCurrentUserPubkey = ref.watch(isCurrentUserSelectorProvider(pubkey));
 
     return userMetadataAsync.maybeWhen(
       data: (userMetadata) {
         if (userMetadata == null) return const SizedBox.shrink();
-
-        final isCurrentUserPubkey = ref.watch(isCurrentUserSelectorProvider(userMetadata.pubkey));
 
         return GestureDetector(
           onTap: () => StoryViewerRoute(pubkey: pubkey).push<void>(context),
