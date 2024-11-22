@@ -24,7 +24,6 @@ List<UserStories>? stories(Ref ref) {
 
   final postEntities = entitiesPagedDataState.data.items.whereType<PostEntity>().where((post) {
     final mediaType = post.data.media.values.firstOrNull?.mediaType;
-
     return mediaType == MediaType.image || mediaType == MediaType.video;
   }).toList();
 
