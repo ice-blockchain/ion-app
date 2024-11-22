@@ -169,6 +169,8 @@ class PostData with _$PostData implements EventSerializable {
   String toString() {
     return 'PostData(${content.map((match) => match.text).join()})';
   }
+
+  MediaAttachment? get primaryMedia => media.isNotEmpty ? media.values.first : null;
 }
 
 @freezed

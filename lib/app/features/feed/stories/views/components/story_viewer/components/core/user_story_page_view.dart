@@ -8,7 +8,7 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 
 class UserStoryPageView extends StatelessWidget {
   const UserStoryPageView({
-    required this.user,
+    required this.userStory,
     required this.isCurrentUser,
     required this.currentStoryIndex,
     required this.onStoryPageChanged,
@@ -19,7 +19,7 @@ class UserStoryPageView extends StatelessWidget {
     super.key,
   });
 
-  final UserStories user;
+  final UserStories userStory;
   final bool isCurrentUser;
   final int currentStoryIndex;
   final ValueChanged<int> onStoryPageChanged;
@@ -30,15 +30,15 @@ class UserStoryPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentStory = user.stories[currentStoryIndex];
+    final currentStory = userStory.stories[currentStoryIndex];
 
     return KeyboardVisibilityProvider(
       child: StoryGestureHandler(
         onTapLeft: () => currentStoryIndex > 0 ? onPreviousStory() : onPreviousUser(),
         onTapRight: () =>
-            currentStoryIndex < user.stories.length - 1 ? onNextStory() : onNextUser(),
+            currentStoryIndex < userStory.stories.length - 1 ? onNextStory() : onNextUser(),
         child: StoryContent(
-          story: currentStory,
+          post: currentStory,
         ),
       ),
     );

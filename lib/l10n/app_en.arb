@@ -37,6 +37,7 @@
   "button_link": "Link",
   "button_share": "Share",
   "button_mute": "Mute",
+  "button_unmute": "Unmute",
   "button_block": "Block",
   "button_report": "Report",
   "button_publish": "Publish",

@@ -3,18 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/progress/progress.dart';
 
 class StoryProgressBarContainer extends ConsumerWidget {
   const StoryProgressBarContainer({
-    required this.stories,
+    required this.posts,
     required this.currentStoryIndex,
     required this.onStoryCompleted,
     super.key,
   });
 
-  final List<Story> stories;
+  final List<PostEntity> posts;
   final int currentStoryIndex;
   final VoidCallback onStoryCompleted;
 
@@ -23,11 +23,11 @@ class StoryProgressBarContainer extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0.s),
       child: Row(
-        children: stories.asMap().entries.map((entry) {
-          final index = entry.key;
+        children: posts.asMap().entries.map((post) {
+          final index = post.key;
           return Expanded(
             child: StoryProgressTracker(
-              story: entry.value,
+              post: post.value,
               isActive: index <= currentStoryIndex,
               isCurrent: index == currentStoryIndex,
               isPreviousStory: index < currentStoryIndex,

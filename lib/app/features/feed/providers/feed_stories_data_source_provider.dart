@@ -22,10 +22,11 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
           actionSource: ActionSourceRelayUrl(entry.key),
           entityFilter: (entity) => entity is PostEntity,
           requestFilters: [
-            RequestFilter(
-              kinds: const [PostEntity.kind],
-              authors: entry.value,
-              limit: 10,
+            const RequestFilter(
+              kinds: [PostEntity.kind],
+              // TODO: uncomment when our relays are used
+              // authors: [entry.value],
+              limit: 20,
             ),
           ],
         ),

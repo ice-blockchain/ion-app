@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/mute_provider.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
@@ -27,6 +28,7 @@ class StoryContextMenu extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isMuted = ref.watch(globalMuteProvider);
     final menuWidth = useState<double>(100.0.s);
 
     final updateWidth = useCallback(
@@ -59,11 +61,9 @@ class StoryContextMenu extends HookConsumerWidget {
               ),
               const ContextMenuItemDivider(),
               ContextMenuItem(
-                label: context.i18n.button_mute,
-                iconAsset: Assets.svg.iconChannelMute,
-                onPressed: () {
-                  closeMenu();
-                },
+                label: isMuted ? context.i18n.button_unmute : context.i18n.button_mute,
+                iconAsset: isMuted ? Assets.svg.iconChannelUnmute : Assets.svg.iconChannelMute,
+                onPressed: () => ref.read(globalMuteProvider.notifier).toggle(),
                 onLayout: updateWidth,
               ),
               const ContextMenuItemDivider(),

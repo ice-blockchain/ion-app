@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
-import 'package:ion/app/features/feed/stories/data/models/models.dart';
+import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_story_progress.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/progress/progress.dart';
@@ -11,7 +12,7 @@ import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryProgressTracker extends HookConsumerWidget {
   const StoryProgressTracker({
-    required this.story,
+    required this.post,
     required this.isActive,
     required this.isCurrent,
     required this.isPreviousStory,
@@ -20,7 +21,7 @@ class StoryProgressTracker extends HookConsumerWidget {
     super.key,
   });
 
-  final Story story;
+  final PostEntity post;
   final bool isActive;
   final bool isCurrent;
   final bool isPreviousStory;
@@ -31,17 +32,18 @@ class StoryProgressTracker extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isPaused = ref.watch(storyPauseControllerProvider);
 
-    final videoController = story.whenOrNull(
-      video: (data, _) => ref.watch(
-        videoControllerProvider(
-          data.contentUrl,
-          autoPlay: isCurrent,
-        ),
-      ),
-    );
+    final firstMedia = post.data.primaryMedia;
+    final videoController = (firstMedia != null && firstMedia.mediaType == MediaType.video)
+        ? ref.watch(
+            videoControllerProvider(
+              firstMedia.url,
+              autoPlay: isCurrent,
+            ),
+          )
+        : null;
 
     final storyProgress = useStoryProgress(
-      story: story,
+      post: post,
       isCurrent: isCurrent,
       isPaused: isPaused,
       videoController: videoController,

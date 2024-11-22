@@ -715,14 +715,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.20.5"
-  flutter_hooks_lint:
-    dependency: "direct dev"
-    description:
-      name: flutter_hooks_lint
-      sha256: "3d7e4f8c6a41b78f1152997bfbc2f301d43b6c4a4252ed7ff2cf38bd090cb941"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.1"
   flutter_image_compress:
     dependency: transitive
     description:

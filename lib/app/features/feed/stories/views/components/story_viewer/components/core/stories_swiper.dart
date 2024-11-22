@@ -9,7 +9,7 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 class StoriesSwiper extends StatelessWidget {
   const StoriesSwiper({
     required this.userPageController,
-    required this.users,
+    required this.userStories,
     required this.currentUserIndex,
     required this.currentStoryIndex,
     required this.onUserPageChanged,
@@ -21,7 +21,7 @@ class StoriesSwiper extends StatelessWidget {
   });
 
   final PageController userPageController;
-  final List<UserStories> users;
+  final List<UserStories> userStories;
   final int currentUserIndex;
   final int currentStoryIndex;
   final ValueChanged<int> onUserPageChanged;
@@ -34,21 +34,21 @@ class StoriesSwiper extends StatelessWidget {
   Widget build(BuildContext context) {
     return CubePageView.builder(
       controller: userPageController,
-      itemCount: users.length,
+      itemCount: userStories.length,
       onPageChanged: (index) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           onUserPageChanged(index);
         });
       },
       itemBuilder: (context, userIndex, userNotifier) {
-        final user = users[userIndex];
+        final userStory = userStories[userIndex];
         final isCurrentUser = userIndex == currentUserIndex;
 
         return CubeWidget(
           index: userIndex,
           pageNotifier: userNotifier,
           child: UserStoryPageView(
-            user: user,
+            userStory: userStory,
             isCurrentUser: isCurrentUser,
             currentStoryIndex: isCurrentUser ? currentStoryIndex : 0,
             onStoryPageChanged: (storyIndex) {
@@ -59,7 +59,8 @@ class StoriesSwiper extends StatelessWidget {
             onNextStory: onNextStory,
             onPreviousStory: onPreviousStory,
             onNextUser: () {
-              final hasNextUser = userPageController.hasClients && userIndex < users.length - 1;
+              final hasNextUser =
+                  userPageController.hasClients && userIndex < userStories.length - 1;
 
               if (hasNextUser) {
                 userPageController.nextPage(
