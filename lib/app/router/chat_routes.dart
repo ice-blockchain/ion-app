@@ -16,6 +16,8 @@ class ChatRoutes {
         TypedGoRoute<ShareProfileModalRoute>(path: 'share-profile'),
         TypedGoRoute<ChatAddPollModalRoute>(path: 'add-poll'),
         TypedGoRoute<SearchEmojiRoute>(path: 'search-emoji'),
+        TypedGoRoute<AddParticipantsToGroupModalRoute>(path: 'add-participants-to-group'),
+        TypedGoRoute<CreateGroupModalRoute>(path: 'create-group'),
       ],
     ),
   ];
@@ -97,6 +99,22 @@ class ChatAddPollModalRoute extends BaseRouteData {
   ChatAddPollModalRoute()
       : super(
           child: const ChatAddPollModal(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class AddParticipantsToGroupModalRoute extends BaseRouteData {
+  AddParticipantsToGroupModalRoute()
+      : super(
+          child: const AddGroupParticipantsPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class CreateGroupModalRoute extends BaseRouteData {
+  CreateGroupModalRoute()
+      : super(
+          child: const CreateGroupPage(),
           type: IceRouteType.bottomSheet,
         );
 }
