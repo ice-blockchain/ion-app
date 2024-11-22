@@ -19,7 +19,7 @@ class EntityCommentsButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final countEntity = ref.watch(
       nostrCacheProvider.select(
-        cacheSelector<EventCountResultEntity<int>>(
+        cacheSelector<EventCountResultEntity>(
           EventCountResultEntity.cacheKeyBuilder(
             key: eventReference.eventId,
             type: EventCountResultType.replies,
@@ -40,7 +40,7 @@ class EntityCommentsButton extends ConsumerWidget {
         activeIcon: Assets.svg.iconBlockCommenton.icon(
           size: 14.0.s,
         ),
-        value: countEntity != null ? formatDoubleCompact(countEntity.data.content) : '',
+        value: countEntity != null ? formatDoubleCompact(countEntity.data.content as int) : '',
         activeColor: context.theme.appColors.primaryAccent,
       ),
     );

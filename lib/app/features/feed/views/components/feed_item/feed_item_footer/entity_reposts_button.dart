@@ -19,7 +19,7 @@ class EntityRepostsButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final repostsCountEntity = ref.watch(
       nostrCacheProvider.select(
-        cacheSelector<EventCountResultEntity<int>>(
+        cacheSelector<EventCountResultEntity>(
           EventCountResultEntity.cacheKeyBuilder(
             key: eventReference.eventId,
             type: EventCountResultType.reposts,
@@ -30,7 +30,7 @@ class EntityRepostsButton extends ConsumerWidget {
 
     final quotesCountEntity = ref.watch(
       nostrCacheProvider.select(
-        cacheSelector<EventCountResultEntity<int>>(
+        cacheSelector<EventCountResultEntity>(
           EventCountResultEntity.cacheKeyBuilder(
             key: eventReference.eventId,
             type: EventCountResultType.quotes,
@@ -53,7 +53,8 @@ class EntityRepostsButton extends ConsumerWidget {
           color: context.theme.appColors.primaryAccent,
         ),
         value: repostsCountEntity != null && quotesCountEntity != null
-            ? formatDoubleCompact(repostsCountEntity.data.content + quotesCountEntity.data.content)
+            ? formatDoubleCompact(
+                (repostsCountEntity.data.content as int) + (quotesCountEntity.data.content as int))
             : '',
         activeColor: context.theme.appColors.primaryAccent,
       ),

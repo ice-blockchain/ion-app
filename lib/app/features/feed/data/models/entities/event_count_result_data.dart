@@ -24,14 +24,12 @@ enum EventCountResultType {
 }
 
 @Freezed(equal: false)
-class EventCountResultEntity<T>
-    with _$EventCountResultEntity<T>, NostrEntity
-    implements CacheableEntity {
+class EventCountResultEntity with _$EventCountResultEntity, NostrEntity implements CacheableEntity {
   const factory EventCountResultEntity({
     required String id,
     required String pubkey,
     required DateTime createdAt,
-    required EventCountResultSummary<T> data,
+    required EventCountResultSummary data,
   }) = _EventCountResultEntity;
 
   const EventCountResultEntity._();
@@ -47,7 +45,7 @@ class EventCountResultEntity<T>
     final summary = EventCountResultSummary(
       key: data.getKey(type),
       type: type,
-      content: data.content as T,
+      content: data.content,
     );
 
     return EventCountResultEntity(
@@ -68,9 +66,9 @@ class EventCountResultEntity<T>
 }
 
 @freezed
-class EventCountResultSummary<T> with _$EventCountResultSummary<T> {
+class EventCountResultSummary with _$EventCountResultSummary {
   const factory EventCountResultSummary({
-    required T content,
+    required dynamic content,
     required String key,
     required EventCountResultType type,
   }) = _EventCountResultSummary;
@@ -119,7 +117,9 @@ class EventCountResultData with _$EventCountResultData {
     if (params.group == RelatedEventMarker.reply.toShortString() ||
         params.group == RelatedEventMarker.root.toShortString()) {
       return EventCountResultType.replies;
-    } else if (filter.kinds != null && filter.kinds!.contains(RepostEntity.kind)) {
+    } else if (filter.kinds != null &&
+        filter.kinds!.contains(RepostEntity.kind) &&
+        params.group == RelatedEvent.tagName) {
       return EventCountResultType.reposts;
     } else if (params.group == QuotedEvent.tagName) {
       return EventCountResultType.quotes;

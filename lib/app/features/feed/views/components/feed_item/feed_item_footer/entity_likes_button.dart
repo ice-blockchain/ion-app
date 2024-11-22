@@ -19,7 +19,7 @@ class EntityLikesButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final reactionsCountEntity = ref.watch(
       nostrCacheProvider.select(
-        cacheSelector<EventCountResultEntity<Map<String, int>>>(
+        cacheSelector<EventCountResultEntity>(
           EventCountResultEntity.cacheKeyBuilder(
             key: eventReference.eventId,
             type: EventCountResultType.reactions,
@@ -28,7 +28,8 @@ class EntityLikesButton extends ConsumerWidget {
       ),
     );
 
-    final numberOfLikes = reactionsCountEntity?.data.content[ReactionsEntity.likeSymbol];
+    final content = reactionsCountEntity?.data.content as Map<String, dynamic>?;
+    final numberOfLikes = content?[ReactionsEntity.likeSymbol];
 
     return GestureDetector(
       onTap: HapticFeedback.lightImpact,
@@ -41,7 +42,7 @@ class EntityLikesButton extends ConsumerWidget {
           size: 18.0.s,
           color: context.theme.appColors.attentionRed,
         ),
-        value: numberOfLikes != null ? formatDoubleCompact(numberOfLikes) : '',
+        value: numberOfLikes != null ? formatDoubleCompact(numberOfLikes as int) : '',
         activeColor: context.theme.appColors.attentionRed,
       ),
     );
