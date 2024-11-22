@@ -9,7 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.dart';
 import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/router/app_routes.dart';

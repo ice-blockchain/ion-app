@@ -5,11 +5,11 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/reactions_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
-import 'package:ion/app/features/feed/data/models/event_count_request_data.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
-import 'package:ion/app/features/feed/data/models/repost_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -23,7 +23,6 @@ enum EventCountResultType {
   reactions;
 }
 
-//TODO::move to subfolder entities folder
 @Freezed(equal: false)
 class EventCountResultEntity<T>
     with _$EventCountResultEntity<T>, NostrEntity

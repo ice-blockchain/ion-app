@@ -2,10 +2,10 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_hashtag.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';

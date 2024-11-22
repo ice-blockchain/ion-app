@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:video_player/video_player.dart';
 
 class StoryProgress {
@@ -89,7 +89,6 @@ StoryProgress useStoryProgress({
           );
 
         case MediaType.unknown:
-        
       }
       return null;
     },

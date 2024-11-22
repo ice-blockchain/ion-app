@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/features/feed/data/models/article_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/article/mocked_data.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';

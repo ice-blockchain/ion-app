@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/feed/data/models/article_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.dart';
-import 'package:ion/app/features/feed/data/models/post_data.dart';
-import 'package:ion/app/features/feed/data/models/repost_data.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
