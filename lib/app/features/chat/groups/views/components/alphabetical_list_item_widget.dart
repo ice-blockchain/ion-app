@@ -5,6 +5,7 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/groups/model/alphabetical_list_item.dart';
+import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class AlphabeticalListItemWidget extends StatelessWidget {
@@ -27,7 +28,12 @@ class AlphabeticalListItemWidget extends StatelessWidget {
           backgroundColor: context.theme.appColors.secondaryBackground,
           onTap: () => onUserItemTap(item),
           title: Text(item.user.name),
-          subtitle: Text(item.user.username),
+          subtitle: Text(
+            prefixUsername(
+              context: context,
+              username: item.user.username,
+            ),
+          ),
           leading: Avatar(imageUrl: item.user.avatarUrl, size: 30.0.s),
           trailing: isUserSelected(item)
               ? Assets.svg.iconBlockCheckboxOn.icon()

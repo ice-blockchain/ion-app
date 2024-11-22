@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -14,6 +15,7 @@ import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CreateGroupPage extends ConsumerWidget {
@@ -22,9 +24,9 @@ class CreateGroupPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
-    final nameController = useTextEditingController(
-      text: ref.watch(createGroupFormControllerProvider).title,
-    );
+    final nameController = useTextEditingController(text: createGroupForm.title);
+    final members = createGroupForm.members.toList();
+
     return SheetContent(
       topPadding: 0,
       body: Column(
@@ -71,7 +73,7 @@ class CreateGroupPage extends ConsumerWidget {
                     children: [
                       Assets.svg.iconCategoriesFollowing.icon(size: 16.0.s),
                       SizedBox(width: 6.0.s),
-                      Text('Group members (${createGroupForm.members.length})'),
+                      Text('Group members (${members.length})'),
                       const Spacer(),
                       TextButton(
                         onPressed: () {},
@@ -83,6 +85,32 @@ class CreateGroupPage extends ConsumerWidget {
                         ),
                       ),
                     ],
+                  ),
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: members.length,
+                      separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
+                      itemBuilder: (BuildContext context, int i) {
+                        final member = members[i];
+                        return ListItem(
+                          contentPadding: EdgeInsets.zero,
+                          constraints: BoxConstraints(maxHeight: 36.0.s),
+                          backgroundColor: context.theme.appColors.secondaryBackground,
+                          title: Text(member.name),
+                          subtitle: Text(
+                            prefixUsername(
+                              context: context,
+                              username: member.username,
+                            ),
+                          ),
+                          leading: Avatar(
+                            imageUrl: member.avatarUrl,
+                            size: 30.0.s,
+                          ),
+                          trailing: Assets.svg.iconBlockDelete.icon(size: 24.0.s),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
