@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.dart';
-import 'package:ion/app/features/feed/data/models/entities/reactions_data.dart';
+import 'package:ion/app/features/feed/providers/counters/likes_count_provider.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_action_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -17,19 +15,7 @@ class EntityLikesButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reactionsCountEntity = ref.watch(
-      nostrCacheProvider.select(
-        cacheSelector<EventCountResultEntity>(
-          EventCountResultEntity.cacheKeyBuilder(
-            key: eventReference.eventId,
-            type: EventCountResultType.reactions,
-          ),
-        ),
-      ),
-    );
-
-    final content = reactionsCountEntity?.data.content as Map<String, dynamic>?;
-    final numberOfLikes = content?[ReactionsEntity.likeSymbol];
+    final likesCount = ref.watch(LikesCountProvider(eventReference));
 
     return GestureDetector(
       onTap: HapticFeedback.lightImpact,
@@ -42,7 +28,7 @@ class EntityLikesButton extends ConsumerWidget {
           size: 16.0.s,
           color: context.theme.appColors.attentionRed,
         ),
-        value: numberOfLikes != null ? formatDoubleCompact(numberOfLikes as int) : '',
+        value: likesCount != null ? formatDoubleCompact(likesCount) : '',
         activeColor: context.theme.appColors.attentionRed,
       ),
     );
