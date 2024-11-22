@@ -11,6 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -47,10 +48,14 @@ class MediaService {
     return _saveCameraImage(File(image.path));
   }
 
-  Future<List<MediaFile>> fetchGalleryMedia({required int page, required int size}) async {
+  Future<List<MediaFile>> fetchGalleryMedia({
+    required int page,
+    required int size,
+    required MediaPickerType type,
+  }) async {
     try {
       final albums = await PhotoManager.getAssetPathList(
-        type: RequestType.image,
+        type: type.toRequestType(),
       );
 
       if (albums.isEmpty) return [];
@@ -59,15 +64,17 @@ class MediaService {
         page: page,
         size: size,
       );
-
-      final mediaFiles = assets.map((AssetEntity asset) {
-        return MediaFile(
-          path: asset.id,
-          height: asset.height,
-          width: asset.width,
-          mimeType: asset.mimeType,
-        );
-      }).toList();
+      final mediaFiles = assets
+          .map(
+            (asset) => MediaFile(
+              path: asset.id,
+              height: asset.height,
+              width: asset.width,
+              mimeType: asset.mimeType,
+            ),
+          )
+          .toList()
+          .cast<MediaFile>();
 
       return mediaFiles;
     } catch (e) {

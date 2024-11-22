@@ -6,17 +6,21 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/features/gallery/providers/media_selection_provider.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
+import 'package:ion/app/features/gallery/views/components/duration_badge.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
-class ImageCell extends ConsumerWidget {
-  const ImageCell({
+class GalleryGridCell extends ConsumerWidget {
+  const GalleryGridCell({
     required this.mediaFile,
+    this.type = MediaPickerType.common,
     super.key,
   });
 
   final MediaFile mediaFile;
+  final MediaPickerType type;
 
   static double get cellHeight => 120.0.s;
   static double get cellWidth => 122.0.s;
@@ -31,7 +35,9 @@ class ImageCell extends ConsumerWidget {
       height: cellHeight,
       child: GestureDetector(
         onTap: () {
-          ref.read(mediaSelectionNotifierProvider.notifier).toggleSelection(mediaFile.path);
+          ref
+              .read(mediaSelectionNotifierProvider.notifier)
+              .toggleSelection(mediaFile.path, type: type);
         },
         child: assetEntityAsync.maybeWhen(
           data: (asset) {
@@ -60,6 +66,14 @@ class ImageCell extends ConsumerWidget {
                           selectionOrder: selectionState.order.toString(),
                         ),
                       ),
+                      if (asset.type == AssetType.video)
+                        Positioned(
+                          bottom: 4.0.s,
+                          right: 4.0.s,
+                          child: DurationBadge(
+                            duration: asset.duration,
+                          ),
+                        ),
                     ],
                   );
                 } else {

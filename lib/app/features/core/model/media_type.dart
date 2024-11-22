@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter/material.dart';
+import 'package:ion/app/extensions/extensions.dart';
+
 enum MediaType {
   image,
   video,
@@ -32,5 +35,13 @@ enum MediaType {
 
   static bool isVideoUrl(String url) {
     return RegExp(r'https?://\S+\.(?:mp4|avi|mov|wmv|flv|mkv|webm)').hasMatch(url);
+  }
+
+  String title(BuildContext context) {
+    return switch (this) {
+      MediaType.image => context.i18n.gallery_add_photo_title,
+      MediaType.video => context.i18n.common_add_video,
+      MediaType.unknown => '',
+    };
   }
 }

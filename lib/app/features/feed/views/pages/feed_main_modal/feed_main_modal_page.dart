@@ -7,11 +7,13 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/features/wallet/model/feed_type.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 
 class FeedMainModalPage extends StatelessWidget {
   const FeedMainModalPage({super.key});
@@ -48,6 +50,25 @@ class FeedMainModalPage extends StatelessWidget {
                     permission: Permission.camera,
                   ),
                   settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
+                );
+              } else if (type == FeedType.video) {
+                return PermissionAwareWidget(
+                  permissionType: Permission.photos,
+                  onGranted: () async {
+                    if (context.mounted) {
+                      await MediaPickerRoute(mediaPickerType: MediaPickerType.video)
+                          .push<List<MediaFile>>(context);
+                      if (context.mounted) {
+                        await CreateVideoRoute().push<void>(context);
+                      }
+                    }
+                  },
+                  requestDialog: const PermissionRequestSheet(permission: Permission.photos),
+                  settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
+                  builder: (_, onPressed) => MainModalItem(
+                    item: type,
+                    onTap: onPressed,
+                  ),
                 );
               }
 

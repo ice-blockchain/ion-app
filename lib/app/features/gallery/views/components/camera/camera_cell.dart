@@ -45,7 +45,7 @@ class CameraCell extends HookConsumerWidget {
             ready: (_, __, ___) async {
               if (shouldOpenCamera.value) {
                 shouldOpenCamera.value = false;
-                await ref.read(galleryNotifierProvider.notifier).captureImage();
+                await ref.read(galleryNotifierProvider().notifier).captureImage();
               }
             },
           );
@@ -57,7 +57,7 @@ class CameraCell extends HookConsumerWidget {
       onGranted: () async {
         await ref.read(cameraControllerNotifierProvider).maybeWhen(
               ready: (_, __, ___) async =>
-                  ref.read(galleryNotifierProvider.notifier).captureImage(),
+                  ref.read(galleryNotifierProvider().notifier).captureImage(),
               orElse: () {
                 shouldOpenCamera.value = true;
                 cameraControllerNotifier.resumeCamera();

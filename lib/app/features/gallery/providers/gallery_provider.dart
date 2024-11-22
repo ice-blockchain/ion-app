@@ -6,6 +6,7 @@ import 'package:ion/app/features/core/permissions/providers/permissions_provider
 import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ion/app/features/gallery/data/models/models.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -23,27 +24,33 @@ class GalleryNotifier extends _$GalleryNotifier {
   static const int _pageSize = 100;
 
   @override
-  Future<GalleryState> build() async {
+  Future<GalleryState> build({MediaPickerType type = MediaPickerType.common}) async {
     final mediaService = ref.watch(mediaServiceProvider);
-
     final hasPermission = ref.read(hasPermissionProvider(Permission.photos));
 
     if (!hasPermission) {
       Logger.log('Photos Permission denied');
-      return const GalleryState(
+      return GalleryState(
         mediaData: [],
         currentPage: 0,
         hasMore: false,
+        type: type,
       );
     }
 
-    final mediaData = await mediaService.fetchGalleryMedia(page: 0, size: _pageSize);
+    final mediaData = await mediaService.fetchGalleryMedia(
+      page: 0,
+      size: _pageSize,
+      type: type,
+    );
+
     final hasMore = mediaData.length == _pageSize;
 
     return GalleryState(
       mediaData: mediaData,
       currentPage: 1,
       hasMore: hasMore,
+      type: type,
     );
   }
 
@@ -58,6 +65,7 @@ class GalleryNotifier extends _$GalleryNotifier {
       final newMedia = await mediaService.fetchGalleryMedia(
         page: currentState.currentPage,
         size: _pageSize,
+        type: currentState.type,
       );
 
       final hasMore = newMedia.length == _pageSize;
@@ -88,7 +96,10 @@ class GalleryNotifier extends _$GalleryNotifier {
         );
       });
 
-      mediaSelectionNotifier.toggleSelection(mediaFile.path);
+      final currentState = state.value;
+      if (currentState == null) return;
+
+      mediaSelectionNotifier.toggleSelection(mediaFile.path, type: state.value!.type);
     }
   }
 }

@@ -20,7 +20,6 @@ class FeedRoutes {
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
         TypedGoRoute<CreatePostRoute>(path: 'create-post'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
-        TypedGoRoute<CreateStoryRoute>(path: 'create-story'),
         TypedGoRoute<CreateVideoRoute>(path: 'create-video'),
         TypedGoRoute<MediaPickerRoute>(path: 'media-picker'),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
@@ -154,14 +153,6 @@ class CreateArticleRoute extends BaseRouteData {
         );
 }
 
-class CreateStoryRoute extends BaseRouteData {
-  CreateStoryRoute()
-      : super(
-          child: const CreateStoryModal(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
 class CreateVideoRoute extends BaseRouteData {
   CreateVideoRoute()
       : super(
@@ -171,15 +162,17 @@ class CreateVideoRoute extends BaseRouteData {
 }
 
 class MediaPickerRoute extends BaseRouteData {
-  MediaPickerRoute({this.maxSelection = 5})
+  MediaPickerRoute({this.maxSelection = 5, this.mediaPickerType = MediaPickerType.common})
       : super(
           child: MediaPickerPage(
             maxSelection: maxSelection,
+            type: mediaPickerType,
           ),
           type: IceRouteType.bottomSheet,
         );
 
   final int maxSelection;
+  final MediaPickerType mediaPickerType;
 }
 
 class ArticlePreviewRoute extends BaseRouteData {

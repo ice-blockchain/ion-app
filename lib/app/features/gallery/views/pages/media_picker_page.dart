@@ -8,18 +8,24 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class MediaPickerPage extends HookConsumerWidget {
-  const MediaPickerPage({required this.maxSelection, super.key});
+  const MediaPickerPage({
+    required this.maxSelection,
+    this.type = MediaPickerType.common,
+    super.key,
+  });
 
   final int maxSelection;
+  final MediaPickerType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final galleryState = ref.watch(galleryNotifierProvider);
+    final galleryState = ref.watch(galleryNotifierProvider(type: type));
     final selectedMedia = ref.watch(
       mediaSelectionNotifierProvider.select((state) => state.selectedMedia),
     );
@@ -36,11 +42,11 @@ class MediaPickerPage extends HookConsumerWidget {
         primary: false,
         flexibleSpace: NavigationAppBar.modal(
           title: Text(
-            context.i18n.gallery_add_photo_title,
+            type.title(context),
             style: context.theme.appTextThemes.subtitle,
           ),
           actions: [
-            AddImagesButton(
+            AddMediaButton(
               onPressed: () => context.pop(selectedMedia),
               mediaCount: selectedMedia.length,
             ),
@@ -49,12 +55,14 @@ class MediaPickerPage extends HookConsumerWidget {
         automaticallyImplyLeading: false,
         pinned: true,
       ),
-      GalleryGridview(
+      GalleryGridView(
+        type: type,
         galleryState: galleryState.valueOrNull ??
-            const GalleryState(
+            GalleryState(
               mediaData: [],
               currentPage: 0,
               hasMore: true,
+              type: type,
             ),
       ),
     ];
@@ -63,7 +71,7 @@ class MediaPickerPage extends HookConsumerWidget {
       body: LoadMoreBuilder(
         slivers: slivers,
         hasMore: galleryState.value?.hasMore ?? false,
-        onLoadMore: () => ref.read(galleryNotifierProvider.notifier).fetchNextPage(),
+        onLoadMore: () => ref.read(galleryNotifierProvider(type: type).notifier).fetchNextPage(),
         builder: (context, slivers) => CustomScrollView(slivers: slivers),
       ),
     );
