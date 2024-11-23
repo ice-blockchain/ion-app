@@ -79,6 +79,8 @@
   "common_document": "Document",
   "common_you": "You",
   "common_add_video": "Add video",
+  "common_forwarded": "Forwarded",
+  "common_forwarded_from": "Forwarded from",
   "auth_secured_by": "Secured by",
   "auth_privacy": "By continuing, you are agreeing to our [[:link]]terms_of_service[[/:link]] & [[:link]]privacy_policy[[/:link]]",
   "auth_terms_of_service": "Terms of Service",
