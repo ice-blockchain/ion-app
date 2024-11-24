@@ -7,7 +7,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
-import 'package:ion/app/features/feed/data/models/entities/reactions_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/reaction_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
@@ -123,7 +123,7 @@ class EventCountResultData with _$EventCountResultData {
       return EventCountResultType.reposts;
     } else if (params.group == QuotedEvent.tagName) {
       return EventCountResultType.quotes;
-    } else if (filter.kinds != null && filter.kinds!.contains(ReactionsEntity.kind)) {
+    } else if (filter.kinds != null && filter.kinds!.contains(ReactionEntity.kind)) {
       return EventCountResultType.reactions;
     } else {
       throw UnknownEventCountResultType(eventId: eventId);
