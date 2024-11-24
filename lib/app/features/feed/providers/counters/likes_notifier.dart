@@ -16,6 +16,10 @@ class LikesNotifier extends _$LikesNotifier {
   FutureOr<void> build(EventReference eventReference) {}
 
   Future<void> toggle() async {
+    if (state.isLoading) {
+      return;
+    }
+
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
@@ -36,6 +40,7 @@ class LikesNotifier extends _$LikesNotifier {
         );
         await ref.read(nostrNotifierProvider.notifier).sendEntityData(data);
       }
+      //TODO::update counters with EventCountRequestData
     });
   }
 }
