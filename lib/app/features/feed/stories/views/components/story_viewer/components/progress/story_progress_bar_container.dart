@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/progress/progress.dart';
 
 class StoryProgressBarContainer extends ConsumerWidget {
   const StoryProgressBarContainer({
-    required this.posts,
-    required this.currentStoryIndex,
-    required this.onStoryCompleted,
+    required this.pubkey,
     super.key,
   });
 
-  final List<PostEntity> posts;
-  final int currentStoryIndex;
-  final VoidCallback onStoryCompleted;
+  final String pubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final storyState = ref.watch(storyViewingControllerProvider(startingPubkey: pubkey));
+    final posts = storyState.userStories[storyState.currentUserIndex].stories;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0.s),
       child: Row(
@@ -28,10 +28,21 @@ class StoryProgressBarContainer extends ConsumerWidget {
           return Expanded(
             child: StoryProgressTracker(
               post: post.value,
-              isActive: index <= currentStoryIndex,
-              isCurrent: index == currentStoryIndex,
-              isPreviousStory: index < currentStoryIndex,
-              onCompleted: onStoryCompleted,
+              isActive: index <= storyState.currentStoryIndex,
+              isCurrent: index == storyState.currentStoryIndex,
+              isPreviousStory: index < storyState.currentStoryIndex,
+              onCompleted: () {
+                final notifier =
+                    ref.read(storyViewingControllerProvider(startingPubkey: pubkey).notifier);
+
+                if (storyState.hasNextStory) {
+                  notifier.moveToNextStory();
+                } else if (storyState.hasNextUser) {
+                  notifier.moveToNextUser();
+                } else {
+                  context.pop();
+                }
+              },
               margin: index > 0 ? EdgeInsets.only(left: 4.0.s) : null,
             ),
           );

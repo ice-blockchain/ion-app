@@ -18,15 +18,15 @@ class StoryViewerContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final media = post.data.primaryMedia;
-    if (media == null) {
-      return const SizedBox.shrink();
-    }
+    // if (media == null) {
+    //   return const SizedBox.shrink();
+    // }
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
-      child: switch (media.mediaType) {
-        MediaType.image => ImageStoryViewer(path: media.url),
-        MediaType.video => VideoStoryViewer(videoPath: media.url),
+      child: switch (media?.mediaType) {
+        MediaType.image => ImageStoryViewer(path: media!.url),
+        MediaType.video => VideoStoryViewer(videoPath: media!.url),
         _ => const CenteredLoadingIndicator()
       },
     );

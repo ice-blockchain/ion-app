@@ -11,7 +11,6 @@ class UserStoryPageView extends StatelessWidget {
     required this.userStory,
     required this.isCurrentUser,
     required this.currentStoryIndex,
-    required this.onStoryPageChanged,
     required this.onNextStory,
     required this.onPreviousStory,
     required this.onNextUser,
@@ -22,7 +21,6 @@ class UserStoryPageView extends StatelessWidget {
   final UserStories userStory;
   final bool isCurrentUser;
   final int currentStoryIndex;
-  final ValueChanged<int> onStoryPageChanged;
   final VoidCallback onNextStory;
   final VoidCallback onPreviousStory;
   final VoidCallback onNextUser;
@@ -37,9 +35,7 @@ class UserStoryPageView extends StatelessWidget {
         onTapLeft: () => currentStoryIndex > 0 ? onPreviousStory() : onPreviousUser(),
         onTapRight: () =>
             currentStoryIndex < userStory.stories.length - 1 ? onNextStory() : onNextUser(),
-        child: StoryContent(
-          post: currentStory,
-        ),
+        child: StoryContent(post: currentStory),
       ),
     );
   }

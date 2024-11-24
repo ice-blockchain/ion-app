@@ -37,14 +37,11 @@ class VideoStoryViewer extends HookConsumerWidget {
 
     final videoAspectRatio = videoController.value.aspectRatio;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SizedBox(
-          width: constraints.maxWidth,
-          height: constraints.maxWidth / videoAspectRatio,
-          child: VideoPlayer(videoController),
-        );
-      },
+    return Center(
+      child: AspectRatio(
+        aspectRatio: videoAspectRatio,
+        child: VideoPlayer(videoController),
+      ),
     );
   }
 }

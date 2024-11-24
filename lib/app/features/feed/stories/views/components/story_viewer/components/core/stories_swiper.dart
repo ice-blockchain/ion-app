@@ -1,87 +1,72 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cube_transition_plus/cube_transition_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/core.dart';
+import 'package:ion/app/utils/future.dart';
 
-class StoriesSwiper extends StatelessWidget {
+class StoriesSwiper extends HookConsumerWidget {
   const StoriesSwiper({
-    required this.userPageController,
-    required this.userStories,
-    required this.currentUserIndex,
-    required this.currentStoryIndex,
-    required this.onUserPageChanged,
-    required this.onStoryPageChanged,
-    required this.onNextStory,
-    required this.onPreviousStory,
-    required this.onPausedChanged,
+    required this.pubkey,
     super.key,
   });
 
-  final PageController userPageController;
-  final List<UserStories> userStories;
-  final int currentUserIndex;
-  final int currentStoryIndex;
-  final ValueChanged<int> onUserPageChanged;
-  final ValueChanged<int> onStoryPageChanged;
-  final VoidCallback onNextStory;
-  final VoidCallback onPreviousStory;
-  final ValueChanged<bool> onPausedChanged;
+  final String pubkey;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final storyState = ref.watch(storyViewingControllerProvider(startingPubkey: pubkey));
+    final userPageController = usePageController(initialPage: storyState.currentUserIndex);
+
     return CubePageView.builder(
       controller: userPageController,
-      itemCount: userStories.length,
-      onPageChanged: (index) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          onUserPageChanged(index);
-        });
-      },
+      itemCount: storyState.userStories.length,
+      onPageChanged:
+          ref.read(storyViewingControllerProvider(startingPubkey: pubkey).notifier).moveToUser,
       itemBuilder: (context, userIndex, userNotifier) {
-        final userStory = userStories[userIndex];
-        final isCurrentUser = userIndex == currentUserIndex;
+        final userStory = storyState.userStories[userIndex];
+        final isCurrentUser = userIndex == storyState.currentUserIndex;
 
         return CubeWidget(
           index: userIndex,
           pageNotifier: userNotifier,
-          child: UserStoryPageView(
-            userStory: userStory,
-            isCurrentUser: isCurrentUser,
-            currentStoryIndex: isCurrentUser ? currentStoryIndex : 0,
-            onStoryPageChanged: (storyIndex) {
-              if (isCurrentUser) {
-                onStoryPageChanged(storyIndex);
-              }
-            },
-            onNextStory: onNextStory,
-            onPreviousStory: onPreviousStory,
-            onNextUser: () {
-              final hasNextUser =
-                  userPageController.hasClients && userIndex < userStories.length - 1;
-
-              if (hasNextUser) {
-                userPageController.nextPage(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
-              } else {
-                context.pop();
-              }
-            },
-            onPreviousUser: () {
-              final hasPreviousUser = userPageController.hasClients && userIndex > 0;
-
-              if (hasPreviousUser) {
-                userPageController.previousPage(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
-              } else {
-                context.pop();
-              }
+          child: Consumer(
+            builder: (context, ref, _) {
+              return UserStoryPageView(
+                userStory: userStory,
+                isCurrentUser: isCurrentUser,
+                currentStoryIndex: isCurrentUser ? storyState.currentStoryIndex : 0,
+                onNextStory: ref
+                    .read(storyViewingControllerProvider(startingPubkey: pubkey).notifier)
+                    .moveToNextStory,
+                onPreviousStory: ref
+                    .read(storyViewingControllerProvider(startingPubkey: pubkey).notifier)
+                    .moveToPreviousStory,
+                onNextUser: () {
+                  if (userPageController.hasClients &&
+                      userIndex < storyState.userStories.length - 1) {
+                    userPageController.nextPage(
+                      duration: 300.ms,
+                      curve: Curves.easeInOut,
+                    );
+                  } else {
+                    context.pop();
+                  }
+                },
+                onPreviousUser: () {
+                  if (userPageController.hasClients && userIndex > 0) {
+                    userPageController.previousPage(
+                      duration: 300.ms,
+                      curve: Curves.easeInOut,
+                    );
+                  } else {
+                    context.pop();
+                  }
+                },
+              );
             },
           ),
         );

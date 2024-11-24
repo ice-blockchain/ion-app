@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:developer';
+
+import 'package:collection/collection.dart';
+import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -16,24 +20,34 @@ class StoryViewingController extends _$StoryViewingController {
   StoryViewerState build({required String startingPubkey}) {
     final stories = ref.watch(storiesProvider);
 
-    if (stories == null || stories.isEmpty) {
-      return const StoryViewerState(
-        userStories: [],
-        currentUserIndex: 0,
-        currentStoryIndex: 0,
-      );
-    }
-
-    var initialUserIndex =
-        stories.indexWhere((userStories) => userStories.pubkey == startingPubkey);
-
-    initialUserIndex = (initialUserIndex == -1) ? 0 : initialUserIndex;
-
-    return StoryViewerState(
-      userStories: stories,
-      currentUserIndex: initialUserIndex,
+    const emptyState = StoryViewerState(
+      userStories: [],
+      currentUserIndex: 0,
       currentStoryIndex: 0,
     );
+
+    log('Stories count: ${stories?.length}', name: 'StoryViewingController');
+
+    log('starting pubkey: $startingPubkey', name: 'StoryViewingController');
+
+    final result = stories?.firstWhereOrNull((UserStories userStories) {
+          return userStories.pubkey == startingPubkey;
+        })?.let<StoryViewerState>(
+          (UserStories foundStories) {
+            log(
+              'Stories count: ${stories.length}, Found index: ${stories.indexOf(foundStories)}',
+              name: 'StoryViewingController',
+            );
+            return StoryViewerState(
+              userStories: stories,
+              currentUserIndex: stories.indexOf(foundStories),
+              currentStoryIndex: 0,
+            );
+          },
+        ) ??
+        emptyState;
+
+    return result;
   }
 
   void moveToNextStory() {
@@ -41,11 +55,8 @@ class StoryViewingController extends _$StoryViewingController {
       state = state.copyWith(
         currentStoryIndex: state.currentStoryIndex + 1,
       );
-    } else if (state.hasNextUser) {
-      state = state.copyWith(
-        currentUserIndex: state.currentUserIndex + 1,
-        currentStoryIndex: 0,
-      );
+    } else {
+      moveToNextUser();
     }
   }
 
@@ -54,12 +65,8 @@ class StoryViewingController extends _$StoryViewingController {
       state = state.copyWith(
         currentStoryIndex: state.currentStoryIndex - 1,
       );
-    } else if (state.hasPreviousUser) {
-      final previousUserStoriesCount = state.userStories[state.currentUserIndex - 1].stories.length;
-      state = state.copyWith(
-        currentUserIndex: state.currentUserIndex - 1,
-        currentStoryIndex: previousUserStoriesCount - 1,
-      );
+    } else {
+      moveToPreviousUser();
     }
   }
 
@@ -84,6 +91,15 @@ class StoryViewingController extends _$StoryViewingController {
     if (state.hasNextUser) {
       state = state.copyWith(
         currentUserIndex: state.currentUserIndex + 1,
+        currentStoryIndex: 0,
+      );
+    }
+  }
+
+  void moveToPreviousUser() {
+    if (state.hasPreviousUser) {
+      state = state.copyWith(
+        currentUserIndex: state.currentUserIndex - 1,
         currentStoryIndex: 0,
       );
     }
