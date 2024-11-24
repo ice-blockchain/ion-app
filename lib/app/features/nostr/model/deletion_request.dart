@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:nostr_dart/nostr_dart.dart';
