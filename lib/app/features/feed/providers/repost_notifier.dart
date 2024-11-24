@@ -23,7 +23,7 @@ class RepostNotifier extends _$RepostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final entity = ref.read(nostrEntityProvider(eventReference: eventReference));
+      final entity = ref.read(nostrEntityProvider(eventReference: eventReference)).valueOrNull;
       final data = switch (entity) {
         _ when entity is PostEntity =>
           RepostData(eventId: eventReference.eventId, pubkey: eventReference.pubkey),

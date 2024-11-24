@@ -1,9 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nostr_cache.g.dart';
+
+final _nostrCacheStreamController = StreamController<NostrEntity>.broadcast();
 
 mixin CacheableEntity on NostrEntity {
   String get cacheKey;
@@ -18,11 +23,17 @@ class NostrCache extends _$NostrCache {
 
   void cache(CacheableEntity event) {
     state = {...state, event.cacheKey: event};
+    _nostrCacheStreamController.sink.add(event);
   }
 
   void remove(String key) {
     state = {...state}..remove(key);
   }
+}
+
+@Riverpod(keepAlive: true)
+Raw<Stream<NostrEntity>> nostrCacheStream(Ref ref) {
+  return _nostrCacheStreamController.stream;
 }
 
 // TODO:

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/providers/counters/reposted_events_provider.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_action_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
@@ -19,6 +20,7 @@ class EntityRepostsButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final repostsCount = ref.watch(repostsCountProvider(eventReference));
+    final isReposted = ref.watch(isRepostedProvider(eventReference));
 
     return GestureDetector(
       onTap: () {
@@ -33,6 +35,7 @@ class EntityRepostsButton extends ConsumerWidget {
         ),
         value: repostsCount != null ? formatDoubleCompact(repostsCount) : '',
         activeColor: context.theme.appColors.primaryAccent,
+        isActive: isReposted,
       ),
     );
   }
