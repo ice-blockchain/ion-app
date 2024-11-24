@@ -1,29 +1,25 @@
-// SPDX-License-Identifier: ice License 1.0
-
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
-import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/plus_icon.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 
-class StoryListItem extends HookConsumerWidget {
-  const StoryListItem({
+class CurrentUserStoryListItem extends HookConsumerWidget {
+  const CurrentUserStoryListItem({
     required this.pubkey,
+    required this.gradient,
     super.key,
-    this.gradient,
   });
 
   final String pubkey;
   final Gradient? gradient;
 
-  static double get width => 65.0.s;
-  static double get height => 91.0.s;
-  static double get borderSize => 2.0.s;
+  static double get plusSize => 18.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,8 +33,8 @@ class StoryListItem extends HookConsumerWidget {
         return GestureDetector(
           onTap: () => StoryViewerRoute(pubkey: pubkey).push<void>(context),
           child: SizedBox(
-            width: width,
-            height: height,
+            width: StoryListItem.width,
+            height: StoryListItem.height,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -47,16 +43,22 @@ class StoryListItem extends HookConsumerWidget {
                   alignment: Alignment.bottomCenter,
                   children: [
                     StoryColoredBorder(
-                      size: width,
+                      size: StoryListItem.width,
                       color: context.theme.appColors.strokeElements,
                       gradient: viewed.value ? null : gradient,
                       child: StoryColoredBorder(
-                        size: width - borderSize * 2,
+                        size: StoryListItem.width - StoryListItem.borderSize * 2,
                         color: context.theme.appColors.secondaryBackground,
                         child: Avatar(
-                          size: width - borderSize * 4,
+                          size: StoryListItem.width - StoryListItem.borderSize * 4,
                           imageUrl: userMetadata.data.picture,
                         ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -plusSize / 2,
+                      child: PlusIcon(
+                        size: plusSize,
                       ),
                     ),
                   ],
@@ -64,7 +66,7 @@ class StoryListItem extends HookConsumerWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 2.0.s),
                   child: Text(
-                    userMetadata.data.name,
+                    context.i18n.common_you,
                     style: context.theme.appTextThemes.caption3.copyWith(
                       color: context.theme.appColors.primaryText,
                     ),
