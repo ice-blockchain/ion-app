@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/providers/counters/is_liked_provider.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.dart';
+import 'package:ion/app/features/feed/providers/counters/likes_notifier.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_action_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/utils/num.dart';
@@ -17,10 +19,16 @@ class EntityLikesButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final likesCount = ref.watch(LikesCountProvider(eventReference));
+    final likesCount = ref.watch(likesCountProvider(eventReference));
+    final isLiked = ref.watch(isLikedProvider(eventReference));
+
+    ref.displayErrors(likesNotifierProvider(eventReference));
 
     return GestureDetector(
-      onTap: HapticFeedback.lightImpact,
+      onTap: () {
+        HapticFeedback.lightImpact();
+        ref.read(likesNotifierProvider(eventReference).notifier).toggle();
+      },
       child: FeedItemActionButton(
         icon: Assets.svg.iconVideoLikeOff.icon(
           size: 16.0.s,
@@ -32,6 +40,7 @@ class EntityLikesButton extends ConsumerWidget {
         ),
         value: likesCount != null ? formatDoubleCompact(likesCount) : '',
         activeColor: context.theme.appColors.attentionRed,
+        isActive: isLiked,
       ),
     );
   }
