@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/counters/is_liked_provider.dart';
+import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_notifier.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_action_button.dart';

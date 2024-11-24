@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.dart';
-import 'package:ion/app/features/feed/providers/counters/is_liked_provider.dart';
+import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.dart';
+import 'package:ion/app/features/nostr/model/deletion_request.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,10 +19,15 @@ class LikesNotifier extends _$LikesNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final isLiked = ref.read(isLikedProvider(eventReference));
+      final likeEntity = ref.read(likeReactionProvider(eventReference));
 
-      if (isLiked) {
-        throw UnimplementedError();
+      if (likeEntity != null) {
+        final data = DeletionRequest(
+          events: [EventToDelete(eventId: likeEntity.id, kind: ReactionEntity.kind)],
+        );
+        final event = ref.read(nostrNotifierProvider.notifier).sign(data);
+        await ref.read(nostrNotifierProvider.notifier).sendEvent(event);
+        ref.read(nostrCacheProvider.notifier).remove(likeEntity.cacheKey);
       } else {
         final data = ReactionData(
           content: ReactionEntity.likeSymbol,

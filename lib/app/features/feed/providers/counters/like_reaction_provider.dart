@@ -5,14 +5,14 @@ import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'is_liked_provider.g.dart';
+part 'like_reaction_provider.g.dart';
 
 @riverpod
-bool isLiked(Ref ref, EventReference eventReference) {
+ReactionEntity? likeReaction(Ref ref, EventReference eventReference) {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) {
-    return false;
+    return null;
   }
 
   final reactionEntity = ref.watch(
@@ -27,5 +27,10 @@ bool isLiked(Ref ref, EventReference eventReference) {
     ),
   );
 
-  return reactionEntity != null;
+  return reactionEntity;
+}
+
+@riverpod
+bool isLiked(Ref ref, EventReference eventReference) {
+  return ref.watch(likeReactionProvider(eventReference)) != null;
 }

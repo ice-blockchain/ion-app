@@ -19,6 +19,10 @@ class NostrCache extends _$NostrCache {
   void cache(CacheableEntity event) {
     state = {...state, event.cacheKey: event};
   }
+
+  void remove(String key) {
+    state = {...state}..remove(key);
+  }
 }
 
 // TODO:
