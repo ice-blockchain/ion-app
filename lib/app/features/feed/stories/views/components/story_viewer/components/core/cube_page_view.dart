@@ -5,6 +5,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+/// This widget is adapted from https://github.com/aeyrium/cube_transition
+/// with modifications to the disposal behavior of the PageController to prevent an exception 
+/// when the page attempts to use a disposed controller.
 enum CubeTransformStyle { inside, outside }
 
 /// Signature for a function that creates a widget for a given index in a [CubePageView]
