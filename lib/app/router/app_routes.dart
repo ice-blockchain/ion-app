@@ -306,7 +306,7 @@ class IntroRoute extends BaseRouteData {
 class FeedMainModalRoute extends BaseRouteData {
   FeedMainModalRoute()
       : super(
-          child: FeedMainModalPage(),
+          child: const FeedMainModalPage(),
           type: IceRouteType.mainModalSheet,
         );
 }
