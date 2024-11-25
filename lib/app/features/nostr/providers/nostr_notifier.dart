@@ -48,13 +48,7 @@ class NostrNotifier extends _$NostrNotifier {
     List<EventSerializable> entitiesData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
-
-    if (keyStore == null) {
-      throw KeystoreNotFoundException();
-    }
-
-    final events = entitiesData.map((data) => data.toEventMessage(keyStore)).toList();
+    final events = entitiesData.map(sign).toList();
     await sendEvents(events);
     return events.map(_parseAndCache).toList();
   }
@@ -104,6 +98,16 @@ class NostrNotifier extends _$NostrNotifier {
     final entitiesStream = requestEntities(requestMessage, actionSource: actionSource);
     final entities = await entitiesStream.toList();
     return entities.isNotEmpty ? entities.first as T : null;
+  }
+
+  EventMessage sign(EventSerializable entityData) {
+    final keyStore = ref.read(currentUserNostrKeyStoreProvider).valueOrNull;
+
+    if (keyStore == null) {
+      throw KeystoreNotFoundException();
+    }
+
+    return entityData.toEventMessage(keyStore);
   }
 
   Future<NostrRelay> _getRelay(ActionSource actionSource) async {

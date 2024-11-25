@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/entity_comments_button.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/entity_likes_button.dart';
+import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/entity_replies_button.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/entity_reposts_button.dart';
 import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/entity_share_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
@@ -31,7 +31,7 @@ class FeedItemFooter extends HookConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(child: EntityCommentsButton(eventReference: eventReference)),
+          Flexible(child: EntityRepliesButton(eventReference: eventReference)),
           Flexible(
             child: EntityRepostsButton(eventReference: eventReference),
           ),
