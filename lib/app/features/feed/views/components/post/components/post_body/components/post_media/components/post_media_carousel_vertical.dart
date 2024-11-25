@@ -20,7 +20,7 @@ class PostMediaCarouselVertical extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemWidth = MediaQuery.of(context).size.width * _viewportFraction;
+    final itemWidth = MediaQuery.sizeOf(context).width * _viewportFraction;
     return SizedBox(
       height: itemWidth / aspectRatio,
       child: ListView.separated(

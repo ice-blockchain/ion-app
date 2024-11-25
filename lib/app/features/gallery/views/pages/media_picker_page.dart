@@ -80,7 +80,7 @@ class MediaPickerPage extends HookConsumerWidget {
 
     return isBottomSheet
         ? SizedBox(
-            height: MediaQuery.of(context).size.height * 0.9,
+            height: MediaQuery.sizeOf(context).height * 0.9,
             child: loadMoreBuilder,
           )
         : SheetContent(

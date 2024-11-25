@@ -78,7 +78,7 @@ class AddAdminModal extends HookConsumerWidget {
     );
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.8,
+      height: MediaQuery.sizeOf(context).height * 0.8,
       child: Column(
         children: [
           Expanded(

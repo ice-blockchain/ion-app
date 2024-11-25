@@ -45,7 +45,7 @@ class TopicSelectModal extends HookConsumerWidget {
 
     return Container(
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.9,
+        maxHeight: MediaQuery.sizeOf(context).height * 0.9,
       ),
       child: CustomScrollView(
         slivers: [
