@@ -3,22 +3,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/components/separated/separated_column.dart';
+import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/chat/groups/providers/create_group_form_controller_provider.dart';
+import 'package:ion/app/features/chat/groups/views/components/group_participant_list_item.dart';
+import 'package:ion/app/features/chat/groups/views/pages/group_type_selection_model.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ion/app/utils/username.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CreateGroupPage extends ConsumerWidget {
+class CreateGroupPage extends HookConsumerWidget {
   const CreateGroupPage({super.key});
 
   @override
@@ -26,6 +30,18 @@ class CreateGroupPage extends ConsumerWidget {
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
     final nameController = useTextEditingController(text: createGroupForm.title);
     final members = createGroupForm.members.toList();
+
+    useEffect(
+      () {
+        void updateTitle() {
+          ref.read(createGroupFormControllerProvider.notifier).title = nameController.text;
+        }
+
+        nameController.addListener(updateTitle);
+        return () => nameController.removeListener(updateTitle);
+      },
+      [nameController],
+    );
 
     return SheetContent(
       topPadding: 0,
@@ -43,8 +59,7 @@ class CreateGroupPage extends ConsumerWidget {
           SizedBox(height: 27.0.s),
           Expanded(
             child: ScreenSideOffset.small(
-              child: SeparatedColumn(
-                separator: SizedBox(height: 24.0.s),
+              child: Column(
                 children: [
                   Row(
                     children: [
@@ -63,12 +78,28 @@ class CreateGroupPage extends ConsumerWidget {
                       ),
                     ],
                   ),
+                  SizedBox(height: 24.0.s),
                   GeneralSelectionButton(
                     iconAsset: Assets.svg.iconChannelType,
                     title: 'Group type',
                     selectedValue: createGroupForm.type.getTitle(context),
-                    onPress: () async {},
+                    onPress: () {
+                      showSimpleBottomSheet<void>(
+                        context: context,
+                        child: GroupTypeSelectionModal(
+                          groupType: createGroupForm.type,
+                          onUpdated: (type) {
+                            ref
+                                .read(
+                                  createGroupFormControllerProvider.notifier,
+                                )
+                                .type = type;
+                          },
+                        ),
+                      );
+                    },
                   ),
+                  SizedBox(height: 24.0.s),
                   Row(
                     children: [
                       Assets.svg.iconCategoriesFollowing.icon(size: 16.0.s),
@@ -76,7 +107,9 @@ class CreateGroupPage extends ConsumerWidget {
                       Text('Group members (${members.length})'),
                       const Spacer(),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          AddParticipantsToGroupModalRoute().go(context);
+                        },
                         child: Text(
                           'edit',
                           style: context.theme.appTextThemes.caption.copyWith(
@@ -86,33 +119,33 @@ class CreateGroupPage extends ConsumerWidget {
                       ),
                     ],
                   ),
+                  SizedBox(height: 20.0.s),
                   Expanded(
                     child: ListView.separated(
                       itemCount: members.length,
                       separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
-                      itemBuilder: (BuildContext context, int i) {
-                        final member = members[i];
-                        return ListItem(
-                          contentPadding: EdgeInsets.zero,
-                          constraints: BoxConstraints(maxHeight: 36.0.s),
-                          backgroundColor: context.theme.appColors.secondaryBackground,
-                          title: Text(member.name),
-                          subtitle: Text(
-                            prefixUsername(
-                              context: context,
-                              username: member.username,
-                            ),
-                          ),
-                          leading: Avatar(
-                            imageUrl: member.avatarUrl,
-                            size: 30.0.s,
-                          ),
-                          trailing: Assets.svg.iconBlockDelete.icon(size: 24.0.s),
-                        );
-                      },
+                      itemBuilder: (BuildContext context, int i) =>
+                          GroupMemberListItem(member: members[i]),
                     ),
                   ),
                 ],
+              ),
+            ),
+          ),
+          const HorizontalSeparator(),
+          SizedBox(height: 16.0.s),
+          ScreenBottomOffset(
+            margin: 32.0.s,
+            child: ScreenSideOffset.large(
+              child: Button(
+                type: createGroupForm.canCreate ? ButtonType.primary : ButtonType.disabled,
+                mainAxisSize: MainAxisSize.max,
+                minimumSize: Size(56.0.s, 56.0.s),
+                leadingIcon: Assets.svg.iconPlusCreatechannel.icon(
+                  color: context.theme.appColors.onPrimaryAccent,
+                ),
+                label: const Text('Create group'),
+                onPressed: () {},
               ),
             ),
           ),

@@ -7,6 +7,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/groups/model/alphabetical_list_item.dart';
 import 'package:ion/app/features/chat/groups/model/user.dart';
@@ -77,6 +78,7 @@ class AddGroupParticipantsPage extends HookConsumerWidget {
               ),
             ),
           ),
+          const HorizontalSeparator(),
           ScreenBottomOffset(
             margin: 32.0.s,
             child: Padding(
