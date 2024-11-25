@@ -2,29 +2,28 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/channel_type.dart';
-import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/channel_type_selection_modal/components/channel_type_selection_list_item.dart';
+import 'package:ion/app/features/chat/model/group_type.dart';
+import 'package:ion/app/features/chat/views/components/type_selection_list_item.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-class ChannelTypeSelectionModal extends HookConsumerWidget {
-  const ChannelTypeSelectionModal({
-    required this.channelType,
+class GroupTypeSelectionModal extends HookConsumerWidget {
+  const GroupTypeSelectionModal({
+    required this.groupType,
     required this.onUpdated,
     super.key,
   });
 
-  final ChannelType channelType;
-  final void Function(ChannelType channelType) onUpdated;
+  final GroupType groupType;
+  final void Function(GroupType groupType) onUpdated;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedChannelType = useState(channelType);
+    final selectedGroupType = useState(groupType);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -33,22 +32,22 @@ class ChannelTypeSelectionModal extends HookConsumerWidget {
           showBackButton: false,
           actions: [
             NavigationCloseButton(
-              onPressed: () => context.pop(),
+              onPressed: Navigator.of(context, rootNavigator: true).pop,
             ),
           ],
-          title: Text(context.i18n.channel_create_type_select_title),
+          title: Text(context.i18n.group_create_type_title),
         ),
-        for (final ChannelType type in ChannelType.values.toSet())
+        for (final type in GroupType.values.toSet())
           ScreenSideOffset.small(
             child: Column(
               children: [
-                ChannelTypeSelectionListItem(
-                  channelType: type,
+                TypeSelectionListItem(
+                  type: type,
                   onTap: () {
-                    selectedChannelType.value = type;
+                    selectedGroupType.value = type;
                     onUpdated(type);
                   },
-                  isSelected: selectedChannelType.value == type,
+                  isSelected: selectedGroupType.value == type,
                 ),
                 SizedBox(height: 16.0.s),
               ],

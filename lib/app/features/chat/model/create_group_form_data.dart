@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/chat/groups/model/group_type.dart';
-import 'package:ion/app/features/chat/groups/model/user.dart';
+import 'package:ion/app/features/chat/model/group_type.dart';
 
 part 'create_group_form_data.freezed.dart';
 
@@ -11,8 +10,7 @@ class CreateGroupFormData with _$CreateGroupFormData {
   const factory CreateGroupFormData({
     @Default(GroupType.public) GroupType type,
     String? title,
-    @Default({}) Set<User> members,
-    String? coverUrl,
+    @Default({}) Set<String> members,
   }) = _CreateGroupFormData;
 
   const CreateGroupFormData._();

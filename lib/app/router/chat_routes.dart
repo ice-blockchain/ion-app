@@ -106,7 +106,7 @@ class ChatAddPollModalRoute extends BaseRouteData {
 class AddParticipantsToGroupModalRoute extends BaseRouteData {
   AddParticipantsToGroupModalRoute()
       : super(
-          child: const AddGroupParticipantsPage(),
+          child: const AddGroupParticipantsModal(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -114,7 +114,7 @@ class AddParticipantsToGroupModalRoute extends BaseRouteData {
 class CreateGroupModalRoute extends BaseRouteData {
   CreateGroupModalRoute()
       : super(
-          child: const CreateGroupPage(),
+          child: const CreateGroupModal(),
           type: IceRouteType.bottomSheet,
         );
 }

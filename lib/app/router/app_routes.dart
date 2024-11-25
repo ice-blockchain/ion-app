@@ -15,8 +15,6 @@ import 'package:ion/app/features/auth/views/pages/select_languages/select_langua
 import 'package:ion/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_password.dart';
 import 'package:ion/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
-import 'package:ion/app/features/chat/groups/views/pages/add_group_participants_page.dart';
-import 'package:ion/app/features/chat/groups/views/pages/create_group_page.dart';
 import 'package:ion/app/features/chat/messages/views/pages/messages_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_add_poll_modal/chat_add_poll_modal.dart';
@@ -25,6 +23,8 @@ import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_moda
 import 'package:ion/app/features/chat/views/pages/chat_main_page/chat_main_page.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/new_channel_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.dart';
+import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/add_group_participants_modal.dart';
+import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/create_group_modal.dart';
 import 'package:ion/app/features/contacts/pages/contacts_list_view.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
@@ -55,8 +55,6 @@ import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_op
 import 'package:ion/app/features/feed/views/pages/share_post_modal/share_post_modal.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
-import 'package:ion/app/features/groups/views/pages/add_group_participants_page.dart';
-import 'package:ion/app/features/groups/views/pages/create_group_page.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_page.dart';
