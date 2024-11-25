@@ -1,23 +1,19 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'user_action_signing_init_request.freezed.dart';
 part 'user_action_signing_init_request.g.dart';
 
-@JsonSerializable()
-class UserActionSigningInitRequest {
-  const UserActionSigningInitRequest({
-    required this.userActionPayload,
-    required this.userActionHttpMethod,
-    required this.userActionHttpPath,
-  });
+@freezed
+class UserActionSigningInitRequest with _$UserActionSigningInitRequest {
+  const factory UserActionSigningInitRequest({
+    required String userActionPayload,
+    required String userActionHttpMethod,
+    required String userActionHttpPath,
+    @Default('Api') String userActionServerKind,
+  }) = _UserActionSigningInitRequest;
 
   factory UserActionSigningInitRequest.fromJson(Map<String, dynamic> json) =>
       _$UserActionSigningInitRequestFromJson(json);
-
-  final String userActionPayload;
-  final String userActionHttpMethod;
-  final String userActionHttpPath;
-
-  Map<String, dynamic> toJson() => _$UserActionSigningInitRequestToJson(this);
 }
