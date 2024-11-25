@@ -6,6 +6,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_hashtag.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.dart';
+import 'package:ion/app/features/feed/providers/counters/replies_count_provider.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
@@ -85,6 +86,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       if (quotedEvent != null) {
         ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
+      }
+      if (parentEvent != null) {
+        ref.read(repliesCountProvider(parentEvent).notifier).addOne();
       }
     });
   }
