@@ -3,11 +3,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ion/app/components/auth/secured_by.dart';
 import 'package:ion/app/constants/links.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/auth/views/components/identity_link/identity_link.dart';
 import 'package:ion/app/services/browser/browser.dart';
 import 'package:ion/l10n/i10n.dart';
 
@@ -65,24 +65,7 @@ class AuthFooter extends HookWidget {
 
     return Column(
       children: [
-        Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: context.i18n.auth_secured_by,
-                style: context.theme.appTextThemes.caption.copyWith(
-                  color: context.theme.appColors.secondaryText,
-                ),
-              ),
-              WidgetSpan(child: SizedBox(width: 6.0.s)),
-              const WidgetSpan(
-                alignment: PlaceholderAlignment.middle,
-                child: IdentityLink(),
-              ),
-            ],
-          ),
-          textAlign: TextAlign.center,
-        ),
+        const SecuredBy(),
         SizedBox(height: 20.0.s),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 220.0.s),
