@@ -5,7 +5,9 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/messages/views/components/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
+import 'package:ion/app/features/chat/providers/mock.dart';
 
 class TextMessage extends StatelessWidget {
   const TextMessage({
@@ -25,33 +27,45 @@ class TextMessage extends StatelessWidget {
         vertical: 12.0.s,
       ),
       isMe: isMe,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      message,
-                      style: context.theme.appTextThemes.body2.copyWith(
-                        color: isMe
-                            ? context.theme.appColors.onPrimaryAccent
-                            : context.theme.appColors.primaryText,
-                      ),
-                    ),
-                    if (reactions.isNotEmpty) MessageReactions(reactions: reactions),
-                  ],
-                ),
+      child: IntrinsicWidth(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            RepliedMessageInfo(
+              isMe: isMe,
+              sender: ChatSender(
+                'Boris Johnson',
+                'https://picsum.photos/200/300',
+                isApproved: true,
+                isIceUser: false,
               ),
-              MessageMetaData(isMe: isMe),
-            ],
-          ),
-        ],
+              message: PhotoRecentChatMessage(DateTime.now()),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        message,
+                        style: context.theme.appTextThemes.body2.copyWith(
+                          color: isMe
+                              ? context.theme.appColors.onPrimaryAccent
+                              : context.theme.appColors.primaryText,
+                        ),
+                      ),
+                      if (reactions.isNotEmpty) MessageReactions(reactions: reactions),
+                    ],
+                  ),
+                ),
+                MessageMetaData(isMe: isMe),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

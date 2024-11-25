@@ -57,10 +57,12 @@ class MessagesPage extends ConsumerWidget {
                             emoji: '😂',
                             isMe: true,
                             reactions: mockReactionsSimple,
+                            hasForwardedMessage: true,
                           );
                         case 3:
                           return const EmojiMessage(
                             emoji: '🤔',
+                            hasForwardedMessage: true,
                             isMe: false,
                           );
                         case 4:

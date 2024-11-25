@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/messages/views/components/forwarded_message_info/forwarded_message_info.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
@@ -12,11 +13,13 @@ class EmojiMessage extends StatelessWidget {
     required this.emoji,
     required this.isMe,
     this.reactions,
+    this.hasForwardedMessage = false,
     super.key,
   });
   final bool isMe;
   final String emoji;
   final List<MessageReactionGroup>? reactions;
+  final bool hasForwardedMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -26,21 +29,29 @@ class EmojiMessage extends StatelessWidget {
         horizontal: 12.0.s,
         vertical: 6.0.s,
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: reactions == null ? CrossAxisAlignment.center : CrossAxisAlignment.end,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: (reactions != null || hasForwardedMessage)
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.center,
             children: [
-              Text(
-                emoji,
-                style: context.theme.appTextThemes.headline1.copyWith(height: 1),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (hasForwardedMessage) ForwardedMessageInfo(isMe: isMe, isPublic: true),
+                  Text(
+                    emoji,
+                    style: context.theme.appTextThemes.headline1.copyWith(height: 1),
+                  ),
+                  MessageReactions(reactions: reactions),
+                ],
               ),
-              MessageReactions(reactions: reactions),
+              MessageMetaData(isMe: isMe),
             ],
           ),
-          MessageMetaData(isMe: isMe),
         ],
       ),
     );

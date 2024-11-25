@@ -58,7 +58,7 @@ class RecentChatTile extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          SenderSummary(chat: chat),
+                          SenderSummary(sender: chat.sender),
                           ChatTimestamp(chat: chat),
                         ],
                       ),
@@ -66,7 +66,7 @@ class RecentChatTile extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          ChatPreview(chat: chat),
+                          Expanded(child: ChatPreview(message: chat.message)),
                           UnreadCountBadge(unreadCount: chat.unreadMessageCount),
                         ],
                       ),
@@ -83,23 +83,26 @@ class RecentChatTile extends ConsumerWidget {
 }
 
 class SenderSummary extends StatelessWidget {
-  const SenderSummary({required this.chat, super.key});
-  final RecentChatDataModel chat;
+  const SenderSummary({required this.sender, this.textColor, super.key});
+  final ChatSender sender;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Text(
-          chat.sender.name,
-          style: context.theme.appTextThemes.subtitle3,
+          sender.name,
+          style: context.theme.appTextThemes.subtitle3.copyWith(
+            color: textColor ?? context.theme.appColors.primaryText,
+          ),
         ),
-        if (chat.sender.isIceUser)
+        if (sender.isIceUser)
           Padding(
             padding: EdgeInsets.only(left: 4.0.s),
             child: Assets.svg.iconBadgeIcelogo.icon(size: 16.0.s),
           ),
-        if (chat.sender.isApproved)
+        if (sender.isApproved)
           Padding(
             padding: EdgeInsets.only(left: 4.0.s),
             child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
@@ -129,27 +132,26 @@ class ChatTimestamp extends StatelessWidget {
 }
 
 class ChatPreview extends StatelessWidget {
-  const ChatPreview({required this.chat, super.key});
-  final RecentChatDataModel chat;
-
+  const ChatPreview({required this.message, this.textColor, this.maxLines = 2, super.key});
+  final RecentChatMessage message;
+  final Color? textColor;
+  final int maxLines;
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Row(
-        children: [
-          RecentChatMessageIcon(message: chat.message),
-          Expanded(
-            child: Text(
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              _getMessageContentText(chat.message, context),
-              style: context.theme.appTextThemes.body2.copyWith(
-                color: context.theme.appColors.onTertararyBackground,
-              ),
+    return Row(
+      children: [
+        RecentChatMessageIcon(message: message, color: textColor),
+        Flexible(
+          child: Text(
+            maxLines: maxLines,
+            overflow: TextOverflow.ellipsis,
+            _getMessageContentText(message, context),
+            style: context.theme.appTextThemes.body2.copyWith(
+              color: textColor ?? context.theme.appColors.onTertararyBackground,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -169,8 +171,9 @@ class ChatPreview extends StatelessWidget {
 }
 
 class RecentChatMessageIcon extends StatelessWidget {
-  const RecentChatMessageIcon({required this.message, super.key});
+  const RecentChatMessageIcon({required this.message, this.color, super.key});
   final RecentChatMessage message;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +184,7 @@ class RecentChatMessageIcon extends StatelessWidget {
         padding: EdgeInsets.only(right: 2.0.s),
         child: messageIconPath.icon(
           size: 16.0.s,
-          color: context.theme.appColors.onTertararyBackground,
+          color: color ?? context.theme.appColors.onTertararyBackground,
         ),
       );
     }
