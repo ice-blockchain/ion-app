@@ -9,31 +9,36 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 
 class StoryProgressBarContainer extends ConsumerWidget {
   const StoryProgressBarContainer({
-    required this.pubkey,
     super.key,
   });
 
-  final String pubkey;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyState = ref.watch(storyViewingControllerProvider(startingPubkey: pubkey));
-    final posts = storyState.userStories[storyState.currentUserIndex].stories;
+    final storyState = ref.watch(storyViewingControllerProvider);
+
+    final userStories = storyState.userStories;
+    final currentStoryIndex = storyState.currentStoryIndex;
+    final currentUserIndex = storyState.currentUserIndex;
+
+    final posts = userStories.isNotEmpty ? userStories[currentUserIndex].stories : null;
+
+    if (posts?.isEmpty ?? true) {
+      return const SizedBox();
+    }
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0.s),
       child: Row(
-        children: posts.asMap().entries.map((post) {
+        children: posts!.asMap().entries.map((post) {
           final index = post.key;
           return Expanded(
             child: StoryProgressTracker(
               post: post.value,
-              isActive: index <= storyState.currentStoryIndex,
-              isCurrent: index == storyState.currentStoryIndex,
-              isPreviousStory: index < storyState.currentStoryIndex,
+              isActive: index <= currentStoryIndex,
+              isCurrent: index == currentStoryIndex,
+              isPreviousStory: index < currentStoryIndex,
               onCompleted: () {
-                final notifier =
-                    ref.read(storyViewingControllerProvider(startingPubkey: pubkey).notifier);
+                final notifier = ref.read(storyViewingControllerProvider.notifier);
 
                 if (storyState.hasNextStory) {
                   notifier.moveToNextStory();

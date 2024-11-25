@@ -2,11 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
-class StoryViewerPage extends StatelessWidget {
+class StoryViewerPage extends HookConsumerWidget {
   const StoryViewerPage({
     required this.pubkey,
     super.key,
@@ -15,7 +18,13 @@ class StoryViewerPage extends StatelessWidget {
   final String pubkey;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final storyState = ref.watch(storyViewingControllerProvider);
+
+    useOnInit(
+      () => ref.read(storyViewingControllerProvider.notifier).loadStoriesByPubkey(pubkey),
+    );
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: context.theme.appColors.primaryText,
@@ -30,12 +39,12 @@ class StoryViewerPage extends StatelessWidget {
             children: [
               Expanded(
                 child: StoriesSwiper(
-                  key: ValueKey(pubkey),
-                  pubkey: pubkey,
+                  userStories: storyState.userStories,
+                  currentUserIndex: storyState.currentUserIndex,
                 ),
               ),
               SizedBox(height: 28.0.s),
-              StoryProgressBarContainer(pubkey: pubkey),
+              const StoryProgressBarContainer(),
               ScreenBottomOffset(margin: 16.0.s),
             ],
           ),

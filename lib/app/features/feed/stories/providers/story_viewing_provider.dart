@@ -1,9 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:developer';
-
-import 'package:collection/collection.dart';
-import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,37 +13,34 @@ part 'story_viewing_provider.g.dart';
 @riverpod
 class StoryViewingController extends _$StoryViewingController {
   @override
-  StoryViewerState build({required String startingPubkey}) {
-    final stories = ref.watch(storiesProvider);
+  StoryViewerState build() {
+    final stories = ref.watch(storiesProvider) ?? [];
 
-    const emptyState = StoryViewerState(
-      userStories: [],
+    return StoryViewerState(
+      userStories: stories,
       currentUserIndex: 0,
       currentStoryIndex: 0,
     );
+  }
 
-    log('Stories count: ${stories?.length}', name: 'StoryViewingController');
+  void loadStoriesByPubkey(String startingPubkey) {
+    final currentStories = state.userStories;
 
-    log('starting pubkey: $startingPubkey', name: 'StoryViewingController');
+    if (currentStories.isEmpty) return;
 
-    final result = stories?.firstWhereOrNull((UserStories userStories) {
-          return userStories.pubkey == startingPubkey;
-        })?.let<StoryViewerState>(
-          (UserStories foundStories) {
-            log(
-              'Stories count: ${stories.length}, Found index: ${stories.indexOf(foundStories)}',
-              name: 'StoryViewingController',
-            );
-            return StoryViewerState(
-              userStories: stories,
-              currentUserIndex: stories.indexOf(foundStories),
-              currentStoryIndex: 0,
-            );
-          },
-        ) ??
-        emptyState;
+    final startingUserIndex = currentStories.indexWhere(
+      (userStories) => userStories.pubkey == startingPubkey,
+    );
 
-    return result;
+    if (startingUserIndex == -1) return;
+
+    final filteredStories = currentStories.sublist(startingUserIndex);
+
+    state = StoryViewerState(
+      userStories: filteredStories,
+      currentUserIndex: 0,
+      currentStoryIndex: 0,
+    );
   }
 
   void moveToNextStory() {

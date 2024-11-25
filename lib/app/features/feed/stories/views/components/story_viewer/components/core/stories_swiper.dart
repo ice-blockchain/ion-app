@@ -4,31 +4,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/stories/data/models/story.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/core.dart';
 import 'package:ion/app/utils/future.dart';
 
 class StoriesSwiper extends HookConsumerWidget {
   const StoriesSwiper({
-    required this.pubkey,
+    required this.userStories,
+    required this.currentUserIndex,
     super.key,
   });
 
-  final String pubkey;
+  final List<UserStories> userStories;
+  final int currentUserIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyState = ref.watch(storyViewingControllerProvider(startingPubkey: pubkey));
-    final userPageController = usePageController(initialPage: storyState.currentUserIndex);
+    final userPageController = usePageController(initialPage: currentUserIndex);
 
     return CubePageView.builder(
       controller: userPageController,
-      itemCount: storyState.userStories.length,
-      onPageChanged:
-          ref.read(storyViewingControllerProvider(startingPubkey: pubkey).notifier).moveToUser,
+      itemCount: userStories.length,
+      onPageChanged: ref.read(storyViewingControllerProvider.notifier).moveToUser,
       itemBuilder: (context, userIndex, userNotifier) {
-        final userStory = storyState.userStories[userIndex];
-        final isCurrentUser = userIndex == storyState.currentUserIndex;
+        final userStory = userStories[userIndex];
+        final isCurrentUser = userIndex == currentUserIndex;
 
         return CubeWidget(
           index: userIndex,
@@ -38,16 +39,13 @@ class StoriesSwiper extends HookConsumerWidget {
               return UserStoryPageView(
                 userStory: userStory,
                 isCurrentUser: isCurrentUser,
-                currentStoryIndex: isCurrentUser ? storyState.currentStoryIndex : 0,
-                onNextStory: ref
-                    .read(storyViewingControllerProvider(startingPubkey: pubkey).notifier)
-                    .moveToNextStory,
-                onPreviousStory: ref
-                    .read(storyViewingControllerProvider(startingPubkey: pubkey).notifier)
-                    .moveToPreviousStory,
+                currentStoryIndex:
+                    isCurrentUser ? ref.read(storyViewingControllerProvider).currentStoryIndex : 0,
+                onNextStory: ref.read(storyViewingControllerProvider.notifier).moveToNextStory,
+                onPreviousStory:
+                    ref.read(storyViewingControllerProvider.notifier).moveToPreviousStory,
                 onNextUser: () {
-                  if (userPageController.hasClients &&
-                      userIndex < storyState.userStories.length - 1) {
+                  if (userPageController.hasClients && userIndex < userStories.length - 1) {
                     userPageController.nextPage(
                       duration: 300.ms,
                       curve: Curves.easeInOut,
