@@ -6,6 +6,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_hashtag.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.dart';
+import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
@@ -81,6 +82,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       //TODO: check the event json according to notion when defined
       await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, data]);
+
+      if (quotedEvent != null) {
+        ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
+      }
     });
   }
 

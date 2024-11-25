@@ -5,6 +5,7 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.dart';
+import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
@@ -36,6 +37,7 @@ class RepostNotifier extends _$RepostNotifier {
       };
 
       await ref.read(nostrNotifierProvider.notifier).sendEntityData(data);
+      ref.read(repostsCountProvider(eventReference).notifier).addOne();
     });
   }
 }
