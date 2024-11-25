@@ -14,6 +14,7 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
 
   const DeletionRequest._();
 
+  /// https://github.com/nostr-protocol/nips/blob/master/09.md
   @override
   EventMessage toEventMessage(EventSigner signer) {
     return EventMessage.fromData(

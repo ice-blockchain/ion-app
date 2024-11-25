@@ -13,14 +13,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'reposted_events_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Stream<List<String>?> repostedEvents(Ref ref) async* {
+Stream<Set<String>?> repostedEvents(Ref ref) async* {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) {
-    yield [];
+    yield {};
   } else {
     final cache = ref.read(nostrCacheProvider);
-    var repostedIds = cache.values.fold<List<String>>([], (result, entity) {
+    var repostedIds = cache.values.fold<Set<String>>({}, (result, entity) {
       final repostedId = _getCurrentUserRepostedId(entity, currentPubkey: currentPubkey);
       if (repostedId != null) {
         result.add(repostedId);
@@ -33,7 +33,7 @@ Stream<List<String>?> repostedEvents(Ref ref) async* {
     await for (final entity in ref.watch(nostrCacheStreamProvider)) {
       final repostedId = _getCurrentUserRepostedId(entity, currentPubkey: currentPubkey);
       if (repostedId != null) {
-        yield repostedIds = [...repostedIds, repostedId];
+        yield repostedIds = {...repostedIds, repostedId};
       }
     }
   }

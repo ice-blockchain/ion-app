@@ -20,7 +20,7 @@ class EntityRepliesButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final repliesCount = ref.watch(repliesCountProvider(eventReference));
-    final isReplied = ref.watch(IsRepliedProvider(eventReference));
+    final isReplied = ref.watch(isRepliedProvider(eventReference));
 
     return GestureDetector(
       onTap: () {
