@@ -20,12 +20,10 @@ class AvatarPicker extends HookConsumerWidget {
   const AvatarPicker({
     super.key,
     this.avatarUrl,
-    this.pickMediaFile,
     this.title,
   });
 
   final String? avatarUrl;
-  final Future<MediaFile?> Function()? pickMediaFile;
   final String? title;
 
   @override
