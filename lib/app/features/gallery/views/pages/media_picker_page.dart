@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -18,12 +17,14 @@ class MediaPickerPage extends HookConsumerWidget {
     required this.maxSelection,
     this.type = MediaPickerType.common,
     this.title,
+    this.isBottomSheet = false,
     super.key,
   });
 
   final int maxSelection;
   final MediaPickerType type;
   final String? title;
+  final bool isBottomSheet;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,9 +48,10 @@ class MediaPickerPage extends HookConsumerWidget {
             title ?? type.title(context),
             style: context.theme.appTextThemes.subtitle,
           ),
+          onBackPress: () => Navigator.of(context).pop(),
           actions: [
             AddMediaButton(
-              onPressed: () => context.pop(selectedMedia),
+              onPressed: () => Navigator.of(context).pop(selectedMedia),
               mediaCount: selectedMedia.length,
             ),
           ],
@@ -69,13 +71,20 @@ class MediaPickerPage extends HookConsumerWidget {
       ),
     ];
 
-    return SheetContent(
-      body: LoadMoreBuilder(
-        slivers: slivers,
-        hasMore: galleryState.value?.hasMore ?? false,
-        onLoadMore: () => ref.read(galleryNotifierProvider(type: type).notifier).fetchNextPage(),
-        builder: (context, slivers) => CustomScrollView(slivers: slivers),
-      ),
+    final loadMoreBuilder = LoadMoreBuilder(
+      slivers: slivers,
+      hasMore: galleryState.value?.hasMore ?? false,
+      onLoadMore: () => ref.read(galleryNotifierProvider(type: type).notifier).fetchNextPage(),
+      builder: (context, slivers) => CustomScrollView(slivers: slivers),
     );
+
+    return isBottomSheet
+        ? SizedBox(
+            height: MediaQuery.of(context).size.height * 0.9,
+            child: loadMoreBuilder,
+          )
+        : SheetContent(
+            body: loadMoreBuilder,
+          );
   }
 }

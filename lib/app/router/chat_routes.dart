@@ -12,7 +12,6 @@ class ChatRoutes {
         TypedGoRoute<DeleteConversationRoute>(path: 'delete/:conversationId'),
         TypedGoRoute<NewChatModalRoute>(path: 'new-chat'),
         TypedGoRoute<NewChannelModalRoute>(path: 'new-channel'),
-        TypedGoRoute<ChannelPictureRoute>(path: 'pick-channel-picture'),
         TypedGoRoute<ChatLearnMoreModalRoute>(path: 'learn-more'),
         TypedGoRoute<ShareProfileModalRoute>(path: 'share-profile'),
         TypedGoRoute<ChatAddPollModalRoute>(path: 'add-poll'),
@@ -70,18 +69,6 @@ class NewChannelModalRoute extends BaseRouteData {
           child: const NewChannelModal(),
           type: IceRouteType.bottomSheet,
         );
-}
-
-class ChannelPictureRoute extends BaseRouteData {
-  ChannelPictureRoute({required this.title})
-      : super(
-          child: MediaPickerPage(
-            maxSelection: 1,
-            title: title,
-          ),
-          type: IceRouteType.bottomSheet,
-        );
-  final String title;
 }
 
 class ChatLearnMoreModalRoute extends BaseRouteData {

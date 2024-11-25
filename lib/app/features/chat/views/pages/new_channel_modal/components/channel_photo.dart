@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
-import 'package:ion/app/router/app_routes.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ChannelPhoto extends StatelessWidget {
@@ -30,12 +28,7 @@ class ChannelPhoto extends StatelessWidget {
                 child: Assets.svg.backgroundCreatechannel.icon(size: constraints.maxWidth),
               ),
               AvatarPicker(
-                pickMediaFile: () async {
-                  final mediaFiles =
-                      await ChannelPictureRoute(title: context.i18n.channel_create_add_photo)
-                          .push<List<MediaFile>>(context);
-                  return mediaFiles?.first;
-                },
+                title: context.i18n.channel_create_add_photo,
               ),
             ],
           );

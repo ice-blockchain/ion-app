@@ -28,10 +28,6 @@ class AvatarPickerNotifier extends _$AvatarPickerNotifier {
     return const AvatarPickerState.initial();
   }
 
-  void setToInitialState() {
-    state = const AvatarPickerState.initial();
-  }
-
   Future<void> pick({
     required CropImageUiSettings cropUiSettings,
     required Future<MediaFile?> Function() pickMediaFile,
