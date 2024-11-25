@@ -638,5 +638,7 @@
   "emoji_category_objects": "Objects",
   "emoji_category_symbols": "Symbols",
   "emoji_category_flags": "Flags",
-  "recent_emoji_reactions": "Recent reactions"
+  "recent_emoji_reactions": "Recent reactions",
+  "passkeys_prompt_title": "Verify with passkey",
+  "passkeys_prompt_description": "Your device will ask your fingerprint, face or screen lock to confirm"
 }
