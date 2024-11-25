@@ -22,7 +22,7 @@ class NftGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BorderRadiusGeometry borderRadius = BorderRadius.circular(16.0.s);
-    final imageWidth = (MediaQuery.of(context).size.width -
+    final imageWidth = (MediaQuery.sizeOf(context).width -
             NftConstants.cellPadding * 4 -
             NftConstants.gridSpacing -
             ScreenSideOffset.defaultSmallMargin * 2) /

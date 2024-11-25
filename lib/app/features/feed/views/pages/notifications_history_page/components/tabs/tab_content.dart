@@ -97,7 +97,7 @@ class TabContent extends HookConsumerWidget {
 
     final mockedPosts = useMemoized(
       () => entities.data.items.whereType<PostEntity>().take(10).toList(),
-      [contentCreators],
+      [entities],
     );
 
     final getMockedNotificationData = useCallback(

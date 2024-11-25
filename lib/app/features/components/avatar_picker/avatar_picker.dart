@@ -9,19 +9,22 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
-import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
-import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class AvatarPicker extends ConsumerWidget {
+class AvatarPicker extends HookConsumerWidget {
   const AvatarPicker({
     super.key,
     this.avatarUrl,
+    this.title,
   });
 
   final String? avatarUrl;
+  final String? title;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,19 +52,30 @@ class AvatarPicker extends ConsumerWidget {
           bottom: -6.0.s,
           right: 0,
           child: PermissionAwareWidget(
-            permissionType: Permission.camera,
+            permissionType: Permission.photos,
             onGranted: () {
               if (avatarPickerState is! AvatarPickerStatePicked) {
                 ref.read(avatarPickerNotifierProvider.notifier).pick(
                       cropUiSettings:
                           ref.read(mediaServiceProvider).buildCropImageUiSettings(context),
+                      pickMediaFile: () async {
+                        final mediaFiles = await showSimpleBottomSheet<List<MediaFile>>(
+                          context: context,
+                          child: MediaPickerPage(
+                            maxSelection: 1,
+                            isBottomSheet: true,
+                            title: title,
+                          ),
+                        );
+                        return mediaFiles?.first;
+                      },
                     );
               }
             },
             requestDialog: const PermissionRequestSheet(
-              permission: Permission.camera,
+              permission: Permission.photos,
             ),
-            settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
+            settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
             builder: (context, onPressed) {
               return GestureDetector(
                 onTap: onPressed,

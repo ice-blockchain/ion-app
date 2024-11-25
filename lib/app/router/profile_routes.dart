@@ -10,7 +10,6 @@ class ProfileRoutes {
       routes: [
         TypedGoRoute<FollowListRoute>(path: 'follow-list'),
         TypedGoRoute<CategorySelectRoute>(path: 'category-selector'),
-        TypedGoRoute<BannerPickerRoute>(path: 'pick-banner'),
         TypedGoRoute<SelectCoinRoute>(path: 'coin-selector'),
         TypedGoRoute<SelectNetworkRoute>(path: 'network-selector'),
         TypedGoRoute<PaymentSelectionRoute>(path: 'payment-selector'),
@@ -34,18 +33,6 @@ class ProfileEditRoute extends BaseRouteData {
   ProfileEditRoute({required this.pubkey})
       : super(
           child: ProfileEditPage(pubkey: pubkey),
-        );
-
-  final String pubkey;
-}
-
-class BannerPickerRoute extends BaseRouteData {
-  BannerPickerRoute({required this.pubkey})
-      : super(
-          child: const MediaPickerPage(
-            maxSelection: 1,
-          ),
-          type: IceRouteType.bottomSheet,
         );
 
   final String pubkey;

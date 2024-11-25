@@ -30,10 +30,13 @@ class UserNameTile extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              userMetadataValue.data.displayName,
-              style: context.theme.appTextThemes.title.copyWith(
-                color: context.theme.appColors.primaryText,
+            Flexible(
+              child: Text(
+                textAlign: TextAlign.center,
+                userMetadataValue.data.displayName,
+                style: context.theme.appTextThemes.title.copyWith(
+                  color: context.theme.appColors.primaryText,
+                ),
               ),
             ),
             if (userMetadataValue.data.verified) ...[
@@ -48,6 +51,7 @@ class UserNameTile extends ConsumerWidget {
           style: context.theme.appTextThemes.caption.copyWith(
             color: context.theme.appColors.secondaryText,
           ),
+          maxLines: 1,
         ),
       ],
     );

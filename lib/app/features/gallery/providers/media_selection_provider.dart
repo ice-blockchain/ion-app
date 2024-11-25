@@ -10,27 +10,24 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'media_selection_provider.g.dart';
 
 @riverpod
-class MaxSelection extends _$MaxSelection {
-  @override
-  int build() => 5;
-
-  Future<void> update(int newValue) async {
-    state = newValue;
-  }
-}
-
-@riverpod
 class MediaSelectionNotifier extends _$MediaSelectionNotifier {
   @override
-  MediaSelectionState build() => const MediaSelectionState(selectedMedia: []);
+  MediaSelectionState build() {
+    return const MediaSelectionState(
+      selectedMedia: [],
+      maxSelection: 5,
+    );
+  }
+
+  void updateMaxSelection(int newMaxSelection) {
+    state = state.copyWith(maxSelection: newMaxSelection);
+  }
 
   void toggleSelection(String path, {MediaPickerType type = MediaPickerType.common}) {
-    final maxSelection = ref.read(maxSelectionProvider);
     final isSelected = state.selectedMedia.any((media) => media.path == path);
-
     if (isSelected) {
       _deselectMedia(path);
-    } else if (state.selectedMedia.length < maxSelection) {
+    } else if (state.selectedMedia.length < state.maxSelection) {
       _selectMedia(path, type);
     }
   }

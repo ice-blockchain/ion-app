@@ -9,5 +9,6 @@ part 'media_selection_state.freezed.dart';
 class MediaSelectionState with _$MediaSelectionState {
   const factory MediaSelectionState({
     required List<MediaFile> selectedMedia,
+    required int maxSelection,
   }) = _MediaSelectionState;
 }

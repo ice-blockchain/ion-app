@@ -7,6 +7,7 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/pages/new_chat_modal/components/new_chat_initial_view/new_chat_initial_view.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -45,7 +46,9 @@ class NewChatModal extends StatelessWidget {
                     _HeaderButton(
                       icon: Assets.svg.iconSearchChannel,
                       title: context.i18n.new_chat_modal_new_channel_button,
-                      onTap: () {},
+                      onTap: () {
+                        NewChannelModalRoute().replace(context);
+                      },
                     ),
                   ],
                 ),
