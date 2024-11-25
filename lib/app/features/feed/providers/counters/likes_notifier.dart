@@ -2,6 +2,7 @@
 
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.dart';
+import 'package:ion/app/features/feed/providers/counters/likes_count_provider.dart';
 import 'package:ion/app/features/nostr/model/deletion_request.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -32,6 +33,7 @@ class LikesNotifier extends _$LikesNotifier {
         final event = ref.read(nostrNotifierProvider.notifier).sign(data);
         await ref.read(nostrNotifierProvider.notifier).sendEvent(event);
         ref.read(nostrCacheProvider.notifier).remove(likeEntity.cacheKey);
+        ref.read(likesCountProvider(eventReference).notifier).removeOne();
       } else {
         final data = ReactionData(
           content: ReactionEntity.likeSymbol,
@@ -39,8 +41,8 @@ class LikesNotifier extends _$LikesNotifier {
           pubkey: eventReference.pubkey,
         );
         await ref.read(nostrNotifierProvider.notifier).sendEntityData(data);
+        ref.read(likesCountProvider(eventReference).notifier).addOne();
       }
-      //TODO::update counters with EventCountRequestData
     });
   }
 }
