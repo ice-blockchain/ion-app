@@ -232,12 +232,25 @@ class StoryPreviewRoute extends BaseRouteData {
 
 @TypedGoRoute<StoryViewerRoute>(
   path: '/story-viewing/:pubkey',
+  routes: [
+    TypedGoRoute<StoryProfileRoute>(path: 'story-profile'),
+  ],
 )
 class StoryViewerRoute extends BaseRouteData {
   StoryViewerRoute({required this.pubkey})
       : super(
           child: StoryViewerPage(pubkey: pubkey),
         );
+
+  final String pubkey;
+}
+
+class StoryProfileRoute extends BaseRouteData {
+  StoryProfileRoute({required this.pubkey})
+      : super(
+          child: ProfilePage(pubkey: pubkey),
+        );
+
   final String pubkey;
 }
 
