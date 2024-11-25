@@ -126,12 +126,14 @@ class CreatePostRoute extends BaseRouteData {
     this.quotedEvent,
     this.content,
     this.showCollapseButton = false,
+    this.videoPath,
   }) : super(
           child: CreatePostModal(
             parentEvent: parentEvent != null ? EventReference.fromString(parentEvent) : null,
             quotedEvent: quotedEvent != null ? EventReference.fromString(quotedEvent) : null,
             content: content,
             showCollapseButton: showCollapseButton,
+            videoPath: videoPath,
           ),
           type: IceRouteType.bottomSheet,
         );
@@ -143,6 +145,8 @@ class CreatePostRoute extends BaseRouteData {
   final String? content;
 
   final bool showCollapseButton;
+
+  final String? videoPath;
 }
 
 class CreateArticleRoute extends BaseRouteData {
@@ -162,8 +166,10 @@ class CreateVideoRoute extends BaseRouteData {
 }
 
 class MediaPickerRoute extends BaseRouteData {
-  MediaPickerRoute({this.maxSelection = 5, this.mediaPickerType = MediaPickerType.common})
-      : super(
+  MediaPickerRoute({
+    this.maxSelection = 5,
+    this.mediaPickerType = MediaPickerType.common,
+  }) : super(
           child: MediaPickerPage(
             maxSelection: maxSelection,
             type: mediaPickerType,

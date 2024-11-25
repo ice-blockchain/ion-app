@@ -30,6 +30,7 @@ class CreatePostModal extends HookConsumerWidget {
     this.parentEvent,
     this.quotedEvent,
     this.content,
+    this.videoPath,
   });
 
   final EventReference? parentEvent;
@@ -39,6 +40,8 @@ class CreatePostModal extends HookConsumerWidget {
   final String? content;
 
   final bool showCollapseButton;
+
+  final String? videoPath;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
