@@ -72,14 +72,6 @@ class StoryViewingController extends _$StoryViewingController {
     }
   }
 
-  void moveToStoryIndex(int storyIndex) {
-    if (storyIndex >= 0 && storyIndex < state.userStories[state.currentUserIndex].stories.length) {
-      state = state.copyWith(
-        currentStoryIndex: storyIndex,
-      );
-    }
-  }
-
   void moveToNextUser() {
     if (state.hasNextUser) {
       state = state.copyWith(
@@ -94,19 +86,6 @@ class StoryViewingController extends _$StoryViewingController {
       state = state.copyWith(
         currentUserIndex: state.currentUserIndex - 1,
         currentStoryIndex: 0,
-      );
-    }
-  }
-
-  void moveToStory(int userIndex, int storyIndex) {
-    final isValidUser = userIndex >= 0 && userIndex < state.userStories.length;
-    final isValidStory =
-        isValidUser && storyIndex >= 0 && storyIndex < state.userStories[userIndex].stories.length;
-
-    if (isValidStory) {
-      state = state.copyWith(
-        currentUserIndex: userIndex,
-        currentStoryIndex: storyIndex,
       );
     }
   }
