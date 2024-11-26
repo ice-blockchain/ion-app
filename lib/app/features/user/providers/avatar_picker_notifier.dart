@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/feed/stories/providers/story_camera_provider.dart';
+import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/services/media_service/media_compress_service.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

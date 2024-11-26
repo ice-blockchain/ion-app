@@ -3,12 +3,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.dart';
 import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_camera_state.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -71,15 +69,4 @@ class StoryCameraController extends _$StoryCameraController {
   }
 
   void reset() => state = const StoryCameraState.initial();
-}
-
-@riverpod
-Future<String?> assetFilePath(Ref ref, String assetId) async {
-  final assetEntity = await ref.watch(assetEntityProvider(assetId).future);
-
-  if (assetEntity == null) return null;
-
-  final file = await assetEntity.file;
-
-  return file?.path;
 }
