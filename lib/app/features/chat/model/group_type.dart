@@ -12,8 +12,8 @@ enum GroupType implements SelectableType {
 
   @override
   String getTitle(BuildContext context) => switch (this) {
-        GroupType.public => context.i18n.group_create_type_public,
-        GroupType.private => context.i18n.group_create_type_private,
+        GroupType.public => context.i18n.common_public,
+        GroupType.private => context.i18n.common_private,
         GroupType.encrypted => context.i18n.group_create_type_encrypted,
       };
 

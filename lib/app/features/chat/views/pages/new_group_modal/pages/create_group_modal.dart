@@ -122,7 +122,7 @@ class CreateGroupModal extends HookConsumerWidget {
                             AddParticipantsToGroupModalRoute().go(context);
                           },
                           child: Text(
-                            context.i18n.group_create_edit_members_list,
+                            context.i18n.button_edit,
                             style: context.theme.appTextThemes.caption.copyWith(
                               color: context.theme.appColors.primaryAccent,
                             ),

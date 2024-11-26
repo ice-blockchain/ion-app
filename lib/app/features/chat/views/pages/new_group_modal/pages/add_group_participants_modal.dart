@@ -74,7 +74,7 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
                   onPressed: () {
                     CreateGroupModalRoute().push<void>(context);
                   },
-                  label: Text(context.i18n.group_create_next_button),
+                  label: Text(context.i18n.button_next),
                   mainAxisSize: MainAxisSize.max,
                 ),
               ),
