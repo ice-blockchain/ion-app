@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
@@ -91,18 +90,19 @@ class _SoundButton extends ConsumerWidget {
   }
 }
 
-class _LikeButton extends ConsumerWidget {
+class _LikeButton extends HookConsumerWidget {
   const _LikeButton({required this.post});
 
   final PostEntity post;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLiked = Random().nextBool();
+    final isLiked = useState(false);
 
-    final icon = isLiked ? Assets.svg.iconVideoLikeOn : Assets.svg.iconVideoLikeOff;
-    final color =
-        isLiked ? context.theme.appColors.attentionRed : context.theme.appColors.onPrimaryAccent;
+    final icon = isLiked.value ? Assets.svg.iconVideoLikeOn : Assets.svg.iconVideoLikeOff;
+    final color = isLiked.value
+        ? context.theme.appColors.attentionRed
+        : context.theme.appColors.onPrimaryAccent;
 
     return StoryControlButton(
       icon: icon.icon(
@@ -111,9 +111,10 @@ class _LikeButton extends ConsumerWidget {
       ),
       borderRadius: 16.0.s,
       iconPadding: 8.0.s,
-      onPressed: () => ref
-          .read(storyViewingControllerProvider(startingPubkey: post.pubkey).notifier)
-          .toggleLike(post.id),
+      onPressed: () {
+        isLiked.value = !isLiked.value;
+        ref.read(storyViewingControllerProvider.notifier).toggleLike(post.id);
+      },
     );
   }
 }

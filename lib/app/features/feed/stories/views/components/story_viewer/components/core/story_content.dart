@@ -39,9 +39,7 @@ class StoryContent extends HookConsumerWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          StoryViewerContent(
-            post: post,
-          ),
+          StoryViewerContent(post: post),
           StoryViewerHeader(currentPost: post),
           Stack(
             children: [

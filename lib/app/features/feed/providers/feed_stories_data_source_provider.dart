@@ -26,7 +26,7 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
               kinds: [PostEntity.kind],
               // TODO: uncomment when our relays are used
               // authors: [entry.value],
-              limit: 20,
+              limit: 70,
             ),
           ],
         ),

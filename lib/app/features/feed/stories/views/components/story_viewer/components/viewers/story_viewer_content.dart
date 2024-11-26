@@ -18,6 +18,7 @@ class StoryViewerContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final media = post.data.primaryMedia;
+
     if (media == null) {
       return const SizedBox.shrink();
     }

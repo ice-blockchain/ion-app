@@ -13,25 +13,32 @@ part 'story_viewing_provider.g.dart';
 @riverpod
 class StoryViewingController extends _$StoryViewingController {
   @override
-  StoryViewerState build({required String startingPubkey}) {
-    final stories = ref.watch(storiesProvider);
-
-    if (stories == null || stories.isEmpty) {
-      return const StoryViewerState(
-        userStories: [],
-        currentUserIndex: 0,
-        currentStoryIndex: 0,
-      );
-    }
-
-    var initialUserIndex =
-        stories.indexWhere((userStories) => userStories.pubkey == startingPubkey);
-
-    initialUserIndex = (initialUserIndex == -1) ? 0 : initialUserIndex;
+  StoryViewerState build() {
+    final stories = ref.watch(storiesProvider) ?? [];
 
     return StoryViewerState(
       userStories: stories,
-      currentUserIndex: initialUserIndex,
+      currentUserIndex: 0,
+      currentStoryIndex: 0,
+    );
+  }
+
+  void loadStoriesByPubkey(String startingPubkey) {
+    final currentStories = state.userStories;
+
+    if (currentStories.isEmpty) return;
+
+    final startingUserIndex = currentStories.indexWhere(
+      (userStories) => userStories.pubkey == startingPubkey,
+    );
+
+    if (startingUserIndex == -1) return;
+
+    final filteredStories = currentStories.sublist(startingUserIndex);
+
+    state = StoryViewerState(
+      userStories: filteredStories,
+      currentUserIndex: 0,
       currentStoryIndex: 0,
     );
   }
@@ -41,11 +48,8 @@ class StoryViewingController extends _$StoryViewingController {
       state = state.copyWith(
         currentStoryIndex: state.currentStoryIndex + 1,
       );
-    } else if (state.hasNextUser) {
-      state = state.copyWith(
-        currentUserIndex: state.currentUserIndex + 1,
-        currentStoryIndex: 0,
-      );
+    } else {
+      moveToNextUser();
     }
   }
 
@@ -54,12 +58,8 @@ class StoryViewingController extends _$StoryViewingController {
       state = state.copyWith(
         currentStoryIndex: state.currentStoryIndex - 1,
       );
-    } else if (state.hasPreviousUser) {
-      final previousUserStoriesCount = state.userStories[state.currentUserIndex - 1].stories.length;
-      state = state.copyWith(
-        currentUserIndex: state.currentUserIndex - 1,
-        currentStoryIndex: previousUserStoriesCount - 1,
-      );
+    } else {
+      moveToPreviousUser();
     }
   }
 
@@ -68,14 +68,6 @@ class StoryViewingController extends _$StoryViewingController {
       state = state.copyWith(
         currentUserIndex: userIndex,
         currentStoryIndex: 0,
-      );
-    }
-  }
-
-  void moveToStoryIndex(int storyIndex) {
-    if (storyIndex >= 0 && storyIndex < state.userStories[state.currentUserIndex].stories.length) {
-      state = state.copyWith(
-        currentStoryIndex: storyIndex,
       );
     }
   }
@@ -89,15 +81,11 @@ class StoryViewingController extends _$StoryViewingController {
     }
   }
 
-  void moveToStory(int userIndex, int storyIndex) {
-    final isValidUser = userIndex >= 0 && userIndex < state.userStories.length;
-    final isValidStory =
-        isValidUser && storyIndex >= 0 && storyIndex < state.userStories[userIndex].stories.length;
-
-    if (isValidStory) {
+  void moveToPreviousUser() {
+    if (state.hasPreviousUser) {
       state = state.copyWith(
-        currentUserIndex: userIndex,
-        currentStoryIndex: storyIndex,
+        currentUserIndex: state.currentUserIndex - 1,
+        currentStoryIndex: 0,
       );
     }
   }

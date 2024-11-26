@@ -7,8 +7,6 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/plus_icon.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -24,18 +22,13 @@ class StoryListItem extends HookConsumerWidget {
   final Gradient? gradient;
 
   static double get width => 65.0.s;
-
   static double get height => 91.0.s;
-
-  static double get plusSize => 18.0.s;
-
   static double get borderSize => 2.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewed = useState(false);
     final userMetadataAsync = ref.watch(userMetadataProvider(pubkey));
-    final isCurrentUserPubkey = ref.watch(isCurrentUserSelectorProvider(pubkey));
 
     return userMetadataAsync.maybeWhen(
       data: (userMetadata) {
@@ -66,19 +59,12 @@ class StoryListItem extends HookConsumerWidget {
                         ),
                       ),
                     ),
-                    if (isCurrentUserPubkey)
-                      Positioned(
-                        bottom: -plusSize / 2,
-                        child: PlusIcon(
-                          size: plusSize,
-                        ),
-                      ),
                   ],
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 2.0.s),
                   child: Text(
-                    isCurrentUserPubkey ? context.i18n.common_you : userMetadata.data.name,
+                    userMetadata.data.name,
                     style: context.theme.appTextThemes.caption3.copyWith(
                       color: context.theme.appColors.primaryText,
                     ),

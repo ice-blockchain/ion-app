@@ -1,88 +1,60 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cube_transition_plus/cube_transition_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.dart';
+import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/core.dart';
+import 'package:ion/app/utils/future.dart';
 
-class StoriesSwiper extends StatelessWidget {
+class StoriesSwiper extends HookConsumerWidget {
   const StoriesSwiper({
-    required this.userPageController,
     required this.userStories,
     required this.currentUserIndex,
-    required this.currentStoryIndex,
-    required this.onUserPageChanged,
-    required this.onStoryPageChanged,
-    required this.onNextStory,
-    required this.onPreviousStory,
-    required this.onPausedChanged,
     super.key,
   });
 
-  final PageController userPageController;
   final List<UserStories> userStories;
   final int currentUserIndex;
-  final int currentStoryIndex;
-  final ValueChanged<int> onUserPageChanged;
-  final ValueChanged<int> onStoryPageChanged;
-  final VoidCallback onNextStory;
-  final VoidCallback onPreviousStory;
-  final ValueChanged<bool> onPausedChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userPageController = usePageController(initialPage: currentUserIndex);
+
     return CubePageView.builder(
       controller: userPageController,
       itemCount: userStories.length,
-      onPageChanged: (index) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          onUserPageChanged(index);
-        });
-      },
-      itemBuilder: (context, userIndex, userNotifier) {
+      onPageChanged: ref.read(storyViewingControllerProvider.notifier).moveToUser,
+      itemBuilder: (context, userIndex, pageNotifier) {
         final userStory = userStories[userIndex];
         final isCurrentUser = userIndex == currentUserIndex;
 
+        final storyController = ref.read(storyViewingControllerProvider);
+        final storyNotifier = ref.read(storyViewingControllerProvider.notifier);
+
         return CubeWidget(
           index: userIndex,
-          pageNotifier: userNotifier,
+          pageNotifier: pageNotifier,
           child: UserStoryPageView(
             userStory: userStory,
             isCurrentUser: isCurrentUser,
-            currentStoryIndex: isCurrentUser ? currentStoryIndex : 0,
-            onStoryPageChanged: (storyIndex) {
-              if (isCurrentUser) {
-                onStoryPageChanged(storyIndex);
-              }
-            },
-            onNextStory: onNextStory,
-            onPreviousStory: onPreviousStory,
-            onNextUser: () {
-              final hasNextUser =
-                  userPageController.hasClients && userIndex < userStories.length - 1;
-
-              if (hasNextUser) {
-                userPageController.nextPage(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
-              } else {
-                context.pop();
-              }
-            },
-            onPreviousUser: () {
-              final hasPreviousUser = userPageController.hasClients && userIndex > 0;
-
-              if (hasPreviousUser) {
-                userPageController.previousPage(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
-              } else {
-                context.pop();
-              }
-            },
+            currentStoryIndex: isCurrentUser ? storyController.currentStoryIndex : 0,
+            onNextStory: storyNotifier.moveToNextStory,
+            onPreviousStory: storyNotifier.moveToPreviousStory,
+            onNextUser: () => userPageController.hasClients && userIndex < userStories.length - 1
+                ? userPageController.nextPage(
+                    duration: 300.ms,
+                    curve: Curves.easeInOut,
+                  )
+                : context.pop(),
+            onPreviousUser: () => userPageController.hasClients && userIndex > 0
+                ? userPageController.previousPage(
+                    duration: 300.ms,
+                    curve: Curves.easeInOut,
+                  )
+                : context.pop(),
           ),
         );
       },

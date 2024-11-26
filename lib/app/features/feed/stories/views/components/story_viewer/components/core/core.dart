@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+export 'cube_page_view.dart';
 export 'stories_swiper.dart';
 export 'story_content.dart';
 export 'story_gesture_handler.dart';
