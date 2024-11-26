@@ -13,6 +13,7 @@ import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends ConsumerWidget {
   const RecentChatTile(this.chat, {super.key});
+
   final RecentChatDataModel chat;
 
   @override
@@ -26,7 +27,12 @@ class RecentChatTile extends ConsumerWidget {
         if (isEditMode) {
           ref.read(selectedConversationsIdsProvider.notifier).toggle(chat.id);
         } else {
-          MessagesRoute().push<void>(context);
+          switch (chat.type) {
+            case ChatType.chat:
+              MessagesRoute().push<void>(context);
+            case ChatType.channel:
+              ChannelRoute(pubkey: chat.id).push<void>(context);
+          }
         }
       },
       behavior: HitTestBehavior.opaque,
@@ -84,6 +90,7 @@ class RecentChatTile extends ConsumerWidget {
 
 class SenderSummary extends StatelessWidget {
   const SenderSummary({required this.sender, this.textColor, super.key});
+
   final ChatSender sender;
   final Color? textColor;
 
@@ -133,9 +140,11 @@ class ChatTimestamp extends StatelessWidget {
 
 class ChatPreview extends StatelessWidget {
   const ChatPreview({required this.message, this.textColor, this.maxLines = 2, super.key});
+
   final RecentChatMessage message;
   final Color? textColor;
   final int maxLines;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -172,6 +181,7 @@ class ChatPreview extends StatelessWidget {
 
 class RecentChatMessageIcon extends StatelessWidget {
   const RecentChatMessageIcon({required this.message, this.color, super.key});
+
   final RecentChatMessage message;
   final Color? color;
 
@@ -207,6 +217,7 @@ class RecentChatMessageIcon extends StatelessWidget {
 
 class UnreadCountBadge extends StatelessWidget {
   const UnreadCountBadge({required this.unreadCount, super.key});
+
   final int unreadCount;
 
   @override

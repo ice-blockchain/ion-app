@@ -81,7 +81,7 @@ class AddAdminModal extends HookConsumerWidget {
               ),
               onPressed: () {
                 ref
-                    .read(channelAdminsProvider.notifier)
+                    .read(channelAdminsProvider().notifier)
                     .setAdmin(selectedPubkey.value!, ChannelAdminType.admin);
                 context.pop();
               },

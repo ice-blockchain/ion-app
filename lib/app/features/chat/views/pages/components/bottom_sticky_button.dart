@@ -3,15 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/generated/assets.gen.dart';
 
-class CreateChannelButton extends StatelessWidget {
-  const CreateChannelButton({
+class BottomStickyButton extends StatelessWidget {
+  const BottomStickyButton({
+    required this.label,
+    required this.iconAsset,
     required this.onPressed,
     this.disabled = false,
     super.key,
   });
 
+  final String label;
+  final String iconAsset;
   final bool disabled;
   final VoidCallback onPressed;
 
@@ -28,11 +31,11 @@ class CreateChannelButton extends StatelessWidget {
           type: disabled ? ButtonType.disabled : ButtonType.primary,
           mainAxisSize: MainAxisSize.max,
           minimumSize: Size(56.0.s, 56.0.s),
-          leadingIcon: Assets.svg.iconPlusCreatechannel.icon(
+          leadingIcon: iconAsset.icon(
             color: context.theme.appColors.onPrimaryAccent,
           ),
           label: Text(
-            context.i18n.channel_create_action,
+            label,
           ),
           onPressed: onPressed,
         ),

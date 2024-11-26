@@ -1,16 +1,29 @@
 // SPDX-License-Identifier: ice License 1.0
 
+enum ChatType {
+  chat,
+  channel,
+  ;
+}
+
 class RecentChatDataModel {
-  RecentChatDataModel(this.sender, this.unreadMessageCount, this.message, this.id);
+  RecentChatDataModel(
+    this.sender,
+    this.unreadMessageCount,
+    this.message,
+    this.id, {
+    this.type = ChatType.chat,
+  });
 
   final String id;
   final ChatSender sender;
   final int unreadMessageCount;
   final RecentChatMessage message;
+  final ChatType type;
 }
 
 class ChatSender {
-  ChatSender(this.name, this.imageUrl, {required this.isApproved, required this.isIceUser});
+  ChatSender(this.name, this.imageUrl, {this.isApproved = false, this.isIceUser = false});
 
   final String name;
   final String imageUrl;
@@ -75,7 +88,6 @@ final mockConversationData = [
       'Mike Planton',
       'https://i.pravatar.cc/150?u=@john',
       isApproved: true,
-      isIceUser: false,
     ),
     1,
     TextRecentChatMessage(
@@ -88,8 +100,6 @@ final mockConversationData = [
     ChatSender(
       'Mark Zuckerberg',
       'https://i.pravatar.cc/150?u=@mark',
-      isApproved: false,
-      isIceUser: false,
     ),
     0,
     TextRecentChatMessage(
@@ -102,8 +112,6 @@ final mockConversationData = [
     ChatSender(
       'Manmeet Singh',
       'https://i.pravatar.cc/150?u=@ashish',
-      isApproved: false,
-      isIceUser: false,
     ),
     0,
     TextRecentChatMessage(
@@ -116,7 +124,6 @@ final mockConversationData = [
     ChatSender(
       'Alicia Wernet',
       'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-      isApproved: false,
       isIceUser: true,
     ),
     3,
@@ -129,8 +136,6 @@ final mockConversationData = [
     ChatSender(
       'Manmeet Singh',
       'https://i.pravatar.cc/150?u=@felix',
-      isApproved: false,
-      isIceUser: false,
     ),
     0,
     TextRecentChatMessage(
@@ -144,7 +149,6 @@ final mockConversationData = [
       'Ice Open Network',
       'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
       isApproved: true,
-      isIceUser: false,
     ),
     3,
     TextRecentChatMessage(
@@ -157,8 +161,6 @@ final mockConversationData = [
     ChatSender(
       'Paul Walker',
       'https://i.pravatar.cc/150?u=@paul',
-      isApproved: false,
-      isIceUser: false,
     ),
     123,
     VoiceRecentChatMessage(
@@ -171,7 +173,6 @@ final mockConversationData = [
       'Danzel York',
       'https://i.pravatar.cc/150?u=@danzel',
       isApproved: true,
-      isIceUser: false,
     ),
     3,
     ReplayRecentChatMessage(
@@ -184,8 +185,6 @@ final mockConversationData = [
     ChatSender(
       'Manmeet Singh',
       'https://i.pravatar.cc/150?u=@venkat',
-      isApproved: false,
-      isIceUser: false,
     ),
     0,
     TextRecentChatMessage(
@@ -198,8 +197,6 @@ final mockConversationData = [
     ChatSender(
       'David Glover',
       'https://i.pravatar.cc/150?u=@david',
-      isApproved: false,
-      isIceUser: false,
     ),
     123,
     VideoRecentChatMessage(
@@ -212,7 +209,6 @@ final mockConversationData = [
       'John Doe',
       'https://i.pravatar.cc/150?u=@john',
       isApproved: true,
-      isIceUser: false,
     ),
     0,
     DocumentRecentChatMessage(
@@ -226,7 +222,6 @@ final mockConversationData = [
       'Mike Planton',
       'https://i.pravatar.cc/150?u=@mike',
       isApproved: true,
-      isIceUser: false,
     ),
     1,
     LinkRecentChatMessage(
@@ -239,7 +234,6 @@ final mockConversationData = [
     ChatSender(
       'Alicia Wernet',
       'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-      isApproved: false,
       isIceUser: true,
     ),
     0,
@@ -266,8 +260,6 @@ final mockConversationData = [
     ChatSender(
       'Paul Walker',
       'https://i.pravatar.cc/150?u=@paul',
-      isApproved: false,
-      isIceUser: false,
     ),
     123,
     MoneyRequestRecentChatMessage(

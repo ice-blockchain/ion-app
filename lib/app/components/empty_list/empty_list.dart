@@ -10,6 +10,7 @@ class EmptyList extends StatelessWidget {
   EmptyList({
     required this.asset,
     required this.title,
+    this.color,
     super.key,
     double? imageSize,
   }) : imageSize = imageSize ?? 48.0.s;
@@ -17,6 +18,7 @@ class EmptyList extends StatelessWidget {
   final String asset;
   final String title;
   final double imageSize;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +31,9 @@ class EmptyList extends StatelessWidget {
           Text(
             title,
             style: context.theme.appTextThemes.caption2.copyWith(
-              color: context.theme.appColors.tertararyText,
+              color: color ?? context.theme.appColors.tertararyText,
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

@@ -9,13 +9,17 @@ part 'channel_admins_provider.g.dart';
 @riverpod
 class ChannelAdmins extends _$ChannelAdmins {
   @override
-  Map<String, ChannelAdminType> build() {
-    final currentPubkey = ref.read(currentPubkeySelectorProvider);
-    final result = <String, ChannelAdminType>{};
-    if (currentPubkey != null) {
-      result.putIfAbsent(currentPubkey, () => ChannelAdminType.owner);
+  Map<String, ChannelAdminType> build({Map<String, ChannelAdminType>? initialAdmins}) {
+    if (initialAdmins != null) {
+      return Map<String, ChannelAdminType>.unmodifiable(initialAdmins);
+    } else {
+      final currentPubkey = ref.read(currentPubkeySelectorProvider);
+      final result = <String, ChannelAdminType>{};
+      if (currentPubkey != null) {
+        result.putIfAbsent(currentPubkey, () => ChannelAdminType.owner);
+      }
+      return Map<String, ChannelAdminType>.unmodifiable(result);
     }
-    return Map<String, ChannelAdminType>.unmodifiable(result);
   }
 
   void setAdmin(String pubkey, ChannelAdminType type) {

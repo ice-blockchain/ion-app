@@ -20,6 +20,7 @@ class AvatarPicker extends HookConsumerWidget {
   const AvatarPicker({
     super.key,
     this.avatarUrl,
+    this.avatarWidget,
     this.title,
     this.iconSize,
     this.iconBackgroundSize,
@@ -30,6 +31,7 @@ class AvatarPicker extends HookConsumerWidget {
   final double? avatarSize;
   final double? iconSize;
   final double? iconBackgroundSize;
+  final Widget? avatarWidget;
   final String? title;
 
   @override
@@ -52,9 +54,8 @@ class AvatarPicker extends HookConsumerWidget {
           imageUrl: avatarFile == null ? avatarUrl : null,
           imageWidget: avatarFile != null
               ? Image.file(File(avatarFile.path))
-              : avatarUrl == null
-                  ? Assets.svg.userPhotoArea.icon(size: 100.0.s)
-                  : null,
+              : avatarWidget ??
+                  (avatarUrl == null ? Assets.svg.userPhotoArea.icon(size: 100.0.s) : null),
         ),
         Positioned(
           bottom: -6.0.s,

@@ -17,4 +17,3 @@ export 'messaging_bottom_bar/messaging_bottom_bar.dart';
 export 'messaging_bottom_bar/messaging_bottom_bar_initial.dart';
 export 'messaging_bottom_bar/messaging_bottom_bar_recording.dart';
 export 'messaging_empty_view/messaging_empty_view.dart';
-export 'messaging_header/messaging_header.dart';

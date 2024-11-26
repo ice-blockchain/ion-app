@@ -48,7 +48,7 @@ class AdminTypeSelectionModal extends HookConsumerWidget {
                   title: adminType.getTitle(context),
                   onTap: () {
                     selectedAdminType.value = adminType;
-                    ref.read(channelAdminsProvider.notifier).setAdmin(adminPubkey, adminType);
+                    ref.read(channelAdminsProvider().notifier).setAdmin(adminPubkey, adminType);
                   },
                   iconAsset: adminType.iconAsset,
                   isSelected: selectedAdminType.value == adminType,

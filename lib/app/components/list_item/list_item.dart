@@ -6,9 +6,9 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:timeago_flutter/timeago_flutter.dart';
 
+part './variants/list_item_dapp.dart';
 part './variants/list_item_text_with_icon.dart';
 part './variants/list_item_user.dart';
-part './variants/list_item_dapp.dart';
 
 class ListItem extends StatelessWidget {
   ListItem({
@@ -189,24 +189,17 @@ class ListItem extends StatelessWidget {
     required BuildContext context,
   }) {
     final backgroundColor = _getBackgroundColor(context);
-    return onTap != null
-        ? Material(
-            color: backgroundColor,
-            borderRadius: borderRadius,
-            child: InkWell(
-              borderRadius: borderRadius,
-              onTap: onTap,
-              child: child,
-            ),
-          )
-        : DecoratedBox(
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              border: border,
-              borderRadius: borderRadius,
-            ),
-            child: child,
-          );
+    return GestureDetector(
+      onTap: onTap,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          border: border,
+          borderRadius: borderRadius,
+        ),
+        child: child,
+      ),
+    );
   }
 
   Color _getBackgroundColor(BuildContext context) {

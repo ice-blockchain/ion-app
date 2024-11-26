@@ -9,15 +9,20 @@ import 'package:ion/app/components/controllers/hooks/use_text_editing_with_highl
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/model/channel_data.dart';
 import 'package:ion/app/features/chat/model/channel_type.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.dart';
+import 'package:ion/app/features/chat/providers/channels_provider.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
+import 'package:ion/app/features/chat/views/pages/components/bottom_sticky_button.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/channel_photo.dart';
-import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/create_button.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/desc_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/title_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admins_management_modal/admins_management_modal.dart';
+import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -33,7 +38,7 @@ class NewChannelModal extends HookConsumerWidget {
     final titleController = useTextEditingController(text: '');
     final descController = useTextEditingWithHighlightsController(text: '');
     final channelType = useState(ChannelType.public);
-    final channelAdmins = ref.watch(channelAdminsProvider);
+    final channelAdmins = ref.watch(channelAdminsProvider());
 
     final paddingValue = 16.0.s;
 
@@ -98,9 +103,28 @@ class NewChannelModal extends HookConsumerWidget {
                 ),
               ),
             ),
-            CreateChannelButton(
+            BottomStickyButton(
+              label: context.i18n.channel_create_action,
+              iconAsset: Assets.svg.iconPlusCreatechannel,
               onPressed: () {
-                if (formKey.currentState!.validate()) {}
+                if (formKey.currentState!.validate()) {
+                  final newChannelData = ChannelData(
+                    id: 'new_channel',
+                    link: 'https://ice.io/iceofficialchannel',
+                    name: titleController.text,
+                    description: descController.text,
+                    channelType: channelType.value,
+                    admins: channelAdmins,
+                    users: channelAdmins.keys.toList(),
+                    image: ref.read(avatarPickerNotifierProvider).mapOrNull(
+                          compressed: (state) => state.file,
+                          picked: (state) => state.file,
+                        ),
+                  );
+                  ref.read(channelsProvider.notifier).setChannel(newChannelData.id, newChannelData);
+                  ref.read(conversationsProvider.notifier).addChannelConversation(newChannelData);
+                  ChannelRoute(pubkey: newChannelData.id).replace(context);
+                }
               },
             ),
             ScreenBottomOffset(),
