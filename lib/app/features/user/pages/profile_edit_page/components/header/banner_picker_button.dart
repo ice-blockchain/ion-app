@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
@@ -47,12 +46,9 @@ class BannerPickerButton extends ConsumerWidget {
       ),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
       builder: (context, onPressed) {
-        if (isBannerLoading) {
-          return const IONLoadingIndicator();
-        }
-
         return HeaderAction(
           onPressed: onPressed,
+          loading: isBannerLoading,
           assetName: Assets.svg.iconProfileEditbg,
         );
       },
