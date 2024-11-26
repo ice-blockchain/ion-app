@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
+import 'package:ion/app/features/user/providers/banner_picker_notifier.dart';
 
 ({
   bool hasChanges,
@@ -13,7 +14,12 @@ import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
   final draftRef = useRef(userMetadata.copyWith());
   final hasChanges = useState(false);
 
-  final avatarFile = ref.watch(avatarPickerNotifierProvider).whenOrNull(processed: (file) => file);
+  final avatarFile = ref.watch(
+    avatarPickerNotifierProvider.select((state) => state.whenOrNull(processed: (file) => file)),
+  );
+  final bannerFile = ref.watch(
+    bannerPickerNotifierProvider.select((state) => state.whenOrNull(processed: (file) => file)),
+  );
 
   void update(UserMetadata userMetadataUpdated) {
     draftRef.value = userMetadataUpdated;
@@ -21,7 +27,7 @@ import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
   }
 
   return (
-    hasChanges: hasChanges.value || avatarFile != null,
+    hasChanges: hasChanges.value || avatarFile != null || bannerFile != null,
     draftRef: draftRef,
     update: update,
   );

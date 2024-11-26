@@ -29,12 +29,7 @@ class Header extends StatelessWidget {
               assetName: Assets.svg.iconProfileBack,
             ),
             const Spacer(),
-            BannerPickerButton(
-              pubkey: pubkey,
-              onMediaSelected: (mediaFile) {
-                if (mediaFile != null) {}
-              },
-            ),
+            const BannerPickerButton(),
           ],
         ),
       ),

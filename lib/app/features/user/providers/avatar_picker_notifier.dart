@@ -23,7 +23,7 @@ sealed class AvatarPickerState with _$AvatarPickerState {
   const factory AvatarPickerState.error({required String message}) = AvatarPickerStateError;
 }
 
-@Riverpod()
+@riverpod
 class AvatarPickerNotifier extends _$AvatarPickerNotifier {
   @override
   AvatarPickerState build() {
@@ -38,14 +38,14 @@ class AvatarPickerNotifier extends _$AvatarPickerNotifier {
     final compressService = ref.read(mediaCompressServiceProvider);
 
     try {
-      final cameraImagePath = await ref.read(assetFilePathProvider(assetId).future);
-      if (cameraImagePath == null) {
+      final assetImagePath = await ref.read(assetFilePathProvider(assetId).future);
+      if (assetImagePath == null) {
         throw AssetEntityFileNotFoundException();
       }
-      state = AvatarPickerState.picked(file: MediaFile(path: cameraImagePath));
+      state = AvatarPickerState.picked(file: MediaFile(path: assetImagePath));
       final croppedImage = await mediaService.cropImage(
         uiSettings: cropUiSettings,
-        path: cameraImagePath,
+        path: assetImagePath,
       );
       if (croppedImage == null) {
         state = const AvatarPickerState.initial();

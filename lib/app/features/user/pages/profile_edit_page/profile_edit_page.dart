@@ -52,9 +52,7 @@ class ProfileEditPage extends HookConsumerWidget {
       body: KeyboardDismissOnTap(
         child: Stack(
           children: [
-            Positioned(
-              child: BackgroundPicture(pubkey: pubkey),
-            ),
+            Positioned(child: BackgroundPicture(pubkey: pubkey)),
             Column(
               children: [
                 Expanded(
