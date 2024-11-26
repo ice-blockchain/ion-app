@@ -7,13 +7,31 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class PasskeysPromptDialog extends ConsumerWidget {
-  const PasskeysPromptDialog({super.key});
+class PasskeyPromptDialog extends HookConsumerWidget {
+  const PasskeyPromptDialog({
+    required this.onInit,
+    required this.provider,
+    super.key,
+  });
+
+  final VoidCallback onInit;
+  final ProviderListenable<AsyncValue<void>> provider;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(provider, (_, next) {
+      if (!next.isLoading) {
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+      }
+    });
+
+    useOnInit(onInit);
+
     final colors = context.theme.appColors;
     final textThemes = context.theme.appTextThemes;
     final isThemeLight = ref.watch(appThemeModeProvider) == ThemeMode.light;

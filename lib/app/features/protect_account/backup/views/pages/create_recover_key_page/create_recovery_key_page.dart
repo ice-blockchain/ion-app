@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/auth/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
@@ -80,7 +81,13 @@ class _Body extends HookConsumerWidget {
     final recoveryData = ref.watch(createRecoveryKeyActionNotifierProvider);
 
     useOnInit(() {
-      ref.read(createRecoveryKeyActionNotifierProvider.notifier).createRecoveryCredentials();
+      guardPasskeyDialog(
+        context,
+        createRecoveryKeyActionNotifierProvider,
+        () {
+          ref.read(createRecoveryKeyActionNotifierProvider.notifier).createRecoveryCredentials();
+        },
+      );
     });
 
     if (recoveryData.isLoading || recoveryData.valueOrNull == null) {

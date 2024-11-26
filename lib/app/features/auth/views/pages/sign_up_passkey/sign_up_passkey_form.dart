@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/auth/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -40,9 +41,15 @@ class SignUpPasskeyForm extends HookConsumerWidget {
                 : const SizedBox.shrink(),
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
-                ref
-                    .read(registerActionNotifierProvider.notifier)
-                    .signUp(keyName: identityKeyNameController.text);
+                guardPasskeyDialog(
+                  context,
+                  registerActionNotifierProvider,
+                  () {
+                    ref
+                        .read(registerActionNotifierProvider.notifier)
+                        .signUp(keyName: identityKeyNameController.text);
+                  },
+                );
               }
             },
             label: Text(context.i18n.sign_up_passkey_button),

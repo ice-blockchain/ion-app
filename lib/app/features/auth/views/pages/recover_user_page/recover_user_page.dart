@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/auth/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/recovery_creds_step.dart';
@@ -57,12 +58,18 @@ class RecoverUserPage extends HookConsumerWidget {
     RecoveryCreds recoveryCreds, [
     Map<TwoFaType, String>? twoFaTypes,
   ]) {
-    ref.read(recoverUserActionNotifierProvider.notifier).recoverUser(
-          username: recoveryCreds.name,
-          credentialId: recoveryCreds.id,
-          recoveryKey: recoveryCreds.code,
-          twoFaTypes: twoFaTypes,
-        );
+    guardPasskeyDialog(
+      ref.context,
+      recoverUserActionNotifierProvider,
+      () {
+        ref.read(recoverUserActionNotifierProvider.notifier).recoverUser(
+              username: recoveryCreds.name,
+              credentialId: recoveryCreds.id,
+              recoveryKey: recoveryCreds.code,
+              twoFaTypes: twoFaTypes,
+            );
+      },
+    );
   }
 
   void _listenRecoverUserResult(WidgetRef ref, ValueNotifier<RecoverUserStep> step) {

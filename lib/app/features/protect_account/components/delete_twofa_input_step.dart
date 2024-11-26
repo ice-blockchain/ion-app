@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/auth/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -57,9 +58,15 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
                       controller: controllers[twoFaType]!,
                       twoFaType: twoFaType,
                       onRequestCode: () async {
-                        await ref
-                            .read(requestTwoFaCodeNotifierProvider.notifier)
-                            .requestTwoFaCode(twoFaType);
+                        await guardPasskeyDialog(
+                          ref.context,
+                          requestTwoFaCodeNotifierProvider,
+                          () {
+                            ref
+                                .read(requestTwoFaCodeNotifierProvider.notifier)
+                                .requestTwoFaCode(twoFaType);
+                          },
+                        );
                       },
                       isSending: isRequesting,
                     ),
@@ -85,12 +92,18 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
     WidgetRef ref,
     Map<TwoFaType, TextEditingController> controllers,
   ) {
-    ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
-      const TwoFAType.authenticator(),
-      [
-        for (final controller in controllers.entries)
-          TwoFaTypeAdapter(controller.key, controller.value.text).twoFAType,
-      ],
+    guardPasskeyDialog(
+      ref.context,
+      deleteTwoFANotifierProvider,
+      () {
+        ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
+          const TwoFAType.authenticator(),
+          [
+            for (final controller in controllers.entries)
+              TwoFaTypeAdapter(controller.key, controller.value.text).twoFAType,
+          ],
+        );
+      },
     );
   }
 
