@@ -141,6 +141,7 @@ class NostrNotifier extends _$NostrNotifier {
     }
   }
 
+  // TODO:process cuncurrent calls to this method for the same pubkey (when opening a profile screen)
   Future<UserRelaysEntity> _getUserRelays(String pubkey) async {
     final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
     if (userRelays.isEmpty) {
