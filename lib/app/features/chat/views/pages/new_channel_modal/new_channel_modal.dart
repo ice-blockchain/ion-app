@@ -11,13 +11,13 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/channel_type.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.dart';
+import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
+import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/channel_photo.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/create_button.dart';
-import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/desc_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/title_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admins_management_modal/admins_management_modal.dart';
-import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/channel_type_selection_modal/channel_type_selection_modal.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -72,9 +72,11 @@ class NewChannelModal extends HookConsumerWidget {
                         onPress: () {
                           showSimpleBottomSheet<void>(
                             context: context,
-                            child: ChannelTypeSelectionModal(
-                              channelType: channelType.value,
+                            child: TypeSelectionModal(
+                              title: context.i18n.channel_create_type_select_title,
+                              values: ChannelType.values,
                               onUpdated: (newChannelType) => channelType.value = newChannelType,
+                              initiallySelectedType: channelType.value,
                             ),
                           );
                         },

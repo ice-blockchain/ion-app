@@ -3,18 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/channel_type.dart';
-import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/selection_list_item.dart';
+import 'package:ion/app/features/chat/model/selectable_type.dart';
+import 'package:ion/app/features/chat/views/components/selection_list_item.dart';
 
-class ChannelTypeSelectionListItem extends StatelessWidget {
-  const ChannelTypeSelectionListItem({
-    required this.channelType,
+class TypeSelectionListItem<T extends SelectableType> extends StatelessWidget {
+  const TypeSelectionListItem({
+    required this.type,
     required this.onTap,
     required this.isSelected,
     super.key,
   });
 
-  final ChannelType channelType;
+  final T type;
   final VoidCallback onTap;
   final bool isSelected;
 
@@ -26,10 +26,12 @@ class ChannelTypeSelectionListItem extends StatelessWidget {
     final borderRadius = 16.0.s;
 
     return Stack(
+      alignment: Alignment.topCenter,
       children: [
         AnimatedSize(
-          duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
+          alignment: Alignment.topCenter,
+          duration: const Duration(milliseconds: 300),
           child: isSelected
               ? Container(
                   decoration: BoxDecoration(
@@ -48,16 +50,16 @@ class ChannelTypeSelectionListItem extends StatelessWidget {
                     bottom: 12.0.s,
                   ),
                   child: Text(
-                    channelType.getDesc(context),
+                    type.getDescription(context),
                     style: textStyles.body.copyWith(color: colors.quaternaryText),
                   ),
                 )
-              : const SizedBox.shrink(),
+              : const SizedBox(width: double.maxFinite),
         ),
         SelectionListItem(
-          title: channelType.getTitle(context),
+          title: type.getTitle(context),
           onTap: onTap,
-          iconAsset: channelType.iconAsset,
+          iconAsset: type.iconAsset,
           isSelected: isSelected,
         ),
       ],

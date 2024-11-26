@@ -2,33 +2,36 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/content_creators_data_source_provider.dart';
-import 'package:ion/app/features/chat/model/channel_admin_type.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.dart';
+import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.dart';
 import 'package:ion/app/features/chat/views/components/selectable_user_list.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
-import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class AddAdminModal extends HookConsumerWidget {
-  const AddAdminModal({
-    super.key,
-  });
+class AddGroupParticipantsModal extends HookConsumerWidget {
+  const AddGroupParticipantsModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final createGroupForm = ref.watch(createGroupFormControllerProvider);
+    final createGroupFormNotifier = ref.read(createGroupFormControllerProvider.notifier);
+
     final searchValue = useState('');
-    final selectedPubkey = useState<String?>(null);
 
     final dataSource = ref.watch(contentCreatorsDataSourceProvider);
     final contentCreators = ref.watch(entitiesPagedDataProvider(dataSource));
 
     final isLoading = contentCreators?.data.items.isEmpty ?? true;
+
+    // TODO: Replace stub with implemented search
     final userEntries = useMemoized(
       () => (contentCreators?.data.items
               .whereType<UserMetadataEntity>()
@@ -47,44 +50,34 @@ class AddAdminModal extends HookConsumerWidget {
       [contentCreators, searchValue.value],
     );
 
-    return SizedBox(
-      height: MediaQuery.sizeOf(context).height * 0.8,
-      child: Column(
+    return SheetContent(
+      topPadding: 0,
+      body: Column(
         children: [
           Expanded(
             child: SelectableUserList(
-              title: context.i18n.channel_create_admins_action,
+              title: context.i18n.group_create_title,
               isLoading: isLoading,
-              selected: [
-                if (selectedPubkey.value != null) selectedPubkey.value!,
-              ],
               userEntries: userEntries,
-              onSelect: (String value) => selectedPubkey.value = value,
+              selected: createGroupForm.members.toList(),
+              onSelect: createGroupFormNotifier.toggleMember,
               onSearchValueChanged: (String value) => searchValue.value = value,
             ),
           ),
           const HorizontalSeparator(),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 16.0.s,
-              horizontal: 44.0.s,
-            ),
-            child: Button(
-              type: selectedPubkey.value == null ? ButtonType.disabled : ButtonType.primary,
-              mainAxisSize: MainAxisSize.max,
-              minimumSize: Size(56.0.s, 56.0.s),
-              leadingIcon: Assets.svg.iconProfileSave.icon(
-                color: context.theme.appColors.onPrimaryAccent,
+          ScreenBottomOffset(
+            margin: 32.0.s,
+            child: Padding(
+              padding: EdgeInsets.only(top: 16.0.s),
+              child: ScreenSideOffset.large(
+                child: Button(
+                  onPressed: () {
+                    CreateGroupModalRoute().push<void>(context);
+                  },
+                  label: Text(context.i18n.button_next),
+                  mainAxisSize: MainAxisSize.max,
+                ),
               ),
-              label: Text(
-                context.i18n.button_confirm,
-              ),
-              onPressed: () {
-                ref
-                    .read(channelAdminsProvider.notifier)
-                    .setAdmin(selectedPubkey.value!, ChannelAdminType.admin);
-                context.pop();
-              },
             ),
           ),
         ],

@@ -40,7 +40,9 @@ class NewChatModal extends StatelessWidget {
                     _HeaderButton(
                       icon: Assets.svg.iconSearchGroups,
                       title: context.i18n.new_chat_modal_new_group_button,
-                      onTap: () {},
+                      onTap: () {
+                        AddParticipantsToGroupModalRoute().push<void>(context);
+                      },
                     ),
                     SizedBox(width: 20.0.s),
                     _HeaderButton(

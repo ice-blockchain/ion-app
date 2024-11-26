@@ -3,25 +3,22 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
-import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class AddAdminListItem extends ConsumerWidget {
-  const AddAdminListItem({
+class GroupMemberListItem extends ConsumerWidget {
+  const GroupMemberListItem({
+    required this.isCurrentPubkey,
+    required this.onRemove,
     required this.pubkey,
-    required this.isSelected,
-    required this.onPress,
     super.key,
   });
 
   final String pubkey;
-  final bool isSelected;
-  final VoidCallback onPress;
-
-  static double get itemHeight => 36.0.s;
+  final bool isCurrentPubkey;
+  final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,11 +26,9 @@ class AddAdminListItem extends ConsumerWidget {
 
     return userMetadataResult.maybeWhen(
       data: (userMetadata) {
-        if (userMetadata == null) {
-          return const SizedBox.shrink();
-        }
+        if (userMetadata == null) return const SizedBox.shrink();
+
         return ListItem.user(
-          onTap: onPress,
           title: Text(userMetadata.data.displayName),
           subtitle: Text(
             prefixUsername(username: userMetadata.data.name, context: context),
@@ -44,20 +39,21 @@ class AddAdminListItem extends ConsumerWidget {
           profilePicture: userMetadata.data.picture,
           verifiedBadge: userMetadata.data.verified,
           ntfAvatar: userMetadata.data.nft,
-          contentPadding: EdgeInsets.symmetric(horizontal: 0.0.s, vertical: 0.0.s),
-          constraints: BoxConstraints(minHeight: itemHeight),
-          trailing: isSelected
-              ? Assets.svg.iconBlockCheckboxOnblue.icon(
-                  color: context.theme.appColors.success,
-                )
-              : Assets.svg.iconBlockCheckboxOff.icon(
-                  color: context.theme.appColors.tertararyText,
+          contentPadding: EdgeInsets.zero,
+          constraints: BoxConstraints(maxHeight: 39.0.s),
+          trailing: isCurrentPubkey
+              ? null
+              : GestureDetector(
+                  onTap: onRemove,
+                  behavior: HitTestBehavior.opaque,
+                  child: Assets.svg.iconBlockDelete.icon(
+                    size: 24.0.s,
+                    color: context.theme.appColors.sheetLine,
+                  ),
                 ),
         );
       },
-      orElse: () => ItemLoadingState(
-        itemHeight: itemHeight,
-      ),
+      orElse: () => const SizedBox.shrink(),
     );
   }
 }

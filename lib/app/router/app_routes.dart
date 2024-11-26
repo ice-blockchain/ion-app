@@ -23,6 +23,8 @@ import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_moda
 import 'package:ion/app/features/chat/views/pages/chat_main_page/chat_main_page.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/new_channel_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.dart';
+import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/add_group_participants_modal.dart';
+import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/create_group_modal.dart';
 import 'package:ion/app/features/contacts/pages/contacts_list_view.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';

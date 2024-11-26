@@ -21,9 +21,15 @@ class AvatarPicker extends HookConsumerWidget {
     super.key,
     this.avatarUrl,
     this.title,
+    this.iconSize,
+    this.iconBackgroundSize,
+    this.avatarSize,
   });
 
   final String? avatarUrl;
+  final double? avatarSize;
+  final double? iconSize;
+  final double? iconBackgroundSize;
   final String? title;
 
   @override
@@ -39,7 +45,7 @@ class AvatarPicker extends HookConsumerWidget {
       clipBehavior: Clip.none,
       children: [
         Avatar(
-          size: 100.0.s,
+          size: avatarSize ?? 100.0.s,
           borderRadius: BorderRadius.circular(20.0.s),
           imageUrl: avatarFile == null ? avatarUrl : null,
           imageWidget: avatarFile != null
@@ -80,8 +86,8 @@ class AvatarPicker extends HookConsumerWidget {
               return GestureDetector(
                 onTap: onPressed,
                 child: Container(
-                  width: 36.0.s,
-                  height: 36.0.s,
+                  width: iconBackgroundSize ?? 36.0.s,
+                  height: iconBackgroundSize ?? 36.0.s,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -89,7 +95,7 @@ class AvatarPicker extends HookConsumerWidget {
                   ),
                   child: avatarPickerState is AvatarPickerStatePicked
                       ? const IONLoadingIndicator()
-                      : Assets.svg.iconLoginCamera.icon(),
+                      : Assets.svg.iconLoginCamera.icon(size: iconSize),
                 ),
               );
             },
