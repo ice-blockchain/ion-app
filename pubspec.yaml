@@ -25,7 +25,6 @@ dependencies:
   dotted_border: ^2.1.0
   email_validator: ^3.0.0
   extended_text: ^14.1.0
-  # ffmpeg_helper: ^1.0.1
   ffmpeg_kit_flutter_full_gpl: ^6.0.3
   ffmpeg_wasm: ^1.0.3
   file_picker: ^8.1.2
