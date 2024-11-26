@@ -27,45 +27,34 @@ class StoriesSwiper extends HookConsumerWidget {
       controller: userPageController,
       itemCount: userStories.length,
       onPageChanged: ref.read(storyViewingControllerProvider.notifier).moveToUser,
-      itemBuilder: (context, userIndex, userNotifier) {
+      itemBuilder: (context, userIndex, pageNotifier) {
         final userStory = userStories[userIndex];
         final isCurrentUser = userIndex == currentUserIndex;
 
+        final storyController = ref.read(storyViewingControllerProvider);
+        final storyNotifier = ref.read(storyViewingControllerProvider.notifier);
+
         return CubeWidget(
           index: userIndex,
-          pageNotifier: userNotifier,
-          child: Consumer(
-            builder: (context, ref, _) {
-              return UserStoryPageView(
-                userStory: userStory,
-                isCurrentUser: isCurrentUser,
-                currentStoryIndex:
-                    isCurrentUser ? ref.read(storyViewingControllerProvider).currentStoryIndex : 0,
-                onNextStory: ref.read(storyViewingControllerProvider.notifier).moveToNextStory,
-                onPreviousStory:
-                    ref.read(storyViewingControllerProvider.notifier).moveToPreviousStory,
-                onNextUser: () {
-                  if (userPageController.hasClients && userIndex < userStories.length - 1) {
-                    userPageController.nextPage(
-                      duration: 300.ms,
-                      curve: Curves.easeInOut,
-                    );
-                  } else {
-                    context.pop();
-                  }
-                },
-                onPreviousUser: () {
-                  if (userPageController.hasClients && userIndex > 0) {
-                    userPageController.previousPage(
-                      duration: 300.ms,
-                      curve: Curves.easeInOut,
-                    );
-                  } else {
-                    context.pop();
-                  }
-                },
-              );
-            },
+          pageNotifier: pageNotifier,
+          child: UserStoryPageView(
+            userStory: userStory,
+            isCurrentUser: isCurrentUser,
+            currentStoryIndex: isCurrentUser ? storyController.currentStoryIndex : 0,
+            onNextStory: storyNotifier.moveToNextStory,
+            onPreviousStory: storyNotifier.moveToPreviousStory,
+            onNextUser: () => userPageController.hasClients && userIndex < userStories.length - 1
+                ? userPageController.nextPage(
+                    duration: 300.ms,
+                    curve: Curves.easeInOut,
+                  )
+                : context.pop(),
+            onPreviousUser: () => userPageController.hasClients && userIndex > 0
+                ? userPageController.previousPage(
+                    duration: 300.ms,
+                    curve: Curves.easeInOut,
+                  )
+                : context.pop(),
           ),
         );
       },

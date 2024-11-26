@@ -15,10 +15,8 @@ class ImageStoryViewer extends StatelessWidget {
       imageUrl: path,
       fit: BoxFit.contain,
       width: double.infinity,
-      filterQuality: FilterQuality.medium,
-      placeholderFadeInDuration: Duration.zero,
-      progressIndicatorBuilder: (context, url, downloadProgress) =>
-          const CenteredLoadingIndicator(),
+      filterQuality: FilterQuality.high,
+      progressIndicatorBuilder: (_, __, ___) => const CenteredLoadingIndicator(),
       errorWidget: (context, url, error) => const SizedBox.shrink(),
     );
   }
