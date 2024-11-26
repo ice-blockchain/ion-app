@@ -3,9 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/controllers/hooks/use_text_editing_with_highlights_controller.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
@@ -20,6 +22,8 @@ import 'package:ion/app/features/user/pages/components/background_picture/backgr
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/category_selector/category_selector.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/header/header.dart';
+import 'package:ion/app/features/user/pages/profile_edit_page/hooks/use_draft_metadata.dart';
+import 'package:ion/app/features/user/providers/user_metadata_notifier.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -37,14 +41,17 @@ class ProfileEditPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
-    final userMetadataValue = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
-    final nameController =
-        useTextEditingController(text: userMetadataValue?.data.displayName ?? '');
-    final nicknameController = useTextEditingController(text: userMetadataValue?.data.name ?? '');
-    final bioController =
-        useTextEditingWithHighlightsController(text: userMetadataValue?.data.about ?? '');
+    final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
+
+    ref.displayErrors(userMetadataNotifierProvider);
+
+    if (userMetadata == null) {
+      return const SizedBox.shrink();
+    }
+
+    final (:hasChanges, :userMetadataDraftRef, :update) = useDraftMetadata(userMetadata.data);
+
     final locationController = useTextEditingController(text: '');
-    final websiteController = useTextEditingController(text: userMetadataValue?.data.website ?? '');
     final category = useState<UserCategoryType?>(null);
 
     return Scaffold(
@@ -77,12 +84,32 @@ class ProfileEditPage extends HookConsumerWidget {
                                       showAvatarPicker: true,
                                     ),
                                     SizedBox(height: paddingValue),
-                                    NameInput(controller: nameController),
+                                    NameInput(
+                                      initialValue: userMetadata.data.displayName,
+                                      onChanged: (text) {
+                                        update(
+                                            userMetadataDraftRef.value.copyWith(displayName: text));
+                                      },
+                                    ),
                                     SizedBox(height: paddingValue),
-                                    NicknameInput(controller: nicknameController),
+                                    NicknameInput(
+                                      initialValue: userMetadata.data.name,
+                                      onChanged: (text) {
+                                        update(userMetadataDraftRef.value.copyWith(name: text));
+                                      },
+                                    ),
                                     SizedBox(height: paddingValue),
                                     BioInput(
-                                      controller: bioController,
+                                      controller: useTextEditingWithHighlightsController(
+                                        text: userMetadata.data.about,
+                                      ),
+                                      onChanged: (text) {
+                                        update(
+                                          userMetadataDraftRef.value.copyWith(
+                                            about: text.isEmpty ? null : text,
+                                          ),
+                                        );
+                                      },
                                     ),
                                     SizedBox(height: paddingValue),
                                     CategorySelector(
@@ -103,7 +130,14 @@ class ProfileEditPage extends HookConsumerWidget {
                                     ),
                                     SizedBox(height: paddingValue),
                                     WebsiteInput(
-                                      controller: websiteController,
+                                      initialValue: userMetadata.data.website,
+                                      onChanged: (text) {
+                                        update(
+                                          userMetadataDraftRef.value.copyWith(
+                                            website: text.isEmpty ? null : text,
+                                          ),
+                                        );
+                                      },
                                     ),
                                     SizedBox(height: paddingValue),
                                   ],
@@ -123,11 +157,22 @@ class ProfileEditPage extends HookConsumerWidget {
                     SizedBox(height: 16.0.s),
                     ScreenSideOffset.large(
                       child: Button(
-                        leadingIcon: Assets.svg.iconProfileSave.icon(
-                          color: context.theme.appColors.onPrimaryAccent,
-                        ),
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {}
+                        disabled: !hasChanges,
+                        type: hasChanges ? ButtonType.primary : ButtonType.disabled,
+                        leadingIcon: ref.watch(userMetadataNotifierProvider).isLoading
+                            ? const IONLoadingIndicator()
+                            : Assets.svg.iconProfileSave.icon(
+                                color: context.theme.appColors.onPrimaryAccent,
+                              ),
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            await ref
+                                .read(userMetadataNotifierProvider.notifier)
+                                .send(userMetadataDraftRef.value);
+                            if (context.mounted) {
+                              context.pop();
+                            }
+                          }
                         },
                         label: Text(context.i18n.profile_save),
                         mainAxisSize: MainAxisSize.max,

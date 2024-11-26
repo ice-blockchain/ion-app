@@ -7,19 +7,31 @@ import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NicknameInput extends StatelessWidget {
-  const NicknameInput({required this.controller, super.key, this.textInputAction});
+  const NicknameInput({
+    super.key,
+    this.controller,
+    this.textInputAction,
+    this.onChanged,
+    this.initialValue,
+  });
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   final TextInputAction? textInputAction;
+
+  final void Function(String)? onChanged;
+
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
     return GeneralUserDataInput(
       controller: controller,
+      onChanged: onChanged,
       prefixIconAssetName: Assets.svg.iconFieldNickname,
       labelText: context.i18n.fill_profile_input_nickname,
       textInputAction: textInputAction,
+      initialValue: initialValue,
       validator: (String? value) {
         if (Validators.isEmpty(value)) return '';
         if (Validators.isInvalidName(value)) {

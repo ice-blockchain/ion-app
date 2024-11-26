@@ -11,9 +11,7 @@ class UserMetadataNotifier extends _$UserMetadataNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<void> publish({
-    required UserMetadata userMetadata,
-  }) async {
+  Future<void> send(UserMetadata userMetadata) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
