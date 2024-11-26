@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:dlibphonenumber/dlibphonenumber.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class Validators {
   Validators._();
