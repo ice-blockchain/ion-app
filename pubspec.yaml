@@ -45,8 +45,6 @@ dependencies:
   freezed_annotation: ^2.4.1
   go_router: ^14.2.0
   hooks_riverpod: ^2.6.1
-  image: ^4.2.0
-  image_compression_flutter: ^1.0.4
   image_cropper: ^8.0.2
   image_picker: ^1.1.2
   intl: any
