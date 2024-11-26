@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/services/media_service/media_compress_service.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
@@ -15,8 +16,9 @@ sealed class AvatarPickerState with _$AvatarPickerState {
 
   const factory AvatarPickerState.picked({required MediaFile file}) = AvatarPickerStatePicked;
 
-  const factory AvatarPickerState.compressed({required MediaFile file}) =
-      AvatarPickerStateCompressed;
+  const factory AvatarPickerState.cropped({required MediaFile file}) = AvatarPickerStateCropped;
+
+  const factory AvatarPickerState.processed({required MediaFile file}) = AvatarPickerStateProcessed;
 
   const factory AvatarPickerState.error({required String message}) = AvatarPickerStateError;
 }
@@ -28,31 +30,35 @@ class AvatarPickerNotifier extends _$AvatarPickerNotifier {
     return const AvatarPickerState.initial();
   }
 
-  Future<void> pick({
+  Future<void> process({
+    required String assetId,
     required CropImageUiSettings cropUiSettings,
-    required Future<MediaFile?> Function() pickMediaFile,
   }) async {
     final mediaService = ref.read(mediaServiceProvider);
     final compressService = ref.read(mediaCompressServiceProvider);
 
     try {
-      final mediaFile = await pickMediaFile();
-      if (mediaFile == null) return;
-      final cameraImagePath = await ref.read(assetFilePathProvider(mediaFile.path).future);
-      if (cameraImagePath == null) return;
+      final cameraImagePath = await ref.read(assetFilePathProvider(assetId).future);
+      if (cameraImagePath == null) {
+        throw AssetEntityFileNotFoundException();
+      }
+      state = AvatarPickerState.picked(file: MediaFile(path: cameraImagePath));
       final croppedImage = await mediaService.cropImage(
         uiSettings: cropUiSettings,
         path: cameraImagePath,
       );
-      if (croppedImage == null) return;
-      state = AvatarPickerState.picked(file: croppedImage);
+      if (croppedImage == null) {
+        state = const AvatarPickerState.initial();
+        return;
+      }
+      state = AvatarPickerState.cropped(file: croppedImage);
       final compressedImage = await compressService.compressImage(
         croppedImage,
         width: 720,
         height: 720,
         quality: 70,
       );
-      state = AvatarPickerState.compressed(file: compressedImage);
+      state = AvatarPickerState.processed(file: compressedImage);
     } catch (error) {
       state = AvatarPickerState.error(message: error.toString());
     }

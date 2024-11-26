@@ -16,7 +16,7 @@ class FillProfileNotifier extends _$FillProfileNotifier {
 
     state = await AsyncValue.guard(() async {
       final avatarFile =
-          ref.read(avatarPickerNotifierProvider).whenOrNull(compressed: (file) => file);
+          ref.read(avatarPickerNotifierProvider).whenOrNull(processed: (file) => file);
       if (avatarFile != null) {
         await ref.read(onboardingDataProvider.notifier).uploadAvatar(avatarFile);
       }

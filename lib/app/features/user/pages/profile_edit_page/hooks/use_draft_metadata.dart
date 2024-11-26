@@ -13,7 +13,7 @@ import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
   final draftRef = useRef(userMetadata.copyWith());
   final hasChanges = useState(false);
 
-  final avatarFile = ref.watch(avatarPickerNotifierProvider).whenOrNull(compressed: (file) => file);
+  final avatarFile = ref.watch(avatarPickerNotifierProvider).whenOrNull(processed: (file) => file);
 
   void update(UserMetadata userMetadataUpdated) {
     draftRef.value = userMetadataUpdated;

@@ -39,7 +39,7 @@ class EditSubmitButton extends ConsumerWidget {
       onPressed: () async {
         if (formKey.currentState!.validate()) {
           final avatarFile =
-              ref.watch(avatarPickerNotifierProvider).whenOrNull(compressed: (file) => file);
+              ref.watch(avatarPickerNotifierProvider).whenOrNull(processed: (file) => file);
           await ref
               .read(userMetadataNotifierProvider.notifier)
               .send(draftRef.value, avatar: avatarFile);
