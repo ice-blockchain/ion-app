@@ -30,7 +30,7 @@ class StoryList extends ConsumerWidget {
         separatorBuilder: (_, __) => const StoryListSeparator(),
         itemBuilder: (_, index) {
           if (index == 0) {
-            return CurrentUserStoryListItem( 
+            return CurrentUserStoryListItem(
               pubkey: currentUserPubkey,
               gradient: storyBorderGradients.first,
             );
