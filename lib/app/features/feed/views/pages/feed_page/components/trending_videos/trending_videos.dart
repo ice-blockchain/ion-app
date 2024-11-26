@@ -8,6 +8,7 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/section_header/section_header.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.dart';
 import 'package:ion/app/features/feed/providers/trending_videos_overlay_provider.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list.dart';
@@ -22,7 +23,11 @@ class TrendingVideos extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final listOverlay = ref.watch(trendingVideosOverlayNotifierProvider);
     final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
-    final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
+    // TODO: remove this [mockPostEntitiesPagedDataProvider] when we have real data
+    // final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final videosData = ref.watch(mockPostEntitiesPagedDataProvider(dataSource));
+
+    if (videosData?.data.items.isEmpty ?? true) return const SizedBox.shrink();
 
     return Column(
       children: [
@@ -37,7 +42,7 @@ class TrendingVideos extends ConsumerWidget {
           LoadMoreBuilder(
             slivers: [
               TrendingVideosList(
-                entities: videosData.data.items.toList(),
+                videos: videosData.data.items.map((e) => e as PostEntity).toList(),
                 listOverlay: listOverlay,
               ),
             ],
@@ -58,7 +63,12 @@ class TrendingVideos extends ConsumerWidget {
 
   Future<void> _onLoadMore(WidgetRef ref) async {
     await ref
-        .read(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)).notifier)
+        // TODO: remove this [mockPostEntitiesPagedDataProvider] when we have real data
+        // .read(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)).notifier)
+        .read(
+          mockPostEntitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider))
+              .notifier,
+        )
         .fetchEntities();
   }
 }

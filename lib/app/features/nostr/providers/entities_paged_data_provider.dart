@@ -5,14 +5,17 @@ import 'dart:async';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/paged.dart';
+import 'package:ion/app/features/feed/data/models/entities/mocked_counters.dart';
+import 'package:ion/app/features/feed/providers/fake_posts_generator.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'entities_paged_data_provider.g.dart';
 part 'entities_paged_data_provider.freezed.dart';
+part 'entities_paged_data_provider.g.dart';
 
 @freezed
 class EntitiesDataSource with _$EntitiesDataSource {
@@ -114,6 +117,63 @@ class EntitiesPagedData extends _$EntitiesPagedData {
     return MapEntry(
       dataSource.actionSource,
       PaginationParams(hasMore: lastEventTime != null, lastEventTime: lastEventTime),
+    );
+  }
+}
+
+// TODO: remove [MockPostEntitiesPagedData] when real relay data will be ready
+@riverpod
+class MockPostEntitiesPagedData extends _$MockPostEntitiesPagedData {
+  @override
+  EntitiesPagedDataState? build(List<EntitiesDataSource>? dataSources) {
+    if (dataSources != null) {
+      Future.microtask(fetchEntities);
+
+      return EntitiesPagedDataState(
+        dataSources: dataSources,
+        data: Paged.data(
+          {},
+          pagination: {for (final source in dataSources) source.actionSource: PaginationParams()},
+        ),
+      );
+    }
+    return null;
+  }
+
+  Future<void> fetchEntities() async {
+    final currentState = state;
+    if (currentState == null || currentState.data is PagedLoading) {
+      return;
+    }
+
+    state = currentState.copyWith(
+      data: Paged.loading(currentState.data.items, pagination: currentState.data.pagination),
+    );
+
+    final mockedPosts = List.generate(
+      dataSources!.first.requestFilters.first.limit!,
+      (index) => generateFakePostWithVideo(),
+    ).toSet();
+
+    final nostrCache = ref.read(nostrCacheProvider.notifier);
+
+    for (final post in mockedPosts) {
+      generateFakeCounters(ref, post.id);
+      nostrCache.cache(post);
+    }
+
+    final paginationEntries = await Future.delayed(
+      const Duration(milliseconds: 500),
+      () => {
+        for (final source in currentState.dataSources) source.actionSource: PaginationParams(),
+      },
+    );
+
+    state = state?.copyWith(
+      data: Paged.data(
+        {...state!.data.items, ...mockedPosts},
+        pagination: paginationEntries,
+      ),
     );
   }
 }

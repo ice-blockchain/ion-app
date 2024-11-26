@@ -261,3 +261,17 @@ class StoryContactsShareRoute extends BaseRouteData {
           type: IceRouteType.bottomSheet,
         );
 }
+
+@TypedGoRoute<VideoRoute>(
+  path: '/video/:eventReference',
+)
+class VideoRoute extends BaseRouteData {
+  VideoRoute({required this.eventReference})
+      : super(
+          child: VideoPage(
+            EventReference.fromString(eventReference),
+          ),
+        );
+
+  final String eventReference;
+}

@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
-import 'package:ion/app/features/feed/providers/posts_storage_provider.dart';
+import 'package:ion/app/features/feed/providers/fake_posts_generator.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/search/providers/feed_search_filters_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

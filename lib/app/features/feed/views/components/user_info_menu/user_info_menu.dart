@@ -17,11 +17,16 @@ import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class UserInfoMenu extends ConsumerWidget {
-  const UserInfoMenu({required this.pubkey, super.key});
+  const UserInfoMenu({
+    required this.pubkey,
+    this.iconColor,
+    super.key,
+  });
 
   static double get iconSize => 20.0.s;
 
   final String pubkey;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,7 +74,7 @@ class UserInfoMenu extends ConsumerWidget {
         ],
       ),
       child: Assets.svg.iconMorePopup.icon(
-        color: context.theme.appColors.onTertararyBackground,
+        color: iconColor ?? context.theme.appColors.onTertararyBackground,
       ),
     );
   }
