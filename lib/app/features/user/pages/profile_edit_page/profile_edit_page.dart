@@ -9,6 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/bio_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/location_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/name_input.dart';
@@ -26,17 +27,15 @@ import 'package:ion/app/router/app_routes.dart';
 
 class ProfileEditPage extends HookConsumerWidget {
   const ProfileEditPage({
-    required this.pubkey,
     super.key,
   });
-
-  final String pubkey;
 
   static double get paddingValue => 20.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
+    final pubkey = ref.watch(currentPubkeySelectorProvider)!;
     final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
 
     if (userMetadata == null) {

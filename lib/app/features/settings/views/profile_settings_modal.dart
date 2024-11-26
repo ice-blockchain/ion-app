@@ -6,7 +6,6 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/components/action_button/action_button.dart';
@@ -23,7 +22,6 @@ class ProfileSettingsModal extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final contentLanguages = Language.values.take(3).toList();
     final primaryColor = context.theme.appColors.primaryAccent;
-    final pubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
     return SheetContent(
       body: Column(
@@ -48,7 +46,7 @@ class ProfileSettingsModal extends ConsumerWidget {
                   ),
                   label: context.i18n.settings_profile_edit,
                   onTap: () {
-                    ProfileEditRoute(pubkey: pubkey).go(context);
+                    ProfileEditRoute().go(context);
                   },
                 ),
                 ActionButton(
