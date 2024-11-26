@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
@@ -28,11 +29,19 @@ class VideoPreviewCover extends HookConsumerWidget {
 
     useOnInit(videoController.play);
 
+    useEffect(
+      () {
+        return videoController.dispose;
+      },
+      [videoController],
+    );
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(12.0.s),
       child: SizedBox(
         width: placeholderWidth,
         child: Stack(
+          alignment: Alignment.center,
           children: [
             ColoredBox(
               color: Colors.amber,
@@ -50,6 +59,35 @@ class VideoPreviewCover extends HookConsumerWidget {
                     : Container(
                         color: Colors.black,
                       ),
+              ),
+            ),
+            Center(
+              child: Container(
+                width: 48.0.s,
+                height: 48.0.s,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24.0.s),
+                  color: context.theme.appColors.primaryAccent,
+                ),
+                child: ValueListenableBuilder<VideoPlayerValue>(
+                  valueListenable: videoController,
+                  builder: (context, value, child) {
+                    return IconButton(
+                      icon: value.isPlaying
+                          ? Assets.svg.iconVideoPause
+                              .icon(color: context.theme.appColors.secondaryBackground)
+                          : Assets.svg.iconVideoPlay
+                              .icon(color: context.theme.appColors.secondaryBackground),
+                      onPressed: () {
+                        if (value.isPlaying) {
+                          videoController.pause();
+                        } else {
+                          videoController.play();
+                        }
+                      },
+                    );
+                  },
+                ),
               ),
             ),
             // assetFilePathAsync.maybeWhen(
@@ -87,7 +125,7 @@ class VideoPreviewCover extends HookConsumerWidget {
             Positioned(
               left: 12.0.s,
               bottom: 12.0.s,
-              child: const VideoPreviewDuration(duration: 70), //TODO: Get duration from video
+              child: VideoPreviewDuration(duration: videoController.value.duration.inSeconds),
             ),
           ],
         ),
