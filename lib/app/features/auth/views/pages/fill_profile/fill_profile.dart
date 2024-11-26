@@ -26,8 +26,8 @@ class FillProfile extends HookConsumerWidget {
     final fillProfileState = ref.watch(fillProfileNotifierProvider);
     final formKey = useMemoized(GlobalKey<FormState>.new);
     final onboardingData = ref.watch(onboardingDataProvider);
-    final isAvatarCompressing =
-        ref.watch(avatarPickerNotifierProvider.select((state) => state is AvatarPickerStatePicked));
+    final isAvatarCompressing = ref
+        .watch(avatarPickerNotifierProvider.select((state) => state is AvatarPickerStateCropped));
     final nameController = useTextEditingController.fromValue(
       TextEditingValue(text: onboardingData.displayName ?? ''),
     );

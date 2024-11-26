@@ -20,8 +20,8 @@ class BannerPickerButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBannerLoading =
-        ref.watch(bannerPickerNotifierProvider.select((state) => state is BannerPickerStatePicked));
+    final isBannerLoading = ref
+        .watch(bannerPickerNotifierProvider.select((state) => state is BannerPickerStateCropped));
 
     return PermissionAwareWidget(
       permissionType: Permission.photos,
@@ -37,6 +37,7 @@ class BannerPickerButton extends ConsumerWidget {
           if (mediaFiles != null && context.mounted) {
             await ref.read(bannerPickerNotifierProvider.notifier).process(
                   assetId: mediaFiles.first.path,
+                  cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(context),
                 );
           }
         }

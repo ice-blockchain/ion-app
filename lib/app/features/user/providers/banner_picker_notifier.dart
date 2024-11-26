@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/services/media_service/media_compress_service.dart';
@@ -16,6 +17,8 @@ sealed class BannerPickerState with _$BannerPickerState {
 
   const factory BannerPickerState.picked({required MediaFile file}) = BannerPickerStatePicked;
 
+  const factory BannerPickerState.cropped({required MediaFile file}) = BannerPickerStateCropped;
+
   const factory BannerPickerState.processed({required MediaFile file}) = BannerPickerStateProcessed;
 
   const factory BannerPickerState.error({required String message}) = BannerPickerStateError;
@@ -28,7 +31,11 @@ class BannerPickerNotifier extends _$BannerPickerNotifier {
     return const BannerPickerState.initial();
   }
 
-  Future<void> process({required String assetId}) async {
+  Future<void> process({
+    required String assetId,
+    required CropImageUiSettings cropUiSettings,
+  }) async {
+    final mediaService = ref.read(mediaServiceProvider);
     final compressService = ref.read(mediaCompressServiceProvider);
 
     try {
@@ -37,8 +44,21 @@ class BannerPickerNotifier extends _$BannerPickerNotifier {
         throw AssetEntityFileNotFoundException();
       }
       state = BannerPickerState.picked(file: MediaFile(path: assetImagePath));
+
+      final croppedImage = await mediaService.cropImage(
+        uiSettings: cropUiSettings,
+        path: assetImagePath,
+        aspectRatio: const CropAspectRatio(ratioX: 4, ratioY: 3),
+      );
+      if (croppedImage == null) {
+        state = const BannerPickerState.initial();
+        return;
+      }
+
+      state = BannerPickerState.cropped(file: croppedImage);
+
       final compressedImage = await compressService.compressImage(
-        MediaFile(path: assetImagePath),
+        croppedImage,
         width: 1024,
         height: 768,
         quality: 70,
