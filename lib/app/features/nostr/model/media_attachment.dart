@@ -3,6 +3,7 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/utils/validators.dart';
 
 /// Media attachments (images, videos, and other files) may be added to events by including
 /// a URL in the event content, along with a matching imeta tag.
@@ -36,7 +37,7 @@ class MediaAttachment {
       switch (key) {
         case 'url':
           {
-            if ((Uri.tryParse(value)?.isAbsolute).falseOrValue) {
+            if (!Validators.isInvalidUrl(value)) {
               url = value;
             }
           }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:dlibphonenumber/dlibphonenumber.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:email_validator/email_validator.dart';
 
 class Validators {
@@ -52,5 +53,9 @@ class Validators {
         pollAnswers.every(
           (answer) => answer.trim().isNotEmpty && answer.trim().length <= 25,
         );
+  }
+
+  static bool isInvalidUrl(String? value) {
+    return isEmpty(value) || !(Uri.tryParse(value!)?.isAbsolute).falseOrValue;
   }
 }

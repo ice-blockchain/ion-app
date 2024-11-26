@@ -5,16 +5,16 @@ import 'package:ion/app/features/user/model/user_metadata.dart';
 
 ({
   bool hasChanges,
-  ObjectRef<UserMetadata> userMetadataDraftRef,
+  ObjectRef<UserMetadata> draftRef,
   void Function(UserMetadata) update,
 }) useDraftMetadata(UserMetadata userMetadata) {
-  final userMetadataDraftRef = useRef(userMetadata.copyWith());
+  final draftRef = useRef(userMetadata.copyWith());
   final hasChanges = useState(false);
 
   void update(UserMetadata userMetadataUpdated) {
-    userMetadataDraftRef.value = userMetadataUpdated;
-    hasChanges.value = userMetadataDraftRef.value != userMetadata;
+    draftRef.value = userMetadataUpdated;
+    hasChanges.value = draftRef.value != userMetadata;
   }
 
-  return (hasChanges: hasChanges.value, userMetadataDraftRef: userMetadataDraftRef, update: update);
+  return (hasChanges: hasChanges.value, draftRef: draftRef, update: update);
 }

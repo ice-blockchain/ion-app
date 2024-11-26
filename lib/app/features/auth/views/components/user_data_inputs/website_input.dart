@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
+import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class WebsiteInput extends StatelessWidget {
@@ -27,6 +28,13 @@ class WebsiteInput extends StatelessWidget {
       prefixIconAssetName: Assets.svg.iconArticleLink,
       labelText: context.i18n.profile_website,
       initialValue: initialValue,
+      validator: (String? value) {
+        if (Validators.isEmpty(value)) return '';
+        if (Validators.isInvalidUrl(value)) {
+          return context.i18n.error_website_invalid;
+        }
+        return null;
+      },
     );
   }
 }
