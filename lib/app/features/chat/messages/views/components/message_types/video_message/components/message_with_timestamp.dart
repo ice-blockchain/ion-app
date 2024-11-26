@@ -7,6 +7,7 @@ class _MessageWithTimestamp extends StatelessWidget {
     required this.message,
     required this.isMe,
     this.reactions,
+    super.key,
   });
 
   final String message;
@@ -17,11 +18,12 @@ class _MessageWithTimestamp extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 8.0.s),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
-        // textBaseline: TextBaseline.alphabetic,
         children: [
           Flexible(
+            fit: (message.isEmpty && reactions == null) ? FlexFit.tight : FlexFit.loose,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -23,37 +23,60 @@ class PhotoMessage extends HookWidget {
   final String? message;
   final String imageUrl;
   final List<MessageReactionGroup>? reactions;
+
   static double get padding => 8.0.s;
-  static double get maxWidth => MessageItemWrapper.maxWidth - padding * 2;
+  static double get maxHeight => 300.0.s;
 
   @override
   Widget build(BuildContext context) {
     useAutomaticKeepAlive();
 
+    /// Key to get the width of the content container
+    final contentContainerKey = useRef<GlobalKey>(GlobalKey());
+
+    /// Width of the image
+    final imageWidth = useState<double>(0);
+
     return MessageItemWrapper(
       isMe: isMe,
       contentPadding: EdgeInsets.all(padding),
-      child: GestureDetector(
-        onTap: () {
-          PhotoGalleryRoute(
-            photoUrls: [imageUrl],
-            title: message ?? '',
-            senderName: 'Selena Marquez',
-            sentAt: DateTime.now(),
-          ).push<void>(context);
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _PhotoContent(imageUrl: imageUrl),
-            SizedBox(height: 8.0.s),
-            _MessageContent(
-              message: message!,
-              isMe: isMe,
-              reactions: reactions,
+      child: LayoutBuilder(
+        builder: (context, _) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            /// Update the minimum width of the image based on the content container width
+            if (message == null && reactions == null) {
+              imageWidth.value = double.infinity;
+            } else {
+              imageWidth.value = contentContainerKey.value.currentContext?.size?.width ?? 0;
+            }
+          });
+          return GestureDetector(
+            onTap: () {
+              PhotoGalleryRoute(
+                photoUrls: [imageUrl],
+                title: message ?? '',
+                senderName: 'Selena Marquez',
+                sentAt: DateTime.now(),
+              ).push<void>(context);
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _PhotoContent(
+                  imageUrl: imageUrl,
+                  width: imageWidth.value,
+                ),
+                SizedBox(height: 8.0.s),
+                _MessageContent(
+                  key: contentContainerKey.value,
+                  message: message,
+                  isMe: isMe,
+                  reactions: reactions,
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -62,19 +85,25 @@ class PhotoMessage extends HookWidget {
 class _PhotoContent extends StatelessWidget {
   const _PhotoContent({
     required this.imageUrl,
+    required this.width,
   });
 
   final String imageUrl;
+  final double width;
+
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: imageUrl,
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: width,
+        maxHeight: PhotoMessage.maxHeight,
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.0.s),
         child: CachedNetworkImage(
           imageUrl: imageUrl,
-          width: PhotoMessage.maxWidth,
-          fit: BoxFit.cover,
+          fit: BoxFit.fitWidth,
+          width: width,
         ),
       ),
     );
@@ -83,43 +112,43 @@ class _PhotoContent extends StatelessWidget {
 
 class _MessageContent extends StatelessWidget {
   const _MessageContent({
-    required this.message,
     required this.isMe,
+    this.message,
     this.reactions,
+    super.key,
   });
 
-  final String message;
+  final String? message;
   final bool isMe;
   final List<MessageReactionGroup>? reactions;
+
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: PhotoMessage.maxWidth,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          fit: (message == null && reactions == null) ? FlexFit.tight : FlexFit.loose,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (message != null)
                 Text(
-                  message,
+                  message!,
                   style: context.theme.appTextThemes.body2.copyWith(
                     color: isMe
                         ? context.theme.appColors.onPrimaryAccent
                         : context.theme.appColors.primaryText,
                   ),
                 ),
-                MessageReactions(reactions: reactions),
-              ],
-            ),
+              MessageReactions(reactions: reactions),
+            ],
           ),
-          MessageMetaData(isMe: isMe),
-        ],
-      ),
+        ),
+        MessageMetaData(isMe: isMe),
+      ],
     );
   }
 }

@@ -68,7 +68,7 @@ class MessagesPage extends ConsumerWidget {
                         case 4:
                           return const PhotoMessage(
                             isMe: true,
-                            imageUrl: 'https://picsum.photos/700/900',
+                            imageUrl: 'https://picsum.photos/500/700',
                             message: 'Check this out!',
                             reactions: mockReactionsMany,
                           );
@@ -77,12 +77,12 @@ class MessagesPage extends ConsumerWidget {
                             message:
                                 'Hey there! Can you check this, please and tell me what you think?',
                             isMe: false,
-                            imageUrl: 'https://picsum.photos/500/400',
+                            imageUrl: 'https://picsum.photos/500/700',
                           );
                         case 6:
                           return const VideoMessage(
                             isMe: true,
-                            message: 'Look at this video',
+                            // message: 'Look at this video',
                             videoUrl:
                                 'https://videos.pexels.com/video-files/4002110/4002110-sd_640_360_25fps.mp4',
                           );
