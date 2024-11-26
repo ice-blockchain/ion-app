@@ -32,6 +32,8 @@ class ProfileEditPage extends HookConsumerWidget {
 
   final String pubkey;
 
+  static double get paddingValue => 20.0.s;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
@@ -45,87 +47,76 @@ class ProfileEditPage extends HookConsumerWidget {
     final websiteController = useTextEditingController(text: userMetadataValue?.data.website ?? '');
     final category = useState<UserCategoryType?>(null);
 
-    final paddingValue = 20.0.s;
-
     return Scaffold(
       body: KeyboardDismissOnTap(
         child: Stack(
-          alignment: Alignment.topCenter,
           children: [
             Positioned(
               child: BackgroundPicture(pubkey: pubkey),
             ),
-            CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: ScreenTopOffset(
-                    child: Column(
-                      children: [
-                        SizedBox(height: 60.0.s),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: context.theme.appColors.secondaryBackground,
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0.s)),
-                          ),
-                          child: ScreenSideOffset.large(
-                            child: Form(
-                              key: formKey,
-                              child: Column(
-                                children: [
-                                  ProfileAvatar(
-                                    pubkey: pubkey,
-                                    showAvatarPicker: true,
-                                  ),
-                                  SizedBox(height: paddingValue),
-                                  NameInput(controller: nameController),
-                                  SizedBox(height: paddingValue),
-                                  NicknameInput(controller: nicknameController),
-                                  SizedBox(height: paddingValue),
-                                  BioInput(
-                                    controller: bioController,
-                                  ),
-                                  SizedBox(height: paddingValue),
-                                  CategorySelector(
-                                    selectedUserCategoryType: category.value,
-                                    onPressed: () async {
-                                      final newUserCategoryType = await CategorySelectRoute(
-                                        pubkey: pubkey,
-                                        selectedUserCategoryType: category.value,
-                                      ).push<UserCategoryType?>(context);
-                                      if (newUserCategoryType != null) {
-                                        category.value = newUserCategoryType;
-                                      }
-                                    },
-                                  ),
-                                  SizedBox(height: paddingValue),
-                                  LocationInput(
-                                    controller: locationController,
-                                  ),
-                                  SizedBox(height: paddingValue),
-                                  WebsiteInput(
-                                    controller: websiteController,
-                                  ),
-                                ],
+            Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: ScreenTopOffset(
+                      child: Column(
+                        children: [
+                          SizedBox(height: 60.0.s),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: context.theme.appColors.secondaryBackground,
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(30.0.s)),
+                            ),
+                            child: ScreenSideOffset.large(
+                              child: Form(
+                                key: formKey,
+                                child: Column(
+                                  children: [
+                                    ProfileAvatar(
+                                      pubkey: pubkey,
+                                      showAvatarPicker: true,
+                                    ),
+                                    SizedBox(height: paddingValue),
+                                    NameInput(controller: nameController),
+                                    SizedBox(height: paddingValue),
+                                    NicknameInput(controller: nicknameController),
+                                    SizedBox(height: paddingValue),
+                                    BioInput(
+                                      controller: bioController,
+                                    ),
+                                    SizedBox(height: paddingValue),
+                                    CategorySelector(
+                                      selectedUserCategoryType: category.value,
+                                      onPressed: () async {
+                                        final newUserCategoryType = await CategorySelectRoute(
+                                          pubkey: pubkey,
+                                          selectedUserCategoryType: category.value,
+                                        ).push<UserCategoryType?>(context);
+                                        if (newUserCategoryType != null) {
+                                          category.value = newUserCategoryType;
+                                        }
+                                      },
+                                    ),
+                                    SizedBox(height: paddingValue),
+                                    LocationInput(
+                                      controller: locationController,
+                                    ),
+                                    SizedBox(height: paddingValue),
+                                    WebsiteInput(
+                                      controller: websiteController,
+                                    ),
+                                    SizedBox(height: paddingValue),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ],
-            ),
-            Positioned(
-              child: Header(
-                pubkey: pubkey,
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: ColoredBox(
-                color: context.theme.appColors.secondaryBackground,
-                child: Column(
+                Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const HorizontalSeparator(),
@@ -142,10 +133,13 @@ class ProfileEditPage extends HookConsumerWidget {
                         mainAxisSize: MainAxisSize.max,
                       ),
                     ),
-                    SizedBox(height: paddingValue + MediaQuery.paddingOf(context).bottom),
+                    SizedBox(height: paddingValue),
                   ],
                 ),
-              ),
+              ],
+            ),
+            Positioned(
+              child: Header(pubkey: pubkey),
             ),
           ],
         ),
