@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/user/pages/components/background_picture/background_picture.dart';
+import 'package:ion/app/features/user/pages/components/user_banner/user_banner.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/footer/footer.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/header/header.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/links_list/links_list.dart';
@@ -31,9 +31,7 @@ class PullRightMenuPage extends ConsumerWidget {
           alignment: Alignment.topCenter,
           children: [
             Positioned(
-              child: BackgroundPicture(
-                pubkey: currentPubkey,
-              ),
+              child: UserBanner(pubkey: currentPubkey),
             ),
             SingleChildScrollView(
               child: ScreenTopOffset(

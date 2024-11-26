@@ -15,11 +15,11 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/name_inp
 import 'package:ion/app/features/auth/views/components/user_data_inputs/nickname_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/website_input.dart';
 import 'package:ion/app/features/user/model/user_category_type.dart';
-import 'package:ion/app/features/user/pages/components/background_picture/background_picture.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/category_selector/category_selector.dart';
-import 'package:ion/app/features/user/pages/profile_edit_page/components/edit_submit_button.dart/edit_submit_button.dart';
+import 'package:ion/app/features/user/pages/profile_edit_page/components/edit_submit_button/edit_submit_button.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/header/header.dart';
+import 'package:ion/app/features/user/pages/profile_edit_page/components/user_banner_picked/user_banner_picker.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/hooks/use_draft_metadata.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -52,7 +52,7 @@ class ProfileEditPage extends HookConsumerWidget {
       body: KeyboardDismissOnTap(
         child: Stack(
           children: [
-            Positioned(child: BackgroundPicture(pubkey: pubkey)),
+            Positioned(child: UserBannerPicked(pubkey: pubkey)),
             Column(
               children: [
                 Expanded(
