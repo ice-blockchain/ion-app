@@ -542,22 +542,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  ffmpeg_helper:
+  ffmpeg_kit_flutter_full_gpl:
     dependency: "direct main"
     description:
-      name: ffmpeg_helper
-      sha256: "9652adb5aa14ef014a677a85a55ceef2fdbe07c3cffe04ebab0b73f979eca952"
+      name: ffmpeg_kit_flutter_full_gpl
+      sha256: "4f269bcb636bfcb544e5b4d65c706a3d311839970cb42638e72406410c1b5b7b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
-  ffmpeg_kit_flutter_min_gpl:
-    dependency: transitive
-    description:
-      name: ffmpeg_kit_flutter_min_gpl
-      sha256: ca3dc2330c176c8ef96fb512e7a1a37ab369e15685d2e72a52ec1d50726360a0
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.0"
+    version: "6.0.3"
   ffmpeg_kit_flutter_platform_interface:
     dependency: transitive
     description:

@@ -36,12 +36,12 @@ PODS:
   - DKPhotoGallery/Resource (0.0.19):
     - SDWebImage
     - SwiftyGif
-  - ffmpeg-kit-ios-min-gpl (5.1)
-  - ffmpeg_kit_flutter_min_gpl (5.1.0):
-    - ffmpeg_kit_flutter_min_gpl/min-gpl (= 5.1.0)
+  - ffmpeg-kit-ios-full-gpl (6.0)
+  - ffmpeg_kit_flutter_full_gpl (6.0.3):
+    - ffmpeg_kit_flutter_full_gpl/full-gpl (= 6.0.3)
     - Flutter
-  - ffmpeg_kit_flutter_min_gpl/min-gpl (5.1.0):
-    - ffmpeg-kit-ios-min-gpl (= 5.1)
+  - ffmpeg_kit_flutter_full_gpl/full-gpl (6.0.3):
+    - ffmpeg-kit-ios-full-gpl (= 6.0)
     - Flutter
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
@@ -126,7 +126,7 @@ DEPENDENCIES:
   - audio_waveforms (from `.symlinks/plugins/audio_waveforms/ios`)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
-  - ffmpeg_kit_flutter_min_gpl (from `.symlinks/plugins/ffmpeg_kit_flutter_min_gpl/ios`)
+  - ffmpeg_kit_flutter_full_gpl (from `.symlinks/plugins/ffmpeg_kit_flutter_full_gpl/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - file_saver (from `.symlinks/plugins/file_saver/ios`)
   - Flutter (from `Flutter`)
@@ -154,7 +154,7 @@ SPEC REPOS:
   trunk:
     - DKImagePickerController
     - DKPhotoGallery
-    - ffmpeg-kit-ios-min-gpl
+    - ffmpeg-kit-ios-full-gpl
     - libwebp
     - Mantle
     - MTBBarcodeScanner
@@ -170,8 +170,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
-  ffmpeg_kit_flutter_min_gpl:
-    :path: ".symlinks/plugins/ffmpeg_kit_flutter_min_gpl/ios"
+  ffmpeg_kit_flutter_full_gpl:
+    :path: ".symlinks/plugins/ffmpeg_kit_flutter_full_gpl/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   file_saver:
@@ -223,8 +223,8 @@ SPEC CHECKSUMS:
   device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
-  ffmpeg-kit-ios-min-gpl: ac5eb47f98b27e26d14c009de3ce9181007ce688
-  ffmpeg_kit_flutter_min_gpl: f657651b493b7608fad9dda3ad606eb0946c9faa
+  ffmpeg-kit-ios-full-gpl: 80adc341962e55ef709e36baa8ed9a70cf4ea62b
+  ffmpeg_kit_flutter_full_gpl: 8d15c14c0c3aba616fac04fe44b3d27d02e3c330
   file_picker: 09aa5ec1ab24135ccd7a1621c46c84134bfd6655
   file_saver: 503e386464dbe118f630e17b4c2e1190fa0cf808
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
