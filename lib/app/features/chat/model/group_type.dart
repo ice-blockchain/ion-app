@@ -28,6 +28,6 @@ enum GroupType implements SelectableType {
   String get iconAsset => switch (this) {
         GroupType.public => Assets.svg.iconChannelType,
         GroupType.private => Assets.svg.iconChannelPrivatetype,
-        GroupType.encrypted => Assets.svg.iconChannelType,
+        GroupType.encrypted => Assets.svg.iconLoginIdentity,
       };
 }
