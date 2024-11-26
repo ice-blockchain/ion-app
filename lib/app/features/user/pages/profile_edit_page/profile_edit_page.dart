@@ -43,7 +43,7 @@ class ProfileEditPage extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final (:hasChanges, :draftRef, :update) = useDraftMetadata(userMetadata.data);
+    final (:hasChanges, :draftRef, :update) = useDraftMetadata(ref, userMetadata.data);
 
     final locationController = useTextEditingController(text: '');
     final category = useState<UserCategoryType?>(null);
@@ -109,9 +109,7 @@ class ProfileEditPage extends HookConsumerWidget {
                                       },
                                     ),
                                     SizedBox(height: paddingValue),
-                                    LocationInput(
-                                      controller: locationController,
-                                    ),
+                                    LocationInput(controller: locationController),
                                     SizedBox(height: paddingValue),
                                     WebsiteInput(
                                       initialValue: userMetadata.data.website,

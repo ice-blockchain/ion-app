@@ -6,6 +6,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
+import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
 import 'package:ion/app/features/user/providers/user_metadata_notifier.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -37,7 +38,11 @@ class EditSubmitButton extends ConsumerWidget {
             ),
       onPressed: () async {
         if (formKey.currentState!.validate()) {
-          await ref.read(userMetadataNotifierProvider.notifier).send(draftRef.value);
+          final avatarFile =
+              ref.watch(avatarPickerNotifierProvider).whenOrNull(compressed: (file) => file);
+          await ref
+              .read(userMetadataNotifierProvider.notifier)
+              .send(draftRef.value, avatar: avatarFile);
           if (context.mounted) {
             context.pop();
           }
