@@ -62,14 +62,8 @@ class FeedPage extends HookConsumerWidget {
       SliverToBoxAdapter(
         child: Column(
           children: [
-            if (feedCategory == FeedCategory.articles) ...[
-              const ArticleCategoriesMenu(),
-              FeedListSeparator(),
-            ],
-            if (feedCategory != FeedCategory.articles) ...[
-              const Stories(),
-              FeedListSeparator(height: 16.0.s),
-            ],
+            if (feedCategory == FeedCategory.articles) const ArticleCategoriesMenu(),
+            if (feedCategory != FeedCategory.articles) const Stories(),
             if (feedCategory == FeedCategory.feed) const TrendingVideos(),
           ],
         ),
