@@ -73,7 +73,9 @@ class StoryPreviewPage extends ConsumerWidget {
                   onPressed: () async {
                     final result = await showSimpleBottomSheet<bool>(
                       context: context,
-                      child: const VisibilitySettingsModal(),
+                      child: VisibilitySettingsModal(
+                        title: context.i18n.visibility_settings_title_story,
+                      ),
                     );
 
                     if (result ?? false) {
