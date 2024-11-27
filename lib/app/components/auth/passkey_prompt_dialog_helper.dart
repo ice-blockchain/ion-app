@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/auth/passkey_prompt_dialog.dart';
@@ -10,9 +12,16 @@ Future<void> guardPasskeyDialog(
 ) async {
   return showSimpleBottomSheet<void>(
     context: context,
-    child: PasskeyPromptDialog(
-      onInit: onInit,
-      provider: provider,
-    ),
+    child: const PasskeyPromptDialog(),
+  );
+}
+
+Future<void> guardPasskeyDialog2(
+  BuildContext context,
+  Widget Function(Widget child) passkeyRequestBuilder,
+) async {
+  return showSimpleBottomSheet<void>(
+    context: context,
+    child: passkeyRequestBuilder(const PasskeyPromptDialog()),
   );
 }
