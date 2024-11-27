@@ -6,7 +6,12 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/general_
 import 'package:ion/generated/assets.gen.dart';
 
 class BioInput extends StatelessWidget {
-  const BioInput({this.controller, super.key, this.onChanged, this.initialValue});
+  const BioInput({
+    this.controller,
+    this.onChanged,
+    this.initialValue,
+    super.key,
+  });
 
   final TextEditingController? controller;
 
