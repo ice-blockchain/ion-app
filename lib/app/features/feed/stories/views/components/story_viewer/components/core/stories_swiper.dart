@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.dart';
+import 'package:ion/app/features/feed/stories/data/models/story_viewer_state.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/core/core.dart';
 import 'package:ion/app/utils/future.dart';
@@ -23,6 +24,16 @@ class StoriesSwiper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userPageController = usePageController(initialPage: currentUserIndex);
 
+    ref.listen<StoryViewerState>(storyViewingControllerProvider, (previous, next) {
+      if (previous?.currentUserIndex != next.currentUserIndex) {
+        userPageController.animateToPage(
+          next.currentUserIndex,
+          duration: 300.ms,
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+
     return CubePageView.builder(
       controller: userPageController,
       itemCount: userStories.length,
@@ -31,7 +42,6 @@ class StoriesSwiper extends HookConsumerWidget {
         final userStory = userStories[userIndex];
         final isCurrentUser = userIndex == currentUserIndex;
 
-        final storyController = ref.read(storyViewingControllerProvider);
         final storyNotifier = ref.read(storyViewingControllerProvider.notifier);
 
         return CubeWidget(
@@ -40,7 +50,6 @@ class StoriesSwiper extends HookConsumerWidget {
           child: UserStoryPageView(
             userStory: userStory,
             isCurrentUser: isCurrentUser,
-            currentStoryIndex: isCurrentUser ? storyController.currentStoryIndex : 0,
             onNextStory: storyNotifier.moveToNextStory,
             onPreviousStory: storyNotifier.moveToPreviousStory,
             onNextUser: () => userPageController.hasClients && userIndex < userStories.length - 1
