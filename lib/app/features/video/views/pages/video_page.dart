@@ -100,7 +100,7 @@ class VideoPage extends HookConsumerWidget {
                             ),
                             child: Center(
                               child: Assets.svg.iconBackArrow.icon(
-                                color: Colors.white,
+                                color: context.theme.appColors.secondaryBackground,
                               ),
                             ),
                           ),
@@ -131,9 +131,11 @@ class VideoPage extends HookConsumerWidget {
                                   pubkey: eventReference.pubkey,
                                   trailing: UserInfoMenu(
                                     pubkey: eventReference.pubkey,
-                                    iconColor: Colors.white,
+                                    iconColor: context.theme.appColors.secondaryBackground,
                                   ),
-                                  textColor: Colors.white,
+                                  textStyle: TextStyle(
+                                    color: context.theme.appColors.secondaryBackground,
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 10.0.s,

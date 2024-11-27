@@ -15,13 +15,13 @@ class UserInfo extends HookConsumerWidget {
   const UserInfo({
     required this.pubkey,
     this.trailing,
-    this.textColor,
+    this.textStyle,
     super.key,
   });
 
   final String pubkey;
   final Widget? trailing;
-  final Color? textColor;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,15 +39,11 @@ class UserInfo extends HookConsumerWidget {
           onTap: () => ProfileRoute(pubkey: pubkey).push<void>(context),
           title: Text(
             userMetadataEntity.data.displayName,
-            style: TextStyle(
-              color: textColor,
-            ),
+            style: textStyle,
           ),
           subtitle: Text(
             prefixUsername(username: userMetadataEntity.data.name, context: context),
-            style: TextStyle(
-              color: textColor,
-            ),
+            style: textStyle,
           ),
           profilePicture: userMetadataEntity.data.picture,
           trailing: trailing,

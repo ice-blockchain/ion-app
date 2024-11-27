@@ -3,7 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_author.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_likes_button.dart';
@@ -55,14 +55,14 @@ class _PlaceholderThumbnail extends StatelessWidget {
       width: size.width,
       height: size.height,
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.3),
+        color: context.theme.appColors.sheetLine.withOpacity(0.3),
         borderRadius: BorderRadius.circular(16.0.s),
       ),
       child: Center(
         child: Icon(
           Icons.broken_image,
           size: 48.0.s,
-          color: Colors.grey,
+          color: context.theme.appColors.sheetLine,
         ),
       ),
     );

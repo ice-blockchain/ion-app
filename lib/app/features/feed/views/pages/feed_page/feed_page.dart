@@ -17,7 +17,6 @@ import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dar
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.dart';
-import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
