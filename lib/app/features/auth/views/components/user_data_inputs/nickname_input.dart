@@ -19,7 +19,7 @@ class NicknameInput extends StatelessWidget {
 
   final TextInputAction? textInputAction;
 
-  final void Function(String)? onChanged;
+  final ValueChanged<String>? onChanged;
 
   final String? initialValue;
 

@@ -10,7 +10,7 @@ class BioInput extends StatelessWidget {
 
   final TextEditingController? controller;
 
-  final void Function(String)? onChanged;
+  final ValueChanged<String>? onChanged;
 
   final String? initialValue;
 

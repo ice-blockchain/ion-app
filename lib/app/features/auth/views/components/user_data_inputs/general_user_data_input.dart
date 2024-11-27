@@ -22,7 +22,7 @@ class GeneralUserDataInput extends StatelessWidget {
   final String prefixIconAssetName;
   final String labelText;
   final TextEditingController? controller;
-  final void Function(String)? onChanged;
+  final ValueChanged<String>? onChanged;
   final FormFieldValidator<String>? validator;
   final int? maxLines;
   final int? minLines;
