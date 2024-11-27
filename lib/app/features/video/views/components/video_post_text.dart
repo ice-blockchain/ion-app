@@ -47,13 +47,13 @@ class VideoTextPost extends HookConsumerWidget {
         return _isTextOneLine(
           text: postText,
           style: context.theme.appTextThemes.body2.copyWith(color: Colors.white),
-          maxWidth: MediaQuery.of(context).size.width,
+          maxWidth: MediaQuery.sizeOf(context).width,
         );
       },
       [
         postText,
         context.theme.appTextThemes.body2,
-        MediaQuery.of(context).size.width,
+        MediaQuery.sizeOf(context).width,
       ],
     );
 
