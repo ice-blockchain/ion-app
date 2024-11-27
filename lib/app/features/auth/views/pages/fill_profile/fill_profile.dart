@@ -13,7 +13,7 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/name_inp
 import 'package:ion/app/features/auth/views/components/user_data_inputs/nickname_input.dart';
 import 'package:ion/app/features/auth/views/pages/fill_profile/components/fill_prifile_submit_button.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
-import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -26,8 +26,9 @@ class FillProfile extends HookConsumerWidget {
     final fillProfileState = ref.watch(fillProfileNotifierProvider);
     final formKey = useMemoized(GlobalKey<FormState>.new);
     final onboardingData = ref.watch(onboardingDataProvider);
-    final isAvatarCompressing =
-        ref.watch(avatarPickerNotifierProvider.select((state) => state is AvatarPickerStatePicked));
+    final isAvatarCompressing = ref.watch(
+      avatarProcessorNotifierProvider.select((state) => state is AvatarProcessorStateCropped),
+    );
     final nameController = useTextEditingController.fromValue(
       TextEditingValue(text: onboardingData.displayName ?? ''),
     );

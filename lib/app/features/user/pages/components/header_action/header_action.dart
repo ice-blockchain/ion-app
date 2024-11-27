@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
 class HeaderAction extends StatelessWidget {
@@ -11,6 +12,7 @@ class HeaderAction extends StatelessWidget {
     required this.onPressed,
     required this.assetName,
     this.disabled = false,
+    this.loading = false,
     this.opacity = 0,
     super.key,
   });
@@ -18,6 +20,7 @@ class HeaderAction extends StatelessWidget {
   final String assetName;
   final VoidCallback onPressed;
   final bool disabled;
+  final bool loading;
   final double opacity;
 
   static double get buttonSize => 40.0.s;
@@ -44,7 +47,9 @@ class HeaderAction extends StatelessWidget {
       borderColor: interpolatedBorderColor,
       backgroundColor: interpolatedBackgroundColor,
       tintColor: context.theme.appColors.primaryText,
-      icon: assetName.icon(size: iconSize),
+      icon: loading
+          ? const IONLoadingIndicator(type: IndicatorType.dark)
+          : assetName.icon(size: iconSize),
       onPressed: onPressed,
     );
   }

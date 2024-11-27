@@ -30,12 +30,10 @@ class ProfileRoute extends BaseRouteData {
 }
 
 class ProfileEditRoute extends BaseRouteData {
-  ProfileEditRoute({required this.pubkey})
+  ProfileEditRoute()
       : super(
-          child: ProfileEditPage(pubkey: pubkey),
+          child: const ProfileEditPage(),
         );
-
-  final String pubkey;
 }
 
 class FollowListRoute extends BaseRouteData {

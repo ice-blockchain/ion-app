@@ -20,6 +20,17 @@ Future<AssetEntity?> assetEntity(Ref ref, String id) {
 }
 
 @riverpod
+Future<String?> assetFilePath(Ref ref, String assetId) async {
+  final assetEntity = await ref.watch(assetEntityProvider(assetId).future);
+
+  if (assetEntity == null) return null;
+
+  final file = await assetEntity.file;
+
+  return file?.path;
+}
+
+@riverpod
 class GalleryNotifier extends _$GalleryNotifier {
   static const int _pageSize = 100;
 

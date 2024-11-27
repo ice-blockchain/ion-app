@@ -9,17 +9,14 @@ import 'package:ion/generated/assets.gen.dart';
 
 class EditUserButton extends ConsumerWidget {
   const EditUserButton({
-    required this.pupkey,
     super.key,
   });
-
-  final String pupkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Button(
       onPressed: () {
-        ProfileEditRoute(pubkey: pupkey).push<void>(context);
+        ProfileEditRoute().push<void>(context);
       },
       leadingIcon: Assets.svg.iconEditLink.icon(
         color: context.theme.appColors.onPrimaryAccent,

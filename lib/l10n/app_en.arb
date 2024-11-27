@@ -466,6 +466,7 @@
   "error_screenshots_arent_secure_title": "Screenshots aren’t secure",
   "error_screenshots_arent_secure_description": "Anyone who has access to your keys can use your assets. We recommend writing with your hands.",
   "error_nickname_invalid": "Only letters, numbers, and dots are allowed",
+  "error_website_invalid": "Invalid website url",
   "error_general_title": "Something went wrong",
   "error_general_description": "An unexpected error occurred. Please try again later. {info}",
   "error_general_error_code": "Error code: {error}",

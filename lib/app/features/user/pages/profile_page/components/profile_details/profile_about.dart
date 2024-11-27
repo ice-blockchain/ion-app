@@ -17,13 +17,17 @@ class ProfileAbout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final aboutText = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.data.about ??
-        'Read @America to understand why I’m supporting Donald #Trump for President';
+    final about =
+        ref.watch(userMetadataProvider(pubkey).select((state) => state.valueOrNull?.data.about));
+
+    if (about == null) {
+      return const SizedBox.shrink();
+    }
 
     return SizedBox(
       width: double.infinity,
       child: RichTextWithHighlights(
-        text: aboutText,
+        text: about,
         style: context.theme.appTextThemes.body2.copyWith(
           color: context.theme.appColors.primaryText,
         ),

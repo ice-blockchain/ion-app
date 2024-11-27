@@ -8,7 +8,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/user/pages/components/user_name_tile/user_name_tile.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followed_by/followed_by.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_about.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions/edit_profile_actions.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions/edit_user_button.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions/profile_actions.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_followers.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/user_info/user_info_summary.dart';
@@ -31,9 +31,7 @@ class ProfileDetails extends ConsumerWidget {
           UserNameTile(pubkey: pubkey),
           SizedBox(height: 8.0.s),
           if (isCurrentUserProfile)
-            EditProfileActions(
-              pubkey: pubkey,
-            )
+            const EditUserButton()
           else
             ProfileActions(
               pubkey: pubkey,

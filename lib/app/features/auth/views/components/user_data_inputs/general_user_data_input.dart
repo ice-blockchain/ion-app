@@ -7,23 +7,27 @@ import 'package:ion/app/extensions/extensions.dart';
 
 class GeneralUserDataInput extends StatelessWidget {
   const GeneralUserDataInput({
-    required this.controller,
     required this.prefixIconAssetName,
     required this.labelText,
+    this.controller,
+    this.onChanged,
     this.validator,
     this.maxLines = 1,
     this.minLines,
     this.textInputAction,
+    this.initialValue,
     super.key,
   });
 
-  final TextEditingController controller;
   final String prefixIconAssetName;
   final String labelText;
+  final TextEditingController? controller;
+  final ValueChanged<String>? onChanged;
   final FormFieldValidator<String>? validator;
   final int? maxLines;
   final int? minLines;
   final TextInputAction? textInputAction;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +36,7 @@ class GeneralUserDataInput extends StatelessWidget {
         hasRightDivider: true,
         icons: [prefixIconAssetName.icon(color: context.theme.appColors.secondaryText)],
       ),
+      onChanged: onChanged,
       labelText: labelText,
       controller: controller,
       validator: validator,
@@ -39,6 +44,7 @@ class GeneralUserDataInput extends StatelessWidget {
       scrollPadding: EdgeInsets.all(120.0.s),
       maxLines: maxLines,
       minLines: minLines,
+      initialValue: initialValue,
     );
   }
 }

@@ -2,6 +2,7 @@
 
 import 'package:dlibphonenumber/dlibphonenumber.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class Validators {
   Validators._();
@@ -52,5 +53,9 @@ class Validators {
         pollAnswers.every(
           (answer) => answer.trim().isNotEmpty && answer.trim().length <= 25,
         );
+  }
+
+  static bool isInvalidUrl(String? value) {
+    return isEmpty(value) || !(Uri.tryParse(value!)?.isAbsolute).falseOrValue;
   }
 }
