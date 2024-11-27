@@ -12,6 +12,7 @@ class StoryCaptureButton extends StatelessWidget {
     required this.recordingProgress,
     required this.onRecordingStart,
     required this.onRecordingStop,
+    required this.onCapturePhoto,
     super.key,
   });
 
@@ -19,10 +20,12 @@ class StoryCaptureButton extends StatelessWidget {
   final double recordingProgress;
   final Future<void> Function()? onRecordingStart;
   final Future<void> Function()? onRecordingStop;
+  final Future<void> Function()? onCapturePhoto;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: onCapturePhoto != null ? () async => onCapturePhoto!() : null,
       onLongPress: onRecordingStart != null ? () async => onRecordingStart!() : null,
       onLongPressUp: onRecordingStop != null ? () async => onRecordingStop!() : null,
       child: AnimatedContainer(

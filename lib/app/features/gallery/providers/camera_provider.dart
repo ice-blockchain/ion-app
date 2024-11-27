@@ -180,6 +180,18 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
     );
   }
 
+  Future<XFile?> takePicture() async {
+    if (_cameraController == null) return null;
+
+    try {
+      final picture = await _cameraController!.takePicture();
+      return picture;
+    } catch (e) {
+      Logger.log('Error taking picture: $e');
+      return null;
+    }
+  }
+
   Future<void> startVideoRecording() async {
     await state.maybeWhen(
       ready: (controller, isRecording, isFlashOn) async {

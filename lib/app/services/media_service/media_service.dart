@@ -45,7 +45,7 @@ class MediaService {
       return MediaFile(path: image.path, mimeType: image.mimeType);
     }
 
-    return _saveCameraImage(File(image.path));
+    return saveImageToGallery(File(image.path));
   }
 
   Future<List<MediaFile>> fetchGalleryMedia({
@@ -124,7 +124,7 @@ class MediaService {
     ];
   }
 
-  Future<MediaFile?> _saveCameraImage(File imageFile) async {
+  Future<MediaFile?> saveImageToGallery(File imageFile) async {
     final asset = await PhotoManager.editor.saveImageWithPath(
       imageFile.path,
       title: 'Camera_${DateTime.now().millisecondsSinceEpoch}.jpg',

@@ -73,6 +73,9 @@ class StoryRecordPage extends HookConsumerWidget {
                     child: StoryCaptureButton(
                       isRecording: isRecording,
                       recordingProgress: recordingProgress,
+                      onCapturePhoto: isCameraReady
+                          ? () async => ref.read(storyCameraControllerProvider.notifier).takePhoto()
+                          : null,
                       onRecordingStart: isCameraReady
                           ? () async =>
                               ref.read(storyCameraControllerProvider.notifier).startVideoRecording()

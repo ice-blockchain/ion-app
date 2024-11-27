@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.dart';
@@ -17,6 +18,19 @@ part 'story_camera_provider.g.dart';
 class StoryCameraController extends _$StoryCameraController {
   @override
   StoryCameraState build() => const StoryCameraState.initial();
+
+  Future<void> takePhoto() async {
+    final cameraNotifier = ref.read(cameraControllerNotifierProvider.notifier);
+    final picture = await cameraNotifier.takePicture();
+
+    if (picture != null) {
+      final mediaFile = await ref.read(mediaServiceProvider).saveImageToGallery(File(picture.path));
+
+      state = mediaFile != null
+          ? StoryCameraState.saved(file: mediaFile)
+          : const StoryCameraState.error(message: 'Failed to save photo.');
+    }
+  }
 
   Future<void> startVideoRecording() async {
     await ref.read(cameraControllerNotifierProvider.notifier).startVideoRecording();
