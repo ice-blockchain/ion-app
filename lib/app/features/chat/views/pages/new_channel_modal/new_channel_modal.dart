@@ -21,7 +21,7 @@ import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/c
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/desc_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/title_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admins_management_modal/admins_management_modal.dart';
-import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -116,9 +116,9 @@ class NewChannelModal extends HookConsumerWidget {
                     channelType: channelType.value,
                     admins: channelAdmins,
                     users: channelAdmins.keys.toList(),
-                    image: ref.read(avatarPickerNotifierProvider).mapOrNull(
-                          compressed: (state) => state.file,
-                          picked: (state) => state.file,
+                    image: ref.read(avatarProcessorNotifierProvider).mapOrNull(
+                          cropped: (file) => file.file,
+                          processed: (file) => file.file,
                         ),
                   );
                   ref.read(channelsProvider.notifier).setChannel(newChannelData.id, newChannelData);

@@ -21,7 +21,7 @@ import 'package:ion/app/features/chat/views/pages/components/bottom_sticky_butto
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/desc_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/title_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admins_management_modal/admins_management_modal.dart';
-import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -135,9 +135,9 @@ class EditChannelPage extends HookConsumerWidget {
                           description: descController.text,
                           channelType: channelType.value,
                           admins: channelAdmins,
-                          image: ref.read(avatarPickerNotifierProvider).mapOrNull(
-                                    compressed: (state) => state.file,
-                                    picked: (state) => state.file,
+                          image: ref.read(avatarProcessorNotifierProvider).mapOrNull(
+                                    cropped: (file) => file.file,
+                                    processed: (file) => file.file,
                                   ) ??
                               channelData.image,
                         );
