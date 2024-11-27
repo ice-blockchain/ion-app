@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/features/user/providers/avatar_processor_notifier.dart';
 import 'package:ion/app/features/user/providers/banner_processor_notifier.dart';
-import 'package:ion/app/features/user/providers/user_metadata_notifier.dart';
+import 'package:ion/app/features/user/providers/update_user_metadata_notifier.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class EditSubmitButton extends ConsumerWidget {
@@ -29,12 +29,12 @@ class EditSubmitButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.displayErrors(userMetadataNotifierProvider);
+    ref.displayErrors(updateUserMetadataNotifierProvider);
 
     return Button(
       disabled: !hasChanges,
       type: hasChanges ? ButtonType.primary : ButtonType.disabled,
-      leadingIcon: ref.watch(userMetadataNotifierProvider).isLoading
+      leadingIcon: ref.watch(updateUserMetadataNotifierProvider).isLoading
           ? const IONLoadingIndicator()
           : Assets.svg.iconProfileSave.icon(
               color: context.theme.appColors.onPrimaryAccent,
@@ -46,8 +46,8 @@ class EditSubmitButton extends ConsumerWidget {
           final bannerFile =
               ref.read(bannerProcessorNotifierProvider).whenOrNull(processed: (file) => file);
           await ref
-              .read(userMetadataNotifierProvider.notifier)
-              .send(draftRef.value, avatar: avatarFile, banner: bannerFile);
+              .read(updateUserMetadataNotifierProvider.notifier)
+              .publish(draftRef.value, avatar: avatarFile, banner: bannerFile);
           if (context.mounted) {
             context.pop();
           }

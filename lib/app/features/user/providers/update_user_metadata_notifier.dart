@@ -1,21 +1,19 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/nostr/model/file_metadata.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_metadata_notifier.g.dart';
+part 'update_user_metadata_notifier.g.dart';
 
 @riverpod
-class UserMetadataNotifier extends _$UserMetadataNotifier {
+class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<void> send(UserMetadata userMetadata, {MediaFile? avatar, MediaFile? banner}) async {
+  Future<void> publish(UserMetadata userMetadata, {MediaFile? avatar, MediaFile? banner}) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
@@ -24,8 +22,8 @@ class UserMetadataNotifier extends _$UserMetadataNotifier {
       final (uploadedAvatar, uploadedBanner) = await (_upload(avatar), _upload(banner)).wait;
 
       final files = [uploadedAvatar, uploadedBanner]
-          .whereType<(FileMetadata, MediaAttachment)>()
-          .map((result) => result.$1);
+          .whereType<UploadResult>()
+          .map((result) => result.fileMetadata);
 
       if (uploadedAvatar != null) {
         final attachment = uploadedAvatar.mediaAttachment;
