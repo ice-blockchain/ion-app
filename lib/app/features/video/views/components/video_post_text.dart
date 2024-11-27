@@ -42,10 +42,19 @@ class VideoTextPost extends HookConsumerWidget {
       excludeMatcherType: UrlMatcher,
     );
 
-    final isOneLine = _isTextOneLine(
-      text: postText,
-      style: context.theme.appTextThemes.body2.copyWith(color: Colors.white),
-      maxWidth: MediaQuery.of(context).size.width,
+    final isOneLine = useMemoized(
+      () {
+        return _isTextOneLine(
+          text: postText,
+          style: context.theme.appTextThemes.body2.copyWith(color: Colors.white),
+          maxWidth: MediaQuery.of(context).size.width,
+        );
+      },
+      [
+        postText,
+        context.theme.appTextThemes.body2,
+        MediaQuery.of(context).size.width,
+      ],
     );
 
     return Column(
