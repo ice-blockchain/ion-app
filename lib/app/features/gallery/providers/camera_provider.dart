@@ -152,7 +152,7 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
             isFlashOn: mode == FlashMode.torch,
           );
         } catch (e) {
-          Logger.log('Error setting flash mode: $e');
+          Logger.log('Error setting flash mode', error: e);
           state = CameraState.error(message: 'Error setting flash mode: $e');
         }
       },
@@ -172,7 +172,7 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
             isFlashOn: !isFlashOn,
           );
         } catch (e) {
-          Logger.log('Error toggling flash mode: $e');
+          Logger.log('Error toggling flash mode', error: e);
           state = CameraState.error(message: 'Error toggling flash mode: $e');
         }
       },
@@ -187,7 +187,7 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       final picture = await _cameraController!.takePicture();
       return picture;
     } catch (e) {
-      Logger.log('Error taking picture: $e');
+      Logger.log('Error taking picture', error: e);
       return null;
     }
   }
@@ -204,7 +204,7 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
               isFlashOn: isFlashOn,
             );
           } catch (e) {
-            Logger.log('Error starting video recording: $e');
+            Logger.log('Error starting video recording', error: e);
             state = CameraState.error(message: 'Error starting video recording: $e');
           }
         }
@@ -225,7 +225,7 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
             );
             return file;
           } catch (e) {
-            Logger.log('Error stopping video recording: $e');
+            Logger.log('Error stopping video recording', error: e);
             state = CameraState.error(message: 'Error stopping video recording: $e');
             return null;
           }
