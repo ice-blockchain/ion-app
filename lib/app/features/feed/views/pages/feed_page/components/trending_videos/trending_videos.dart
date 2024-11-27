@@ -27,7 +27,16 @@ class TrendingVideos extends ConsumerWidget {
     // final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
     final videosData = ref.watch(mockPostEntitiesPagedDataProvider(dataSource));
 
-    if (videosData?.data.items.isEmpty ?? true) return const SizedBox.shrink();
+    if (videosData == null) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 12.0.s),
+        child: TrendingVideosListSkeleton(
+          listOverlay: listOverlay,
+        ),
+      );
+    }
+
+    if (videosData.data.items.isEmpty) return const SizedBox.shrink();
 
     return Column(
       children: [
@@ -36,26 +45,23 @@ class TrendingVideos extends ConsumerWidget {
           title: context.i18n.feed_trending_videos,
           leadingIcon: const VideosIcon(),
         ),
-        if (videosData == null)
-          TrendingVideosListSkeleton(listOverlay: listOverlay)
-        else
-          LoadMoreBuilder(
-            slivers: [
-              TrendingVideosList(
-                videos: videosData.data.items.whereType<PostEntity>().toList(),
-                listOverlay: listOverlay,
-              ),
-            ],
-            hasMore: videosData.hasMore,
-            onLoadMore: () => _onLoadMore(ref),
-            builder: (context, slivers) => SizedBox(
-              height: listOverlay.itemSize.height,
-              child: CustomScrollView(
-                scrollDirection: Axis.horizontal,
-                slivers: slivers,
-              ),
+        LoadMoreBuilder(
+          slivers: [
+            TrendingVideosList(
+              videos: videosData.data.items.whereType<PostEntity>().toList(),
+              listOverlay: listOverlay,
+            ),
+          ],
+          hasMore: videosData.hasMore,
+          onLoadMore: () => _onLoadMore(ref),
+          builder: (context, slivers) => SizedBox(
+            height: listOverlay.itemSize.height,
+            child: CustomScrollView(
+              scrollDirection: Axis.horizontal,
+              slivers: slivers,
             ),
           ),
+        ),
         SizedBox(height: 18.0.s),
       ],
     );
