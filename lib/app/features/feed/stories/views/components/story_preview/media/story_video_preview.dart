@@ -17,37 +17,32 @@ class StoryVideoPreview extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final assetFilePathAsync = ref.watch(assetFilePathProvider(path));
 
+    final filePath = assetFilePathAsync.valueOrNull;
+
+    if (filePath == null) {
+      return const CenteredLoadingIndicator();
+    }
+
+    final videoController = ref.watch(
+      videoControllerProvider(
+        filePath,
+        autoPlay: true,
+        looping: true,
+      ),
+    );
+
+    if (!videoController.value.isInitialized) {
+      return const CenteredLoadingIndicator();
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(22.0.s),
-          child: assetFilePathAsync.maybeWhen(
-            data: (filePath) {
-              if (filePath == null) {
-                return const CenteredLoadingIndicator();
-              }
-
-              final videoController = ref.read(
-                videoControllerProvider(
-                  filePath,
-                  autoPlay: true,
-                  looping: true,
-                ),
-              );
-
-              if (!videoController.value.isInitialized) {
-                return const CenteredLoadingIndicator();
-              }
-
-              final videoAspectRatio = videoController.value.aspectRatio;
-
-              return SizedBox(
-                width: constraints.maxWidth,
-                height: constraints.maxWidth / videoAspectRatio,
-                child: VideoPlayer(videoController),
-              );
-            },
-            orElse: () => const CenteredLoadingIndicator(),
+          child: SizedBox(
+            width: constraints.maxWidth,
+            height: constraints.maxWidth / videoController.value.aspectRatio,
+            child: VideoPlayer(videoController),
           ),
         );
       },

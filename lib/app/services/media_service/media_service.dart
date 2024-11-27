@@ -45,7 +45,7 @@ class MediaService {
       return MediaFile(path: image.path, mimeType: image.mimeType);
     }
 
-    return _saveCameraImage(File(image.path));
+    return saveImageToGallery(File(image.path));
   }
 
   Future<List<MediaFile>> fetchGalleryMedia({
@@ -64,17 +64,19 @@ class MediaService {
         page: page,
         size: size,
       );
-      final mediaFiles = assets
-          .map(
-            (asset) => MediaFile(
-              path: asset.id,
-              height: asset.height,
-              width: asset.width,
-              mimeType: asset.mimeType,
-            ),
-          )
-          .toList()
-          .cast<MediaFile>();
+
+      final mediaFiles = await Future.wait(
+        assets.map((asset) async {
+          final mimeType = await asset.mimeTypeAsync;
+
+          return MediaFile(
+            path: asset.id,
+            height: asset.height,
+            width: asset.width,
+            mimeType: mimeType,
+          );
+        }),
+      );
 
       return mediaFiles;
     } catch (e) {
@@ -122,7 +124,7 @@ class MediaService {
     ];
   }
 
-  Future<MediaFile?> _saveCameraImage(File imageFile) async {
+  Future<MediaFile?> saveImageToGallery(File imageFile) async {
     final asset = await PhotoManager.editor.saveImageWithPath(
       imageFile.path,
       title: 'Camera_${DateTime.now().millisecondsSinceEpoch}.jpg',
@@ -134,11 +136,13 @@ class MediaService {
 
     if (file == null) return null;
 
+    final mimeType = await asset.mimeTypeAsync;
+
     return MediaFile(
       path: asset.id,
       height: asset.height,
       width: asset.width,
-      mimeType: asset.mimeType,
+      mimeType: mimeType,
     );
   }
 
@@ -156,9 +160,11 @@ class MediaService {
 
     if (file == null) return null;
 
+    final mimeType = await asset.mimeTypeAsync;
+
     return MediaFile(
       path: asset.id,
-      mimeType: asset.mimeType,
+      mimeType: mimeType,
     );
   }
 

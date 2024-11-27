@@ -9,8 +9,11 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 
 class VisibilitySettingsModal extends StatelessWidget {
   const VisibilitySettingsModal({
+    this.title,
     super.key,
   });
+
+  final String? title;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,7 @@ class VisibilitySettingsModal extends StatelessWidget {
       children: [
         NavigationAppBar.modal(
           showBackButton: false,
-          title: Text(context.i18n.visibility_settings_title_video),
+          title: Text(title ?? context.i18n.visibility_settings_title_video),
         ),
         SizedBox(height: 12.0.s),
         const HorizontalSeparator(),

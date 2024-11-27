@@ -220,14 +220,14 @@ class StoryRecordRoute extends BaseRouteData {
 }
 
 class StoryPreviewRoute extends BaseRouteData {
-  StoryPreviewRoute({required this.path, required this.storyType})
+  StoryPreviewRoute({required this.path, required this.mimeType})
       : super(
-          child: StoryPreviewPage(path: path, type: storyType),
+          child: StoryPreviewPage(path: path, mimeType: mimeType),
           type: IceRouteType.slideFromLeft,
         );
 
   final String path;
-  final StoryType storyType;
+  final String? mimeType;
 }
 
 @TypedGoRoute<StoryViewerRoute>(
