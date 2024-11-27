@@ -58,10 +58,10 @@ class _PlaceholderThumbnail extends StatelessWidget {
         color: Colors.grey.withOpacity(0.3),
         borderRadius: BorderRadius.circular(16.0.s),
       ),
-      child: const Center(
+      child: Center(
         child: Icon(
           Icons.broken_image,
-          size: 48,
+          size: 48.0.s,
           color: Colors.grey,
         ),
       ),
