@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/components/entities_list/entities_list.dart';
+import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.dart';
-import 'package:ion/app/features/feed/views/components/entities_list/entities_list.dart';
-import 'package:ion/app/features/feed/views/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
 
 class FeedPosts extends ConsumerWidget {

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/entities_list/entities_list.dart';
-import 'package:ion/app/features/feed/views/components/entities_list/entities_list_skeleton.dart';
+import 'package:ion/app/features/components/entities_list/entities_list.dart';
+import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/search/providers/feed_search_top_posts_provider.dart';
 import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 

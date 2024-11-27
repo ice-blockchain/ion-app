@@ -16,7 +16,7 @@ import 'package:ion/app/features/user/pages/profile_page/components/tabs/content
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/posts_tab.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/replies_tab.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/videos_tab.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_header.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content_separator.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opacity_on_scroll.dart';
 
@@ -88,7 +88,7 @@ class ProfilePage extends HookConsumerWidget {
                           child: const ProfileTabsHeader(),
                         ),
                       ),
-                      const TabHeader(),
+                      const SliverToBoxAdapter(child: ContentSeparator()),
                     ];
                   },
                   body: TabBarView(
