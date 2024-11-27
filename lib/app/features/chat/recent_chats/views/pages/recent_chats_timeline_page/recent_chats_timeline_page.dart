@@ -1,17 +1,24 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
-import 'package:ion/app/features/chat/providers/mock.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/router/app_routes.dart';
 
-class RecentChatsTimelinePage extends StatelessWidget {
+class RecentChatsTimelinePage extends ConsumerWidget {
   const RecentChatsTimelinePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final conversations = ref.watch(conversationsProvider).valueOrNull;
+
+    if (conversations == null) {
+      return const SizedBox.shrink();
+    }
+
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -30,7 +37,7 @@ class RecentChatsTimelinePage extends StatelessWidget {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              final conversation = mockConversationData[index];
+              final conversation = conversations[index];
               return Column(
                 children: [
                   if (index == 0)
@@ -42,7 +49,7 @@ class RecentChatsTimelinePage extends StatelessWidget {
                 ],
               );
             },
-            childCount: mockConversationData.length,
+            childCount: conversations.length,
           ),
         ),
       ],

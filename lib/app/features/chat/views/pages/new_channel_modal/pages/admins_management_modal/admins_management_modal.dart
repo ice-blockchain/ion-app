@@ -22,7 +22,7 @@ class AdminsManagementModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final channelAdmins = ref.watch(channelAdminsProvider);
+    final channelAdmins = ref.watch(channelAdminsProvider());
     final channelAdminsPubkeys = useMemoized(() => channelAdmins.keys.toList(), [channelAdmins]);
 
     final buttonSize = 56.0.s;

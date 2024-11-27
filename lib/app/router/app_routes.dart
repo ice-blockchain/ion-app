@@ -17,6 +17,8 @@ import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_passw
 import 'package:ion/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
 import 'package:ion/app/features/chat/messages/views/pages/messages_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
+import 'package:ion/app/features/chat/views/pages/channel_page/channel_page.dart';
+import 'package:ion/app/features/chat/views/pages/channel_page/pages/edit_channel_page/edit_channel_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_add_poll_modal/chat_add_poll_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_learn_more_modal/chat_learn_more_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
@@ -144,13 +146,23 @@ import 'package:ion/app/router/main_tabs/main_tab_navigation.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'app_routes.g.dart';
+
 part 'auth_routes.dart';
+
+part 'channel_routes.dart';
+
 part 'chat_routes.dart';
+
 part 'dapps_routes.dart';
+
 part 'feed_routes.dart';
+
 part 'profile_routes.dart';
+
 part 'protect_account_routes.dart';
+
 part 'settings_routes.dart';
+
 part 'wallet_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');

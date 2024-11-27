@@ -16,9 +16,11 @@ class TextMessage extends StatelessWidget {
     required this.reactions,
     super.key,
   });
+
   final bool isMe;
   final String message;
   final List<MessageReactionGroup> reactions;
+
   @override
   Widget build(BuildContext context) {
     return MessageItemWrapper(
@@ -37,7 +39,6 @@ class TextMessage extends StatelessWidget {
                 'Boris Johnson',
                 'https://picsum.photos/200/300',
                 isApproved: true,
-                isIceUser: false,
               ),
               message: PhotoRecentChatMessage(DateTime.now()),
             ),
