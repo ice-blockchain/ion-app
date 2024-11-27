@@ -6,6 +6,8 @@ import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart'
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/feed/data/models/visibility_settings_options.dart';
+import 'package:ion/app/features/feed/providers/selected_visibility_options_provider.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_share_button.dart';
@@ -29,11 +31,18 @@ class StoryPreviewPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<StoryCameraState>(storyCameraControllerProvider, (_, next) {
-      if (next is StoryCameraUploading && context.mounted) {
-        FeedRoute().go(context);
-      }
-    });
+    ref
+      ..listen<VisibilitySettingsOptions>(selectedVisibilityOptionsProvider,
+          (previous, selectedOption) {
+        if (previous != selectedOption) {
+          ref.read(storyCameraControllerProvider.notifier).publishStory();
+        }
+      })
+      ..listen<StoryCameraState>(storyCameraControllerProvider, (_, next) {
+        if (next is StoryCameraUploading && context.mounted) {
+          FeedRoute().go(context);
+        }
+      });
 
     final mediaType = mimeType != null ? MediaType.fromMimeType(mimeType!) : MediaType.unknown;
 
@@ -71,16 +80,12 @@ class StoryPreviewPage extends ConsumerWidget {
                 SizedBox(height: 16.0.s),
                 StoryShareButton(
                   onPressed: () async {
-                    final result = await showSimpleBottomSheet<bool>(
+                    await showSimpleBottomSheet<bool>(
                       context: context,
                       child: VisibilitySettingsModal(
                         title: context.i18n.visibility_settings_title_story,
                       ),
                     );
-
-                    if (result ?? false) {
-                      await ref.read(storyCameraControllerProvider.notifier).publishStory();
-                    }
                   },
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
