@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/back_hardware_button_interceptor/back_hardware_button_interceptor.dart';
@@ -75,33 +76,47 @@ class CreatePostModal extends HookConsumerWidget {
               ],
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child: ScreenSideOffset.small(
-                  child: Column(
-                    children: [
-                      if (videoPath != null) VideoPreviewCover(videoPath: videoPath!),
-                      if (videoPath != null) SizedBox(height: 24.0.s),
-                      if (parentEvent != null) ParentEntity(eventReference: parentEvent!),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const CurrentUserAvatar(),
-                          SizedBox(width: 10.0.s),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 6.0.s),
-                              child: TextEditor(
-                                textEditorController,
-                                placeholder: createOption.getPlaceholder(context),
-                              ),
+              child: KeyboardVisibilityBuilder(
+                builder: (context, isKeyboardVisible) {
+                  return SingleChildScrollView(
+                    reverse: isKeyboardVisible,
+                    child: KeyboardDismissOnTap(
+                      child: ScreenSideOffset.small(
+                        child: Column(
+                          children: [
+                            if (videoPath != null) VideoPreviewCover(videoPath: videoPath!),
+                            if (videoPath != null) SizedBox(height: 24.0.s),
+                            if (parentEvent != null) ParentEntity(eventReference: parentEvent!),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const CurrentUserAvatar(),
+                                SizedBox(width: 10.0.s),
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 6.0.s),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: isKeyboardVisible
+                                            ? MediaQuery.of(context).viewInsets.bottom
+                                            : 0,
+                                      ),
+                                      child: TextEditor(
+                                        textEditorController,
+                                        placeholder: createOption.getPlaceholder(context),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                            if (quotedEvent != null) QuotedEntity(eventReference: quotedEvent!),
+                          ],
+                        ),
                       ),
-                      if (quotedEvent != null) QuotedEntity(eventReference: quotedEvent!),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
             ),
             const HorizontalSeparator(),
