@@ -44,7 +44,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         final attachments = <MediaAttachment>[];
         await Future.wait(
           mediaIds.map((id) async {
-            final (fileMetadata, mediaAttachment) = await _uploadImage(id);
+            final (:fileMetadata, :mediaAttachment) = await _uploadImage(id);
             attachments.add(mediaAttachment);
             files.add(fileMetadata);
           }),
@@ -120,7 +120,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     }.toList();
   }
 
-  Future<(FileMetadata, MediaAttachment)> _uploadImage(String imageId) async {
+  Future<UploadResult> _uploadImage(String imageId) async {
     final assetEntity = await ref.read(assetEntityProvider(imageId).future);
     if (assetEntity == null) {
       throw AssetEntityNotFoundException();

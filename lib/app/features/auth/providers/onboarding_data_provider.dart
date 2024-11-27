@@ -49,7 +49,7 @@ class OnboardingData extends _$OnboardingData {
 
   Future<void> uploadAvatar(MediaFile avatar) async {
     await _generateNostrKeyStore();
-    final (fileMetadata, mediaAttachment) =
+    final (:fileMetadata, :mediaAttachment) =
         await ref.read(nostrUploadNotifierProvider.notifier).upload(avatar);
     state =
         state.copyWith(avatarFileMetadata: fileMetadata, avatarMediaAttachment: mediaAttachment);

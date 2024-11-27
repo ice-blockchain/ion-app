@@ -28,7 +28,7 @@ class UserMetadataNotifier extends _$UserMetadataNotifier {
           .map((result) => result.$1);
 
       if (uploadedAvatar != null) {
-        final attachment = uploadedAvatar.$2;
+        final attachment = uploadedAvatar.mediaAttachment;
         data = data.copyWith(
           picture: attachment.url,
           media: {...data.media, attachment.url: attachment},
@@ -36,7 +36,7 @@ class UserMetadataNotifier extends _$UserMetadataNotifier {
       }
 
       if (uploadedBanner != null) {
-        final attachment = uploadedBanner.$2;
+        final attachment = uploadedBanner.mediaAttachment;
         data = data.copyWith(
           banner: attachment.url,
           media: {...data.media, attachment.url: attachment},
@@ -47,9 +47,9 @@ class UserMetadataNotifier extends _$UserMetadataNotifier {
     });
   }
 
-  Future<(FileMetadata, MediaAttachment)?> _upload(MediaFile? file) {
+  Future<UploadResult?> _upload(MediaFile? file) {
     return file != null
         ? ref.read(nostrUploadNotifierProvider.notifier).upload(file)
-        : Future<(FileMetadata, MediaAttachment)?>.value();
+        : Future<UploadResult?>.value();
   }
 }

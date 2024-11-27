@@ -19,12 +19,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'nostr_upload_notifier.freezed.dart';
 part 'nostr_upload_notifier.g.dart';
 
+typedef UploadResult = ({FileMetadata fileMetadata, MediaAttachment mediaAttachment});
+
 @riverpod
 class NostrUploadNotifier extends _$NostrUploadNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<(FileMetadata, MediaAttachment)> upload(
+  Future<UploadResult> upload(
     MediaFile file,
   ) async {
     final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
@@ -49,7 +51,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
       dimension: fileMetadata.dimension,
     );
 
-    return (fileMetadata, mediaAttachment);
+    return (fileMetadata: fileMetadata, mediaAttachment: mediaAttachment);
   }
 
   // TODO: handle delegatedToUrl when migrating to common relays
