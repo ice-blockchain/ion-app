@@ -15,7 +15,7 @@ class VideoPreviewDuration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 17.0.s,
+      height: 20.0.s,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: context.theme.appColors.backgroundSheet,
