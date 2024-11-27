@@ -42,7 +42,7 @@ class TrendingVideos extends ConsumerWidget {
           LoadMoreBuilder(
             slivers: [
               TrendingVideosList(
-                videos: videosData.data.items.map((e) => e as PostEntity).toList(),
+                videos: videosData.data.items.whereType<PostEntity>().toList(),
                 listOverlay: listOverlay,
               ),
             ],

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
@@ -9,9 +10,7 @@ import 'package:ion/app/features/feed/views/components/post/components/post_body
 import 'package:ion/app/services/text_parser/matchers/url_matcher.dart';
 import 'package:ion/app/utils/post_text.dart';
 
-final _textExpandStateProvider = StateProvider.autoDispose<bool>((ref) => false);
-
-class VideoTextPost extends ConsumerWidget {
+class VideoTextPost extends HookConsumerWidget {
   const VideoTextPost({
     required this.postEntity,
     super.key,
@@ -36,7 +35,7 @@ class VideoTextPost extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final postMedia = usePostMedia(postEntity.data);
-    final isTextExpanded = ref.watch(_textExpandStateProvider);
+    final isTextExpanded = useState(false);
 
     final postText = extractPostText(
       postEntity.data.content,
@@ -54,9 +53,7 @@ class VideoTextPost extends ConsumerWidget {
       children: [
         if (postMedia.isNotEmpty) PostMedia(media: postMedia),
         GestureDetector(
-          onTap: isOneLine
-              ? null
-              : () => ref.read(_textExpandStateProvider.notifier).state = !isTextExpanded,
+          onTap: isOneLine ? null : () => isTextExpanded.value = !isTextExpanded.value,
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             switchInCurve: Curves.easeInOut,
@@ -71,7 +68,7 @@ class VideoTextPost extends ConsumerWidget {
                 ),
               );
             },
-            child: isTextExpanded
+            child: isTextExpanded.value
                 ? Text(
                     postText,
                     key: const ValueKey('expanded'),
