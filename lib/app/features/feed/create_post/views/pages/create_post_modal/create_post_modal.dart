@@ -79,7 +79,7 @@ class CreatePostModal extends HookConsumerWidget {
                 child: ScreenSideOffset.small(
                   child: Column(
                     children: [
-                      if (videoPath != null) VideoPreviewCover(videoPath: videoPath),
+                      if (videoPath != null) VideoPreviewCover(videoPath: videoPath!),
                       if (videoPath != null) SizedBox(height: 24.0.s),
                       if (parentEvent != null) ParentEntity(eventReference: parentEvent!),
                       Row(
