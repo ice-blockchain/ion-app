@@ -38,6 +38,7 @@ class AvatarPickerNotifier extends _$AvatarPickerNotifier {
     final compressService = ref.read(mediaCompressServiceProvider);
 
     try {
+      state = const AvatarPickerState.initial();
       final assetImagePath = await ref.read(assetFilePathProvider(assetId).future);
       if (assetImagePath == null) {
         throw AssetEntityFileNotFoundException();

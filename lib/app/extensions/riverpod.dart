@@ -43,6 +43,17 @@ extension DisplayErrorsExtension on WidgetRef {
       }
     });
   }
+
+  void displayErrorsForState<S>(ProviderListenable<dynamic> provider) {
+    listen(provider, (prev, next) {
+      if (prev is! S && next is S && context.isCurrentRoute && context.mounted) {
+        showSimpleBottomSheet<void>(
+          context: context,
+          child: ErrorModal(error: next as Object),
+        );
+      }
+    });
+  }
 }
 
 extension ListenResultExtension on WidgetRef {

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
@@ -21,6 +22,8 @@ class BannerPickerButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isBannerLoading = ref
         .watch(bannerPickerNotifierProvider.select((state) => state is BannerPickerStateCropped));
+
+    ref.displayErrorsForState<BannerPickerStateError>(bannerPickerNotifierProvider);
 
     return PermissionAwareWidget(
       permissionType: Permission.photos,

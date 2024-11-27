@@ -39,6 +39,7 @@ class BannerPickerNotifier extends _$BannerPickerNotifier {
     final compressService = ref.read(mediaCompressServiceProvider);
 
     try {
+      state = const BannerPickerState.initial();
       final assetImagePath = await ref.read(assetFilePathProvider(assetId).future);
       if (assetImagePath == null) {
         throw AssetEntityFileNotFoundException();

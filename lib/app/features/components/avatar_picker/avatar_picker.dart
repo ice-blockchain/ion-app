@@ -41,6 +41,8 @@ class AvatarPicker extends HookConsumerWidget {
       processed: (file) => file,
     );
 
+    ref.displayErrorsForState<AvatarPickerStateError>(avatarPickerNotifierProvider);
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
