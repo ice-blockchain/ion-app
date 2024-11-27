@@ -12,7 +12,6 @@ import 'package:ion/app/features/feed/stories/data/models/story_camera_state.dar
 import 'package:ion/app/features/feed/stories/hooks/use_recording_progress.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
-import 'package:ion/app/features/feed/stories/views/pages/story_preview_page.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -39,8 +38,8 @@ class StoryRecordPage extends HookConsumerWidget {
     ref.listen<StoryCameraState>(storyCameraControllerProvider, (_, next) {
       if (next is StoryCameraSaved && context.mounted) {
         StoryPreviewRoute(
-          path: next.videoPath,
-          storyType: StoryType.video,
+          path: next.file.path,
+          mimeType: next.file.mimeType,
         ).push<void>(context);
       }
     });

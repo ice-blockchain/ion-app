@@ -31,7 +31,7 @@ class StoryCameraController extends _$StoryCameraController {
       final mediaFile = await ref.read(mediaServiceProvider).saveVideoToGallery(videoFile.path);
 
       if (mediaFile != null) {
-        state = StoryCameraState.saved(videoPath: mediaFile.path);
+        state = StoryCameraState.saved(file: mediaFile);
       }
     } else {
       state = const StoryCameraState.error(message: 'Failed to stop video recording.');

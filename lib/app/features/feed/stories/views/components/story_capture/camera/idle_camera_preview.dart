@@ -9,7 +9,6 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/story_control_button.dart';
-import 'package:ion/app/features/feed/stories/views/pages/story_preview_page.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
@@ -60,7 +59,7 @@ class IdleCameraPreview extends ConsumerWidget {
                 if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
                   await StoryPreviewRoute(
                     path: mediaFiles.first.path,
-                    storyType: StoryType.image,
+                    mimeType: mediaFiles.first.mimeType,
                   ).push<void>(context);
                 }
               }

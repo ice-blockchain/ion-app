@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_share_button.dart';
@@ -15,20 +17,15 @@ import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
-enum StoryType {
-  image,
-  video,
-}
-
 class StoryPreviewPage extends ConsumerWidget {
   const StoryPreviewPage({
     required this.path,
-    required this.type,
+    required this.mimeType,
     super.key,
   });
 
   final String path;
-  final StoryType type;
+  final String? mimeType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,6 +34,8 @@ class StoryPreviewPage extends ConsumerWidget {
         FeedRoute().go(context);
       }
     });
+
+    final mediaType = mimeType != null ? MediaType.fromMimeType(mimeType!) : MediaType.unknown;
 
     return Scaffold(
       body: SafeArea(
@@ -55,9 +54,10 @@ class StoryPreviewPage extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
-                      child: switch (type) {
-                        StoryType.video => StoryVideoPreview(path: path),
-                        StoryType.image => StoryImagePreview(path: path),
+                      child: switch (mediaType) {
+                        MediaType.video => StoryVideoPreview(path: path),
+                        MediaType.image => StoryImagePreview(path: path),
+                        MediaType.unknown => const CenteredLoadingIndicator(),
                       },
                     ),
                     SizedBox(height: 8.0.s),

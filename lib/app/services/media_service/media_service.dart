@@ -64,17 +64,19 @@ class MediaService {
         page: page,
         size: size,
       );
-      final mediaFiles = assets
-          .map(
-            (asset) => MediaFile(
-              path: asset.id,
-              height: asset.height,
-              width: asset.width,
-              mimeType: asset.mimeType,
-            ),
-          )
-          .toList()
-          .cast<MediaFile>();
+
+      final mediaFiles = await Future.wait(
+        assets.map((asset) async {
+          final mimeType = await asset.mimeTypeAsync;
+
+          return MediaFile(
+            path: asset.id,
+            height: asset.height,
+            width: asset.width,
+            mimeType: mimeType,
+          );
+        }),
+      );
 
       return mediaFiles;
     } catch (e) {
@@ -134,11 +136,13 @@ class MediaService {
 
     if (file == null) return null;
 
+    final mimeType = await asset.mimeTypeAsync;
+
     return MediaFile(
       path: asset.id,
       height: asset.height,
       width: asset.width,
-      mimeType: asset.mimeType,
+      mimeType: mimeType,
     );
   }
 
@@ -156,9 +160,11 @@ class MediaService {
 
     if (file == null) return null;
 
+    final mimeType = await asset.mimeTypeAsync;
+
     return MediaFile(
       path: asset.id,
-      mimeType: asset.mimeType,
+      mimeType: mimeType,
     );
   }
 
