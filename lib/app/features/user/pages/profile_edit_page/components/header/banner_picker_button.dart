@@ -8,7 +8,7 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
-import 'package:ion/app/features/user/providers/banner_picker_notifier.dart';
+import 'package:ion/app/features/user/providers/banner_processor_notifier.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -20,10 +20,11 @@ class BannerPickerButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBannerLoading = ref
-        .watch(bannerPickerNotifierProvider.select((state) => state is BannerPickerStateCropped));
+    final isBannerLoading = ref.watch(
+      bannerProcessorNotifierProvider.select((state) => state is BannerProcessorStateCropped),
+    );
 
-    ref.displayErrorsForState<BannerPickerStateError>(bannerPickerNotifierProvider);
+    ref.displayErrorsForState<BannerProcessorStateError>(bannerProcessorNotifierProvider);
 
     return PermissionAwareWidget(
       permissionType: Permission.photos,
@@ -37,7 +38,7 @@ class BannerPickerButton extends ConsumerWidget {
             ),
           );
           if (mediaFiles != null && context.mounted) {
-            await ref.read(bannerPickerNotifierProvider.notifier).process(
+            await ref.read(bannerProcessorNotifierProvider.notifier).process(
                   assetId: mediaFiles.first.path,
                   cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(context),
                 );

@@ -7,27 +7,29 @@ import 'package:ion/app/services/media_service/media_compress_service.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'avatar_picker_notifier.freezed.dart';
-part 'avatar_picker_notifier.g.dart';
+part 'avatar_processor_notifier.freezed.dart';
+part 'avatar_processor_notifier.g.dart';
 
 @freezed
-sealed class AvatarPickerState with _$AvatarPickerState {
-  const factory AvatarPickerState.initial() = AvatarPickerStateInitial;
+sealed class AvatarProcessorState with _$AvatarProcessorState {
+  const factory AvatarProcessorState.initial() = AvatarProcessorStateInitial;
 
-  const factory AvatarPickerState.picked({required MediaFile file}) = AvatarPickerStatePicked;
+  const factory AvatarProcessorState.picked({required MediaFile file}) = AvatarProcessorStatePicked;
 
-  const factory AvatarPickerState.cropped({required MediaFile file}) = AvatarPickerStateCropped;
+  const factory AvatarProcessorState.cropped({required MediaFile file}) =
+      AvatarProcessorStateCropped;
 
-  const factory AvatarPickerState.processed({required MediaFile file}) = AvatarPickerStateProcessed;
+  const factory AvatarProcessorState.processed({required MediaFile file}) =
+      AvatarProcessorStateProcessed;
 
-  const factory AvatarPickerState.error({required String message}) = AvatarPickerStateError;
+  const factory AvatarProcessorState.error({required String message}) = AvatarProcessorStateError;
 }
 
 @riverpod
-class AvatarPickerNotifier extends _$AvatarPickerNotifier {
+class AvatarProcessorNotifier extends _$AvatarProcessorNotifier {
   @override
-  AvatarPickerState build() {
-    return const AvatarPickerState.initial();
+  AvatarProcessorState build() {
+    return const AvatarProcessorState.initial();
   }
 
   Future<void> process({
@@ -38,30 +40,30 @@ class AvatarPickerNotifier extends _$AvatarPickerNotifier {
     final compressService = ref.read(mediaCompressServiceProvider);
 
     try {
-      state = const AvatarPickerState.initial();
+      state = const AvatarProcessorState.initial();
       final assetImagePath = await ref.read(assetFilePathProvider(assetId).future);
       if (assetImagePath == null) {
         throw AssetEntityFileNotFoundException();
       }
-      state = AvatarPickerState.picked(file: MediaFile(path: assetImagePath));
+      state = AvatarProcessorState.picked(file: MediaFile(path: assetImagePath));
       final croppedImage = await mediaService.cropImage(
         uiSettings: cropUiSettings,
         path: assetImagePath,
       );
       if (croppedImage == null) {
-        state = const AvatarPickerState.initial();
+        state = const AvatarProcessorState.initial();
         return;
       }
-      state = AvatarPickerState.cropped(file: croppedImage);
+      state = AvatarProcessorState.cropped(file: croppedImage);
       final compressedImage = await compressService.compressImage(
         croppedImage,
         width: 720,
         height: 720,
         quality: 70,
       );
-      state = AvatarPickerState.processed(file: compressedImage);
+      state = AvatarProcessorState.processed(file: compressedImage);
     } catch (error) {
-      state = AvatarPickerState.error(message: error.toString());
+      state = AvatarProcessorState.error(message: error.toString());
     }
   }
 }

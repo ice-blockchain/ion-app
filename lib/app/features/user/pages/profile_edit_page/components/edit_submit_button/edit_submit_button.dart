@@ -8,8 +8,8 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
-import 'package:ion/app/features/user/providers/avatar_picker_notifier.dart';
-import 'package:ion/app/features/user/providers/banner_picker_notifier.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.dart';
+import 'package:ion/app/features/user/providers/banner_processor_notifier.dart';
 import 'package:ion/app/features/user/providers/user_metadata_notifier.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -42,9 +42,9 @@ class EditSubmitButton extends ConsumerWidget {
       onPressed: () async {
         if (formKey.currentState!.validate()) {
           final avatarFile =
-              ref.read(avatarPickerNotifierProvider).whenOrNull(processed: (file) => file);
+              ref.read(avatarProcessorNotifierProvider).whenOrNull(processed: (file) => file);
           final bannerFile =
-              ref.read(bannerPickerNotifierProvider).whenOrNull(processed: (file) => file);
+              ref.read(bannerProcessorNotifierProvider).whenOrNull(processed: (file) => file);
           await ref
               .read(userMetadataNotifierProvider.notifier)
               .send(draftRef.value, avatar: avatarFile, banner: bannerFile);

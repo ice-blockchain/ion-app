@@ -8,27 +8,29 @@ import 'package:ion/app/services/media_service/media_compress_service.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'banner_picker_notifier.freezed.dart';
-part 'banner_picker_notifier.g.dart';
+part 'banner_processor_notifier.freezed.dart';
+part 'banner_processor_notifier.g.dart';
 
 @freezed
-sealed class BannerPickerState with _$BannerPickerState {
-  const factory BannerPickerState.initial() = BannerPickerStateInitial;
+sealed class BannerProcessorState with _$BannerProcessorState {
+  const factory BannerProcessorState.initial() = BannerProcessorStateInitial;
 
-  const factory BannerPickerState.picked({required MediaFile file}) = BannerPickerStatePicked;
+  const factory BannerProcessorState.picked({required MediaFile file}) = BannerProcessorStatePicked;
 
-  const factory BannerPickerState.cropped({required MediaFile file}) = BannerPickerStateCropped;
+  const factory BannerProcessorState.cropped({required MediaFile file}) =
+      BannerProcessorStateCropped;
 
-  const factory BannerPickerState.processed({required MediaFile file}) = BannerPickerStateProcessed;
+  const factory BannerProcessorState.processed({required MediaFile file}) =
+      BannerProcessorStateProcessed;
 
-  const factory BannerPickerState.error({required String message}) = BannerPickerStateError;
+  const factory BannerProcessorState.error({required String message}) = BannerProcessorStateError;
 }
 
 @riverpod
-class BannerPickerNotifier extends _$BannerPickerNotifier {
+class BannerProcessorNotifier extends _$BannerProcessorNotifier {
   @override
-  BannerPickerState build() {
-    return const BannerPickerState.initial();
+  BannerProcessorState build() {
+    return const BannerProcessorState.initial();
   }
 
   Future<void> process({
@@ -39,12 +41,12 @@ class BannerPickerNotifier extends _$BannerPickerNotifier {
     final compressService = ref.read(mediaCompressServiceProvider);
 
     try {
-      state = const BannerPickerState.initial();
+      state = const BannerProcessorState.initial();
       final assetImagePath = await ref.read(assetFilePathProvider(assetId).future);
       if (assetImagePath == null) {
         throw AssetEntityFileNotFoundException();
       }
-      state = BannerPickerState.picked(file: MediaFile(path: assetImagePath));
+      state = BannerProcessorState.picked(file: MediaFile(path: assetImagePath));
 
       final croppedImage = await mediaService.cropImage(
         uiSettings: cropUiSettings,
@@ -52,11 +54,11 @@ class BannerPickerNotifier extends _$BannerPickerNotifier {
         aspectRatio: const CropAspectRatio(ratioX: 4, ratioY: 3),
       );
       if (croppedImage == null) {
-        state = const BannerPickerState.initial();
+        state = const BannerProcessorState.initial();
         return;
       }
 
-      state = BannerPickerState.cropped(file: croppedImage);
+      state = BannerProcessorState.cropped(file: croppedImage);
 
       final compressedImage = await compressService.compressImage(
         croppedImage,
@@ -64,9 +66,9 @@ class BannerPickerNotifier extends _$BannerPickerNotifier {
         height: 768,
         quality: 70,
       );
-      state = BannerPickerState.processed(file: compressedImage);
+      state = BannerProcessorState.processed(file: compressedImage);
     } catch (error) {
-      state = BannerPickerState.error(message: error.toString());
+      state = BannerProcessorState.error(message: error.toString());
     }
   }
 }
