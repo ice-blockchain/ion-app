@@ -62,7 +62,7 @@ class FeedMainModalPage extends StatelessWidget {
                       ).push<List<MediaFile>>(context);
 
                       if (result != null && result.isNotEmpty && context.mounted) {
-                        await CreatePostRoute(videoPath: result[0].path).push<void>(context);
+                        CreatePostRoute(videoPath: result[0].path).go(context);
                       }
                     }
                   },
@@ -94,7 +94,6 @@ class FeedMainModalPage extends StatelessWidget {
   String _getCreateFlowRouteLocation(FeedType type) {
     return switch (type) {
       FeedType.post => CreatePostRoute().location,
-      FeedType.video => CreateVideoRoute().location,
       FeedType.article => CreateArticleRoute().location,
       _ => throw UnimplementedError(),
     };
