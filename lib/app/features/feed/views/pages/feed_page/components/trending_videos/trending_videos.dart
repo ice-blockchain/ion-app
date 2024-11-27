@@ -11,6 +11,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.dart';
 import 'package:ion/app/features/feed/providers/trending_videos_overlay_provider.dart';
+import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_skeleton.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/video_icon.dart';
@@ -63,6 +64,7 @@ class TrendingVideos extends ConsumerWidget {
           ),
         ),
         SizedBox(height: 18.0.s),
+        FeedListSeparator(),
       ],
     );
   }

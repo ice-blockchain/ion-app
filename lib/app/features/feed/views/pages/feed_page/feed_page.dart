@@ -70,10 +70,7 @@ class FeedPage extends HookConsumerWidget {
               const Stories(),
               FeedListSeparator(height: 16.0.s),
             ],
-            if (feedCategory == FeedCategory.feed) ...[
-              const TrendingVideos(),
-              FeedListSeparator(),
-            ],
+            if (feedCategory == FeedCategory.feed) const TrendingVideos(),
           ],
         ),
       ),
