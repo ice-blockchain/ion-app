@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-enum ChatType {
-  chat,
-  channel,
-  ;
-}
+enum ChatType { chat, channel }
 
 class RecentChatDataModel {
   RecentChatDataModel(

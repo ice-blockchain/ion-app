@@ -14,8 +14,6 @@ import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/services/keyboard/keyboard.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-const String hasPrivacyModalShownKey = 'hasPrivacyModalShownKey';
-
 class ChannelPage extends ConsumerWidget {
   const ChannelPage({
     required this.pubkey,
