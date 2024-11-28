@@ -23,7 +23,7 @@ class TrendingVideoListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eventReference = EventReference(eventId: video.id, pubkey: video.pubkey);
+    final eventReference = EventReference.fromNostrEntity(video);
 
     final thumbnailUrl = video.data.primaryMedia?.thumb;
     if (thumbnailUrl == null || thumbnailUrl.isEmpty) {

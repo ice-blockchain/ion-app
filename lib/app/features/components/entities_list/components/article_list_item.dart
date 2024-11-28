@@ -15,7 +15,8 @@ class ArticleListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eventReference = EventReference(eventId: article.id, pubkey: article.pubkey);
+    final eventReference = EventReference.fromNostrEntity(article);
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 12.0.s),
       child: GestureDetector(

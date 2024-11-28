@@ -99,10 +99,7 @@ class VideoPage extends HookConsumerWidget {
                 ),
               ),
               VideoActions(
-                eventReference: EventReference(
-                  pubkey: video.pubkey,
-                  eventId: video.id,
-                ),
+                eventReference: EventReference.fromNostrEntity(video),
               ),
             ],
           ),

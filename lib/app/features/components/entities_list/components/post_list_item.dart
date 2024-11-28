@@ -16,7 +16,7 @@ class PostListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final eventReference = EventReference(eventId: post.id, pubkey: post.pubkey);
+    final eventReference = EventReference.fromNostrEntity(post);
     // TODO:
     // wait for 10002 to be in cache before showing the UI when "side effects" are impl
     // process 20002 in the feed provider to fetch 10002
