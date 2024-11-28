@@ -13,10 +13,12 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenSideOffset.small(
-      child: EmptyList(
-        asset: Assets.svg.walletIconProfileEmptyprofile,
-        title: context.i18n.profile_empty_state,
+    return SliverFillRemaining(
+      child: ScreenSideOffset.small(
+        child: EmptyList(
+          asset: Assets.svg.walletIconProfileEmptyprofile,
+          title: context.i18n.profile_empty_state,
+        ),
       ),
     );
   }

@@ -6,7 +6,7 @@ import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
-import 'package:ion/app/features/user/providers/user_posts_data_source_provider.dart';
+import 'package:ion/app/features/user/providers/user_articles_data_source_provider.dart';
 
 class ArticlesTab extends ConsumerWidget {
   const ArticlesTab({
@@ -18,19 +18,19 @@ class ArticlesTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dataSource = ref.watch(userPostsDataSourceProvider(pubkey));
-    final entities = ref.watch(entitiesPagedDataProvider(dataSource));
-
-    if (entities == null) {
-      return const EntitiesListSkeleton();
-    }
-
-    if (entities.data.items.isEmpty) {
-      return const EmptyState();
-    }
+    final dataSource = ref.watch(userArticlesDataSourceProvider(pubkey));
+    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entities = entitiesPagedData?.data.items;
 
     return CustomScrollView(
-      slivers: [EntitiesList(entities: entities.data.items.toList())],
+      slivers: [
+        if (entities == null)
+          const EntitiesListSkeleton()
+        else if (entities.isEmpty)
+          const EmptyState()
+        else
+          EntitiesList(entities: entities.toList()),
+      ],
     );
   }
 }

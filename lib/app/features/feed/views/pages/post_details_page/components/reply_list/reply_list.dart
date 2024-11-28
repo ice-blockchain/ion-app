@@ -18,14 +18,15 @@ class ReplyList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(repliesDataSourceProvider(eventReference: eventReference));
-    final entities = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entities = entitiesPagedData?.data.items;
 
     if (entities == null) {
       return const EntitiesListSkeleton();
     }
 
     return EntitiesList(
-      entities: entities.data.items.toList(),
+      entities: entities.toList(),
       separator: FeedListSeparator(height: 1.0.s),
     );
   }

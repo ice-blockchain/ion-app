@@ -27,8 +27,9 @@ class TrendingVideos extends ConsumerWidget {
     // TODO: remove this [mockPostEntitiesPagedDataProvider] when we have real data
     // final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
     final videosData = ref.watch(mockPostEntitiesPagedDataProvider(dataSource));
+    final videos = videosData?.data.items;
 
-    if (videosData == null) {
+    if (videos == null) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 12.0.s),
         child: TrendingVideosListSkeleton(
@@ -37,7 +38,7 @@ class TrendingVideos extends ConsumerWidget {
       );
     }
 
-    if (videosData.data.items.isEmpty) return const SizedBox.shrink();
+    if (videos.isEmpty) return const SizedBox.shrink();
 
     return Column(
       children: [
@@ -49,11 +50,11 @@ class TrendingVideos extends ConsumerWidget {
         LoadMoreBuilder(
           slivers: [
             TrendingVideosList(
-              videos: videosData.data.items.whereType<PostEntity>().toList(),
+              videos: videos.whereType<PostEntity>().toList(),
               listOverlay: listOverlay,
             ),
           ],
-          hasMore: videosData.hasMore,
+          hasMore: videosData!.hasMore,
           onLoadMore: () => _onLoadMore(ref),
           builder: (context, slivers) => SizedBox(
             height: listOverlay.itemSize.height,

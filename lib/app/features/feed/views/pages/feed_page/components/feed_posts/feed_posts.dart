@@ -13,12 +13,13 @@ class FeedPosts extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(feedPostsDataSourceProvider);
-    final entities = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entities = entitiesPagedData?.data.items;
 
     if (entities == null) {
       return const EntitiesListSkeleton();
     }
 
-    return EntitiesList(entities: entities.data.items.toList());
+    return EntitiesList(entities: entities.toList());
   }
 }

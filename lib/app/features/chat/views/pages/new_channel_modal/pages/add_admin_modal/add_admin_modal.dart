@@ -26,12 +26,13 @@ class AddAdminModal extends HookConsumerWidget {
     final selectedPubkey = useState<String?>(null);
 
     final dataSource = ref.watch(contentCreatorsDataSourceProvider);
-    final contentCreators = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final contentCreators = entitiesPagedData?.data.items;
 
-    final isLoading = contentCreators?.data.items.isEmpty ?? true;
+    final isLoading = contentCreators?.isEmpty ?? true;
     final userEntries = useMemoized(
-      () => (contentCreators?.data.items
-              .whereType<UserMetadataEntity>()
+      () => (contentCreators
+              ?.whereType<UserMetadataEntity>()
               .where(
                 (entity) =>
                     entity.data.displayName

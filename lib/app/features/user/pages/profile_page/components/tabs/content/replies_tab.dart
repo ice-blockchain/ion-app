@@ -19,18 +19,18 @@ class RepliesTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(userPostsDataSourceProvider(pubkey));
-    final entities = ref.watch(entitiesPagedDataProvider(dataSource));
-
-    if (entities == null) {
-      return const EntitiesListSkeleton();
-    }
-
-    if (entities.data.items.isEmpty) {
-      return const EmptyState();
-    }
+    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entities = entitiesPagedData?.data.items;
 
     return CustomScrollView(
-      slivers: [EntitiesList(entities: entities.data.items.toList(), showParent: true)],
+      slivers: [
+        if (entities == null)
+          const EntitiesListSkeleton()
+        else if (entities.isEmpty)
+          const EmptyState()
+        else
+          EntitiesList(entities: entities.toList()),
+      ],
     );
   }
 }
