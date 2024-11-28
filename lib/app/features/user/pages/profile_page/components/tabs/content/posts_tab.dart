@@ -1,14 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
-import 'package:ion/app/features/feed/views/components/entities_list/components/post_list_item.dart';
-import 'package:ion/app/features/user/model/user_content_type.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content_separator.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/tab_entities_list.dart';
+import 'package:ion/app/features/user/providers/user_posts_data_source_provider.dart';
 
-class PostsTab extends StatelessWidget {
+class PostsTab extends ConsumerWidget {
   const PostsTab({
     required this.pubkey,
     super.key,
@@ -16,31 +13,9 @@ class PostsTab extends StatelessWidget {
 
   final String pubkey;
 
-  static const UserContentType tabType = UserContentType.posts;
-
   @override
-  Widget build(BuildContext context) {
-    const posts = <PostEntity>[];
-
-    if (posts.isEmpty) {
-      return const EmptyState(
-        tabType: tabType,
-      );
-    }
-
-    return ListView.separated(
-      itemBuilder: (context, index) {
-        return ColoredBox(
-          color: context.theme.appColors.secondaryBackground,
-          child: PostListItem(
-            post: posts[index],
-          ),
-        );
-      },
-      separatorBuilder: (context, index) {
-        return const ContentSeparator();
-      },
-      itemCount: posts.length,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dataSource = ref.watch(userPostsDataSourceProvider(pubkey));
+    return TabEntitiesList(dataSource: dataSource);
   }
 }

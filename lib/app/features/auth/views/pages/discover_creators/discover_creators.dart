@@ -29,7 +29,8 @@ class DiscoverCreators extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final finishNotifier = ref.watch(onboardingCompleteNotifierProvider);
     final dataSource = ref.watch(contentCreatorsDataSourceProvider);
-    final contentCreators = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final contentCreators = entitiesPagedData?.data.items;
 
     ref.displayErrors(onboardingCompleteNotifierProvider);
 
@@ -38,7 +39,7 @@ class DiscoverCreators extends HookConsumerWidget {
     final mayContinue = selectedCreators.isNotEmpty;
 
     final slivers = [
-      if (contentCreators == null || contentCreators.data.items.isEmpty)
+      if (contentCreators == null || contentCreators.isEmpty)
         SliverToBoxAdapter(
           child: ScreenSideOffset.small(
             child: Skeleton(
@@ -52,9 +53,9 @@ class DiscoverCreators extends HookConsumerWidget {
       else
         SliverList.separated(
           separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
-          itemCount: contentCreators.data.items.length,
+          itemCount: contentCreators.length,
           itemBuilder: (BuildContext context, int index) {
-            final creator = contentCreators.data.items.elementAt(index);
+            final creator = contentCreators.elementAt(index);
             if (creator is UserMetadataEntity) {
               return CreatorListItem(
                 userMetadataEntity: creator,
@@ -75,7 +76,7 @@ class DiscoverCreators extends HookConsumerWidget {
             child: LoadMoreBuilder(
               slivers: slivers,
               onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
-              hasMore: contentCreators?.data.pagination.values.first.hasMore ?? true,
+              hasMore: entitiesPagedData?.hasMore ?? true,
               builder: (context, slivers) {
                 return AuthScrollContainer(
                   title: context.i18n.discover_creators_title,

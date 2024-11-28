@@ -19,10 +19,12 @@ class Post extends ConsumerWidget {
     required this.eventReference,
     this.header,
     this.footer,
+    this.showParent = false,
     super.key,
   });
 
   final EventReference eventReference;
+  final bool showParent;
   final Widget? header;
   final Widget? footer;
 
@@ -35,7 +37,7 @@ class Post extends ConsumerWidget {
       return const Skeleton(child: PostSkeleton());
     }
 
-    final quotedEvent = postEntity.data.quotedEvent;
+    final framedEvent = _getFramedEventReference(postEntity);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,20 +50,44 @@ class Post extends ConsumerWidget {
             ),
         SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
-        if (quotedEvent != null)
-          Padding(
-            padding: EdgeInsets.only(top: 6.0.s),
-            child: QuotedPostFrame(
-              child: Post(
-                eventReference:
-                    EventReference(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey),
-                header: UserInfo(pubkey: quotedEvent.pubkey),
-                footer: const SizedBox.shrink(),
-              ),
-            ),
-          ),
+        if (framedEvent != null) _FramedEvent(eventReference: framedEvent),
         footer ?? FeedItemFooter(eventReference: eventReference, kind: PostEntity.kind),
       ],
+    );
+  }
+
+  EventReference? _getFramedEventReference(PostEntity postEntity) {
+    if (showParent) {
+      final parentEvent = postEntity.data.parentEvent;
+      if (parentEvent != null) {
+        return EventReference(eventId: parentEvent.eventId, pubkey: parentEvent.pubkey);
+      }
+    } else {
+      final quotedEvent = postEntity.data.quotedEvent;
+      if (quotedEvent != null) {
+        return EventReference(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey);
+      }
+    }
+    return null;
+  }
+}
+
+class _FramedEvent extends StatelessWidget {
+  const _FramedEvent({required this.eventReference});
+
+  final EventReference eventReference;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 6.0.s),
+      child: QuotedPostFrame(
+        child: Post(
+          eventReference: eventReference,
+          header: UserInfo(pubkey: eventReference.pubkey),
+          footer: const SizedBox.shrink(),
+        ),
+      ),
     );
   }
 }

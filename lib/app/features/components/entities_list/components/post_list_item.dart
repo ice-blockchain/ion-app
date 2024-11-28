@@ -8,9 +8,11 @@ import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/router/app_routes.dart';
 
 class PostListItem extends StatelessWidget {
-  const PostListItem({required this.post, super.key});
+  const PostListItem({required this.post, this.showParent = false, super.key});
 
   final PostEntity post;
+
+  final bool showParent;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class PostListItem extends StatelessWidget {
     return GestureDetector(
       onTap: () => PostDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
       child: ScreenSideOffset.small(
-        child: Post(eventReference: eventReference),
+        child: Post(eventReference: eventReference, showParent: showParent),
       ),
     );
   }

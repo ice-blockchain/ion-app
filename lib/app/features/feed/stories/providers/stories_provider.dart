@@ -19,10 +19,11 @@ part 'stories_provider.g.dart';
 List<UserStories>? stories(Ref ref) {
   final dataSource = ref.watch(feedStoriesDataSourceProvider);
   final entitiesPagedDataState = ref.watch(entitiesPagedDataProvider(dataSource));
+  final entities = entitiesPagedDataState?.data.items;
 
-  if (entitiesPagedDataState == null) return null;
+  if (entities == null) return null;
 
-  final postEntities = entitiesPagedDataState.data.items.whereType<PostEntity>().where((post) {
+  final postEntities = entities.whereType<PostEntity>().where((post) {
     final mediaType = post.data.media.values.firstOrNull?.mediaType;
     return mediaType == MediaType.image || mediaType == MediaType.video;
   }).toList();

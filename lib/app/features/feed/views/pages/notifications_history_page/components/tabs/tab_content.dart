@@ -80,13 +80,15 @@ class TabContent extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(contentCreatorsDataSourceProvider);
     final feedPostsDataSource = ref.watch(feedPostsDataSourceProvider);
-    final contentCreators = ref.watch(entitiesPagedDataProvider(dataSource));
-    final entities = ref.watch(entitiesPagedDataProvider(feedPostsDataSource));
+    final contentCreatorsPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final contentCreators = contentCreatorsPagedData?.data.items;
+    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(feedPostsDataSource));
+    final entities = entitiesPagedData?.data.items;
 
     if (contentCreators == null ||
-        contentCreators.data.items.isEmpty ||
+        contentCreators.isEmpty ||
         entities == null ||
-        entities.data.items.isEmpty) {
+        entities.isEmpty) {
       return ListItemsLoadingState(
         itemsCount: 7,
         itemHeight: 106.0.s,
@@ -96,7 +98,7 @@ class TabContent extends HookConsumerWidget {
     }
 
     final mockedPosts = useMemoized(
-      () => entities.data.items.whereType<PostEntity>().take(10).toList(),
+      () => entities.whereType<PostEntity>().take(10).toList(),
       [entities],
     );
 
@@ -104,7 +106,7 @@ class TabContent extends HookConsumerWidget {
       (NotificationData data) {
         final random = Random();
         final dataWithUpdatedPubKeys = data.copyWith(
-          pubkeys: contentCreators.data.items
+          pubkeys: contentCreators
               .whereType<UserMetadataEntity>()
               .take(data.pubkeys.length)
               .map((entity) => entity.pubkey)

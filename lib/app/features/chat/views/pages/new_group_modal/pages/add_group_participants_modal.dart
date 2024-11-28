@@ -27,14 +27,15 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
     final searchValue = useState('');
 
     final dataSource = ref.watch(contentCreatorsDataSourceProvider);
-    final contentCreators = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final contentCreators = entitiesPagedData?.data.items;
 
-    final isLoading = contentCreators?.data.items.isEmpty ?? true;
+    final isLoading = contentCreators?.isEmpty ?? true;
 
     // TODO: Replace stub with implemented search
     final userEntries = useMemoized(
-      () => (contentCreators?.data.items
-              .whereType<UserMetadataEntity>()
+      () => (contentCreators
+              ?.whereType<UserMetadataEntity>()
               .where(
                 (entity) =>
                     entity.data.displayName

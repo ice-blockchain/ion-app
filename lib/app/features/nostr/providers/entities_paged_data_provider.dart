@@ -29,7 +29,6 @@ class EntitiesDataSource with _$EntitiesDataSource {
 @freezed
 class EntitiesPagedDataState with _$EntitiesPagedDataState {
   factory EntitiesPagedDataState({
-    required List<EntitiesDataSource> dataSources,
     // Processing pagination params per data source
     required Paged<NostrEntity, Map<ActionSource, PaginationParams>> data,
   }) = _EntitiesPagedDataState;
@@ -47,9 +46,8 @@ class EntitiesPagedData extends _$EntitiesPagedData {
       Future.microtask(fetchEntities);
 
       return EntitiesPagedDataState(
-        dataSources: dataSources,
         data: Paged.data(
-          {},
+          null,
           pagination: {for (final source in dataSources) source.actionSource: PaginationParams()},
         ),
       );
@@ -59,7 +57,8 @@ class EntitiesPagedData extends _$EntitiesPagedData {
 
   Future<void> fetchEntities() async {
     final currentState = state;
-    if (currentState == null || currentState.data is PagedLoading) {
+
+    if (dataSources == null || currentState == null || currentState.data is PagedLoading) {
       return;
     }
 
@@ -68,12 +67,12 @@ class EntitiesPagedData extends _$EntitiesPagedData {
     );
 
     final paginationEntries = await Future.wait(
-      currentState.dataSources.map(_fetchEntitiesFromDataSource),
+      dataSources!.map(_fetchEntitiesFromDataSource),
     );
 
     state = state?.copyWith(
       data: Paged.data(
-        state!.data.items,
+        state!.data.items ?? {},
         pagination: Map.fromEntries(paginationEntries),
       ),
     );
@@ -103,11 +102,11 @@ class EntitiesPagedData extends _$EntitiesPagedData {
 
     DateTime? lastEventTime;
     await for (final entity in entitiesStream) {
-      if (dataSource.entityFilter(entity) && !(state?.data.items.contains(entity)).falseOrValue) {
+      if (dataSource.entityFilter(entity) && !(state?.data.items?.contains(entity)).falseOrValue) {
         lastEventTime = entity.createdAt;
         state = state?.copyWith(
           data: Paged.loading(
-            {...state!.data.items}..add(entity),
+            {...state!.data.items ?? {}}..add(entity),
             pagination: state!.data.pagination,
           ),
         );
@@ -130,7 +129,6 @@ class MockPostEntitiesPagedData extends _$MockPostEntitiesPagedData {
       Future.microtask(fetchEntities);
 
       return EntitiesPagedDataState(
-        dataSources: dataSources,
         data: Paged.data(
           {},
           pagination: {for (final source in dataSources) source.actionSource: PaginationParams()},
@@ -165,13 +163,13 @@ class MockPostEntitiesPagedData extends _$MockPostEntitiesPagedData {
     final paginationEntries = await Future.delayed(
       const Duration(milliseconds: 500),
       () => {
-        for (final source in currentState.dataSources) source.actionSource: PaginationParams(),
+        for (final source in dataSources!) source.actionSource: PaginationParams(),
       },
     );
 
     state = state?.copyWith(
       data: Paged.data(
-        {...state!.data.items, ...mockedPosts},
+        {...state!.data.items ?? {}, ...mockedPosts},
         pagination: paginationEntries,
       ),
     );

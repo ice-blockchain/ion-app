@@ -16,8 +16,9 @@ import 'package:ion/app/features/user/pages/profile_page/components/tabs/content
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/posts_tab.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/replies_tab.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/videos_tab.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_header.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content_separator.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
+import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opacity_on_scroll.dart';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
@@ -29,23 +30,12 @@ class ProfilePage extends HookConsumerWidget {
   final String pubkey;
   final bool showBackButton;
 
+  double get paddingTop => 60.0.s;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-    final opacityValue = useState<double>(0.0.s);
-    final paddingTop = 60.0.s;
-
-    useEffect(
-      () {
-        void listener() {
-          opacityValue.value = (scrollController.offset / paddingTop).clamp(0.0, 1.0);
-        }
-
-        scrollController.addListener(listener);
-        return () => scrollController.removeListener(listener);
-      },
-      [scrollController, paddingTop],
-    );
+    final (:opacity) = useAnimatedOpacityOnScroll(scrollController, topOffset: paddingTop);
 
     final backgroundColor = context.theme.appColors.secondaryBackground;
 
@@ -57,7 +47,7 @@ class ProfilePage extends HookConsumerWidget {
           children: [
             Positioned(
               child: Opacity(
-                opacity: 1.0 - opacityValue.value,
+                opacity: 1.0 - opacity,
                 child: UserBanner(pubkey: pubkey),
               ),
             ),
@@ -81,19 +71,11 @@ class ProfilePage extends HookConsumerWidget {
                               ),
                               child: Column(
                                 children: [
-                                  ProfileAvatar(
-                                    pubkey: pubkey,
-                                  ),
-                                  ProfileDetails(
-                                    pubkey: pubkey,
-                                  ),
-                                  SizedBox(
-                                    height: 16.0.s,
-                                  ),
+                                  ProfileAvatar(pubkey: pubkey),
+                                  ProfileDetails(pubkey: pubkey),
+                                  SizedBox(height: 16.0.s),
                                   const HorizontalSeparator(),
-                                  SizedBox(
-                                    height: 16.0.s,
-                                  ),
+                                  SizedBox(height: 16.0.s),
                                 ],
                               ),
                             ),
@@ -106,7 +88,7 @@ class ProfilePage extends HookConsumerWidget {
                           child: const ProfileTabsHeader(),
                         ),
                       ),
-                      const TabHeader(),
+                      const SliverToBoxAdapter(child: ContentSeparator()),
                     ];
                   },
                   body: TabBarView(
@@ -124,9 +106,9 @@ class ProfilePage extends HookConsumerWidget {
               alignment: Alignment.topCenter,
               child: Container(
                 padding: EdgeInsets.only(bottom: paddingTop - HeaderAction.buttonSize),
-                color: backgroundColor.withOpacity(opacityValue.value),
+                color: backgroundColor.withOpacity(opacity),
                 child: Header(
-                  opacity: opacityValue.value,
+                  opacity: opacity,
                   pubkey: pubkey,
                   showBackButton: showBackButton,
                 ),

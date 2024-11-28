@@ -36,9 +36,9 @@ class AvatarPicker extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final avatarPickerState = ref.watch(avatarProcessorNotifierProvider);
+    final avatarProcessorState = ref.watch(avatarProcessorNotifierProvider);
 
-    final avatarFile = avatarPickerState.whenOrNull(
+    final avatarFile = avatarProcessorState.whenOrNull(
       cropped: (file) => file,
       processed: (file) => file,
     );
@@ -63,8 +63,8 @@ class AvatarPicker extends HookConsumerWidget {
           child: PermissionAwareWidget(
             permissionType: Permission.photos,
             onGranted: () async {
-              if (avatarPickerState is AvatarProcessorStateInitial ||
-                  avatarPickerState is AvatarProcessorStateError) {
+              if (avatarProcessorState is AvatarProcessorStateInitial ||
+                  avatarProcessorState is AvatarProcessorStateError) {
                 final mediaFiles = await showSimpleBottomSheet<List<MediaFile>>(
                   context: context,
                   child: MediaPickerPage(
@@ -97,7 +97,7 @@ class AvatarPicker extends HookConsumerWidget {
                     shape: BoxShape.circle,
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  child: avatarPickerState is AvatarProcessorStateCropped
+                  child: avatarProcessorState is AvatarProcessorStateCropped
                       ? const IONLoadingIndicator()
                       : Assets.svg.iconLoginCamera.icon(size: iconSize),
                 ),
