@@ -69,4 +69,4 @@ class AudioWavePlaybackService {
 
 @riverpod
 AudioWavePlaybackService audioWavePlaybackService(Ref ref) =>
-    AudioWavePlaybackService(ref.read(mediaCompressServiceProvider));
+    AudioWavePlaybackService(ref.watch(mediaCompressServiceProvider));
