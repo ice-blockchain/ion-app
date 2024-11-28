@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:video_player/video_player.dart';
 
 class StoryVideoPreview extends ConsumerWidget {
@@ -15,17 +14,9 @@ class StoryVideoPreview extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final assetFilePathAsync = ref.watch(assetFilePathProvider(path));
-
-    final filePath = assetFilePathAsync.valueOrNull;
-
-    if (filePath == null) {
-      return const CenteredLoadingIndicator();
-    }
-
     final videoController = ref.watch(
       videoControllerProvider(
-        filePath,
+        path,
         autoPlay: true,
         looping: true,
       ),
