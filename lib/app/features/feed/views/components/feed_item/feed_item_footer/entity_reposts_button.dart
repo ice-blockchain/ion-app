@@ -13,9 +13,14 @@ import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class EntityRepostsButton extends ConsumerWidget {
-  const EntityRepostsButton({required this.eventReference, super.key});
+  const EntityRepostsButton({
+    required this.eventReference,
+    this.color,
+    super.key,
+  });
 
   final EventReference eventReference;
+  final Color? color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,13 +33,17 @@ class EntityRepostsButton extends ConsumerWidget {
         RepostOptionsModalRoute(eventReference: eventReference.toString()).push<void>(context);
       },
       child: FeedItemActionButton(
-        icon: Assets.svg.iconBlockRepost.icon(size: 16.0.s),
+        icon: Assets.svg.iconBlockRepost.icon(
+          size: 16.0.s,
+          color: color ?? context.theme.appColors.onTertararyBackground,
+        ),
+        textColor: color ?? context.theme.appColors.onTertararyBackground,
         activeIcon: Assets.svg.iconBlockRepost.icon(
           size: 16.0.s,
           color: context.theme.appColors.primaryAccent,
         ),
+        activeTextColor: context.theme.appColors.primaryAccent,
         value: repostsCount != null ? formatDoubleCompact(repostsCount) : '',
-        activeColor: context.theme.appColors.primaryAccent,
         isActive: isReposted,
       ),
     );

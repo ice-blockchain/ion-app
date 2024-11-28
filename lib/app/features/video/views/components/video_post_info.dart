@@ -49,18 +49,18 @@ class VideoPostInfo extends ConsumerWidget {
                   color: context.theme.appColors.secondaryBackground,
                 ),
               ),
-              SizedBox(
-                height: 10.0.s,
-              ),
-              VideoTextPost(
-                text: extractPostText(videoPost.data.content),
+
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 10.0.s,
+                  bottom: 14.0.s,
+                ),
+                child: VideoTextPost(
+                  text: extractPostText(videoPost.data.content),
+                ),
               ),
             ],
           ),
-        ),
-        Container(
-          height: 48.0.s,
-          color: context.theme.appColors.primaryText,
         ),
       ],
     );

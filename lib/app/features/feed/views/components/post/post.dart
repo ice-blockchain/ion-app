@@ -51,7 +51,7 @@ class Post extends ConsumerWidget {
         SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
         if (framedEvent != null) _FramedEvent(eventReference: framedEvent),
-        footer ?? FeedItemFooter(eventReference: eventReference, kind: PostEntity.kind),
+        footer ?? FeedItemFooter(eventReference: eventReference),
       ],
     );
   }

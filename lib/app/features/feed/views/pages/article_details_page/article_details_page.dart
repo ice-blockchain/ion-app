@@ -84,7 +84,6 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     ScreenSideOffset.small(
                       child: FeedItemFooter(
                         eventReference: eventReference,
-                        kind: ArticleEntity.kind,
                         bottomPadding: 10.0.s,
                       ),
                     ),

@@ -14,16 +14,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_videos_data_source_provider.g.dart';
 
-@riverpod
+@Riverpod(dependencies: [nostrEntity])
 List<EntitiesDataSource>? feedVideosDataSource(
   Ref ref, {
-  EventReference? eventReference,
+  required EventReference eventReference,
 }) {
   final filters = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters)).valueOrNull;
-  final until = eventReference != null
-      ? ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull?.createdAt
-      : null;
+  final until =
+      ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull?.createdAt;
 
   if (filterRelays == null) return null;
 

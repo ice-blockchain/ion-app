@@ -9,9 +9,14 @@ import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class EntityShareButton extends StatelessWidget {
-  const EntityShareButton({required this.eventReference, super.key});
+  const EntityShareButton({
+    required this.eventReference,
+    this.color,
+    super.key,
+  });
 
   final EventReference eventReference;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +26,11 @@ class EntityShareButton extends StatelessWidget {
         SharePostModalRoute(postId: eventReference.eventId).push<void>(context);
       },
       child: FeedItemActionButton(
-        icon: Assets.svg.iconBlockShare.icon(size: 16.0.s),
-        activeColor: context.theme.appColors.attentionRed,
+        icon: Assets.svg.iconBlockShare.icon(
+          size: 16.0.s,
+          color: color ?? context.theme.appColors.onTertararyBackground,
+        ),
+        textColor: color ?? context.theme.appColors.onTertararyBackground,
       ),
     );
   }

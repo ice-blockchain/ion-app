@@ -13,9 +13,14 @@ import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class EntityLikesButton extends ConsumerWidget {
-  const EntityLikesButton({required this.eventReference, super.key});
+  const EntityLikesButton({
+    required this.eventReference,
+    this.color,
+    super.key,
+  });
 
   final EventReference eventReference;
+  final Color? color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,14 +37,15 @@ class EntityLikesButton extends ConsumerWidget {
       child: FeedItemActionButton(
         icon: Assets.svg.iconVideoLikeOff.icon(
           size: 16.0.s,
-          color: context.theme.appColors.onTertararyBackground,
+          color: color ?? context.theme.appColors.onTertararyBackground,
         ),
+        textColor: color ?? context.theme.appColors.onTertararyBackground,
         activeIcon: Assets.svg.iconVideoLikeOn.icon(
           size: 16.0.s,
           color: context.theme.appColors.attentionRed,
         ),
+        activeTextColor: context.theme.appColors.attentionRed,
         value: likesCount != null ? formatDoubleCompact(likesCount) : '',
-        activeColor: context.theme.appColors.attentionRed,
         isActive: isLiked,
       ),
     );

@@ -12,17 +12,17 @@ import 'package:ion/app/features/nostr/model/event_reference.dart';
 class FeedItemFooter extends HookConsumerWidget {
   FeedItemFooter({
     required this.eventReference,
-    required this.kind,
     double? bottomPadding,
     double? topPadding,
+    this.color,
     super.key,
   })  : bottomPadding = bottomPadding ?? 16.0.s,
         topPadding = topPadding ?? 10.0.s;
 
   final EventReference eventReference;
-  final int kind;
   final double bottomPadding;
   final double topPadding;
+  final Color? color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,12 +31,28 @@ class FeedItemFooter extends HookConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(child: EntityRepliesButton(eventReference: eventReference)),
           Flexible(
-            child: EntityRepostsButton(eventReference: eventReference),
+            child: EntityRepliesButton(
+              eventReference: eventReference,
+              color: color,
+            ),
           ),
-          Flexible(child: EntityLikesButton(eventReference: eventReference)),
-          EntityShareButton(eventReference: eventReference),
+          Flexible(
+            child: EntityRepostsButton(
+              eventReference: eventReference,
+              color: color,
+            ),
+          ),
+          Flexible(
+            child: EntityLikesButton(
+              eventReference: eventReference,
+              color: color,
+            ),
+          ),
+          EntityShareButton(
+            eventReference: eventReference,
+            color: color,
+          ),
         ],
       ),
     );

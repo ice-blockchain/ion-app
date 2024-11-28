@@ -8,40 +8,36 @@ import 'package:ion/app/extensions/theme_data.dart';
 class FeedItemActionButton extends StatelessWidget {
   const FeedItemActionButton({
     required this.icon,
+    required this.textColor,
     this.activeIcon,
-    super.key,
-    this.value,
+    this.activeTextColor,
     this.isActive = false,
-    this.activeColor,
+    this.value,
+    super.key,
   });
 
   final Widget icon;
+  final Color textColor;
   final Widget? activeIcon;
-  final String? value;
+  final Color? activeTextColor;
   final bool isActive;
-  final Color? activeColor;
+  final String? value;
 
   @override
   Widget build(BuildContext context) {
     final effectiveIcon = isActive ? activeIcon : icon;
-    final effectiveColor = isActive ? activeColor : context.theme.appColors.onTertararyBackground;
+    final effectiveTextColor = isActive ? activeTextColor : textColor;
 
     return Row(
       children: [
-        IconTheme(
-          data: IconThemeData(
-            size: 16.0.s,
-            color: effectiveColor,
-          ),
-          child: effectiveIcon ?? icon,
-        ),
+        if (effectiveIcon != null) effectiveIcon,
         if (value != null)
           Padding(
             padding: EdgeInsets.only(left: 4.0.s),
             child: Text(
               value!,
               style: context.theme.appTextThemes.caption2.copyWith(
-                color: effectiveColor,
+                color: effectiveTextColor,
               ),
             ),
           ),

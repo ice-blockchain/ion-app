@@ -13,9 +13,14 @@ import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class EntityRepliesButton extends ConsumerWidget {
-  const EntityRepliesButton({required this.eventReference, super.key});
+  const EntityRepliesButton({
+    required this.eventReference,
+    this.color,
+    super.key,
+  });
 
   final EventReference eventReference;
+  final Color? color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,10 +33,17 @@ class EntityRepliesButton extends ConsumerWidget {
         CreatePostRoute(parentEvent: eventReference.toString()).push<void>(context);
       },
       child: FeedItemActionButton(
-        icon: Assets.svg.iconBlockComment.icon(size: 16.0.s),
-        activeIcon: Assets.svg.iconBlockCommenton.icon(size: 16.0.s),
+        icon: Assets.svg.iconBlockComment.icon(
+          size: 16.0.s,
+          color: color ?? context.theme.appColors.onTertararyBackground,
+        ),
+        textColor: color ?? context.theme.appColors.onTertararyBackground,
+        activeIcon: Assets.svg.iconBlockCommenton.icon(
+          size: 16.0.s,
+          color: context.theme.appColors.primaryAccent,
+        ),
+        activeTextColor: context.theme.appColors.primaryAccent,
         value: repliesCount != null ? formatDoubleCompact(repliesCount) : '',
-        activeColor: context.theme.appColors.primaryAccent,
         isActive: isReplied,
       ),
     );

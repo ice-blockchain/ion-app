@@ -9,8 +9,8 @@ import 'package:ion/app/components/section_header/section_header.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/data/models/trending_videos_overlay.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.dart';
-import 'package:ion/app/features/feed/providers/trending_videos_overlay_provider.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_skeleton.dart';
@@ -22,7 +22,10 @@ class TrendingVideos extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final listOverlay = ref.watch(trendingVideosOverlayNotifierProvider);
+    // TODO: Determine the actual overlay type.
+    // final listOverlay = ref.watch(trendingVideosOverlayNotifierProvider);
+    const listOverlay = TrendingVideosOverlay.vertical;
+
     final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
     // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
     // final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
@@ -32,7 +35,7 @@ class TrendingVideos extends ConsumerWidget {
     if (videos == null) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 12.0.s),
-        child: TrendingVideosListSkeleton(
+        child: const TrendingVideosListSkeleton(
           listOverlay: listOverlay,
         ),
       );
