@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -49,6 +50,54 @@ class CreatePostModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController(defaultText: content);
+    final keyboardVisibilityController = KeyboardVisibilityController();
+    final scrollController = useScrollController();
+    final visibilityToolbarKey = GlobalKey();
+    final actionsToolbarKey = GlobalKey();
+    final textInputKey = GlobalKey();
+
+    useEffect(
+      () {
+        final subscription = keyboardVisibilityController.onChange.listen((isVisible) {
+          if (isVisible) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Future.delayed(const Duration(milliseconds: 100), () {
+                if (scrollController.hasClients) {
+                  final visibilityToolbarBox =
+                      visibilityToolbarKey.currentContext?.findRenderObject() as RenderBox?;
+                  final visibilityToolbarHeight = visibilityToolbarBox?.size.height ?? 0.0;
+
+                  final actionsToolbarBox =
+                      actionsToolbarKey.currentContext?.findRenderObject() as RenderBox?;
+                  final actionsToolbarHeight = actionsToolbarBox?.size.height ?? 0.0;
+
+                  final textInputBox =
+                      textInputKey.currentContext?.findRenderObject() as RenderBox?;
+                  final textInputHeight = textInputBox?.size.height ?? 0.0;
+
+                  // final extraKeyboardOffset = 30.0.s;
+
+                  final maxExtent = scrollController.position.maxScrollExtent +
+                      visibilityToolbarHeight +
+                      actionsToolbarHeight +
+                      textInputHeight;
+                  // extraKeyboardOffset;
+
+                  scrollController.animateTo(
+                    maxExtent,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
+                }
+              });
+            });
+          }
+        });
+
+        return subscription.cancel;
+      },
+      [],
+    );
 
     final createOption = videoPath != null
         ? CreatePostOption.video
@@ -78,30 +127,34 @@ class CreatePostModal extends HookConsumerWidget {
             ),
             Expanded(
               child: SingleChildScrollView(
+                controller: scrollController,
                 child: KeyboardDismissOnTap(
                   child: ScreenSideOffset.small(
                     child: Column(
                       children: [
                         if (videoPath != null) VideoPreviewCover(videoPath: videoPath!),
                         if (parentEvent != null) ParentEntity(eventReference: parentEvent!),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const CurrentUserAvatar(),
-                            SizedBox(width: 10.0.s),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 6.0.s),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10.0.s),
+                          child: Row(
+                            key: textInputKey,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const CurrentUserAvatar(),
+                              SizedBox(width: 10.0.s),
+                              Expanded(
                                 child: Padding(
-                                  padding: EdgeInsets.zero,
+                                  padding: EdgeInsets.only(
+                                    top: 6.0.s,
+                                  ),
                                   child: TextEditor(
                                     textEditorController,
                                     placeholder: createOption.getPlaceholder(context),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         if (quotedEvent != null) QuotedEntity(eventReference: quotedEvent!),
                       ],
@@ -111,8 +164,12 @@ class CreatePostModal extends HookConsumerWidget {
               ),
             ),
             const HorizontalSeparator(),
-            ScreenSideOffset.small(child: const VisibilitySettingsToolbar()),
             ScreenSideOffset.small(
+              key: visibilityToolbarKey,
+              child: const VisibilitySettingsToolbar(),
+            ),
+            ScreenSideOffset.small(
+              key: actionsToolbarKey,
               child: ActionsToolbar(
                 actions: [
                   ToolbarImageButton(textEditorController: textEditorController),
