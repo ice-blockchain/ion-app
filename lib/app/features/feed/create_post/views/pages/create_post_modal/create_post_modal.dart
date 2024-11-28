@@ -77,46 +77,37 @@ class CreatePostModal extends HookConsumerWidget {
               ],
             ),
             Expanded(
-              child: KeyboardVisibilityBuilder(
-                builder: (context, isKeyboardVisible) {
-                  return SingleChildScrollView(
-                    reverse: isKeyboardVisible,
-                    child: KeyboardDismissOnTap(
-                      child: ScreenSideOffset.small(
-                        child: Column(
+              child: SingleChildScrollView(
+                child: KeyboardDismissOnTap(
+                  child: ScreenSideOffset.small(
+                    child: Column(
+                      children: [
+                        if (videoPath != null) VideoPreviewCover(videoPath: videoPath!),
+                        if (parentEvent != null) ParentEntity(eventReference: parentEvent!),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (videoPath != null) VideoPreviewCover(videoPath: videoPath!),
-                            if (parentEvent != null) ParentEntity(eventReference: parentEvent!),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const CurrentUserAvatar(),
-                                SizedBox(width: 10.0.s),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 6.0.s),
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                        bottom: isKeyboardVisible
-                                            ? MediaQuery.of(context).viewInsets.bottom
-                                            : 0,
-                                      ),
-                                      child: TextEditor(
-                                        textEditorController,
-                                        placeholder: createOption.getPlaceholder(context),
-                                      ),
-                                    ),
+                            const CurrentUserAvatar(),
+                            SizedBox(width: 10.0.s),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 6.0.s),
+                                child: Padding(
+                                  padding: EdgeInsets.zero,
+                                  child: TextEditor(
+                                    textEditorController,
+                                    placeholder: createOption.getPlaceholder(context),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                            if (quotedEvent != null) QuotedEntity(eventReference: quotedEvent!),
                           ],
                         ),
-                      ),
+                        if (quotedEvent != null) QuotedEntity(eventReference: quotedEvent!),
+                      ],
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
             ),
             const HorizontalSeparator(),
