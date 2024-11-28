@@ -7,6 +7,7 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
+import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.dart';
 import 'package:ion/app/features/core/views/pages/language_selector_page.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
@@ -44,7 +45,14 @@ class SelectLanguages extends HookConsumerWidget {
             // Skip "follow-creators" step, if user identity is already created,
             // because identity is created based on the selected creators
             // and we can't let user change them at this point.
-            ref.read(onboardingCompleteNotifierProvider.notifier).finish();
+            guardPasskeyDialog(
+              context,
+              (child) => RiverpodPasskeyRequestBuilder(
+                provider: onboardingCompleteNotifierProvider,
+                request: () => ref.read(onboardingCompleteNotifierProvider.notifier).finish(),
+                child: child,
+              ),
+            );
           } else {
             DiscoverCreatorsRoute().push<void>(context);
           }

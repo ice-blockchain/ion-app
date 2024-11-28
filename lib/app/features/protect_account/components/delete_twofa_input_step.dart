@@ -9,19 +9,21 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_try_again_page.dart';
+import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/adapter/twofa_type_adapter.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion_identity_client/ion_identity.dart';
 
 class DeleteTwoFAInputStep extends HookConsumerWidget {
   const DeleteTwoFAInputStep({
+    required this.twoFaToDelete,
     required this.twoFaTypes,
     required this.onDeleteSuccess,
     super.key,
   });
 
+  final TwoFaType twoFaToDelete;
   final List<TwoFaType> twoFaTypes;
   final VoidCallback onDeleteSuccess;
 
@@ -57,9 +59,18 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
                       controller: controllers[twoFaType]!,
                       twoFaType: twoFaType,
                       onRequestCode: () async {
-                        await ref
-                            .read(requestTwoFaCodeNotifierProvider.notifier)
-                            .requestTwoFaCode(twoFaType);
+                        await guardPasskeyDialog(
+                          ref.context,
+                          (child) => RiverpodPasskeyRequestBuilder(
+                            provider: requestTwoFaCodeNotifierProvider,
+                            request: () {
+                              ref
+                                  .read(requestTwoFaCodeNotifierProvider.notifier)
+                                  .requestTwoFaCode(twoFaType);
+                            },
+                            child: child,
+                          ),
+                        );
                       },
                       isSending: isRequesting,
                     ),
@@ -85,12 +96,21 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
     WidgetRef ref,
     Map<TwoFaType, TextEditingController> controllers,
   ) {
-    ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
-      const TwoFAType.authenticator(),
-      [
-        for (final controller in controllers.entries)
-          TwoFaTypeAdapter(controller.key, controller.value.text).twoFAType,
-      ],
+    guardPasskeyDialog(
+      ref.context,
+      (child) => RiverpodPasskeyRequestBuilder(
+        provider: deleteTwoFANotifierProvider,
+        request: () {
+          ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
+            TwoFaTypeAdapter(twoFaToDelete).twoFAType,
+            [
+              for (final controller in controllers.entries)
+                TwoFaTypeAdapter(controller.key, controller.value.text).twoFAType,
+            ],
+          );
+        },
+        child: child,
+      ),
     );
   }
 

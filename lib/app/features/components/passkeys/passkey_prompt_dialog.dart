@@ -2,15 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/auth/secured_by.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/passkeys/secured_by.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class PasskeysPromptDialog extends ConsumerWidget {
-  const PasskeysPromptDialog({super.key});
+class PasskeyPromptDialog extends ConsumerWidget {
+  const PasskeyPromptDialog({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

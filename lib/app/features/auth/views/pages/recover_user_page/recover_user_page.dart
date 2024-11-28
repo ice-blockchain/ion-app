@@ -9,6 +9,7 @@ import 'package:ion/app/features/auth/views/pages/recover_user_page/components/r
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/twofa_input_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/twofa_options_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/models/recover_user_step.dart';
+import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -57,12 +58,19 @@ class RecoverUserPage extends HookConsumerWidget {
     RecoveryCreds recoveryCreds, [
     Map<TwoFaType, String>? twoFaTypes,
   ]) {
-    ref.read(recoverUserActionNotifierProvider.notifier).recoverUser(
-          username: recoveryCreds.name,
-          credentialId: recoveryCreds.id,
-          recoveryKey: recoveryCreds.code,
-          twoFaTypes: twoFaTypes,
-        );
+    guardPasskeyDialog(
+      ref.context,
+      (child) => RiverpodPasskeyRequestBuilder(
+        provider: recoverUserActionNotifierProvider,
+        request: () => ref.read(recoverUserActionNotifierProvider.notifier).recoverUser(
+              username: recoveryCreds.name,
+              credentialId: recoveryCreds.id,
+              recoveryKey: recoveryCreds.code,
+              twoFaTypes: twoFaTypes,
+            ),
+        child: child,
+      ),
+    );
   }
 
   void _listenRecoverUserResult(WidgetRef ref, ValueNotifier<RecoverUserStep> step) {

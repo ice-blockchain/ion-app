@@ -9,6 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/register_action_notifier.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
+import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 
 class SignUpPasskeyForm extends HookConsumerWidget {
   const SignUpPasskeyForm({super.key});
@@ -40,9 +41,18 @@ class SignUpPasskeyForm extends HookConsumerWidget {
                 : const SizedBox.shrink(),
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
-                ref
-                    .read(registerActionNotifierProvider.notifier)
-                    .signUp(keyName: identityKeyNameController.text);
+                guardPasskeyDialog(
+                  ref.context,
+                  (child) => RiverpodPasskeyRequestBuilder(
+                    provider: registerActionNotifierProvider,
+                    request: () {
+                      ref
+                          .read(registerActionNotifierProvider.notifier)
+                          .signUp(keyName: identityKeyNameController.text);
+                    },
+                    child: child,
+                  ),
+                );
               }
             },
             label: Text(context.i18n.sign_up_passkey_button),

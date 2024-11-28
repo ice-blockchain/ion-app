@@ -11,6 +11,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
+import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
@@ -49,7 +50,13 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
                   child: TwoFaCodeInput(
                     controller: codeController,
                     twoFaType: TwoFaType.email,
-                    onRequestCode: () => requestTwoFACode(ref, TwoFAType.email(email)),
+                    onRequestCode: () => guardPasskeyDialog(
+                      context,
+                      (child) => HookPasskeyRequestBuilder(
+                        request: () => requestTwoFACode(ref, TwoFAType.email(email)),
+                        child: child,
+                      ),
+                    ),
                   ),
                 ),
                 const Spacer(),

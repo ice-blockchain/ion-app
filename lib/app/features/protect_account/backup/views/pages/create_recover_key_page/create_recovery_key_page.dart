@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
+import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/create_recover_key_page/components/create_recovery_key_error_state.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/create_recover_key_page/components/create_recovery_key_loading_state.dart';
@@ -80,7 +81,16 @@ class _Body extends HookConsumerWidget {
     final recoveryData = ref.watch(createRecoveryKeyActionNotifierProvider);
 
     useOnInit(() {
-      ref.read(createRecoveryKeyActionNotifierProvider.notifier).createRecoveryCredentials();
+      guardPasskeyDialog(
+        context,
+        (child) => RiverpodPasskeyRequestBuilder(
+          provider: createRecoveryKeyActionNotifierProvider,
+          request: () {
+            ref.read(createRecoveryKeyActionNotifierProvider.notifier).createRecoveryCredentials();
+          },
+          child: child,
+        ),
+      );
     });
 
     if (recoveryData.isLoading || recoveryData.valueOrNull == null) {
