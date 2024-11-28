@@ -8,7 +8,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
-import 'package:ion/app/features/core/providers/video_player_provider.dart';
 
 part 'components/message_with_timestamp.dart';
 
@@ -30,7 +29,6 @@ class VideoMessage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
-    final videoController = ref.watch(videoControllerProvider(videoUrl, looping: true));
     final containerKey = useRef<GlobalKey>(GlobalKey());
     final videoWidth = useState<double>(0);
 
@@ -54,7 +52,7 @@ class VideoMessage extends HookConsumerWidget {
                 constraints: BoxConstraints(maxHeight: 300.0.s, maxWidth: videoWidth.value),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12.0.s),
-                  child: VideoPreview(controller: videoController),
+                  child: VideoPreview(videoUrl: videoUrl),
                 ),
               ),
               _MessageWithTimestamp(

@@ -89,9 +89,13 @@ class VideoPage extends HookConsumerWidget {
                   duration: duration,
                   onChangeStart: (_) => playerController.pause(),
                   onChangeEnd: (_) => playerController.play(),
-                  onChanged: (value) => playerController.seekTo(
-                    Duration(milliseconds: value.toInt()),
-                  ),
+                  onChanged: (value) {
+                    if (playerController.value.isInitialized) {
+                      playerController.seekTo(
+                        Duration(milliseconds: value.toInt()),
+                      );
+                    }
+                  },
                 ),
               ),
               VideoActions(

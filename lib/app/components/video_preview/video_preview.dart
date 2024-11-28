@@ -2,28 +2,37 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class VideoPreview extends HookWidget {
+class VideoPreview extends HookConsumerWidget {
   const VideoPreview({
-    required this.controller,
+    required this.videoUrl,
     super.key,
   });
 
-  final VideoPlayerController controller;
+  final String videoUrl;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(
+      videoControllerProvider(
+        videoUrl,
+        looping: true,
+      ),
+    );
     final isMuted = useState(true);
 
     useEffect(
       () {
-        controller.setVolume(0); // Start muted
-        return controller.dispose;
+        controller.setVolume(0);
+
+        return null;
       },
       [controller],
     );

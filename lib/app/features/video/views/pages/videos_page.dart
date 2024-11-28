@@ -66,18 +66,14 @@ class VideosPage extends HookConsumerWidget {
   void _loadMore(WidgetRef ref, int index, int totalItems) {
     const threshold = 2;
     if (totalItems > threshold && index >= totalItems - threshold) {
-      _loadMoreVideos(ref);
+      ref
+          .read(
+            // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
+            mockPostEntitiesPagedDataProvider(
+              ref.read(feedVideosDataSourceProvider(eventReference: eventReference)),
+            ).notifier,
+          )
+          .fetchEntities();
     }
-  }
-
-  void _loadMoreVideos(WidgetRef ref) {
-    ref
-        .read(
-          // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
-          mockPostEntitiesPagedDataProvider(
-            ref.read(feedVideosDataSourceProvider(eventReference: eventReference)),
-          ).notifier,
-        )
-        .fetchEntities();
   }
 }
