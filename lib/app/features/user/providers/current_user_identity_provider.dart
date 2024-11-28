@@ -1,38 +1,20 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/user/model/user_identity.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_client_provider.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'current_user_identity_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class CurrentUserIdentity extends _$CurrentUserIdentity {
   @override
-  Future<UserIdentity?> build() async {
+  Future<UserDetails?> build() async {
     final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
     if (currentIdentityKeyName != null) {
-      //TODO: Add indentity.io `getUser` request here
-      await Future<void>.delayed(const Duration(seconds: 1));
-      // using local storage to simulate BE response, remove when real request is impl
-      final prefs = await SharedPreferences.getInstance();
-      final relaysSet = prefs.getBool('relays_set_$currentIdentityKeyName') ?? false;
-      return UserIdentity(
-        ionConnectIndexerRelays: [
-          'wss://relay.damus.io',
-          'wss://relay.damus.io',
-          'wss://relay.damus.io',
-        ],
-        ionConnectRelays: relaysSet
-            ? [
-                'wss://relay.damus.io',
-                'wss://relay.damus.io',
-                'wss://relay.damus.io',
-              ]
-            : [],
-        masterPubkey: 'some_key',
-      );
+      final ionIdentityClient = await ref.watch(ionIdentityClientProvider.future);
+      return ionIdentityClient.users.currentUserDetails();
     }
     return null;
   }
@@ -45,30 +27,10 @@ class CurrentUserIdentity extends _$CurrentUserIdentity {
       throw Exception('User is not authenticated');
     }
 
-    await Future<void>.delayed(const Duration(milliseconds: 300));
-    // using local storage to simulate BE response, remove when real request is impl
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('relays_set_$currentIdentityKeyName', true);
-    state = const AsyncData(
-      UserIdentity(
-        ionConnectIndexerRelays: [
-          'wss://relay.damus.io',
-          'wss://relay.damus.io',
-          'wss://relay.damus.io',
-        ],
-        ionConnectRelays: [
-          'wss://relay.damus.io',
-          'wss://relay.damus.io',
-          'wss://relay.damus.io',
-        ],
-        masterPubkey: 'some_key',
-      ),
-    );
-    return [
-      'wss://relay.damus.io',
-      'wss://relay.damus.io',
-      'wss://relay.damus.io',
-    ];
+    final ionIdentityClient = await ref.watch(ionIdentityClientProvider.future);
+    final response = await ionIdentityClient.users
+        .setIONConnectRelays(userId: currentIdentityKeyName, followeeList: followees);
+    return response.ionConnectRelays;
   }
 }
 

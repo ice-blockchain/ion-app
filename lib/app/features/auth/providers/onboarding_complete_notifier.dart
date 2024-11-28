@@ -15,6 +15,7 @@ import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.dart';
 import 'package:ion/app/services/storage/user_preferences_service.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -75,9 +76,9 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   }
 
   Future<List<String>> _assignUserRelays() async {
-    final userIdentity = (await ref.read(currentUserIdentityProvider.future))!;
-    if (userIdentity.ionConnectRelays.isNotEmpty) {
-      return userIdentity.ionConnectRelays;
+    final UserDetails(:ionConnectRelays) = (await ref.read(currentUserIdentityProvider.future))!;
+    if (ionConnectRelays != null && ionConnectRelays.isNotEmpty) {
+      return ionConnectRelays;
     }
     final followees = ref.read(onboardingDataProvider).followees;
     if (followees == null) throw FollowListNotFoundException();
