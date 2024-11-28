@@ -21,6 +21,7 @@ class AuthScrollContainer extends HookWidget {
     this.titleStyle,
     this.descriptionStyle,
     this.mainAxisAlignment,
+    this.onBackPress,
   });
 
   final List<Widget> children;
@@ -41,6 +42,7 @@ class AuthScrollContainer extends HookWidget {
   final TextStyle? descriptionStyle;
 
   final MainAxisAlignment? mainAxisAlignment;
+  final VoidCallback? onBackPress;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +69,7 @@ class AuthScrollContainer extends HookWidget {
               primary: false,
               flexibleSpace: NavigationAppBar.modal(
                 showBackButton: showBackButton,
+                onBackPress: onBackPress,
                 actions: actions,
                 title: title != null
                     ? FadeOnScroll(

@@ -6,6 +6,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/fill_profile_notifier.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
@@ -56,6 +57,12 @@ class FillProfile extends HookConsumerWidget {
           description: context.i18n.fill_profile_description,
           icon: Assets.svg.iconLoginIcelogo.icon(size: 44.0.s),
           mainAxisAlignment: MainAxisAlignment.start,
+          onBackPress: () async {
+            await ref.read(authProvider.notifier).signOut();
+            if (context.mounted) {
+              GetStartedRoute().go(context);
+            }
+          },
           children: [
             Form(
               key: formKey,
