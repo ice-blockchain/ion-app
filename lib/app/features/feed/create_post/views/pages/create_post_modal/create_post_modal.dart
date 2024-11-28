@@ -19,6 +19,7 @@ import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_t
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
+import 'package:ion/app/features/feed/views/components/visibility_settings_toolbar/visibility_settings_toolbar.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -119,6 +120,7 @@ class CreatePostModal extends HookConsumerWidget {
               ),
             ),
             const HorizontalSeparator(),
+            ScreenSideOffset.small(child: const VisibilitySettingsToolbar()),
             ScreenSideOffset.small(
               child: ActionsToolbar(
                 actions: [

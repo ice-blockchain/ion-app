@@ -25,7 +25,6 @@ class ActionsToolbar extends StatelessWidget {
           Expanded(
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 12.0.s),
               itemCount: actions.length,
               separatorBuilder: (context, index) => SizedBox(width: 12.0.s),
               itemBuilder: (context, index) => actions[index],

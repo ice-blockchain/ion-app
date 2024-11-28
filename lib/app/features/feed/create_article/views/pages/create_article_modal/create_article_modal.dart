@@ -99,8 +99,10 @@ class CreateArticleModal extends HookConsumerWidget {
             Column(
               children: [
                 const HorizontalSeparator(),
-                CreateArticleToolbar(
-                  textEditorController: textEditorController,
+                ScreenSideOffset.small(
+                  child: CreateArticleToolbar(
+                    textEditorController: textEditorController,
+                  ),
                 ),
               ],
             ),
