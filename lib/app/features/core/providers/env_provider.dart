@@ -13,6 +13,7 @@ enum EnvVariable {
   ION_IOS_APP_ID,
   ION_ORIGIN,
   SHOW_DEBUG_INFO,
+  BANUBA_TOKEN,
 }
 
 @Riverpod(keepAlive: true)
