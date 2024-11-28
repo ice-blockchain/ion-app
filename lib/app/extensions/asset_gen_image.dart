@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:simple_shadow/simple_shadow.dart';
 
 extension IconExtension on AssetGenImage {
   Widget icon({Color? color, double? size, BoxFit? fit}) {
@@ -59,32 +58,6 @@ extension IconStringExtension on String {
       height: iconHeight,
       excludeFromSemantics: true,
       colorFilter: colorFilter,
-    );
-  }
-
-  Widget iconWithShadow({
-    Color? color,
-    double? size,
-    BoxFit? fit,
-    Color? shadowColor,
-    double? opacity,
-    Offset? offset,
-    double? sigma,
-  }) {
-    final iconSize = size ?? 24.0.s;
-    final colorFilter = color == null ? null : ColorFilter.mode(color, BlendMode.srcIn);
-
-    return SimpleShadow(
-      offset: offset ?? const Offset(0, 1.5),
-      sigma: sigma ?? 1.5,
-      child: SvgPicture.asset(
-        this,
-        width: iconSize,
-        height: iconSize,
-        excludeFromSemantics: true,
-        fit: fit ?? BoxFit.contain,
-        colorFilter: colorFilter,
-      ),
     );
   }
 }
