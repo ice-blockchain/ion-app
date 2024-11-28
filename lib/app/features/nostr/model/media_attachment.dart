@@ -15,6 +15,7 @@ class MediaAttachment {
     this.mimeType,
     this.blurhash,
     this.dimension,
+    this.thumb,
   });
 
   /// https://github.com/nostr-protocol/nips/blob/master/92.md#example
@@ -27,6 +28,7 @@ class MediaAttachment {
     String? mimeType;
     String? blurhash;
     String? dimension;
+    String? thumb;
 
     for (final params in tag.skip(1)) {
       final pair = params.split(' ');
@@ -47,6 +49,8 @@ class MediaAttachment {
           blurhash = value;
         case 'dim':
           dimension = value;
+        case 'thumb':
+          thumb = value;
       }
     }
 
@@ -59,6 +63,7 @@ class MediaAttachment {
       mimeType: mimeType,
       dimension: dimension,
       blurhash: blurhash,
+      thumb: thumb,
     );
   }
 
@@ -69,6 +74,8 @@ class MediaAttachment {
   final String? blurhash;
 
   final String? dimension;
+
+  final String? thumb;
 
   late double? aspectRatio = _aspectRatioFromDimension(dimension);
 
@@ -113,6 +120,7 @@ class MediaAttachment {
       if (mimeType != null) 'm $mimeType',
       if (blurhash != null) 'blurhash $blurhash',
       if (dimension != null) 'dim $dimension',
+      if (thumb != null) 'thumb $thumb',
     ];
   }
 
@@ -121,6 +129,6 @@ class MediaAttachment {
   @override
   String toString() {
     return 'MediaAttachment(mediaType: $mediaType, url: $url, '
-        'mimeType: $mimeType, blurhash: $blurhash, dimension: $dimension)';
+        'mimeType: $mimeType, blurhash: $blurhash, dimension: $dimension, thumb: $thumb)';
   }
 }

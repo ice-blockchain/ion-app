@@ -3,13 +3,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/feed/data/models/trending_videos_overlay.dart';
-import 'package:ion/app/features/feed/providers/trending_videos_overlay_provider.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_author.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_likes_button.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_menu_button.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/mock.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/router/app_routes.dart';
 
 class TrendingVideoListItem extends ConsumerWidget {
   const TrendingVideoListItem({
@@ -18,51 +18,109 @@ class TrendingVideoListItem extends ConsumerWidget {
     super.key,
   });
 
-  final TrendingVideo video;
+  final PostEntity video;
   final Size itemSize;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final eventReference = EventReference(eventId: video.id, pubkey: video.pubkey);
+
+    final thumbnailUrl = video.data.primaryMedia?.thumb;
+    if (thumbnailUrl == null || thumbnailUrl.isEmpty) {
+      return _PlaceholderThumbnail(size: itemSize);
+    }
+
     return GestureDetector(
       onTap: () {
-        ref.read(trendingVideosOverlayNotifierProvider.notifier).overlay =
-            ref.read(trendingVideosOverlayNotifierProvider) == TrendingVideosOverlay.horizontal
-                ? TrendingVideosOverlay.vertical
-                : TrendingVideosOverlay.horizontal;
+        VideoRoute(eventReference: eventReference.toString()).push<void>(context);
       },
-      child: Container(
-        width: itemSize.width,
-        height: itemSize.height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.0.s),
-          image: DecorationImage(
-            image: CachedNetworkImageProvider(video.imageUrl),
-            fit: BoxFit.cover,
-          ),
+      child: _VideoContainer(
+        thumbnailUrl: thumbnailUrl,
+        size: itemSize,
+        eventReference: eventReference,
+        pubkey: video.pubkey,
+      ),
+    );
+  }
+}
+
+class _PlaceholderThumbnail extends StatelessWidget {
+  const _PlaceholderThumbnail({required this.size});
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size.width,
+      height: size.height,
+      decoration: BoxDecoration(
+        color: context.theme.appColors.sheetLine.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(16.0.s),
+      ),
+      child: Center(
+        child: Icon(
+          Icons.broken_image,
+          size: 48.0.s,
+          color: context.theme.appColors.sheetLine,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              height: 40.0.s,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TrendingVideoLikesButton(
-                    likes: video.likes,
-                    onPressed: () {},
-                  ),
-                  TrendingVideoMenuButton(onPressed: () {}),
-                ],
-              ),
-            ),
-            TrendingVideoAuthor(
-              imageUrl: video.authorImageUrl,
-              label: video.authorName,
-            ),
-          ],
+      ),
+    );
+  }
+}
+
+class _VideoContainer extends StatelessWidget {
+  const _VideoContainer({
+    required this.thumbnailUrl,
+    required this.size,
+    required this.eventReference,
+    required this.pubkey,
+  });
+
+  final String thumbnailUrl;
+  final Size size;
+  final EventReference eventReference;
+  final String pubkey;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size.width,
+      height: size.height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16.0.s),
+        image: DecorationImage(
+          image: CachedNetworkImageProvider(thumbnailUrl),
+          fit: BoxFit.cover,
         ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _TopControls(eventReference: eventReference),
+          TrendingVideoAuthor(pubkey: pubkey),
+        ],
+      ),
+    );
+  }
+}
+
+class _TopControls extends StatelessWidget {
+  const _TopControls({required this.eventReference});
+
+  final EventReference eventReference;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40.0.s,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          TrendingVideoLikesButton(eventReference: eventReference),
+          TrendingVideoMenuButton(onPressed: () {}),
+        ],
       ),
     );
   }

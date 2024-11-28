@@ -111,6 +111,7 @@ import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/self_profile_page.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/switch_account_modal.dart';
+import 'package:ion/app/features/video/views/pages/video_page.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/model/nft_data.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/coin_details_page.dart';

@@ -14,13 +14,14 @@ import 'package:ion/app/utils/username.dart';
 class UserInfo extends HookConsumerWidget {
   const UserInfo({
     required this.pubkey,
-    super.key,
     this.trailing,
+    this.textStyle,
+    super.key,
   });
 
-  final Widget? trailing;
-
   final String pubkey;
+  final Widget? trailing;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,8 +37,14 @@ class UserInfo extends HookConsumerWidget {
         }
         return ListItem.user(
           onTap: () => ProfileRoute(pubkey: pubkey).push<void>(context),
-          title: Text(userMetadataEntity.data.displayName),
-          subtitle: Text(prefixUsername(username: userMetadataEntity.data.name, context: context)),
+          title: Text(
+            userMetadataEntity.data.displayName,
+            style: textStyle,
+          ),
+          subtitle: Text(
+            prefixUsername(username: userMetadataEntity.data.name, context: context),
+            style: textStyle,
+          ),
           profilePicture: userMetadataEntity.data.picture,
           trailing: trailing,
           iceBadge: mockedIceBadge.value,

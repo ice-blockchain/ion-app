@@ -7,6 +7,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/hooks/use_post_media.dart';
 import 'package:ion/app/services/text_parser/matchers/url_matcher.dart';
+import 'package:ion/app/utils/post_text.dart';
 
 class PostBody extends ConsumerWidget {
   const PostBody({
@@ -20,19 +21,14 @@ class PostBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final postMedia = usePostMedia(postEntity.data);
 
-    //TODO::temp impl
-    final postText = postEntity.data.content.fold<StringBuffer>(StringBuffer(), (result, match) {
-      if (match.matcherType != UrlMatcher) {
-        result.write(match.text);
-      }
-      return result;
-    });
+    final postText = extractPostText(postEntity.data.content, excludeMatcherType: UrlMatcher);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (postMedia.isNotEmpty) PostMedia(media: postMedia),
         Text(
-          postText.toString(),
+          postText,
           style: context.theme.appTextThemes.body2.copyWith(
             color: context.theme.appColors.sharkText,
           ),

@@ -1,45 +1,49 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/feed/providers/counters/likes_count_provider.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class TrendingVideoLikesButton extends StatelessWidget {
+class TrendingVideoLikesButton extends ConsumerWidget {
   const TrendingVideoLikesButton({
-    required this.likes,
-    required this.onPressed,
+    required this.eventReference,
     super.key,
   });
 
-  final int likes;
-  final VoidCallback onPressed;
+  final EventReference eventReference;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final likesCount = ref.watch(likesCountProvider(eventReference));
+
     return TextButton(
       style: TextButton.styleFrom(
         padding: EdgeInsets.symmetric(horizontal: 12.0.s),
       ),
-      onPressed: onPressed,
+      onPressed: () {},
       child: Row(
         children: [
           Assets.svg.iconVideoLikeOn.icon(
             size: 14.0.s,
             color: context.theme.appColors.secondaryBackground,
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 2.0.s),
-            child: Text(
-              formatDoubleCompact(likes),
-              style: context.theme.appTextThemes.caption3.copyWith(
-                color: context.theme.appColors.secondaryBackground,
+          if (likesCount != null)
+            Padding(
+              padding: EdgeInsets.only(left: 2.0.s),
+              child: Text(
+                formatDoubleCompact(likesCount),
+                style: context.theme.appTextThemes.caption3.copyWith(
+                  color: context.theme.appColors.secondaryBackground,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

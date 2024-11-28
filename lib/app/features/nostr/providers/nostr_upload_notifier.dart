@@ -49,6 +49,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
       mimeType: fileMetadata.mimeType,
       blurhash: fileMetadata.blurhash,
       dimension: fileMetadata.dimension,
+      thumb: fileMetadata.thumb,
     );
 
     return (fileMetadata: fileMetadata, mediaAttachment: mediaAttachment);

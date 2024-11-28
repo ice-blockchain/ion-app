@@ -8,8 +8,10 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/section_header/section_header.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.dart';
 import 'package:ion/app/features/feed/providers/trending_videos_overlay_provider.dart';
+import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_skeleton.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/video_icon.dart';
@@ -22,7 +24,20 @@ class TrendingVideos extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final listOverlay = ref.watch(trendingVideosOverlayNotifierProvider);
     final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
-    final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
+    // TODO: remove this [mockPostEntitiesPagedDataProvider] when we have real data
+    // final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final videosData = ref.watch(mockPostEntitiesPagedDataProvider(dataSource));
+
+    if (videosData == null) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 12.0.s),
+        child: TrendingVideosListSkeleton(
+          listOverlay: listOverlay,
+        ),
+      );
+    }
+
+    if (videosData.data.items.isEmpty) return const SizedBox.shrink();
 
     return Column(
       children: [
@@ -31,34 +46,37 @@ class TrendingVideos extends ConsumerWidget {
           title: context.i18n.feed_trending_videos,
           leadingIcon: const VideosIcon(),
         ),
-        if (videosData == null)
-          TrendingVideosListSkeleton(listOverlay: listOverlay)
-        else
-          LoadMoreBuilder(
-            slivers: [
-              TrendingVideosList(
-                entities: videosData.data.items.toList(),
-                listOverlay: listOverlay,
-              ),
-            ],
-            hasMore: videosData.hasMore,
-            onLoadMore: () => _onLoadMore(ref),
-            builder: (context, slivers) => SizedBox(
-              height: listOverlay.itemSize.height,
-              child: CustomScrollView(
-                scrollDirection: Axis.horizontal,
-                slivers: slivers,
-              ),
+        LoadMoreBuilder(
+          slivers: [
+            TrendingVideosList(
+              videos: videosData.data.items.whereType<PostEntity>().toList(),
+              listOverlay: listOverlay,
+            ),
+          ],
+          hasMore: videosData.hasMore,
+          onLoadMore: () => _onLoadMore(ref),
+          builder: (context, slivers) => SizedBox(
+            height: listOverlay.itemSize.height,
+            child: CustomScrollView(
+              scrollDirection: Axis.horizontal,
+              slivers: slivers,
             ),
           ),
+        ),
         SizedBox(height: 18.0.s),
+        FeedListSeparator(),
       ],
     );
   }
 
   Future<void> _onLoadMore(WidgetRef ref) async {
     await ref
-        .read(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)).notifier)
+        // TODO: remove this [mockPostEntitiesPagedDataProvider] when we have real data
+        // .read(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)).notifier)
+        .read(
+          mockPostEntitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider))
+              .notifier,
+        )
         .fetchEntities();
   }
 }
