@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/auth/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
@@ -108,7 +109,16 @@ class DiscoverCreators extends HookConsumerWidget {
                     onPressed: () {
                       ref.read(onboardingDataProvider.notifier).followees =
                           selectedCreators.map((creator) => creator.pubkey).toList();
-                      ref.read(onboardingCompleteNotifierProvider.notifier).finish();
+
+                      guardPasskeyDialog(
+                        context,
+                        (child) => RiverpodPasskeyRequestBuilder(
+                          provider: onboardingCompleteNotifierProvider,
+                          request: () =>
+                              ref.read(onboardingCompleteNotifierProvider.notifier).finish(),
+                          child: child,
+                        ),
+                      );
                     },
                   ),
                 ),

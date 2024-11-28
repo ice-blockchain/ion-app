@@ -83,10 +83,13 @@ class _Body extends HookConsumerWidget {
     useOnInit(() {
       guardPasskeyDialog(
         context,
-        createRecoveryKeyActionNotifierProvider,
-        () {
-          ref.read(createRecoveryKeyActionNotifierProvider.notifier).createRecoveryCredentials();
-        },
+        (child) => RiverpodPasskeyRequestBuilder(
+          provider: createRecoveryKeyActionNotifierProvider,
+          request: () {
+            ref.read(createRecoveryKeyActionNotifierProvider.notifier).createRecoveryCredentials();
+          },
+          child: child,
+        ),
       );
     });
 

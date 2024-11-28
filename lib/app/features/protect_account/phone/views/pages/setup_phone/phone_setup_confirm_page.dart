@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/auth/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
@@ -64,7 +65,13 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
                     scrollPadding: EdgeInsets.only(bottom: 200.0.s),
                     keyboardType: TextInputType.number,
                     suffixIcon: SendButton(
-                      onRequestCode: () => requestTwoFACode(ref, TwoFAType.sms(phone)),
+                      onRequestCode: () => guardPasskeyDialog(
+                        context,
+                        (child) => HookPasskeyRequestBuilder(
+                          request: () => requestTwoFACode(ref, TwoFAType.sms(phone)),
+                          child: child,
+                        ),
+                      ),
                     ),
                   ),
                 ),

@@ -42,13 +42,16 @@ class SignUpPasskeyForm extends HookConsumerWidget {
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
                 guardPasskeyDialog(
-                  context,
-                  registerActionNotifierProvider,
-                  () {
-                    ref
-                        .read(registerActionNotifierProvider.notifier)
-                        .signUp(keyName: identityKeyNameController.text);
-                  },
+                  ref.context,
+                  (child) => RiverpodPasskeyRequestBuilder(
+                    provider: registerActionNotifierProvider,
+                    request: () {
+                      ref
+                          .read(registerActionNotifierProvider.notifier)
+                          .signUp(keyName: identityKeyNameController.text);
+                    },
+                    child: child,
+                  ),
                 );
               }
             },

@@ -60,15 +60,16 @@ class RecoverUserPage extends HookConsumerWidget {
   ]) {
     guardPasskeyDialog(
       ref.context,
-      recoverUserActionNotifierProvider,
-      () {
-        ref.read(recoverUserActionNotifierProvider.notifier).recoverUser(
+      (child) => RiverpodPasskeyRequestBuilder(
+        provider: recoverUserActionNotifierProvider,
+        request: () => ref.read(recoverUserActionNotifierProvider.notifier).recoverUser(
               username: recoveryCreds.name,
               credentialId: recoveryCreds.id,
               recoveryKey: recoveryCreds.code,
               twoFaTypes: twoFaTypes,
-            );
-      },
+            ),
+        child: child,
+      ),
     );
   }
 

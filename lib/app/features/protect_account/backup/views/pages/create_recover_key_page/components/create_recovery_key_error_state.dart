@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/auth/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -52,9 +53,18 @@ class CreateRecoveryKeyErrorState extends ConsumerWidget {
             Button(
               mainAxisSize: MainAxisSize.max,
               label: Text(locale.button_retry),
-              onPressed: () => ref
-                  .read(createRecoveryKeyActionNotifierProvider.notifier)
-                  .createRecoveryCredentials(),
+              onPressed: () => guardPasskeyDialog(
+                context,
+                (child) => RiverpodPasskeyRequestBuilder(
+                  provider: createRecoveryKeyActionNotifierProvider,
+                  request: () {
+                    ref
+                        .read(createRecoveryKeyActionNotifierProvider.notifier)
+                        .createRecoveryCredentials();
+                  },
+                  child: child,
+                ),
+              ),
             ),
             SizedBox(height: 16.0.s),
           ],
