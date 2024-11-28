@@ -75,13 +75,10 @@ class CreatePostModal extends HookConsumerWidget {
                       textInputKey.currentContext?.findRenderObject() as RenderBox?;
                   final textInputHeight = textInputBox?.size.height ?? 0.0;
 
-                  // final extraKeyboardOffset = 30.0.s;
-
                   final maxExtent = scrollController.position.maxScrollExtent +
                       visibilityToolbarHeight +
                       actionsToolbarHeight +
                       textInputHeight;
-                  // extraKeyboardOffset;
 
                   scrollController.animateTo(
                     maxExtent,
