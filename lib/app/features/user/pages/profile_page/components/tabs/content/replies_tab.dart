@@ -3,9 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
-import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/tab_entities_list.dart';
 import 'package:ion/app/features/user/providers/user_posts_data_source_provider.dart';
 
 class RepliesTab extends ConsumerWidget {
@@ -19,18 +17,9 @@ class RepliesTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(userPostsDataSourceProvider(pubkey));
-    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final entities = entitiesPagedData?.data.items;
-
-    return CustomScrollView(
-      slivers: [
-        if (entities == null)
-          const EntitiesListSkeleton()
-        else if (entities.isEmpty)
-          const EmptyState()
-        else
-          EntitiesList(entities: entities.toList()),
-      ],
+    return TabEntitiesList(
+      dataSource: dataSource,
+      builder: (entities) => EntitiesList(entities: entities.toList(), showParent: true),
     );
   }
 }
