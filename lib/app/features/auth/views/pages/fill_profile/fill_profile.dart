@@ -30,12 +30,10 @@ class FillProfile extends HookConsumerWidget {
     final isAvatarCompressing = ref.watch(
       avatarProcessorNotifierProvider.select((state) => state is AvatarProcessorStateCropped),
     );
-    final nameController = useTextEditingController.fromValue(
-      TextEditingValue(text: onboardingData.displayName ?? ''),
-    );
-    final nicknameController = useTextEditingController.fromValue(
-      TextEditingValue(text: onboardingData.name ?? ''),
-    );
+    final initialName = onboardingData.displayName ?? '';
+    final name = useState(initialName);
+    final initialNickname = onboardingData.name ?? '';
+    final nickname = useState(onboardingData.name ?? '');
 
     ref.displayErrors(fillProfileNotifierProvider);
 
@@ -43,7 +41,7 @@ class FillProfile extends HookConsumerWidget {
       if (formKey.currentState!.validate()) {
         await ref
             .read(fillProfileNotifierProvider.notifier)
-            .submit(nickname: nicknameController.text, displayName: nameController.text);
+            .submit(nickname: name.value, displayName: name.value);
         if (context.mounted && !ref.read(fillProfileNotifierProvider).hasError) {
           await SelectLanguagesRoute().push<void>(context);
         }
@@ -76,16 +74,22 @@ class FillProfile extends HookConsumerWidget {
                           avatarUrl: onboardingData.avatarMediaAttachment?.url,
                         ),
                         SizedBox(height: 28.0.s),
-                        NameInput(controller: nameController),
+                        NameInput(
+                          isLive: true,
+                          initialValue: initialName,
+                          onChanged: (newValue) => name.value = newValue,
+                        ),
                         SizedBox(height: 16.0.s),
                         NicknameInput(
-                          controller: nicknameController,
+                          isLive: true,
+                          initialValue: initialNickname,
                           textInputAction: TextInputAction.done,
+                          onChanged: (newValue) => nickname.value = newValue,
                         ),
                         SizedBox(height: 26.0.s),
                         FillProfileSubmitButton(
-                          disabled: isAvatarCompressing,
-                          loading: fillProfileState.isLoading,
+                          disabled: !(name.value.isNotEmpty && nickname.value.isNotEmpty),
+                          loading: isAvatarCompressing || fillProfileState.isLoading,
                           onPressed: onSubmit,
                         ),
                         SizedBox(height: 40.0.s + MediaQuery.paddingOf(context).bottom),

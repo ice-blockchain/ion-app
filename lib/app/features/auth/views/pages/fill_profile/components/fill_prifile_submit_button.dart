@@ -24,6 +24,7 @@ class FillProfileSubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Button(
       disabled: loading || disabled,
+      type: disabled ? ButtonType.disabled : ButtonType.primary,
       trailingIcon: loading
           ? const IONLoadingIndicator()
           : Assets.svg.iconProfileSave.icon(

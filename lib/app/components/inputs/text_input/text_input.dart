@@ -28,7 +28,9 @@ class TextInput extends HookWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.onChanged,
+    this.onValidated,
     this.maxLength,
+    this.isLive = false,
     this.alwaysShowPrefixIcon = false,
     EdgeInsets? scrollPadding,
     EdgeInsetsGeometry? contentPadding,
@@ -62,8 +64,10 @@ class TextInput extends HookWidget {
   final EdgeInsetsGeometry contentPadding;
 
   final ValueChanged<String>? onChanged;
+  final ValueChanged<bool>? onValidated;
   final bool alwaysShowPrefixIcon;
   final int? maxLength;
+  final bool isLive;
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +75,25 @@ class TextInput extends HookWidget {
     final error = useState<String?>(null);
     final hasValue = useState(initialValue.isNotEmpty);
     final hasFocus = useNodeFocused(focusNode);
+    final hasBeenChanged = useState(false);
+
+    String? validate(String? value) {
+      final validatorError = validator?.call(value);
+      hasBeenChanged.value = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        error.value = validatorError;
+        onValidated?.call(validatorError == null);
+      });
+      return validatorError;
+    }
 
     void onChangedHandler(String text) {
       hasValue.value = text.isNotEmpty;
       onChanged?.call(text);
+      if (isLive) {
+        validate(text);
+      }
+      hasBeenChanged.value;
     }
 
     useTextChanged(
@@ -104,13 +123,7 @@ class TextInput extends HookWidget {
       cursorErrorColor: context.theme.appColors.primaryAccent,
       cursorColor: context.theme.appColors.primaryAccent,
       maxLength: maxLength,
-      validator: (String? value) {
-        final validatorError = validator?.call(value);
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          error.value = validatorError;
-        });
-        return validatorError;
-      },
+      validator: validate,
       decoration: TextInputDecoration(
         context: context,
         verified: verified,

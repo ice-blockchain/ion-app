@@ -59,7 +59,7 @@ class TextInputDecoration extends InputDecoration {
             return context.theme.appTextThemes.subtitle2.copyWith(
               color: states.contains(WidgetState.error)
                   ? context.theme.appColors.attentionRed
-                  : states.contains(WidgetState.focused)
+                  : states.contains(WidgetState.focused) && !verified
                       ? context.theme.appColors.primaryAccent
                       : context.theme.appColors.tertararyText,
               height: 1,
