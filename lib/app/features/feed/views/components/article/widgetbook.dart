@@ -13,10 +13,13 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 )
 Widget feedPostUseCase(BuildContext context) {
   final article = ArticleEntity.fromEventMessage(mockedArticleEvent);
+  final eventReference = EventReference.fromNostrEntity(article);
 
   return Scaffold(
     body: Center(
-      child: Article(eventReference: EventReference(eventId: article.id, pubkey: article.pubkey)),
+      child: Article(
+        eventReference: eventReference,
+      ),
     ),
   );
 }
