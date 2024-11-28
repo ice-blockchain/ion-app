@@ -15,12 +15,14 @@ import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 class EntitiesList extends StatelessWidget {
   const EntitiesList({
     required this.entities,
+    this.showParent = false,
     this.separator,
     super.key,
   });
 
   final List<NostrEntity> entities;
   final Widget? separator;
+  final bool showParent;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class EntitiesList extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final entity = entities[index];
         if (entity is PostEntity) {
-          return PostListItem(post: entity);
+          return PostListItem(post: entity, showParent: showParent);
         } else if (entity is ArticleEntity) {
           return ArticleListItem(article: entity);
         } else if (entity is RepostEntity) {

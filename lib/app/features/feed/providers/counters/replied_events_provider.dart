@@ -3,7 +3,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
-import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -39,24 +38,11 @@ Stream<Set<String>?> repliedEvents(Ref ref) async* {
 }
 
 String? _getCurrentUserRepliedId(NostrEntity entity, {required String currentPubkey}) {
-  if (entity.pubkey != currentPubkey) {
+  if (entity.pubkey != currentPubkey || entity is! PostEntity) {
     return null;
   }
 
-  if (entity is PostEntity && entity.data.relatedEvents != null) {
-    String? rootReplyId;
-    String? replyId;
-    for (final relatedEvent in entity.data.relatedEvents!) {
-      if (relatedEvent.marker == RelatedEventMarker.reply) {
-        replyId = relatedEvent.eventId;
-      } else if (relatedEvent.marker == RelatedEventMarker.root) {
-        rootReplyId = relatedEvent.eventId;
-      }
-    }
-    return replyId ?? rootReplyId;
-  } else {
-    return null;
-  }
+  return entity.data.parentEvent?.eventId;
 }
 
 @riverpod

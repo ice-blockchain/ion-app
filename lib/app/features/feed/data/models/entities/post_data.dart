@@ -170,6 +170,22 @@ class PostData with _$PostData implements EventSerializable {
   }
 
   MediaAttachment? get primaryMedia => media.isNotEmpty ? media.values.first : null;
+
+  RelatedEvent? get parentEvent {
+    if (relatedEvents == null) return null;
+
+    RelatedEvent? rootReplyId;
+    RelatedEvent? replyId;
+    for (final relatedEvent in relatedEvents!) {
+      if (relatedEvent.marker == RelatedEventMarker.reply) {
+        replyId = relatedEvent;
+        break;
+      } else if (relatedEvent.marker == RelatedEventMarker.root) {
+        rootReplyId = relatedEvent;
+      }
+    }
+    return replyId ?? rootReplyId;
+  }
 }
 
 @freezed

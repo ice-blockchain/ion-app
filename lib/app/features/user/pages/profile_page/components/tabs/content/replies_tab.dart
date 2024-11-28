@@ -30,7 +30,7 @@ class RepliesTab extends ConsumerWidget {
     }
 
     return CustomScrollView(
-      slivers: [EntitiesList(entities: entities.data.items.toList())],
+      slivers: [EntitiesList(entities: entities.data.items.toList(), showParent: true)],
     );
   }
 }
