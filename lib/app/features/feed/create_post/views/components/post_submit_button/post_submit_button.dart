@@ -13,14 +13,10 @@ import 'package:ion/app/features/feed/content_notification/data/models/content_n
 import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
-import 'package:ion/app/features/feed/data/models/visibility_settings_options.dart';
-import 'package:ion/app/features/feed/providers/selected_visibility_options_provider.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
-import 'package:ion/app/features/feed/views/pages/visibility_settings_modal/visibility_settings_modal.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/utils/validators.dart';
 
 class PostSubmitButton extends HookConsumerWidget {
@@ -48,39 +44,7 @@ class PostSubmitButton extends HookConsumerWidget {
     final hasPoll = useHasPoll(textEditorController);
     final isSubmitLoading = ref.watch(createPostNotifierProvider).isLoading;
 
-    ref
-      ..displayErrors(createPostNotifierProvider)
-      ..listen<VisibilitySettingsOptions>(selectedVisibilityOptionsProvider,
-          (previous, selectedOption) async {
-        if (previous != selectedOption) {
-          final imageIds = <String>[];
-          final operations = <Operation>[];
-          for (final operation in textEditorController.document.toDelta().operations) {
-            final data = operation.data;
-            if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
-              imageIds.add(data[textEditorSingleImageKey] as String);
-            } else {
-              operations.add(operation);
-            }
-          }
-
-          await ref.read(createPostNotifierProvider.notifier).create(
-                content: Document.fromDelta(Delta.fromOperations(operations)).toPlainText(),
-                parentEvent: parentEvent,
-                quotedEvent: quotedEvent,
-                mediaIds: imageIds,
-              );
-
-          if (!ref.read(createPostNotifierProvider).hasError) {
-            if (ref.context.mounted) {
-              ref.context.pop();
-            }
-            ref
-                .read(contentNotificationControllerProvider.notifier)
-                .showSuccess(videoPath != null ? ContentType.video : ContentType.post);
-          }
-        }
-      });
+    ref.displayErrors(createPostNotifierProvider);
 
     final isSubmitButtonEnabled = useMemoized(
       () {
@@ -101,12 +65,32 @@ class PostSubmitButton extends HookConsumerWidget {
       loading: isSubmitLoading,
       enabled: isSubmitButtonEnabled && !isSubmitLoading,
       onPressed: () async {
-        await showSimpleBottomSheet<bool>(
-          context: context,
-          child: VisibilitySettingsModal(
-            title: context.i18n.visibility_settings_title_story,
-          ),
-        );
+        final imageIds = <String>[];
+        final operations = <Operation>[];
+        for (final operation in textEditorController.document.toDelta().operations) {
+          final data = operation.data;
+          if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
+            imageIds.add(data[textEditorSingleImageKey] as String);
+          } else {
+            operations.add(operation);
+          }
+        }
+
+        await ref.read(createPostNotifierProvider.notifier).create(
+              content: Document.fromDelta(Delta.fromOperations(operations)).toPlainText(),
+              parentEvent: parentEvent,
+              quotedEvent: quotedEvent,
+              mediaIds: imageIds,
+            );
+
+        if (!ref.read(createPostNotifierProvider).hasError) {
+          if (ref.context.mounted) {
+            ref.context.pop();
+          }
+          ref
+              .read(contentNotificationControllerProvider.notifier)
+              .showSuccess(videoPath != null ? ContentType.video : ContentType.post);
+        }
       },
     );
   }
