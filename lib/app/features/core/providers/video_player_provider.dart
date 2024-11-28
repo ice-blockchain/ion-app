@@ -46,15 +46,27 @@ class VideoPlayerControllerFactory {
   const VideoPlayerControllerFactory({
     required this.sourcePath,
   });
+
   final String sourcePath;
 
   VideoPlayerController createController() {
+    final videoPlayerOptions = VideoPlayerOptions(mixWithOthers: true);
+
     if (_isNetworkSource(sourcePath)) {
-      return VideoPlayerController.networkUrl(Uri.parse(sourcePath));
+      return VideoPlayerController.networkUrl(
+        Uri.parse(sourcePath),
+        videoPlayerOptions: videoPlayerOptions,
+      );
     } else if (_isLocalFile(sourcePath)) {
-      return VideoPlayerController.file(File(sourcePath));
+      return VideoPlayerController.file(
+        File(sourcePath),
+        videoPlayerOptions: videoPlayerOptions,
+      );
     }
-    return VideoPlayerController.asset(sourcePath);
+    return VideoPlayerController.asset(
+      sourcePath,
+      videoPlayerOptions: videoPlayerOptions,
+    );
   }
 
   bool _isNetworkSource(String path) {
