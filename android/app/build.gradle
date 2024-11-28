@@ -67,7 +67,6 @@ android {
         pickFirst 'lib/x86/libc++_shared.so'
 
         jniLibs {
-            // ! USE INSTEAD OF REMOVED android.bundle.enableUncompressedNativeLibs=false
             useLegacyPackaging = true
         }
     }
