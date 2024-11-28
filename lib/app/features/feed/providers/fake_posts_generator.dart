@@ -52,13 +52,14 @@ PostEntity generateFakePostWithVideo() {
   final index = Random.secure().nextInt(_fakeVideos.length);
 
   final videoUrl = _fakeVideos.elementAt(index);
+  final thumbUrl = _fakeThumbnails.elementAt(index);
 
   final mockVideo = MediaAttachment(
     url: videoUrl,
     mimeType: 'video/mp4',
     blurhash: 'LKO2?U%2Tw=w]~RBVZRi};RPxuwH',
     dimension: '1920x1080',
-    thumb: 'https://cdn2.thecatapi.com/images/c$index.jpg',
+    thumb: thumbUrl,
   );
 
   final updatedMedia = {
@@ -72,22 +73,37 @@ PostEntity generateFakePostWithVideo() {
 }
 
 const _fakeVideos = [
-  'https://video.nostr.build/03be55c96ffc4c7a5555ce0da6310665218a7a3a37dbbfb17c99c590ce021ca6.mp4',
-  'https://video.nostr.build/054ea62578d96d13005ff271e90b0f501baf8ad42d820a90130dbf41a4bb7358.mp4',
-  'https://video.nostr.build/0c1380a780ce1b4060eb1f8bc347e921a83e2d442f8a1662fed48c243ac747d9.mp4',
-  'https://video.nostr.build/2c260750b614597c14b7fe10d2999645e3424ebdf5f8f15bb0473c002e1dd29b.mp4',
-  'https://video.nostr.build/2e5d2b6c762a230410898e64e145f354e5c654a01fbcbd9b65f65856b1dc5537.mp4',
-  'https://video.nostr.build/2ebb80987913172ce2630cca9c0e627c940484262173238fa1d512a627198370.mp4',
-  'https://video.nostr.build/308b60db6f8e35422b1d375f7a685c8e5e177718c632bdb97069c398041263c7.mp4',
-  'https://video.nostr.build/31b2955ca7936fb0b6a57f08049040e296cbe5eafe3465cadb95a3637e2bf690.mp4',
-  'https://video.nostr.build/3aa83bbe66187625fbd965b87e1993cba75885b9df974bcfde1e5889dd770648.mp4',
-  'https://video.nostr.build/3aa83bbe66187625fbd965b87e1993cba75885b9df974bcfde1e5889dd770648.mp4',
-  'https://video.nostr.build/3f1ac0a39a756d0e5cbfd7f6759590589ec9d201ed09f72e888f6d1e50d2e4b8.mp4',
-  'https://video.nostr.build/409fa84ce66136b4f06342265800773c0d6aabddb86fcb67c9f963078a52bf9f.mp4',
-  'https://video.nostr.build/45a1b6d0c8fe4a123ae4783266321dad266f6ae804f6299e60e6e5a28f572872.mp4',
-  'https://video.nostr.build/4bf6d8e0fc28561b4a4b4f056081a2a43e7b84fa4603147b126397ab759c2c00.mp4',
-  'https://video.nostr.build/56ab2e184aae6e5573e19dac63e09d52aa01b5493fd841db4cd16e62051c245a.mp4',
-  'https://video.nostr.build/647496771b3844410473b79a47af1ab22022cd7c33034164a3b7ebe5bc3d912f.mp4',
-  'https://video.nostr.build/6b8eb64f3df112b29c773dd8d7f640f91cf66bbe232f14cfcbea09166b956f21.mp4',
-  'https://video.nostr.build/7180dbccf904a655962e93edd098dd98f1a10b4ff941b90dbb7a6cbeec1606a2.mp4',
+  'https://cdn.pixabay.com/video/2024/11/24/243060_tiny.mp4',
+  'https://cdn.pixabay.com/video/2022/10/07/133960-758543811_tiny.mp4',
+  'https://cdn.pixabay.com/video/2024/10/17/236714_tiny.mp4',
+  'https://cdn.pixabay.com/video/2023/08/02/174344-851128203_tiny.mp4',
+  'https://cdn.pixabay.com/video/2022/07/24/125351-733383354_tiny.mp4',
+  'https://cdn.pixabay.com/video/2023/04/27/160708-821847891_tiny.mp4',
+  'https://cdn.pixabay.com/video/2024/03/24/205450-926957431_tiny.mp4',
+  'https://cdn.pixabay.com/video/2022/09/25/132493-753631623_tiny.mp4',
+  'https://cdn.pixabay.com/video/2024/05/27/213971_tiny.mp4',
+  'https://cdn.pixabay.com/video/2023/08/31/178524-860033460_tiny.mp4',
+  'https://cdn.pixabay.com/video/2022/07/25/125485-733802512_tiny.mp4',
+  'https://cdn.pixabay.com/video/2023/04/14/158946-818020165_tiny.mp4',
+  'https://cdn.pixabay.com/video/2022/03/14/110751-688187608_tiny.mp4',
+  'https://cdn.pixabay.com/video/2023/05/24/164382-830461334_tiny.mp4',
+  'https://cdn.pixabay.com/video/2022/10/16/135137-761273456_tiny.mp4',
+];
+
+const _fakeThumbnails = [
+  'https://cdn.pixabay.com/video/2024/11/24/243060_tiny.jpg',
+  'https://cdn.pixabay.com/video/2022/10/07/133960-758543811_tiny.jpg',
+  'https://cdn.pixabay.com/video/2024/10/17/236714_tiny.jpg',
+  'https://cdn.pixabay.com/video/2023/08/02/174344-851128203_tiny.jpg',
+  'https://cdn.pixabay.com/video/2022/07/24/125351-733383354_tiny.jpg',
+  'https://cdn.pixabay.com/video/2023/04/27/160708-821847891_tiny.jpg',
+  'https://cdn.pixabay.com/video/2024/03/24/205450-926957431_tiny.jpg',
+  'https://cdn.pixabay.com/video/2022/09/25/132493-753631623_tiny.jpg',
+  'https://cdn.pixabay.com/video/2024/05/27/213971_tiny.jpg',
+  'https://cdn.pixabay.com/video/2023/08/31/178524-860033460_tiny.jpg',
+  'https://cdn.pixabay.com/video/2022/07/25/125485-733802512_tiny.jpg',
+  'https://cdn.pixabay.com/video/2023/04/14/158946-818020165_tiny.jpg',
+  'https://cdn.pixabay.com/video/2022/03/14/110751-688187608_tiny.jpg',
+  'https://cdn.pixabay.com/video/2023/05/24/164382-830461334_tiny.jpg',
+  'https://cdn.pixabay.com/video/2022/10/16/135137-761273456_tiny.jpg',
 ];

@@ -3,19 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_body/hooks/use_post_media.dart';
-import 'package:ion/app/services/text_parser/matchers/url_matcher.dart';
-import 'package:ion/app/utils/post_text.dart';
 
 class VideoTextPost extends HookWidget {
   const VideoTextPost({
-    required this.postEntity,
+    required this.text,
     super.key,
   });
 
-  final PostEntity postEntity;
+  final String text;
 
   bool _isTextOneLine({
     required String text,
@@ -33,24 +28,18 @@ class VideoTextPost extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final postMedia = usePostMedia(postEntity.data);
     final isTextExpanded = useState(false);
-
-    final postText = extractPostText(
-      postEntity.data.content,
-      excludeMatcherType: UrlMatcher,
-    );
 
     final isOneLine = useMemoized(
       () {
         return _isTextOneLine(
-          text: postText,
+          text: text,
           style: context.theme.appTextThemes.body2.copyWith(color: Colors.white),
           maxWidth: MediaQuery.sizeOf(context).width,
         );
       },
       [
-        postText,
+        text,
         context.theme.appTextThemes.body2,
         MediaQuery.sizeOf(context).width,
       ],
@@ -59,7 +48,6 @@ class VideoTextPost extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (postMedia.isNotEmpty) PostMedia(media: postMedia),
         GestureDetector(
           onTap: isOneLine ? null : () => isTextExpanded.value = !isTextExpanded.value,
           child: AnimatedSwitcher(
@@ -78,14 +66,14 @@ class VideoTextPost extends HookWidget {
             },
             child: isTextExpanded.value
                 ? Text(
-                    postText,
+                    text,
                     key: const ValueKey('expanded'),
                     style: context.theme.appTextThemes.body2.copyWith(
                       color: Colors.white,
                     ),
                   )
                 : Text(
-                    postText,
+                    text,
                     key: const ValueKey('collapsed'),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

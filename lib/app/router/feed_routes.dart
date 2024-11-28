@@ -262,13 +262,13 @@ class StoryContactsShareRoute extends BaseRouteData {
         );
 }
 
-@TypedGoRoute<VideoRoute>(
+@TypedGoRoute<VideosRoute>(
   path: '/video/:eventReference',
 )
-class VideoRoute extends BaseRouteData {
-  VideoRoute({required this.eventReference})
+class VideosRoute extends BaseRouteData {
+  VideosRoute({required this.eventReference})
       : super(
-          child: VideoPage(
+          child: VideosPage(
             EventReference.fromString(eventReference),
           ),
         );

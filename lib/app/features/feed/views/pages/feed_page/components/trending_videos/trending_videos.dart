@@ -24,7 +24,7 @@ class TrendingVideos extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final listOverlay = ref.watch(trendingVideosOverlayNotifierProvider);
     final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
-    // TODO: remove this [mockPostEntitiesPagedDataProvider] when we have real data
+    // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
     // final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
     final videosData = ref.watch(mockPostEntitiesPagedDataProvider(dataSource));
     final videos = videosData?.data.items;
@@ -72,9 +72,8 @@ class TrendingVideos extends ConsumerWidget {
 
   Future<void> _onLoadMore(WidgetRef ref) async {
     await ref
-        // TODO: remove this [mockPostEntitiesPagedDataProvider] when we have real data
-        // .read(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)).notifier)
         .read(
+          // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
           mockPostEntitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider))
               .notifier,
         )

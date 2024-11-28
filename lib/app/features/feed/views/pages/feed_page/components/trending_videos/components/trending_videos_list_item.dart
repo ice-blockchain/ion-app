@@ -32,7 +32,7 @@ class TrendingVideoListItem extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        VideoRoute(eventReference: eventReference.toString()).push<void>(context);
+        VideosRoute(eventReference: eventReference.toString()).push<void>(context);
       },
       child: _VideoContainer(
         thumbnailUrl: thumbnailUrl,

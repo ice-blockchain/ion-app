@@ -16,7 +16,7 @@ import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.dart';
-import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.dart';
+import 'package:ion/app/features/feed/providers/feed_videos_data_source_provider.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
@@ -104,7 +104,7 @@ class FeedPage extends HookConsumerWidget {
     ref
       ..invalidate(entitiesPagedDataProvider(ref.read(feedStoriesDataSourceProvider)))
       ..invalidate(entitiesPagedDataProvider(ref.read(feedPostsDataSourceProvider)))
-      ..invalidate(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)));
+      ..invalidate(entitiesPagedDataProvider(ref.read(feedVideosDataSourceProvider())));
   }
 
   Future<void> _onLoadMore(WidgetRef ref) async {
