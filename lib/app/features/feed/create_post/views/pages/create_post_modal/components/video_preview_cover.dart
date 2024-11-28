@@ -30,9 +30,12 @@ class VideoPreviewCover extends HookConsumerWidget {
     final filePath = assetFilePathAsync.valueOrNull;
 
     if (filePath == null) {
-      return VideoPreviewLoading(
-        width: placeholderWidth,
-        aspectRatio: defaultAspectRatio,
+      return Padding(
+        padding: EdgeInsets.only(bottom: 24.0.s),
+        child: VideoPreviewLoading(
+          width: placeholderWidth,
+          aspectRatio: defaultAspectRatio,
+        ),
       );
     }
 
@@ -44,9 +47,12 @@ class VideoPreviewCover extends HookConsumerWidget {
     );
 
     if (!videoController.value.isInitialized) {
-      return VideoPreviewLoading(
-        width: placeholderWidth,
-        aspectRatio: defaultAspectRatio,
+      return Padding(
+        padding: EdgeInsets.only(bottom: 24.0.s),
+        child: VideoPreviewLoading(
+          width: placeholderWidth,
+          aspectRatio: defaultAspectRatio,
+        ),
       );
     }
 
@@ -57,68 +63,71 @@ class VideoPreviewCover extends HookConsumerWidget {
       [videoController],
     );
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12.0.s),
-      child: SizedBox(
-        width: placeholderWidth,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            AspectRatio(
-              aspectRatio: defaultAspectRatio,
-              child: (videoController.value.isInitialized)
-                  ? FittedBox(
-                      fit: BoxFit.cover,
-                      child: SizedBox(
-                        width: videoController.value.size.width,
-                        height: videoController.value.size.height,
-                        child: VideoPlayer(videoController),
+    return Padding(
+      padding: EdgeInsets.only(bottom: 24.0.s),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.0.s),
+        child: SizedBox(
+          width: placeholderWidth,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              AspectRatio(
+                aspectRatio: defaultAspectRatio,
+                child: (videoController.value.isInitialized)
+                    ? FittedBox(
+                        fit: BoxFit.cover,
+                        child: SizedBox(
+                          width: videoController.value.size.width,
+                          height: videoController.value.size.height,
+                          child: VideoPlayer(videoController),
+                        ),
+                      )
+                    : Container(
+                        color: Colors.black,
                       ),
-                    )
-                  : Container(
-                      color: Colors.black,
-                    ),
-            ),
-            Center(
-              child: Container(
-                width: 48.0.s,
-                height: 48.0.s,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24.0.s),
-                  color: context.theme.appColors.primaryAccent,
-                ),
-                child: ValueListenableBuilder<VideoPlayerValue>(
-                  valueListenable: videoController,
-                  builder: (context, value, child) {
-                    return IconButton(
-                      icon: value.isPlaying
-                          ? Assets.svg.iconVideoPause
-                              .icon(color: context.theme.appColors.secondaryBackground)
-                          : Assets.svg.iconVideoPlay
-                              .icon(color: context.theme.appColors.secondaryBackground),
-                      onPressed: () {
-                        if (value.isPlaying) {
-                          videoController.pause();
-                        } else {
-                          videoController.play();
-                        }
-                      },
-                    );
-                  },
+              ),
+              Center(
+                child: Container(
+                  width: 48.0.s,
+                  height: 48.0.s,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24.0.s),
+                    color: context.theme.appColors.primaryAccent,
+                  ),
+                  child: ValueListenableBuilder<VideoPlayerValue>(
+                    valueListenable: videoController,
+                    builder: (context, value, child) {
+                      return IconButton(
+                        icon: value.isPlaying
+                            ? Assets.svg.iconVideoPause
+                                .icon(color: context.theme.appColors.secondaryBackground)
+                            : Assets.svg.iconVideoPlay
+                                .icon(color: context.theme.appColors.secondaryBackground),
+                        onPressed: () {
+                          if (value.isPlaying) {
+                            videoController.pause();
+                          } else {
+                            videoController.play();
+                          }
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              right: 12.0.s,
-              bottom: 12.0.s,
-              child: const VideoPreviewEditCover(),
-            ),
-            Positioned(
-              left: 12.0.s,
-              bottom: 12.0.s,
-              child: VideoPreviewDuration(duration: videoController.value.duration.inSeconds),
-            ),
-          ],
+              Positioned(
+                right: 12.0.s,
+                bottom: 12.0.s,
+                child: const VideoPreviewEditCover(),
+              ),
+              Positioned(
+                left: 12.0.s,
+                bottom: 12.0.s,
+                child: VideoPreviewDuration(duration: videoController.value.duration.inSeconds),
+              ),
+            ],
+          ),
         ),
       ),
     );

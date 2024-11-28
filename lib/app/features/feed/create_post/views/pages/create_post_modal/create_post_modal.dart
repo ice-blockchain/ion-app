@@ -49,11 +49,13 @@ class CreatePostModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController(defaultText: content);
 
-    final createOption = parentEvent != null
-        ? CreatePostOption.reply
-        : quotedEvent != null
-            ? CreatePostOption.quote
-            : CreatePostOption.plain;
+    final createOption = videoPath != null
+        ? CreatePostOption.video
+        : parentEvent != null
+            ? CreatePostOption.reply
+            : quotedEvent != null
+                ? CreatePostOption.quote
+                : CreatePostOption.plain;
 
     Future<void> onBack() async =>
         textEditorController.document.isEmpty() ? context.pop() : _showCancelCreationModal(context);
@@ -66,9 +68,7 @@ class CreatePostModal extends HookConsumerWidget {
           children: [
             NavigationAppBar.modal(
               title: Text(
-                (videoPath != null)
-                    ? context.i18n.create_video_new_video
-                    : createOption.getTitle(context),
+                createOption.getTitle(context),
               ),
               onBackPress: onBack,
               actions: [
@@ -85,7 +85,6 @@ class CreatePostModal extends HookConsumerWidget {
                         child: Column(
                           children: [
                             if (videoPath != null) VideoPreviewCover(videoPath: videoPath!),
-                            if (videoPath != null) SizedBox(height: 24.0.s),
                             if (parentEvent != null) ParentEntity(eventReference: parentEvent!),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,

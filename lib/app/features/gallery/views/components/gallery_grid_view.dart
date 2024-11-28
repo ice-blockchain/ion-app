@@ -35,8 +35,7 @@ class GalleryGridView extends StatelessWidget {
             return const CameraCell();
           }
 
-          final adjustedIndex = index - 1;
-          final mediaData = galleryState.mediaData[adjustedIndex];
+          final mediaData = galleryState.mediaData[index - 1];
           return GalleryGridCell(
             key: ValueKey(mediaData.path),
             mediaFile: mediaData,
