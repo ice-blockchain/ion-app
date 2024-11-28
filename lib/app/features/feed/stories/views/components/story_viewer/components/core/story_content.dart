@@ -9,7 +9,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_viewer_header.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/header.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryContent extends HookConsumerWidget {
@@ -40,7 +40,12 @@ class StoryContent extends HookConsumerWidget {
         fit: StackFit.expand,
         children: [
           StoryViewerContent(post: post),
-          StoryViewerHeader(currentPost: post),
+          Stack(
+            children: [
+              const StoryHeaderGradient(),
+              StoryViewerHeader(currentPost: post),
+            ],
+          ),
           Stack(
             children: [
               StoryInputField(
