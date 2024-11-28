@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/auth/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
@@ -18,6 +17,7 @@ import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.dar
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
+import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';

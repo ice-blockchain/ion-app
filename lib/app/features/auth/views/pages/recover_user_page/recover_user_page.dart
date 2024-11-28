@@ -3,13 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/auth/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/recovery_creds_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/twofa_input_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/twofa_options_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/models/recover_user_step.dart';
+import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.dart';
 import 'package:ion/app/router/app_routes.dart';

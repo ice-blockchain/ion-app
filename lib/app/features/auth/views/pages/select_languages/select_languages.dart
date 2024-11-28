@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/auth/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
+import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.dart';
 import 'package:ion/app/features/core/views/pages/language_selector_page.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
