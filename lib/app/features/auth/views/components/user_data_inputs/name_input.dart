@@ -7,24 +7,33 @@ import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NameInput extends StatelessWidget {
-  const NameInput({this.controller, this.onChanged, this.initialValue, super.key});
-
-  final TextEditingController? controller;
+  const NameInput({
+    this.onChanged,
+    this.initialValue,
+    this.isLive = false,
+    super.key,
+  });
 
   final ValueChanged<String>? onChanged;
 
   final String? initialValue;
 
+  final bool isLive;
+
   @override
   Widget build(BuildContext context) {
     return GeneralUserDataInput(
-      controller: controller,
       onChanged: onChanged,
       prefixIconAssetName: Assets.svg.iconFieldName,
       labelText: context.i18n.fill_profile_input_name,
       initialValue: initialValue,
+      isLive: isLive,
+      showNoErrorsIndicator: isLive,
       validator: (String? value) {
         if (Validators.isEmpty(value)) return '';
+        if (Validators.isInvalidName(value)) {
+          return context.i18n.error_nickname_invalid;
+        }
         return null;
       },
     );

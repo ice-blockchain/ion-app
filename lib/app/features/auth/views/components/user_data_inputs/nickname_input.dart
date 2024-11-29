@@ -9,13 +9,11 @@ import 'package:ion/generated/assets.gen.dart';
 class NicknameInput extends StatelessWidget {
   const NicknameInput({
     super.key,
-    this.controller,
     this.textInputAction,
     this.onChanged,
     this.initialValue,
+    this.isLive = false,
   });
-
-  final TextEditingController? controller;
 
   final TextInputAction? textInputAction;
 
@@ -23,15 +21,18 @@ class NicknameInput extends StatelessWidget {
 
   final String? initialValue;
 
+  final bool isLive;
+
   @override
   Widget build(BuildContext context) {
     return GeneralUserDataInput(
-      controller: controller,
       onChanged: onChanged,
       prefixIconAssetName: Assets.svg.iconFieldNickname,
       labelText: context.i18n.fill_profile_input_nickname,
       textInputAction: textInputAction,
       initialValue: initialValue,
+      isLive: isLive,
+      showNoErrorsIndicator: isLive,
       validator: (String? value) {
         if (Validators.isEmpty(value)) return '';
         if (Validators.isInvalidName(value)) {
