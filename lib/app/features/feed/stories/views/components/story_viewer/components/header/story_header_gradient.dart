@@ -14,16 +14,16 @@ class StoryHeaderGradient extends StatelessWidget {
       right: 0,
       child: Container(
         height: 80.0.s,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color.fromRGBO(0, 0, 0, 0.3),
-              Color.fromRGBO(0, 0, 0, 0.15),
-              Color.fromRGBO(0, 0, 0, 0),
+              context.theme.appColors.primaryText.withOpacity(0.3),
+              context.theme.appColors.primaryText.withOpacity(0.15),
+              context.theme.appColors.primaryText.withOpacity(0),
             ],
-            stops: [0.0, 0.5, 1.0],
+            stops: const [0.0, 0.5, 1.0],
           ),
         ),
       ),

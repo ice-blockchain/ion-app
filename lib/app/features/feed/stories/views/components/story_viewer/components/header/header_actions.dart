@@ -18,13 +18,13 @@ class HeaderActions extends StatelessWidget {
       children: [
         StoryContextMenu(
           pubkey: post.pubkey,
-          child: Assets.svg.iconMoreStories.iconWithShadow(
+          child: Assets.svg.iconMoreStoriesshadow.icon(
             color: context.theme.appColors.onPrimaryAccent,
           ),
         ),
         SizedBox(width: 16.0.s),
         GestureDetector(
-          child: Assets.svg.iconSheetClose.iconWithShadow(
+          child: Assets.svg.iconSheetCloseshadow.icon(
             color: context.theme.appColors.onPrimaryAccent,
           ),
           onTap: () => context.pop(),
