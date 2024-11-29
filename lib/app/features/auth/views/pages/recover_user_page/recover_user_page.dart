@@ -27,7 +27,13 @@ class RecoverUserPage extends HookConsumerWidget {
     final twoFAOptions = useRef<Map<TwoFaType, String>?>(null);
     final twoFAOptionsCount = useRef<int>(0);
 
-    _listenInitRecoverResult(ref, recoveryCreds, twoFAOptions, twoFAOptionsCount, step);
+    _listenInitRecoverResult(
+      ref: ref,
+      recoveryCreds: recoveryCreds,
+      twoFAOptions: twoFAOptions,
+      twoFAOptionsCountRef: twoFAOptionsCount,
+      step: step,
+    );
     _listenCompleteRecoverResult(ref);
 
     return switch (step.value) {
@@ -77,13 +83,13 @@ class RecoverUserPage extends HookConsumerWidget {
         );
   }
 
-  void _listenInitRecoverResult(
-    WidgetRef ref,
-    ObjectRef<RecoveryCreds?> recoveryCreds,
-    ObjectRef<Map<TwoFaType, String>?> twoFAOptions,
-    ObjectRef<int> twoFAOptionsCountRef,
-    ValueNotifier<RecoverUserStep> step,
-  ) {
+  void _listenInitRecoverResult({
+    required WidgetRef ref,
+    required ObjectRef<RecoveryCreds?> recoveryCreds,
+    required ObjectRef<Map<TwoFaType, String>?> twoFAOptions,
+    required ObjectRef<int> twoFAOptionsCountRef,
+    required ValueNotifier<RecoverUserStep> step,
+  }) {
     ref
       ..listenError(initUserRecoveryActionNotifierProvider, (error) async {
         switch (error) {
