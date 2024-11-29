@@ -130,7 +130,7 @@ class MessagesPage extends HookConsumerWidget {
                           case 8:
                             return const AudioMessage(
                               '112133',
-                              audioUrl: 'https://www2.cs.uic.edu/~i101/SoundFiles/preamble10.wav',
+                              audioUrl: 'https://getsamplefiles.com/download/opus/sample-3.opus',
                               isMe: false,
                               reactions: mockReactionsMany,
                             );

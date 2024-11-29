@@ -160,7 +160,8 @@ class ImageCompressTab extends HookConsumerWidget {
             );
 
         // Display the compressed image size in MB
-        compressedSize.value = '${(compressedFile.size ?? 0 / 1024 / 1024).toStringAsFixed(2)} MB';
+        compressedSize.value =
+            '${(await XFile(compressedFile.path).length() / 1024 / 1024).toStringAsFixed(2)} MB';
 
         compressedImage.value = compressedFile;
         isCompressing.value = false;
