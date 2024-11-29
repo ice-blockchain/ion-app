@@ -15,3 +15,7 @@
 ## Screenshots (if applicable)
 <!-- Include screenshots to demonstrate any UI changes. -->
 <!-- <img width="180" alt="image" src="image_url_here"> -->
+
+## Figma Link (if applicable)
+<!-- Add a link to the Figma design here if relevant to the PR. -->
+
