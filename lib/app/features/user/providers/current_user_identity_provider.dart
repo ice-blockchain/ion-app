@@ -23,6 +23,7 @@ class CurrentUserIdentity extends _$CurrentUserIdentity {
     final ionIdentityClient = await ref.watch(ionIdentityClientProvider.future);
     final response =
         await ionIdentityClient.users.setIONConnectRelays(followeeList: followees ?? []);
+    state = AsyncData(state.valueOrNull!.copyWith(ionConnectRelays: response.ionConnectRelays));
     return response.ionConnectRelays;
   }
 }
