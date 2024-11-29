@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/video_preview/video_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_image.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_video.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 
 class PostMediaItem extends StatelessWidget {
@@ -25,11 +25,11 @@ class PostMediaItem extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: aspectRatio,
         child: switch (mediaItem.mediaType) {
-          MediaType.image => PostMediaImage(
+          MediaType.image => CachedNetworkImage(
               imageUrl: mediaItem.url,
-              aspectRatio: aspectRatio,
+              fit: BoxFit.cover,
             ),
-          MediaType.video => PostMediaVideo(
+          MediaType.video => VideoPreview(
               videoUrl: mediaItem.url,
             ),
           _ => const SizedBox.shrink(),

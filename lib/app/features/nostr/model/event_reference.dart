@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 
 part 'event_reference.freezed.dart';
 
@@ -17,6 +18,10 @@ class EventReference with _$EventReference {
   factory EventReference.fromString(String input) {
     final parts = input.split(separator);
     return EventReference(eventId: parts[0], pubkey: parts[1]);
+  }
+
+  factory EventReference.fromNostrEntity(NostrEntity nostrEntity) {
+    return EventReference(eventId: nostrEntity.id, pubkey: nostrEntity.pubkey);
   }
 
   @override

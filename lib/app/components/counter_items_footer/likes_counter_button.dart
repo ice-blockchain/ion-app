@@ -3,19 +3,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/counter_items_footer/text_action_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_notifier.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_action_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class EntityLikesButton extends ConsumerWidget {
-  const EntityLikesButton({required this.eventReference, super.key});
+class LikesCounterButton extends ConsumerWidget {
+  const LikesCounterButton({
+    required this.eventReference,
+    this.color,
+    super.key,
+  });
 
   final EventReference eventReference;
+  final Color? color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,17 +34,18 @@ class EntityLikesButton extends ConsumerWidget {
         HapticFeedback.lightImpact();
         ref.read(likesNotifierProvider(eventReference).notifier).toggle();
       },
-      child: FeedItemActionButton(
+      child: TextActionButton(
         icon: Assets.svg.iconVideoLikeOff.icon(
           size: 16.0.s,
-          color: context.theme.appColors.onTertararyBackground,
+          color: color ?? context.theme.appColors.onTertararyBackground,
         ),
+        textColor: color ?? context.theme.appColors.onTertararyBackground,
         activeIcon: Assets.svg.iconVideoLikeOn.icon(
           size: 16.0.s,
           color: context.theme.appColors.attentionRed,
         ),
+        activeTextColor: context.theme.appColors.attentionRed,
         value: likesCount != null ? formatDoubleCompact(likesCount) : '',
-        activeColor: context.theme.appColors.attentionRed,
         isActive: isLiked,
       ),
     );

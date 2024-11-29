@@ -61,9 +61,8 @@ class NotificationItem extends StatelessWidget {
               height: 8.0.s,
             ),
             Post(
-              eventReference: EventReference(
-                eventId: notificationData.postEntity!.id,
-                pubkey: notificationData.postEntity!.pubkey,
+              eventReference: EventReference.fromNostrEntity(
+                notificationData.postEntity!,
               ),
               header: const SizedBox.shrink(),
               footer: const SizedBox.shrink(),

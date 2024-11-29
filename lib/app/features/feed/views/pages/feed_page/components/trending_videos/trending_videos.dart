@@ -9,22 +9,27 @@ import 'package:ion/app/components/section_header/section_header.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/data/models/trending_videos_overlay.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.dart';
-import 'package:ion/app/features/feed/providers/trending_videos_overlay_provider.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_skeleton.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/video_icon.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
+import 'package:ion/app/router/app_routes.dart';
 
 class TrendingVideos extends ConsumerWidget {
   const TrendingVideos({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final listOverlay = ref.watch(trendingVideosOverlayNotifierProvider);
+    // TODO: Determine the actual overlay type.
+    // final listOverlay = ref.watch(trendingVideosOverlayNotifierProvider);
+    const listOverlay = TrendingVideosOverlay.vertical;
+
     final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
-    // TODO: remove this [mockPostEntitiesPagedDataProvider] when we have real data
+    // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
     // final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
     final videosData = ref.watch(mockPostEntitiesPagedDataProvider(dataSource));
     final videos = videosData?.data.items;
@@ -32,7 +37,7 @@ class TrendingVideos extends ConsumerWidget {
     if (videos == null) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 12.0.s),
-        child: TrendingVideosListSkeleton(
+        child: const TrendingVideosListSkeleton(
           listOverlay: listOverlay,
         ),
       );
@@ -43,7 +48,10 @@ class TrendingVideos extends ConsumerWidget {
     return Column(
       children: [
         SectionHeader(
-          onPress: () {},
+          onPress: () {
+            final eventReference = EventReference.fromNostrEntity(videos.first);
+            VideosRoute(eventReference: eventReference.toString()).push<void>(context);
+          },
           title: context.i18n.feed_trending_videos,
           leadingIcon: const VideosIcon(),
         ),
@@ -72,9 +80,8 @@ class TrendingVideos extends ConsumerWidget {
 
   Future<void> _onLoadMore(WidgetRef ref) async {
     await ref
-        // TODO: remove this [mockPostEntitiesPagedDataProvider] when we have real data
-        // .read(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)).notifier)
         .read(
+          // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
           mockPostEntitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider))
               .notifier,
         )
