@@ -40,20 +40,25 @@ class VideoPreviewCover extends HookConsumerWidget {
       return const _VideoPlaceholder();
     }
 
-    useEffect(
-      () {
-        return videoController.dispose;
-      },
-      [videoController],
-    );
-
     final videoWidth = videoController.value.size.width;
     final videoHeight = videoController.value.size.height;
     final aspectRatio = videoWidth / videoHeight;
 
     final maxWidth = MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultMediumMargin * 2;
-    final calculatedHeight = maxWidth / aspectRatio;
-    final constrainedHeight = calculatedHeight.clamp(0.0, 430.0.s);
+    const maxHeight = 430.0; // Maximum allowed height for the video preview
+
+    double calculatedWidth;
+    double calculatedHeight;
+
+    if (aspectRatio > maxWidth / maxHeight) {
+      // Fit to width
+      calculatedWidth = maxWidth;
+      calculatedHeight = calculatedWidth / aspectRatio;
+    } else {
+      // Fit to height
+      calculatedHeight = maxHeight;
+      calculatedWidth = calculatedHeight * aspectRatio;
+    }
 
     final showPlayButton = useState(true);
 
@@ -62,8 +67,8 @@ class VideoPreviewCover extends HookConsumerWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.0.s),
         child: SizedBox(
-          width: maxWidth,
-          height: constrainedHeight,
+          width: calculatedWidth,
+          height: calculatedHeight,
           child: GestureDetector(
             onTap: () {
               if (videoController.value.isPlaying) {

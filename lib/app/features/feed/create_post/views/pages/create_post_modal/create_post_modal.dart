@@ -28,7 +28,7 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class CreatePostModal extends HookConsumerWidget {
-  const CreatePostModal({
+  CreatePostModal({
     required this.showCollapseButton,
     super.key,
     this.parentEvent,
@@ -47,14 +47,15 @@ class CreatePostModal extends HookConsumerWidget {
 
   final String? videoPath;
 
+  final visibilityToolbarKey = GlobalKey();
+  final actionsToolbarKey = GlobalKey();
+  final textInputKey = GlobalKey();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController(defaultText: content);
     final keyboardVisibilityController = KeyboardVisibilityController();
     final scrollController = useScrollController();
-    final visibilityToolbarKey = GlobalKey();
-    final actionsToolbarKey = GlobalKey();
-    final textInputKey = GlobalKey();
 
     useEffect(
       () {
