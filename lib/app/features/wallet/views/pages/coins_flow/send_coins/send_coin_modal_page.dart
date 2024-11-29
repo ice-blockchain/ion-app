@@ -22,6 +22,7 @@ class SendCoinModalPage extends ConsumerWidget {
           NetworkSelectSendRoute().push<void>(context);
         },
         title: context.i18n.wallet_send_coins,
+        showBackButton: true,
       ),
     );
   }

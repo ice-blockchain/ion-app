@@ -17,11 +17,13 @@ class CoinsListView extends ConsumerWidget {
   const CoinsListView({
     required this.onCoinItemTap,
     required this.title,
+    this.showBackButton = false,
     super.key,
   });
 
   final void Function(CoinData coin) onCoinItemTap;
   final String title;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,7 +35,7 @@ class CoinsListView extends ConsumerWidget {
           padding: EdgeInsets.symmetric(vertical: 8.0.s),
           child: NavigationAppBar.screen(
             title: Text(title),
-            showBackButton: false,
+            showBackButton: showBackButton,
             actions: [
               NavigationCloseButton(onPressed: () => context.pop()),
             ],
