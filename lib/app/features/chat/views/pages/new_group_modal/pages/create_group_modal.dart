@@ -183,7 +183,7 @@ class CreateGroupModal extends HookConsumerWidget {
                           ),
                     );
 
-                    ref.read(groupsProvider.notifier).setChannel(newGroup.id, newGroup);
+                    ref.read(groupsProvider.notifier).setGroup(newGroup.id, newGroup);
                     ref.read(conversationsProvider.notifier).addGroupConversation(newGroup);
                     GroupRoute(pubkey: newGroup.id).replace(context);
                   }

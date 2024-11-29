@@ -10,7 +10,7 @@ abstract class MessageWithAuthor {
   MessageAuthor get author;
 }
 
-/// Representation of the messages list item.
+/// Representation of any element in the chat list.
 @freezed
 sealed class MessageListItem with _$MessageListItem {
   const factory MessageListItem.date({

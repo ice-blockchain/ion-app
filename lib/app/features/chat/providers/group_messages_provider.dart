@@ -11,9 +11,6 @@ part 'group_messages_provider.g.dart';
 
 /// Mocked provider that simulates receiving and mapping data messages
 /// from the server to a model, which describes to UI what should be displayed.
-///
-/// Currently, [RecentChatMessage] is used as a simulation of such a data model from the server.
-/// This should be replaced once the data layer is implemented.
 @riverpod
 Future<List<MessageListItem>> groupMessages(Ref ref) async {
   const currentAuthor = MessageAuthor(

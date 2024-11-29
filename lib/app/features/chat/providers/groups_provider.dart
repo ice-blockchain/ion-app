@@ -16,7 +16,7 @@ class Groups extends _$Groups {
     return Map<String, Group>.unmodifiable(result);
   }
 
-  void setChannel(String id, Group data) {
+  void setGroup(String id, Group data) {
     final newState = Map<String, Group>.from(state);
     newState[id] = data;
     state = Map<String, Group>.unmodifiable(newState);
