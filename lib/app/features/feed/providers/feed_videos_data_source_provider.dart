@@ -24,7 +24,7 @@ List<EntitiesDataSource>? feedVideosDataSource(
   final until =
       ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull?.createdAt;
 
-  if (filterRelays == null) return null;
+  if (filterRelays == null || until == null) return null;
 
   final dataSources = [
     for (final entry in filterRelays.entries)
