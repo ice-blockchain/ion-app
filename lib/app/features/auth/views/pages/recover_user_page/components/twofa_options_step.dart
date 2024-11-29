@@ -20,10 +20,12 @@ import 'package:ion/generated/assets.gen.dart';
 
 class TwoFAOptionsStep extends HookConsumerWidget {
   const TwoFAOptionsStep({
+    required this.twoFAOptionsCount,
     required this.onConfirm,
     super.key,
   });
 
+  final int twoFAOptionsCount;
   final VoidCallback onConfirm;
 
   @override

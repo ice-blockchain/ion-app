@@ -47,15 +47,24 @@ class IONIdentityAuth {
   Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials() =>
       createRecoveryCredentialsService.createRecoveryCredentials();
 
-  Future<void> recoverUser({
+  Future<UserRegistrationChallenge> initRecovery({
     required String credentialId,
-    required String recoveryKey,
     List<TwoFAType> twoFATypes = const [],
   }) =>
-      recoverUserService.recoverUser(
+      recoverUserService.initRecovery(
+        credentialId: credentialId,
+        twoFATypes: twoFATypes,
+      );
+
+  Future<void> completeRecovery({
+    required UserRegistrationChallenge challenge,
+    required String credentialId,
+    required String recoveryKey,
+  }) =>
+      recoverUserService.completeRecovery(
+        challenge: challenge,
         credentialId: credentialId,
         recoveryKey: recoveryKey,
-        twoFATypes: twoFATypes,
       );
 
   Future<void> logOut() async {

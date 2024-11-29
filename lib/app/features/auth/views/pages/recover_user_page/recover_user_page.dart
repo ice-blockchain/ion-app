@@ -25,32 +25,50 @@ class RecoverUserPage extends HookConsumerWidget {
     final step = useState(RecoverUserStep.recoveryCreds);
     final recoveryCreds = useRef<RecoveryCreds?>(null);
     final twoFAOptions = useRef<Map<TwoFaType, String>?>(null);
+    final twoFAOptionsCount = useRef<int>(0);
 
-    _listenRecoverUserResult(ref, step);
+    _listenInitRecoverResult(
+      ref: ref,
+      recoveryCreds: recoveryCreds,
+      twoFAOptions: twoFAOptions,
+      twoFAOptionsCountRef: twoFAOptionsCount,
+      step: step,
+    );
+    _listenCompleteRecoverResult(ref);
 
-    return ProviderScope(
-      overrides: [
-        availableTwoFaTypesProvider.overrideWithValue(TwoFaType.values),
-      ],
-      child: switch (step.value) {
-        RecoverUserStep.recoveryCreds => RecoveryCredsStep(
-            onContinuePressed: (name, id, code) {
-              recoveryCreds.value = (name: name, id: id, code: code);
-              _makeRecoverUserRequest(ref, recoveryCreds.value!);
-            },
-          ),
-        RecoverUserStep.twoFAOptions => TwoFAOptionsStep(
+    return switch (step.value) {
+      RecoverUserStep.recoveryCreds => RecoveryCredsStep(
+          onContinuePressed: (name, id, code) {
+            recoveryCreds.value = (name: name, id: id, code: code);
+            _makeRecoverUserRequest(ref, recoveryCreds.value!);
+          },
+        ),
+      RecoverUserStep.twoFAOptions => ProviderScope(
+          overrides: [
+            availableTwoFaTypesProvider.overrideWithValue(
+              (types: TwoFaType.values, count: twoFAOptionsCount.value),
+            ),
+          ],
+          child: TwoFAOptionsStep(
+            twoFAOptionsCount: twoFAOptionsCount.value,
             onConfirm: () => step.value = RecoverUserStep.twoFAInput,
           ),
-        RecoverUserStep.twoFAInput => TwoFAInputStep(
+        ),
+      RecoverUserStep.twoFAInput => ProviderScope(
+          overrides: [
+            availableTwoFaTypesProvider.overrideWithValue(
+              (types: TwoFaType.values, count: twoFAOptionsCount.value),
+            ),
+          ],
+          child: TwoFAInputStep(
             recoveryIdentityKeyName: recoveryCreds.value!.name,
             onContinuePressed: (twoFaTypes) {
               twoFAOptions.value = twoFaTypes;
               _makeRecoverUserRequest(ref, recoveryCreds.value!, twoFaTypes);
             },
           ),
-      },
-    );
+        ),
+    };
   }
 
   void _makeRecoverUserRequest(
@@ -58,37 +76,57 @@ class RecoverUserPage extends HookConsumerWidget {
     RecoveryCreds recoveryCreds, [
     Map<TwoFaType, String>? twoFaTypes,
   ]) {
-    guardPasskeyDialog(
-      ref.context,
-      (child) => RiverpodPasskeyRequestBuilder(
-        provider: recoverUserActionNotifierProvider,
-        request: () => ref.read(recoverUserActionNotifierProvider.notifier).recoverUser(
-              username: recoveryCreds.name,
-              credentialId: recoveryCreds.id,
-              recoveryKey: recoveryCreds.code,
-              twoFaTypes: twoFaTypes,
-            ),
-        child: child,
-      ),
-    );
+    ref.read(initUserRecoveryActionNotifierProvider.notifier).initRecovery(
+          username: recoveryCreds.name,
+          credentialId: recoveryCreds.id,
+          twoFaTypes: twoFaTypes,
+        );
   }
 
-  void _listenRecoverUserResult(WidgetRef ref, ValueNotifier<RecoverUserStep> step) {
+  void _listenInitRecoverResult({
+    required WidgetRef ref,
+    required ObjectRef<RecoveryCreds?> recoveryCreds,
+    required ObjectRef<Map<TwoFaType, String>?> twoFAOptions,
+    required ObjectRef<int> twoFAOptionsCountRef,
+    required ValueNotifier<RecoverUserStep> step,
+  }) {
     ref
-      ..listenError(recoverUserActionNotifierProvider, (error) async {
+      ..listenError(initUserRecoveryActionNotifierProvider, (error) async {
         switch (error) {
-          case TwoFARequiredException():
+          case TwoFARequiredException(:final twoFAOptionsCount):
+            twoFAOptionsCountRef.value = twoFAOptionsCount;
             step.value = RecoverUserStep.twoFAOptions;
           default:
         }
       })
-      ..listenSuccess(
-        recoverUserActionNotifierProvider,
-        (value) {
-          value?.whenOrNull(
-            success: () => RecoverUserSuccessRoute().push<void>(ref.context),
-          );
-        },
-      );
+      ..listenSuccess(initUserRecoveryActionNotifierProvider, (value) {
+        final challenge = value?.whenOrNull(success: (challenge) => challenge);
+
+        guardPasskeyDialog(
+          ref.context,
+          (child) => RiverpodPasskeyRequestBuilder(
+            provider: completeUserRecoveryActionNotifierProvider,
+            request: () =>
+                ref.read(completeUserRecoveryActionNotifierProvider.notifier).completeRecovery(
+                      username: recoveryCreds.value!.name,
+                      credentialId: recoveryCreds.value!.id,
+                      recoveryKey: recoveryCreds.value!.code,
+                      challenge: challenge!,
+                    ),
+            child: child,
+          ),
+        );
+      });
+  }
+
+  void _listenCompleteRecoverResult(WidgetRef ref) {
+    ref.listenSuccess(
+      completeUserRecoveryActionNotifierProvider,
+      (value) {
+        value?.whenOrNull(
+          success: () => RecoverUserSuccessRoute().push<void>(ref.context),
+        );
+      },
+    );
   }
 }
