@@ -16,9 +16,6 @@ class ChatDateHeaderText extends StatelessWidget {
         horizontal: 6.0.s,
         vertical: 1.0.s,
       ),
-      margin: EdgeInsets.symmetric(
-        vertical: 12.0.s,
-      ),
       decoration: BoxDecoration(
         color: context.theme.appColors.secondaryBackground,
         borderRadius: BorderRadius.circular(16.0.s),

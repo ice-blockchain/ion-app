@@ -5,18 +5,30 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 import 'package:ion/app/utils/username.dart';
 
 class ProfileShareMessage extends StatelessWidget {
-  const ProfileShareMessage({required this.isMe, super.key, this.reactions});
+  const ProfileShareMessage({
+    required this.isMe,
+    this.isLastMessageFromSender = true,
+    this.reactions,
+    this.author,
+    super.key,
+  });
+
   final bool isMe;
+  final MessageAuthor? author;
+  final bool isLastMessageFromSender;
   final List<MessageReactionGroup>? reactions;
 
   @override
   Widget build(BuildContext context) {
     return MessageItemWrapper(
+      isLastMessageFromSender: isLastMessageFromSender,
       contentPadding: EdgeInsets.all(12.0.s),
       isMe: isMe,
       child: IntrinsicWidth(
@@ -28,6 +40,7 @@ class ProfileShareMessage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  MessageAuthorNameWidget(author: author),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

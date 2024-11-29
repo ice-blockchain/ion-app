@@ -10,12 +10,16 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
+import 'package:ion/app/features/chat/model/group.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.dart';
+import 'package:ion/app/features/chat/providers/groups_provider.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -33,7 +37,7 @@ class CreateGroupModal extends HookConsumerWidget {
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
     final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
-    final nameController = useTextEditingController(text: createGroupForm.title);
+    final nameController = useTextEditingController(text: createGroupForm.name);
     final members = createGroupForm.members.toList();
 
     useEffect(
@@ -166,7 +170,23 @@ class CreateGroupModal extends HookConsumerWidget {
                 ),
                 label: Text(context.i18n.group_create_create_button),
                 onPressed: () {
-                  if (formKey.currentState!.validate()) {}
+                  if (formKey.currentState!.validate()) {
+                    final newGroup = Group(
+                      id: 'new_group',
+                      link: 'https://ice.io/testers_group',
+                      name: createGroupForm.name!,
+                      type: createGroupForm.type,
+                      members: createGroupForm.members.toList(),
+                      image: ref.read(avatarProcessorNotifierProvider).mapOrNull(
+                            cropped: (file) => file.file,
+                            processed: (file) => file.file,
+                          ),
+                    );
+
+                    ref.read(groupsProvider.notifier).setChannel(newGroup.id, newGroup);
+                    ref.read(conversationsProvider.notifier).addGroupConversation(newGroup);
+                    GroupRoute(pubkey: newGroup.id).replace(context);
+                  }
                 },
               ),
             ),

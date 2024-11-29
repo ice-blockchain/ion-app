@@ -6,7 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/video_preview/video_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 
 part 'components/message_with_timestamp.dart';
@@ -15,6 +17,8 @@ class VideoMessage extends HookConsumerWidget {
   const VideoMessage({
     required this.isMe,
     required this.videoUrl,
+    this.isLastMessageFromSender = true,
+    this.author,
     this.message,
     this.reactions,
     super.key,
@@ -22,6 +26,8 @@ class VideoMessage extends HookConsumerWidget {
   final bool isMe;
   final String? message;
   final String videoUrl;
+  final bool isLastMessageFromSender;
+  final MessageAuthor? author;
   final List<MessageReactionGroup>? reactions;
   static double get padding => 8.0.s;
 
@@ -34,6 +40,7 @@ class VideoMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      isLastMessageFromSender: isLastMessageFromSender,
       contentPadding: EdgeInsets.all(padding),
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -48,6 +55,7 @@ class VideoMessage extends HookConsumerWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              MessageAuthorNameWidget(author: author),
               ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: 300.0.s, maxWidth: videoWidth.value),
                 child: ClipRRect(

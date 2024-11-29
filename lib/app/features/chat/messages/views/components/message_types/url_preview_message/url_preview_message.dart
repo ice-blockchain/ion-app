@@ -6,16 +6,28 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/url_preview/url_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
 part 'components/meta_data_preview.dart';
 
 class UrlPreviewMessage extends HookWidget {
-  const UrlPreviewMessage({required this.url, required this.isMe, super.key, this.reactions});
+  const UrlPreviewMessage({
+    required this.url,
+    required this.isMe,
+    this.author,
+    this.reactions,
+    this.isLastMessageFromSender = true,
+    super.key,
+  });
+
   final bool isMe;
   final String url;
+  final MessageAuthor? author;
+  final bool isLastMessageFromSender;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -23,6 +35,7 @@ class UrlPreviewMessage extends HookWidget {
     useAutomaticKeepAlive();
     return MessageItemWrapper(
       isMe: isMe,
+      isLastMessageFromSender: isLastMessageFromSender,
       contentPadding: EdgeInsets.all(8.0.s),
       child: UrlPreview(
         url: url,
@@ -30,6 +43,7 @@ class UrlPreviewMessage extends HookWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              MessageAuthorNameWidget(author: author),
               Text(
                 url,
                 style: context.theme.appTextThemes.body2.copyWith(

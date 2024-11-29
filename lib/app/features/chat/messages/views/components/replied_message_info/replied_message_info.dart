@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 
@@ -15,7 +16,7 @@ class RepliedMessageInfo extends HookWidget {
   });
 
   final bool isMe;
-  final ChatSender sender;
+  final MessageAuthor sender;
   final RecentChatMessage message;
 
   @override

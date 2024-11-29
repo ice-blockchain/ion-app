@@ -4,17 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/poll_message/mock.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 
 part 'poll_result_message.dart';
 
 class PollMessage extends HookWidget {
-  const PollMessage({required this.isMe, super.key, this.reactions});
+  const PollMessage({
+    required this.isMe,
+    super.key,
+    this.reactions,
+    this.author,
+    this.isLastMessageFromSender = true,
+  });
+
   final bool isMe;
+  final MessageAuthor? author;
+  final bool isLastMessageFromSender;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -26,6 +37,7 @@ class PollMessage extends HookWidget {
     }
 
     return MessageItemWrapper(
+      isLastMessageFromSender: isLastMessageFromSender,
       contentPadding: EdgeInsets.all(
         12.0.s,
       ),
@@ -34,6 +46,7 @@ class PollMessage extends HookWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          MessageAuthorNameWidget(author: author),
           Flexible(
             child: Text(
               mockPoll.question,

@@ -600,6 +600,7 @@
   "group_create_type_private_desc": "Private channels can't be found in search and aren't end-to-end encrypted.",
   "group_create_type_encrypted": "Encrypted",
   "group_create_type_encrypted_desc": "End-to-end encryption is used. Only you and the people you communicate with can see the messages.",
+  "group_created_message": "The group has been created",
   "notification_video_loading": "Your video is loading...",
   "notification_story_loading": "Your story is loading...",
   "notification_post_loading": "Your post is loading...",
@@ -663,5 +664,6 @@
   "emoji_category_flags": "Flags",
   "recent_emoji_reactions": "Recent reactions",
   "passkeys_prompt_title": "Verify with passkey",
-  "passkeys_prompt_description": "Your device will ask your fingerprint, face or screen lock to confirm"
+  "passkeys_prompt_description": "Your device will ask your fingerprint, face or screen lock to confirm",
+  "members_count": "{count, plural, =1 {{count} member} other {{count} members}}"
 }

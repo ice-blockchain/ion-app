@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/chat/model/channel_data.dart';
+import 'package:ion/app/features/chat/model/chat_type.dart';
+import 'package:ion/app/features/chat/model/group.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,9 +29,9 @@ class Conversations extends _$Conversations {
   void addChannelConversation(ChannelData channelData) {
     update((currentData) {
       final newConversation = RecentChatDataModel(
-        ChatSender(
-          channelData.name,
-          'https://x.com/ice_blockchain/photo',
+        MessageAuthor(
+          name: channelData.name,
+          imageUrl: 'https://x.com/ice_blockchain/photo',
           isApproved: true,
         ),
         1,
@@ -38,6 +41,30 @@ class Conversations extends _$Conversations {
         ),
         channelData.id,
         type: ChatType.channel,
+      );
+      final newData = [
+        newConversation,
+        ...currentData,
+      ];
+      return List<RecentChatDataModel>.unmodifiable(newData);
+    });
+  }
+
+  void addGroupConversation(Group group) {
+    update((currentData) {
+      final newConversation = RecentChatDataModel(
+        MessageAuthor(
+          name: group.name,
+          imageUrl: 'https://x.com/ice_blockchain/photo',
+          isApproved: true,
+        ),
+        1,
+        TextRecentChatMessage(
+          'The group has been created',
+          DateTime.now(),
+        ),
+        group.id,
+        type: ChatType.group,
       );
       final newData = [
         newConversation,
