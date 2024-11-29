@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_list_item.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
-import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'group_messages_provider.g.dart';
