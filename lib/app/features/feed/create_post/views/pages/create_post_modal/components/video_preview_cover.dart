@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_duration.dart';
@@ -50,7 +51,7 @@ class VideoPreviewCover extends HookConsumerWidget {
     final videoHeight = videoController.value.size.height;
     final aspectRatio = videoWidth / videoHeight;
 
-    final maxWidth = MediaQuery.sizeOf(context).width - 48.0.s;
+    final maxWidth = MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultMediumMargin * 2;
     final calculatedHeight = maxWidth / aspectRatio;
     final constrainedHeight = calculatedHeight.clamp(0.0, 430.0.s);
 
