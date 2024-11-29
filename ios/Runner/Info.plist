@@ -39,7 +39,7 @@
 		<key>NSContactsUsageDescription</key>
 		<string>Contacts access helps you to invite more friends</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>This app requires access to notifications to keep you informed.</string>
+<string>This app uses the media library to let you add music to videos.</string>
 		<key>PermissionGroupNotification</key>
 		<string>This app requires access to notifications to keep you informed.</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
