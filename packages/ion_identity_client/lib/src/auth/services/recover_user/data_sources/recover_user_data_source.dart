@@ -6,7 +6,6 @@ import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/network_exception.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
-import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 
 class RecoverUserDataSource {
   RecoverUserDataSource({
@@ -40,7 +39,8 @@ class RecoverUserDataSource {
 
       if (dioException?.response?.statusCode == 403 &&
           dioException?.response?.data['error']['message'] == '2FA_REQUIRED') {
-        throw const TwoFARequiredException();
+        final twoFAOptionsCount = dioException?.response?.data['data']['n'] as int;
+        throw TwoFARequiredException(twoFAOptionsCount);
       }
       rethrow;
     }

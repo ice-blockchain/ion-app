@@ -23,9 +23,8 @@ class RecoverUserService {
   final PasskeysSigner passkeySigner;
   final KeyService keyService;
 
-  Future<void> recoverUser({
+  Future<UserRegistrationChallenge> initRecovery({
     required String credentialId,
-    required String recoveryKey,
     required List<TwoFAType> twoFATypes,
   }) async {
     final userRegistrationChallenge = await dataSource.createDelegatedRecoveryChallenge(
@@ -33,11 +32,18 @@ class RecoverUserService {
       credentialId: credentialId,
       twoFATypes: twoFATypes,
     );
+    return userRegistrationChallenge;
+  }
 
-    final attestation = await passkeySigner.register(userRegistrationChallenge);
+  Future<void> completeRecovery({
+    required UserRegistrationChallenge challenge,
+    required String credentialId,
+    required String recoveryKey,
+  }) async {
+    final attestation = await passkeySigner.register(challenge);
 
     final signedRecoveryPackage = await _signNewCredentials(
-      encryptedKey: userRegistrationChallenge.allowedRecoveryCredentials![0].encryptedRecoveryKey,
+      encryptedKey: challenge.allowedRecoveryCredentials![0].encryptedRecoveryKey,
       recoveryKey: recoveryKey,
       credentialId: credentialId,
       newCredentials: {
@@ -52,7 +58,7 @@ class RecoverUserService {
         },
         'recovery': signedRecoveryPackage,
       },
-      temporaryAuthenticationToken: userRegistrationChallenge.temporaryAuthenticationToken,
+      temporaryAuthenticationToken: challenge.temporaryAuthenticationToken,
     );
   }
 

@@ -15,9 +15,15 @@ class RecoveryCredsStep extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recoverUserState = ref.watch(recoverUserActionNotifierProvider);
+    final isLoading = ref.watch(
+          initUserRecoveryActionNotifierProvider.select((it) => it.isLoading),
+        ) ||
+        ref.watch(
+          completeUserRecoveryActionNotifierProvider.select((it) => it.isLoading),
+        );
+
     return RecoveryKeysInputContainer(
-      isLoading: recoverUserState.isLoading,
+      isLoading: isLoading,
       validator: (value, property) => value == null || value.isEmpty ? '' : null,
       onContinuePressed: onContinuePressed,
     );

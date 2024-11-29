@@ -23,11 +23,11 @@ class SelectedTwoFAOptionsNotifier extends _$SelectedTwoFAOptionsNotifier {
   @override
   SelectTwoFAOptionsState build() {
     final availableTwoFATypes = ref.watch(availableTwoFaTypesProvider);
-    final optionsAmount = availableTwoFATypes.length;
+    final optionsAmount = availableTwoFATypes.count;
 
     return SelectTwoFAOptionsState(
       optionsAmount: optionsAmount,
-      availableOptions: availableTwoFATypes.toSet(),
+      availableOptions: availableTwoFATypes.types.toSet(),
       selectedValues: List.generate(optionsAmount, (_) => null),
     );
   }
@@ -52,11 +52,17 @@ Set<TwoFaType> selectedTwoFaOptions(Ref ref) {
   return state.selectedValues.whereType<TwoFaType>().toSet();
 }
 
+typedef AvailableTwoFATypesState = ({
+  List<TwoFaType> types,
+  int count,
+});
+
 @Riverpod(dependencies: [])
-List<TwoFaType> availableTwoFaTypes(Ref ref) =>
+AvailableTwoFATypesState availableTwoFaTypes(Ref ref) =>
     throw UnimplementedError('availableTwoFaTypesProvider must be overridden');
 
 @riverpod
-List<TwoFaType> securityMethodsEnabledTypes(Ref ref) {
-  return ref.watch(securityAccountControllerProvider).requireValue.enabledTypes;
+AvailableTwoFATypesState securityMethodsEnabledTypes(Ref ref) {
+  final enabledTypes = ref.watch(securityAccountControllerProvider).requireValue.enabledTypes;
+  return (types: enabledTypes, count: enabledTypes.length);
 }

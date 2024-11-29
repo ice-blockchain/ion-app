@@ -81,7 +81,7 @@ extension ListenResultExtension on WidgetRef {
         return;
       }
 
-      if (next.hasValue) {
+      if (next is AsyncData) {
         onSuccess(next.value);
       }
     });
