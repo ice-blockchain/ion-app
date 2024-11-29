@@ -32,9 +32,7 @@ class NostrNotifier extends _$NostrNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
     final relay = await _getRelay(actionSource);
-    // await relay.sendEvents(events);
-    // TODO: uncomment when our relays are used
-    await Future.wait(events.map(relay.sendEvent).toList());
+    await relay.sendEvents(events);
   }
 
   Future<void> sendEvent(

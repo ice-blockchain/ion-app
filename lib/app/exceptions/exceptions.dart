@@ -14,10 +14,6 @@ class FollowListNotFoundException extends IONException {
   FollowListNotFoundException() : super(10001, 'Follow list is null');
 }
 
-class FollowListIsEmptyException extends IONException {
-  FollowListIsEmptyException() : super(10002, 'Follow list is empty');
-}
-
 class KeystoreNotFoundException extends IONException {
   KeystoreNotFoundException() : super(10003, 'KeyStore is null');
 }

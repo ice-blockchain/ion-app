@@ -19,17 +19,10 @@ class CurrentUserIdentity extends _$CurrentUserIdentity {
     return null;
   }
 
-  Future<List<String>> assignUserRelays({required List<String> followees}) async {
-    //TODO: Add identity.io patch ion-connect-relays here.
-    final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
-
-    if (currentIdentityKeyName == null) {
-      throw Exception('User is not authenticated');
-    }
-
+  Future<List<String>> assignUserRelays({List<String>? followees}) async {
     final ionIdentityClient = await ref.watch(ionIdentityClientProvider.future);
-    final response = await ionIdentityClient.users
-        .setIONConnectRelays(userId: currentIdentityKeyName, followeeList: followees);
+    final response =
+        await ionIdentityClient.users.setIONConnectRelays(followeeList: followees ?? []);
     return response.ionConnectRelays;
   }
 }

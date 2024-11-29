@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -51,11 +50,9 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final avatarFileMetadataEvent = _buildAvatarFileMetadataEvent(keyStore: nostrKeyStore);
 
         await ref.read(nostrNotifierProvider.notifier).sendEvents([
-          //TODO:uncomment when switched to our relays
-          // damus returns "rate-limited: you are noting too much"
-          followListEvent,
-          // interestSetEvent,
-          // interestsEvent,
+          // followListEvent,
+          interestSetEvent,
+          interestsEvent,
           if (avatarFileMetadataEvent != null) avatarFileMetadataEvent,
           userRelaysEvent,
           userMetadataEvent,
@@ -63,7 +60,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         ]);
 
         <CacheableEntity>[
-          FollowListEntity.fromEventMessage(followListEvent),
+          // FollowListEntity.fromEventMessage(followListEvent),
           InterestSetEntity.fromEventMessage(interestSetEvent),
           InterestsEntity.fromEventMessage(interestsEvent),
           UserMetadataEntity.fromEventMessage(userMetadataEvent),
@@ -81,17 +78,17 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       return ionConnectRelays;
     }
     final followees = ref.read(onboardingDataProvider).followees;
-    if (followees == null) throw FollowListNotFoundException();
-    if (followees.isEmpty) throw FollowListIsEmptyException();
 
     final userRelays =
         await ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);
 
-    // Persisting followees so that in case of finish onboarding retry we could create FollowList event out of it
-    final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-    await ref
-        .read(userPreferencesServiceProvider(identityKeyName: identityKeyName!))
-        .setValue(followeesListPersistanceKey, followees);
+    if (followees != null) {
+      // Persisting followees so that in case of finish onboarding retry we could create FollowList event out of it
+      final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+      await ref
+          .read(userPreferencesServiceProvider(identityKeyName: identityKeyName!))
+          .setValue(followeesListPersistanceKey, followees);
+    }
 
     return userRelays;
   }
@@ -192,12 +189,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       followees = service.getValue<List<String>>(followeesListPersistanceKey);
     }
 
-    if (followees == null) {
-      throw Exception('Failed to create follow list, followees is null');
-    }
-
     final followListData = FollowListData(
-      list: followees.map((pubkey) => Followee(pubkey: pubkey)).toList(),
+      list: followees == null ? [] : followees.map((pubkey) => Followee(pubkey: pubkey)).toList(),
     );
 
     return followListData.toEventMessage(keyStore);
