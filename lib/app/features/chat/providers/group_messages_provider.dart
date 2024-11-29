@@ -57,7 +57,10 @@ Future<List<MessageListItem>> groupMessages(Ref ref) async {
       time: date,
     ),
     MessageListItem.photo(
-        author: danielAuthor, time: date, imageUrl: 'https://picsum.photos/700/900'),
+      author: danielAuthor,
+      time: date,
+      imageUrl: 'https://picsum.photos/700/900',
+    ),
     MessageListItem.audio(
       author: samantaAuthor,
       time: date,
@@ -69,7 +72,7 @@ Future<List<MessageListItem>> groupMessages(Ref ref) async {
       time: date,
       videoUrl: 'https://videos.pexels.com/video-files/5975407/5975407-hd_1080_1920_30fps.mp4',
     ),
-    MessageListItem.link(author: samantaAuthor, time: date, link: 'google.com'),
+    MessageListItem.link(author: samantaAuthor, time: date, link: 'https://videos.pexels.com'),
     MessageListItem.shareProfile(author: danielAuthor, time: date, displayName: 'Some profile'),
     MessageListItem.poll(author: samantaAuthor, time: date),
     MessageListItem.money(
