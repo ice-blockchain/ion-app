@@ -88,7 +88,7 @@ class FillProfile extends HookConsumerWidget {
                         ),
                         SizedBox(height: 26.0.s),
                         FillProfileSubmitButton(
-                          disabled: !(name.value.isNotEmpty && nickname.value.isNotEmpty),
+                          disabled: name.value.isEmpty || nickname.value.isEmpty,
                           loading: isAvatarCompressing || fillProfileState.isLoading,
                           onPressed: onSubmit,
                         ),
