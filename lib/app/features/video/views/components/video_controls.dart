@@ -49,6 +49,16 @@ class VideoControls extends HookConsumerWidget {
                   ),
             onPressed: () => ref.read(globalMuteProvider.notifier).toggle(),
           ),
+          SizedBox(width: 10.0.s),
+          VideoButton(
+            icon: Assets.svg.iconPicinpic.icon(
+              color: context.theme.appColors.secondaryBackground,
+              size: 20.0.s,
+            ),
+            onPressed: () {
+              // TODO: add impl for pic in pic
+            },
+          ),
         ],
       ),
     );

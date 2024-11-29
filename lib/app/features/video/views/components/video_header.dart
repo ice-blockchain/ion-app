@@ -32,7 +32,25 @@ class VideoHeader extends StatelessWidget {
               // TODO: add impl for categories for you
             },
           ),
+          SizedBox(width: 10.0.s),
+          VideoButton(
+            icon: Assets.svg.iconVideoSavevideo.icon(
+              color: context.theme.appColors.secondaryBackground,
+            ),
+            onPressed: () {
+              // TODO: add impl for save video
+            },
+          ),
           const Spacer(),
+          VideoButton(
+            icon: Assets.svg.iconVideoAddvideo.icon(
+              color: context.theme.appColors.secondaryBackground,
+            ),
+            onPressed: () {
+              // TODO: add impl for add video
+            },
+          ),
+          SizedBox(width: 10.0.s),
           VideoButton(
             icon: Assets.svg.iconFieldSearch.icon(
               color: context.theme.appColors.secondaryBackground,
