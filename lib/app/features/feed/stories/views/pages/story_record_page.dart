@@ -45,7 +45,7 @@ class StoryRecordPage extends HookConsumerWidget {
         if (filePath == null) return;
 
         if (MediaType.fromMimeType(next.file.mimeType!) == MediaType.video) {
-          filePath = await ref.watch(banubaServiceProvider).openTrimmerScreen(filePath);
+          filePath = await ref.read(banubaServiceProvider).openTrimmerScreen(filePath);
         }
 
         if (context.mounted) {
