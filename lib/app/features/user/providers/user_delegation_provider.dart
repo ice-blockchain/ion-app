@@ -10,7 +10,6 @@ import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/user_delegation.dart';
 import 'package:ion/app/features/wallets/providers/main_wallet_provider.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
-import 'package:ion/app/services/ion_identity/mocked_ton_wallet_keystore.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -33,8 +32,9 @@ Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
     );
 
   return ref.read(nostrNotifierProvider.notifier).requestEntity<UserDelegationEntity>(
-      requestMessage,
-      actionSource: const ActionSourceIndexers());
+        requestMessage,
+        actionSource: const ActionSourceIndexers(),
+      );
 }
 
 @Riverpod(keepAlive: true)
@@ -97,15 +97,15 @@ class UserDelegationManager extends _$UserDelegationManager {
         .wallets
         .generateHashSignature(mainWallet.id, eventId);
 
-    final signaturePrefix =
-        '${mainWallet.signingKey.scheme}/${mainWallet.signingKey.curve}'.toLowerCase();
+    final curveName = switch (mainWallet.signingKey.curve) {
+      'ed25519' => 'curve25519',
+      _ => throw UnsupportedSignatureAlgorithmException(mainWallet.signingKey.curve)
+    };
+
+    final signaturePrefix = '${mainWallet.signingKey.scheme}/$curveName'.toLowerCase();
     final signatureBody =
         '${signResponse.signature['r']}${signResponse.signature['s']}'.replaceAll('0x', '');
-    // ignore: unused_local_variable
     final signature = '$signaturePrefix:$signatureBody';
-
-    // TODO:still using mock because damus do not accept this kind of signatures
-    final fakeSignature = (await ref.read(mockedMainWalletProvider.future)).sign(message: eventId);
 
     return EventMessage(
       id: eventId,
@@ -114,7 +114,7 @@ class UserDelegationManager extends _$UserDelegationManager {
       kind: kind,
       tags: tags,
       content: '',
-      sig: fakeSignature,
+      sig: signature,
     );
   }
 }

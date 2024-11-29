@@ -103,3 +103,8 @@ class UnknownEventCountResultKey extends IONException {
   UnknownEventCountResultKey({required String eventId})
       : super(10020, 'Unknown EventCount result key $eventId');
 }
+
+class UnsupportedSignatureAlgorithmException extends IONException {
+  UnsupportedSignatureAlgorithmException(String algorithm)
+      : super(10021, 'Unsupported signature algorithm - $algorithm');
+}
