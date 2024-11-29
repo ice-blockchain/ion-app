@@ -6,6 +6,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/enum.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/nostr/model/replaceable_event_reference.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -79,6 +80,14 @@ class InterestSetData with _$InterestSetData implements EventSerializable {
         ...hashtags.map((hashtag) => ['t', hashtag]),
       ],
       content: '',
+    );
+  }
+
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: InterestSetEntity.kind,
+      pubkey: pubkey,
+      type: type.toShortString(),
     );
   }
 }

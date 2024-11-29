@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
@@ -31,9 +32,9 @@ Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
       RequestFilter(kinds: const [UserDelegationEntity.kind], limit: 1, authors: [pubkey]),
     );
 
-  return ref
-      .read(nostrNotifierProvider.notifier)
-      .requestEntity<UserDelegationEntity>(requestMessage);
+  return ref.read(nostrNotifierProvider.notifier).requestEntity<UserDelegationEntity>(
+      requestMessage,
+      actionSource: const ActionSourceIndexers());
 }
 
 @Riverpod(keepAlive: true)

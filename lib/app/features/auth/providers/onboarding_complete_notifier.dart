@@ -50,7 +50,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final avatarFileMetadataEvent = _buildAvatarFileMetadataEvent(keyStore: nostrKeyStore);
 
         await ref.read(nostrNotifierProvider.notifier).sendEvents([
-          // followListEvent,
+          followListEvent,
           interestSetEvent,
           interestsEvent,
           if (avatarFileMetadataEvent != null) avatarFileMetadataEvent,
@@ -60,7 +60,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         ]);
 
         <CacheableEntity>[
-          // FollowListEntity.fromEventMessage(followListEvent),
+          FollowListEntity.fromEventMessage(followListEvent),
           InterestSetEntity.fromEventMessage(interestSetEvent),
           InterestsEntity.fromEventMessage(interestsEvent),
           UserMetadataEntity.fromEventMessage(userMetadataEvent),
@@ -156,7 +156,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
     final interestsData = InterestsData(
       hashtags: [],
-      interestSetRefs: [interestSetEvent.id],
+      interestSetRefs: [interestSetData.toReplaceableEventReference(keyStore.publicKey)],
     );
 
     final interestsEvent = interestsData.toEventMessage(keyStore);
