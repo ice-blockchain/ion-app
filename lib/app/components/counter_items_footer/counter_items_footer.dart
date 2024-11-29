@@ -2,15 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/counter_items_footer/likes_counter_button.dart';
+import 'package:ion/app/components/counter_items_footer/replies_counter_button.dart';
+import 'package:ion/app/components/counter_items_footer/reposts_counter_button.dart';
+import 'package:ion/app/components/counter_items_footer/share_button.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/entity_likes_button.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/entity_replies_button.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/entity_reposts_button.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/entity_share_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 
-class FeedItemFooter extends HookConsumerWidget {
-  FeedItemFooter({
+class CounterItemsFooter extends HookConsumerWidget {
+  CounterItemsFooter({
     required this.eventReference,
     double? bottomPadding,
     double? topPadding,
@@ -32,24 +32,24 @@ class FeedItemFooter extends HookConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
-            child: EntityRepliesButton(
+            child: RepliesCounterButton(
               eventReference: eventReference,
               color: color,
             ),
           ),
           Flexible(
-            child: EntityRepostsButton(
+            child: RepostsCounterButton(
               eventReference: eventReference,
               color: color,
             ),
           ),
           Flexible(
-            child: EntityLikesButton(
+            child: LikesCounterButton(
               eventReference: eventReference,
               color: color,
             ),
           ),
-          EntityShareButton(
+          ShareButton(
             eventReference: eventReference,
             color: color,
           ),

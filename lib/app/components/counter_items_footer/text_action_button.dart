@@ -5,8 +5,8 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 
-class FeedItemActionButton extends StatelessWidget {
-  const FeedItemActionButton({
+class TextActionButton extends StatelessWidget {
+  const TextActionButton({
     required this.icon,
     required this.textColor,
     this.activeIcon,

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
 
 class VideoActions extends StatelessWidget {
@@ -19,7 +19,7 @@ class VideoActions extends StatelessWidget {
       height: 48.0.s,
       padding: EdgeInsets.symmetric(horizontal: 16.0.s),
       color: context.theme.appColors.primaryText,
-      child: FeedItemFooter(
+      child: CounterItemsFooter(
         bottomPadding: 0,
         topPadding: 0,
         eventReference: eventReference,

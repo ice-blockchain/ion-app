@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
-import 'package:ion/app/features/feed/views/components/feed_item/feed_item_footer/feed_item_footer.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
@@ -82,7 +82,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     ScreenSideOffset.small(child: const TextEditorPreview()),
                     const ArticleDetailsDateTopics(),
                     ScreenSideOffset.small(
-                      child: FeedItemFooter(
+                      child: CounterItemsFooter(
                         eventReference: eventReference,
                         bottomPadding: 10.0.s,
                       ),
