@@ -16,6 +16,7 @@ import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/quoted_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_cover.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_keyboard_scroll_handler.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
@@ -38,13 +39,9 @@ class CreatePostModal extends HookConsumerWidget {
   });
 
   final EventReference? parentEvent;
-
   final EventReference? quotedEvent;
-
   final String? content;
-
   final bool showCollapseButton;
-
   final String? videoPath;
 
   final visibilityToolbarKey = GlobalKey();
@@ -54,47 +51,11 @@ class CreatePostModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController(defaultText: content);
-    final keyboardVisibilityController = KeyboardVisibilityController();
     final scrollController = useScrollController();
 
-    useEffect(
-      () {
-        final subscription = keyboardVisibilityController.onChange.listen((isVisible) {
-          if (isVisible) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Future.delayed(const Duration(milliseconds: 100), () {
-                if (scrollController.hasClients) {
-                  final visibilityToolbarBox =
-                      visibilityToolbarKey.currentContext?.findRenderObject() as RenderBox?;
-                  final visibilityToolbarHeight = visibilityToolbarBox?.size.height ?? 0.0;
-
-                  final actionsToolbarBox =
-                      actionsToolbarKey.currentContext?.findRenderObject() as RenderBox?;
-                  final actionsToolbarHeight = actionsToolbarBox?.size.height ?? 0.0;
-
-                  final textInputBox =
-                      textInputKey.currentContext?.findRenderObject() as RenderBox?;
-                  final textInputHeight = textInputBox?.size.height ?? 0.0;
-
-                  final maxExtent = scrollController.position.maxScrollExtent +
-                      visibilityToolbarHeight +
-                      actionsToolbarHeight +
-                      textInputHeight;
-
-                  scrollController.animateTo(
-                    maxExtent,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOut,
-                  );
-                }
-              });
-            });
-          }
-        });
-
-        return subscription.cancel;
-      },
-      [],
+    useKeyboardScrollHandler(
+      scrollController: scrollController,
+      keysToMeasure: [visibilityToolbarKey, actionsToolbarKey, textInputKey],
     );
 
     final createOption = videoPath != null
@@ -124,9 +85,9 @@ class CreatePostModal extends HookConsumerWidget {
               ],
             ),
             Expanded(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: KeyboardDismissOnTap(
+              child: KeyboardDismissOnTap(
+                child: SingleChildScrollView(
+                  controller: scrollController,
                   child: ScreenSideOffset.small(
                     child: Column(
                       children: [
@@ -190,9 +151,7 @@ class CreatePostModal extends HookConsumerWidget {
     );
   }
 
-  Future<void> _showCancelCreationModal(
-    BuildContext context,
-  ) async {
+  Future<void> _showCancelCreationModal(BuildContext context) async {
     await showSimpleBottomSheet<void>(
       context: context,
       child: CancelCreationModal(

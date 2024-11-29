@@ -10,7 +10,7 @@ class VideoPreviewDuration extends StatelessWidget {
     super.key,
   });
 
-  final int duration;
+  final Duration duration;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class VideoPreviewDuration extends StatelessWidget {
               horizontal: 4.0.s,
             ),
             child: Text(
-              formatDuration(Duration(seconds: duration)),
+              formatDuration(duration),
               style: context.theme.appTextThemes.caption.copyWith(
                 color: context.theme.appColors.secondaryBackground,
                 fontSize: 12.0.s,

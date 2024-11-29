@@ -108,7 +108,9 @@ class VideoPreviewCover extends HookConsumerWidget {
                 Positioned(
                   left: 12.0.s,
                   bottom: 12.0.s,
-                  child: VideoPreviewDuration(duration: videoController.value.duration.inSeconds),
+                  child: VideoPreviewDuration(
+                    duration: Duration(seconds: videoController.value.duration.inSeconds),
+                  ),
                 ),
               ],
             ),
