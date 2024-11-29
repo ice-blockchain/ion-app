@@ -66,7 +66,7 @@ class IdleCameraPreview extends ConsumerWidget {
                   if (filePath == null) return;
 
                   if (MediaType.fromMimeType(mediaFiles.first.mimeType!) == MediaType.video) {
-                    filePath = await ref.read(openTrimmerScreenProvider(filePath).future);
+                    filePath = await ref.watch(banubaServiceProvider).openTrimmerScreen(filePath);
                   }
 
                   if (context.mounted) {

@@ -8,16 +8,24 @@ import 'package:ve_sdk_flutter/ve_sdk_flutter.dart';
 
 part 'banuba_service.g.dart';
 
+class BanubaService {
+  const BanubaService(this.env);
+  final Env env;
+
+  Future<String> openTrimmerScreen(String filePath) async {
+    final config = FeaturesConfigBuilder().build();
+
+    final exportResult = await VeSdkFlutter().openTrimmerScreen(
+      env.get<String>(EnvVariable.BANUBA_TOKEN),
+      config,
+      [filePath],
+    );
+
+    return exportResult?.videoSources.first ?? filePath;
+  }
+}
+
 @riverpod
-Future<String> openTrimmerScreen(Ref ref, String filePath) async {
-  final banubaToken = ref.watch(envProvider.notifier).get<String>(EnvVariable.BANUBA_TOKEN);
-  final config = FeaturesConfigBuilder().build();
-
-  final exportResult = await VeSdkFlutter().openTrimmerScreen(
-    banubaToken,
-    config,
-    [filePath],
-  );
-
-  return exportResult?.videoSources.first ?? filePath;
+BanubaService banubaService(Ref ref) {
+  return BanubaService(ref.watch(envProvider.notifier));
 }
