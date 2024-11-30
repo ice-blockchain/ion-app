@@ -25,7 +25,6 @@ class WalletsModal extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             NavigationAppBar.modal(
-              showBackButton: false,
               title: Text(context.i18n.wallet_wallets),
               actions: [
                 NavigationCloseButton(

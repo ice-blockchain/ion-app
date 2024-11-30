@@ -42,7 +42,6 @@ class ManageCoinsPage extends HookConsumerWidget {
       body: Column(
         children: [
           NavigationAppBar.modal(
-            showBackButton: false,
             title: Text(context.i18n.wallet_manage_coins),
             actions: [NavigationTextButton(label: context.i18n.core_done)],
           ),
