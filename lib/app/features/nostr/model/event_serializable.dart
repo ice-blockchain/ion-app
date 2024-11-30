@@ -3,5 +3,5 @@
 import 'package:nostr_dart/nostr_dart.dart';
 
 abstract class EventSerializable {
-  EventMessage toEventMessage(EventSigner signer);
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []});
 }

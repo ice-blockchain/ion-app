@@ -14,6 +14,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
   const factory UserRelaysEntity({
     required String id,
     required String pubkey,
+    required String? masterPubkey,
     required DateTime createdAt,
     required UserRelaysData data,
   }) = _UserRelaysEntity;
@@ -29,6 +30,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
     return UserRelaysEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
       createdAt: eventMessage.createdAt,
       data: UserRelaysData.fromEventMessage(eventMessage),
     );
@@ -54,16 +56,22 @@ class UserRelaysData with _$UserRelaysData implements EventSerializable {
 
   factory UserRelaysData.fromEventMessage(EventMessage eventMessage) {
     return UserRelaysData(
-      list: eventMessage.tags.where((tag) => tag[0] == 'r').map(UserRelay.fromTag).toList(),
+      list: [
+        for (final tag in eventMessage.tags)
+          if (tag[0] == UserRelay.tagName) UserRelay.fromTag(tag),
+      ],
     );
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: UserRelaysEntity.kind,
-      tags: list.map((relay) => relay.toTag()).toList(),
+      tags: [
+        ...tags,
+        ...list.map((relay) => relay.toTag()),
+      ],
       content: '',
     );
   }

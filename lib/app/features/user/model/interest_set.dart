@@ -19,6 +19,7 @@ class InterestSetEntity with _$InterestSetEntity, NostrEntity implements Cacheab
   const factory InterestSetEntity({
     required String id,
     required String pubkey,
+    required String? masterPubkey,
     required DateTime createdAt,
     required InterestSetData data,
   }) = _InterestSetEntity;
@@ -34,6 +35,7 @@ class InterestSetEntity with _$InterestSetEntity, NostrEntity implements Cacheab
     return InterestSetEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
       createdAt: eventMessage.createdAt,
       data: InterestSetData.fromEventMessage(eventMessage),
     );
@@ -71,11 +73,12 @@ class InterestSetData with _$InterestSetData implements EventSerializable {
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: InterestSetEntity.kind,
       tags: [
+        ...tags,
         ['d', type.toShortString()],
         ...hashtags.map((hashtag) => ['t', hashtag]),
       ],

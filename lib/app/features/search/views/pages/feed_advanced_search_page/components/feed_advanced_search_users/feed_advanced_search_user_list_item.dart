@@ -13,15 +13,15 @@ import 'package:ion/app/utils/username.dart';
 
 class FeedAdvancedSearchUserListItem extends ConsumerWidget {
   const FeedAdvancedSearchUserListItem({
-    required this.pubKey,
+    required this.pubkey,
     super.key,
   });
 
-  final String pubKey;
+  final String pubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadataValue = ref.watch(userMetadataProvider(pubKey)).valueOrNull?.data;
+    final userMetadataValue = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.data;
 
     if (userMetadataValue == null) {
       return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));
@@ -42,7 +42,7 @@ class FeedAdvancedSearchUserListItem extends ConsumerWidget {
             ntfAvatar: userMetadataValue.nft,
             profilePicture: userMetadataValue.picture,
             verifiedBadge: userMetadataValue.verified,
-            trailing: FollowUserButton(pubKey: pubKey),
+            trailing: FollowUserButton(pubkey: pubkey),
           ),
           if (about != null) ...[
             SizedBox(height: 10.0.s),

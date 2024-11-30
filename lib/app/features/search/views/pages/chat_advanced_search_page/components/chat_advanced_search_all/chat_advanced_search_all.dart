@@ -25,7 +25,7 @@ class ChatAdvancedSearchAll extends HookConsumerWidget {
           child: const HorizontalSeparator(),
         ),
         const ChatAdvancedSearchUserListItem(
-          pubKey: 'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
+          pubkey: 'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
         ),
         HorizontalSeparator(
           height: 16.0.s,

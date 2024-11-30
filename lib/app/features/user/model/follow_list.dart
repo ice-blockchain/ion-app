@@ -14,6 +14,7 @@ class FollowListEntity with _$FollowListEntity, NostrEntity implements Cacheable
   const factory FollowListEntity({
     required String id,
     required String pubkey,
+    required String? masterPubkey,
     required DateTime createdAt,
     required FollowListData data,
   }) = _FollowListEntity;
@@ -29,6 +30,7 @@ class FollowListEntity with _$FollowListEntity, NostrEntity implements Cacheable
     return FollowListEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
       createdAt: eventMessage.createdAt,
       data: FollowListData.fromEventMessage(eventMessage),
     );
@@ -52,18 +54,24 @@ class FollowListData with _$FollowListData implements EventSerializable {
 
   factory FollowListData.fromEventMessage(EventMessage eventMessage) {
     return FollowListData(
-      list: eventMessage.tags.map(Followee.fromTag).toList(),
+      list: [
+        for (final tag in eventMessage.tags)
+          if (tag[0] == Followee.tagName) Followee.fromTag(tag),
+      ],
     );
   }
 
   const FollowListData._();
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: FollowListEntity.kind,
-      tags: list.map((followee) => followee.toTag()).toList(),
+      tags: [
+        ...tags,
+        ...list.map((followee) => followee.toTag()),
+      ],
       content: '',
     );
   }

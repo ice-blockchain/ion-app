@@ -11,15 +11,15 @@ import 'package:ion/generated/assets.gen.dart';
 
 class ChatAdvancedSearchUserListItem extends ConsumerWidget {
   const ChatAdvancedSearchUserListItem({
-    required this.pubKey,
+    required this.pubkey,
     super.key,
   });
 
-  final String pubKey;
+  final String pubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadataValue = ref.watch(userMetadataProvider(pubKey)).valueOrNull?.data;
+    final userMetadataValue = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.data;
 
     if (userMetadataValue == null) {
       return const SizedBox.shrink();

@@ -19,6 +19,7 @@ class EventCountRequestEntity
   const factory EventCountRequestEntity({
     required String id,
     required String pubkey,
+    required String? masterPubkey,
     required DateTime createdAt,
     required EventCountRequestData data,
   }) = _EventCountRequestEntity;
@@ -34,6 +35,7 @@ class EventCountRequestEntity
     return EventCountRequestEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
       createdAt: eventMessage.createdAt,
       data: EventCountRequestData.fromEventMessage(eventMessage),
     );
@@ -67,12 +69,12 @@ class EventCountRequestData with _$EventCountRequestData implements EventSeriali
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: EventCountRequestEntity.kind,
       content: filter.toString(),
-      tags: params.toTags(),
+      tags: [...tags, ...params.toTags()],
     );
   }
 }

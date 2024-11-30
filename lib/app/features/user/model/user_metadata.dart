@@ -18,6 +18,7 @@ class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements Cache
   const factory UserMetadataEntity({
     required String id,
     required String pubkey,
+    required String? masterPubkey,
     required DateTime createdAt,
     required UserMetadata data,
   }) = _UserMetadataEntity;
@@ -33,6 +34,7 @@ class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements Cache
     return UserMetadataEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
       createdAt: eventMessage.createdAt,
       data: UserMetadata.fromEventMessage(eventMessage),
     );
@@ -89,7 +91,7 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: UserMetadataEntity.kind,
@@ -104,7 +106,10 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
           bot: bot,
         ).toJson(),
       ),
-      tags: media.values.map((attachment) => attachment.toTag()).toList(),
+      tags: [
+        ...tags,
+        for (final attachment in media.values) attachment.toTag(),
+      ],
     );
   }
 }

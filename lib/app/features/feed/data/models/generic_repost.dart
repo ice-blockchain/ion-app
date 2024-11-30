@@ -14,6 +14,7 @@ class GenericRepostEntity with _$GenericRepostEntity, NostrEntity implements Cac
   const factory GenericRepostEntity({
     required String id,
     required String pubkey,
+    required String? masterPubkey,
     required DateTime createdAt,
     required GenericRepostData data,
   }) = _GenericRepostEntity;
@@ -29,6 +30,7 @@ class GenericRepostEntity with _$GenericRepostEntity, NostrEntity implements Cac
     return GenericRepostEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
       createdAt: eventMessage.createdAt,
       data: GenericRepostData.fromEventMessage(eventMessage),
     );
@@ -82,12 +84,13 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: GenericRepostEntity.kind,
       content: '',
       tags: [
+        ...tags,
         ['p', pubkey],
         ['e', eventId],
         ['k', kind.toString()],

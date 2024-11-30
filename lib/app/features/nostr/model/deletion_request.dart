@@ -16,12 +16,13 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
 
   /// https://github.com/nostr-protocol/nips/blob/master/09.md
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: kind,
       content: '',
       tags: [
+        ...tags,
         for (final event in events) ...event.toTags(),
       ],
     );

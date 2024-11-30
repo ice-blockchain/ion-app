@@ -16,6 +16,7 @@ class UserDelegationEntity with _$UserDelegationEntity, NostrEntity implements C
   const factory UserDelegationEntity({
     required String id,
     required String pubkey,
+    required String? masterPubkey,
     required DateTime createdAt,
     required UserDelegationData data,
   }) = _UserDelegationEntity;
@@ -31,6 +32,7 @@ class UserDelegationEntity with _$UserDelegationEntity, NostrEntity implements C
     return UserDelegationEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
       createdAt: eventMessage.createdAt,
       data: UserDelegationData.fromEventMessage(eventMessage),
     );
@@ -114,14 +116,14 @@ class UserDelegate with _$UserDelegate {
     final kindsString = (attestation.length > 2) ? attestation[2] : null;
 
     final status = DelegationStatus.values.byName(statusName);
-    final time = DateTime.fromMicrosecondsSinceEpoch(int.parse(timestamp));
+    final time = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp) * 1000);
     final kinds = kindsString?.split(',').map(int.parse).toList();
 
     return UserDelegate(pubkey: pubkey, relay: relay, status: status, time: time, kinds: kinds);
   }
 
   List<String> toTag() {
-    final attestationParts = [status.toShortString(), time.microsecondsSinceEpoch];
+    final attestationParts = [status.toShortString(), time.millisecondsSinceEpoch ~/ 1000];
     if (kinds.emptyOrValue.isNotEmpty) {
       attestationParts.add(kinds!.join(','));
     }

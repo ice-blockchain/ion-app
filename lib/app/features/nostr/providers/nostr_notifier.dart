@@ -15,6 +15,7 @@ import 'package:ion/app/features/nostr/providers/relays_provider.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.dart';
+import 'package:ion/app/features/wallets/providers/main_wallet_provider.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
 import 'package:nostr_dart/nostr_dart.dart' as nd;
@@ -100,12 +101,22 @@ class NostrNotifier extends _$NostrNotifier {
 
   EventMessage sign(EventSerializable entityData) {
     final keyStore = ref.read(currentUserNostrKeyStoreProvider).valueOrNull;
+    final mainWallet = ref.read(mainWalletProvider).valueOrNull;
 
     if (keyStore == null) {
       throw KeystoreNotFoundException();
     }
 
-    return entityData.toEventMessage(keyStore);
+    if (mainWallet == null) {
+      throw MainWalletNotFoundException();
+    }
+
+    return entityData.toEventMessage(
+      keyStore,
+      tags: [
+        ['b', mainWallet.signingKey.publicKey],
+      ],
+    );
   }
 
   Future<NostrRelay> _getRelay(ActionSource actionSource) async {

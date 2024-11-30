@@ -37,7 +37,7 @@ class ChatAdvancedSearchUsers extends HookConsumerWidget {
                   SizedBox(
                     height: 12.0.s,
                   ),
-                ChatAdvancedSearchUserListItem(pubKey: pubKeys[index]),
+                ChatAdvancedSearchUserListItem(pubkey: pubKeys[index]),
                 HorizontalSeparator(
                   height: 16.0.s,
                 ),

@@ -57,7 +57,7 @@ class ChatSimpleSearchPage extends ConsumerWidget {
                             ref.read(chatSearchHistoryProvider.notifier).clear();
                           },
                           itemBuilder: (context, index) =>
-                              FeedSearchHistoryUserListItem(pubKey: pubKeys![index]),
+                              FeedSearchHistoryUserListItem(pubkey: pubKeys![index]),
                         )
                   : pubKeys.isEmpty
                       ? NothingIsFound(

@@ -100,9 +100,10 @@ class DiscoverCreators extends HookConsumerWidget {
                   label: Text(context.i18n.button_continue),
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
-                    ref.read(onboardingDataProvider.notifier).followees =
-                        selectedCreators.map((creator) => creator.pubkey).toList();
-
+                    ref.read(onboardingDataProvider.notifier).followees = [
+                      for (final creator in selectedCreators)
+                        if (creator.masterPubkey != null) creator.masterPubkey!,
+                    ];
                     guardPasskeyDialog(
                       context,
                       (child) => RiverpodPasskeyRequestBuilder(

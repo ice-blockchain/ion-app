@@ -22,7 +22,7 @@ class FeedSearchResults extends ConsumerWidget {
         padding: EdgeInsets.symmetric(vertical: listVerticalOffset),
         itemCount: pubKeys.length,
         itemBuilder: (context, index) {
-          return FeedSearchResultsListItem(pubKey: pubKeys[index]);
+          return FeedSearchResultsListItem(pubkey: pubKeys[index]);
         },
       ),
     );

@@ -13,6 +13,7 @@ class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity
   const factory ArticleEntity({
     required String id,
     required String pubkey,
+    required String? masterPubkey,
     required DateTime createdAt,
     required ArticleData data,
   }) = _ArticleEntity;
@@ -27,6 +28,7 @@ class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity
     return ArticleEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
       createdAt: eventMessage.createdAt,
       data: ArticleData.fromEventMessage(eventMessage),
     );
@@ -83,11 +85,12 @@ class ArticleData implements EventSerializable {
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: ArticleEntity.kind,
       tags: [
+        ...tags,
         if (title != null) ['title', title!],
         if (image != null) ['image', image!],
         if (summary != null) ['summary', summary!],

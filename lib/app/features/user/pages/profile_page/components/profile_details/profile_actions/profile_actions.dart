@@ -33,7 +33,7 @@ class ProfileActions extends HookConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FollowUserButton(
-          pubKey: pubkey,
+          pubkey: pubkey,
         ),
         SizedBox(width: 8.0.s),
         ProfileAction(

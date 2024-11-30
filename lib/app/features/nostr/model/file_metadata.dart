@@ -14,6 +14,7 @@ class FileMetadataEntity with _$FileMetadataEntity, NostrEntity implements Cache
   const factory FileMetadataEntity({
     required String id,
     required String pubkey,
+    required String? masterPubkey,
     required DateTime createdAt,
     required FileMetadata data,
   }) = _FileMetadataEntity;
@@ -29,6 +30,7 @@ class FileMetadataEntity with _$FileMetadataEntity, NostrEntity implements Cache
     return FileMetadataEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
       createdAt: eventMessage.createdAt,
       data: FileMetadata.fromEventMessage(eventMessage),
     );
@@ -153,27 +155,26 @@ class FileMetadata with _$FileMetadata implements EventSerializable {
   const FileMetadata._();
 
   @override
-  EventMessage toEventMessage(EventSigner keyStore) {
-    final tags = [
-      ['url', url],
-      ['m', mimeType],
-      ['x', fileHash],
-      ['ox', originalFileHash],
-      if (size != null) ['size', size.toString()],
-      if (dimension != null) ['dim', dimension!],
-      if (magnet != null) ['magnet', magnet!],
-      if (torrentInfoHash != null) ['i', torrentInfoHash!],
-      if (blurhash != null) ['blurhash', blurhash!],
-      if (thumb != null) ['thumb', thumb!],
-      if (image != null) ['image', image!],
-      if (summary != null) ['summary', summary!],
-      if (alt != null) ['alt', alt!],
-    ];
-
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
-      signer: keyStore,
+      signer: signer,
       kind: FileMetadataEntity.kind,
-      tags: tags,
+      tags: [
+        ...tags,
+        ['url', url],
+        ['m', mimeType],
+        ['x', fileHash],
+        ['ox', originalFileHash],
+        if (size != null) ['size', size.toString()],
+        if (dimension != null) ['dim', dimension!],
+        if (magnet != null) ['magnet', magnet!],
+        if (torrentInfoHash != null) ['i', torrentInfoHash!],
+        if (blurhash != null) ['blurhash', blurhash!],
+        if (thumb != null) ['thumb', thumb!],
+        if (image != null) ['image', image!],
+        if (summary != null) ['summary', summary!],
+        if (alt != null) ['alt', alt!],
+      ],
       content: caption,
     );
   }

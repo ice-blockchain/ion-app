@@ -32,7 +32,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final (relayUrls, nostrKeyStore) =
             await (_assignUserRelays(), _generateNostrKeyStore()).wait;
 
-        final userRelaysEvent = _buildUserRelays(keyStore: nostrKeyStore, relayUrls: relayUrls);
+        final userRelaysEvent = _buildUserRelays(relayUrls: relayUrls);
 
         // Add user relays to cache first because other actions rely on it
         ref
@@ -41,22 +41,23 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
         final userDelegationEvent = await _buildUserDelegation(keyStore: nostrKeyStore);
 
-        final userMetadataEvent = _buildUserMetadata(keyStore: nostrKeyStore);
+        final userMetadataEvent = _buildUserMetadata();
 
-        final (:interestSetEvent, :interestsEvent) = _buildUserLanguages(keyStore: nostrKeyStore);
+        final (:interestSetEvent, :interestsEvent) = _buildUserLanguages();
 
-        final followListEvent = _buildFollowList(keyStore: nostrKeyStore);
+        final followListEvent = _buildFollowList();
 
-        final avatarFileMetadataEvent = _buildAvatarFileMetadataEvent(keyStore: nostrKeyStore);
+        final avatarFileMetadataEvent = _buildAvatarFileMetadataEvent();
 
         await ref.read(nostrNotifierProvider.notifier).sendEvents([
+          // Delegation should be first
+          userDelegationEvent,
           followListEvent,
           interestSetEvent,
           interestsEvent,
-          if (avatarFileMetadataEvent != null) avatarFileMetadataEvent,
           userRelaysEvent,
           userMetadataEvent,
-          userDelegationEvent,
+          if (avatarFileMetadataEvent != null) avatarFileMetadataEvent,
         ]);
 
         <CacheableEntity>[
@@ -100,22 +101,15 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return nostrKeyStore;
   }
 
-  EventMessage _buildUserRelays({
-    required KeyStore keyStore,
-    required List<String> relayUrls,
-  }) {
+  EventMessage _buildUserRelays({required List<String> relayUrls}) {
     final userRelays = UserRelaysData(
       list: relayUrls.map((url) => UserRelay(url: url)).toList(),
     );
 
-    final userRelaysEvent = userRelays.toEventMessage(keyStore);
-
-    return userRelaysEvent;
+    return ref.read(nostrNotifierProvider.notifier).sign(userRelays);
   }
 
-  EventMessage _buildUserMetadata({
-    required KeyStore keyStore,
-  }) {
+  EventMessage _buildUserMetadata() {
     final OnboardingState(:name, :displayName, :avatarMediaAttachment) =
         ref.read(onboardingDataProvider);
 
@@ -135,12 +129,10 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
           avatarMediaAttachment != null ? {avatarMediaAttachment.url: avatarMediaAttachment} : {},
     );
 
-    return userMetadata.toEventMessage(keyStore);
+    return ref.read(nostrNotifierProvider.notifier).sign(userMetadata);
   }
 
-  ({EventMessage interestSetEvent, EventMessage interestsEvent}) _buildUserLanguages({
-    required KeyStore keyStore,
-  }) {
+  ({EventMessage interestSetEvent, EventMessage interestsEvent}) _buildUserLanguages() {
     final OnboardingState(:languages) = ref.read(onboardingDataProvider);
 
     if (languages == null || languages.isEmpty) {
@@ -152,14 +144,14 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       hashtags: languages,
     );
 
-    final interestSetEvent = interestSetData.toEventMessage(keyStore);
+    final interestSetEvent = ref.read(nostrNotifierProvider.notifier).sign(interestSetData);
 
     final interestsData = InterestsData(
       hashtags: [],
-      interestSetRefs: [interestSetData.toReplaceableEventReference(keyStore.publicKey)],
+      interestSetRefs: [interestSetData.toReplaceableEventReference(interestSetEvent.pubkey)],
     );
 
-    final interestsEvent = interestsData.toEventMessage(keyStore);
+    final interestsEvent = ref.read(nostrNotifierProvider.notifier).sign(interestsData);
 
     return (interestSetEvent: interestSetEvent, interestsEvent: interestsEvent);
   }
@@ -176,9 +168,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         .buildDelegationEventFrom(userDelegationData);
   }
 
-  EventMessage _buildFollowList({
-    required KeyStore keyStore,
-  }) {
+  EventMessage _buildFollowList() {
     final onboardingData = ref.read(onboardingDataProvider);
 
     var followees = onboardingData.followees;
@@ -193,12 +183,16 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       list: followees == null ? [] : followees.map((pubkey) => Followee(pubkey: pubkey)).toList(),
     );
 
-    return followListData.toEventMessage(keyStore);
+    return ref.read(nostrNotifierProvider.notifier).sign(followListData);
   }
 
   static const String followeesListPersistanceKey = 'OnboardingCompleteNotifier:followees';
 
-  EventMessage? _buildAvatarFileMetadataEvent({required KeyStore keyStore}) {
-    return ref.read(onboardingDataProvider).avatarFileMetadata?.toEventMessage(keyStore);
+  EventMessage? _buildAvatarFileMetadataEvent() {
+    final fileMetadata = ref.read(onboardingDataProvider).avatarFileMetadata;
+
+    if (fileMetadata == null) return null;
+
+    return ref.read(nostrNotifierProvider.notifier).sign(fileMetadata);
   }
 }

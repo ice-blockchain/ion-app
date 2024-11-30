@@ -14,6 +14,7 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
   const factory RepostEntity({
     required String id,
     required String pubkey,
+    required String? masterPubkey,
     required DateTime createdAt,
     required RepostData data,
   }) = _RepostEntity;
@@ -29,6 +30,7 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
     return RepostEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
       createdAt: eventMessage.createdAt,
       data: RepostData.fromEventMessage(eventMessage),
     );
@@ -77,12 +79,13 @@ class RepostData with _$RepostData implements EventSerializable {
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: RepostEntity.kind,
       content: '',
       tags: [
+        ...tags,
         ['p', pubkey],
         ['e', eventId],
       ],

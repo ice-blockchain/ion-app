@@ -41,10 +41,10 @@ Future<FollowListEntity?> currentUserFollowList(Ref ref) async {
 }
 
 @riverpod
-bool isCurrentUserFollowingSelector(Ref ref, String pubKey) {
+bool isCurrentUserFollowingSelector(Ref ref, String pubkey) {
   return ref.watch(
     currentUserFollowListProvider.select(
-      (state) => state.valueOrNull?.pubkeys.contains(pubKey) ?? false,
+      (state) => state.valueOrNull?.pubkeys.contains(pubkey) ?? false,
     ),
   );
 }
