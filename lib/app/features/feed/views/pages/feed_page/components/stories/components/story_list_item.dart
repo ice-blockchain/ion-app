@@ -36,42 +36,48 @@ class StoryListItem extends HookConsumerWidget {
 
         return GestureDetector(
           onTap: () => StoryViewerRoute(pubkey: pubkey).push<void>(context),
-          child: SizedBox(
-            width: width,
-            height: height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.bottomCenter,
+          child: Hero(
+            tag: 'story-$pubkey',
+            child: Material(
+              color: Colors.transparent,
+              child: SizedBox(
+                width: width,
+                height: height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    StoryColoredBorder(
-                      size: width,
-                      color: context.theme.appColors.strokeElements,
-                      gradient: viewed.value ? null : gradient,
-                      child: StoryColoredBorder(
-                        size: width - borderSize * 2,
-                        color: context.theme.appColors.secondaryBackground,
-                        child: Avatar(
-                          size: width - borderSize * 4,
-                          imageUrl: userMetadata.data.picture,
+                    Stack(
+                      clipBehavior: Clip.none,
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        StoryColoredBorder(
+                          size: width,
+                          color: context.theme.appColors.strokeElements,
+                          gradient: viewed.value ? null : gradient,
+                          child: StoryColoredBorder(
+                            size: width - borderSize * 2,
+                            color: context.theme.appColors.secondaryBackground,
+                            child: Avatar(
+                              size: width - borderSize * 4,
+                              imageUrl: userMetadata.data.picture,
+                            ),
+                          ),
                         ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2.0.s),
+                      child: Text(
+                        userMetadata.data.name,
+                        style: context.theme.appTextThemes.caption3.copyWith(
+                          color: context.theme.appColors.primaryText,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 2.0.s),
-                  child: Text(
-                    userMetadata.data.name,
-                    style: context.theme.appTextThemes.caption3.copyWith(
-                      color: context.theme.appColors.primaryText,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         );
