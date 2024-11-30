@@ -13,7 +13,7 @@ class ImageStoryViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: path,
-      fit: BoxFit.contain,
+      fit: BoxFit.fill,
       width: double.infinity,
       filterQuality: FilterQuality.high,
       progressIndicatorBuilder: (_, __, ___) => const CenteredLoadingIndicator(),
