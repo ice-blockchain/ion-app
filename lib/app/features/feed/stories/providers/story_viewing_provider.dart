@@ -50,9 +50,12 @@ class StoryViewingController extends _$StoryViewingController {
 
   void moveToUser(int userIndex) {
     if (userIndex >= 0 && userIndex < state.userStories.length) {
+      final newStoryIndex =
+          userIndex > state.currentUserIndex ? 0 : state.userStories[userIndex].stories.length - 1;
+
       state = state.copyWith(
         currentUserIndex: userIndex,
-        currentStoryIndex: 0,
+        currentStoryIndex: newStoryIndex,
       );
     }
   }
