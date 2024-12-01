@@ -29,7 +29,7 @@ class WebsiteInput extends StatelessWidget {
       labelText: context.i18n.profile_website,
       initialValue: initialValue,
       validator: (String? value) {
-        if (Validators.isEmpty(value)) return '';
+        if (Validators.isEmpty(value)) return null;
         if (Validators.isInvalidUrl(value)) {
           return context.i18n.error_website_invalid;
         }
