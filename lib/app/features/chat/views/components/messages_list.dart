@@ -109,7 +109,7 @@ class ChatMessagesList extends StatelessWidget {
             link: (message) => UrlPreviewMessage(
               isMe: isMe,
               url: message.link,
-              reactions: mockReactionsMany,
+              reactions: mockReactionsSimple,
               author: authorToDisplay,
               isLastMessageFromSender: isLastMessageFromSender,
             ),
@@ -121,7 +121,7 @@ class ChatMessagesList extends StatelessWidget {
             ),
             poll: (message) => PollMessage(
               isMe: isMe,
-              reactions: mockReactionsMany,
+              reactions: mockReactionsSimple,
               author: authorToDisplay,
               isLastMessageFromSender: isLastMessageFromSender,
             ),

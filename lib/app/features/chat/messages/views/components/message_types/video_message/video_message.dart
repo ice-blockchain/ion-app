@@ -23,20 +23,38 @@ class VideoMessage extends HookConsumerWidget {
     this.reactions,
     super.key,
   });
+
   final bool isMe;
   final String? message;
   final String videoUrl;
   final bool isLastMessageFromSender;
   final MessageAuthor? author;
   final List<MessageReactionGroup>? reactions;
-  static double get padding => 8.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final maxContentWidth = 272.0.s;
+    final maxVideoHeight = 340.0.s;
+
     useAutomaticKeepAlive();
 
-    final containerKey = useRef<GlobalKey>(GlobalKey());
-    final videoWidth = useState<double>(0);
+    final contentWidth = useState<double>(maxContentWidth);
+    final videoController = ref.watch(videoControllerProvider(videoUrl, looping: true));
+
+    // Identify acceptable video width to limit message content width
+    if (videoController.value.isInitialized) {
+      final aspectRatio = videoController.value.aspectRatio;
+
+      var adjustedWidth = maxContentWidth;
+      var adjustedHeight = adjustedWidth / aspectRatio;
+
+      if (adjustedHeight > maxVideoHeight) {
+        adjustedHeight = maxVideoHeight;
+        adjustedWidth = adjustedHeight * aspectRatio;
+      }
+
+      contentWidth.value = adjustedWidth;
+    }
 
     return MessageItemWrapper(
       isMe: isMe,
@@ -61,17 +79,33 @@ class VideoMessage extends HookConsumerWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12.0.s),
                   child: VideoPreview(videoUrl: videoUrl),
+      contentPadding: EdgeInsets.all(8.0.s),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: contentWidth.value,
+        ),
+        child: Column(
+          children: [
+            MessageAuthorNameWidget(author: author),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: maxVideoHeight,
+                maxWidth: maxContentWidth,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0.s),
+                child: VideoPreview(
+                  controller: videoController,
                 ),
               ),
-              _MessageWithTimestamp(
-                key: containerKey.value,
-                message: message ?? '',
-                isMe: isMe,
-                reactions: reactions,
-              ),
-            ],
-          );
-        },
+            ),
+            _MessageWithTimestamp(
+              isMe: isMe,
+              message: message ?? '',
+              reactions: reactions,
+            ),
+          ],
+        ),
       ),
     );
   }

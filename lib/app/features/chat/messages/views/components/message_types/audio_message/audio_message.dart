@@ -79,10 +79,27 @@ class AudioMessage extends HookConsumerWidget {
       [],
     );
 
+    final metadataWidth = useState<double>(0);
+    final metadataKey = useMemoized(GlobalKey.new);
+    final contentPadding = EdgeInsets.all(12.0.s);
+
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final renderBox = metadataKey.currentContext?.findRenderObject() as RenderBox?;
+          if (renderBox != null) {
+            metadataWidth.value = renderBox.size.width;
+          }
+        });
+        return null;
+      },
+      [metadataKey],
+    );
+
     return MessageItemWrapper(
       isMe: isMe,
       isLastMessageFromSender: isLastMessageFromSender,
-      contentPadding: EdgeInsets.all(12.0.s),
+      contentPadding: contentPadding,
       child: VisibilityDetector(
         key: ValueKey(audioUrl),
         onVisibilityChanged: (info) {
@@ -113,10 +130,17 @@ class AudioMessage extends HookConsumerWidget {
                     ),
                   ],
                 ),
-                MessageReactions(reactions: reactions),
+                SizedBox(
+                  width:
+                      MessageItemWrapper.maxWidth - contentPadding.horizontal - metadataWidth.value,
+                  child: MessageReactions(reactions: reactions),
+                ),
               ],
             ),
-            MessageMetaData(isMe: isMe),
+            MessageMetaData(
+              key: metadataKey,
+              isMe: isMe,
+            ),
           ],
         ),
       ),
