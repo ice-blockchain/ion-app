@@ -73,8 +73,6 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
           UserMetadataEntity.fromEventMessage(userMetadataEvent),
           UserDelegationEntity.fromEventMessage(userDelegationEvent),
         ].forEach(ref.read(nostrCacheProvider.notifier).cache);
-
-        ref.read(onboardingDataProvider.notifier).reset();
       },
     );
   }

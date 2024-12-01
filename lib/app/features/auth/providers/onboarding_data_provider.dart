@@ -24,7 +24,7 @@ class OnboardingState with _$OnboardingState {
   factory OnboardingState.fromJson(Map<String, dynamic> json) => _$OnboardingStateFromJson(json);
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 class OnboardingData extends _$OnboardingData {
   @override
   OnboardingState build() {
@@ -78,10 +78,6 @@ class OnboardingData extends _$OnboardingData {
     }
 
     return OnboardingState.fromJson(json.decode(savedState) as Map<String, dynamic>);
-  }
-
-  void reset() {
-    state = const OnboardingState();
   }
 
   static const _onboardingPersistanceKey = 'onboarding_data';
