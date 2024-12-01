@@ -31,6 +31,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
+        final delegationTime = DateTime.now();
+
         final (relayUrls, nostrKeyStore) =
             await (_assignUserRelays(), _generateNostrKeyStore()).wait;
 
@@ -42,7 +44,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
             .cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
 
         final (userDelegationEvent, uploadedAvatar) = await (
-          _buildUserDelegation(pubkey: nostrKeyStore.publicKey),
+          _buildUserDelegation(pubkey: nostrKeyStore.publicKey, delegationTime: delegationTime),
           _uploadAvatar(),
         ).wait;
 
@@ -149,10 +151,11 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
   Future<EventMessage> _buildUserDelegation({
     required String pubkey,
+    DateTime? delegationTime,
   }) async {
     final userDelegationData = await ref
         .read(userDelegationManagerProvider.notifier)
-        .buildCurrentUserDelegationDataWith(pubkey: pubkey);
+        .buildCurrentUserDelegationDataWith(pubkey: pubkey, delegationTime: delegationTime);
 
     return ref
         .read(userDelegationManagerProvider.notifier)

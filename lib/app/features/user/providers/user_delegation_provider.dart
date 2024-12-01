@@ -59,7 +59,10 @@ class UserDelegationManager extends _$UserDelegationManager {
   @override
   FutureOr<void> build() {}
 
-  Future<UserDelegationData> buildCurrentUserDelegationDataWith({required String pubkey}) async {
+  Future<UserDelegationData> buildCurrentUserDelegationDataWith({
+    required String pubkey,
+    DateTime? delegationTime,
+  }) async {
     final delegation = (await ref.read(currentUserDelegationProvider.future))?.data ??
         const UserDelegationData(delegates: []);
 
@@ -68,7 +71,7 @@ class UserDelegationManager extends _$UserDelegationManager {
         ...delegation.delegates,
         UserDelegate(
           pubkey: pubkey,
-          time: DateTime.now(),
+          time: delegationTime ?? DateTime.now(),
           status: DelegationStatus.active,
         ),
       ],
