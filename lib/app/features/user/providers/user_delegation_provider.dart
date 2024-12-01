@@ -68,8 +68,7 @@ class UserDelegationManager extends _$UserDelegationManager {
         ...delegation.delegates,
         UserDelegate(
           pubkey: pubkey,
-          // TODO:PASS TIME AS PARAM!!
-          time: DateTime.now().subtract(const Duration(minutes: 10)),
+          time: DateTime.now(),
           status: DelegationStatus.active,
         ),
       ],

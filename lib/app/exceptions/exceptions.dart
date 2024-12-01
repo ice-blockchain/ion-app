@@ -86,10 +86,6 @@ class EventNotFoundException extends IONException {
       : super(10016, 'Event with id $eventId not found for pubkey $pubkey');
 }
 
-class AssetEntityNotFoundException extends IONException {
-  AssetEntityNotFoundException() : super(10017, 'Asset entity not found');
-}
-
 class AssetEntityFileNotFoundException extends IONException {
   AssetEntityFileNotFoundException() : super(10018, 'Asset entity file not found');
 }
@@ -112,4 +108,9 @@ class UnsupportedSignatureAlgorithmException extends IONException {
 class MasterPubkeyNotFoundException extends IONException {
   MasterPubkeyNotFoundException({required String eventId})
       : super(10022, 'Master pubkey is not found in event $eventId');
+}
+
+class RequiredFieldIsEmptyException extends IONException {
+  RequiredFieldIsEmptyException({required String field})
+      : super(10023, 'Required field is empty $field');
 }

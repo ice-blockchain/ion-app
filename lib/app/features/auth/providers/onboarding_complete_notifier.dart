@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -32,14 +33,16 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final (relayUrls, nostrKeyStore) =
             await (_assignUserRelays(), _generateNostrKeyStore()).wait;
 
+        // Build user delegation first to ensure that all subsequent events
+        // have a createdAt timestamp after the delegation's attestation
+        final userDelegationEvent = await _buildUserDelegation(pubkey: nostrKeyStore.publicKey);
+
         final userRelaysEvent = _buildUserRelays(relayUrls: relayUrls);
 
-        // Add user relays to cache first because other actions rely on it
+        // Add user relays to cache because it will be used to `sendEvents`
         ref
             .read(nostrCacheProvider.notifier)
             .cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
-
-        final userDelegationEvent = await _buildUserDelegation(keyStore: nostrKeyStore);
 
         final userMetadataEvent = _buildUserMetadata();
 
@@ -52,10 +55,10 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         await ref.read(nostrNotifierProvider.notifier).sendEvents([
           // Delegation should be first
           userDelegationEvent,
+          userRelaysEvent,
           followListEvent,
           interestSetEvent,
           interestsEvent,
-          userRelaysEvent,
           userMetadataEvent,
           if (avatarFileMetadataEvent != null) avatarFileMetadataEvent,
         ]);
@@ -114,11 +117,11 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         ref.read(onboardingDataProvider);
 
     if (name == null) {
-      throw Exception('Failed to create user metadata, name is empty');
+      throw RequiredFieldIsEmptyException(field: 'name');
     }
 
     if (displayName == null) {
-      throw Exception('Failed to create user metadata, display name is empty');
+      throw RequiredFieldIsEmptyException(field: 'displayName');
     }
 
     final userMetadata = UserMetadata(
@@ -136,7 +139,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     final OnboardingState(:languages) = ref.read(onboardingDataProvider);
 
     if (languages == null || languages.isEmpty) {
-      throw Exception('Failed to create user interests, languages is null or empty');
+      throw RequiredFieldIsEmptyException(field: 'languages');
     }
 
     final interestSetData = InterestSetData(
@@ -157,11 +160,11 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   }
 
   Future<EventMessage> _buildUserDelegation({
-    required KeyStore keyStore,
+    required String pubkey,
   }) async {
     final userDelegationData = await ref
         .read(userDelegationManagerProvider.notifier)
-        .buildCurrentUserDelegationDataWith(pubkey: keyStore.publicKey);
+        .buildCurrentUserDelegationDataWith(pubkey: pubkey);
 
     return ref
         .read(userDelegationManagerProvider.notifier)

@@ -14,6 +14,9 @@ PostEntity generateFakePost() {
       signer: keyStore,
       kind: PostEntity.kind,
       content: _fakeFeedMessages.elementAt(random.nextInt(_fakeFeedMessages.length)),
+      tags: const [
+        ['b', ''],
+      ],
     ),
   );
   return postEntity.copyWith(

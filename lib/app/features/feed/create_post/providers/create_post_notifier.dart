@@ -123,7 +123,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<UploadResult> _uploadImage(String imageId) async {
     final assetEntity = await ref.read(assetEntityProvider(imageId).future);
     if (assetEntity == null) {
-      throw AssetEntityNotFoundException();
+      throw AssetEntityFileNotFoundException();
     }
 
     final file = await assetEntity.file;
