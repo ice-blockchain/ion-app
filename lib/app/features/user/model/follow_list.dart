@@ -36,7 +36,7 @@ class FollowListEntity with _$FollowListEntity, NostrEntity implements Cacheable
     );
   }
 
-  List<String> get pubkeys => data.list.map((followee) => followee.pubkey).toList();
+  List<String> get masterPubkeys => data.list.map((followee) => followee.masterPubkey).toList();
 
   @override
   String get cacheKey => cacheKeyBuilder(pubkey: pubkey);
@@ -80,7 +80,7 @@ class FollowListData with _$FollowListData implements EventSerializable {
 @freezed
 class Followee with _$Followee {
   const factory Followee({
-    required String pubkey,
+    required String masterPubkey,
     @Default('') String relayUrl,
     @Default('') String petname,
   }) = _Followee;
@@ -91,11 +91,11 @@ class Followee with _$Followee {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
-    return Followee(pubkey: tag[1], relayUrl: tag[2], petname: tag[3]);
+    return Followee(masterPubkey: tag[1], relayUrl: tag[2], petname: tag[3]);
   }
 
   List<String> toTag() {
-    return [tagName, pubkey, relayUrl, petname];
+    return [tagName, masterPubkey, relayUrl, petname];
   }
 
   static const String tagName = 'p';

@@ -166,7 +166,9 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     final OnboardingState(:followees) = ref.read(onboardingDataProvider);
 
     final followListData = FollowListData(
-      list: followees == null ? [] : followees.map((pubkey) => Followee(pubkey: pubkey)).toList(),
+      list: followees == null
+          ? []
+          : followees.map((masterPubkey) => Followee(masterPubkey: masterPubkey)).toList(),
     );
 
     return ref.read(nostrNotifierProvider.notifier).sign(followListData);

@@ -105,12 +105,17 @@ class UnsupportedSignatureAlgorithmException extends IONException {
       : super(10021, 'Unsupported signature algorithm - $algorithm');
 }
 
-class MasterPubkeyNotFoundException extends IONException {
-  MasterPubkeyNotFoundException({required String eventId})
+class EventMasterPubkeyNotFoundException extends IONException {
+  EventMasterPubkeyNotFoundException({required String eventId})
       : super(10022, 'Master pubkey is not found in event $eventId');
+}
+
+class UserMasterPubkeyNotFoundException extends IONException {
+  UserMasterPubkeyNotFoundException({required String pubkey})
+      : super(10023, 'Master pubkey is not found for user $pubkey');
 }
 
 class RequiredFieldIsEmptyException extends IONException {
   RequiredFieldIsEmptyException({required String field})
-      : super(10023, 'Required field is empty $field');
+      : super(10024, 'Required field is empty $field');
 }

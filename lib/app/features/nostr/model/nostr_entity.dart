@@ -17,7 +17,7 @@ abstract mixin class NostrEntity {
         eventMessage.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
 
     if (masterPubkey == null) {
-      throw MasterPubkeyNotFoundException(eventId: eventMessage.id);
+      throw EventMasterPubkeyNotFoundException(eventId: eventMessage.id);
     }
 
     return masterPubkey;

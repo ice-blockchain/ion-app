@@ -26,7 +26,7 @@ void main() {
 
       expect(followList, isA<FollowListEntity>());
       expect(followList.data.list.length, 3);
-      expect(followList.data.list[1].pubkey, '14aeb..8dad4');
+      expect(followList.data.list[1].masterPubkey, '14aeb..8dad4');
       expect(followList.data.list[1].relayUrl, 'wss://bobrelay.com/nostr');
       expect(followList.data.list[1].petname, 'bob');
     });
