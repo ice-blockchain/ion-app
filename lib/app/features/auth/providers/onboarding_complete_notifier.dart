@@ -16,7 +16,6 @@ import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.dart';
-import 'package:ion/app/services/storage/user_preferences_service.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -73,7 +72,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
           UserDelegationEntity.fromEventMessage(userDelegationEvent),
         ].forEach(ref.read(nostrCacheProvider.notifier).cache);
 
-        ref.invalidate(onboardingDataProvider);
+        ref.read(onboardingDataProvider.notifier).reset();
       },
     );
   }
@@ -85,18 +84,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     }
     final followees = ref.read(onboardingDataProvider).followees;
 
-    final userRelays =
-        await ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);
-
-    if (followees != null) {
-      // Persisting followees so that in case of finish onboarding retry we could create FollowList event out of it
-      final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-      await ref
-          .read(userPreferencesServiceProvider(identityKeyName: identityKeyName!))
-          .setValue(followeesListPersistanceKey, followees);
-    }
-
-    return userRelays;
+    return ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);
   }
 
   Future<KeyStore> _generateNostrKeyStore() async {
@@ -172,15 +160,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   }
 
   EventMessage _buildFollowList() {
-    final onboardingData = ref.read(onboardingDataProvider);
-
-    var followees = onboardingData.followees;
-
-    if (followees == null) {
-      final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-      final service = ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName!));
-      followees = service.getValue<List<String>>(followeesListPersistanceKey);
-    }
+    final OnboardingState(:followees) = ref.read(onboardingDataProvider);
 
     final followListData = FollowListData(
       list: followees == null ? [] : followees.map((pubkey) => Followee(pubkey: pubkey)).toList(),
@@ -188,8 +168,6 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
     return ref.read(nostrNotifierProvider.notifier).sign(followListData);
   }
-
-  static const String followeesListPersistanceKey = 'OnboardingCompleteNotifier:followees';
 
   Future<({EventMessage fileMetadataEvent, MediaAttachment mediaAttachment})?>
       _uploadAvatar() async {
