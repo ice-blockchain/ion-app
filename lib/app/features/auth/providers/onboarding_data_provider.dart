@@ -81,15 +81,7 @@ class OnboardingData extends _$OnboardingData {
   }
 
   void reset() {
-    final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-
-    if (identityKeyName == null) {
-      return;
-    }
-
-    ref
-        .read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
-        .remove(_onboardingPersistanceKey);
+    state = const OnboardingState();
   }
 
   static const _onboardingPersistanceKey = 'onboarding_data';
