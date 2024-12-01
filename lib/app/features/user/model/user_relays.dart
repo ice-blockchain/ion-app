@@ -14,7 +14,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
   const factory UserRelaysEntity({
     required String id,
     required String pubkey,
-    required String? masterPubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required UserRelaysData data,
   }) = _UserRelaysEntity;
@@ -30,7 +30,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
     return UserRelaysEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage),
       createdAt: eventMessage.createdAt,
       data: UserRelaysData.fromEventMessage(eventMessage),
     );

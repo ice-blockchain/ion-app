@@ -14,7 +14,7 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
   const factory RepostEntity({
     required String id,
     required String pubkey,
-    required String? masterPubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required RepostData data,
   }) = _RepostEntity;
@@ -30,7 +30,7 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
     return RepostEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage),
       createdAt: eventMessage.createdAt,
       data: RepostData.fromEventMessage(eventMessage),
     );

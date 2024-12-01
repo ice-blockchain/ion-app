@@ -16,7 +16,7 @@ class UserDelegationEntity with _$UserDelegationEntity, NostrEntity implements C
   const factory UserDelegationEntity({
     required String id,
     required String pubkey,
-    required String? masterPubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required UserDelegationData data,
   }) = _UserDelegationEntity;
@@ -32,7 +32,7 @@ class UserDelegationEntity with _$UserDelegationEntity, NostrEntity implements C
     return UserDelegationEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
+      masterPubkey: eventMessage.pubkey,
       createdAt: eventMessage.createdAt,
       data: UserDelegationData.fromEventMessage(eventMessage),
     );

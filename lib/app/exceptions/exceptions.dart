@@ -108,3 +108,8 @@ class UnsupportedSignatureAlgorithmException extends IONException {
   UnsupportedSignatureAlgorithmException(String algorithm)
       : super(10021, 'Unsupported signature algorithm - $algorithm');
 }
+
+class MasterPubkeyNotFoundException extends IONException {
+  MasterPubkeyNotFoundException({required String eventId})
+      : super(10022, 'Master pubkey is not found in event $eventId');
+}

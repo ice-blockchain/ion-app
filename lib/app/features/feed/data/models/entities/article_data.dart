@@ -13,7 +13,7 @@ class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity
   const factory ArticleEntity({
     required String id,
     required String pubkey,
-    required String? masterPubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required ArticleData data,
   }) = _ArticleEntity;
@@ -28,7 +28,7 @@ class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity
     return ArticleEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage),
       createdAt: eventMessage.createdAt,
       data: ArticleData.fromEventMessage(eventMessage),
     );

@@ -101,8 +101,7 @@ class DiscoverCreators extends HookConsumerWidget {
                   mainAxisSize: MainAxisSize.max,
                   onPressed: () {
                     ref.read(onboardingDataProvider.notifier).followees = [
-                      for (final creator in selectedCreators)
-                        if (creator.masterPubkey != null) creator.masterPubkey!,
+                      for (final creator in selectedCreators) creator.masterPubkey,
                     ];
                     guardPasskeyDialog(
                       context,

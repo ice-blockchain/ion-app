@@ -15,7 +15,7 @@ class ReactionEntity with _$ReactionEntity, NostrEntity implements CacheableEnti
   const factory ReactionEntity({
     required String id,
     required String pubkey,
-    required String? masterPubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required ReactionData data,
   }) = _ReactionEntity;
@@ -31,7 +31,7 @@ class ReactionEntity with _$ReactionEntity, NostrEntity implements CacheableEnti
     return ReactionEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage.tags),
+      masterPubkey: NostrEntity.getMasterPubkey(eventMessage),
       createdAt: eventMessage.createdAt,
       data: ReactionData.fromEventMessage(eventMessage),
     );
