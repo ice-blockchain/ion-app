@@ -15,6 +15,7 @@ void main() {
         signer: keyStore,
         kind: 30015,
         tags: const [
+          ['b', ''],
           ['d', 'languages'],
           ['t', 'en'],
           ['t', 'es'],
