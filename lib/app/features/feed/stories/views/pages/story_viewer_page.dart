@@ -3,9 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_page_dismiss.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_provider.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -21,12 +23,11 @@ class StoryViewerPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyState = ref.watch(storyViewingControllerProvider);
+    final stories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
+
+    useOnInit(() => ref.read(storyViewingControllerProvider.notifier).updateStories(stories));
 
     final drag = usePageDismiss(context);
-
-    useOnInit(
-      () => ref.read(storyViewingControllerProvider.notifier).loadStoriesByPubkey(pubkey),
-    );
 
     return Hero(
       tag: 'story-$pubkey',
@@ -47,25 +48,27 @@ class StoryViewerPage extends HookConsumerWidget {
                 resizeToAvoidBottomInset: false,
                 backgroundColor: context.theme.appColors.primaryText,
                 body: SafeArea(
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: StoriesSwiper(
-                              userStories: storyState.userStories,
-                              currentUserIndex: storyState.currentUserIndex,
+                  child: storyState.userStories.isEmpty
+                      ? const CenteredLoadingIndicator()
+                      : Column(
+                          children: [
+                            Expanded(
+                              child: StoriesSwiper(
+                                userStories: storyState.userStories,
+                                currentUserIndex: storyState.currentUserIndex,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 28.0.s),
-                          const StoryProgressBarContainer(),
-                          ScreenBottomOffset(margin: 16.0.s),
-                        ],
-                      ),
-                    ),
-                  ),
+                            SizedBox(height: 28.0.s),
+                            const StoryProgressBarContainer(),
+                            ScreenBottomOffset(margin: 16.0.s),
+                          ],
+                        ),
                 ),
               ),
             ),
           ),
+        ),
+      ),
     );
   }
 }

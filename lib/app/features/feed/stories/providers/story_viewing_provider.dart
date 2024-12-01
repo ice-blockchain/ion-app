@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_viewing_provider.g.dart';
@@ -14,30 +13,16 @@ part 'story_viewing_provider.g.dart';
 class StoryViewingController extends _$StoryViewingController {
   @override
   StoryViewerState build() {
-    final stories = ref.watch(storiesProvider) ?? [];
-
-    return StoryViewerState(
-      userStories: stories,
+    return const StoryViewerState(
+      userStories: [],
       currentUserIndex: 0,
       currentStoryIndex: 0,
     );
   }
 
-  void loadStoriesByPubkey(String startingPubkey) {
-    final currentStories = state.userStories;
-
-    if (currentStories.isEmpty) return;
-
-    final startingUserIndex = currentStories.indexWhere(
-      (userStories) => userStories.pubkey == startingPubkey,
-    );
-
-    if (startingUserIndex == -1) return;
-
-    final filteredStories = currentStories.sublist(startingUserIndex);
-
+  void updateStories(List<UserStories> stories) {
     state = StoryViewerState(
-      userStories: filteredStories,
+      userStories: stories,
       currentUserIndex: 0,
       currentStoryIndex: 0,
     );
