@@ -48,7 +48,7 @@ class OnboardingData extends _$OnboardingData {
     state = state.copyWith(followees: followees);
   }
 
-  set avatar(MediaFile avatar) {
+  set avatar(MediaFile? avatar) {
     state = state.copyWith(avatar: avatar);
   }
 

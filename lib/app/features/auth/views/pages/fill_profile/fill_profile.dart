@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -35,6 +37,11 @@ class FillProfile extends HookConsumerWidget {
 
     final onSubmit = useCallback(() async {
       if (formKey.currentState!.validate()) {
+        final pickedAvatar =
+            ref.read(avatarProcessorNotifierProvider).whenOrNull(processed: (file) => file);
+        if (pickedAvatar != null) {
+          ref.read(onboardingDataProvider.notifier).avatar = pickedAvatar;
+        }
         ref.read(onboardingDataProvider.notifier).name = name.value;
         ref.read(onboardingDataProvider.notifier).displayName = nickname.value;
         await SelectLanguagesRoute().push<void>(context);
@@ -63,7 +70,11 @@ class FillProfile extends HookConsumerWidget {
                     child: Column(
                       children: [
                         SizedBox(height: 20.0.s),
-                        const AvatarPicker(),
+                        AvatarPicker(
+                          avatarWidget: onboardingData.avatar != null
+                              ? Image.file(File(onboardingData.avatar!.path))
+                              : null,
+                        ),
                         SizedBox(height: 28.0.s),
                         NameInput(
                           isLive: true,

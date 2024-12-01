@@ -34,17 +34,17 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final (relayUrls, nostrKeyStore) =
             await (_assignUserRelays(), _generateNostrKeyStore()).wait;
 
-        // Build user delegation first to ensure that all subsequent events
-        // have a createdAt timestamp after the delegation's attestation
-        final userDelegationEvent = await _buildUserDelegation(pubkey: nostrKeyStore.publicKey);
-        final uploadedAvatar = await _uploadAvatar();
-
         final userRelaysEvent = _buildUserRelays(relayUrls: relayUrls);
 
-        // Add user relays to cache because it will be used to `sendEvents`
+        // Add user relays to cache because it will be used to `sendEvents`, upload avatar
         ref
             .read(nostrCacheProvider.notifier)
             .cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
+
+        final (userDelegationEvent, uploadedAvatar) = await (
+          _buildUserDelegation(pubkey: nostrKeyStore.publicKey),
+          _uploadAvatar(),
+        ).wait;
 
         final userMetadataEvent =
             _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
