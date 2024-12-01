@@ -22,7 +22,6 @@ class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
   const factory PostEntity({
     required String id,
     required String pubkey,
-    required String masterPubkey,
     required DateTime createdAt,
     required PostData data,
   }) = _PostEntity;
@@ -37,8 +36,7 @@ class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
 
     return PostEntity(
       id: eventMessage.id,
-      pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: NostrEntity.getMasterPubkey(eventMessage),
       createdAt: eventMessage.createdAt,
       data: PostData.fromEventMessage(eventMessage),
     );

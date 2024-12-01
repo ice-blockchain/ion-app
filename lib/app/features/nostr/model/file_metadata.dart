@@ -14,7 +14,6 @@ class FileMetadataEntity with _$FileMetadataEntity, NostrEntity implements Cache
   const factory FileMetadataEntity({
     required String id,
     required String pubkey,
-    required String masterPubkey,
     required DateTime createdAt,
     required FileMetadata data,
   }) = _FileMetadataEntity;
@@ -29,8 +28,7 @@ class FileMetadataEntity with _$FileMetadataEntity, NostrEntity implements Cache
 
     return FileMetadataEntity(
       id: eventMessage.id,
-      pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: NostrEntity.getMasterPubkey(eventMessage),
       createdAt: eventMessage.createdAt,
       data: FileMetadata.fromEventMessage(eventMessage),
     );

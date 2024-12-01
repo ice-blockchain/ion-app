@@ -9,7 +9,6 @@ import 'package:nostr_dart/nostr_dart.dart';
 abstract mixin class NostrEntity {
   String get id;
   String get pubkey;
-  String get masterPubkey;
   DateTime get createdAt;
 
   static String getMasterPubkey(EventMessage eventMessage) {

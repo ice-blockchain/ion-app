@@ -19,7 +19,6 @@ class InterestSetEntity with _$InterestSetEntity, NostrEntity implements Cacheab
   const factory InterestSetEntity({
     required String id,
     required String pubkey,
-    required String masterPubkey,
     required DateTime createdAt,
     required InterestSetData data,
   }) = _InterestSetEntity;
@@ -34,8 +33,7 @@ class InterestSetEntity with _$InterestSetEntity, NostrEntity implements Cacheab
 
     return InterestSetEntity(
       id: eventMessage.id,
-      pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: NostrEntity.getMasterPubkey(eventMessage),
       createdAt: eventMessage.createdAt,
       data: InterestSetData.fromEventMessage(eventMessage),
     );

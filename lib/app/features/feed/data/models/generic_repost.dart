@@ -14,7 +14,6 @@ class GenericRepostEntity with _$GenericRepostEntity, NostrEntity implements Cac
   const factory GenericRepostEntity({
     required String id,
     required String pubkey,
-    required String masterPubkey,
     required DateTime createdAt,
     required GenericRepostData data,
   }) = _GenericRepostEntity;
@@ -29,8 +28,7 @@ class GenericRepostEntity with _$GenericRepostEntity, NostrEntity implements Cac
 
     return GenericRepostEntity(
       id: eventMessage.id,
-      pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: NostrEntity.getMasterPubkey(eventMessage),
       createdAt: eventMessage.createdAt,
       data: GenericRepostData.fromEventMessage(eventMessage),
     );

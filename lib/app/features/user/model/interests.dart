@@ -16,7 +16,6 @@ class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEn
   const factory InterestsEntity({
     required String id,
     required String pubkey,
-    required String masterPubkey,
     required DateTime createdAt,
     required InterestsData data,
   }) = _InterestsEntity;
@@ -31,8 +30,7 @@ class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEn
 
     return InterestsEntity(
       id: eventMessage.id,
-      pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: NostrEntity.getMasterPubkey(eventMessage),
       createdAt: eventMessage.createdAt,
       data: InterestsData.fromEventMessage(eventMessage),
     );

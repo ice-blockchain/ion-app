@@ -30,12 +30,6 @@ Future<UserMetadataEntity?> userMetadata(Ref ref, String pubkey) async {
       );
 }
 
-@riverpod
-Future<String?> userMasterPubkey(Ref ref, String pubkey) async {
-  final userMetadata = await ref.watch(userMetadataProvider(pubkey).future);
-  return userMetadata?.masterPubkey;
-}
-
 @Riverpod(keepAlive: true)
 Future<UserMetadataEntity?> currentUserMetadata(Ref ref) async {
   final currentUserNostrKey = await ref.watch(currentUserNostrKeyStoreProvider.future);

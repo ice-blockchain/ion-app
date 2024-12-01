@@ -8,7 +8,6 @@ import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -43,10 +42,9 @@ Future<FollowListEntity?> currentUserFollowList(Ref ref) async {
 
 @riverpod
 bool isCurrentUserFollowingSelector(Ref ref, String pubkey) {
-  final masterPubkey = ref.watch(userMasterPubkeyProvider(pubkey)).valueOrNull;
   return ref.watch(
     currentUserFollowListProvider.select(
-      (state) => state.valueOrNull?.masterPubkeys.contains(masterPubkey) ?? false,
+      (state) => state.valueOrNull?.pubkeys.contains(pubkey) ?? false,
     ),
   );
 }
@@ -63,19 +61,12 @@ class FollowListManager extends _$FollowListManager {
       if (followList == null) {
         throw FollowListNotFoundException();
       }
-      final masterPubkey = await ref.read(userMasterPubkeyProvider(pubkey).future);
-
-      if (masterPubkey == null) {
-        throw UserMasterPubkeyNotFoundException(pubkey: pubkey);
-      }
-
       final followees = List<Followee>.from(followList.data.list);
-      final followee =
-          followees.firstWhereOrNull((followee) => followee.masterPubkey == masterPubkey);
+      final followee = followees.firstWhereOrNull((followee) => followee.pubkey == pubkey);
       if (followee != null) {
         followees.remove(followee);
       } else {
-        followees.add(Followee(masterPubkey: masterPubkey));
+        followees.add(Followee(pubkey: pubkey));
       }
       await ref
           .read(nostrNotifierProvider.notifier)

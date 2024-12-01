@@ -29,7 +29,7 @@ class FollowListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pubkeys = switch (followType) {
       FollowType.followers => ref.watch(userFollowersProvider(pubkey)).valueOrNull,
-      FollowType.following => ref.watch(followListProvider(pubkey)).valueOrNull?.masterPubkeys,
+      FollowType.following => ref.watch(followListProvider(pubkey)).valueOrNull?.pubkeys,
     };
 
     return SheetContent(

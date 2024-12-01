@@ -18,7 +18,6 @@ class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements Cache
   const factory UserMetadataEntity({
     required String id,
     required String pubkey,
-    required String masterPubkey,
     required DateTime createdAt,
     required UserMetadata data,
   }) = _UserMetadataEntity;
@@ -33,8 +32,7 @@ class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements Cache
 
     return UserMetadataEntity(
       id: eventMessage.id,
-      pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: NostrEntity.getMasterPubkey(eventMessage),
       createdAt: eventMessage.createdAt,
       data: UserMetadata.fromEventMessage(eventMessage),
     );

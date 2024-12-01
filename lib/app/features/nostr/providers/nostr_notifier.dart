@@ -2,6 +2,7 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/mocked_counters.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
@@ -123,11 +124,11 @@ class NostrNotifier extends _$NostrNotifier {
     switch (actionSource) {
       case ActionSourceCurrentUser():
         {
-          final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
-          if (keyStore == null) {
-            throw KeystoreNotFoundException();
+          final pubkey = ref.read(currentPubkeySelectorProvider);
+          if (pubkey == null) {
+            throw UserMasterPubkeyNotFoundException();
           }
-          final userRelays = await _getUserRelays(keyStore.publicKey);
+          final userRelays = await _getUserRelays(pubkey);
           return await ref.read(relayProvider(userRelays.data.list.random.url).future);
         }
       case ActionSourceUser():

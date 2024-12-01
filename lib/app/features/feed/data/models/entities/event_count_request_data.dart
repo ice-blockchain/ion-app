@@ -19,7 +19,6 @@ class EventCountRequestEntity
   const factory EventCountRequestEntity({
     required String id,
     required String pubkey,
-    required String masterPubkey,
     required DateTime createdAt,
     required EventCountRequestData data,
   }) = _EventCountRequestEntity;
@@ -34,8 +33,7 @@ class EventCountRequestEntity
 
     return EventCountRequestEntity(
       id: eventMessage.id,
-      pubkey: eventMessage.pubkey,
-      masterPubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: NostrEntity.getMasterPubkey(eventMessage),
       createdAt: eventMessage.createdAt,
       data: EventCountRequestData.fromEventMessage(eventMessage),
     );
