@@ -24,16 +24,15 @@ class ManageCoinsPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
 
-    final manageCoinsData = ref.watch(
-      manageCoinsNotifierProvider.select((data) => data.valueOrNull ?? []),
-    );
-    final isLoading = ref.watch(
-      manageCoinsNotifierProvider.select((data) => data.isLoading),
+    final filteredCoinsState = ref.watch(
+      filteredCoinsNotifierProvider(searchText: searchText.value),
     );
 
     useOnInit(
       () {
-        ref.read(manageCoinsNotifierProvider.notifier).fetch(searchValue: searchText.value);
+        ref.read(filteredCoinsNotifierProvider(searchText: searchText.value).notifier).filter(
+              searchText: searchText.value,
+            );
       },
       [searchText.value],
     );
@@ -53,38 +52,41 @@ class ManageCoinsPage extends HookConsumerWidget {
                   child: ScreenSideOffset.small(
                     child: SearchInput(
                       onTextChanged: (String value) => searchText.value = value,
-                      loading: isLoading && manageCoinsData.isNotEmpty,
+                      loading: filteredCoinsState.isLoading,
                     ),
                   ),
                 ),
-                if (manageCoinsData.isEmpty && !isLoading) const EmptyState(),
-                if (manageCoinsData.isEmpty && isLoading)
-                  ListItemsLoadingState(
+                filteredCoinsState.maybeWhen(
+                  data: (filteredCoins) {
+                    if (filteredCoins.isEmpty) {
+                      return const EmptyState();
+                    }
+                    return SliverPadding(
+                      padding: EdgeInsets.only(
+                        bottom: 23.0.s + MediaQuery.paddingOf(context).bottom,
+                      ),
+                      sliver: SliverList.separated(
+                        itemCount: filteredCoins.length,
+                        separatorBuilder: (BuildContext context, int index) {
+                          return SizedBox(height: 12.0.s);
+                        },
+                        itemBuilder: (BuildContext context, int index) {
+                          return ScreenSideOffset.small(
+                            child: ManageCoinItem(
+                              coinId: filteredCoins[index].coinData.abbreviation,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  loading: () => ListItemsLoadingState(
                     itemsCount: 7,
                     separatorHeight: 12.0.s,
                     listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
                   ),
-                if (manageCoinsData.isNotEmpty)
-                  SliverPadding(
-                    padding: EdgeInsets.only(
-                      bottom: 23.0.s + MediaQuery.paddingOf(context).bottom,
-                    ),
-                    sliver: SliverList.separated(
-                      itemCount: manageCoinsData.length,
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(
-                          height: 12.0.s,
-                        );
-                      },
-                      itemBuilder: (BuildContext context, int index) {
-                        return ScreenSideOffset.small(
-                          child: ManageCoinItem(
-                            manageCoinData: manageCoinsData[index],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  orElse: () => const EmptyState(),
+                ),
               ],
             ),
           ),
