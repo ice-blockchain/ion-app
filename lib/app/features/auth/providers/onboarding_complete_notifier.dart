@@ -3,9 +3,11 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
+import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';
 import 'package:ion/app/features/user/model/interest_set.dart';
 import 'package:ion/app/features/user/model/interests.dart';
@@ -36,6 +38,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         // Build user delegation first to ensure that all subsequent events
         // have a createdAt timestamp after the delegation's attestation
         final userDelegationEvent = await _buildUserDelegation(pubkey: nostrKeyStore.publicKey);
+        final uploadedAvatar = await _uploadAvatar();
 
         final userRelaysEvent = _buildUserRelays(relayUrls: relayUrls);
 
@@ -44,13 +47,12 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
             .read(nostrCacheProvider.notifier)
             .cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
 
-        final userMetadataEvent = _buildUserMetadata();
+        final userMetadataEvent =
+            _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
 
         final (:interestSetEvent, :interestsEvent) = _buildUserLanguages();
 
         final followListEvent = _buildFollowList();
-
-        final avatarFileMetadataEvent = _buildAvatarFileMetadataEvent();
 
         await ref.read(nostrNotifierProvider.notifier).sendEvents([
           // Delegation should be first
@@ -60,7 +62,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
           interestSetEvent,
           interestsEvent,
           userMetadataEvent,
-          if (avatarFileMetadataEvent != null) avatarFileMetadataEvent,
+          if (uploadedAvatar != null) uploadedAvatar.fileMetadataEvent,
         ]);
 
         <CacheableEntity>[
@@ -112,9 +114,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return ref.read(nostrNotifierProvider.notifier).sign(userRelays);
   }
 
-  EventMessage _buildUserMetadata() {
-    final OnboardingState(:name, :displayName, :avatarMediaAttachment) =
-        ref.read(onboardingDataProvider);
+  EventMessage _buildUserMetadata({MediaAttachment? avatarAttachment}) {
+    final OnboardingState(:name, :displayName) = ref.read(onboardingDataProvider);
 
     if (name == null) {
       throw RequiredFieldIsEmptyException(field: 'name');
@@ -127,9 +128,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     final userMetadata = UserMetadata(
       name: name,
       displayName: displayName,
-      picture: avatarMediaAttachment?.url,
-      media:
-          avatarMediaAttachment != null ? {avatarMediaAttachment.url: avatarMediaAttachment} : {},
+      picture: avatarAttachment?.url,
+      media: avatarAttachment != null ? {avatarAttachment.url: avatarAttachment} : {},
     );
 
     return ref.read(nostrNotifierProvider.notifier).sign(userMetadata);
@@ -191,11 +191,17 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
   static const String followeesListPersistanceKey = 'OnboardingCompleteNotifier:followees';
 
-  EventMessage? _buildAvatarFileMetadataEvent() {
-    final fileMetadata = ref.read(onboardingDataProvider).avatarFileMetadata;
-
-    if (fileMetadata == null) return null;
-
-    return ref.read(nostrNotifierProvider.notifier).sign(fileMetadata);
+  Future<({EventMessage fileMetadataEvent, MediaAttachment mediaAttachment})?>
+      _uploadAvatar() async {
+    final avatar = ref.read(onboardingDataProvider).avatar;
+    if (avatar != null) {
+      final (:fileMetadata, :mediaAttachment) =
+          await ref.read(nostrUploadNotifierProvider.notifier).upload(avatar);
+      return (
+        fileMetadataEvent: ref.read(nostrNotifierProvider.notifier).sign(fileMetadata),
+        mediaAttachment: mediaAttachment
+      );
+    }
+    return null;
   }
 }
