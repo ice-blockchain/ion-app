@@ -55,8 +55,6 @@ class WalletTabsHeader extends ConsumerWidget {
             onTap: () => DAppsRoute().push<void>(context),
           ),
           const Spacer(),
-          // Removed accordingly to the
-          // https://www.notion.so/leftclick/AND-iOS-Wallets-Coin-screen-Hide-option-is-present-14c0a77b88c880c0a576d06198797119
           //const WalletTabsHeaderHideAction(),
           TextButton(
             onPressed: () {
