@@ -308,7 +308,7 @@
   "wallet_receive": "Receive",
   "wallet_receive_coins": "Receive coins",
   "wallet_share_address": "Share address",
-  "wallet_scan": "Scan QR code",
+  "wallet_scan": "Scan the QR code",
   "wallet_scan_hint": "Scan the QR code to send cryptocurrency",
   "wallet_sent": "Sent",
   "wallet_received": "Received",
