@@ -6,16 +6,6 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/dapps/model/dapp_data.dart';
 import 'package:ion/app/features/dapps/views/components/apps_collection/apps_collection.dart';
 
-class AppsRouteData {
-  AppsRouteData({
-    required this.title,
-    this.isSearchVisible = true,
-  });
-
-  final String title;
-  final bool? isSearchVisible;
-}
-
 class Apps extends StatelessWidget {
   const Apps({
     super.key,

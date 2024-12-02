@@ -20,9 +20,18 @@ class DAppsRoute extends BaseRouteData {
 }
 
 class DAppsListRoute extends BaseRouteData {
-  DAppsListRoute({required this.$extra}) : super(child: DAppsList(payload: $extra));
+  DAppsListRoute({
+    required this.title,
+    this.isSearchVisible = true,
+  }) : super(
+          child: DAppsList(
+            title: title,
+            isSearchVisible: isSearchVisible,
+          ),
+        );
 
-  final AppsRouteData $extra;
+  final String title;
+  final bool isSearchVisible;
 }
 
 class DAppDetailsRoute extends BaseRouteData {

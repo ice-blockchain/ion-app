@@ -8,6 +8,7 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_back_button.dart';
 import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -51,12 +52,7 @@ class SearchNavigation extends HookConsumerWidget {
       child: Row(
         children: [
           if (showBackButton) ...[
-            NavigationButton(
-              onPressed: context.pop,
-              icon: Assets.svg.iconBackArrow.icon(
-                color: context.theme.appColors.primaryText,
-              ),
-            ),
+            NavigationBackButton(context.pop),
             SizedBox(width: 12.0.s),
           ],
           Expanded(

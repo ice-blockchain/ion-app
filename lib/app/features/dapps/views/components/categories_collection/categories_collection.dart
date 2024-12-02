@@ -73,9 +73,7 @@ class CategoriesCollection extends StatelessWidget {
                 Button.icon(
                   onPressed: () {
                     DAppsListRoute(
-                      $extra: AppsRouteData(
-                        title: DAppsCategory.values[index].title(context),
-                      ),
+                      title: DAppsCategory.values[index].title(context),
                     ).push<void>(context);
                   },
                   icon: DAppsCategory.values[index].icon,

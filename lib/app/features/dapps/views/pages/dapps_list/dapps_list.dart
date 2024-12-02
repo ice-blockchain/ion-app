@@ -9,16 +9,16 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/dapps/providers/dapps_provider.dart';
-import 'package:ion/app/features/dapps/views/categories/apps/apps.dart';
 import 'package:ion/app/features/dapps/views/pages/dapps_list/dapps_list_item.dart';
 import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DAppsList extends HookConsumerWidget {
-  const DAppsList({required this.payload, super.key});
+  const DAppsList({required this.title, this.isSearchVisible = true, super.key});
 
-  final AppsRouteData payload;
+  final String title;
+  final bool isSearchVisible;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +32,7 @@ class DAppsList extends HookConsumerWidget {
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
-        title: Text(payload.title),
+        title: Text(title),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -43,7 +43,7 @@ class DAppsList extends HookConsumerWidget {
                 padding: EdgeInsets.only(top: 12.0.s),
                 child: Column(
                   children: [
-                    if (payload.isSearchVisible ?? false)
+                    if (isSearchVisible)
                       SearchInput(
                         onTextChanged: (String value) => searchText.value = value,
                       ),

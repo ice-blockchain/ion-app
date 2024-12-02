@@ -51,10 +51,8 @@ class DAppsPage extends HookConsumerWidget {
                   items: apps,
                   onPress: () {
                     DAppsListRoute(
-                      $extra: AppsRouteData(
-                        title: context.i18n.dapps_section_title_highest_ranked,
-                        isSearchVisible: false,
-                      ),
+                      title: context.i18n.dapps_section_title_highest_ranked,
+                      isSearchVisible: false,
                     ).push<void>(context);
                   },
                 ),
@@ -64,18 +62,14 @@ class DAppsPage extends HookConsumerWidget {
                   topOffset: 8.0.s,
                   onPress: () {
                     DAppsListRoute(
-                      $extra: AppsRouteData(
-                        title: context.i18n.dapps_section_title_recently_added,
-                      ),
+                      title: context.i18n.dapps_section_title_recently_added,
                     ).push<void>(context);
                   },
                 ),
                 Favourites(
                   onPress: () {
                     DAppsListRoute(
-                      $extra: AppsRouteData(
-                        title: context.i18n.dapps_section_title_favourites,
-                      ),
+                      title: context.i18n.dapps_section_title_favourites,
                     ).push<void>(context);
                   },
                 ),
