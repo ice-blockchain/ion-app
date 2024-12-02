@@ -4,6 +4,20 @@ PODS:
   - BanubaARCloudSDK (1.39.0)
   - BanubaAudioBrowserSDK (1.39.0)
   - BanubaLicenseServicingSDK (1.39.0)
+  - BanubaPhotoEditorSDK (1.2.5):
+    - BanubaLicenseServicingSDK (>= 1.38.0)
+    - BanubaUtilities (>= 1.38.0)
+    - BNBAcneEyebagsRemoval (~> 1.16.0)
+    - BNBBackground (~> 1.16.0)
+    - BNBEffectPlayer (~> 1.16.0)
+    - BNBEyes (~> 1.16.0)
+    - BNBHair (~> 1.16.0)
+    - BNBLicenseUtils (>= 1.38.0)
+    - BNBLips (~> 1.16.0)
+    - BNBScripting (~> 1.16.0)
+    - BNBSdkApi (~> 1.16.0)
+    - BNBSdkCore (~> 1.16.0)
+    - BNBSkin (~> 1.16.0)
   - BanubaSDK (1.39.0):
     - BNBBackground (~> 1.16.0)
     - BNBEffectPlayer (~> 1.16.0)
@@ -19,6 +33,11 @@ PODS:
   - BanubaUtilities (1.39.0)
   - BanubaVideoEditorGallerySDK (1.39.0)
   - BanubaVideoEditorSDK (1.39.0)
+  - BNBAcneEyebagsRemoval (1.16.0):
+    - BNBEffectPlayer (= 1.16.0)
+    - BNBFaceTracker (= 1.16.0)
+    - BNBScripting (= 1.16.0)
+    - BNBSdkCore (= 1.16.0)
   - BNBBackground (1.16.0):
     - BNBEffectPlayer (= 1.16.0)
     - BNBScripting (= 1.16.0)
@@ -169,6 +188,7 @@ PODS:
 
 DEPENDENCIES:
   - audio_waveforms (from `.symlinks/plugins/audio_waveforms/ios`)
+  - BanubaPhotoEditorSDK (= 1.2.5)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - ffmpeg_kit_flutter_full_gpl (from `.symlinks/plugins/ffmpeg_kit_flutter_full_gpl/ios`)
@@ -199,6 +219,7 @@ SPEC REPOS:
     - BanubaARCloudSDK
     - BanubaAudioBrowserSDK
     - BanubaLicenseServicingSDK
+    - BanubaPhotoEditorSDK
     - BanubaSDK
     - BanubaSDKServicing
     - BanubaSDKSimple
@@ -211,6 +232,7 @@ SPEC REPOS:
     - VEPlaybackSDK
     - VideoEditor
   https://github.com/sdk-banuba/banuba-sdk-podspecs.git:
+    - BNBAcneEyebagsRemoval
     - BNBBackground
     - BNBEffectPlayer
     - BNBEyes
@@ -287,12 +309,14 @@ SPEC CHECKSUMS:
   BanubaARCloudSDK: 40da62afeea642301ca8092600c9bb9cf67fe30e
   BanubaAudioBrowserSDK: 3a92807e60daa70dcaa1e76920abab97e7a73bf4
   BanubaLicenseServicingSDK: f2b51a4288d6b9796063855f5db6dc227819de22
+  BanubaPhotoEditorSDK: 4bc36ccdb69dc0165ba81d770f4e7fec9f544477
   BanubaSDK: 50fe306f8237027a2eb68a3087fc4ab31ace2af5
   BanubaSDKServicing: 2ad67c2471efe66851e2f9449f7d15f466974dc6
   BanubaSDKSimple: b2a2e3b5619f683d8a6c3783b3976950e8d4157a
   BanubaUtilities: 4ca45fcd7a6b5d246b75f02fd3f36b43d2dbebd3
   BanubaVideoEditorGallerySDK: 6d775728f14ab78e210d86058166e3deb3fc3814
   BanubaVideoEditorSDK: 1b8d56004f147c0ed96077f8171247efbc0511e7
+  BNBAcneEyebagsRemoval: 7911b43363b621e7855aea935f31383d0c3c5a84
   BNBBackground: 4007ddf58588bfe962c09ee315d4cdf245da6efe
   BNBEffectPlayer: 4c44c3f0c6776a1f2ba3094bd1ec82b7b149ce2a
   BNBEyes: eb0d0da3c6d588f74d2812306b8172c23f26576d
@@ -340,6 +364,6 @@ SPEC CHECKSUMS:
   video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
   VideoEditor: b3e55fe6a6589e715365da822172f54b6fea8169
 
-PODFILE CHECKSUM: 0fc285dc7e71f0047008ca90716c3e3e4c72f8e3
+PODFILE CHECKSUM: f19afb20048b05a04dbc809ad7d199f1df053e9a
 
 COCOAPODS: 1.16.2
