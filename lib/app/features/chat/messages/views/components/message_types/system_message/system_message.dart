@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 
 class SystemMessage extends StatelessWidget {
   const SystemMessage({
@@ -14,7 +15,7 @@ class SystemMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.maxFinite,
+      width: MessageItemWrapper.maxWidth,
       child: Text(
         message,
         textAlign: TextAlign.center,

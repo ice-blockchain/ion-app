@@ -13,6 +13,7 @@ import 'package:ion/app/features/chat/messages/views/components/message_metadata
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -83,7 +84,7 @@ class AudioMessage extends HookConsumerWidget {
     final metadataKey = useMemoized(GlobalKey.new);
     final contentPadding = EdgeInsets.all(12.0.s);
 
-    useEffect(
+    useOnInit(
       () {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           final renderBox = metadataKey.currentContext?.findRenderObject() as RenderBox?;
@@ -91,7 +92,6 @@ class AudioMessage extends HookConsumerWidget {
             metadataWidth.value = renderBox.size.width;
           }
         });
-        return null;
       },
       [metadataKey],
     );
