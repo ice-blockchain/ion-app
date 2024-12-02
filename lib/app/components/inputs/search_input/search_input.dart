@@ -23,6 +23,7 @@ class SearchInput extends HookWidget {
     this.textInputAction,
     this.onSubmitted,
     this.suffix,
+    this.showCancelButton = true,
     FocusNode? focusNode,
     TextEditingController? controller,
   })  : externalFocusNode = focusNode,
@@ -33,6 +34,7 @@ class SearchInput extends HookWidget {
   final void Function(String)? onTextChanged;
   final VoidCallback? onCancelSearch;
   final bool loading;
+  final bool showCancelButton;
   final String defaultValue;
   final FocusNode? externalFocusNode;
   final TextEditingController? externalController;
@@ -112,7 +114,7 @@ class SearchInput extends HookWidget {
             ),
           ),
         ),
-        if (focused.value)
+        if (focused.value && showCancelButton)
           TextFieldTapRegion(
             child: SearchCancelButton(
               onPressed: () {
