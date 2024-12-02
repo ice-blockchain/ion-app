@@ -24,6 +24,8 @@ class VideoPreviewCover extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final showPlayButton = useState(true);
+
     final assetFilePathAsync = ref.watch(assetFilePathProvider(videoPath));
     final filePath = assetFilePathAsync.valueOrNull;
 
@@ -46,8 +48,6 @@ class VideoPreviewCover extends HookConsumerWidget {
     final videoAspectRatio = videoSize.width / videoSize.height;
 
     final clampedAspectRatio = videoAspectRatio.clamp(minAspectRatio, maxAspectRatio);
-
-    final showPlayButton = useState(true);
 
     return Padding(
       padding: EdgeInsets.only(bottom: 24.0.s, left: 12.0.s, right: 12.0.s),
