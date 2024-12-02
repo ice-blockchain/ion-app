@@ -20,45 +20,36 @@ class BalanceActions extends StatelessWidget {
   final VoidCallback onSend;
   final bool isLoading;
 
-  Widget _buildMainContainer({
-    required Widget child,
-  }) {
-    if (isLoading) {
-      return Skeleton(child: child);
-    }
-    return child;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return _buildMainContainer(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Button.compact(
-              leadingIcon: Assets.svg.iconButtonSend.icon(),
-              label: Text(
-                context.i18n.wallet_send,
-              ),
-              onPressed: isLoading ? () {} : onSend,
+    final child = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Button.compact(
+            leadingIcon: Assets.svg.iconButtonSend.icon(),
+            label: Text(
+              context.i18n.wallet_send,
             ),
+            onPressed: isLoading ? () {} : onSend,
           ),
-          SizedBox(
-            width: 12.0.s,
-          ),
-          Expanded(
-            child: Button.compact(
-              type: isLoading ? ButtonType.primary : ButtonType.outlined,
-              leadingIcon: Assets.svg.iconButtonReceive.icon(),
-              label: Text(
-                context.i18n.wallet_receive,
-              ),
-              onPressed: isLoading ? () {} : onReceive,
+        ),
+        SizedBox(
+          width: 12.0.s,
+        ),
+        Expanded(
+          child: Button.compact(
+            type: isLoading ? ButtonType.primary : ButtonType.outlined,
+            leadingIcon: Assets.svg.iconButtonReceive.icon(),
+            label: Text(
+              context.i18n.wallet_receive,
             ),
+            onPressed: isLoading ? () {} : onReceive,
           ),
-        ],
-      ),
+        ),
+      ],
     );
+
+    return isLoading ? Skeleton(child: child) : child;
   }
 }

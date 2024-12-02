@@ -3,10 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
-import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/wallet/model/nft_layout_type.dart';
@@ -19,6 +15,8 @@ import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/header/header.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/loaders/grid_loader.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/loaders/list_loader.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_footer.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_header.dart';
@@ -43,25 +41,20 @@ class WalletPage extends HookConsumerWidget {
 
     List<Widget> getActiveTabContent() {
       if (activeTab.value == WalletTabType.coins) {
-        if (coinsState.isLoading) {
-          return [const _ListLoader()];
-        }
-        return [
-          const CoinsTab(),
-          const CoinsTabFooter(),
-        ];
-      } else {
-        if (nftsState.isLoading) {
-          if (nftLayoutType == NftLayoutType.list) {
-            return [const _ListLoader()];
-          }
-          return [const _GridLoader()];
-        }
-        return [
-          const NftsTab(),
-          const NftsTabFooter(),
-        ];
+        return coinsState.isLoading
+            ? [const ListLoader()]
+            : [
+                const CoinsTab(),
+                const CoinsTabFooter(),
+              ];
       }
+      if (nftsState.isLoading) {
+        return nftLayoutType == NftLayoutType.list ? [const ListLoader()] : [const GridLoader()];
+      }
+      return [
+        const NftsTab(),
+        const NftsTabFooter(),
+      ];
     }
 
     return Scaffold(
@@ -99,55 +92,6 @@ class WalletPage extends HookConsumerWidget {
             const CoinsTabHeader(),
           ...getActiveTabContent(),
         ],
-      ),
-    );
-  }
-}
-
-class _ListLoader extends StatelessWidget {
-  const _ListLoader();
-
-  @override
-  Widget build(BuildContext context) {
-    return ListItemsLoadingState(
-      itemsCount: 7,
-      separatorHeight: 12.0.s,
-      itemHeight: 60.0.s,
-      padding: EdgeInsets.zero,
-      listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
-    );
-  }
-}
-
-class _GridLoader extends StatelessWidget {
-  const _GridLoader();
-
-  @override
-  Widget build(BuildContext context) {
-    final width =
-        (MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultSmallMargin * 2 - 12.0.s) / 2;
-    final height = width / NftsTab.aspectRatio;
-    return SliverToBoxAdapter(
-      child: ScreenSideOffset.small(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                ContainerSkeleton(width: width, height: height),
-                SizedBox(
-                  width: 12.0.s,
-                ),
-                ContainerSkeleton(width: width, height: height),
-              ],
-            ),
-            SizedBox(
-              height: 16.0.s,
-            ),
-            ItemLoadingState(
-              itemHeight: 60.0.s,
-            ),
-          ],
-        ),
       ),
     );
   }
