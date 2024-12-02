@@ -66,6 +66,7 @@ class ChatMessagesList extends ConsumerWidget {
             text: (message) => TextMessage(
               message: message.text,
               isMe: message.author.isCurrentUser,
+              repliedMessage: message.repliedMessage,
               isLastMessageFromSender: isLastMessageFromSender,
               author: authorToDisplay,
             ),

@@ -9,7 +9,7 @@ import 'package:ion/app/features/chat/messages/views/components/message_reaction
 import 'package:ion/app/features/chat/messages/views/components/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
-import 'package:ion/app/features/chat/providers/mock.dart';
+import 'package:ion/app/features/chat/model/replied_message.dart';
 
 class TextMessage extends StatelessWidget {
   const TextMessage({
@@ -26,7 +26,7 @@ class TextMessage extends StatelessWidget {
   final String message;
   final MessageAuthor? author;
   final bool isLastMessageFromSender;
-  final RecentChatMessage? repliedMessage;
+  final RepliedMessage? repliedMessage;
   final List<MessageReactionGroup> reactions;
 
   @override
@@ -43,15 +43,11 @@ class TextMessage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MessageAuthorNameWidget(author: author),
-            if (repliedMessage != null)
+            if (repliedMessage case final RepliedMessage replied)
               RepliedMessageInfo(
                 isMe: isMe,
-                sender: const MessageAuthor(
-                  name: 'Boris Johnson',
-                  imageUrl: 'https://picsum.photos/200/300',
-                  isApproved: true,
-                ),
-                message: PhotoRecentChatMessage(DateTime.now()),
+                sender: replied.author,
+                message: replied.message,
               ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

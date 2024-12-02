@@ -3,6 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
+import 'package:ion/app/features/chat/model/replied_message.dart';
 
 part 'message_list_item.freezed.dart';
 
@@ -27,6 +28,7 @@ sealed class MessageListItem with _$MessageListItem {
     required MessageAuthor author,
     required String text,
     required DateTime time,
+    RepliedMessage? repliedMessage,
   }) = TextItem;
 
   @Implements<MessageWithAuthor>()
