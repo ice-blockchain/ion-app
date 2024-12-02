@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_duration.dart';
@@ -19,6 +18,9 @@ class VideoPreviewCover extends HookConsumerWidget {
   });
 
   final String videoPath;
+
+  static const double minAspectRatio = 9 / 16;
+  static const double maxAspectRatio = 16 / 9;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,79 +42,66 @@ class VideoPreviewCover extends HookConsumerWidget {
       return const _VideoPlaceholder();
     }
 
-    final videoWidth = videoController.value.size.width;
-    final videoHeight = videoController.value.size.height;
-    final aspectRatio = videoWidth / videoHeight;
+    final videoSize = videoController.value.size;
+    final videoAspectRatio = videoSize.width / videoSize.height;
 
-    final maxWidth = MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultMediumMargin * 2;
-    const maxHeight = 430.0; // Maximum allowed height for the video preview
-
-    double calculatedWidth;
-    double calculatedHeight;
-
-    if (aspectRatio > maxWidth / maxHeight) {
-      // Fit to width
-      calculatedWidth = maxWidth;
-      calculatedHeight = calculatedWidth / aspectRatio;
-    } else {
-      // Fit to height
-      calculatedHeight = maxHeight;
-      calculatedWidth = calculatedHeight * aspectRatio;
-    }
+    final clampedAspectRatio = videoAspectRatio.clamp(minAspectRatio, maxAspectRatio);
 
     final showPlayButton = useState(true);
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 24.0.s),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12.0.s),
-        child: SizedBox(
-          width: calculatedWidth,
-          height: calculatedHeight,
-          child: GestureDetector(
-            onTap: () {
-              if (videoController.value.isPlaying) {
-                videoController.pause();
-                showPlayButton.value = true;
-              } else {
-                videoController.play();
-                showPlayButton.value = false;
-              }
-            },
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                VideoPlayer(videoController),
-                if (showPlayButton.value)
-                  Container(
-                    width: 48.0.s,
-                    height: 48.0.s,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24.0.s),
-                      color: context.theme.appColors.primaryAccent,
+      padding: EdgeInsets.only(bottom: 24.0.s, left: 12.0.s, right: 12.0.s),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 430.0.s),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12.0.s),
+          child: AspectRatio(
+            aspectRatio: clampedAspectRatio,
+            child: GestureDetector(
+              onTap: () {
+                if (videoController.value.isPlaying) {
+                  videoController.pause();
+                  showPlayButton.value = true;
+                } else {
+                  videoController.play();
+                  showPlayButton.value = false;
+                }
+              },
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  VideoPlayer(videoController),
+                  if (showPlayButton.value)
+                    Container(
+                      width: 48.0.s,
+                      height: 48.0.s,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(24.0.s),
+                        color: context.theme.appColors.primaryAccent,
+                      ),
+                      child: IconButton(
+                        icon: Assets.svg.iconVideoPlay
+                            .icon(color: context.theme.appColors.secondaryBackground),
+                        onPressed: () {
+                          videoController.play();
+                          showPlayButton.value = false;
+                        },
+                      ),
                     ),
-                    child: IconButton(
-                      icon: Assets.svg.iconVideoPlay
-                          .icon(color: context.theme.appColors.secondaryBackground),
-                      onPressed: () {
-                        videoController.play();
-                        showPlayButton.value = false;
-                      },
+                  Positioned(
+                    right: 12.0.s,
+                    bottom: 12.0.s,
+                    child: const VideoPreviewEditCover(),
+                  ),
+                  Positioned(
+                    left: 12.0.s,
+                    bottom: 12.0.s,
+                    child: VideoPreviewDuration(
+                      duration: Duration(seconds: videoController.value.duration.inSeconds),
                     ),
                   ),
-                Positioned(
-                  right: 12.0.s,
-                  bottom: 12.0.s,
-                  child: const VideoPreviewEditCover(),
-                ),
-                Positioned(
-                  left: 12.0.s,
-                  bottom: 12.0.s,
-                  child: VideoPreviewDuration(
-                    duration: Duration(seconds: videoController.value.duration.inSeconds),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
