@@ -1,15 +1,20 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/hooks/use_post_media.dart';
-import 'package:ion/app/services/text_parser/matchers/url_matcher.dart';
-import 'package:ion/app/utils/post_text.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/services/browser/browser.dart';
+import 'package:ion/app/services/text_parser/text_match.dart';
+import 'package:ion/app/services/text_parser/text_matcher.dart';
 
-class PostBody extends ConsumerWidget {
+class PostBody extends HookConsumerWidget {
   const PostBody({
     required this.postEntity,
     super.key,
@@ -21,19 +26,49 @@ class PostBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final postMedia = usePostMedia(postEntity.data);
 
-    final postText = extractPostText(postEntity.data.content, excludeMatcherType: UrlMatcher);
+    final textSpanBuilder = useMemoized(
+      () => TextSpanBuilder(
+        defaultStyle: context.theme.appTextThemes.body2.copyWith(
+          color: context.theme.appColors.sharkText,
+        ),
+        matcherStyles: TextSpanBuilder.defaultMatchersStyles(context),
+      ),
+    );
+
+    final filteredContent =
+        (postMedia.isEmpty) ? postEntity.data.content : _excludeMediaLinks(postMedia);
+
+    final postText = textSpanBuilder.build(
+      filteredContent,
+      onTap: (match) {
+        if (match.matcher is HashtagMatcher) {
+          FeedAdvancedSearchRoute(query: match.text).go(context);
+        }
+        if (match.matcher is UrlMatcher) openUrlInAppBrowser(match.text);
+      },
+    );
+
+    useEffect(
+      () {
+        return textSpanBuilder.dispose;
+      },
+      [textSpanBuilder],
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (postMedia.isNotEmpty) PostMedia(media: postMedia),
-        Text(
+        Text.rich(
           postText,
-          style: context.theme.appTextThemes.body2.copyWith(
-            color: context.theme.appColors.sharkText,
-          ),
         ),
       ],
     );
+  }
+
+  List<TextMatch> _excludeMediaLinks(List<MediaAttachment> postMedia) {
+    return postEntity.data.content.where((match) {
+      return !postMedia.any((media) => media.url == match.text);
+    }).toList();
   }
 }

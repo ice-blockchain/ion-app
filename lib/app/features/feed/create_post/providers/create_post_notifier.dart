@@ -17,8 +17,8 @@ import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.dart';
 import 'package:ion/app/services/media_service/media_compress_service.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
-import 'package:ion/app/services/text_parser/matchers/hashtag_matcher.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
+import 'package:ion/app/services/text_parser/text_matcher.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_post_notifier.g.dart';
@@ -96,7 +96,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   List<RelatedHashtag> _buildRelatedHashtags(List<TextMatch> content) {
     return [
       for (final match in content)
-        if (match.matcherType == HashtagMatcher) RelatedHashtag(value: match.text),
+        if (match.matcher is HashtagMatcher) RelatedHashtag(value: match.text),
     ];
   }
 

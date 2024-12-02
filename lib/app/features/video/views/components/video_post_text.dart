@@ -6,19 +6,19 @@ import 'package:ion/app/extensions/extensions.dart';
 
 class VideoTextPost extends HookWidget {
   const VideoTextPost({
-    required this.text,
+    required this.textSpan,
     super.key,
   });
 
-  final String text;
+  final TextSpan textSpan;
 
   bool _isTextOneLine({
-    required String text,
+    required TextSpan text,
     required TextStyle style,
     required double maxWidth,
   }) {
     final textPainter = TextPainter(
-      text: TextSpan(text: text, style: style),
+      text: text,
       maxLines: 1,
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: maxWidth);
@@ -33,13 +33,13 @@ class VideoTextPost extends HookWidget {
     final isOneLine = useMemoized(
       () {
         return _isTextOneLine(
-          text: text,
+          text: textSpan,
           style: context.theme.appTextThemes.body2.copyWith(color: Colors.white),
           maxWidth: MediaQuery.sizeOf(context).width,
         );
       },
       [
-        text,
+        textSpan,
         context.theme.appTextThemes.body2,
         MediaQuery.sizeOf(context).width,
       ],
@@ -65,21 +65,15 @@ class VideoTextPost extends HookWidget {
               );
             },
             child: isTextExpanded.value
-                ? Text(
-                    text,
+                ? Text.rich(
+                    textSpan,
                     key: const ValueKey('expanded'),
-                    style: context.theme.appTextThemes.body2.copyWith(
-                      color: Colors.white,
-                    ),
                   )
-                : Text(
-                    text,
+                : Text.rich(
+                    textSpan,
                     key: const ValueKey('collapsed'),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: context.theme.appTextThemes.body2.copyWith(
-                      color: Colors.white,
-                    ),
                   ),
           ),
         ),
