@@ -22,15 +22,13 @@ class VideoPreview extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Ignore linter rule to avoid using Non-null assertion everywhere
-    // ignore: omit_local_variable_types
-    final VideoPlayerController controller = videoController ??
+    final controller = videoController ??
         ref.watch(
           videoControllerProvider(
             videoUrl,
             looping: true,
           ),
-        );
+        )!;
     final isMuted = useState(true);
 
     useEffect(

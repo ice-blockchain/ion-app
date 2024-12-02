@@ -84,17 +84,12 @@ class AudioMessage extends HookConsumerWidget {
     final metadataKey = useMemoized(GlobalKey.new);
     final contentPadding = EdgeInsets.all(12.0.s);
 
-    useOnInit(
-      () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          final renderBox = metadataKey.currentContext?.findRenderObject() as RenderBox?;
-          if (renderBox != null) {
-            metadataWidth.value = renderBox.size.width;
-          }
-        });
-      },
-      [metadataKey],
-    );
+    useOnInit(() {
+      final renderBox = metadataKey.currentContext?.findRenderObject() as RenderBox?;
+      if (renderBox != null) {
+        metadataWidth.value = renderBox.size.width;
+      }
+    });
 
     return MessageItemWrapper(
       isMe: isMe,
