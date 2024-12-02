@@ -71,12 +71,11 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
 
   // TODO: handle delegatedToUrl when migrating to common relays
   Future<String> _getFileStorageApiUrl({required KeyStore keyStore}) async {
-    final userRelays =
-        await ref.read(userRelaysManagerProvider.notifier).fetch([keyStore.publicKey]);
-    if (userRelays.isEmpty) {
+    final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetchForCurrentUser();
+    if (userRelays == null) {
       throw UserRelaysNotFoundException();
     }
-    final relayUrl = userRelays.first.data.list.random.url;
+    final relayUrl = userRelays.data.list.random.url;
 
     try {
       final parsedRelayUrl = Uri.parse(relayUrl);

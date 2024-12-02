@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -68,12 +68,11 @@ class UserRelaysManager extends _$UserRelaysManager {
   }
 
   Future<UserRelaysEntity?> fetchForCurrentUser() async {
-    final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
-    if (keyStore == null) {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentPubkey == null) {
       return null;
     }
-    final userRelays =
-        await ref.read(userRelaysManagerProvider.notifier).fetch([keyStore.publicKey]);
+    final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetch([currentPubkey]);
     if (userRelays.isEmpty) {
       return null;
     }
