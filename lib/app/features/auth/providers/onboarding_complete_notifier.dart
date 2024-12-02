@@ -161,9 +161,15 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   }
 
   Future<({FileMetadata fileMetadata, MediaAttachment mediaAttachment})?> _uploadAvatar() async {
-    final avatar = ref.read(onboardingDataProvider).avatar;
-    if (avatar != null) {
-      return ref.read(nostrUploadNotifierProvider.notifier).upload(avatar, alt: FileAlt.avatar);
+    try {
+      final avatar = ref.read(onboardingDataProvider).avatar;
+      if (avatar != null) {
+        return await ref
+            .read(nostrUploadNotifierProvider.notifier)
+            .upload(avatar, alt: FileAlt.avatar);
+      }
+    } catch (_) {
+      // intentionally ignore upload avatar exceptions
     }
     return null;
   }
