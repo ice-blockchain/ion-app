@@ -53,6 +53,7 @@ class DAppsPage extends HookConsumerWidget {
                     DAppsListRoute(
                       $extra: AppsRouteData(
                         title: context.i18n.dapps_section_title_highest_ranked,
+                        isSearchVisible: false,
                       ),
                     ).push<void>(context);
                   },

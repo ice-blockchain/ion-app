@@ -31,6 +31,8 @@ class DAppsSimpleSearchPage extends ConsumerWidget {
           children: [
             SearchNavigation(
               query: query,
+              showBackButton: true,
+              showCancelButton: false,
               loading: dAppsSearchResults.isLoading,
               onTextChanged: (String text) {
                 DAppsSimpleSearchRoute(query: text).replace(context);
