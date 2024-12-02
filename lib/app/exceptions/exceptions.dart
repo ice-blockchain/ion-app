@@ -122,3 +122,8 @@ class RequiredFieldIsEmptyException extends IONException {
   RequiredFieldIsEmptyException({required String field})
       : super(10024, 'Required field is empty $field');
 }
+
+class FileUploadException extends IONException {
+  FileUploadException(dynamic error, {required String url})
+      : super(10025, 'Failed to upload file to $url: $error');
+}

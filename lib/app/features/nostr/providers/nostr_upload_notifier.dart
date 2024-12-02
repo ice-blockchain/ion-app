@@ -118,7 +118,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
 
       return uploadResponse;
     } catch (error) {
-      throw Exception('Failed to upload file to $url: $error');
+      throw FileUploadException(error, url: url);
     }
   }
 }
