@@ -4,6 +4,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
+import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
@@ -35,39 +36,28 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final (relayUrls, nostrKeyStore) =
             await (_assignUserRelays(), _generateNostrKeyStore()).wait;
 
-        final userRelaysEvent = await _buildUserRelays(relayUrls: relayUrls);
-        // Add user relays to cache because it will be used to `sendEvents`, upload avatar
-        ref
-            .read(nostrCacheProvider.notifier)
-            .cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
+        // Build and cache user relays first because it is used to `sendEvents`, upload avatar
+        final userRelays = await _buildAndCacheUserRelays(relayUrls: relayUrls);
 
         // Send user delegation event in advance so all subsequent events pass delegation attestation
         await _sendUserDelegation(pubkey: nostrKeyStore.publicKey);
 
         final uploadedAvatar = await _uploadAvatar();
 
-        final userMetadataEvent =
-            await _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
+        final userMetadata = _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
 
-        final (:interestSetEvent, :interestsEvent) = await _buildUserLanguages();
+        final (:interestSetData, :interestsData) = _buildUserLanguages();
 
-        final followListEvent = await _buildFollowList();
+        final followList = _buildFollowList();
 
-        await ref.read(nostrNotifierProvider.notifier).sendEvents([
-          userRelaysEvent,
-          followListEvent,
-          interestSetEvent,
-          interestsEvent,
-          userMetadataEvent,
-          if (uploadedAvatar != null) uploadedAvatar.fileMetadataEvent,
+        await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([
+          userRelays,
+          userMetadata,
+          followList,
+          interestSetData,
+          interestsData,
+          if (uploadedAvatar != null) uploadedAvatar.fileMetadata,
         ]);
-
-        <CacheableEntity>[
-          FollowListEntity.fromEventMessage(followListEvent),
-          InterestSetEntity.fromEventMessage(interestSetEvent),
-          InterestsEntity.fromEventMessage(interestsEvent),
-          UserMetadataEntity.fromEventMessage(userMetadataEvent),
-        ].forEach(ref.read(nostrCacheProvider.notifier).cache);
       },
     );
   }
@@ -89,15 +79,19 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return nostrKeyStore;
   }
 
-  Future<EventMessage> _buildUserRelays({required List<String> relayUrls}) {
+  Future<UserRelaysData> _buildAndCacheUserRelays({required List<String> relayUrls}) async {
     final userRelays = UserRelaysData(
       list: relayUrls.map((url) => UserRelay(url: url)).toList(),
     );
 
-    return ref.read(nostrNotifierProvider.notifier).sign(userRelays);
+    final userRelaysEvent = await ref.read(nostrNotifierProvider.notifier).sign(userRelays);
+
+    ref.read(nostrCacheProvider.notifier).cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
+
+    return userRelays;
   }
 
-  Future<EventMessage> _buildUserMetadata({MediaAttachment? avatarAttachment}) {
+  UserMetadata _buildUserMetadata({MediaAttachment? avatarAttachment}) {
     final OnboardingState(:name, :displayName) = ref.read(onboardingDataProvider);
 
     if (name == null) {
@@ -108,22 +102,25 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       throw RequiredFieldIsEmptyException(field: 'displayName');
     }
 
-    final userMetadata = UserMetadata(
+    return UserMetadata(
       name: name,
       displayName: displayName,
       picture: avatarAttachment?.url,
       media: avatarAttachment != null ? {avatarAttachment.url: avatarAttachment} : {},
     );
-
-    return ref.read(nostrNotifierProvider.notifier).sign(userMetadata);
   }
 
-  Future<({EventMessage interestSetEvent, EventMessage interestsEvent})>
-      _buildUserLanguages() async {
+  ({InterestSetData interestSetData, InterestsData interestsData}) _buildUserLanguages() {
     final OnboardingState(:languages) = ref.read(onboardingDataProvider);
+
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
 
     if (languages == null || languages.isEmpty) {
       throw RequiredFieldIsEmptyException(field: 'languages');
+    }
+
+    if (currentPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
     }
 
     final interestSetData = InterestSetData(
@@ -131,16 +128,12 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       hashtags: languages,
     );
 
-    final interestSetEvent = await ref.read(nostrNotifierProvider.notifier).sign(interestSetData);
-
     final interestsData = InterestsData(
       hashtags: [],
-      interestSetRefs: [interestSetData.toReplaceableEventReference(interestSetEvent.pubkey)],
+      interestSetRefs: [interestSetData.toReplaceableEventReference(currentPubkey)],
     );
 
-    final interestsEvent = await ref.read(nostrNotifierProvider.notifier).sign(interestsData);
-
-    return (interestSetEvent: interestSetEvent, interestsEvent: interestsEvent);
+    return (interestSetData: interestSetData, interestsData: interestsData);
   }
 
   Future<void> _sendUserDelegation({required String pubkey}) async {
@@ -159,26 +152,18 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         .cache(UserDelegationEntity.fromEventMessage(userDelegationEvent));
   }
 
-  Future<EventMessage> _buildFollowList() {
+  FollowListData _buildFollowList() {
     final OnboardingState(:followees) = ref.read(onboardingDataProvider);
 
-    final followListData = FollowListData(
+    return FollowListData(
       list: followees == null ? [] : followees.map((pubkey) => Followee(pubkey: pubkey)).toList(),
     );
-
-    return ref.read(nostrNotifierProvider.notifier).sign(followListData);
   }
 
-  Future<({EventMessage fileMetadataEvent, MediaAttachment mediaAttachment})?>
-      _uploadAvatar() async {
+  Future<({FileMetadata fileMetadata, MediaAttachment mediaAttachment})?> _uploadAvatar() async {
     final avatar = ref.read(onboardingDataProvider).avatar;
     if (avatar != null) {
-      final (:fileMetadata, :mediaAttachment) =
-          await ref.read(nostrUploadNotifierProvider.notifier).upload(avatar, alt: FileAlt.avatar);
-      return (
-        fileMetadataEvent: await ref.read(nostrNotifierProvider.notifier).sign(fileMetadata),
-        mediaAttachment: mediaAttachment
-      );
+      return ref.read(nostrUploadNotifierProvider.notifier).upload(avatar, alt: FileAlt.avatar);
     }
     return null;
   }
