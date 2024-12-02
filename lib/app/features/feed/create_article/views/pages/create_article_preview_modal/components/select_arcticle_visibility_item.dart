@@ -46,7 +46,7 @@ class SelectArticleVisibilityItem extends ConsumerWidget {
         onTap: () {
           showSimpleBottomSheet<void>(
             context: context,
-            child: const VisibilitySettingsModal(),
+            child: VisibilitySettingsModal(title: context.i18n.article_settings_title),
           );
         },
       ),
