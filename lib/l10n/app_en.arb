@@ -475,7 +475,7 @@
   "error_general_description": "An unexpected error occurred. Please try again later. {info}",
   "error_general_error_code": "Error code: {error}",
   "warning_avoid_storing_keys": "Avoid storing keys on any device to prevent losing access to funds in case of a hack",
-  "warning_authenticator_setup": "Save and keep your key safe in case it is lost",
+  "warning_authenticator_setup": "Keep this key safe to restore access if you lose your device.",
   "authenticator_setup_title": "Authenticator setup",
   "authenticator_setup_description": "In order to link the key, you need one of the following Authenticator applications",
   "authenticator_setup_key": "Setup key",
