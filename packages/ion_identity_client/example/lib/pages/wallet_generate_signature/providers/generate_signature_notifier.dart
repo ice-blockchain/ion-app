@@ -10,7 +10,7 @@ part 'generate_signature_notifier.g.dart';
 @riverpod
 class GenerateSignatureNotifier extends _$GenerateSignatureNotifier {
   @override
-  FutureOr<PseudoNetworkSignatureResponse?> build() => null;
+  FutureOr<GenerateSignatureResponse?> build() => null;
 
   Future<void> generateSignature(String message, String walletId) async {
     state = const AsyncLoading();
