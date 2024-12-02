@@ -30,45 +30,6 @@ import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.
 class WalletPage extends HookConsumerWidget {
   const WalletPage({super.key});
 
-  Widget _buildListLoader() {
-    return ListItemsLoadingState(
-      itemsCount: 7,
-      separatorHeight: 12.0.s,
-      itemHeight: 60.0.s,
-      padding: EdgeInsets.zero,
-      listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
-    );
-  }
-
-  Widget _buildGridLoader(BuildContext context) {
-    final width =
-        (MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultSmallMargin * 2 - 12.0.s) / 2;
-    final height = width / NftsTab.aspectRatio;
-    return SliverToBoxAdapter(
-      child: ScreenSideOffset.small(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                ContainerSkeleton(width: width, height: height),
-                SizedBox(
-                  width: 12.0.s,
-                ),
-                ContainerSkeleton(width: width, height: height),
-              ],
-            ),
-            SizedBox(
-              height: 16.0.s,
-            ),
-            ItemLoadingState(
-              itemHeight: 60.0.s,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
@@ -83,7 +44,7 @@ class WalletPage extends HookConsumerWidget {
     List<Widget> getActiveTabContent() {
       if (activeTab.value == WalletTabType.coins) {
         if (coinsState.isLoading) {
-          return [_buildListLoader()];
+          return [const _ListLoader()];
         }
         return [
           const CoinsTab(),
@@ -92,9 +53,9 @@ class WalletPage extends HookConsumerWidget {
       } else {
         if (nftsState.isLoading) {
           if (nftLayoutType == NftLayoutType.list) {
-            return [_buildListLoader()];
+            return [const _ListLoader()];
           }
-          return [_buildGridLoader(context)];
+          return [const _GridLoader()];
         }
         return [
           const NftsTab(),
@@ -138,6 +99,55 @@ class WalletPage extends HookConsumerWidget {
             const CoinsTabHeader(),
           ...getActiveTabContent(),
         ],
+      ),
+    );
+  }
+}
+
+class _ListLoader extends StatelessWidget {
+  const _ListLoader();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListItemsLoadingState(
+      itemsCount: 7,
+      separatorHeight: 12.0.s,
+      itemHeight: 60.0.s,
+      padding: EdgeInsets.zero,
+      listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
+    );
+  }
+}
+
+class _GridLoader extends StatelessWidget {
+  const _GridLoader();
+
+  @override
+  Widget build(BuildContext context) {
+    final width =
+        (MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultSmallMargin * 2 - 12.0.s) / 2;
+    final height = width / NftsTab.aspectRatio;
+    return SliverToBoxAdapter(
+      child: ScreenSideOffset.small(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                ContainerSkeleton(width: width, height: height),
+                SizedBox(
+                  width: 12.0.s,
+                ),
+                ContainerSkeleton(width: width, height: height),
+              ],
+            ),
+            SizedBox(
+              height: 16.0.s,
+            ),
+            ItemLoadingState(
+              itemHeight: 60.0.s,
+            ),
+          ],
+        ),
       ),
     );
   }

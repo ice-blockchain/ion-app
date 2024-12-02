@@ -14,15 +14,39 @@ class WalletSwitcher extends ConsumerWidget {
     super.key,
   });
 
-  Widget _buildWalletSwitcher({
-    required BuildContext context,
-    required String title,
-    required VoidCallback onPressed,
-  }) {
-    return Button.dropdown(
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final walletData = ref.watch(currentWalletDataProvider).valueOrNull;
+
+    if (walletData == null) {
+      return Skeleton(
+        child: _WalletSwitcherButton(title: 'main', onPressed: () {}, key: key),
+      );
+    }
+    return _WalletSwitcherButton(
+      title: walletData.name,
       onPressed: () {
         WalletsRoute().push<void>(context);
       },
+      key: key,
+    );
+  }
+}
+
+class _WalletSwitcherButton extends StatelessWidget {
+  const _WalletSwitcherButton({
+    required this.title,
+    required this.onPressed,
+    super.key,
+  });
+
+  final String title;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Button.dropdown(
+      onPressed: onPressed,
       leadingIcon: const WalletIcon(
         size: 28,
         iconSize: 18.6,
@@ -37,24 +61,6 @@ class WalletSwitcher extends ConsumerWidget {
           color: context.theme.appColors.primaryText,
         ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final walletData = ref.watch(currentWalletDataProvider).valueOrNull;
-
-    if (walletData == null) {
-      return Skeleton(
-        child: _buildWalletSwitcher(context: context, title: 'main', onPressed: () {}),
-      );
-    }
-    return _buildWalletSwitcher(
-      context: context,
-      title: walletData.name,
-      onPressed: () {
-        WalletsRoute().push<void>(context);
-      },
     );
   }
 }
