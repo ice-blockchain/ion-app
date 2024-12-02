@@ -32,22 +32,19 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
-        final delegationTime = DateTime.now();
-
         final (relayUrls, nostrKeyStore) =
             await (_assignUserRelays(), _generateNostrKeyStore()).wait;
 
         final userRelaysEvent = await _buildUserRelays(relayUrls: relayUrls);
-
         // Add user relays to cache because it will be used to `sendEvents`, upload avatar
         ref
             .read(nostrCacheProvider.notifier)
             .cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
 
-        final (userDelegationEvent, uploadedAvatar) = await (
-          _buildUserDelegation(pubkey: nostrKeyStore.publicKey, delegationTime: delegationTime),
-          _uploadAvatar(),
-        ).wait;
+        // Send user delegation event in advance so all subsequent events pass delegation attestation
+        await _sendUserDelegation(pubkey: nostrKeyStore.publicKey);
+
+        final uploadedAvatar = await _uploadAvatar();
 
         final userMetadataEvent =
             await _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
@@ -57,8 +54,6 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final followListEvent = await _buildFollowList();
 
         await ref.read(nostrNotifierProvider.notifier).sendEvents([
-          // Delegation should be first
-          userDelegationEvent,
           userRelaysEvent,
           followListEvent,
           interestSetEvent,
@@ -72,7 +67,6 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
           InterestSetEntity.fromEventMessage(interestSetEvent),
           InterestsEntity.fromEventMessage(interestsEvent),
           UserMetadataEntity.fromEventMessage(userMetadataEvent),
-          UserDelegationEntity.fromEventMessage(userDelegationEvent),
         ].forEach(ref.read(nostrCacheProvider.notifier).cache);
       },
     );
@@ -149,17 +143,20 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return (interestSetEvent: interestSetEvent, interestsEvent: interestsEvent);
   }
 
-  Future<EventMessage> _buildUserDelegation({
-    required String pubkey,
-    DateTime? delegationTime,
-  }) async {
+  Future<void> _sendUserDelegation({required String pubkey}) async {
     final userDelegationData = await ref
         .read(userDelegationManagerProvider.notifier)
-        .buildCurrentUserDelegationDataWith(pubkey: pubkey, delegationTime: delegationTime);
+        .buildCurrentUserDelegationDataWith(pubkey: pubkey);
 
-    return ref
+    final userDelegationEvent = await ref
         .read(userDelegationManagerProvider.notifier)
         .buildDelegationEventFrom(userDelegationData);
+
+    await ref.read(nostrNotifierProvider.notifier).sendEvent(userDelegationEvent);
+
+    ref
+        .read(nostrCacheProvider.notifier)
+        .cache(UserDelegationEntity.fromEventMessage(userDelegationEvent));
   }
 
   Future<EventMessage> _buildFollowList() {

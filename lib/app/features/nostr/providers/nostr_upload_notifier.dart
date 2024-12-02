@@ -13,11 +13,9 @@ import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/file_storage_metadata.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_auth.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nostr_upload_notifier.freezed.dart';
@@ -34,19 +32,13 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
     MediaFile file, {
     required FileAlt alt,
   }) async {
-    final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
-
-    if (keyStore == null) {
-      throw KeystoreNotFoundException();
-    }
-
     if (file.width == null || file.height == null) {
       throw UnknownUploadFileResolutionException();
     }
 
     final dimension = '${file.width}x${file.height}';
 
-    final apiUrl = await _getFileStorageApiUrl(keyStore: keyStore);
+    final apiUrl = await _getFileStorageApiUrl();
 
     final response = await _makeUploadRequest(url: apiUrl, file: file, alt: alt);
 
@@ -70,7 +62,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
   }
 
   // TODO: handle delegatedToUrl when migrating to common relays
-  Future<String> _getFileStorageApiUrl({required KeyStore keyStore}) async {
+  Future<String> _getFileStorageApiUrl() async {
     final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetchForCurrentUser();
     if (userRelays == null) {
       throw UserRelaysNotFoundException();
