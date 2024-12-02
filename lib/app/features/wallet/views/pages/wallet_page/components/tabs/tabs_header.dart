@@ -55,7 +55,6 @@ class WalletTabsHeader extends ConsumerWidget {
             onTap: () => DAppsRoute().push<void>(context),
           ),
           const Spacer(),
-          //const WalletTabsHeaderHideAction(),
           TextButton(
             onPressed: () {
               ref.read(searchVisibleProvider.notifier).isVisible = true;
