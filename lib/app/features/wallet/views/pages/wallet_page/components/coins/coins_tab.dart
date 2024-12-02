@@ -19,31 +19,34 @@ class CoinsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coins = ref.watch(filteredWalletCoinsProvider).valueOrNull ?? [];
+    final selectedCoinsState = ref.watch(filteredWalletCoinsProvider);
 
-    if (coins.isEmpty) {
-      return const EmptyState(
-        tabType: tabType,
-      );
-    }
+    return selectedCoinsState.maybeWhen(
+      data: (selectedCoins) {
+        if (selectedCoins.isEmpty) {
+          return const EmptyState(tabType: tabType);
+        }
 
-    return SliverList.separated(
-      itemCount: coins.length,
-      separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(
-          height: 12.0.s,
+        return SliverList.separated(
+          itemCount: selectedCoins.length,
+          separatorBuilder: (BuildContext context, int index) {
+            return SizedBox(height: 12.0.s);
+          },
+          itemBuilder: (BuildContext context, int index) {
+            return ScreenSideOffset.small(
+              child: CoinItem(
+                coinData: selectedCoins[index],
+                onTap: () {
+                  CoinsDetailsRoute(coinId: selectedCoins[index].abbreviation).go(context);
+                },
+              ),
+            );
+          },
         );
       },
-      itemBuilder: (BuildContext context, int index) {
-        return ScreenSideOffset.small(
-          child: CoinItem(
-            coinData: coins[index],
-            onTap: () {
-              CoinsDetailsRoute(coinId: coins[index].abbreviation).go(context);
-            },
-          ),
-        );
-      },
+      orElse: () => const SliverToBoxAdapter(
+        child: SizedBox.shrink(),
+      ),
     );
   }
 }

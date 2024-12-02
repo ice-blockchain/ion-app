@@ -64,11 +64,6 @@ class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
 }
 
 @Riverpod(keepAlive: true)
-AsyncValue<List<ManageCoinData>> allCoins(Ref ref) {
-  return ref.watch(manageCoinsNotifierProvider);
-}
-
-@Riverpod(keepAlive: true)
 AsyncValue<List<ManageCoinData>> selectedCoins(Ref ref) {
   final allCoins = ref.watch(manageCoinsNotifierProvider).value ?? [];
   final selected = allCoins.where((coin) => coin.isSelected).toList();
