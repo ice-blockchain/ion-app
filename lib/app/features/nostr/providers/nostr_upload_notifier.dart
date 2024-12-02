@@ -90,12 +90,14 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
     required KeyStore keyStore,
   }) async {
     final fileBytes = await File(file.path).readAsBytes();
+    final fileName = file.name ?? file.basename;
+    final multipartFile = MultipartFile.fromBytes(fileBytes, filename: fileName);
 
     final formData = FormData.fromMap({
-      'file': MultipartFile.fromBytes(fileBytes, filename: file.name),
-      'caption': file.name,
-      'alt': file.name,
-      'size': file.size,
+      'file': MultipartFile.fromBytes(fileBytes, filename: fileName),
+      'caption': fileName,
+      'alt': fileName,
+      'size': multipartFile.length,
       'content_type': file.mimeType,
     });
 

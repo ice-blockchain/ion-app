@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:path/path.dart' as p;
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -30,7 +31,11 @@ class MediaFile with _$MediaFile {
     String? mimeType,
   }) = _MediaFile;
 
+  const MediaFile._();
+
   factory MediaFile.fromJson(Map<String, dynamic> json) => _$MediaFileFromJson(json);
+
+  String get basename => p.basename(path);
 }
 
 typedef CropImageUiSettings = List<PlatformUiSettings>;

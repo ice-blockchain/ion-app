@@ -107,7 +107,7 @@ class MediaCompressionService {
       ]).then((session) async {
         final returnCode = await session.getReturnCode();
         if (ReturnCode.isSuccess(returnCode)) {
-          return MediaFile(path: output);
+          return MediaFile(path: output, mimeType: 'image/webp');
         }
         throw Exception('Failed to compress image.');
       });
