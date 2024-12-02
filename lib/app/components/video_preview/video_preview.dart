@@ -13,19 +13,24 @@ import 'package:visibility_detector/visibility_detector.dart';
 class VideoPreview extends HookConsumerWidget {
   const VideoPreview({
     required this.videoUrl,
+    this.videoController,
     super.key,
   });
 
   final String videoUrl;
+  final VideoPlayerController? videoController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.watch(
-      videoControllerProvider(
-        videoUrl,
-        looping: true,
-      ),
-    );
+    // Ignore linter rule to avoid using Non-null assertion everywhere
+    // ignore: omit_local_variable_types
+    final VideoPlayerController controller = videoController ??
+        ref.watch(
+          videoControllerProvider(
+            videoUrl,
+            looping: true,
+          ),
+        );
     final isMuted = useState(true);
 
     useEffect(

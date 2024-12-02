@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
-import 'package:ion/app/features/chat/model/message_list_item.dart';
 import 'package:ion/app/features/chat/providers/group_messages_provider.dart';
 import 'package:ion/app/features/chat/providers/groups_provider.dart';
 import 'package:ion/app/features/chat/views/components/messages_list.dart';
@@ -30,10 +29,7 @@ class GroupPage extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final messages = ref.watch(groupMessagesProvider).maybeMap(
-          data: (data) => data.value,
-          orElse: () => <MessageListItem>[],
-        );
+    final messages = ref.watch(groupMessagesProvider).emptyOrValue;
 
     return GestureDetector(
       onTap: () => hideKeyboard(context),

@@ -11,7 +11,7 @@ part 'group_messages_provider.g.dart';
 /// Mocked provider that simulates receiving and mapping data messages
 /// from the server to a model, which describes to UI what should be displayed.
 @riverpod
-Future<List<MessageListItem>> groupMessages(Ref ref) async {
+List<MessageListItem> groupMessages(Ref ref) {
   const currentAuthor = MessageAuthor(
     name: 'Current',
     imageUrl: 'https://picsum.photos/200/300',
@@ -28,7 +28,7 @@ Future<List<MessageListItem>> groupMessages(Ref ref) async {
 
   final date = DateTime.now();
 
-  return <MessageListItem>[
+  return [
     MessageListItem.date(time: date),
     MessageListItem.system(text: 'The group has been created', time: date),
     MessageListItem.text(author: samantaAuthor, text: 'Hi there!', time: date),

@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -17,11 +18,11 @@ import 'package:ion/app/features/chat/messages/views/components/message_types/sy
 import 'package:ion/app/features/chat/messages/views/components/message_types/text_message/text_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/url_preview_message/url_preview_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/video_message/video_message.dart';
-import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_list_item.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
+import 'package:ion/app/features/chat/providers/author_to_display_provider.dart';
 
-class ChatMessagesList extends StatelessWidget {
+class ChatMessagesList extends ConsumerWidget {
   const ChatMessagesList(
     this.messages, {
     super.key,
@@ -31,16 +32,11 @@ class ChatMessagesList extends StatelessWidget {
   final bool displayAuthorsIncomingMessages;
   final List<MessageListItem> messages;
 
-  bool _isMessageFromDifferentUser(int index, MessageAuthor? currentAuthor) {
-    final message = messages[index];
-    if (message is MessageWithAuthor) {
-      return currentAuthor != (message as MessageWithAuthor).author;
-    }
-    return true;
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authorToDisplayProvider = ref.watch(
+      authorsToDisplayProviderProvider(messages).notifier,
+    );
     return ColoredBox(
       color: context.theme.appColors.primaryBackground,
       child: ListView.separated(
@@ -49,20 +45,18 @@ class ChatMessagesList extends StatelessWidget {
         itemBuilder: (context, index) {
           final message = messages[index];
           final isLastMessage = index == (messages.length - 1);
-          final isFirstMessage = index <= 0;
-
           final author =
               message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
 
-          final isLastMessageFromSender =
-              isLastMessage || _isMessageFromDifferentUser(index + 1, author);
+          final isLastMessageFromSender = isLastMessage ||
+              authorToDisplayProvider.isMessageFromDifferentUser(
+                index + 1,
+                author,
+              );
 
-          MessageAuthor? authorToDisplay;
-          if (displayAuthorsIncomingMessages) {
-            final isFirstMessageFromSender =
-                isFirstMessage || _isMessageFromDifferentUser(index - 1, author);
-            authorToDisplay = isFirstMessageFromSender ? author : null;
-          }
+          final authorToDisplay = displayAuthorsIncomingMessages
+              ? authorToDisplayProvider.getAuthorToDisplay(index)
+              : null;
 
           final isMe = author?.isCurrentUser ?? false;
 
@@ -159,7 +153,7 @@ class ChatMessagesList extends StatelessWidget {
           final message = messages[index];
           final isLastMessage = index == (messages.length - 1);
           final isLastMessageFromSender = isLastMessage ||
-              _isMessageFromDifferentUser(
+              authorToDisplayProvider.isMessageFromDifferentUser(
                 index + 1,
                 message is MessageWithAuthor ? (message as MessageWithAuthor).author : null,
               );

@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/messages/views/components/message_author/m
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
+import 'package:ion/app/features/core/providers/video_player_provider.dart';
 
 part 'components/message_with_timestamp.dart';
 
@@ -59,26 +60,6 @@ class VideoMessage extends HookConsumerWidget {
     return MessageItemWrapper(
       isMe: isMe,
       isLastMessageFromSender: isLastMessageFromSender,
-      contentPadding: EdgeInsets.all(padding),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            /// Update the minimum width of the image based on the content container width
-            if (message == null && reactions == null) {
-              videoWidth.value = double.infinity;
-            } else {
-              videoWidth.value = containerKey.value.currentContext?.size?.width ?? 0;
-            }
-          });
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MessageAuthorNameWidget(author: author),
-              ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 300.0.s, maxWidth: videoWidth.value),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.0.s),
-                  child: VideoPreview(videoUrl: videoUrl),
       contentPadding: EdgeInsets.all(8.0.s),
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -95,7 +76,8 @@ class VideoMessage extends HookConsumerWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12.0.s),
                 child: VideoPreview(
-                  controller: videoController,
+                  videoUrl: videoUrl,
+                  videoController: videoController,
                 ),
               ),
             ),

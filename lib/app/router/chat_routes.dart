@@ -119,10 +119,7 @@ class CreateGroupModalRoute extends BaseRouteData {
         );
 }
 
-@TypedGoRoute<GroupRoute>(
-  path: '/group/:pubkey',
-  routes: [],
-)
+@TypedGoRoute<GroupRoute>(path: '/group/:pubkey')
 class GroupRoute extends BaseRouteData {
   GroupRoute({required this.pubkey})
       : super(
