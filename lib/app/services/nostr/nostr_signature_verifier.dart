@@ -39,6 +39,7 @@ class NostrSignatureVerifier extends SchnorrSignatureVerifier {
   }) async {
     final publicKeyBytes = Uint8List.fromList(hex.decode(publicKey));
     final signatureBytes = Uint8List.fromList(hex.decode(signature));
+    final messageBytes = Uint8List.fromList(hex.decode(message));
 
     // ignore: unused_local_variable
     final signatureObject = Signature(
@@ -46,8 +47,6 @@ class NostrSignatureVerifier extends SchnorrSignatureVerifier {
       publicKey: SimplePublicKey(publicKeyBytes, type: KeyPairType.ed25519),
     );
 
-    // TODO::REMOVE
-    return true;
-    // return Ed25519().verifyString(message, signature: signatureObject);
+    return Ed25519().verify(messageBytes, signature: signatureObject);
   }
 }
