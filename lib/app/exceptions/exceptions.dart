@@ -127,3 +127,11 @@ class FileUploadException extends IONException {
   FileUploadException(dynamic error, {required String url})
       : super(10025, 'Failed to upload file to $url: $error');
 }
+
+class UnknownUploadFileResolutionException extends IONException {
+  UnknownUploadFileResolutionException() : super(10026, 'Unknown upload file resolution');
+}
+
+class CompressImageException extends IONException {
+  CompressImageException(dynamic error) : super(10027, 'Compress image exception: $error');
+}

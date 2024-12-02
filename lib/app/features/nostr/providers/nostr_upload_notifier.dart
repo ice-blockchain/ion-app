@@ -38,6 +38,12 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
       throw KeystoreNotFoundException();
     }
 
+    if (file.width == null || file.height == null) {
+      throw UnknownUploadFileResolutionException();
+    }
+
+    final dimension = '${file.width}x${file.height}';
+
     final apiUrl = await _getFileStorageApiUrl(keyStore: keyStore);
 
     final response = await _makeUploadRequest(url: apiUrl, file: file);
@@ -51,7 +57,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
       url: fileMetadata.url,
       mimeType: fileMetadata.mimeType,
       blurhash: fileMetadata.blurhash,
-      dimension: fileMetadata.dimension,
+      dimension: dimension,
       thumb: fileMetadata.thumb,
     );
 

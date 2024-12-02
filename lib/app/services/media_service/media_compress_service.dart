@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:cross_file/cross_file.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_audio_bitrate_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_audio_codec_arg.dart';
@@ -90,11 +94,10 @@ class MediaCompressionService {
     int? width,
     int? height,
     int quality = 80,
-    bool keepAspectRatio = true,
   }) async {
     try {
       final output = await _generateOutputPath();
-      return await FFmpegKit.executeWithArguments([
+      final session = await FFmpegKit.executeWithArguments([
         '-i',
         file.path,
         '-c:v',
@@ -104,13 +107,20 @@ class MediaCompressionService {
         '-q:v',
         quality.toString(),
         output,
-      ]).then((session) async {
-        final returnCode = await session.getReturnCode();
-        if (ReturnCode.isSuccess(returnCode)) {
-          return MediaFile(path: output, mimeType: 'image/webp');
-        }
-        throw Exception('Failed to compress image.');
-      });
+      ]);
+      final returnCode = await session.getReturnCode();
+      if (!ReturnCode.isSuccess(returnCode)) {
+        throw CompressImageException(returnCode);
+      }
+
+      final outputDimension = await _getImageDimension(path: output);
+
+      return MediaFile(
+        path: output,
+        mimeType: 'image/webp',
+        width: outputDimension.width,
+        height: outputDimension.height,
+      );
     } catch (error, stackTrace) {
       Logger.log('Error during image compression!', error: error, stackTrace: stackTrace);
       rethrow;
@@ -219,6 +229,20 @@ class MediaCompressionService {
     final outputPath = path.join(tempDir.path, outputFileName);
 
     return outputPath;
+  }
+
+  ///
+  /// Get width and height for the given image path
+  ///
+  Future<({int width, int height})> _getImageDimension({required String path}) async {
+    final file = File(path);
+    final imageBytes = await file.readAsBytes();
+
+    final codec = await instantiateImageCodec(imageBytes);
+    final frame = await codec.getNextFrame();
+    final image = frame.image;
+
+    return (width: image.width, height: image.height);
   }
 }
 
