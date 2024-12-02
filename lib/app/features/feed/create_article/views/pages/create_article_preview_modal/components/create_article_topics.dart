@@ -28,8 +28,7 @@ class CreateArticleTopics extends ConsumerWidget {
       contentPadding: EdgeInsets.zero,
       backgroundColor: context.theme.appColors.secondaryBackground,
       leading: selectedOption.getIcon(context),
-      trailing: Assets.svg.iconArrowRight
-          .icon(color: context.theme.appColors.primaryAccent),
+      trailing: Assets.svg.iconArrowRight.icon(color: context.theme.appColors.primaryAccent),
       constraints: BoxConstraints(minHeight: 40.0.s),
       onTap: () {
         showSimpleBottomSheet<void>(
