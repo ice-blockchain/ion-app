@@ -9,16 +9,14 @@ part 'contacts_data_provider.g.dart';
 @Riverpod(keepAlive: true)
 class ContactsDataNotifier extends _$ContactsDataNotifier {
   @override
-  Map<String, ContactData> build() {
-    final contacts = <String, ContactData>{};
-    return Map<String, ContactData>.unmodifiable(contacts);
-  }
+  Future<Map<String, ContactData>> build() async {
+    // Simulate a network delay
+    await Future<void>.delayed(const Duration(seconds: 2));
 
-  void fetchContacts() {
     final contacts = <String, ContactData>{};
     for (final contactData in mockedContactDataArray) {
-      contacts.putIfAbsent(contactData.id, () => contactData);
+      contacts[contactData.id] = contactData;
     }
-    state = Map<String, ContactData>.unmodifiable(contacts);
+    return Map<String, ContactData>.unmodifiable(contacts);
   }
 }

@@ -3,15 +3,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
-import 'package:ion/app/features/wallet/providers/filtered_wallet_coins_provider.dart';
-import 'package:ion/app/features/wallet/providers/filtered_wallet_nfts_provider.dart';
+import 'package:ion/app/features/wallet/model/nft_layout_type.dart';
+import 'package:ion/app/features/wallet/providers/filtered_assets_provider.dart';
+import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_header.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/header/header.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab.dart';
@@ -25,6 +30,45 @@ import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.
 class WalletPage extends HookConsumerWidget {
   const WalletPage({super.key});
 
+  Widget _buildListLoader() {
+    return ListItemsLoadingState(
+      itemsCount: 7,
+      separatorHeight: 12.0.s,
+      itemHeight: 60.0.s,
+      padding: EdgeInsets.zero,
+      listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
+    );
+  }
+
+  Widget _buildGridLoader(BuildContext context) {
+    final width =
+        (MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultSmallMargin * 2 - 12.0.s) / 2;
+    final height = width / NftsTab.aspectRatio;
+    return SliverToBoxAdapter(
+      child: ScreenSideOffset.small(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                ContainerSkeleton(width: width, height: height),
+                SizedBox(
+                  width: 12.0.s,
+                ),
+                ContainerSkeleton(width: width, height: height),
+              ],
+            ),
+            SizedBox(
+              height: 16.0.s,
+            ),
+            ItemLoadingState(
+              itemHeight: 60.0.s,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
@@ -32,28 +76,26 @@ class WalletPage extends HookConsumerWidget {
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
-    final coinsState = ref.watch(filteredWalletCoinsProvider);
-    final nftsState = ref.watch(filteredWalletNftsProvider);
-
-    final isLoading = coinsState.isLoading || nftsState.isLoading;
+    final coinsState = ref.watch(filteredCoinsProvider);
+    final nftsState = ref.watch(filteredNftsProvider);
+    final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
 
     List<Widget> getActiveTabContent() {
-      if (isLoading) {
-        return [
-          ListItemsLoadingState(
-            itemsCount: 7,
-            separatorHeight: 12.0.s,
-            listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
-          ),
-        ];
-      }
-
       if (activeTab.value == WalletTabType.coins) {
+        if (coinsState.isLoading) {
+          return [_buildListLoader()];
+        }
         return [
           const CoinsTab(),
           const CoinsTabFooter(),
         ];
       } else {
+        if (nftsState.isLoading) {
+          if (nftLayoutType == NftLayoutType.list) {
+            return [_buildListLoader()];
+          }
+          return [_buildGridLoader(context)];
+        }
         return [
           const NftsTab(),
           const NftsTabFooter(),
@@ -73,6 +115,7 @@ class WalletPage extends HookConsumerWidget {
             child: Column(
               children: [
                 const Balance(),
+                const ContactsList(),
                 Delimiter(
                   padding: EdgeInsets.only(
                     top: 16.0.s,

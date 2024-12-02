@@ -21,7 +21,6 @@ class CoinsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final coins = ref.watch(filteredWalletCoinsProvider).valueOrNull ?? [];
 
-    // TODO: add proper loading state
     if (coins.isEmpty) {
       return const EmptyState(
         tabType: tabType,

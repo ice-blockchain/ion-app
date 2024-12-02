@@ -21,12 +21,13 @@ class NftsTab extends ConsumerWidget {
 
   static const WalletTabType tabType = WalletTabType.nfts;
 
+  static const double aspectRatio = 0.72;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final nfts = ref.watch(filteredWalletNftsProvider).valueOrNull ?? [];
     final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
 
-    // TODO: add loading state
     if (nfts.isEmpty) {
       return const EmptyState(
         tabType: tabType,
@@ -43,7 +44,7 @@ class NftsTab extends ConsumerWidget {
             crossAxisCount: 2,
             crossAxisSpacing: NftConstants.gridSpacing,
             mainAxisSpacing: NftConstants.gridSpacing,
-            childAspectRatio: 0.72,
+            childAspectRatio: aspectRatio,
           ),
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {

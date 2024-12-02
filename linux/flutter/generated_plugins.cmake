@@ -6,7 +6,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   file_saver
   file_selector_linux
   flutter_secure_storage_linux
-  image_compression_flutter
   screen_retriever
   url_launcher_linux
   window_manager
