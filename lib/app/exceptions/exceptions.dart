@@ -112,8 +112,10 @@ class EventMasterPubkeyNotFoundException extends IONException {
 
 class UserMasterPubkeyNotFoundException extends IONException {
   UserMasterPubkeyNotFoundException({String? pubkey})
-      : super(10023,
-            'Master pubkey is not found for ${pubkey == null ? "current user" : 'user $pubkey'}');
+      : super(
+          10023,
+          'Master pubkey is not found for ${pubkey == null ? "current user" : 'user $pubkey'}',
+        );
 }
 
 class RequiredFieldIsEmptyException extends IONException {
