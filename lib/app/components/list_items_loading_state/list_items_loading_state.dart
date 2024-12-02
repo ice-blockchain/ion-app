@@ -18,12 +18,14 @@ class ListItemsLoadingState extends StatelessWidget {
     this.itemsCount,
     this.itemHeight,
     this.separatorHeight,
+    this.padding,
     super.key,
   });
 
   final int? itemsCount;
   final double? itemHeight;
   final double? separatorHeight;
+  final EdgeInsetsGeometry? padding;
   final ListItemsLoadingStateType listItemsLoadingStateType;
 
   Widget _buildSkeleton({
@@ -49,10 +51,13 @@ class ListItemsLoadingState extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (listItemsLoadingStateType) {
       case ListItemsLoadingStateType.listView:
-        return _buildSkeleton(context: context);
+        return Padding(
+          padding: padding ?? EdgeInsets.zero,
+          child: _buildSkeleton(context: context),
+        );
       case ListItemsLoadingStateType.scrollView:
         return SliverPadding(
-          padding: EdgeInsets.only(top: 16.0.s),
+          padding: padding ?? EdgeInsets.only(top: 16.0.s),
           sliver: SliverToBoxAdapter(
             child: _buildSkeleton(context: context),
           ),

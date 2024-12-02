@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
@@ -11,15 +12,17 @@ class BalanceActions extends StatelessWidget {
   const BalanceActions({
     required this.onReceive,
     required this.onSend,
+    this.isLoading = false,
     super.key,
   });
 
   final VoidCallback onReceive;
   final VoidCallback onSend;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final child = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
@@ -28,7 +31,7 @@ class BalanceActions extends StatelessWidget {
             label: Text(
               context.i18n.wallet_send,
             ),
-            onPressed: onSend,
+            onPressed: isLoading ? () {} : onSend,
           ),
         ),
         SizedBox(
@@ -36,15 +39,17 @@ class BalanceActions extends StatelessWidget {
         ),
         Expanded(
           child: Button.compact(
-            type: ButtonType.outlined,
+            type: isLoading ? ButtonType.primary : ButtonType.outlined,
             leadingIcon: Assets.svg.iconButtonReceive.icon(),
             label: Text(
               context.i18n.wallet_receive,
             ),
-            onPressed: onReceive,
+            onPressed: isLoading ? () {} : onReceive,
           ),
         ),
       ],
     );
+
+    return isLoading ? Skeleton(child: child) : child;
   }
 }

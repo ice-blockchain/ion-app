@@ -3,17 +3,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
-import 'package:ion/app/features/wallet/providers/filtered_wallet_coins_provider.dart';
-import 'package:ion/app/features/wallet/providers/filtered_wallet_nfts_provider.dart';
+import 'package:ion/app/features/wallet/model/nft_layout_type.dart';
+import 'package:ion/app/features/wallet/providers/filtered_assets_provider.dart';
+import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_header.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/header/header.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/loaders/grid_loader.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/loaders/list_loader.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_footer.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_header.dart';
@@ -32,33 +35,26 @@ class WalletPage extends HookConsumerWidget {
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
-    final coinsState = ref.watch(filteredWalletCoinsProvider);
-    final nftsState = ref.watch(filteredWalletNftsProvider);
-
-    final isLoading = coinsState.isLoading || nftsState.isLoading;
+    final coinsState = ref.watch(filteredCoinsProvider);
+    final nftsState = ref.watch(filteredNftsProvider);
+    final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
 
     List<Widget> getActiveTabContent() {
-      if (isLoading) {
-        return [
-          ListItemsLoadingState(
-            itemsCount: 7,
-            separatorHeight: 12.0.s,
-            listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
-          ),
-        ];
-      }
-
       if (activeTab.value == WalletTabType.coins) {
-        return [
-          const CoinsTab(),
-          const CoinsTabFooter(),
-        ];
-      } else {
-        return [
-          const NftsTab(),
-          const NftsTabFooter(),
-        ];
+        return coinsState.isLoading
+            ? [const ListLoader()]
+            : [
+                const CoinsTab(),
+                const CoinsTabFooter(),
+              ];
       }
+      if (nftsState.isLoading) {
+        return nftLayoutType == NftLayoutType.list ? [const ListLoader()] : [const GridLoader()];
+      }
+      return [
+        const NftsTab(),
+        const NftsTabFooter(),
+      ];
     }
 
     return Scaffold(
@@ -73,6 +69,7 @@ class WalletPage extends HookConsumerWidget {
             child: Column(
               children: [
                 const Balance(),
+                const ContactsList(),
                 Delimiter(
                   padding: EdgeInsets.only(
                     top: 16.0.s,
