@@ -539,6 +539,7 @@
   "push_notifications_no_access_description": "You have previously denied notification permission. Please go to settings to enable notifications.",
   "story_preview_title": "Story preview",
   "story_settings_title": "Who can reply this story",
+  "article_settings_title": "Who can reply this article",
   "chat_title": "Chats",
   "chat_empty_description": "You have no conversations yet",
   "chat_new_message_button": "New message",
