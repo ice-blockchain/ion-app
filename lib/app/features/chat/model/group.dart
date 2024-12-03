@@ -2,7 +2,6 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
 
 part 'group.freezed.dart';
 

@@ -10,7 +10,6 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
-import 'package:ion/app/features/chat/model/group.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.dart';
 import 'package:ion/app/features/chat/providers/create_group_provider.dart';
@@ -20,7 +19,6 @@ import 'package:ion/app/features/chat/views/components/general_selection_button.
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
-import 'package:ion/app/features/user/providers/avatar_processor_notifier.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
