@@ -73,12 +73,24 @@ BanubaService banubaService(Ref ref) {
 Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
   final filePath = await ref.read(assetFilePathProvider(mediaFile.path).future);
 
-  if (filePath == null || mediaFile.mimeType == null) {
+  if (filePath == null) {
     Logger.log('File path or mime type is null', error: mediaFile, stackTrace: StackTrace.current);
     throw Exception('File path or mime type is null');
   }
 
-  return MediaType.fromMimeType(mediaFile.mimeType!) == MediaType.video
-      ? ref.read(banubaServiceProvider).editVideo(filePath)
-      : ref.read(banubaServiceProvider).editPhoto(filePath);
+  if (mediaFile.mimeType == null) {
+    Logger.log('Mime type is null', error: mediaFile, stackTrace: StackTrace.current);
+    throw Exception('Mime type is null');
+  }
+
+  final mediaType = MediaType.fromMimeType(mediaFile.mimeType!);
+
+  switch (mediaType) {
+    case MediaType.image:
+      return ref.read(banubaServiceProvider).editPhoto(filePath);
+    case MediaType.video:
+      return ref.read(banubaServiceProvider).editVideo(filePath);
+    case MediaType.unknown:
+      throw Exception('Unknown media type');
+  }
 }
