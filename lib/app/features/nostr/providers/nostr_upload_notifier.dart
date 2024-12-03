@@ -78,12 +78,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
         path: FileStorageMetadata.path,
       );
 
-      final response = await ref.read(dioProvider).getUri<dynamic>(
-            metadataUri,
-            options: Options(
-              contentType: 'application/json',
-            ),
-          );
+      final response = await ref.read(dioProvider).getUri<dynamic>(metadataUri);
       final uploadPath =
           FileStorageMetadata.fromJson(json.decode(response.data as String) as Map<String, dynamic>)
               .apiUrl;
