@@ -26,7 +26,7 @@ class SvgShadow extends StatelessWidget {
       children: [
         if (color.alpha != 0)
           Transform.translate(
-            offset: offset ??  Offset(0, 1.5.s),
+            offset: offset ?? Offset(0, 1.5.s),
             child: ImageFiltered(
               imageFilter: ImageFilter.blur(
                 sigmaY: sigma ?? 1.5,

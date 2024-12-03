@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/wallet/model/coin_data.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/model/manage_coin_data.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/providers/mock_data/manage_coins_mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -73,4 +74,11 @@ AsyncValue<List<ManageCoinData>> selectedCoins(Ref ref) {
   final allCoinsMap = ref.watch(manageCoinsNotifierProvider).value ?? {};
   final selected = allCoinsMap.values.where((coin) => coin.isSelected).toList();
   return AsyncData<List<ManageCoinData>>(selected);
+}
+
+@riverpod
+CoinData? mockedCoinById(Ref ref, {required String coinId}) {
+  return mockedManageCoinsDataArray
+      .firstWhere((coin) => coin.coinData.abbreviation == coinId)
+      .coinData;
 }
