@@ -8,7 +8,6 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header_hide_action.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header_tab.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
@@ -56,7 +55,6 @@ class WalletTabsHeader extends ConsumerWidget {
             onTap: () => DAppsRoute().push<void>(context),
           ),
           const Spacer(),
-          const WalletTabsHeaderHideAction(),
           TextButton(
             onPressed: () {
               ref.read(searchVisibleProvider.notifier).isVisible = true;
