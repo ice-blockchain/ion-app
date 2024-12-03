@@ -47,7 +47,8 @@ class ShareAddressView extends StatelessWidget {
                 Button.compact(
                   mainAxisSize: MainAxisSize.max,
                   minimumSize: Size(56.0.s, 56.0.s),
-                  leadingIcon: Assets.svg.iconButtonSend.icon(),
+                  leadingIcon: Assets.svg.iconButtonShare
+                      .icon(color: context.theme.appColors.secondaryBackground),
                   label: Text(
                     context.i18n.button_share,
                   ),
