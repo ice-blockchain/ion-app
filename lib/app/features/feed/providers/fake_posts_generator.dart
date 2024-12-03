@@ -23,29 +23,31 @@ PostEntity generateFakePost() {
 
 const _fakeFeedMessages = [
   // Short messages
-  'Wow!',
-  'Amazing deal!',
-  'This is incredible.',
-  'Cant believe this!',
-  'Epic moment.',
+
+  'Wow! #amazing',
+  'Amazing deal! #nostr',
+  'This is incredible. @jack ⚡️',
+  'Cant believe this! #nostr',
+  'Epic moment. #bitcoin ⚡️',
 
   // Medium-length messages
-  'A cozy day with my favorite book.',
-  'The best coffee I have had in years.',
-  'Just saw the cutest puppy today!',
-  'Dinner with friends was amazing.',
-  'My latest painting is finally done!',
-  'Workout complete, feeling strong.',
-  'Exploring a new trail this weekend.',
+
+  'A cozy day with my favorite book. @alice #reading',
+  'The best coffee I have had in years. Check out https://bitcoin.org #coffee',
+  'Just saw the cutest puppy today! @bob #pets #dogs',
+  'Dinner with friends was amazing. @carol @dave #foodie',
+  'My latest painting is finally done! #art',
+  'Workout complete, feeling strong. @gym_buddy #fitness',
+  'Exploring a new trail this weekend. https://nostr.com #hiking',
 
   // Long messages
-  'I just tried this amazing recipe for homemade pizza, and it turned out so good! Highly recommend it to anyone who loves to cook.',
-  'Today I spent hours exploring a beautiful forest trail. The sunlight streaming through the trees and the sound of the birds made it feel magical.',
-  'Finally finished watching that series everyone been talking about. The ending blew my mind—I wasnt expecting that at all!',
-  'A big thank you to everyone who supported me throughout this journey. Your encouragement means the world, and Im so grateful!',
-  'Attended a workshop on mindfulness today, and it completely changed the way I think about things. Feeling inspired and ready to practice more!',
-];
 
+  'I just tried this amazing recipe for homemade pizza from https://recipes.com, and it turned out so good! @chef_john #cooking #foodie Highly recommend it to anyone who loves to cook.',
+  'Today I spent hours exploring a beautiful forest trail with @naturelov3r. The sunlight streaming through the trees and the sound of the birds made it feel magical. #nature #hiking #outdoors',
+  'Finally finished watching that series everyone @netflix been talking about. The ending blew my mind—I wasnt expecting that at all! #bingeworthy #mustwatch',
+  'A big thank you to @everyone @team who supported me throughout this journey. Your encouragement means the world, and Im so grateful! #grateful #community',
+  'Attended a workshop on mindfulness today with @guru, and it completely changed the way I think about things. https://mindful.org #mindfulness #growth Feeling inspired and ready to practice more!',
+];
 PostEntity generateFakePostWithVideo() {
   final basePost = generateFakePost();
 

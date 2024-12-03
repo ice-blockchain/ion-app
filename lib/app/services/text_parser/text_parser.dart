@@ -33,7 +33,7 @@ class TextParser {
     final patterns = <String>[];
 
     for (var i = 0; i < matchers.length; i++) {
-      final pattern = matchers[i].pattern;
+      final pattern = matchers.elementAt(i).pattern;
       final groupName = '__parser__$i';
       final groupCount = RegExp('$pattern|.*').firstMatch('')?.groupCount ?? 0;
 
@@ -47,7 +47,16 @@ class TextParser {
     _pattern = patterns.join('|');
   }
 
-  final List<TextMatcher> matchers;
+  /// TextParser with all matchers, that will be used to parse the text.
+  factory TextParser.allMatchers() => TextParser(
+        matchers: const {
+          UrlMatcher(),
+          HashtagMatcher(),
+          MentionMatcher(),
+        },
+      );
+
+  final Set<TextMatcher> matchers;
 
   final List<String> _matcherGroupNames = [];
 
@@ -77,7 +86,7 @@ class TextParser {
           TextMatch(
             substring,
             offset: match.start,
-            matcherType: matchers[matcherIndex].runtimeType,
+            matcher: matchers.elementAt(matcherIndex),
             matcherIndex: matcherIndex,
             groups: match.groups(_matcherGroupRanges[matcherIndex]),
           ),

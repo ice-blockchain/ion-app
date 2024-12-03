@@ -10,9 +10,8 @@ import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ion/app/services/text_parser/matchers/hashtag_matcher.dart';
-import 'package:ion/app/services/text_parser/matchers/url_matcher.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
+import 'package:ion/app/services/text_parser/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -62,11 +61,11 @@ class PostData with _$PostData implements EventSerializable {
     List<RelatedHashtag>? relatedHashtags,
   }) = _PostData;
 
-  const PostData._();
-
   factory PostData.fromEventMessage(EventMessage eventMessage) {
-    final parsedContent = TextParser(matchers: [const UrlMatcher()]).parse(eventMessage.content);
+    final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
+
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+
     return PostData(
       content: parsedContent,
       media: _buildMedia(tags[MediaAttachment.tagName], parsedContent),
@@ -78,18 +77,35 @@ class PostData with _$PostData implements EventSerializable {
   }
 
   factory PostData.fromRawContent(String content) {
-    final parsedContent =
-        TextParser(matchers: [const UrlMatcher(), const HashtagMatcher()]).parse(content);
+    final parsedContent = TextParser.allMatchers().parse(content);
+
     final hashtags = parsedContent
-        .where((match) => match.matcherType is HashtagMatcher)
+        .where((match) => match.matcher is HashtagMatcher)
         .map((match) => RelatedHashtag(value: match.text))
         .toList();
+
     return PostData(
       content: parsedContent,
       relatedHashtags: hashtags,
       media: {},
     );
   }
+
+  const PostData._();
+
+  List<MediaAttachment> get postMedia => content.fold<List<MediaAttachment>>(
+        [],
+        (result, match) {
+          if (match.matcher is UrlMatcher && media.containsKey(match.text)) {
+            result.add(media[match.text]!);
+          }
+          return result;
+        },
+      );
+
+  List<TextMatch> get contentWithoutMedia => content.where((match) {
+        return !postMedia.any((media) => media.url == match.text);
+      }).toList();
 
   @override
   EventMessage toEventMessage(EventSigner signer) {
@@ -121,7 +137,7 @@ class PostData with _$PostData implements EventSerializable {
       {},
       (result, match) {
         final link = match.text;
-        if (match.matcherType == UrlMatcher) {
+        if (match.matcher is UrlMatcher) {
           if (imeta.containsKey(link)) {
             result[link] = imeta[link]!;
           } else {

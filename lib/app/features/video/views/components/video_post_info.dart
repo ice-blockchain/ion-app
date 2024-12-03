@@ -2,14 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/text_span_builder/hooks/use_text_span_builder.dart';
+import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/video/views/components/video_post_text.dart';
-import 'package:ion/app/utils/post_text.dart';
 
-class VideoPostInfo extends ConsumerWidget {
+class VideoPostInfo extends HookConsumerWidget {
   const VideoPostInfo({
     required this.videoPost,
     super.key,
@@ -56,7 +57,15 @@ class VideoPostInfo extends ConsumerWidget {
                   bottom: 14.0.s,
                 ),
                 child: VideoTextPost(
-                  text: extractPostText(videoPost.data.content),
+                  textSpan: useTextSpanBuilder(
+                    context,
+                    defaultStyle: context.theme.appTextThemes.body2.copyWith(
+                      color: context.theme.appColors.secondaryBackground,
+                    ),
+                  ).build(
+                    videoPost.data.contentWithoutMedia,
+                    onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
+                  ),
                 ),
               ),
             ],

@@ -1,21 +1,29 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/foundation.dart';
+sealed class TextMatcher {
+  const TextMatcher();
 
-@immutable
-abstract class TextMatcher {
-  const TextMatcher(this.pattern);
+  String get pattern;
+}
 
-  final String pattern;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TextMatcher && runtimeType == other.runtimeType && pattern == other.pattern;
+class MentionMatcher extends TextMatcher {
+  const MentionMatcher();
 
   @override
-  int get hashCode => Object.hash(runtimeType, pattern);
+  String get pattern => r'@\w+\b';
+}
+
+class HashtagMatcher extends TextMatcher {
+  const HashtagMatcher();
 
   @override
-  String toString() => '$runtimeType(pattern: $pattern)';
+  String get pattern => r'#[^\s]+';
+}
+
+class UrlMatcher extends TextMatcher {
+  const UrlMatcher();
+
+  @override
+  String get pattern =>
+      r'https?://(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)\b';
 }

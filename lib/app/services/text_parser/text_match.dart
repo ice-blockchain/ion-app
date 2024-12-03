@@ -6,24 +6,20 @@ class TextMatch {
   const TextMatch(
     this.text, {
     this.groups = const [],
-    this.matcherType = TextMatcher,
+    this.matcher,
     this.matcherIndex,
     this.offset = 0,
   });
 
   final String text;
-
   final List<String?> groups;
-
-  final Type matcherType;
-
+  final TextMatcher? matcher;
   final int? matcherIndex;
-
   final int offset;
 
   @override
   String toString() {
-    return 'TextMatch(text: $text, groups: $groups, matcherType: $matcherType, '
+    return 'TextMatch(text: $text, groups: $groups, matcher: $matcher, '
         'matcherIndex: $matcherIndex, offset: $offset)';
   }
 }
