@@ -2,8 +2,11 @@
 
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.dart';
+import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:ve_sdk_flutter/features_config.dart';
 import 'package:ve_sdk_flutter/ve_sdk_flutter.dart';
@@ -28,7 +31,7 @@ class BanubaService {
     );
   }
 
-  Future<String> startPhotoEditor(String filePath) async {
+  Future<String> editPhoto(String filePath) async {
     try {
       await _initPhotoEditor();
 
@@ -48,7 +51,7 @@ class BanubaService {
     }
   }
 
-  Future<String> openTrimmerScreen(String filePath) async {
+  Future<String> editVideo(String filePath) async {
     final config = FeaturesConfigBuilder().build();
 
     final exportResult = await VeSdkFlutter().openTrimmerScreen(
@@ -64,4 +67,18 @@ class BanubaService {
 @riverpod
 BanubaService banubaService(Ref ref) {
   return BanubaService(ref.watch(envProvider.notifier));
+}
+
+@riverpod
+Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
+  final filePath = await ref.read(assetFilePathProvider(mediaFile.path).future);
+
+  if (filePath == null || mediaFile.mimeType == null) {
+    Logger.log('File path or mime type is null', error: mediaFile, stackTrace: StackTrace.current);
+    throw Exception('File path or mime type is null');
+  }
+
+  return MediaType.fromMimeType(mediaFile.mimeType!) == MediaType.video
+      ? ref.read(banubaServiceProvider).editVideo(filePath)
+      : ref.read(banubaServiceProvider).editPhoto(filePath);
 }

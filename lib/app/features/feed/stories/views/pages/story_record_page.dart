@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
@@ -15,7 +14,6 @@ import 'package:ion/app/features/feed/stories/providers/story_camera_provider.da
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/services/media_service/banuba_service.dart';
 
@@ -40,15 +38,7 @@ class StoryRecordPage extends HookConsumerWidget {
 
     ref.listen<StoryCameraState>(storyCameraControllerProvider, (_, next) async {
       if (next is StoryCameraSaved && context.mounted) {
-        var filePath = await ref.read(assetFilePathProvider(next.file.path).future);
-
-        if (filePath == null) return;
-
-        if (MediaType.fromMimeType(next.file.mimeType!) == MediaType.video) {
-          filePath = await ref.read(banubaServiceProvider).openTrimmerScreen(filePath);
-        } else {
-          filePath = await ref.read(banubaServiceProvider).startPhotoEditor(filePath);
-        }
+        final filePath = await ref.read(editMediaProvider(next.file).future);
 
         if (context.mounted) {
           await StoryPreviewRoute(
