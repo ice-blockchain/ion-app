@@ -137,18 +137,15 @@ class TextSpanBuilder {
     BuildContext context, {
     TextStyle? style,
   }) {
-    final defaultStyle = style ?? context.theme.appTextThemes.body2;
+    final defaultStyle = style ??
+        context.theme.appTextThemes.body2.copyWith(
+          color: context.theme.appColors.darkBlue,
+        );
 
     return {
-      const HashtagMatcher(): defaultStyle.copyWith(
-        color: context.theme.appColors.darkBlue,
-      ),
-      const UrlMatcher(): defaultStyle.copyWith(
-        color: context.theme.appColors.darkBlue,
-      ),
-      const MentionMatcher(): defaultStyle.copyWith(
-        color: context.theme.appColors.darkBlue,
-      ),
+      const HashtagMatcher(): defaultStyle,
+      const UrlMatcher(): defaultStyle,
+      const MentionMatcher(): defaultStyle,
     };
   }
 }
