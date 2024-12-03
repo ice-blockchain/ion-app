@@ -10,24 +10,28 @@ part 'manage_coins_provider.g.dart';
 @Riverpod(keepAlive: true)
 class ManageCoinsNotifier extends _$ManageCoinsNotifier {
   @override
-  AsyncValue<List<ManageCoinData>> build() {
-    return AsyncData<List<ManageCoinData>>(
-      List<ManageCoinData>.unmodifiable(mockedManageCoinsDataArray),
+  AsyncValue<Map<String, ManageCoinData>> build() {
+    return AsyncData<Map<String, ManageCoinData>>(
+      Map<String, ManageCoinData>.fromEntries(
+        mockedManageCoinsDataArray.map(
+          (coin) => MapEntry(coin.coinData.abbreviation, coin),
+        ),
+      ),
     );
   }
 
   void switchCoin({required String coinId}) {
-    final currentList = state.value ?? <ManageCoinData>[];
-    state = AsyncData<List<ManageCoinData>>(
-      List<ManageCoinData>.unmodifiable(
-        currentList.map((coin) {
-          if (coin.coinData.abbreviation == coinId) {
-            return coin.copyWith(isSelected: !coin.isSelected);
-          }
-          return coin;
-        }),
-      ),
-    );
+    final currentMap = state.value ?? <String, ManageCoinData>{};
+
+    if (currentMap.containsKey(coinId)) {
+      final updatedCoin = currentMap[coinId]!.copyWith(
+        isSelected: !currentMap[coinId]!.isSelected,
+      );
+
+      state = AsyncData<Map<String, ManageCoinData>>(
+        {...currentMap, coinId: updatedCoin},
+      );
+    }
   }
 }
 
@@ -46,7 +50,8 @@ class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
     final allCoinsState = ref.read(manageCoinsNotifierProvider);
 
     state = allCoinsState.maybeWhen(
-      data: (allCoins) {
+      data: (allCoinsMap) {
+        final allCoins = allCoinsMap.values.toList();
         final query = searchText.trim().toLowerCase();
 
         if (query.isEmpty) {
@@ -65,7 +70,7 @@ class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
 
 @Riverpod(keepAlive: true)
 AsyncValue<List<ManageCoinData>> selectedCoins(Ref ref) {
-  final allCoins = ref.watch(manageCoinsNotifierProvider).value ?? [];
-  final selected = allCoins.where((coin) => coin.isSelected).toList();
+  final allCoinsMap = ref.watch(manageCoinsNotifierProvider).value ?? {};
+  final selected = allCoinsMap.values.where((coin) => coin.isSelected).toList();
   return AsyncData<List<ManageCoinData>>(selected);
 }

@@ -28,7 +28,7 @@ class ManageCoinItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final manageCoinData = ref.watch(
       manageCoinsNotifierProvider.select(
-        (state) => state.valueOrNull?.firstWhere((coin) => coin.coinData.abbreviation == coinId),
+        (state) => state.valueOrNull?[coinId],
       ),
     );
 
