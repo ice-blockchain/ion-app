@@ -5,10 +5,10 @@ import 'package:ion/app/features/chat/model/group.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'create_group_provider.g.dart';
+part 'create_chat_group_provider.g.dart';
 
 @riverpod
-Group createGroup(Ref ref) {
+Group createChatGroup(Ref ref) {
   final createGroupForm = ref.read(createGroupFormControllerProvider);
 
   return Group(
