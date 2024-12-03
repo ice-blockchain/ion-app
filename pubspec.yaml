@@ -65,7 +65,11 @@ dependencies:
   permission_handler: ^11.3.0
   photo_manager: ^3.3.0
   photo_manager_image_provider: ^2.1.1
-  qr_code_scanner: ^1.0.1
+  qr_code_scanner:
+    git:
+      url: https://github.com/ice-blockchain/qr_code_scanner
+      ref: master
+      version: ^1.0.0
   qr_flutter: ^4.1.0
   riverpod_annotation: ^2.6.1
   share_plus: ^10.0.2
@@ -75,6 +79,7 @@ dependencies:
   timeago: ^3.6.1
   timeago_flutter: ^3.6.0
   url_launcher: ^6.0.12
+  ve_sdk_flutter: ^0.9.0
   video_player: ^2.9.1
   video_player_win: ^2.3.11
   visibility_detector: ^0.4.0+2

@@ -15,6 +15,7 @@ import 'package:ion/app/features/feed/stories/views/components/story_capture/com
 import 'package:ion/app/features/gallery/data/models/camera_state.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/services/media_service/banuba_service.dart';
 
 class StoryRecordPage extends HookConsumerWidget {
   const StoryRecordPage({super.key});
@@ -35,12 +36,16 @@ class StoryRecordPage extends HookConsumerWidget {
 
     final isCameraReady = cameraState is CameraReady;
 
-    ref.listen<StoryCameraState>(storyCameraControllerProvider, (_, next) {
+    ref.listen<StoryCameraState>(storyCameraControllerProvider, (_, next) async {
       if (next is StoryCameraSaved && context.mounted) {
-        StoryPreviewRoute(
-          path: next.file.path,
-          mimeType: next.file.mimeType,
-        ).push<void>(context);
+        final filePath = await ref.read(editMediaProvider(next.file).future);
+
+        if (context.mounted) {
+          await StoryPreviewRoute(
+            path: filePath,
+            mimeType: next.file.mimeType,
+          ).push<void>(context);
+        }
       }
     });
 

@@ -1637,11 +1637,12 @@ packages:
   qr_code_scanner:
     dependency: "direct main"
     description:
-      name: qr_code_scanner
-      sha256: f23b68d893505a424f0bd2e324ebea71ed88465d572d26bb8d2e78a4749591fd
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
+      path: "."
+      ref: master
+      resolved-ref: "8e9d77ac2bd98516c7dca8b12349ff3d44b83bd6"
+      url: "https://github.com/ice-blockchain/qr_code_scanner"
+    source: git
+    version: "1.0.0"
   qr_flutter:
     dependency: "direct main"
     description:
@@ -2087,6 +2088,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.5.1"
+  ve_sdk_flutter:
+    dependency: "direct main"
+    description:
+      name: ve_sdk_flutter
+      sha256: "2325eccc15db5643482d68f0737a5cac76fcc60bf678c33936c1b603e8e04ded"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.0"
   vector_graphics:
     dependency: transitive
     description:

@@ -11,6 +11,7 @@ import 'package:ion/app/features/feed/stories/providers/story_camera_provider.da
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/story_control_button.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/services/media_service/banuba_service.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -57,10 +58,14 @@ class IdleCameraPreview extends ConsumerWidget {
                 final mediaFiles =
                     await MediaPickerRoute(maxSelection: 1).push<List<MediaFile>>(context);
                 if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
-                  await StoryPreviewRoute(
-                    path: mediaFiles.first.path,
-                    mimeType: mediaFiles.first.mimeType,
-                  ).push<void>(context);
+                  final filePath = await ref.read(editMediaProvider(mediaFiles.first).future);
+
+                  if (context.mounted) {
+                    await StoryPreviewRoute(
+                      path: filePath,
+                      mimeType: mediaFiles.first.mimeType,
+                    ).push<void>(context);
+                  }
                 }
               }
             },
