@@ -13,6 +13,7 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/general_
 import 'package:ion/app/features/chat/model/group.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.dart';
+import 'package:ion/app/features/chat/providers/create_group_provider.dart';
 import 'package:ion/app/features/chat/providers/groups_provider.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
@@ -171,20 +172,11 @@ class CreateGroupModal extends HookConsumerWidget {
                 label: Text(context.i18n.group_create_create_button),
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    final newGroup = Group(
-                      id: 'new_group',
-                      link: 'https://ice.io/testers_group',
-                      name: createGroupForm.name!,
-                      type: createGroupForm.type,
-                      members: createGroupForm.members.toList(),
-                      image: ref.read(avatarProcessorNotifierProvider).mapOrNull(
-                            cropped: (file) => file.file,
-                            processed: (file) => file.file,
-                          ),
-                    );
+                    final newGroup = ref.read(createGroupProvider);
 
                     ref.read(groupsProvider.notifier).setGroup(newGroup.id, newGroup);
                     ref.read(conversationsProvider.notifier).addGroupConversation(newGroup);
+
                     GroupRoute(pubkey: newGroup.id).replace(context);
                   }
                 },

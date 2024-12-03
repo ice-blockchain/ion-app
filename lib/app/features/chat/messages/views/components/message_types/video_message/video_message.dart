@@ -66,6 +66,7 @@ class VideoMessage extends HookConsumerWidget {
           maxWidth: contentWidth.value,
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MessageAuthorNameWidget(author: author),
             ConstrainedBox(

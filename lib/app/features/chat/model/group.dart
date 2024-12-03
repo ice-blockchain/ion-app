@@ -14,6 +14,6 @@ class Group with _$Group {
     required String name,
     required List<String> members,
     required GroupType type,
-    MediaFile? image,
+    String? imageUrl,
   }) = _Group;
 }

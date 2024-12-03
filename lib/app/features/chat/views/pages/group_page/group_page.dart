@@ -44,11 +44,7 @@ class GroupPage extends ConsumerWidget {
             children: [
               MessagingHeader(
                 onTap: () {},
-                imageWidget: group.image != null
-                    ? Image.file(
-                        File(group.image!.path),
-                      )
-                    : null,
+                imageUrl: group.imageUrl,
                 name: group.name,
                 subtitle: Text(
                   context.i18n.members_count(group.members.length),
