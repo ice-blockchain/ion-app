@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
@@ -30,7 +32,9 @@ class RestoreMenuPage extends StatelessWidget {
                 SizedBox(height: 12.0.s),
                 RestoreMenuItem(
                   icon: Assets.svg.walletLoginCloud.icon(size: 48.0.s),
-                  title: context.i18n.restore_identity_type_icloud_title,
+                  title: Platform.isIOS
+                      ? context.i18n.restore_identity_type_icloud_title
+                      : context.i18n.restore_identity_type_google_drive_title,
                   description: context.i18n.restore_identity_type_icloud_description,
                   onPressed: () {},
                 ),
