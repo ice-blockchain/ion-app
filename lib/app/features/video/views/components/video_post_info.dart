@@ -63,7 +63,7 @@ class VideoPostInfo extends HookConsumerWidget {
                       color: context.theme.appColors.secondaryBackground,
                     ),
                   ).build(
-                    videoPost.data.content,
+                    videoPost.data.contentWithoutMedia,
                     onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
                   ),
                 ),

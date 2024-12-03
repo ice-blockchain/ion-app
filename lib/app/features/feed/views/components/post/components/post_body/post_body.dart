@@ -7,9 +7,6 @@ import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_body/hooks/use_post_media.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
-import 'package:ion/app/services/text_parser/text_match.dart';
 
 class PostBody extends HookConsumerWidget {
   const PostBody({
@@ -21,7 +18,7 @@ class PostBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postMedia = usePostMedia(postEntity.data);
+    final postMedia = postEntity.data.postMedia;
 
     final textSpanBuilder = useTextSpanBuilder(
       context,
@@ -30,11 +27,8 @@ class PostBody extends HookConsumerWidget {
       ),
     );
 
-    final filteredContent =
-        (postMedia.isEmpty) ? postEntity.data.content : _excludeMediaLinks(postMedia);
-
     final postText = textSpanBuilder.build(
-      filteredContent,
+      postEntity.data.contentWithoutMedia,
       onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
     );
 
@@ -47,11 +41,5 @@ class PostBody extends HookConsumerWidget {
         ),
       ],
     );
-  }
-
-  List<TextMatch> _excludeMediaLinks(List<MediaAttachment> postMedia) {
-    return postEntity.data.content.where((match) {
-      return !postMedia.any((media) => media.url == match.text);
-    }).toList();
   }
 }

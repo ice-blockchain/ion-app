@@ -61,8 +61,6 @@ class PostData with _$PostData implements EventSerializable {
     List<RelatedHashtag>? relatedHashtags,
   }) = _PostData;
 
-  const PostData._();
-
   factory PostData.fromEventMessage(EventMessage eventMessage) {
     final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
 
@@ -92,6 +90,22 @@ class PostData with _$PostData implements EventSerializable {
       media: {},
     );
   }
+
+  const PostData._();
+
+  List<MediaAttachment> get postMedia => content.fold<List<MediaAttachment>>(
+        [],
+        (result, match) {
+          if (match.matcher is UrlMatcher && media.containsKey(match.text)) {
+            result.add(media[match.text]!);
+          }
+          return result;
+        },
+      );
+
+  List<TextMatch> get contentWithoutMedia => content.where((match) {
+        return !postMedia.any((media) => media.url == match.text);
+      }).toList();
 
   @override
   EventMessage toEventMessage(EventSigner signer) {
