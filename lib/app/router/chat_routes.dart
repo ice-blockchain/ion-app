@@ -118,3 +118,13 @@ class CreateGroupModalRoute extends BaseRouteData {
           type: IceRouteType.bottomSheet,
         );
 }
+
+@TypedGoRoute<GroupRoute>(path: '/group/:pubkey')
+class GroupRoute extends BaseRouteData {
+  GroupRoute({required this.pubkey})
+      : super(
+          child: GroupPage(pubkey: pubkey),
+        );
+
+  final String pubkey;
+}

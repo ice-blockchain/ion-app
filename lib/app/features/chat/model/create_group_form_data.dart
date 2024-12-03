@@ -8,12 +8,12 @@ part 'create_group_form_data.freezed.dart';
 @freezed
 class CreateGroupFormData with _$CreateGroupFormData {
   const factory CreateGroupFormData({
-    @Default(GroupType.public) GroupType type,
-    String? title,
+    String? name,
     @Default({}) Set<String> members,
+    @Default(GroupType.public) GroupType type,
   }) = _CreateGroupFormData;
 
   const CreateGroupFormData._();
 
-  bool get canCreate => title != null && title!.isNotEmpty;
+  bool get canCreate => name != null && name!.isNotEmpty;
 }

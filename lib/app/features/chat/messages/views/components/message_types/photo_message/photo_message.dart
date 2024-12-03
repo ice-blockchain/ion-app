@@ -4,9 +4,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 import 'package:ion/app/router/app_routes.dart';
 
@@ -14,17 +16,22 @@ class PhotoMessage extends HookWidget {
   const PhotoMessage({
     required this.isMe,
     required this.imageUrl,
+    this.isLastMessageFromAuthor = true,
     this.message,
     this.reactions,
+    this.author,
     super.key,
   });
 
   final bool isMe;
   final String? message;
   final String imageUrl;
+  final MessageAuthor? author;
+  final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
   static double get padding => 8.0.s;
+
   static double get maxHeight => 300.0.s;
 
   @override
@@ -39,6 +46,7 @@ class PhotoMessage extends HookWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(padding),
       child: LayoutBuilder(
         builder: (context, _) {
@@ -62,6 +70,7 @@ class PhotoMessage extends HookWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                MessageAuthorNameWidget(author: author),
                 _PhotoContent(
                   imageUrl: imageUrl,
                   width: imageWidth.value,

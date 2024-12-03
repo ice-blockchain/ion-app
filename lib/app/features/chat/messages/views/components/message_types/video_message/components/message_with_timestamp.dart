@@ -7,12 +7,12 @@ class _MessageWithTimestamp extends StatelessWidget {
     required this.message,
     required this.isMe,
     this.reactions,
-    super.key,
   });
 
   final String message;
   final bool isMe;
   final List<MessageReactionGroup>? reactions;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,8 +22,7 @@ class _MessageWithTimestamp extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Flexible(
-            fit: (message.isEmpty && reactions == null) ? FlexFit.tight : FlexFit.loose,
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -11,7 +11,10 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
+import 'package:ion/app/features/chat/providers/create_chat_group_provider.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.dart';
+import 'package:ion/app/features/chat/providers/groups_provider.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
@@ -33,7 +36,7 @@ class CreateGroupModal extends HookConsumerWidget {
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
     final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
-    final nameController = useTextEditingController(text: createGroupForm.title);
+    final nameController = useTextEditingController(text: createGroupForm.name);
     final members = createGroupForm.members.toList();
 
     useEffect(
@@ -166,7 +169,14 @@ class CreateGroupModal extends HookConsumerWidget {
                 ),
                 label: Text(context.i18n.group_create_create_button),
                 onPressed: () {
-                  if (formKey.currentState!.validate()) {}
+                  if (formKey.currentState!.validate()) {
+                    final newGroup = ref.read(createChatGroupProvider);
+
+                    ref.read(groupsProvider.notifier).setGroup(newGroup.id, newGroup);
+                    ref.read(conversationsProvider.notifier).addGroupConversation(newGroup);
+
+                    GroupRoute(pubkey: newGroup.id).replace(context);
+                  }
                 },
               ),
             ),

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/model/chat_type.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.dart';
@@ -32,6 +34,8 @@ class RecentChatTile extends ConsumerWidget {
               MessagesRoute().push<void>(context);
             case ChatType.channel:
               ChannelRoute(pubkey: chat.id).push<void>(context);
+            case ChatType.group:
+              GroupRoute(pubkey: chat.id).push<void>(context);
           }
         }
       },
@@ -91,7 +95,7 @@ class RecentChatTile extends ConsumerWidget {
 class SenderSummary extends StatelessWidget {
   const SenderSummary({required this.sender, this.textColor, super.key});
 
-  final ChatSender sender;
+  final MessageAuthor sender;
   final Color? textColor;
 
   @override
@@ -166,6 +170,7 @@ class ChatPreview extends StatelessWidget {
 
   String _getMessageContentText(RecentChatMessage message, BuildContext context) =>
       switch (message) {
+        final SystemRecentChatMessage message => message.text,
         final TextRecentChatMessage textMessage => textMessage.text,
         final ReplayRecentChatMessage replayMessage => replayMessage.text,
         final DocumentRecentChatMessage documentMessage => documentMessage.fileName,
@@ -203,6 +208,7 @@ class RecentChatMessageIcon extends StatelessWidget {
 
   String? _getMessageIcon() => switch (message) {
         TextRecentChatMessage _ => null,
+        SystemRecentChatMessage _ => null,
         VideoRecentChatMessage _ => Assets.svg.iconFeedVideos,
         DocumentRecentChatMessage _ => Assets.svg.iconChatFile,
         LinkRecentChatMessage _ => Assets.svg.iconArticleLink,

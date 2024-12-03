@@ -7,30 +7,38 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/hooks/use_audio_playback_controller.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 part 'components/audio_wave_form_display.dart';
+
 part 'components/play_pause_button.dart';
 
 class AudioMessage extends HookConsumerWidget {
-  const AudioMessage(
-    this.id, {
+  const AudioMessage({
+    required this.id,
     required this.audioUrl,
     required this.isMe,
+    this.isLastMessageFromAuthor = true,
+    this.author,
     this.reactions,
     super.key,
   });
 
   final bool isMe;
-  final String audioUrl;
   final String id;
+  final String audioUrl;
+  final MessageAuthor? author;
+  final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -72,9 +80,21 @@ class AudioMessage extends HookConsumerWidget {
       [],
     );
 
+    final metadataWidth = useState<double>(0);
+    final metadataKey = useMemoized(GlobalKey.new);
+    final contentPadding = EdgeInsets.all(12.0.s);
+
+    useOnInit(() {
+      final renderBox = metadataKey.currentContext?.findRenderObject() as RenderBox?;
+      if (renderBox != null) {
+        metadataWidth.value = renderBox.size.width;
+      }
+    });
+
     return MessageItemWrapper(
       isMe: isMe,
-      contentPadding: EdgeInsets.all(12.0.s),
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
+      contentPadding: contentPadding,
       child: VisibilityDetector(
         key: ValueKey(audioUrl),
         onVisibilityChanged: (info) {
@@ -89,6 +109,7 @@ class AudioMessage extends HookConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                MessageAuthorNameWidget(author: author),
                 Row(
                   children: [
                     _PlayPauseButton(
@@ -104,10 +125,17 @@ class AudioMessage extends HookConsumerWidget {
                     ),
                   ],
                 ),
-                MessageReactions(reactions: reactions),
+                SizedBox(
+                  width:
+                      MessageItemWrapper.maxWidth - contentPadding.horizontal - metadataWidth.value,
+                  child: MessageReactions(reactions: reactions),
+                ),
               ],
             ),
-            MessageMetaData(isMe: isMe),
+            MessageMetaData(
+              key: metadataKey,
+              isMe: isMe,
+            ),
           ],
         ),
       ),

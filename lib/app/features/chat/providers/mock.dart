@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-enum ChatType { chat, channel }
+import 'package:ion/app/features/chat/model/chat_type.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 
 class RecentChatDataModel {
   RecentChatDataModel(
@@ -12,19 +13,10 @@ class RecentChatDataModel {
   });
 
   final String id;
-  final ChatSender sender;
+  final MessageAuthor sender;
   final int unreadMessageCount;
   final RecentChatMessage message;
   final ChatType type;
-}
-
-class ChatSender {
-  ChatSender(this.name, this.imageUrl, {this.isApproved = false, this.isIceUser = false});
-
-  final String name;
-  final String imageUrl;
-  final bool isApproved;
-  final bool isIceUser;
 }
 
 sealed class RecentChatMessage {
@@ -33,8 +25,13 @@ sealed class RecentChatMessage {
   final DateTime time;
 }
 
+class SystemRecentChatMessage extends RecentChatMessage {
+  SystemRecentChatMessage(this.text, super.time);
+  final String text;
+}
+
 class TextRecentChatMessage extends RecentChatMessage {
-  TextRecentChatMessage(this.text, DateTime time) : super(time);
+  TextRecentChatMessage(this.text, super.time);
   final String text;
 }
 
@@ -47,7 +44,7 @@ class VoiceRecentChatMessage extends RecentChatMessage {
 }
 
 class ReplayRecentChatMessage extends RecentChatMessage {
-  ReplayRecentChatMessage(this.text, DateTime time) : super(time);
+  ReplayRecentChatMessage(this.text, super.time);
   final String text;
 }
 
@@ -56,17 +53,17 @@ class VideoRecentChatMessage extends RecentChatMessage {
 }
 
 class DocumentRecentChatMessage extends RecentChatMessage {
-  DocumentRecentChatMessage(this.fileName, DateTime time) : super(time);
+  DocumentRecentChatMessage(this.fileName, super.time);
   final String fileName;
 }
 
 class LinkRecentChatMessage extends RecentChatMessage {
-  LinkRecentChatMessage(this.link, DateTime time) : super(time);
+  LinkRecentChatMessage(this.link, super.time);
   final String link;
 }
 
 class ProfileShareRecentChatMessage extends RecentChatMessage {
-  ProfileShareRecentChatMessage(this.displayName, DateTime time) : super(time);
+  ProfileShareRecentChatMessage(this.displayName, super.time);
   final String displayName;
 }
 
@@ -80,9 +77,9 @@ class MoneyRequestRecentChatMessage extends RecentChatMessage {
 
 final mockConversationData = [
   RecentChatDataModel(
-    ChatSender(
-      'Mike Planton',
-      'https://i.pravatar.cc/150?u=@john',
+    const MessageAuthor(
+      name: 'Mike Planton',
+      imageUrl: 'https://i.pravatar.cc/150?u=@john',
       isApproved: true,
     ),
     1,
@@ -93,9 +90,9 @@ final mockConversationData = [
     '1',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Mark Zuckerberg',
-      'https://i.pravatar.cc/150?u=@mark',
+    const MessageAuthor(
+      name: 'Mark Zuckerberg',
+      imageUrl: 'https://i.pravatar.cc/150?u=@mark',
     ),
     0,
     TextRecentChatMessage(
@@ -105,9 +102,9 @@ final mockConversationData = [
     '2',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Manmeet Singh',
-      'https://i.pravatar.cc/150?u=@ashish',
+    const MessageAuthor(
+      name: 'Manmeet Singh',
+      imageUrl: 'https://i.pravatar.cc/150?u=@ashish',
     ),
     0,
     TextRecentChatMessage(
@@ -117,9 +114,9 @@ final mockConversationData = [
     '3',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Alicia Wernet',
-      'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+    const MessageAuthor(
+      name: 'Alicia Wernet',
+      imageUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
       isIceUser: true,
     ),
     3,
@@ -129,9 +126,9 @@ final mockConversationData = [
     '4',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Manmeet Singh',
-      'https://i.pravatar.cc/150?u=@felix',
+    const MessageAuthor(
+      name: 'Manmeet Singh',
+      imageUrl: 'https://i.pravatar.cc/150?u=@felix',
     ),
     0,
     TextRecentChatMessage(
@@ -141,9 +138,9 @@ final mockConversationData = [
     '5',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Ice Open Network',
-      'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
+    const MessageAuthor(
+      name: 'Ice Open Network',
+      imageUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
       isApproved: true,
     ),
     3,
@@ -154,9 +151,9 @@ final mockConversationData = [
     '6',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Paul Walker',
-      'https://i.pravatar.cc/150?u=@paul',
+    const MessageAuthor(
+      name: 'Paul Walker',
+      imageUrl: 'https://i.pravatar.cc/150?u=@paul',
     ),
     123,
     VoiceRecentChatMessage(
@@ -165,9 +162,9 @@ final mockConversationData = [
     '7',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Danzel York',
-      'https://i.pravatar.cc/150?u=@danzel',
+    const MessageAuthor(
+      name: 'Danzel York',
+      imageUrl: 'https://i.pravatar.cc/150?u=@danzel',
       isApproved: true,
     ),
     3,
@@ -178,9 +175,9 @@ final mockConversationData = [
     '8',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Manmeet Singh',
-      'https://i.pravatar.cc/150?u=@venkat',
+    const MessageAuthor(
+      name: 'Manmeet Singh',
+      imageUrl: 'https://i.pravatar.cc/150?u=@venkat',
     ),
     0,
     TextRecentChatMessage(
@@ -190,9 +187,9 @@ final mockConversationData = [
     '9',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'David Glover',
-      'https://i.pravatar.cc/150?u=@david',
+    const MessageAuthor(
+      name: 'David Glover',
+      imageUrl: 'https://i.pravatar.cc/150?u=@david',
     ),
     123,
     VideoRecentChatMessage(
@@ -201,9 +198,9 @@ final mockConversationData = [
     '10',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'John Doe',
-      'https://i.pravatar.cc/150?u=@john',
+    const MessageAuthor(
+      name: 'John Doe',
+      imageUrl: 'https://i.pravatar.cc/150?u=@john',
       isApproved: true,
     ),
     0,
@@ -214,9 +211,9 @@ final mockConversationData = [
     '11',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Mike Planton',
-      'https://i.pravatar.cc/150?u=@mike',
+    const MessageAuthor(
+      name: 'Mike Planton',
+      imageUrl: 'https://i.pravatar.cc/150?u=@mike',
       isApproved: true,
     ),
     1,
@@ -227,9 +224,9 @@ final mockConversationData = [
     '12',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Alicia Wernet',
-      'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+    const MessageAuthor(
+      name: 'Alicia Wernet',
+      imageUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
       isIceUser: true,
     ),
     0,
@@ -240,9 +237,9 @@ final mockConversationData = [
     '13',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Ice Open Network',
-      'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
+    const MessageAuthor(
+      name: 'Ice Open Network',
+      imageUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
       isApproved: true,
       isIceUser: true,
     ),
@@ -253,9 +250,9 @@ final mockConversationData = [
     '14',
   ),
   RecentChatDataModel(
-    ChatSender(
-      'Paul Walker',
-      'https://i.pravatar.cc/150?u=@paul',
+    const MessageAuthor(
+      name: 'Paul Walker',
+      imageUrl: 'https://i.pravatar.cc/150?u=@paul',
     ),
     123,
     MoneyRequestRecentChatMessage(

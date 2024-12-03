@@ -21,7 +21,7 @@ class CreateGroupFormController extends _$CreateGroupFormController {
 
   set type(GroupType value) => state = state.copyWith(type: value);
 
-  set title(String value) => state = state.copyWith(title: value);
+  set title(String value) => state = state.copyWith(name: value);
 
   set members(Iterable<String> value) => state = state.copyWith(members: value.toSet());
 

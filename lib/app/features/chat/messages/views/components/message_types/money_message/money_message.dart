@@ -5,9 +5,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -21,6 +23,8 @@ class MoneyMessage extends HookWidget {
     required this.amount,
     required this.equivalentUsd,
     required this.chain,
+    this.isLastMessageFromAuthor = true,
+    this.author,
     this.reactions,
     super.key,
   });
@@ -30,7 +34,10 @@ class MoneyMessage extends HookWidget {
   final double amount;
   final double equivalentUsd;
   final String chain;
+  final MessageAuthor? author;
+  final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
+
   @override
   Widget build(BuildContext context) {
     final textColor = useMemoized(
@@ -76,6 +83,7 @@ class MoneyMessage extends HookWidget {
     );
 
     return MessageItemWrapper(
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
         vertical: 12.0.s,
@@ -84,6 +92,7 @@ class MoneyMessage extends HookWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          MessageAuthorNameWidget(author: author),
           Text(
             title,
             style: context.theme.appTextThemes.body2.copyWith(color: textColor),

@@ -2,28 +2,37 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/messages/views/components/replied_message_info/replied_message_info.dart';
+import 'package:ion/app/features/chat/model/message_author.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.dart';
-import 'package:ion/app/features/chat/providers/mock.dart';
+import 'package:ion/app/features/chat/model/replied_message.dart';
 
 class TextMessage extends StatelessWidget {
   const TextMessage({
-    required this.message,
     required this.isMe,
-    required this.reactions,
+    required this.message,
+    this.isLastMessageFromAuthor = true,
+    this.reactions = const [],
+    this.author,
+    this.repliedMessage,
     super.key,
   });
 
   final bool isMe;
   final String message;
+  final MessageAuthor? author;
+  final bool isLastMessageFromAuthor;
+  final RepliedMessage? repliedMessage;
   final List<MessageReactionGroup> reactions;
 
   @override
   Widget build(BuildContext context) {
     return MessageItemWrapper(
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
         vertical: 12.0.s,
@@ -33,15 +42,13 @@ class TextMessage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RepliedMessageInfo(
-              isMe: isMe,
-              sender: ChatSender(
-                'Boris Johnson',
-                'https://picsum.photos/200/300',
-                isApproved: true,
+            MessageAuthorNameWidget(author: author),
+            if (repliedMessage case final RepliedMessage replied)
+              RepliedMessageInfo(
+                isMe: isMe,
+                sender: replied.author,
+                message: replied.message,
               ),
-              message: PhotoRecentChatMessage(DateTime.now()),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
