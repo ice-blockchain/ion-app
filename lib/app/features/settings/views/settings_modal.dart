@@ -44,7 +44,7 @@ class SettingsModal extends ConsumerWidget {
         children: [
           NavigationAppBar.modal(
             showBackButton: false,
-            title: Text(context.i18n.common_profile),
+            title: Text(context.i18n.settings_title),
             actions: [
               NavigationCloseButton(
                 onPressed: context.pop,
