@@ -12,13 +12,13 @@ class MessageItemWrapper extends HookWidget {
     required this.isMe,
     required this.child,
     required this.contentPadding,
-    this.isLastMessageFromSender = true,
+    this.isLastMessageFromAuthor = true,
     super.key,
   });
 
   final bool isMe;
   final Widget child;
-  final bool isLastMessageFromSender;
+  final bool isLastMessageFromAuthor;
   final EdgeInsetsGeometry contentPadding;
 
   /// The maximum width of the message content in the chat
@@ -69,9 +69,9 @@ class MessageItemWrapper extends HookWidget {
                 topLeft: Radius.circular(12.0.s),
                 topRight: Radius.circular(12.0.s),
                 bottomLeft:
-                    !isLastMessageFromSender || isMe ? Radius.circular(12.0.s) : Radius.zero,
+                    !isLastMessageFromAuthor || isMe ? Radius.circular(12.0.s) : Radius.zero,
                 bottomRight:
-                    isMe && isLastMessageFromSender ? Radius.zero : Radius.circular(12.0.s),
+                    isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
               ),
             ),
             // Sender name shouldn't be shown for messages of the current user

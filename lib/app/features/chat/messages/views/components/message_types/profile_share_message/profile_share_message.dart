@@ -14,7 +14,7 @@ import 'package:ion/app/utils/username.dart';
 class ProfileShareMessage extends StatelessWidget {
   const ProfileShareMessage({
     required this.isMe,
-    this.isLastMessageFromSender = true,
+    this.isLastMessageFromAuthor = true,
     this.reactions,
     this.author,
     super.key,
@@ -22,13 +22,13 @@ class ProfileShareMessage extends StatelessWidget {
 
   final bool isMe;
   final MessageAuthor? author;
-  final bool isLastMessageFromSender;
+  final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
   @override
   Widget build(BuildContext context) {
     return MessageItemWrapper(
-      isLastMessageFromSender: isLastMessageFromSender,
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(12.0.s),
       isMe: isMe,
       child: IntrinsicWidth(

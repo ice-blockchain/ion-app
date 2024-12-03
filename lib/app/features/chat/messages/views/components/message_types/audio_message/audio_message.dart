@@ -28,7 +28,7 @@ class AudioMessage extends HookConsumerWidget {
     required this.id,
     required this.audioUrl,
     required this.isMe,
-    this.isLastMessageFromSender = true,
+    this.isLastMessageFromAuthor = true,
     this.author,
     this.reactions,
     super.key,
@@ -38,7 +38,7 @@ class AudioMessage extends HookConsumerWidget {
   final String id;
   final String audioUrl;
   final MessageAuthor? author;
-  final bool isLastMessageFromSender;
+  final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -93,7 +93,7 @@ class AudioMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
-      isLastMessageFromSender: isLastMessageFromSender,
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: contentPadding,
       child: VisibilityDetector(
         key: ValueKey(audioUrl),

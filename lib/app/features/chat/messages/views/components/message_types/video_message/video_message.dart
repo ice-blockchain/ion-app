@@ -18,7 +18,7 @@ class VideoMessage extends HookConsumerWidget {
   const VideoMessage({
     required this.isMe,
     required this.videoUrl,
-    this.isLastMessageFromSender = true,
+    this.isLastMessageFromAuthor = true,
     this.author,
     this.message,
     this.reactions,
@@ -28,7 +28,7 @@ class VideoMessage extends HookConsumerWidget {
   final bool isMe;
   final String? message;
   final String videoUrl;
-  final bool isLastMessageFromSender;
+  final bool isLastMessageFromAuthor;
   final MessageAuthor? author;
   final List<MessageReactionGroup>? reactions;
 
@@ -59,7 +59,7 @@ class VideoMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
-      isLastMessageFromSender: isLastMessageFromSender,
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(8.0.s),
       child: ConstrainedBox(
         constraints: BoxConstraints(

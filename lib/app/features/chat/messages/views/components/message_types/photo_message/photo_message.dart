@@ -16,7 +16,7 @@ class PhotoMessage extends HookWidget {
   const PhotoMessage({
     required this.isMe,
     required this.imageUrl,
-    this.isLastMessageFromSender = true,
+    this.isLastMessageFromAuthor = true,
     this.message,
     this.reactions,
     this.author,
@@ -27,7 +27,7 @@ class PhotoMessage extends HookWidget {
   final String? message;
   final String imageUrl;
   final MessageAuthor? author;
-  final bool isLastMessageFromSender;
+  final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
   static double get padding => 8.0.s;
@@ -46,7 +46,7 @@ class PhotoMessage extends HookWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
-      isLastMessageFromSender: isLastMessageFromSender,
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(padding),
       child: LayoutBuilder(
         builder: (context, _) {

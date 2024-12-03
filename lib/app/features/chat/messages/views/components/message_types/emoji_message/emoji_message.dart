@@ -17,13 +17,13 @@ class EmojiMessage extends StatelessWidget {
     this.author,
     this.reactions,
     this.hasForwardedMessage = false,
-    this.isLastMessageFromSender = true,
+    this.isLastMessageFromAuthor = true,
     super.key,
   });
   final bool isMe;
   final String emoji;
   final List<MessageReactionGroup>? reactions;
-  final bool isLastMessageFromSender;
+  final bool isLastMessageFromAuthor;
   final bool hasForwardedMessage;
   final MessageAuthor? author;
 
@@ -31,7 +31,7 @@ class EmojiMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MessageItemWrapper(
       isMe: isMe,
-      isLastMessageFromSender: isLastMessageFromSender,
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
         vertical: 6.0.s,

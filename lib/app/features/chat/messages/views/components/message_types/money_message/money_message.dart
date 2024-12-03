@@ -23,7 +23,7 @@ class MoneyMessage extends HookWidget {
     required this.amount,
     required this.equivalentUsd,
     required this.chain,
-    this.isLastMessageFromSender = true,
+    this.isLastMessageFromAuthor = true,
     this.author,
     this.reactions,
     super.key,
@@ -35,7 +35,7 @@ class MoneyMessage extends HookWidget {
   final double equivalentUsd;
   final String chain;
   final MessageAuthor? author;
-  final bool isLastMessageFromSender;
+  final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -83,7 +83,7 @@ class MoneyMessage extends HookWidget {
     );
 
     return MessageItemWrapper(
-      isLastMessageFromSender: isLastMessageFromSender,
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
         vertical: 12.0.s,

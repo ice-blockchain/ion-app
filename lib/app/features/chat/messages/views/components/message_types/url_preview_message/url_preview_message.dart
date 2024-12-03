@@ -20,14 +20,14 @@ class UrlPreviewMessage extends HookWidget {
     required this.isMe,
     this.author,
     this.reactions,
-    this.isLastMessageFromSender = true,
+    this.isLastMessageFromAuthor = true,
     super.key,
   });
 
   final bool isMe;
   final String url;
   final MessageAuthor? author;
-  final bool isLastMessageFromSender;
+  final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -35,7 +35,7 @@ class UrlPreviewMessage extends HookWidget {
     useAutomaticKeepAlive();
     return MessageItemWrapper(
       isMe: isMe,
-      isLastMessageFromSender: isLastMessageFromSender,
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(8.0.s),
       child: UrlPreview(
         url: url,

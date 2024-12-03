@@ -20,12 +20,12 @@ class PollMessage extends HookWidget {
     super.key,
     this.reactions,
     this.author,
-    this.isLastMessageFromSender = true,
+    this.isLastMessageFromAuthor = true,
   });
 
   final bool isMe;
   final MessageAuthor? author;
-  final bool isLastMessageFromSender;
+  final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -37,7 +37,7 @@ class PollMessage extends HookWidget {
     }
 
     return MessageItemWrapper(
-      isLastMessageFromSender: isLastMessageFromSender,
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(
         12.0.s,
       ),

@@ -48,7 +48,7 @@ class ChatMessagesList extends ConsumerWidget {
           final author =
               message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
 
-          final isLastMessageFromSender = isLastMessage ||
+          final isLastMessageFromAuthor = isLastMessage ||
               authorToDisplayProvider.isMessageFromDifferentUser(
                 index + 1,
                 author,
@@ -67,7 +67,7 @@ class ChatMessagesList extends ConsumerWidget {
               message: message.text,
               isMe: message.author.isCurrentUser,
               repliedMessage: message.repliedMessage,
-              isLastMessageFromSender: isLastMessageFromSender,
+              isLastMessageFromAuthor: isLastMessageFromAuthor,
               author: authorToDisplay,
             ),
             photo: (message) => PhotoMessage(
@@ -76,13 +76,13 @@ class ChatMessagesList extends ConsumerWidget {
               message: message.text,
               reactions: mockReactionsMany,
               author: authorToDisplay,
-              isLastMessageFromSender: isLastMessageFromSender,
+              isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             emoji: (message) => EmojiMessage(
               emoji: message.emoji,
               reactions: mockReactionsSimple,
               isMe: isMe,
-              isLastMessageFromSender: isLastMessageFromSender,
+              isLastMessageFromAuthor: isLastMessageFromAuthor,
               // TODO: Replace mocked implementation
               hasForwardedMessage: Random().nextBool(),
             ),
@@ -92,33 +92,33 @@ class ChatMessagesList extends ConsumerWidget {
               isMe: isMe,
               reactions: mockReactionsMany,
               author: authorToDisplay,
-              isLastMessageFromSender: isLastMessageFromSender,
+              isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             video: (message) => VideoMessage(
               isMe: isMe,
               message: message.text,
               author: authorToDisplay,
               videoUrl: message.videoUrl,
-              isLastMessageFromSender: isLastMessageFromSender,
+              isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             link: (message) => UrlPreviewMessage(
               isMe: isMe,
               url: message.link,
               reactions: mockReactionsSimple,
               author: authorToDisplay,
-              isLastMessageFromSender: isLastMessageFromSender,
+              isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             shareProfile: (message) => ProfileShareMessage(
               isMe: isMe,
               reactions: mockReactionsSimple,
               author: authorToDisplay,
-              isLastMessageFromSender: isLastMessageFromSender,
+              isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             poll: (message) => PollMessage(
               isMe: isMe,
               reactions: mockReactionsSimple,
               author: authorToDisplay,
-              isLastMessageFromSender: isLastMessageFromSender,
+              isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             money: (message) => MoneyMessage(
               isMe: isMe,
@@ -127,7 +127,7 @@ class ChatMessagesList extends ConsumerWidget {
               equivalentUsd: message.usdt,
               chain: message.chain,
               author: authorToDisplay,
-              isLastMessageFromSender: isLastMessageFromSender,
+              isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             // TODO: Unimplemented type
             document: (message) => throw UnimplementedError(),
@@ -139,7 +139,7 @@ class ChatMessagesList extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      if (isLastMessageFromSender)
+                      if (isLastMessageFromAuthor)
                         Avatar(size: 36.0.s, imageUrl: author.imageUrl)
                       else
                         SizedBox(width: 36.0.s),
@@ -153,7 +153,7 @@ class ChatMessagesList extends ConsumerWidget {
         separatorBuilder: (context, index) {
           final message = messages[index];
           final isLastMessage = index == (messages.length - 1);
-          final isLastMessageFromSender = isLastMessage ||
+          final isLastMessageFromAuthor = isLastMessage ||
               authorToDisplayProvider.isMessageFromDifferentUser(
                 index + 1,
                 message is MessageWithAuthor ? (message as MessageWithAuthor).author : null,
@@ -163,7 +163,7 @@ class ChatMessagesList extends ConsumerWidget {
 
           if (message is DateItem) {
             separatorHeight = 12.0.s;
-          } else if (isLastMessageFromSender) {
+          } else if (isLastMessageFromAuthor) {
             separatorHeight = 16.0.s;
           }
 

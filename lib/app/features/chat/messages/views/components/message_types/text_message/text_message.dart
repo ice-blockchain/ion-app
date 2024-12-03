@@ -15,7 +15,7 @@ class TextMessage extends StatelessWidget {
   const TextMessage({
     required this.isMe,
     required this.message,
-    this.isLastMessageFromSender = true,
+    this.isLastMessageFromAuthor = true,
     this.reactions = const [],
     this.author,
     this.repliedMessage,
@@ -25,14 +25,14 @@ class TextMessage extends StatelessWidget {
   final bool isMe;
   final String message;
   final MessageAuthor? author;
-  final bool isLastMessageFromSender;
+  final bool isLastMessageFromAuthor;
   final RepliedMessage? repliedMessage;
   final List<MessageReactionGroup> reactions;
 
   @override
   Widget build(BuildContext context) {
     return MessageItemWrapper(
-      isLastMessageFromSender: isLastMessageFromSender,
+      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
         vertical: 12.0.s,
