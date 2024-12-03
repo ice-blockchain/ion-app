@@ -3,11 +3,11 @@
 import 'dart:convert';
 
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion.dart';
 import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion_data.dart';
-import 'package:ion_identity_client/src/signer/dtos/fido_2_attestation.dart';
-import 'package:ion_identity_client/src/signer/dtos/fido_2_attestation_data.dart';
 import 'package:ion_identity_client/src/signer/dtos/user_action_challenge.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:passkeys/authenticator.dart';
 import 'package:passkeys/types.dart';
 
@@ -42,11 +42,11 @@ class PasskeysSigner {
   PasskeysOptions options;
 
   /// Registers a user based on the provided [challenge], returning a
-  /// [Fido2Attestation] containing the attestation data.
+  /// [CredentialRequestData] containing the attestation data.
   ///
   /// The registration process involves interacting with a passkey authenticator
   /// and relies on the options specified in [PasskeysOptions].
-  Future<Fido2Attestation> register(UserRegistrationChallenge challenge) async {
+  Future<CredentialRequestData> register(UserRegistrationChallenge challenge) async {
     final registerResponse = await PasskeyAuthenticator().register(
       RegisterRequestType(
         challenge: challenge.challenge,
@@ -88,13 +88,13 @@ class PasskeysSigner {
       ),
     );
 
-    return Fido2Attestation(
-      Fido2AttestationData(
-        registerResponse.attestationObject,
-        registerResponse.clientDataJSON,
-        registerResponse.rawId,
+    return CredentialRequestData(
+      credentialInfo: CredentialInfo(
+        attestationData: registerResponse.attestationObject,
+        clientData: registerResponse.clientDataJSON,
+        credId: registerResponse.rawId,
       ),
-      'Fido2',
+      credentialKind: CredentialKind.Fido2,
     );
   }
 
@@ -140,9 +140,48 @@ class PasskeysSigner {
     }
   }
 
-  Future<bool> canAuthenticate() {
-    // ignoring because replacement is not available for all platforms
+  /// Determines whether the device supports passkeys (WebAuthn/FIDO2) for authentication.
+  ///
+  /// This method performs the following checks:
+  ///
+  /// 1. **Passkey Authentication Availability**:
+  ///    - Utilizes [PasskeyAuthenticator]'s `canAuthenticate` method to determine if the user can currently
+  ///      authenticate using passkeys.
+  ///    - **Note**: This may return `false` if the user hasn't set up biometrics or a device lock, even if the
+  ///      device itself supports passkeys.
+  ///
+  /// 2. **Hardware Support for Biometrics**:
+  ///    - Uses [LocalAuthentication]'s `canCheckBiometrics` to verify if the device has hardware support for
+  ///      biometric authentication.
+  ///
+  /// 3. **Device-Level Authentication Support**:
+  ///    - Checks [LocalAuthentication]'s `isDeviceSupported` to determine if device-level authentication is
+  ///      set up.
+  ///
+  /// The method returns `true` if **either**:
+  /// - Passkey authentication is available (`canAuthenticate` returns `true`), **or**
+  /// - The device has biometric hardware support (`canCheckBiometrics` is `true`) **and** device-level
+  ///   authentication is **not** set up (`isDeviceSupported` is `false`).
+  ///
+  /// This dual-check approach helps eliminate false negatives where the device supports passkeys, but
+  /// certain user configurations (like unset biometrics) might otherwise prevent successful authentication.
+  ///
+  Future<bool> canAuthenticate() async {
+    // Ignoring because replacement is not available for all platforms
     // ignore: deprecated_member_use
-    return PasskeyAuthenticator().canAuthenticate();
+    final passkeyFuture = PasskeyAuthenticator().canAuthenticate();
+    final localAuth = LocalAuthentication();
+
+    final results = await Future.wait<bool>([
+      passkeyFuture,
+      localAuth.canCheckBiometrics,
+      localAuth.isDeviceSupported(),
+    ]);
+
+    final canAuthenticateResult = results[0];
+    final canCheckBiometrics = results[1];
+    final isDeviceSupported = results[2];
+
+    return canAuthenticateResult || (canCheckBiometrics && !isDeviceSupported);
   }
 }

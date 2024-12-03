@@ -5,6 +5,7 @@ import 'package:ion_identity_client/src/core/service_locator/ion_identity_client
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/users_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/wallets_client_service_locator.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
+import 'package:ion_identity_client/src/signer/password_signer.dart';
 
 class ClientsServiceLocator {
   factory ClientsServiceLocator() {
@@ -21,6 +22,7 @@ class ClientsServiceLocator {
     required String username,
     required IONIdentityConfig config,
     required PasskeysSigner signer,
+    required PasswordSigner passwordSigner,
   }) {
     var client = _clients[username];
     if (client == null) {
@@ -29,6 +31,7 @@ class ClientsServiceLocator {
           username: username,
           config: config,
           signer: signer,
+          passwordSigner: passwordSigner,
         ),
         wallets: WalletsClientServiceLocator().wallets(
           username: username,

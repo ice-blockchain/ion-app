@@ -26,12 +26,12 @@ class RegisterDataSource {
   }
 
   Future<RegistrationCompleteResponse> registerComplete({
-    required Fido2Attestation attestation,
+    required CredentialRequestData credentialData,
     required String temporaryAuthenticationToken,
   }) {
     return networkClient.post(
       registerCompletePath,
-      data: SignedChallenge(firstFactorCredential: attestation).toJson(),
+      data: SignedChallenge(firstFactorCredential: credentialData).toJson(),
       decoder: RegistrationCompleteResponse.fromJson,
       headers: RequestHeaders.getTokenHeader(token: temporaryAuthenticationToken),
     );

@@ -125,75 +125,66 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildMainContainer(
-      context: context,
-      child: Container(
-        alignment: Alignment.center,
-        constraints: constraints,
-        padding: contentPadding,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                if (leading != null)
-                  if (leadingPadding != EdgeInsets.zero)
-                    Padding(padding: leadingPadding, child: leading)
-                  else
-                    leading!,
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (title != null)
-                        DefaultTextStyle(
-                          style: switchTitleStyles
-                              ? _getDefaultSubtitleStyle(context)
-                              : _getDefaultTitleStyle(context),
-                          overflow: TextOverflow.ellipsis,
-                          child: title!,
-                        ),
-                      if (subtitle != null)
-                        DefaultTextStyle(
-                          style: switchTitleStyles
-                              ? _getDefaultTitleStyle(context)
-                              : _getDefaultSubtitleStyle(context),
-                          overflow: TextOverflow.ellipsis,
-                          child: subtitle!,
-                        ),
-                    ],
-                  ),
+    final child = Container(
+      alignment: Alignment.center,
+      constraints: constraints,
+      padding: contentPadding,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              if (leading != null)
+                if (leadingPadding != EdgeInsets.zero)
+                  Padding(padding: leadingPadding, child: leading)
+                else
+                  leading!,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (title != null)
+                      DefaultTextStyle(
+                        style: switchTitleStyles
+                            ? _getDefaultSubtitleStyle(context)
+                            : _getDefaultTitleStyle(context),
+                        overflow: TextOverflow.ellipsis,
+                        child: title!,
+                      ),
+                    if (subtitle != null)
+                      DefaultTextStyle(
+                        style: switchTitleStyles
+                            ? _getDefaultTitleStyle(context)
+                            : _getDefaultSubtitleStyle(context),
+                        overflow: TextOverflow.ellipsis,
+                        child: subtitle!,
+                      ),
+                  ],
                 ),
-                if (trailing != null)
-                  if (trailingPadding != EdgeInsets.zero)
-                    Padding(padding: trailingPadding, child: trailing)
-                  else
-                    trailing!,
-              ],
-            ),
-            if (secondary != null)
-              DefaultTextStyle(
-                style: switchTitleStyles
-                    ? _getDefaultSubtitleStyle(context)
-                    : _getDefaultTitleStyle(context),
-                child: secondary!,
               ),
-          ],
-        ),
+              if (trailing != null)
+                if (trailingPadding != EdgeInsets.zero)
+                  Padding(padding: trailingPadding, child: trailing)
+                else
+                  trailing!,
+            ],
+          ),
+          if (secondary != null)
+            DefaultTextStyle(
+              style: switchTitleStyles
+                  ? _getDefaultSubtitleStyle(context)
+                  : _getDefaultTitleStyle(context),
+              child: secondary!,
+            ),
+        ],
       ),
     );
-  }
 
-  Widget _buildMainContainer({
-    required Widget child,
-    required BuildContext context,
-  }) {
-    final backgroundColor = _getBackgroundColor(context);
     return GestureDetector(
       onTap: onTap,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: _getBackgroundColor(context),
           border: border,
           borderRadius: borderRadius,
         ),

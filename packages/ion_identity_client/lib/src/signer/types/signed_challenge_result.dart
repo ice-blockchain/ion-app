@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 
 typedef SignedUserActionChallengeResult<F> = ({
@@ -8,6 +9,6 @@ typedef SignedUserActionChallengeResult<F> = ({
 });
 
 typedef SignedUserRegistrationChallengeResult<F> = ({
-  Fido2Attestation attestation,
+  CredentialRequestData attestation,
   UserRegistrationChallenge userRegistrationChallenge,
 });

@@ -40,7 +40,9 @@ class IONIdentityAuth {
   final String username;
   final TokenStorage tokenStorage;
 
-  Future<void> registerUser() => registerService.registerUser();
+  Future<void> registerUser({String? password}) => registerService.registerUser(password: password);
+
+  Future<void> isPasskeyAuthAvailable() => registerService.isPasskeyAuthAvailable();
 
   Future<void> loginUser() => loginService.loginUser();
 

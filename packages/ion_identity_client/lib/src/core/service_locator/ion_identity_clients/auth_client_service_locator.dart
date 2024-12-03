@@ -19,6 +19,7 @@ import 'package:ion_identity_client/src/core/service_locator/ion_identity_client
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/wallets_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
+import 'package:ion_identity_client/src/signer/password_signer.dart';
 
 class AuthClientServiceLocator {
   factory AuthClientServiceLocator() {
@@ -33,15 +34,22 @@ class AuthClientServiceLocator {
     required String username,
     required IONIdentityConfig config,
     required PasskeysSigner signer,
+    required PasswordSigner passwordSigner,
   }) {
     return IONIdentityAuth(
       username: username,
-      registerService: register(username: username, config: config, signer: signer),
+      registerService: register(
+        username: username,
+        config: config,
+        signer: signer,
+        passwordSigner: passwordSigner,
+      ),
       loginService: login(username: username, config: config, signer: signer),
       createRecoveryCredentialsService: createRecoveryCredentials(
         username: username,
         config: config,
         signer: signer,
+        passwordSigner: passwordSigner,
       ),
       recoverUserService: recoverUser(
         username: username,
@@ -58,10 +66,12 @@ class AuthClientServiceLocator {
     required String username,
     required IONIdentityConfig config,
     required PasskeysSigner signer,
+    required PasswordSigner passwordSigner,
   }) {
     return RegisterService(
       username: username,
       signer: signer,
+      passwordSigner: passwordSigner,
       dataSource: RegisterDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
       ),
@@ -88,6 +98,7 @@ class AuthClientServiceLocator {
     required String username,
     required IONIdentityConfig config,
     required PasskeysSigner signer,
+    required PasswordSigner passwordSigner,
   }) {
     return CreateRecoveryCredentialsService(
       username: username,
@@ -100,6 +111,7 @@ class AuthClientServiceLocator {
         config: config,
         signer: signer,
       ),
+      passwordSigner: passwordSigner,
       keyService: const KeyService(),
     );
   }

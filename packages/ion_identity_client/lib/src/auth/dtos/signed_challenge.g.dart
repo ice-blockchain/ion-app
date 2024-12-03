@@ -8,7 +8,7 @@ part of 'signed_challenge.dart';
 
 SignedChallenge _$SignedChallengeFromJson(Map<String, dynamic> json) =>
     SignedChallenge(
-      firstFactorCredential: Fido2Attestation.fromJson(
+      firstFactorCredential: CredentialRequestData.fromJson(
           json['firstFactorCredential'] as Map<String, dynamic>),
       wallets: (json['wallets'] as List<dynamic>?)
               ?.map((e) =>
