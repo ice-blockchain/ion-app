@@ -25,6 +25,7 @@ class PostSubmitButton extends HookConsumerWidget {
     super.key,
     this.parentEvent,
     this.quotedEvent,
+    this.videoPath,
   });
 
   final QuillController textEditorController;
@@ -33,6 +34,8 @@ class PostSubmitButton extends HookConsumerWidget {
 
   final EventReference? quotedEvent;
 
+  final String? videoPath; //TODO: remove and get from provider or controller
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasContent = useTextEditorHasContent(textEditorController);
@@ -40,6 +43,7 @@ class PostSubmitButton extends HookConsumerWidget {
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
     final hasPoll = useHasPoll(textEditorController);
     final isSubmitLoading = ref.watch(createPostNotifierProvider).isLoading;
+
     ref.displayErrors(createPostNotifierProvider);
 
     final isSubmitButtonEnabled = useMemoized(
@@ -83,7 +87,9 @@ class PostSubmitButton extends HookConsumerWidget {
           if (ref.context.mounted) {
             ref.context.pop();
           }
-          ref.read(contentNotificationControllerProvider.notifier).showSuccess(ContentType.post);
+          ref
+              .read(contentNotificationControllerProvider.notifier)
+              .showSuccess(videoPath != null ? ContentType.video : ContentType.post);
         }
       },
     );
