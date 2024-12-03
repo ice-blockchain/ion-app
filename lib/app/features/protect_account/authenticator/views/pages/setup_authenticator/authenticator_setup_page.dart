@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/components/progress_bar/sliver_app_bar_with_progress.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
@@ -16,6 +15,8 @@ import 'package:ion/app/features/protect_account/authenticator/views/pages/setup
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
 import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
@@ -32,19 +33,25 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
     return SheetContent(
       body: CustomScrollView(
         slivers: [
-          SliverAppBarWithProgress(
-            progressValue: step == AuthenticatorSetupSteps.success ? null : step.progressValue,
-            title: step.getAppBarTitle(context),
-            onClose: Navigator.of(context, rootNavigator: true).pop,
-            showBackButton: step != AuthenticatorSetupSteps.success,
-            showProgress: step != AuthenticatorSetupSteps.success,
+          SliverAppBar(
+            primary: false,
+            flexibleSpace: NavigationAppBar.modal(
+              showBackButton: step != AuthenticatorSetupSteps.success,
+              actions: [
+                NavigationCloseButton(
+                  onPressed: Navigator.of(context, rootNavigator: true).pop,
+                ),
+              ],
+            ),
+            automaticallyImplyLeading: false,
+            toolbarHeight: NavigationAppBar.modalHeaderHeight,
+            pinned: true,
           ),
           SliverFillRemaining(
             hasScrollBody: step == AuthenticatorSetupSteps.options,
             child: Column(
               children: [
                 AuthHeader(
-                  topOffset: 34.0.s,
                   title: step.getPageTitle(context),
                   description: step.getDescription(context),
                   titleStyle: context.theme.appTextThemes.headline2,
