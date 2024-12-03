@@ -22,6 +22,17 @@ class StoryViewerHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadataEntity = ref.watch(userMetadataProvider(currentPost.pubkey));
 
+    final shadow = [
+      Shadow(
+        offset: Offset(
+          0.0.s,
+          1.5.s,
+        ),
+        blurRadius: 1.5,
+        color: context.theme.appColors.primaryText.withOpacity(0.25),
+      ),
+    ];
+
     return userMetadataEntity.maybeWhen(
       data: (userMetadata) {
         if (userMetadata == null) return const SizedBox.shrink();
@@ -38,6 +49,7 @@ class StoryViewerHeader extends ConsumerWidget {
                 userMetadata.data.name,
                 style: context.theme.appTextThemes.subtitle3.copyWith(
                   color: context.theme.appColors.onPrimaryAccent,
+                  shadows: shadow,
                 ),
               ),
               subtitle: Text(
@@ -47,6 +59,7 @@ class StoryViewerHeader extends ConsumerWidget {
                 ),
                 style: context.theme.appTextThemes.caption.copyWith(
                   color: context.theme.appColors.onPrimaryAccent,
+                  shadows: shadow,
                 ),
               ),
               verifiedBadge: userMetadata.data.verified,

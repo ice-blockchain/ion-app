@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ion/app/components/shadow/svg_shadow.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/story_context_menu.dart';
@@ -18,14 +19,18 @@ class HeaderActions extends StatelessWidget {
       children: [
         StoryContextMenu(
           pubkey: post.pubkey,
-          child: Assets.svg.iconMoreStoriesshadow.icon(
-            color: context.theme.appColors.onPrimaryAccent,
+          child: SvgShadow(
+            child: Assets.svg.iconMoreStories.icon(
+              color: context.theme.appColors.onPrimaryAccent,
+            ),
           ),
         ),
         SizedBox(width: 16.0.s),
         GestureDetector(
-          child: Assets.svg.iconSheetCloseshadow.icon(
-            color: context.theme.appColors.onPrimaryAccent,
+          child: SvgShadow(
+            child: Assets.svg.iconSheetClose.icon(
+              color: context.theme.appColors.onPrimaryAccent,
+            ),
           ),
           onTap: () => context.pop(),
         ),

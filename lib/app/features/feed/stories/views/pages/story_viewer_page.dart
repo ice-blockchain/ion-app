@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/stories/hooks/use_page_dismiss.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -21,35 +22,50 @@ class StoryViewerPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final storyState = ref.watch(storyViewingControllerProvider);
 
+    final drag = usePageDismiss(context);
+
     useOnInit(
       () => ref.read(storyViewingControllerProvider.notifier).loadStoriesByPubkey(pubkey),
     );
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: context.theme.appColors.primaryText,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark,
-      ),
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: context.theme.appColors.primaryText,
-        body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: StoriesSwiper(
-                  userStories: storyState.userStories,
-                  currentUserIndex: storyState.currentUserIndex,
+    return Hero(
+      tag: 'story-$pubkey',
+      child: Material(
+        color: Colors.transparent,
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: context.theme.appColors.primaryText,
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark,
+          ),
+          child: GestureDetector(
+            onVerticalDragUpdate: drag.onDragUpdate,
+            onVerticalDragEnd: drag.onDragEnd,
+            child: Transform.translate(
+              offset: Offset(0, drag.offset),
+              child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                backgroundColor: context.theme.appColors.primaryText,
+                body: SafeArea(
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: StoriesSwiper(
+                              userStories: storyState.userStories,
+                              currentUserIndex: storyState.currentUserIndex,
+                            ),
+                          ),
+                          SizedBox(height: 28.0.s),
+                          const StoryProgressBarContainer(),
+                          ScreenBottomOffset(margin: 16.0.s),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(height: 28.0.s),
-              const StoryProgressBarContainer(),
-              ScreenBottomOffset(margin: 16.0.s),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 }
