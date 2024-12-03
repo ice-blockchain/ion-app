@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 
 class TextEditingWithHighlightsController extends TextEditingController {
@@ -19,7 +20,7 @@ class TextEditingWithHighlightsController extends TextEditingController {
       defaultStyle: style,
       matcherStyles: TextSpanBuilder.defaultMatchersStyles(
         context,
-        style: style,
+        style: style?.copyWith(color: context.theme.appColors.darkBlue),
       ),
     ).build(
       TextParser.allMatchers().parse(text),

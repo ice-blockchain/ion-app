@@ -3,6 +3,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/services/browser/browser.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_matcher.dart';
 
@@ -81,5 +83,14 @@ class TextSpanBuilder {
       const UrlMatcher(): defaultStyle,
       const MentionMatcher(): defaultStyle,
     };
+  }
+
+  /// Add default onTap for all matchers
+  static void defaultOnTap(
+    BuildContext context, {
+    required TextMatch match,
+  }) {
+    if (match.matcher is UrlMatcher) openUrlInAppBrowser(match.text);
+    if (match.matcher is HashtagMatcher) FeedAdvancedSearchRoute(query: match.text).go(context);
   }
 }
