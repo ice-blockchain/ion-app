@@ -18,6 +18,7 @@ import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -168,8 +169,9 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
             .read(nostrUploadNotifierProvider.notifier)
             .upload(avatar, alt: FileAlt.avatar);
       }
-    } catch (_) {
+    } catch (error, stackTrace) {
       // intentionally ignore upload avatar exceptions
+      Logger.log('Upload avatar exception', error: error, stackTrace: stackTrace);
     }
     return null;
   }
