@@ -5,14 +5,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/card/rounded_card.dart';
+import 'package:ion/app/components/copy/copy_builder.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.dart';
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/utils/clipboard.dart';
-import 'package:ion/app/utils/future.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
@@ -25,8 +24,6 @@ class CopyKeyCard extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
     final textTheme = context.theme.appTextThemes;
-
-    final isCopied = useState(false);
 
     final code = useState<String?>(null);
 
@@ -67,27 +64,27 @@ class CopyKeyCard extends HookConsumerWidget {
                     : IndicatorType.dark,
               ),
           SizedBox(height: 20.0.s),
-          Button(
-            minimumSize: Size(148.0.s, 48.0.s),
-            leadingIcon: isCopied.value
-                ? Assets.svg.iconBlockCheckGreen.icon()
-                : Assets.svg.iconBlockCopyBlue.icon(),
-            borderColor: isCopied.value
-                ? context.theme.appColors.success
-                : context.theme.appColors.strokeElements,
-            onPressed: () {
-              if (code.value == null) return;
-              copyToClipboard(code.value!);
-              isCopied.value = true;
-              delayed(() => isCopied.value = false, after: 3.seconds);
-            },
-            label: Text(
-              isCopied.value ? context.i18n.wallet_copied : context.i18n.button_copy,
-              style: context.theme.appTextThemes.body.copyWith(
-                color: context.theme.appColors.primaryText,
+          CopyBuilder(
+            builder: (context, onCopy, isCopied) => Button(
+              minimumSize: Size(148.0.s, 48.0.s),
+              leadingIcon: isCopied
+                  ? Assets.svg.iconBlockCheckGreen.icon()
+                  : Assets.svg.iconBlockCopyBlue.icon(),
+              borderColor: isCopied
+                  ? context.theme.appColors.success
+                  : context.theme.appColors.strokeElements,
+              onPressed: () {
+                if (code.value == null) return;
+                onCopy(code.value!);
+              },
+              label: Text(
+                isCopied ? context.i18n.wallet_copied : context.i18n.button_copy,
+                style: context.theme.appTextThemes.body.copyWith(
+                  color: context.theme.appColors.primaryText,
+                ),
               ),
+              type: ButtonType.secondary,
             ),
-            type: ButtonType.secondary,
           ),
         ],
       ),

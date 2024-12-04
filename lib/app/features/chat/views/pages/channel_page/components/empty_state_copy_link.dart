@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/clipboard.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class EmptyStateCopyLink extends StatelessWidget {
@@ -16,7 +16,7 @@ class EmptyStateCopyLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Clipboard.setData(ClipboardData(text: link)),
+      onTap: () => copyToClipboard(link),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

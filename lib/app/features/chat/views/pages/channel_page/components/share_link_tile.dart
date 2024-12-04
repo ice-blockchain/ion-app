@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/channels_provider.dart';
+import 'package:ion/app/utils/clipboard.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ShareLinkTile extends ConsumerWidget {
@@ -27,7 +27,7 @@ class ShareLinkTile extends ConsumerWidget {
     }
 
     return ListItem(
-      onTap: () => Clipboard.setData(ClipboardData(text: channelData.link)),
+      onTap: () => copyToClipboard(channelData.link),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 12.0.s),
       backgroundColor: context.theme.appColors.secondaryBackground,
       border: Border.all(
