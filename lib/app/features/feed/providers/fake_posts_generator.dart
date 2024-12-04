@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -62,8 +63,11 @@ PostEntity generateFakePostWithVideo() {
   final mockVideo = MediaAttachment(
     url: videoUrl,
     mimeType: 'video/mp4',
-    blurhash: 'LKO2?U%2Tw=w]~RBVZRi};RPxuwH',
     dimension: '1920x1080',
+    alt: FileAlt.post,
+    torrentInfoHash: '',
+    fileHash: '',
+    originalFileHash: '',
     thumb: thumbUrl,
   );
 

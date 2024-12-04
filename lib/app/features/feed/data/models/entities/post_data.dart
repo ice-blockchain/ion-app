@@ -138,12 +138,8 @@ class PostData with _$PostData implements EventSerializable {
       {},
       (result, match) {
         final link = match.text;
-        if (match.matcher is UrlMatcher) {
-          if (imeta.containsKey(link)) {
-            result[link] = imeta[link]!;
-          } else {
-            result[link] = MediaAttachment(url: link);
-          }
+        if (match.matcher is UrlMatcher && imeta.containsKey(link)) {
+          result[link] = imeta[link]!;
         }
         return result;
       },

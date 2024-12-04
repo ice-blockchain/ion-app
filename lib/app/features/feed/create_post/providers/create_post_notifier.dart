@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/providers/counters/replies_count_provider.
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
@@ -141,6 +142,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           quality: 70,
         );
 
-    return ref.read(nostrUploadNotifierProvider.notifier).upload(compressedImage);
+    return ref
+        .read(nostrUploadNotifierProvider.notifier)
+        .upload(compressedImage, alt: FileAlt.post);
   }
 }

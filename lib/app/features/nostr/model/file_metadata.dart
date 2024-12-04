@@ -49,11 +49,11 @@ class FileMetadata with _$FileMetadata implements EventSerializable {
     required String mimeType,
     required String fileHash,
     required String originalFileHash,
+    required String torrentInfoHash,
     @Default('') String caption,
     int? size,
     String? dimension,
     String? magnet,
-    String? torrentInfoHash,
     String? blurhash,
     String? thumb,
     String? image,
@@ -76,7 +76,7 @@ class FileMetadata with _$FileMetadata implements EventSerializable {
       size: values['size'] != null ? int.parse(values['size']!) : null,
       dimension: values['dim'],
       magnet: values['magnet'],
-      torrentInfoHash: values['i'],
+      torrentInfoHash: values['i']!,
       blurhash: values['blurhash'],
       thumb: values['thumb'],
       image: values['image'],
@@ -129,9 +129,15 @@ class FileMetadata with _$FileMetadata implements EventSerializable {
           alt = tag[1];
       }
     }
-    if (url == null || mimeType == null || fileHash == null || originalFileHash == null) {
+
+    if (url == null ||
+        mimeType == null ||
+        fileHash == null ||
+        originalFileHash == null ||
+        torrentInfoHash == null) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
+
     return FileMetadata(
       url: url,
       mimeType: mimeType,
@@ -166,7 +172,7 @@ class FileMetadata with _$FileMetadata implements EventSerializable {
         if (size != null) ['size', size.toString()],
         if (dimension != null) ['dim', dimension!],
         if (magnet != null) ['magnet', magnet!],
-        if (torrentInfoHash != null) ['i', torrentInfoHash!],
+        ['i', torrentInfoHash],
         if (blurhash != null) ['blurhash', blurhash!],
         if (thumb != null) ['thumb', thumb!],
         if (image != null) ['image', image!],

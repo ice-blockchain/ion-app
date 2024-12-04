@@ -1,8 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/utils/validators.dart';
 
 /// Media attachments (images, videos, and other files) may be added to events by including
@@ -12,9 +14,12 @@ import 'package:ion/app/utils/validators.dart';
 class MediaAttachment {
   MediaAttachment({
     required this.url,
-    this.mimeType,
-    this.blurhash,
-    this.dimension,
+    required this.mimeType,
+    required this.dimension,
+    required this.alt,
+    required this.torrentInfoHash,
+    required this.fileHash,
+    required this.originalFileHash,
     this.thumb,
   });
 
@@ -26,9 +31,12 @@ class MediaAttachment {
 
     String? url;
     String? mimeType;
-    String? blurhash;
     String? dimension;
     String? thumb;
+    String? alt;
+    String? torrentInfoHash;
+    String? fileHash;
+    String? originalFileHash;
 
     for (final params in tag.skip(1)) {
       final pair = params.split(' ');
@@ -45,35 +53,46 @@ class MediaAttachment {
           }
         case 'm':
           mimeType = value;
-        case 'blurhash':
-          blurhash = value;
         case 'dim':
           dimension = value;
         case 'thumb':
           thumb = value;
+        case 'alt':
+          alt = value;
+        case 'i':
+          torrentInfoHash = value;
+        case 'x':
+          fileHash = value;
+        case 'ox':
+          originalFileHash = value;
       }
     }
 
-    if (url == null) {
-      throw Exception('Url is not found in imeta tag');
-    }
-
     return MediaAttachment(
-      url: url,
-      mimeType: mimeType,
-      dimension: dimension,
-      blurhash: blurhash,
+      url: url!,
+      mimeType: mimeType!,
+      dimension: dimension!,
+      alt: EnumExtensions.fromShortString(FileAlt.values, alt!),
+      torrentInfoHash: torrentInfoHash!,
+      fileHash: fileHash!,
+      originalFileHash: originalFileHash!,
       thumb: thumb,
     );
   }
 
   final String url;
 
-  final String? mimeType;
+  final String mimeType;
 
-  final String? blurhash;
+  final String dimension;
 
-  final String? dimension;
+  final FileAlt alt;
+
+  final String fileHash;
+
+  final String originalFileHash;
+
+  final String torrentInfoHash;
 
   final String? thumb;
 
@@ -117,9 +136,12 @@ class MediaAttachment {
     return [
       tagName,
       'url $url',
-      if (mimeType != null) 'm $mimeType',
-      if (blurhash != null) 'blurhash $blurhash',
-      if (dimension != null) 'dim $dimension',
+      'm $mimeType',
+      'dim $dimension',
+      'i $torrentInfoHash',
+      'alt ${alt.toShortString()}',
+      'x $fileHash',
+      'ox $originalFileHash',
       if (thumb != null) 'thumb $thumb',
     ];
   }
@@ -128,7 +150,6 @@ class MediaAttachment {
 
   @override
   String toString() {
-    return 'MediaAttachment(mediaType: $mediaType, url: $url, '
-        'mimeType: $mimeType, blurhash: $blurhash, dimension: $dimension, thumb: $thumb)';
+    return 'MediaAttachment(url: $url, mimeType: $mimeType, dimension: $dimension, alt: $alt, fileHash: $fileHash, originalFileHash: $originalFileHash, torrentInfoHash: $torrentInfoHash, thumb: $thumb)';
   }
 }

@@ -3,6 +3,7 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
+import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
@@ -176,7 +177,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     final avatar = ref.read(onboardingDataProvider).avatar;
     if (avatar != null) {
       final (:fileMetadata, :mediaAttachment) =
-          await ref.read(nostrUploadNotifierProvider.notifier).upload(avatar);
+          await ref.read(nostrUploadNotifierProvider.notifier).upload(avatar, alt: FileAlt.avatar);
       return (
         fileMetadataEvent: await ref.read(nostrNotifierProvider.notifier).sign(fileMetadata),
         mediaAttachment: mediaAttachment

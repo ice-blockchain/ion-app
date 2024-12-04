@@ -8,6 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.dart';
+import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/file_storage_metadata.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
@@ -30,8 +31,9 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
   FutureOr<void> build() {}
 
   Future<UploadResult> upload(
-    MediaFile file,
-  ) async {
+    MediaFile file, {
+    required FileAlt alt,
+  }) async {
     final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
 
     if (keyStore == null) {
@@ -46,7 +48,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
 
     final apiUrl = await _getFileStorageApiUrl(keyStore: keyStore);
 
-    final response = await _makeUploadRequest(url: apiUrl, file: file);
+    final response = await _makeUploadRequest(url: apiUrl, file: file, alt: alt);
 
     final fileMetadata = FileMetadata.fromUploadResponseTags(
       response.nip94Event.tags,
@@ -56,8 +58,11 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
     final mediaAttachment = MediaAttachment(
       url: fileMetadata.url,
       mimeType: fileMetadata.mimeType,
-      blurhash: fileMetadata.blurhash,
       dimension: dimension,
+      torrentInfoHash: fileMetadata.torrentInfoHash,
+      fileHash: fileMetadata.fileHash,
+      originalFileHash: fileMetadata.originalFileHash,
+      alt: alt,
       thumb: fileMetadata.thumb,
     );
 
@@ -100,6 +105,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
   Future<UploadResponse> _makeUploadRequest({
     required String url,
     required MediaFile file,
+    required FileAlt alt,
   }) async {
     final fileBytes = await File(file.path).readAsBytes();
     final fileName = file.name ?? file.basename;
@@ -108,7 +114,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
     final formData = FormData.fromMap({
       'file': MultipartFile.fromBytes(fileBytes, filename: fileName),
       'caption': fileName,
-      'alt': fileName,
+      'alt': alt.toShortString(),
       'size': multipartFile.length,
       'content_type': file.mimeType,
     });
