@@ -45,8 +45,7 @@ class NftItem extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor:
-          backgroundColor ?? context.theme.appColors.tertararyBackground,
+      backgroundColor: backgroundColor ?? context.theme.appColors.tertararyBackground,
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(16.0.s),
         child: CachedNetworkImage(

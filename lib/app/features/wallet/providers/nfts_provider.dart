@@ -19,9 +19,8 @@ Future<List<NftData>> nftsData(Ref ref) async {
   final currentWalletId = await ref.watch(currentWalletIdProvider.future);
 
   final ionIdentity = await ref.watch(ionIdentityProvider.future);
-  final walletNfts = await ionIdentity(username: currentUser)
-      .wallets
-      .getWalletNfts(currentWalletId);
+  final walletNfts =
+      await ionIdentity(username: currentUser).wallets.getWalletNfts(currentWalletId);
 
   final coins = [
     // ignore: unused_local_variable
