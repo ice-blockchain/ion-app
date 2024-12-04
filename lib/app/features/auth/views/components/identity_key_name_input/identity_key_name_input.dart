@@ -48,7 +48,6 @@ class IdentityKeyNameInput extends StatelessWidget {
                       showSimpleBottomSheet<void>(
                         context: context,
                         child: const IdentityInfo(),
-                        useRootNavigator: false,
                       );
                     },
                   ),
