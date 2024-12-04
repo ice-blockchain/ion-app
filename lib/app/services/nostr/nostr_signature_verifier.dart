@@ -41,7 +41,6 @@ class NostrSignatureVerifier extends SchnorrSignatureVerifier {
     final signatureBytes = Uint8List.fromList(hex.decode(signature));
     final messageBytes = Uint8List.fromList(hex.decode(message));
 
-    // ignore: unused_local_variable
     final signatureObject = Signature(
       signatureBytes,
       publicKey: SimplePublicKey(publicKeyBytes, type: KeyPairType.ed25519),
