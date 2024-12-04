@@ -34,7 +34,7 @@ class FeedSearchResultsListItem extends ConsumerWidget {
               onTap: () {
                 ref
                     .read(feedSearchHistoryProvider.notifier)
-                    .addUserIdToTheHistory(userMetadataEntity.pubkey);
+                    .addUserIdToTheHistory(userMetadataEntity.masterPubkey);
               },
               child: ListItem.user(
                 title: Text(userMetadataEntity.data.displayName),

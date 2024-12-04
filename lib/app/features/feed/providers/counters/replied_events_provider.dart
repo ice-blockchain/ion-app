@@ -38,7 +38,7 @@ Stream<Set<String>?> repliedEvents(Ref ref) async* {
 }
 
 String? _getCurrentUserRepliedId(NostrEntity entity, {required String currentPubkey}) {
-  if (entity.pubkey != currentPubkey || entity is! PostEntity) {
+  if (entity.masterPubkey != currentPubkey || entity is! PostEntity) {
     return null;
   }
 

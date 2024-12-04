@@ -40,7 +40,7 @@ class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEn
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: pubkey);
+  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
 
   static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 

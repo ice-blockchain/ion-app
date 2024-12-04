@@ -22,7 +22,7 @@ class RepostListItem extends StatelessWidget {
       child: ScreenSideOffset.small(
         child: Column(
           children: [
-            RepostAuthorHeader(pubkey: repost.pubkey),
+            RepostAuthorHeader(pubkey: repost.masterPubkey),
             Post(eventReference: eventReference),
           ],
         ),

@@ -30,7 +30,7 @@ List<UserStories>? stories(Ref ref) {
 
   final groupedStories = groupBy<PostEntity, String>(
     postEntities,
-    (post) => post.pubkey,
+    (post) => post.masterPubkey,
   );
 
   final userStoriesList = <UserStories>[];

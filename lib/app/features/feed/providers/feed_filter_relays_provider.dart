@@ -30,12 +30,12 @@ Future<Map<String, List<String>>> feedFilterRelays(Ref ref, FeedFilter filter) a
       }
 
       final options = {
-        for (final relays in [...followListRelays, userRelays]) relays.pubkey: relays.urls,
+        for (final relays in [...followListRelays, userRelays]) relays.masterPubkey: relays.urls,
       };
       return findBestOptions(options);
     case FeedFilter.following:
       final options = {
-        for (final relays in followListRelays) relays.pubkey: relays.urls,
+        for (final relays in followListRelays) relays.masterPubkey: relays.urls,
       };
       return findBestOptions(options);
   }

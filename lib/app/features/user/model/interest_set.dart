@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/extensions/enum.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/model/replaceable_event_reference.dart';
@@ -43,7 +42,7 @@ class InterestSetEntity with _$InterestSetEntity, NostrEntity implements Cacheab
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: pubkey, type: data.type);
+  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey, type: data.type);
 
   static String cacheKeyBuilder({required String pubkey, required InterestSetType type}) =>
       '$kind:$type:$pubkey';

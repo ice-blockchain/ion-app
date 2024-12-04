@@ -108,7 +108,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       if (rootRelatedEvent != null) rootRelatedEvent,
       RelatedEvent(
         eventId: parentEntity.id,
-        pubkey: parentEntity.pubkey,
+        pubkey: parentEntity.masterPubkey,
         marker: rootRelatedEvent != null ? RelatedEventMarker.reply : RelatedEventMarker.root,
       ),
     ];
@@ -116,7 +116,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
   List<RelatedPubkey> _buildRelatedPubkeys(PostEntity parentEntity) {
     return <RelatedPubkey>{
-      RelatedPubkey(value: parentEntity.pubkey),
+      RelatedPubkey(value: parentEntity.masterPubkey),
       ...parentEntity.data.relatedPubkeys ?? [],
     }.toList();
   }

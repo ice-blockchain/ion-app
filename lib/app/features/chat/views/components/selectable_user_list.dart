@@ -97,7 +97,7 @@ class SelectableUserList extends HookConsumerWidget {
             separatorBuilder: (BuildContext _, int __) => SizedBox(height: separatorHeight),
             itemCount: userEntries.length,
             itemBuilder: (BuildContext context, int index) {
-              final pubkey = userEntries[index].pubkey;
+              final pubkey = userEntries[index].masterPubkey;
               final sectionHeader = getSectionHeader(index);
               return ScreenSideOffset.small(
                 child: Column(

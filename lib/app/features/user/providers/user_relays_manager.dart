@@ -51,7 +51,7 @@ class UserRelaysManager extends _$UserRelaysManager {
     await for (final entity in entitiesStream) {
       if (entity is UserRelaysEntity) {
         result.add(entity);
-        pubkeysToFetch.remove(entity.pubkey);
+        pubkeysToFetch.remove(entity.masterPubkey);
       }
     }
 

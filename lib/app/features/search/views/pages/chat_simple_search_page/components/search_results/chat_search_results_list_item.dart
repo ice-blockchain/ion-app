@@ -35,7 +35,7 @@ class ChatSearchResultsListItem extends ConsumerWidget {
               onTap: () {
                 ref
                     .read(feedSearchHistoryProvider.notifier)
-                    .addUserIdToTheHistory(userMetadata.pubkey);
+                    .addUserIdToTheHistory(userMetadata.masterPubkey);
               },
               child: Row(
                 children: [

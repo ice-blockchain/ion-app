@@ -38,7 +38,7 @@ class TrendingVideoListItem extends ConsumerWidget {
         thumbnailUrl: thumbnailUrl,
         size: itemSize,
         eventReference: eventReference,
-        pubkey: video.pubkey,
+        pubkey: video.masterPubkey,
       ),
     );
   }

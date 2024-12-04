@@ -40,7 +40,7 @@ Stream<Set<String>?> repostedEvents(Ref ref) async* {
 }
 
 String? _getCurrentUserRepostedId(NostrEntity entity, {required String currentPubkey}) {
-  if (entity.pubkey != currentPubkey) {
+  if (entity.masterPubkey != currentPubkey) {
     return null;
   }
 

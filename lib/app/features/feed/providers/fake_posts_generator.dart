@@ -21,7 +21,7 @@ PostEntity generateFakePost() {
     ),
   );
   return postEntity.copyWith(
-    pubkey: '5144fe88ff4253c6408ee89ce7fae6f501d84599bc5bd14014d08e489587d5af',
+    masterPubkey: '5144fe88ff4253c6408ee89ce7fae6f501d84599bc5bd14014d08e489587d5af',
   );
 }
 

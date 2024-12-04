@@ -109,7 +109,7 @@ class TabContent extends HookConsumerWidget {
           pubkeys: contentCreators
               .whereType<UserMetadataEntity>()
               .take(data.pubkeys.length)
-              .map((entity) => entity.pubkey)
+              .map((entity) => entity.masterPubkey)
               .toList(),
         );
         if ((data.type == NotificationsType.repost ||

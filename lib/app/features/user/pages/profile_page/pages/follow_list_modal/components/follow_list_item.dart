@@ -42,7 +42,7 @@ class FollowListItem extends ConsumerWidget {
           profilePicture: userMetadata.data.picture,
           verifiedBadge: userMetadata.data.verified,
           onTap: () {
-            Navigator.of(context).pop(userMetadata.pubkey);
+            Navigator.of(context).pop(userMetadata.masterPubkey);
           },
         );
       },

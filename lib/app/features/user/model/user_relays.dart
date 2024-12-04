@@ -40,7 +40,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
   List<String> get urls => data.list.map((relay) => relay.url).toList();
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: pubkey);
+  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
 
   static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 

@@ -40,7 +40,7 @@ class ReactionEntity with _$ReactionEntity, NostrEntity implements CacheableEnti
 
   @override
   String get cacheKey =>
-      cacheKeyBuilder(eventId: data.eventId, pubkey: pubkey, content: data.content);
+      cacheKeyBuilder(eventId: data.eventId, pubkey: masterPubkey, content: data.content);
 
   static String cacheKeyBuilder({
     required String eventId,
