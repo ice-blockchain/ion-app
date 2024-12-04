@@ -8,7 +8,7 @@ class WalletRoutes {
       routes: [TypedGoRoute<AllowAccessRoute>(path: 'allow-access')],
     ),
     TypedShellRoute<ModalShellRouteData>(
-      routes: [TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting')],
+      routes: [TypedGoRoute<ManageNftsRoute>(path: 'manage-nfts')],
     ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
@@ -40,7 +40,7 @@ class WalletRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<NftDetailsRoute>(path: 'nft-details'),
-        TypedGoRoute<NftsSortingRoute>(path: 'nfts-sorting'),
+        TypedGoRoute<ManageNftsRoute>(path: 'manage-nfts'),
         TypedGoRoute<NftSendFormRoute>(
           path: 'nft-send',
           routes: [
@@ -105,10 +105,10 @@ class AllowAccessRoute extends BaseRouteData {
         );
 }
 
-class NftsSortingRoute extends BaseRouteData {
-  NftsSortingRoute()
+class ManageNftsRoute extends BaseRouteData {
+  ManageNftsRoute()
       : super(
-          child: const NftsSortingModal(),
+          child: const ManageNftsPage(),
           type: IceRouteType.bottomSheet,
         );
 }

@@ -8,7 +8,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
 import 'package:ion/app/features/wallet/model/nft_layout_type.dart';
-import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_price.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_network.dart';
 
 class NftListItem extends StatelessWidget {
   const NftListItem({
@@ -35,7 +35,7 @@ class NftListItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           const Text(''),
-          NftPrice(
+          NftNetwork(
             nftData: nftData,
             layoutType: NftLayoutType.list,
           ),

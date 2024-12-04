@@ -3,12 +3,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 class NftItem extends StatelessWidget {
   const NftItem({
@@ -35,13 +33,9 @@ class NftItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.only(right: 5.0.s),
-                child: Assets.images.wallet.walletEth.icon(size: 12.0.s),
-              ),
-              Padding(
                 padding: EdgeInsets.only(right: 4.0.s),
                 child: Text(
-                  '${nftData.price} ${nftData.currency}',
+                  ' ${nftData.currency}',
                   style: context.theme.appTextThemes.caption2.copyWith(
                     color: context.theme.appColors.secondaryText,
                   ),
@@ -51,7 +45,8 @@ class NftItem extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: backgroundColor ?? context.theme.appColors.tertararyBackground,
+      backgroundColor:
+          backgroundColor ?? context.theme.appColors.tertararyBackground,
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(16.0.s),
         child: CachedNetworkImage(

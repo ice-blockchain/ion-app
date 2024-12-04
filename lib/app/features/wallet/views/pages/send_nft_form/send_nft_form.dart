@@ -30,8 +30,10 @@ class SendNftForm extends ConsumerWidget {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
-    final formController = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
-    final notifier = ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier);
+    final formController =
+        ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
+    final notifier = ref.read(
+        sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier);
     final selectedNft = formController.selectedNft;
     final selectedContact = formController.selectedContact;
 
@@ -58,11 +60,8 @@ class SendNftForm extends ConsumerWidget {
                       NftPicture(imageUrl: selectedNft.iconUrl),
                       SizedBox(height: 16.0.s),
                       NftName(
-                        name: selectedNft.collectionName,
                         rank: selectedNft.rank,
-                        price: selectedNft.price,
-                        networkSymbol: selectedNft.currency,
-                        networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
+                        name: selectedNft.collectionName,
                       ),
                       SizedBox(height: 16.0.s),
                       ContactInputSwitcher(
@@ -76,7 +75,8 @@ class SendNftForm extends ConsumerWidget {
                           ).push<String>(context);
 
                           if (contactId != null) {
-                            final contact = ref.read(contactByIdProvider(id: contactId));
+                            final contact =
+                                ref.read(contactByIdProvider(id: contactId));
                             notifier.setContact(contact);
                           }
                         },
