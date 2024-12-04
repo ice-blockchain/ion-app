@@ -13,7 +13,6 @@ import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';
 import 'package:ion/app/features/user/model/interest_set.dart';
 import 'package:ion/app/features/user/model/interests.dart';
-import 'package:ion/app/features/user/model/user_delegation.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
@@ -38,10 +37,14 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
             await (_assignUserRelays(), _generateNostrKeyStore()).wait;
 
         // Build and cache user relays first because it is used to `sendEvents`, upload avatar
-        final userRelays = await _buildAndCacheUserRelays(relayUrls: relayUrls);
+        final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
 
         // Send user delegation event in advance so all subsequent events pass delegation attestation
-        await _sendUserDelegation(pubkey: nostrKeyStore.publicKey);
+        final userDelegationEvent = await _buildUserDelegation(pubkey: nostrKeyStore.publicKey);
+
+        await ref
+            .read(nostrNotifierProvider.notifier)
+            .sendEvents([userDelegationEvent, userRelaysEvent]);
 
         final uploadedAvatar = await _uploadAvatar();
 
@@ -52,7 +55,6 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final followList = _buildFollowList();
 
         await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([
-          userRelays,
           userMetadata,
           followList,
           interestSetData,
@@ -80,7 +82,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return nostrKeyStore;
   }
 
-  Future<UserRelaysData> _buildAndCacheUserRelays({required List<String> relayUrls}) async {
+  Future<EventMessage> _buildAndCacheUserRelays({required List<String> relayUrls}) async {
     final userRelays = UserRelaysData(
       list: relayUrls.map((url) => UserRelay(url: url)).toList(),
     );
@@ -89,7 +91,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
     ref.read(nostrCacheProvider.notifier).cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
 
-    return userRelays;
+    return userRelaysEvent;
   }
 
   UserMetadata _buildUserMetadata({MediaAttachment? avatarAttachment}) {
@@ -137,20 +139,14 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return (interestSetData: interestSetData, interestsData: interestsData);
   }
 
-  Future<void> _sendUserDelegation({required String pubkey}) async {
+  Future<EventMessage> _buildUserDelegation({required String pubkey}) async {
     final userDelegationData = await ref
         .read(userDelegationManagerProvider.notifier)
         .buildCurrentUserDelegationDataWith(pubkey: pubkey);
 
-    final userDelegationEvent = await ref
+    return ref
         .read(userDelegationManagerProvider.notifier)
         .buildDelegationEventFrom(userDelegationData);
-
-    await ref.read(nostrNotifierProvider.notifier).sendEvent(userDelegationEvent);
-
-    ref
-        .read(nostrCacheProvider.notifier)
-        .cache(UserDelegationEntity.fromEventMessage(userDelegationEvent));
   }
 
   FollowListData _buildFollowList() {

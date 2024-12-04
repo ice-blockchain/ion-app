@@ -29,36 +29,44 @@ class NostrNotifier extends _$NostrNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<void> sendEvents(
+  Future<List<NostrEntity>?> sendEvents(
     List<EventMessage> events, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    bool cache = true,
   }) async {
     final relay = await _getRelay(actionSource);
     await relay.sendEvents(events);
+    if (cache) {
+      return events.map(_parseAndCache).toList();
+    }
+    return null;
   }
 
-  Future<void> sendEvent(
+  Future<NostrEntity?> sendEvent(
     EventMessage event, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    bool cache = true,
   }) async {
-    return sendEvents([event], actionSource: actionSource);
+    final result = await sendEvents([event], actionSource: actionSource, cache: cache);
+    return result?.elementAtOrNull(0);
   }
 
-  Future<List<NostrEntity>> sendEntitiesData(
+  Future<List<NostrEntity>?> sendEntitiesData(
     List<EventSerializable> entitiesData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    bool cache = true,
   }) async {
     final events = await Future.wait(entitiesData.map(sign));
-    await sendEvents(events);
-    return events.map(_parseAndCache).toList();
+    return sendEvents(events, actionSource: actionSource, cache: cache);
   }
 
-  Future<NostrEntity> sendEntityData(
+  Future<NostrEntity?> sendEntityData(
     EventSerializable entityData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    bool cache = true,
   }) async {
-    final entities = await sendEntitiesData([entityData], actionSource: actionSource);
-    return entities.first;
+    final entities = await sendEntitiesData([entityData], actionSource: actionSource, cache: cache);
+    return entities?.elementAtOrNull(0);
   }
 
   Stream<EventMessage> requestEvents(

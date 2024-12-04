@@ -30,8 +30,7 @@ class LikesNotifier extends _$LikesNotifier {
         final data = DeletionRequest(
           events: [EventToDelete(eventId: likeEntity.id, kind: ReactionEntity.kind)],
         );
-        final event = await ref.read(nostrNotifierProvider.notifier).sign(data);
-        await ref.read(nostrNotifierProvider.notifier).sendEvent(event);
+        await ref.read(nostrNotifierProvider.notifier).sendEntityData(data, cache: false);
         ref.read(nostrCacheProvider.notifier).remove(likeEntity.cacheKey);
         ref.read(likesCountProvider(eventReference).notifier).removeOne();
       } else {
