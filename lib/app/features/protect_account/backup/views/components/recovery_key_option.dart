@@ -3,11 +3,12 @@
 import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/card/rounded_card.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class RecoveryKeyOption extends StatelessWidget {
+class RecoveryKeyOption extends HookWidget {
   const RecoveryKeyOption({
     required this.title,
     required this.subtitle,
@@ -23,10 +24,23 @@ class RecoveryKeyOption extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextThemes;
 
+    final isCopied = useState<bool>(false);
+    final iconAsset = isCopied.value ? Assets.svg.iconBlockCheckGreen : this.iconAsset;
+    final iconColor = isCopied.value ? null : context.theme.appColors.onTertararyBackground;
+    final title = isCopied.value ? context.i18n.wallet_copied : this.title;
+    final borderColor = isCopied.value ? context.theme.appColors.success : null;
+
     return GestureDetector(
-      onTap: () => Clipboard.setData(ClipboardData(text: subtitle)),
+      onTap: () {
+        isCopied.value = true;
+        Clipboard.setData(ClipboardData(text: subtitle));
+        Future<void>.delayed(const Duration(seconds: 3)).then((_) {
+          isCopied.value = false;
+        });
+      },
       child: RoundedCard.outlined(
         padding: EdgeInsets.symmetric(vertical: 20.0.s, horizontal: 16.0.s),
+        borderColor: borderColor,
         child: Column(
           children: [
             Row(
@@ -34,7 +48,7 @@ class RecoveryKeyOption extends StatelessWidget {
               children: [
                 iconAsset.icon(
                   size: 16.0.s,
-                  color: context.theme.appColors.onTertararyBackground,
+                  color: iconColor,
                 ),
                 SizedBox(width: 6.0.s),
                 Text(
