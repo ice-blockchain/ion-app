@@ -84,9 +84,7 @@ class NftDetailsPage extends ConsumerWidget {
                       onPressed: () {
                         ref
                             .read(
-                              sendAssetFormControllerProvider(
-                                      type: CryptoAssetType.nft)
-                                  .notifier,
+                              sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier,
                             )
                             .setNft(nft);
                         NftSendFormRoute().push<void>(context);

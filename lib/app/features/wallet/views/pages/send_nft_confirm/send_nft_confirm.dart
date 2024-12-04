@@ -22,8 +22,7 @@ class SendNftConfirmPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
-    final formData =
-        ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
+    final formData = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
     final selectedNft = formData.selectedNft;
 
     return SheetContent(
@@ -62,8 +61,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                         child: Text(
                           '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
                           textAlign: TextAlign.right,
-                          style:
-                              context.theme.appTextThemes.caption3.copyWith(),
+                          style: context.theme.appTextThemes.caption3.copyWith(),
                         ),
                       ),
                     ),

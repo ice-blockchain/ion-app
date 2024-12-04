@@ -29,13 +29,10 @@ class NftHeaderSelectAction extends ConsumerWidget {
       }
 
       return selectedNftNetworks.any(
-        (ManageNftNetworkData network) =>
-            network.networkType == NetworkType.all,
+        (ManageNftNetworkData network) => network.networkType == NetworkType.all,
       )
           ? context.i18n.core_all
-          : selectedNftNetworks
-              .map((e) => e.networkType.name.toUpperCase())
-              .join(', ');
+          : selectedNftNetworks.map((e) => e.networkType.name.toUpperCase()).join(', ');
     }
 
     return TextButton(
@@ -49,8 +46,7 @@ class NftHeaderSelectAction extends ConsumerWidget {
             Flexible(
               child: Text(
                 '${context.i18n.core_chain}: ${joinSelectedNetworks()}',
-                style:
-                    context.theme.appTextThemes.caption.copyWith(color: color),
+                style: context.theme.appTextThemes.caption.copyWith(color: color),
                 overflow: TextOverflow.ellipsis,
               ),
             ),

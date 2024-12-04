@@ -87,11 +87,9 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     collectionName: 'WZRD',
     identifier: 67,
     price: 2.11,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-10.png',
+    iconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-10.png',
     currency: 'ETH',
-    currencyIconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+    currencyIconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
     description:
         'Explore the mysteries of the universe with WZRD! This hand-drawn, one-of-a-kind digital artwork features a whimsical feline adorned with interstellar patterns and vibrant colors. Perfect for space enthusiasts and cat lovers alike, this NFT brings a touch of the cosmos to your collection. Own a piece of digital space art today!',
     network: 'Ethereum',
@@ -105,11 +103,9 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     collectionName: 'Moonrunners Specialty',
     identifier: 4,
     price: 3.87,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-11.png',
+    iconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-11.png',
     currency: 'ETH',
-    currencyIconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+    currencyIconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
     description:
         'Step into a world of electric hues and surreal landscapes with Moonrunners Specialty. This unique digital painting captures the essence of a futuristic city bathed in neon lights. With its intricate details and vivid colors, this NFT promises to be a standout addition to any digital art collection. Embrace the future with Moonrunners Specialty.',
     network: 'Ethereum',
@@ -123,11 +119,9 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     collectionName: 'Crazy Monkey',
     identifier: 456,
     price: 0.04,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-12.png',
+    iconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-12.png',
     currency: 'ETH',
-    currencyIconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+    currencyIconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
     description:
         'Behold the Crazy Monkey, a mesmerizing 3D digital sculpture that exudes mystery and power. Crafted with intricate textures and lifelike details, this NFT represents a mythical protector from a forgotten era. Perfect for collectors of fantasy and mythology, Crazy Monkey is a testament to digital artistry at its finest.',
     network: 'Ethereum',
@@ -141,11 +135,9 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     collectionName: 'Metaverse Melody',
     identifier: 76,
     price: 1.34,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-13.png',
+    iconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-13.png',
     currency: 'ETH',
-    currencyIconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+    currencyIconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
     description:
         'Experience the harmony of the digital world with Metaverse Melody, a dynamic audio-visual NFT. This piece combines stunning visuals with an original soundtrack, creating an immersive experience that transports you to the heart of the metaverse. Ideal for those who appreciate both visual and auditory art forms, Metaverse Melody is a symphony for the senses.',
     network: 'Ethereum',
@@ -159,11 +151,9 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     collectionName: 'Ethereal Butterfly',
     identifier: 345,
     price: 0,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
+    iconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-14.png',
     currency: 'ETH',
-    currencyIconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+    currencyIconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
     description:
         'Delicate and enchanting, Ethereal Butterfly is a digital artwork that captures the ephemeral beauty of a butterfly in flight. With its shimmering wings and vibrant colors, this NFT is a symbol of transformation and freedom. Perfect for nature lovers and art enthusiasts, Ethereal Butterfly adds a touch of grace and elegance to any collection.',
     network: 'Ethereum',
@@ -177,11 +167,9 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     collectionName: 'Pixel Samurai',
     identifier: 19,
     price: 0.05,
-    iconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-15.png',
+    iconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-15.png',
     currency: 'ETH',
-    currencyIconUrl:
-        'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
+    currencyIconUrl: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-2.png',
     description:
         'Unleash the warrior within with Pixel Samurai, a striking 8-bit digital artwork that combines classic retro gaming aesthetics with the fierce elegance of a samurai. This NFT features a meticulously designed warrior poised for battle, set against a backdrop of traditional Japanese elements. Perfect for fans of retro gaming and martial arts, Pixel Samurai brings a blend of nostalgia and artistry to your digital collection.',
     network: 'Ethereum',

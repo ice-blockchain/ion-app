@@ -73,8 +73,7 @@ class FilteredNftsNetworkNotifier extends _$FilteredNftsNetworkNotifier {
 
         final filteredNetworks = allNetworks
             .where(
-              (network) =>
-                  network.networkType.name.toLowerCase().contains(query),
+              (network) => network.networkType.name.toLowerCase().contains(query),
             )
             .toSet();
 
@@ -87,9 +86,7 @@ class FilteredNftsNetworkNotifier extends _$FilteredNftsNetworkNotifier {
 
 @Riverpod(keepAlive: true)
 AsyncValue<List<ManageNftNetworkData>> selectedNftsNetworks(Ref ref) {
-  final allNftNetworksMap =
-      ref.watch(manageNftNetworksNotifierProvider).value ?? {};
-  final selected =
-      allNftNetworksMap.where((network) => network.isSelected).toList();
+  final allNftNetworksMap = ref.watch(manageNftNetworksNotifierProvider).value ?? {};
+  final selected = allNftNetworksMap.where((network) => network.isSelected).toList();
   return AsyncData<List<ManageNftNetworkData>>(selected);
 }

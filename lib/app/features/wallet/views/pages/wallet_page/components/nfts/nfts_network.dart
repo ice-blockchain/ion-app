@@ -22,8 +22,7 @@ class NftNetwork extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Avatar(
-            size: 12.0.s, imageWidget: nftData.networkType.iconAsset.image()),
+        Avatar(size: 12.0.s, imageWidget: nftData.networkType.iconAsset.image()),
         SizedBox(width: 5.0.s),
         Text(
           nftData.networkType.name.toUpperCase(),
