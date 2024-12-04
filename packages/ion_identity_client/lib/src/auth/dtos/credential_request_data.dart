@@ -6,12 +6,15 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'credential_request_data.g.dart';
 
+// ignore: constant_identifier_names
+enum CredentialKind { Fido2, Key, PasswordProtectedKey, RecoveryKey }
+
 @JsonSerializable()
 class CredentialRequestData {
   const CredentialRequestData({
     required this.credentialKind,
     required this.credentialInfo,
-    required this.encryptedPrivateKey,
+    this.encryptedPrivateKey,
     this.credentialName,
     this.challengeIdentifier,
   });
@@ -22,9 +25,10 @@ class CredentialRequestData {
   final String? challengeIdentifier;
   @JsonKey(includeIfNull: false)
   final String? credentialName;
-  final String credentialKind;
+  @JsonKey(includeIfNull: false)
+  final String? encryptedPrivateKey;
+  final CredentialKind credentialKind;
   final CredentialInfo credentialInfo;
-  final String encryptedPrivateKey;
 
   JsonObject toJson() => _$CredentialRequestDataToJson(this);
 }

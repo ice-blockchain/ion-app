@@ -11,6 +11,7 @@ class RegisterPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final usernameController = useTextEditingController();
+    final passwordController = useTextEditingController();
 
     final registerState = ref.watch(registerActionNotifierProvider);
     final isLoading = registerState.isLoading;
@@ -40,6 +41,14 @@ class RegisterPage extends HookConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
+            TextField(
+              controller: passwordController,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: isLoading
                   ? null
@@ -52,7 +61,11 @@ class RegisterPage extends HookConsumerWidget {
                         return;
                       }
 
-                      ref.read(registerActionNotifierProvider.notifier).signUp(keyName: username);
+                      ref.read(registerActionNotifierProvider.notifier).signUp(
+                            keyName: username,
+                            password:
+                                passwordController.text.isEmpty ? null : passwordController.text,
+                          );
                     },
               child: const Text('Register'),
             ),

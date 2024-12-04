@@ -3,7 +3,7 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/user_action_signer_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
-import 'package:ion_identity_client/src/signer/passkey_signer.dart';
+import 'package:ion_identity_client/src/signer/identity_signer.dart';
 import 'package:ion_identity_client/src/wallets/ion_identity_wallets.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/data_sources/create_wallet_data_source.dart';
@@ -32,14 +32,14 @@ class WalletsClientServiceLocator {
   IONIdentityWallets wallets({
     required String username,
     required IONIdentityConfig config,
-    required PasskeysSigner signer,
+    required IdentitySigner identitySigner,
   }) {
     return IONIdentityWallets(
       username: username,
       createWalletService: createWallet(
         username: username,
         config: config,
-        signer: signer,
+        identitySigner: identitySigner,
       ),
       getWalletsService: getWallets(username: username, config: config),
       getWalletAssetsService: getWalletAssets(username: username, config: config),
@@ -52,7 +52,7 @@ class WalletsClientServiceLocator {
       generateSignatureService: generateSignature(
         username: username,
         config: config,
-        signer: signer,
+        identitySigner: identitySigner,
       ),
     );
   }
@@ -60,14 +60,14 @@ class WalletsClientServiceLocator {
   CreateWalletService createWallet({
     required String username,
     required IONIdentityConfig config,
-    required PasskeysSigner signer,
+    required IdentitySigner identitySigner,
   }) {
     return CreateWalletService(
       username: username,
       dataSource: const CreateWalletDataSource(),
       userActionSigner: UserActionSignerServiceLocator().userActionSigner(
         config: config,
-        signer: signer,
+        identitySigner: identitySigner,
       ),
     );
   }
@@ -140,14 +140,14 @@ class WalletsClientServiceLocator {
   GenerateSignatureService generateSignature({
     required String username,
     required IONIdentityConfig config,
-    required PasskeysSigner signer,
+    required IdentitySigner identitySigner,
   }) {
     return GenerateSignatureService(
       username: username,
       dataSource: const GenerateSignatureDataSource(),
       userActionSigner: UserActionSignerServiceLocator().userActionSigner(
         config: config,
-        signer: signer,
+        identitySigner: identitySigner,
       ),
     );
   }

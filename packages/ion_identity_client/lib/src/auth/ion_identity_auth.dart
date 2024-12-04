@@ -42,6 +42,9 @@ class IONIdentityAuth {
 
   Future<void> registerUser() => registerService.registerUser();
 
+  Future<void> registerUserWithPassword(String password) =>
+      registerService.registerWithPassword(password);
+
   Future<void> loginUser() => loginService.loginUser();
 
   Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials() =>
