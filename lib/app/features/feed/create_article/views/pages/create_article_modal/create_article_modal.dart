@@ -9,7 +9,7 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/components/create_article_add_image.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/components/create_article_toolbar.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/hooks/use_create_article.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/router/app_routes.dart';
@@ -22,8 +22,7 @@ class CreateArticleModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textEditorController = useQuillController();
-    final titleController = TextEditingController();
+    final articleState = useCreateArticle();
 
     Future<bool?> showCancelCreationModal(BuildContext context) {
       return showSimpleBottomSheet<bool>(
@@ -55,18 +54,23 @@ class CreateArticleModal extends HookConsumerWidget {
                   label: Text(
                     context.i18n.button_next,
                     style: context.theme.appTextThemes.body.copyWith(
-                      color: context.theme.appColors.primaryAccent,
+                      color: articleState.isButtonEnabled
+                          ? context.theme.appColors.primaryAccent
+                          : context.theme.appColors.sheetLine,
                     ),
                   ),
                   backgroundColor: context.theme.appColors.secondaryBackground,
                   borderColor: context.theme.appColors.secondaryBackground,
+                  disabled: !articleState.isButtonEnabled,
                   onPressed: () {
                     ArticlePreviewRoute().push<void>(context);
                   },
                 ),
               ],
             ),
-            const CreateArticleAddImage(),
+            CreateArticleAddImage(
+              selectedImage: articleState.selectedImage,
+            ),
             Padding(
               padding: EdgeInsets.only(
                 left: ScreenSideOffset.defaultSmallMargin,
@@ -75,7 +79,7 @@ class CreateArticleModal extends HookConsumerWidget {
                 bottom: 6.0.s,
               ),
               child: TextField(
-                controller: titleController,
+                controller: articleState.titleController,
                 style: context.theme.appTextThemes.headline2.copyWith(
                   color: context.theme.appColors.primaryText,
                 ),
@@ -91,7 +95,7 @@ class CreateArticleModal extends HookConsumerWidget {
             Expanded(
               child: ScreenSideOffset.small(
                 child: TextEditor(
-                  textEditorController,
+                  articleState.textEditorController,
                   placeholder: context.i18n.create_article_story_placeholder,
                 ),
               ),
@@ -101,7 +105,7 @@ class CreateArticleModal extends HookConsumerWidget {
                 const HorizontalSeparator(),
                 ScreenSideOffset.small(
                   child: CreateArticleToolbar(
-                    textEditorController: textEditorController,
+                    textEditorController: articleState.textEditorController,
                   ),
                 ),
               ],
