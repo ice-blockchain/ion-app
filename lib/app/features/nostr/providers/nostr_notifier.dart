@@ -48,7 +48,7 @@ class NostrNotifier extends _$NostrNotifier {
     List<EventSerializable> entitiesData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    final events = entitiesData.map(sign).toList();
+    final events = await Future.wait(entitiesData.map(sign));
     await sendEvents(events);
     return events.map(_parseAndCache).toList();
   }
@@ -100,7 +100,7 @@ class NostrNotifier extends _$NostrNotifier {
     return entities.isNotEmpty ? entities.first as T : null;
   }
 
-  EventMessage sign(EventSerializable entityData) {
+  Future<EventMessage> sign(EventSerializable entityData) async {
     final keyStore = ref.read(currentUserNostrKeyStoreProvider).valueOrNull;
     final mainWallet = ref.read(mainWalletProvider).valueOrNull;
 

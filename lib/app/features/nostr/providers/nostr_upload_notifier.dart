@@ -13,6 +13,7 @@ import 'package:ion/app/features/nostr/model/file_storage_metadata.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_auth.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -39,7 +40,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
 
     final apiUrl = await _getFileStorageApiUrl(keyStore: keyStore);
 
-    final response = await _makeUploadRequest(url: apiUrl, file: file, keyStore: keyStore);
+    final response = await _makeUploadRequest(url: apiUrl, file: file);
 
     final fileMetadata = FileMetadata.fromUploadResponseTags(
       response.nip94Event.tags,
@@ -75,9 +76,15 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
         path: FileStorageMetadata.path,
       );
 
-      final response = await ref.read(dioProvider).getUri<String>(metadataUri);
+      final response = await ref.read(dioProvider).getUri<dynamic>(
+            metadataUri,
+            options: Options(
+              contentType: 'application/json',
+            ),
+          );
       final uploadPath =
-          FileStorageMetadata.fromJson(json.decode(response.data!) as Map<String, dynamic>).apiUrl;
+          FileStorageMetadata.fromJson(json.decode(response.data as String) as Map<String, dynamic>)
+              .apiUrl;
       return metadataUri.replace(path: uploadPath).toString();
     } catch (error) {
       throw GetFileStorageUrlException(error);
@@ -87,7 +94,6 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
   Future<UploadResponse> _makeUploadRequest({
     required String url,
     required MediaFile file,
-    required KeyStore keyStore,
   }) async {
     final fileBytes = await File(file.path).readAsBytes();
     final fileName = file.name ?? file.basename;
@@ -102,17 +108,19 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
     });
 
     final nostrAuth = NostrAuth(url: url, method: 'POST', payload: fileBytes);
+    final authEvent = await ref.read(nostrNotifierProvider.notifier).sign(nostrAuth);
 
     try {
-      final response = await ref.read(dioProvider).post<Map<String, dynamic>>(
+      final response = await ref.read(dioProvider).post<dynamic>(
             url,
             data: formData,
             options: Options(
-              headers: {'Authorization': await nostrAuth.toAuthorizationHeader(keyStore)},
+              headers: {'Authorization': nostrAuth.toAuthorizationHeader(authEvent)},
             ),
           );
 
-      final uploadResponse = UploadResponse.fromJson(response.data!);
+      final uploadResponse =
+          UploadResponse.fromJson(json.decode(response.data as String) as Map<String, dynamic>);
 
       if (uploadResponse.status != 'success') {
         throw Exception(uploadResponse.message);

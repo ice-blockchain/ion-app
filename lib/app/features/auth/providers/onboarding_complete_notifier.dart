@@ -36,7 +36,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final (relayUrls, nostrKeyStore) =
             await (_assignUserRelays(), _generateNostrKeyStore()).wait;
 
-        final userRelaysEvent = _buildUserRelays(relayUrls: relayUrls);
+        final userRelaysEvent = await _buildUserRelays(relayUrls: relayUrls);
 
         // Add user relays to cache because it will be used to `sendEvents`, upload avatar
         ref
@@ -49,11 +49,11 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         ).wait;
 
         final userMetadataEvent =
-            _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
+            await _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
 
-        final (:interestSetEvent, :interestsEvent) = _buildUserLanguages();
+        final (:interestSetEvent, :interestsEvent) = await _buildUserLanguages();
 
-        final followListEvent = _buildFollowList();
+        final followListEvent = await _buildFollowList();
 
         await ref.read(nostrNotifierProvider.notifier).sendEvents([
           // Delegation should be first
@@ -94,7 +94,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return nostrKeyStore;
   }
 
-  EventMessage _buildUserRelays({required List<String> relayUrls}) {
+  Future<EventMessage> _buildUserRelays({required List<String> relayUrls}) {
     final userRelays = UserRelaysData(
       list: relayUrls.map((url) => UserRelay(url: url)).toList(),
     );
@@ -102,7 +102,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return ref.read(nostrNotifierProvider.notifier).sign(userRelays);
   }
 
-  EventMessage _buildUserMetadata({MediaAttachment? avatarAttachment}) {
+  Future<EventMessage> _buildUserMetadata({MediaAttachment? avatarAttachment}) {
     final OnboardingState(:name, :displayName) = ref.read(onboardingDataProvider);
 
     if (name == null) {
@@ -123,7 +123,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return ref.read(nostrNotifierProvider.notifier).sign(userMetadata);
   }
 
-  ({EventMessage interestSetEvent, EventMessage interestsEvent}) _buildUserLanguages() {
+  Future<({EventMessage interestSetEvent, EventMessage interestsEvent})>
+      _buildUserLanguages() async {
     final OnboardingState(:languages) = ref.read(onboardingDataProvider);
 
     if (languages == null || languages.isEmpty) {
@@ -135,14 +136,14 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       hashtags: languages,
     );
 
-    final interestSetEvent = ref.read(nostrNotifierProvider.notifier).sign(interestSetData);
+    final interestSetEvent = await ref.read(nostrNotifierProvider.notifier).sign(interestSetData);
 
     final interestsData = InterestsData(
       hashtags: [],
       interestSetRefs: [interestSetData.toReplaceableEventReference(interestSetEvent.pubkey)],
     );
 
-    final interestsEvent = ref.read(nostrNotifierProvider.notifier).sign(interestsData);
+    final interestsEvent = await ref.read(nostrNotifierProvider.notifier).sign(interestsData);
 
     return (interestSetEvent: interestSetEvent, interestsEvent: interestsEvent);
   }
@@ -160,7 +161,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         .buildDelegationEventFrom(userDelegationData);
   }
 
-  EventMessage _buildFollowList() {
+  Future<EventMessage> _buildFollowList() {
     final OnboardingState(:followees) = ref.read(onboardingDataProvider);
 
     final followListData = FollowListData(
@@ -177,7 +178,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       final (:fileMetadata, :mediaAttachment) =
           await ref.read(nostrUploadNotifierProvider.notifier).upload(avatar);
       return (
-        fileMetadataEvent: ref.read(nostrNotifierProvider.notifier).sign(fileMetadata),
+        fileMetadataEvent: await ref.read(nostrNotifierProvider.notifier).sign(fileMetadata),
         mediaAttachment: mediaAttachment
       );
     }
