@@ -18,8 +18,7 @@ import 'package:ion_identity_client/src/auth/services/twofa/twofa_service.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/user_action_signer_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/wallets_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
-import 'package:ion_identity_client/src/signer/passkey_signer.dart';
-import 'package:ion_identity_client/src/signer/password_signer.dart';
+import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class AuthClientServiceLocator {
   factory AuthClientServiceLocator() {
@@ -33,30 +32,27 @@ class AuthClientServiceLocator {
   IONIdentityAuth auth({
     required String username,
     required IONIdentityConfig config,
-    required PasskeysSigner signer,
-    required PasswordSigner passwordSigner,
+    required IdentitySigner identitySigner,
   }) {
     return IONIdentityAuth(
       username: username,
       registerService: register(
         username: username,
         config: config,
-        signer: signer,
-        passwordSigner: passwordSigner,
+        identitySigner: identitySigner,
       ),
-      loginService: login(username: username, config: config, signer: signer),
+      loginService: login(username: username, config: config, identitySigner: identitySigner),
       createRecoveryCredentialsService: createRecoveryCredentials(
         username: username,
         config: config,
-        signer: signer,
-        passwordSigner: passwordSigner,
+        identitySigner: identitySigner,
       ),
       recoverUserService: recoverUser(
         username: username,
         config: config,
-        signer: signer,
+        identitySigner: identitySigner,
       ),
-      twoFAService: twoFA(username: username, config: config, signer: signer),
+      twoFAService: twoFA(username: username, config: config, identitySigner: identitySigner),
       delegatedLoginService: delegatedLogin(config: config),
       tokenStorage: IONIdentityServiceLocator.tokenStorage(),
     );
@@ -65,13 +61,11 @@ class AuthClientServiceLocator {
   RegisterService register({
     required String username,
     required IONIdentityConfig config,
-    required PasskeysSigner signer,
-    required PasswordSigner passwordSigner,
+    required IdentitySigner identitySigner,
   }) {
     return RegisterService(
       username: username,
-      signer: signer,
-      passwordSigner: passwordSigner,
+      identitySigner: identitySigner,
       dataSource: RegisterDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
       ),
@@ -82,11 +76,11 @@ class AuthClientServiceLocator {
   LoginService login({
     required String username,
     required IONIdentityConfig config,
-    required PasskeysSigner signer,
+    required IdentitySigner identitySigner,
   }) {
     return LoginService(
       username: username,
-      signer: signer,
+      identitySigner: identitySigner,
       dataSource: LoginDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
       ),
@@ -97,8 +91,7 @@ class AuthClientServiceLocator {
   CreateRecoveryCredentialsService createRecoveryCredentials({
     required String username,
     required IONIdentityConfig config,
-    required PasskeysSigner signer,
-    required PasswordSigner passwordSigner,
+    required IdentitySigner identitySigner,
   }) {
     return CreateRecoveryCredentialsService(
       username: username,
@@ -109,9 +102,9 @@ class AuthClientServiceLocator {
       ),
       userActionSigner: UserActionSignerServiceLocator().userActionSigner(
         config: config,
-        signer: signer,
+        identitySigner: identitySigner,
       ),
-      passwordSigner: passwordSigner,
+      identitySigner: identitySigner,
       keyService: const KeyService(),
     );
   }
@@ -119,12 +112,12 @@ class AuthClientServiceLocator {
   RecoverUserService recoverUser({
     required String username,
     required IONIdentityConfig config,
-    required PasskeysSigner signer,
+    required IdentitySigner identitySigner,
   }) {
     return RecoverUserService(
       config: config,
       username: username,
-      passkeySigner: signer,
+      identitySigner: identitySigner,
       dataSource: RecoverUserDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
       ),
@@ -147,7 +140,7 @@ class AuthClientServiceLocator {
   TwoFAService twoFA({
     required String username,
     required IONIdentityConfig config,
-    required PasskeysSigner signer,
+    required IdentitySigner identitySigner,
   }) {
     return TwoFAService(
       username: username,
@@ -158,7 +151,7 @@ class AuthClientServiceLocator {
       wallets: WalletsClientServiceLocator().wallets(
         username: username,
         config: config,
-        signer: signer,
+        identitySigner: identitySigner,
       ),
       extractUserIdService: extractUserId(),
     );

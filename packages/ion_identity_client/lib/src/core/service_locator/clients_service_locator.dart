@@ -4,8 +4,7 @@ import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/auth_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/users_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/wallets_client_service_locator.dart';
-import 'package:ion_identity_client/src/signer/passkey_signer.dart';
-import 'package:ion_identity_client/src/signer/password_signer.dart';
+import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class ClientsServiceLocator {
   factory ClientsServiceLocator() {
@@ -21,8 +20,7 @@ class ClientsServiceLocator {
   IONIdentityClient ionIdentityClient({
     required String username,
     required IONIdentityConfig config,
-    required PasskeysSigner signer,
-    required PasswordSigner passwordSigner,
+    required IdentitySigner identitySigner,
   }) {
     var client = _clients[username];
     if (client == null) {
@@ -30,13 +28,12 @@ class ClientsServiceLocator {
         auth: AuthClientServiceLocator().auth(
           username: username,
           config: config,
-          signer: signer,
-          passwordSigner: passwordSigner,
+          identitySigner: identitySigner,
         ),
         wallets: WalletsClientServiceLocator().wallets(
           username: username,
           config: config,
-          signer: signer,
+          identitySigner: identitySigner,
         ),
         users: UsersClientServiceLocator().users(
           username: username,

@@ -7,7 +7,7 @@ import 'package:ion_identity_client/src/auth/dtos/credential_request_data.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_response.dart';
 import 'package:ion_identity_client/src/auth/services/create_recovery_credentials/data_sources/create_recovery_credentials_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
-import 'package:ion_identity_client/src/signer/password_signer.dart';
+import 'package:ion_identity_client/src/signer/identity_signer.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:uuid/uuid.dart';
 
@@ -17,7 +17,7 @@ class CreateRecoveryCredentialsService {
     required this.config,
     required this.dataSource,
     required this.userActionSigner,
-    required this.passwordSigner,
+    required this.identitySigner,
     required this.keyService,
   });
 
@@ -25,13 +25,13 @@ class CreateRecoveryCredentialsService {
   final IONIdentityConfig config;
   final CreateRecoveryCredentialsDataSource dataSource;
   final UserActionSigner userActionSigner;
-  final PasswordSigner passwordSigner;
+  final IdentitySigner identitySigner;
   final KeyService keyService;
 
   Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials() async {
     final credentialChallenge = await dataSource.createCredentialInit(username: username);
     final recoveryCode = generateRecoveryCode();
-    final credentialRequestData = await passwordSigner.getCredentialInfo(
+    final credentialRequestData = await identitySigner.registerWithPassword(
       challenge: credentialChallenge.challenge,
       password: recoveryCode,
       credentialKind: CredentialKind.RecoveryKey,

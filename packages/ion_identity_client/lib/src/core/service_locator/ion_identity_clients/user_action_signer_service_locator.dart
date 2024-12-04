@@ -4,7 +4,7 @@ import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/network_service_locator.dart';
 import 'package:ion_identity_client/src/signer/data_sources/user_action_signer_data_source.dart';
-import 'package:ion_identity_client/src/signer/passkey_signer.dart';
+import 'package:ion_identity_client/src/signer/identity_signer.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 
 class UserActionSignerServiceLocator {
@@ -19,14 +19,14 @@ class UserActionSignerServiceLocator {
 
   UserActionSigner userActionSigner({
     required IONIdentityConfig config,
-    required PasskeysSigner signer,
+    required IdentitySigner identitySigner,
   }) {
     return UserActionSigner(
       dataSource: UserActionSignerDataSource(
         networkClient: NetworkServiceLocator().networkClient(config: config),
         tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       ),
-      passkeysSigner: signer,
+      identitySigner: identitySigner,
     );
   }
 }

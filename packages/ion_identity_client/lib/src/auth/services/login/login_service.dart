@@ -3,18 +3,18 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
 import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
-import 'package:ion_identity_client/src/signer/passkey_signer.dart';
+import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class LoginService {
   const LoginService({
     required this.username,
-    required this.signer,
+    required this.identitySigner,
     required this.dataSource,
     required this.tokenStorage,
   });
 
   final String username;
-  final PasskeysSigner signer;
+  final IdentitySigner identitySigner;
   final LoginDataSource dataSource;
   final TokenStorage tokenStorage;
 
@@ -36,13 +36,13 @@ class LoginService {
   /// - [PasskeyValidationException] if the passkey validation fails.
   /// - [UnknownIONIdentityException] for any other unexpected errors during the login process.
   Future<void> loginUser() async {
-    final canAuthenticate = await signer.canAuthenticate();
+    final canAuthenticate = await identitySigner.isPasskeyAvailable();
     if (!canAuthenticate) {
       throw const PasskeyNotAvailableException();
     }
 
     final challenge = await dataSource.loginInit(username: username);
-    final assertion = await signer.sign(challenge);
+    final assertion = await identitySigner.signWithPasskey(challenge);
     final tokens = await dataSource.loginComplete(
       challengeIdentifier: challenge.challengeIdentifier,
       assertion: assertion,

@@ -6,21 +6,21 @@ import 'package:cryptography/cryptography.dart' as cryptography;
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user/data_sources/recover_user_data_source.dart';
-import 'package:ion_identity_client/src/signer/passkey_signer.dart';
+import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class RecoverUserService {
   RecoverUserService({
     required this.username,
     required this.dataSource,
     required this.config,
-    required this.passkeySigner,
+    required this.identitySigner,
     required this.keyService,
   });
 
   final String username;
   final RecoverUserDataSource dataSource;
   final IONIdentityConfig config;
-  final PasskeysSigner passkeySigner;
+  final IdentitySigner identitySigner;
   final KeyService keyService;
 
   Future<UserRegistrationChallenge> initRecovery({
@@ -40,7 +40,7 @@ class RecoverUserService {
     required String credentialId,
     required String recoveryKey,
   }) async {
-    final attestation = await passkeySigner.register(challenge);
+    final attestation = await identitySigner.registerWithPasskey(challenge);
 
     final signedRecoveryPackage = await _signNewCredentials(
       encryptedKey: challenge.allowedRecoveryCredentials![0].encryptedRecoveryKey,
