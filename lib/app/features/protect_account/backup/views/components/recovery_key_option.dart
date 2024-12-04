@@ -23,29 +23,27 @@ class RecoveryKeyOption extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = context.theme.appTextThemes;
     return CopyBuilder(
-      builder: (context, onCopy, isCopied) {
-        final iconAsset = isCopied ? Assets.svg.iconBlockCheckGreen : this.iconAsset;
-        final iconColor = isCopied ? null : context.theme.appColors.onTertararyBackground;
-        final title = isCopied ? context.i18n.wallet_copied : this.title;
-        final borderColor = isCopied ? context.theme.appColors.success : null;
-
+      defaultIcon: iconAsset.icon(
+        size: 16.0.s,
+        color: context.theme.appColors.onTertararyBackground,
+      ),
+      copiedIcon: Assets.svg.iconBlockCheckGreen.icon(size: 16.0.s),
+      defaultText: title,
+      builder: (context, onCopy, content) {
         return GestureDetector(
           onTap: () => onCopy(subtitle),
           child: RoundedCard.outlined(
             padding: EdgeInsets.symmetric(vertical: 20.0.s, horizontal: 16.0.s),
-            borderColor: borderColor,
+            borderColor: content.borderColor,
             child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    iconAsset.icon(
-                      size: 16.0.s,
-                      color: iconColor,
-                    ),
+                    content.icon,
                     SizedBox(width: 6.0.s),
                     Text(
-                      title,
+                      content.text,
                       style: textTheme.caption2.copyWith(
                         color: context.theme.appColors.onTertararyBackground,
                       ),

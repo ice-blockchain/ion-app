@@ -43,7 +43,7 @@ class CopiedTooltip extends HookConsumerWidget {
           ),
           alignment: Alignment.center,
           child: Text(
-            context.i18n.wallet_copied,
+            context.i18n.common_copied,
             style: context.theme.appTextThemes.caption2.copyWith(
               color: context.theme.appColors.primaryBackground,
             ),

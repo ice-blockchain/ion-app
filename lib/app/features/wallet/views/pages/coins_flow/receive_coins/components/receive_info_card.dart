@@ -80,17 +80,16 @@ class ReceiveInfoCard extends HookConsumerWidget {
                 ),
                 SizedBox(height: 22.0.s),
                 CopyBuilder(
-                  builder: (context, onCopy, isCopied) => Button(
+                  defaultIcon: Assets.svg.iconBlockCopyBlue.icon(),
+                  defaultText: context.i18n.button_copy,
+                  defaultBorderColor: context.theme.appColors.strokeElements,
+                  builder: (context, onCopy, content) => Button(
                     minimumSize: Size(148.0.s, 48.0.s),
-                    leadingIcon: isCopied
-                        ? Assets.svg.iconBlockCheckGreen.icon()
-                        : Assets.svg.iconBlockCopyBlue.icon(),
-                    borderColor: isCopied
-                        ? context.theme.appColors.success
-                        : context.theme.appColors.strokeElements,
+                    leadingIcon: content.icon,
+                    borderColor: content.borderColor,
                     onPressed: () => onCopy(walletAddress),
                     label: Text(
-                      isCopied ? context.i18n.wallet_copied : context.i18n.button_copy,
+                      content.text,
                       style: context.theme.appTextThemes.body.copyWith(
                         color: context.theme.appColors.primaryText,
                       ),
