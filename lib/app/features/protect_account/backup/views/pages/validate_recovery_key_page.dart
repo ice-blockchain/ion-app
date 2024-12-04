@@ -28,8 +28,8 @@ class ValidateRecoveryKeyPage extends ConsumerWidget {
   ) {
     final propertyValue = switch (property) {
       RecoveryKeyProperty.identityKeyName => recoveryData.identityKeyName,
-      RecoveryKeyProperty.recoveryKeyId => recoveryData.recoveryKeyId,
       RecoveryKeyProperty.recoveryCode => recoveryData.recoveryCode,
+      RecoveryKeyProperty.recoveryKeyId => recoveryData.recoveryKeyId,
     };
 
     return inputValue == propertyValue ? null : '';
