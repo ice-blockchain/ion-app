@@ -47,22 +47,14 @@ class NftDetailsPage extends ConsumerWidget {
                     NftPicture(imageUrl: nft.iconUrl),
                     SizedBox(height: 15.0.s),
                     NftName(
-                      name: nft.collectionName,
                       rank: nft.rank,
-                      price: nft.price,
-                      networkSymbol: nft.currency,
-                      networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
+                      name: nft.collectionName,
                     ),
                     SizedBox(height: 12.0.s),
                     RoundedCard.filled(
                       child: ReadMoreText(
                         nft.description,
                       ),
-                    ),
-                    SizedBox(height: 12.0.s),
-                    ListItem.text(
-                      title: Text(context.i18n.send_nft_token_id),
-                      value: nft.identifier.toString(),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
@@ -92,7 +84,9 @@ class NftDetailsPage extends ConsumerWidget {
                       onPressed: () {
                         ref
                             .read(
-                              sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier,
+                              sendAssetFormControllerProvider(
+                                      type: CryptoAssetType.nft)
+                                  .notifier,
                             )
                             .setNft(nft);
                         NftSendFormRoute().push<void>(context);
