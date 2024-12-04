@@ -65,6 +65,7 @@ dependencies:
   permission_handler: ^11.3.0
   photo_manager: ^3.3.0
   photo_manager_image_provider: ^2.1.1
+  pretty_dio_logger: ^1.4.0
   qr_code_scanner:
     git:
       url: https://github.com/ice-blockchain/qr_code_scanner

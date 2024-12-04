@@ -3,9 +3,9 @@
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -33,18 +33,18 @@ Future<FollowListEntity?> followList(Ref ref, String pubkey) async {
 
 @Riverpod(keepAlive: true)
 Future<FollowListEntity?> currentUserFollowList(Ref ref) async {
-  final keyStore = await ref.watch(currentUserNostrKeyStoreProvider.future);
-  if (keyStore == null) {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentPubkey == null) {
     return null;
   }
-  return ref.watch(followListProvider(keyStore.publicKey).future);
+  return ref.watch(followListProvider(currentPubkey).future);
 }
 
 @riverpod
-bool isCurrentUserFollowingSelector(Ref ref, String pubKey) {
+bool isCurrentUserFollowingSelector(Ref ref, String pubkey) {
   return ref.watch(
     currentUserFollowListProvider.select(
-      (state) => state.valueOrNull?.pubkeys.contains(pubKey) ?? false,
+      (state) => state.valueOrNull?.pubkeys.contains(pubkey) ?? false,
     ),
   );
 }

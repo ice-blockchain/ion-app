@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
@@ -18,6 +19,7 @@ class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements Cache
   const factory UserMetadataEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required UserMetadata data,
   }) = _UserMetadataEntity;
@@ -33,13 +35,14 @@ class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements Cache
     return UserMetadataEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: UserMetadata.fromEventMessage(eventMessage),
     );
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: pubkey);
+  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
 
   static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
@@ -89,7 +92,7 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: UserMetadataEntity.kind,
@@ -104,7 +107,10 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
           bot: bot,
         ).toJson(),
       ),
-      tags: media.values.map((attachment) => attachment.toTag()).toList(),
+      tags: [
+        ...tags,
+        for (final attachment in media.values) attachment.toTag(),
+      ],
     );
   }
 }

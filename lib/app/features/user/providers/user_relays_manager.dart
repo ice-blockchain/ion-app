@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_client_provider.dart';
+import 'package:ion/app/services/logger/logger.dart';
+import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_relays_manager.g.dart';
@@ -16,68 +21,90 @@ class UserRelaysManager extends _$UserRelaysManager {
     List<String> pubkeys, {
     ActionSource actionSource = const ActionSourceIndexers(),
   }) async {
-    //TODO::remove this stub and uncomment the rest as soon as we use our relays
-    return List.generate(pubkeys.length, (index) {
-      return UserRelaysEntity(
-        createdAt: DateTime.now(),
-        id: '',
-        pubkey: pubkeys[index],
-        data: const UserRelaysData(list: [UserRelay(url: 'wss://relay.damus.io')]),
+    final result = <UserRelaysEntity>[];
+    final pubkeysToFetch = <String>[];
+
+    for (final pubkey in pubkeys) {
+      final cached = ref.read(
+        nostrCacheProvider.select(
+          cacheSelector<UserRelaysEntity>(UserRelaysEntity.cacheKeyBuilder(pubkey: pubkey)),
+        ),
       );
-    });
+      if (cached != null) {
+        result.add(cached);
+      } else {
+        pubkeysToFetch.add(pubkey);
+      }
+    }
 
-    // final result = <UserRelaysEntity>[];
-    // final pubkeysToFetch = <String>[];
+    if (pubkeysToFetch.isEmpty) {
+      return result;
+    }
 
-    // for (final pubkey in pubkeys) {
-    //   final cached = ref.read(nostrCacheProvider.select(cacheSelector<UserRelaysEntity>(UserRelaysEntity.cacheKeyBuilder(pubkey: pubkey))));
-    //   if (cached != null) {
-    //     result.add(cached);
-    //   } else {
-    //     pubkeysToFetch.add(pubkey);
-    //   }
-    // }
+    final requestMessage = RequestMessage()
+      ..addFilter(
+        RequestFilter(kinds: const [UserRelaysEntity.kind], authors: pubkeysToFetch),
+      );
 
-    // if (pubkeysToFetch.isEmpty) {
-    //   return result;
-    // }
+    final entitiesStream = ref
+        .read(nostrNotifierProvider.notifier)
+        .requestEntities(requestMessage, actionSource: actionSource);
 
-    // final requestMessage = RequestMessage()
-    //   ..addFilter(
-    //     RequestFilter(kinds: const [UserRelaysEntity.kind], authors: pubkeysToFetch),
-    //   );
+    await for (final entity in entitiesStream) {
+      if (entity is UserRelaysEntity) {
+        result.add(entity);
+        pubkeysToFetch.remove(entity.masterPubkey);
+      }
+    }
 
-    // final entitiesStream = ref
-    //     .read(nostrNotifierProvider.notifier)
-    //     .requestEntities(requestMessage, actionSource: actionSource);
+    if (pubkeysToFetch.isNotEmpty) {
+      final userRelays = await _fetchRelaysFromIdentityFor(pubkeys: pubkeysToFetch);
 
-    // await for (final entity in entitiesStream) {
-    //   if (entity is UserRelaysEntity) {
-    //     result.add(entity);
-    //   }
-    // }
+      result.addAll(userRelays);
+    }
 
-    // // if (userRelays == null) {
-    // //TODO:
-    // // request to identity->get-user for the provided `pubkey` when implemented
-    // // and return them here if found:
-    // // ref.read(nostrCacheProvider.notifier).cache(userRelays);
-    // // return ...
-    // // }
-
-    // return result;
+    return result;
   }
 
   Future<UserRelaysEntity?> fetchForCurrentUser() async {
-    final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
-    if (keyStore == null) {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    if (currentPubkey == null) {
       return null;
     }
-    final userRelays =
-        await ref.read(userRelaysManagerProvider.notifier).fetch([keyStore.publicKey]);
+    final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetch([currentPubkey]);
     if (userRelays.isEmpty) {
       return null;
     }
     return userRelays.first;
+  }
+
+  Future<List<UserRelaysEntity>> _fetchRelaysFromIdentityFor({
+    required List<String> pubkeys,
+  }) async {
+    final ionIdentity = await ref.read(ionIdentityClientProvider.future);
+    final userDetails = await Future.wait(
+      pubkeys.map((pubkey) async {
+        try {
+          return await ionIdentity.users.details(userId: pubkey);
+        } catch (error, stackTrace) {
+          Logger.log('Error fetching user relays', error: error, stackTrace: stackTrace);
+        }
+      }),
+    );
+    final userRelays = [
+      for (final details in userDetails)
+        if (details != null && details.ionConnectRelays != null)
+          UserRelaysEntity(
+            id: '',
+            masterPubkey: details.masterPubKey,
+            pubkey: details.masterPubKey,
+            createdAt: DateTime.now(),
+            data: UserRelaysData(
+              list: details.ionConnectRelays!.map((url) => UserRelay(url: url)).toList(),
+            ),
+          ),
+    ]..forEach(ref.read(nostrCacheProvider.notifier).cache);
+
+    return userRelays;
   }
 }

@@ -20,7 +20,7 @@ class StoryViewerHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadataEntity = ref.watch(userMetadataProvider(currentPost.pubkey));
+    final userMetadataEntity = ref.watch(userMetadataProvider(currentPost.masterPubkey));
 
     final shadow = [
       Shadow(
@@ -42,7 +42,7 @@ class StoryViewerHeader extends ConsumerWidget {
           left: 16.0.s,
           right: 22.0.s,
           child: GestureDetector(
-            onTap: () => StoryProfileRoute(pubkey: currentPost.pubkey).push<void>(context),
+            onTap: () => StoryProfileRoute(pubkey: currentPost.masterPubkey).push<void>(context),
             child: ListItem.user(
               profilePicture: userMetadata.data.picture,
               title: Text(

@@ -17,7 +17,7 @@ List<EntitiesDataSource>? repliesDataSource(
 }) {
   final dataSources = [
     EntitiesDataSource(
-      actionSource: ActionSourceUser(eventReference.eventId),
+      actionSource: ActionSourceUser(eventReference.pubkey),
       entityFilter: (entity) => entity is PostEntity,
       requestFilters: [
         RequestFilter(

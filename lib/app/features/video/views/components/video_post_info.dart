@@ -41,9 +41,9 @@ class VideoPostInfo extends HookConsumerWidget {
             children: [
               // TODO: fix route issue, route to another route tree
               UserInfo(
-                pubkey: videoPost.pubkey,
+                pubkey: videoPost.masterPubkey,
                 trailing: UserInfoMenu(
-                  pubkey: videoPost.pubkey,
+                  pubkey: videoPost.masterPubkey,
                   iconColor: context.theme.appColors.secondaryBackground,
                 ),
                 textStyle: TextStyle(

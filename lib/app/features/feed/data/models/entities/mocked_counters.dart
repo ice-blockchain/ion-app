@@ -18,6 +18,7 @@ void generateFakeCounters(Ref ref, String eventId) {
     content: RequestFilter(kinds: const [1, 6], e: [eventId]).toString(),
     tags: const [
       ['param', 'group', 'root'],
+      ['b', ''],
     ],
   );
 
@@ -32,6 +33,7 @@ void generateFakeCounters(Ref ref, String eventId) {
       ['request', requestEventReplies.toString()],
       ['e', requestEventReplies.id],
       ['p', requestEventReplies.pubkey],
+      const ['b', ''],
     ],
   );
   final repliesCountEntity = EventCountResultEntity.fromEventMessage(responseEventReplies);
@@ -46,6 +48,7 @@ void generateFakeCounters(Ref ref, String eventId) {
     content: RequestFilter(kinds: const [6], e: [eventId]).toString(),
     tags: const [
       ['param', 'group', 'e'],
+      ['b', ''],
     ],
   );
   final responseEventReposts = EventMessage(
@@ -59,6 +62,7 @@ void generateFakeCounters(Ref ref, String eventId) {
       ['request', requestEventReposts.toString()],
       ['e', requestEventReposts.id],
       ['p', requestEventReposts.pubkey],
+      const ['b', ''],
     ],
   );
   final repostsCountEntity = EventCountResultEntity.fromEventMessage(responseEventReposts);
@@ -73,6 +77,7 @@ void generateFakeCounters(Ref ref, String eventId) {
     content: RequestFilter(kinds: const [1], q: [eventId]).toString(),
     tags: const [
       ['param', 'group', 'q'],
+      ['b', ''],
     ],
   );
   final responseEventQuotes = EventMessage(
@@ -86,6 +91,7 @@ void generateFakeCounters(Ref ref, String eventId) {
       ['request', requestEventQuotes.toString()],
       ['e', requestEventQuotes.id],
       ['p', requestEventQuotes.pubkey],
+      const ['b', ''],
     ],
   );
   final quotesCountEntity = EventCountResultEntity.fromEventMessage(responseEventQuotes);
@@ -100,6 +106,7 @@ void generateFakeCounters(Ref ref, String eventId) {
     content: RequestFilter(kinds: const [7], e: [eventId]).toString(),
     tags: const [
       ['param', 'group', 'content'],
+      ['b', ''],
     ],
   );
   final responseEventReactions = EventMessage(
@@ -113,6 +120,7 @@ void generateFakeCounters(Ref ref, String eventId) {
       ['request', requestEventReactions.toString()],
       ['e', requestEventReactions.id],
       ['p', requestEventReactions.pubkey],
+      const ['b', ''],
     ],
   );
   final reactionsCountEntity = EventCountResultEntity.fromEventMessage(responseEventReactions);

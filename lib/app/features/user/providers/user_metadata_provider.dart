@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -32,9 +33,14 @@ Future<UserMetadataEntity?> userMetadata(Ref ref, String pubkey) async {
 
 @Riverpod(keepAlive: true)
 Future<UserMetadataEntity?> currentUserMetadata(Ref ref) async {
-  final currentUserNostrKey = await ref.watch(currentUserNostrKeyStoreProvider.future);
-  if (currentUserNostrKey == null) {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentPubkey == null) {
     return null;
   }
-  return ref.watch(userMetadataProvider(currentUserNostrKey.publicKey).future);
+
+  try {
+    return await ref.watch(userMetadataProvider(currentPubkey).future);
+  } on UserRelaysNotFoundException catch (_) {
+    return null;
+  }
 }

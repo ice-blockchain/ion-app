@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -14,6 +15,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
   const factory UserRelaysEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required UserRelaysData data,
   }) = _UserRelaysEntity;
@@ -29,6 +31,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
     return UserRelaysEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: UserRelaysData.fromEventMessage(eventMessage),
     );
@@ -37,7 +40,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
   List<String> get urls => data.list.map((relay) => relay.url).toList();
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: pubkey);
+  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
 
   static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
@@ -54,16 +57,22 @@ class UserRelaysData with _$UserRelaysData implements EventSerializable {
 
   factory UserRelaysData.fromEventMessage(EventMessage eventMessage) {
     return UserRelaysData(
-      list: eventMessage.tags.where((tag) => tag[0] == 'r').map(UserRelay.fromTag).toList(),
+      list: [
+        for (final tag in eventMessage.tags)
+          if (tag[0] == UserRelay.tagName) UserRelay.fromTag(tag),
+      ],
     );
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: UserRelaysEntity.kind,
-      tags: list.map((relay) => relay.toTag()).toList(),
+      tags: [
+        ...tags,
+        ...list.map((relay) => relay.toTag()),
+      ],
       content: '',
     );
   }

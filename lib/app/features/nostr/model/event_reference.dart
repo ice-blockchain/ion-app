@@ -21,7 +21,7 @@ class EventReference with _$EventReference {
   }
 
   factory EventReference.fromNostrEntity(NostrEntity nostrEntity) {
-    return EventReference(eventId: nostrEntity.id, pubkey: nostrEntity.pubkey);
+    return EventReference(eventId: nostrEntity.id, pubkey: nostrEntity.masterPubkey);
   }
 
   @override

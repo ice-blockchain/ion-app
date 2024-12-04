@@ -29,7 +29,7 @@ class GenericRepostListItem extends StatelessWidget {
       child: ScreenSideOffset.small(
         child: Column(
           children: [
-            RepostAuthorHeader(pubkey: repost.pubkey),
+            RepostAuthorHeader(pubkey: repost.masterPubkey),
             SizedBox(height: 6.0.s),
             Article(eventReference: eventReference),
           ],

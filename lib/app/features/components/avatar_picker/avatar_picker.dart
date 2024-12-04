@@ -64,6 +64,7 @@ class AvatarPicker extends HookConsumerWidget {
             permissionType: Permission.photos,
             onGranted: () async {
               if (avatarProcessorState is AvatarProcessorStateInitial ||
+                  avatarProcessorState is AvatarProcessorStateProcessed ||
                   avatarProcessorState is AvatarProcessorStateError) {
                 final mediaFiles = await showSimpleBottomSheet<List<MediaFile>>(
                   context: context,

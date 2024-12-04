@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/wallets/providers/main_wallet_provider.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.dart';
 import 'package:ion/app/services/storage/local_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -68,12 +68,11 @@ String? currentIdentityKeyNameSelector(Ref ref) {
 
 @riverpod
 String? currentPubkeySelector(Ref ref) {
-  final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
-  if (identityKeyName == null) {
+  final mainWallet = ref.watch(mainWalletProvider).valueOrNull;
+  if (mainWallet == null) {
     return null;
   }
-  final keyStore = ref.watch(nostrKeyStoreProvider(identityKeyName)).valueOrNull;
-  return keyStore?.publicKey;
+  return mainWallet.signingKey.publicKey;
 }
 
 @riverpod

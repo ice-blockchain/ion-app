@@ -20,8 +20,8 @@ class ArticlesCarouselItem extends StatelessWidget {
     return Column(
       children: [
         UserInfo(
-          pubkey: article.pubkey,
-          trailing: UserInfoMenu(pubkey: article.pubkey),
+          pubkey: article.masterPubkey,
+          trailing: UserInfoMenu(pubkey: article.masterPubkey),
         ),
         Flexible(
           child: Row(

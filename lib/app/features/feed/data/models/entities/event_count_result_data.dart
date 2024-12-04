@@ -28,6 +28,7 @@ class EventCountResultEntity with _$EventCountResultEntity, NostrEntity implemen
   const factory EventCountResultEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required EventCountResultSummary data,
   }) = _EventCountResultEntity;
@@ -51,6 +52,7 @@ class EventCountResultEntity with _$EventCountResultEntity, NostrEntity implemen
     return EventCountResultEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: summary,
     );

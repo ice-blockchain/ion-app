@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/providers/counters/replies_count_provider.
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
@@ -107,7 +108,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       if (rootRelatedEvent != null) rootRelatedEvent,
       RelatedEvent(
         eventId: parentEntity.id,
-        pubkey: parentEntity.pubkey,
+        pubkey: parentEntity.masterPubkey,
         marker: rootRelatedEvent != null ? RelatedEventMarker.reply : RelatedEventMarker.root,
       ),
     ];
@@ -115,7 +116,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
   List<RelatedPubkey> _buildRelatedPubkeys(PostEntity parentEntity) {
     return <RelatedPubkey>{
-      RelatedPubkey(value: parentEntity.pubkey),
+      RelatedPubkey(value: parentEntity.masterPubkey),
       ...parentEntity.data.relatedPubkeys ?? [],
     }.toList();
   }
@@ -123,7 +124,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<UploadResult> _uploadImage(String imageId) async {
     final assetEntity = await ref.read(assetEntityProvider(imageId).future);
     if (assetEntity == null) {
-      throw AssetEntityNotFoundException();
+      throw AssetEntityFileNotFoundException();
     }
 
     final file = await assetEntity.file;
@@ -141,6 +142,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           quality: 70,
         );
 
-    return ref.read(nostrUploadNotifierProvider.notifier).upload(compressedImage);
+    return ref
+        .read(nostrUploadNotifierProvider.notifier)
+        .upload(compressedImage, alt: FileAlt.post);
   }
 }

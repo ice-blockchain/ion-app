@@ -37,11 +37,12 @@ class IONIdentityUsers {
       _ionConnectIndexersService.ionConnectIndexers(userId: userId);
 
   Future<SetIONConnectRelaysResponse> setIONConnectRelays({
-    required String userId,
     required List<String> followeeList,
-  }) async =>
-      _setIONConnectRelaysService.setIONConnectRelays(
-        userId: userId,
-        followeeList: followeeList,
-      );
+  }) async {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    return _setIONConnectRelaysService.setIONConnectRelays(
+      userId: userId,
+      followeeList: followeeList,
+    );
+  }
 }

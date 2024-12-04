@@ -2,6 +2,7 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/mocked_counters.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
@@ -15,6 +16,7 @@ import 'package:ion/app/features/nostr/providers/relays_provider.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.dart';
+import 'package:ion/app/features/wallets/providers/main_wallet_provider.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
 import 'package:nostr_dart/nostr_dart.dart' as nd;
@@ -27,38 +29,44 @@ class NostrNotifier extends _$NostrNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<void> sendEvents(
+  Future<List<NostrEntity>?> sendEvents(
     List<EventMessage> events, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    bool cache = true,
   }) async {
     final relay = await _getRelay(actionSource);
-    // await relay.sendEvents(events);
-    // TODO: uncomment when our relays are used
-    await Future.wait(events.map(relay.sendEvent).toList());
+    await relay.sendEvents(events);
+    if (cache) {
+      return events.map(_parseAndCache).toList();
+    }
+    return null;
   }
 
-  Future<void> sendEvent(
+  Future<NostrEntity?> sendEvent(
     EventMessage event, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    bool cache = true,
   }) async {
-    return sendEvents([event], actionSource: actionSource);
+    final result = await sendEvents([event], actionSource: actionSource, cache: cache);
+    return result?.elementAtOrNull(0);
   }
 
-  Future<List<NostrEntity>> sendEntitiesData(
+  Future<List<NostrEntity>?> sendEntitiesData(
     List<EventSerializable> entitiesData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    bool cache = true,
   }) async {
-    final events = entitiesData.map(sign).toList();
-    await sendEvents(events);
-    return events.map(_parseAndCache).toList();
+    final events = await Future.wait(entitiesData.map(sign));
+    return sendEvents(events, actionSource: actionSource, cache: cache);
   }
 
-  Future<NostrEntity> sendEntityData(
+  Future<NostrEntity?> sendEntityData(
     EventSerializable entityData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    bool cache = true,
   }) async {
-    final entities = await sendEntitiesData([entityData], actionSource: actionSource);
-    return entities.first;
+    final entities = await sendEntitiesData([entityData], actionSource: actionSource, cache: cache);
+    return entities?.elementAtOrNull(0);
   }
 
   Stream<EventMessage> requestEvents(
@@ -100,25 +108,35 @@ class NostrNotifier extends _$NostrNotifier {
     return entities.isNotEmpty ? entities.first as T : null;
   }
 
-  EventMessage sign(EventSerializable entityData) {
+  Future<EventMessage> sign(EventSerializable entityData) async {
     final keyStore = ref.read(currentUserNostrKeyStoreProvider).valueOrNull;
+    final mainWallet = ref.read(mainWalletProvider).valueOrNull;
 
     if (keyStore == null) {
       throw KeystoreNotFoundException();
     }
 
-    return entityData.toEventMessage(keyStore);
+    if (mainWallet == null) {
+      throw MainWalletNotFoundException();
+    }
+
+    return entityData.toEventMessage(
+      keyStore,
+      tags: [
+        ['b', mainWallet.signingKey.publicKey],
+      ],
+    );
   }
 
   Future<NostrRelay> _getRelay(ActionSource actionSource) async {
     switch (actionSource) {
       case ActionSourceCurrentUser():
         {
-          final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
-          if (keyStore == null) {
-            throw KeystoreNotFoundException();
+          final pubkey = ref.read(currentPubkeySelectorProvider);
+          if (pubkey == null) {
+            throw UserMasterPubkeyNotFoundException();
           }
-          final userRelays = await _getUserRelays(keyStore.publicKey);
+          final userRelays = await _getUserRelays(pubkey);
           return await ref.read(relayProvider(userRelays.data.list.random.url).future);
         }
       case ActionSourceUser():

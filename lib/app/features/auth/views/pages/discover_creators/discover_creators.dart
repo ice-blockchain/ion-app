@@ -37,8 +37,6 @@ class DiscoverCreators extends HookConsumerWidget {
 
     final (selectedCreators, toggleCreatorSelection) = useSelectedState(<UserMetadataEntity>[]);
 
-    final mayContinue = selectedCreators.isNotEmpty;
-
     final slivers = [
       if (contentCreators == null || contentCreators.isEmpty)
         SliverToBoxAdapter(
@@ -85,46 +83,40 @@ class DiscoverCreators extends HookConsumerWidget {
                   slivers: [
                     SliverPadding(padding: EdgeInsets.only(top: 34.0.s)),
                     ...slivers,
-                    SliverPadding(
-                      padding: EdgeInsets.only(
-                        bottom: 16.0.s + (mayContinue ? 0 : MediaQuery.paddingOf(context).bottom),
-                      ),
-                    ),
+                    SliverPadding(padding: EdgeInsets.only(bottom: 16.0.s)),
                   ],
                 );
               },
             ),
           ),
-          if (mayContinue)
-            Column(
-              children: [
-                const HorizontalSeparator(),
-                SizedBox(height: 16.0.s),
-                ScreenSideOffset.small(
-                  child: Button(
-                    disabled: finishNotifier.isLoading,
-                    trailingIcon: finishNotifier.isLoading ? const IONLoadingIndicator() : null,
-                    label: Text(context.i18n.button_continue),
-                    mainAxisSize: MainAxisSize.max,
-                    onPressed: () {
-                      ref.read(onboardingDataProvider.notifier).followees =
-                          selectedCreators.map((creator) => creator.pubkey).toList();
-
-                      guardPasskeyDialog(
-                        context,
-                        (child) => RiverpodPasskeyRequestBuilder(
-                          provider: onboardingCompleteNotifierProvider,
-                          request: () =>
-                              ref.read(onboardingCompleteNotifierProvider.notifier).finish(),
-                          child: child,
-                        ),
-                      );
-                    },
-                  ),
+          Column(
+            children: [
+              const HorizontalSeparator(),
+              SizedBox(height: 16.0.s),
+              ScreenSideOffset.small(
+                child: Button(
+                  disabled: finishNotifier.isLoading,
+                  trailingIcon: finishNotifier.isLoading ? const IONLoadingIndicator() : null,
+                  label: Text(context.i18n.button_continue),
+                  mainAxisSize: MainAxisSize.max,
+                  onPressed: () {
+                    ref.read(onboardingDataProvider.notifier).followees =
+                        selectedCreators.map((creator) => creator.masterPubkey).toList();
+                    guardPasskeyDialog(
+                      context,
+                      (child) => RiverpodPasskeyRequestBuilder(
+                        provider: onboardingCompleteNotifierProvider,
+                        request: () =>
+                            ref.read(onboardingCompleteNotifierProvider.notifier).finish(),
+                        child: child,
+                      ),
+                    );
+                  },
                 ),
-                SizedBox(height: 8.0.s + MediaQuery.paddingOf(context).bottom),
-              ],
-            ),
+              ),
+              SizedBox(height: 8.0.s + MediaQuery.paddingOf(context).bottom),
+            ],
+          ),
         ],
       ),
     );

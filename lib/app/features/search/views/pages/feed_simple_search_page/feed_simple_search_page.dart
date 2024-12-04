@@ -57,7 +57,7 @@ class FeedSimpleSearchPage extends ConsumerWidget {
                             ref.read(feedSearchHistoryProvider.notifier).clear();
                           },
                           itemBuilder: (context, index) =>
-                              FeedSearchHistoryUserListItem(pubKey: history.pubKeys[index]),
+                              FeedSearchHistoryUserListItem(pubkey: history.pubKeys[index]),
                         )
                   : pubKeys.isEmpty
                       ? NothingIsFound(

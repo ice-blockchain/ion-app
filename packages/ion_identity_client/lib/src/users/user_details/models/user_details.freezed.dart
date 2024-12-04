@@ -22,10 +22,10 @@ UserDetails _$UserDetailsFromJson(Map<String, dynamic> json) {
 mixin _$UserDetails {
   List<String> get ionConnectIndexerRelays =>
       throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
-  String get username => throw _privateConstructorUsedError;
   String get masterPubKey => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
+  String? get userId => throw _privateConstructorUsedError;
+  String? get username => throw _privateConstructorUsedError;
   @JsonKey(name: '2faOptions')
   List<String>? get twoFaOptions => throw _privateConstructorUsedError;
   List<String>? get email => throw _privateConstructorUsedError;
@@ -50,10 +50,10 @@ abstract class $UserDetailsCopyWith<$Res> {
   @useResult
   $Res call(
       {List<String> ionConnectIndexerRelays,
-      String name,
-      String userId,
-      String username,
       String masterPubKey,
+      String? name,
+      String? userId,
+      String? username,
       @JsonKey(name: '2faOptions') List<String>? twoFaOptions,
       List<String>? email,
       List<String>? phoneNumber,
@@ -76,10 +76,10 @@ class _$UserDetailsCopyWithImpl<$Res, $Val extends UserDetails>
   @override
   $Res call({
     Object? ionConnectIndexerRelays = null,
-    Object? name = null,
-    Object? userId = null,
-    Object? username = null,
     Object? masterPubKey = null,
+    Object? name = freezed,
+    Object? userId = freezed,
+    Object? username = freezed,
     Object? twoFaOptions = freezed,
     Object? email = freezed,
     Object? phoneNumber = freezed,
@@ -90,22 +90,22 @@ class _$UserDetailsCopyWithImpl<$Res, $Val extends UserDetails>
           ? _value.ionConnectIndexerRelays
           : ionConnectIndexerRelays // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
       masterPubKey: null == masterPubKey
           ? _value.masterPubKey
           : masterPubKey // ignore: cast_nullable_to_non_nullable
               as String,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      userId: freezed == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      username: freezed == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String?,
       twoFaOptions: freezed == twoFaOptions
           ? _value.twoFaOptions
           : twoFaOptions // ignore: cast_nullable_to_non_nullable
@@ -136,10 +136,10 @@ abstract class _$$UserDetailsImplCopyWith<$Res>
   @useResult
   $Res call(
       {List<String> ionConnectIndexerRelays,
-      String name,
-      String userId,
-      String username,
       String masterPubKey,
+      String? name,
+      String? userId,
+      String? username,
       @JsonKey(name: '2faOptions') List<String>? twoFaOptions,
       List<String>? email,
       List<String>? phoneNumber,
@@ -160,10 +160,10 @@ class __$$UserDetailsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? ionConnectIndexerRelays = null,
-    Object? name = null,
-    Object? userId = null,
-    Object? username = null,
     Object? masterPubKey = null,
+    Object? name = freezed,
+    Object? userId = freezed,
+    Object? username = freezed,
     Object? twoFaOptions = freezed,
     Object? email = freezed,
     Object? phoneNumber = freezed,
@@ -174,22 +174,22 @@ class __$$UserDetailsImplCopyWithImpl<$Res>
           ? _value._ionConnectIndexerRelays
           : ionConnectIndexerRelays // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
       masterPubKey: null == masterPubKey
           ? _value.masterPubKey
           : masterPubKey // ignore: cast_nullable_to_non_nullable
               as String,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      userId: freezed == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      username: freezed == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String?,
       twoFaOptions: freezed == twoFaOptions
           ? _value._twoFaOptions
           : twoFaOptions // ignore: cast_nullable_to_non_nullable
@@ -215,10 +215,10 @@ class __$$UserDetailsImplCopyWithImpl<$Res>
 class _$UserDetailsImpl implements _UserDetails {
   const _$UserDetailsImpl(
       {required final List<String> ionConnectIndexerRelays,
-      required this.name,
-      required this.userId,
-      required this.username,
       required this.masterPubKey,
+      this.name,
+      this.userId,
+      this.username,
       @JsonKey(name: '2faOptions') final List<String>? twoFaOptions,
       final List<String>? email,
       final List<String>? phoneNumber,
@@ -242,13 +242,13 @@ class _$UserDetailsImpl implements _UserDetails {
   }
 
   @override
-  final String name;
-  @override
-  final String userId;
-  @override
-  final String username;
-  @override
   final String masterPubKey;
+  @override
+  final String? name;
+  @override
+  final String? userId;
+  @override
+  final String? username;
   final List<String>? _twoFaOptions;
   @override
   @JsonKey(name: '2faOptions')
@@ -293,7 +293,7 @@ class _$UserDetailsImpl implements _UserDetails {
 
   @override
   String toString() {
-    return 'UserDetails(ionConnectIndexerRelays: $ionConnectIndexerRelays, name: $name, userId: $userId, username: $username, masterPubKey: $masterPubKey, twoFaOptions: $twoFaOptions, email: $email, phoneNumber: $phoneNumber, ionConnectRelays: $ionConnectRelays)';
+    return 'UserDetails(ionConnectIndexerRelays: $ionConnectIndexerRelays, masterPubKey: $masterPubKey, name: $name, userId: $userId, username: $username, twoFaOptions: $twoFaOptions, email: $email, phoneNumber: $phoneNumber, ionConnectRelays: $ionConnectRelays)';
   }
 
   @override
@@ -303,12 +303,12 @@ class _$UserDetailsImpl implements _UserDetails {
             other is _$UserDetailsImpl &&
             const DeepCollectionEquality().equals(
                 other._ionConnectIndexerRelays, _ionConnectIndexerRelays) &&
+            (identical(other.masterPubKey, masterPubKey) ||
+                other.masterPubKey == masterPubKey) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.username, username) ||
                 other.username == username) &&
-            (identical(other.masterPubKey, masterPubKey) ||
-                other.masterPubKey == masterPubKey) &&
             const DeepCollectionEquality()
                 .equals(other._twoFaOptions, _twoFaOptions) &&
             const DeepCollectionEquality().equals(other._email, _email) &&
@@ -323,10 +323,10 @@ class _$UserDetailsImpl implements _UserDetails {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_ionConnectIndexerRelays),
+      masterPubKey,
       name,
       userId,
       username,
-      masterPubKey,
       const DeepCollectionEquality().hash(_twoFaOptions),
       const DeepCollectionEquality().hash(_email),
       const DeepCollectionEquality().hash(_phoneNumber),
@@ -351,10 +351,10 @@ class _$UserDetailsImpl implements _UserDetails {
 abstract class _UserDetails implements UserDetails {
   const factory _UserDetails(
       {required final List<String> ionConnectIndexerRelays,
-      required final String name,
-      required final String userId,
-      required final String username,
       required final String masterPubKey,
+      final String? name,
+      final String? userId,
+      final String? username,
       @JsonKey(name: '2faOptions') final List<String>? twoFaOptions,
       final List<String>? email,
       final List<String>? phoneNumber,
@@ -366,13 +366,13 @@ abstract class _UserDetails implements UserDetails {
   @override
   List<String> get ionConnectIndexerRelays;
   @override
-  String get name;
-  @override
-  String get userId;
-  @override
-  String get username;
-  @override
   String get masterPubKey;
+  @override
+  String? get name;
+  @override
+  String? get userId;
+  @override
+  String? get username;
   @override
   @JsonKey(name: '2faOptions')
   List<String>? get twoFaOptions;

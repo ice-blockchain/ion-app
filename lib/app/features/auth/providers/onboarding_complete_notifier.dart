@@ -3,18 +3,22 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
+import 'package:ion/app/features/nostr/model/file_alt.dart';
+import 'package:ion/app/features/nostr/model/file_metadata.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
+import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';
 import 'package:ion/app/features/user/model/interest_set.dart';
 import 'package:ion/app/features/user/model/interests.dart';
-import 'package:ion/app/features/user/model/user_delegation.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.dart';
-import 'package:ion/app/services/storage/user_preferences_service.dart';
+import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -32,67 +36,43 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final (relayUrls, nostrKeyStore) =
             await (_assignUserRelays(), _generateNostrKeyStore()).wait;
 
-        final userRelaysEvent = _buildUserRelays(keyStore: nostrKeyStore, relayUrls: relayUrls);
+        // Build and cache user relays first because it is used to `sendEvents`, upload avatar
+        final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
 
-        // Add user relays to cache first because other actions rely on it
-        ref
-            .read(nostrCacheProvider.notifier)
-            .cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
+        // Send user delegation event in advance so all subsequent events pass delegation attestation
+        final userDelegationEvent = await _buildUserDelegation(pubkey: nostrKeyStore.publicKey);
 
-        final userDelegationEvent = await _buildUserDelegation(keyStore: nostrKeyStore);
+        await ref
+            .read(nostrNotifierProvider.notifier)
+            .sendEvents([userDelegationEvent, userRelaysEvent]);
 
-        final userMetadataEvent = _buildUserMetadata(keyStore: nostrKeyStore);
+        final uploadedAvatar = await _uploadAvatar();
 
-        final (:interestSetEvent, :interestsEvent) = _buildUserLanguages(keyStore: nostrKeyStore);
+        final userMetadata = _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
 
-        final followListEvent = _buildFollowList(keyStore: nostrKeyStore);
+        final (:interestSetData, :interestsData) = _buildUserLanguages();
 
-        final avatarFileMetadataEvent = _buildAvatarFileMetadataEvent(keyStore: nostrKeyStore);
+        final followList = _buildFollowList();
 
-        await ref.read(nostrNotifierProvider.notifier).sendEvents([
-          //TODO:uncomment when switched to our relays
-          // damus returns "rate-limited: you are noting too much"
-          followListEvent,
-          // interestSetEvent,
-          // interestsEvent,
-          if (avatarFileMetadataEvent != null) avatarFileMetadataEvent,
-          userRelaysEvent,
-          userMetadataEvent,
-          userDelegationEvent,
+        await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([
+          userMetadata,
+          followList,
+          interestSetData,
+          interestsData,
+          if (uploadedAvatar != null) uploadedAvatar.fileMetadata,
         ]);
-
-        <CacheableEntity>[
-          FollowListEntity.fromEventMessage(followListEvent),
-          InterestSetEntity.fromEventMessage(interestSetEvent),
-          InterestsEntity.fromEventMessage(interestsEvent),
-          UserMetadataEntity.fromEventMessage(userMetadataEvent),
-          UserDelegationEntity.fromEventMessage(userDelegationEvent),
-        ].forEach(ref.read(nostrCacheProvider.notifier).cache);
-
-        ref.invalidate(onboardingDataProvider);
       },
     );
   }
 
   Future<List<String>> _assignUserRelays() async {
-    final userIdentity = (await ref.read(currentUserIdentityProvider.future))!;
-    if (userIdentity.ionConnectRelays.isNotEmpty) {
-      return userIdentity.ionConnectRelays;
+    final UserDetails(:ionConnectRelays) = (await ref.read(currentUserIdentityProvider.future))!;
+    if (ionConnectRelays != null && ionConnectRelays.isNotEmpty) {
+      return ionConnectRelays;
     }
     final followees = ref.read(onboardingDataProvider).followees;
-    if (followees == null) throw FollowListNotFoundException();
-    if (followees.isEmpty) throw FollowListIsEmptyException();
 
-    final userRelays =
-        await ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);
-
-    // Persisting followees so that in case of finish onboarding retry we could create FollowList event out of it
-    final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-    await ref
-        .read(userPreferencesServiceProvider(identityKeyName: identityKeyName!))
-        .setValue(followeesListPersistanceKey, followees);
-
-    return userRelays;
+    return ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);
   }
 
   Future<KeyStore> _generateNostrKeyStore() async {
@@ -102,51 +82,48 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return nostrKeyStore;
   }
 
-  EventMessage _buildUserRelays({
-    required KeyStore keyStore,
-    required List<String> relayUrls,
-  }) {
+  Future<EventMessage> _buildAndCacheUserRelays({required List<String> relayUrls}) async {
     final userRelays = UserRelaysData(
       list: relayUrls.map((url) => UserRelay(url: url)).toList(),
     );
 
-    final userRelaysEvent = userRelays.toEventMessage(keyStore);
+    final userRelaysEvent = await ref.read(nostrNotifierProvider.notifier).sign(userRelays);
+
+    ref.read(nostrCacheProvider.notifier).cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
 
     return userRelaysEvent;
   }
 
-  EventMessage _buildUserMetadata({
-    required KeyStore keyStore,
-  }) {
-    final OnboardingState(:name, :displayName, :avatarMediaAttachment) =
-        ref.read(onboardingDataProvider);
+  UserMetadata _buildUserMetadata({MediaAttachment? avatarAttachment}) {
+    final OnboardingState(:name, :displayName) = ref.read(onboardingDataProvider);
 
     if (name == null) {
-      throw Exception('Failed to create user metadata, name is empty');
+      throw RequiredFieldIsEmptyException(field: 'name');
     }
 
     if (displayName == null) {
-      throw Exception('Failed to create user metadata, display name is empty');
+      throw RequiredFieldIsEmptyException(field: 'displayName');
     }
 
-    final userMetadata = UserMetadata(
+    return UserMetadata(
       name: name,
       displayName: displayName,
-      picture: avatarMediaAttachment?.url,
-      media:
-          avatarMediaAttachment != null ? {avatarMediaAttachment.url: avatarMediaAttachment} : {},
+      picture: avatarAttachment?.url,
+      media: avatarAttachment != null ? {avatarAttachment.url: avatarAttachment} : {},
     );
-
-    return userMetadata.toEventMessage(keyStore);
   }
 
-  ({EventMessage interestSetEvent, EventMessage interestsEvent}) _buildUserLanguages({
-    required KeyStore keyStore,
-  }) {
+  ({InterestSetData interestSetData, InterestsData interestsData}) _buildUserLanguages() {
     final OnboardingState(:languages) = ref.read(onboardingDataProvider);
 
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+
     if (languages == null || languages.isEmpty) {
-      throw Exception('Failed to create user interests, languages is null or empty');
+      throw RequiredFieldIsEmptyException(field: 'languages');
+    }
+
+    if (currentPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
     }
 
     final interestSetData = InterestSetData(
@@ -154,57 +131,44 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       hashtags: languages,
     );
 
-    final interestSetEvent = interestSetData.toEventMessage(keyStore);
-
     final interestsData = InterestsData(
       hashtags: [],
-      interestSetRefs: [interestSetEvent.id],
+      interestSetRefs: [interestSetData.toReplaceableEventReference(currentPubkey)],
     );
 
-    final interestsEvent = interestsData.toEventMessage(keyStore);
-
-    return (interestSetEvent: interestSetEvent, interestsEvent: interestsEvent);
+    return (interestSetData: interestSetData, interestsData: interestsData);
   }
 
-  Future<EventMessage> _buildUserDelegation({
-    required KeyStore keyStore,
-  }) async {
+  Future<EventMessage> _buildUserDelegation({required String pubkey}) async {
     final userDelegationData = await ref
         .read(userDelegationManagerProvider.notifier)
-        .buildCurrentUserDelegationDataWith(pubkey: keyStore.publicKey);
+        .buildCurrentUserDelegationDataWith(pubkey: pubkey);
 
     return ref
         .read(userDelegationManagerProvider.notifier)
         .buildDelegationEventFrom(userDelegationData);
   }
 
-  EventMessage _buildFollowList({
-    required KeyStore keyStore,
-  }) {
-    final onboardingData = ref.read(onboardingDataProvider);
+  FollowListData _buildFollowList() {
+    final OnboardingState(:followees) = ref.read(onboardingDataProvider);
 
-    var followees = onboardingData.followees;
-
-    if (followees == null) {
-      final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-      final service = ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName!));
-      followees = service.getValue<List<String>>(followeesListPersistanceKey);
-    }
-
-    if (followees == null) {
-      throw Exception('Failed to create follow list, followees is null');
-    }
-
-    final followListData = FollowListData(
-      list: followees.map((pubkey) => Followee(pubkey: pubkey)).toList(),
+    return FollowListData(
+      list: followees == null ? [] : followees.map((pubkey) => Followee(pubkey: pubkey)).toList(),
     );
-
-    return followListData.toEventMessage(keyStore);
   }
 
-  static const String followeesListPersistanceKey = 'OnboardingCompleteNotifier:followees';
-
-  EventMessage? _buildAvatarFileMetadataEvent({required KeyStore keyStore}) {
-    return ref.read(onboardingDataProvider).avatarFileMetadata?.toEventMessage(keyStore);
+  Future<({FileMetadata fileMetadata, MediaAttachment mediaAttachment})?> _uploadAvatar() async {
+    try {
+      final avatar = ref.read(onboardingDataProvider).avatar;
+      if (avatar != null) {
+        return await ref
+            .read(nostrUploadNotifierProvider.notifier)
+            .upload(avatar, alt: FileAlt.avatar);
+      }
+    } catch (error, stackTrace) {
+      // intentionally ignore upload avatar exceptions
+      Logger.log('Upload avatar exception', error: error, stackTrace: stackTrace);
+    }
+    return null;
   }
 }

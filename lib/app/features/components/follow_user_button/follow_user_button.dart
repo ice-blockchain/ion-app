@@ -9,26 +9,26 @@ import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class FollowUserButton extends ConsumerWidget {
   const FollowUserButton({
-    required this.pubKey,
+    required this.pubkey,
     super.key,
   });
 
-  final String pubKey;
+  final String pubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final following = ref.watch(isCurrentUserFollowingSelectorProvider(pubKey));
+    final following = ref.watch(isCurrentUserFollowingSelectorProvider(pubkey));
     return FollowButton(
       onPressed: () {
         if (following) {
           showSimpleBottomSheet<void>(
             context: context,
             child: UnfollowUserModal(
-              pubkey: pubKey,
+              pubkey: pubkey,
             ),
           );
         } else {
-          ref.read(followListManagerProvider.notifier).toggleFollow(pubKey);
+          ref.read(followListManagerProvider.notifier).toggleFollow(pubkey);
         }
       },
       following: following,

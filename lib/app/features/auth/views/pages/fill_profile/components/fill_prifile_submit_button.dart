@@ -9,14 +9,14 @@ import 'package:ion/generated/assets.gen.dart';
 class FillProfileSubmitButton extends StatelessWidget {
   const FillProfileSubmitButton({
     required this.onPressed,
-    required this.loading,
     required this.disabled,
+    required this.loading,
     super.key,
   });
 
-  final VoidCallback onPressed;
-
   final bool loading;
+
+  final VoidCallback onPressed;
 
   final bool disabled;
 

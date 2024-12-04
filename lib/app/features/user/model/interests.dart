@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/nostr/model/replaceable_event_reference.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -14,6 +17,7 @@ class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEn
   const factory InterestsEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required InterestsData data,
   }) = _InterestsEntity;
@@ -29,13 +33,14 @@ class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEn
     return InterestsEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: InterestsData.fromEventMessage(eventMessage),
     );
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: pubkey);
+  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
 
   static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
@@ -46,26 +51,30 @@ class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEn
 class InterestsData with _$InterestsData implements EventSerializable {
   const factory InterestsData({
     required List<String> hashtags,
-    required List<String> interestSetRefs,
+    required List<ReplaceableEventReference> interestSetRefs,
   }) = _InterestsData;
 
   const InterestsData._();
 
   factory InterestsData.fromEventMessage(EventMessage eventMessage) {
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     return InterestsData(
-      interestSetRefs:
-          eventMessage.tags.where((tag) => tag[0] == 'a').map((tag) => tag[1]).toList(),
+      interestSetRefs: tags[ReplaceableEventReference.tagName]
+              ?.map(ReplaceableEventReference.fromTag)
+              .toList() ??
+          [],
       hashtags: eventMessage.tags.where((tag) => tag[0] == 't').map((tag) => tag[1]).toList(),
     );
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: InterestsEntity.kind,
       tags: [
-        ...interestSetRefs.map((id) => ['a', id]),
+        ...tags,
+        ...interestSetRefs.map((ref) => ref.toTag()),
         ...hashtags.map((hashtag) => ['t', hashtag]),
       ],
       content: '',

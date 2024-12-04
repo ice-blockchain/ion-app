@@ -28,6 +28,7 @@ class PostMediaItem extends StatelessWidget {
           MediaType.image => CachedNetworkImage(
               imageUrl: mediaItem.url,
               fit: BoxFit.cover,
+              errorWidget: (context, url, error) => const SizedBox.shrink(),
             ),
           MediaType.video => VideoPreview(
               videoUrl: mediaItem.url,

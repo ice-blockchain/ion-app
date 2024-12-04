@@ -18,7 +18,7 @@ class HeaderActions extends StatelessWidget {
     return Row(
       children: [
         StoryContextMenu(
-          pubkey: post.pubkey,
+          pubkey: post.masterPubkey,
           child: SvgShadow(
             child: Assets.svg.iconMoreStories.icon(
               color: context.theme.appColors.onPrimaryAccent,

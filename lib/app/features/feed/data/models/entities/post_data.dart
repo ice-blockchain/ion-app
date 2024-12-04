@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_hashtag.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.dart';
@@ -22,6 +23,7 @@ class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
   const factory PostEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required PostData data,
   }) = _PostEntity;
@@ -37,6 +39,7 @@ class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
     return PostEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: PostData.fromEventMessage(eventMessage),
     );
@@ -108,12 +111,13 @@ class PostData with _$PostData implements EventSerializable {
       }).toList();
 
   @override
-  EventMessage toEventMessage(EventSigner signer) {
+  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: PostEntity.kind,
       content: content.map((match) => match.text).join(),
       tags: [
+        ...tags,
         if (quotedEvent != null) quotedEvent!.toTag(),
         if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
         if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
@@ -137,12 +141,8 @@ class PostData with _$PostData implements EventSerializable {
       {},
       (result, match) {
         final link = match.text;
-        if (match.matcher is UrlMatcher) {
-          if (imeta.containsKey(link)) {
-            result[link] = imeta[link]!;
-          } else {
-            result[link] = MediaAttachment(url: link);
-          }
+        if (match.matcher is UrlMatcher && imeta.containsKey(link)) {
+          result[link] = imeta[link]!;
         }
         return result;
       },

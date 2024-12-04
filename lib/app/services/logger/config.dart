@@ -8,4 +8,6 @@ class LoggerConfig {
   static const bool routerLogsEnabled = true;
 
   static const bool nostrLogsEnabled = true;
+
+  static const bool dioLogsEnabled = true;
 }

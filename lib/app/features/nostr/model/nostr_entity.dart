@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 abstract mixin class NostrEntity {
   String get id;
   String get pubkey;
+  String get masterPubkey;
   DateTime get createdAt;
 
   @override

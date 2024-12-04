@@ -33,9 +33,9 @@ class ChatSearchHistory extends _$ChatSearchHistory {
     return ChatSearchHistoryState(pubKeys: storedUserIds, queries: storedQueries);
   }
 
-  Future<void> addUserIdToTheHistory(String pubKey) async {
-    if (!state.pubKeys.contains(pubKey)) {
-      final newUserIds = [pubKey, ...state.pubKeys];
+  Future<void> addUserIdToTheHistory(String pubkey) async {
+    if (!state.pubKeys.contains(pubkey)) {
+      final newUserIds = [pubkey, ...state.pubKeys];
 
       final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
       final userPreferencesService =

@@ -12,15 +12,15 @@ import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ChatSearchResultsListItem extends ConsumerWidget {
-  const ChatSearchResultsListItem({required this.pubKey, super.key});
+  const ChatSearchResultsListItem({required this.pubkey, super.key});
 
   static double get itemVerticalOffset => 8.0.s;
 
-  final String pubKey;
+  final String pubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(userMetadataProvider(pubKey));
+    final userMetadata = ref.watch(userMetadataProvider(pubkey));
     return Padding(
       padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),
       child: ScreenSideOffset.small(
@@ -35,7 +35,7 @@ class ChatSearchResultsListItem extends ConsumerWidget {
               onTap: () {
                 ref
                     .read(feedSearchHistoryProvider.notifier)
-                    .addUserIdToTheHistory(userMetadata.pubkey);
+                    .addUserIdToTheHistory(userMetadata.masterPubkey);
               },
               child: Row(
                 children: [

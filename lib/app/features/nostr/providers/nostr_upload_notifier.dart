@@ -1,19 +1,21 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.dart';
+import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/file_storage_metadata.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_auth.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.dart';
 import 'package:ion/app/services/media_service/media_service.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nostr_upload_notifier.freezed.dart';
@@ -27,17 +29,18 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
   FutureOr<void> build() {}
 
   Future<UploadResult> upload(
-    MediaFile file,
-  ) async {
-    final keyStore = await ref.read(currentUserNostrKeyStoreProvider.future);
-
-    if (keyStore == null) {
-      throw KeystoreNotFoundException();
+    MediaFile file, {
+    required FileAlt alt,
+  }) async {
+    if (file.width == null || file.height == null) {
+      throw UnknownUploadFileResolutionException();
     }
 
-    final apiUrl = await _getFileStorageApiUrl(keyStore: keyStore);
+    final dimension = '${file.width}x${file.height}';
 
-    final response = await _makeUploadRequest(url: apiUrl, file: file, keyStore: keyStore);
+    final apiUrl = await _getFileStorageApiUrl();
+
+    final response = await _makeUploadRequest(url: apiUrl, file: file, alt: alt);
 
     final fileMetadata = FileMetadata.fromUploadResponseTags(
       response.nip94Event.tags,
@@ -47,8 +50,11 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
     final mediaAttachment = MediaAttachment(
       url: fileMetadata.url,
       mimeType: fileMetadata.mimeType,
-      blurhash: fileMetadata.blurhash,
-      dimension: fileMetadata.dimension,
+      dimension: dimension,
+      torrentInfoHash: fileMetadata.torrentInfoHash,
+      fileHash: fileMetadata.fileHash,
+      originalFileHash: fileMetadata.originalFileHash,
+      alt: alt,
       thumb: fileMetadata.thumb,
     );
 
@@ -56,14 +62,12 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
   }
 
   // TODO: handle delegatedToUrl when migrating to common relays
-  Future<String> _getFileStorageApiUrl({required KeyStore keyStore}) async {
-    final userRelays =
-        await ref.read(userRelaysManagerProvider.notifier).fetch([keyStore.publicKey]);
-    if (userRelays.isEmpty) {
+  Future<String> _getFileStorageApiUrl() async {
+    final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetchForCurrentUser();
+    if (userRelays == null) {
       throw UserRelaysNotFoundException();
     }
-    //TODO: switch to userRelays.list.random.url when using our relays
-    const relayUrl = 'wss://nostr.build'; /*userRelays.first.data.list.random.url;*/
+    final relayUrl = userRelays.data.list.random.url;
 
     try {
       final parsedRelayUrl = Uri.parse(relayUrl);
@@ -74,8 +78,11 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
         path: FileStorageMetadata.path,
       );
 
-      final response = await ref.read(dioProvider).getUri<Map<String, dynamic>>(metadataUri);
-      return FileStorageMetadata.fromJson(response.data!).apiUrl;
+      final response = await ref.read(dioProvider).getUri<dynamic>(metadataUri);
+      final uploadPath =
+          FileStorageMetadata.fromJson(json.decode(response.data as String) as Map<String, dynamic>)
+              .apiUrl;
+      return metadataUri.replace(path: uploadPath).toString();
     } catch (error) {
       throw GetFileStorageUrlException(error);
     }
@@ -84,30 +91,34 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
   Future<UploadResponse> _makeUploadRequest({
     required String url,
     required MediaFile file,
-    required KeyStore keyStore,
+    required FileAlt alt,
   }) async {
     final fileBytes = await File(file.path).readAsBytes();
+    final fileName = file.name ?? file.basename;
+    final multipartFile = MultipartFile.fromBytes(fileBytes, filename: fileName);
 
     final formData = FormData.fromMap({
-      'file': MultipartFile.fromBytes(fileBytes, filename: file.name),
-      'caption': file.name,
-      'alt': file.name,
-      'size': file.size,
+      'file': MultipartFile.fromBytes(fileBytes, filename: fileName),
+      'caption': fileName,
+      'alt': alt.toShortString(),
+      'size': multipartFile.length,
       'content_type': file.mimeType,
     });
 
     final nostrAuth = NostrAuth(url: url, method: 'POST', payload: fileBytes);
+    final authEvent = await ref.read(nostrNotifierProvider.notifier).sign(nostrAuth);
 
     try {
-      final response = await ref.read(dioProvider).post<Map<String, dynamic>>(
+      final response = await ref.read(dioProvider).post<dynamic>(
             url,
             data: formData,
             options: Options(
-              headers: {'Authorization': await nostrAuth.toAuthorizationHeader(keyStore)},
+              headers: {'Authorization': nostrAuth.toAuthorizationHeader(authEvent)},
             ),
           );
 
-      final uploadResponse = UploadResponse.fromJson(response.data!);
+      final uploadResponse =
+          UploadResponse.fromJson(json.decode(response.data as String) as Map<String, dynamic>);
 
       if (uploadResponse.status != 'success') {
         throw Exception(uploadResponse.message);
@@ -115,7 +126,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
 
       return uploadResponse;
     } catch (error) {
-      throw Exception('Failed to upload file to $url: $error');
+      throw FileUploadException(error, url: url);
     }
   }
 }

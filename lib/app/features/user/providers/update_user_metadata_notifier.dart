@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.dart';
 import 'package:ion/app/features/user/model/user_metadata.dart';
@@ -19,7 +20,8 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
     state = await AsyncValue.guard(() async {
       var data = userMetadata.copyWith();
 
-      final (uploadedAvatar, uploadedBanner) = await (_upload(avatar), _upload(banner)).wait;
+      final (uploadedAvatar, uploadedBanner) =
+          await (_upload(avatar, alt: FileAlt.avatar), _upload(banner, alt: FileAlt.banner)).wait;
 
       final files = [uploadedAvatar, uploadedBanner]
           .whereType<UploadResult>()
@@ -45,9 +47,9 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
     });
   }
 
-  Future<UploadResult?> _upload(MediaFile? file) {
+  Future<UploadResult?> _upload(MediaFile? file, {required FileAlt alt}) {
     return file != null
-        ? ref.read(nostrUploadNotifierProvider.notifier).upload(file)
+        ? ref.read(nostrUploadNotifierProvider.notifier).upload(file, alt: alt)
         : Future<UploadResult?>.value();
   }
 }

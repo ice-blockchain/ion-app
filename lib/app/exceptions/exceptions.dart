@@ -14,10 +14,6 @@ class FollowListNotFoundException extends IONException {
   FollowListNotFoundException() : super(10001, 'Follow list is null');
 }
 
-class FollowListIsEmptyException extends IONException {
-  FollowListIsEmptyException() : super(10002, 'Follow list is empty');
-}
-
 class KeystoreNotFoundException extends IONException {
   KeystoreNotFoundException() : super(10003, 'KeyStore is null');
 }
@@ -90,10 +86,6 @@ class EventNotFoundException extends IONException {
       : super(10016, 'Event with id $eventId not found for pubkey $pubkey');
 }
 
-class AssetEntityNotFoundException extends IONException {
-  AssetEntityNotFoundException() : super(10017, 'Asset entity not found');
-}
-
 class AssetEntityFileNotFoundException extends IONException {
   AssetEntityFileNotFoundException() : super(10018, 'Asset entity file not found');
 }
@@ -106,4 +98,40 @@ class UnknownEventCountResultType extends IONException {
 class UnknownEventCountResultKey extends IONException {
   UnknownEventCountResultKey({required String eventId})
       : super(10020, 'Unknown EventCount result key $eventId');
+}
+
+class UnsupportedSignatureAlgorithmException extends IONException {
+  UnsupportedSignatureAlgorithmException(String algorithm)
+      : super(10021, 'Unsupported signature algorithm - $algorithm');
+}
+
+class EventMasterPubkeyNotFoundException extends IONException {
+  EventMasterPubkeyNotFoundException({required String eventId})
+      : super(10022, 'Master pubkey is not found in event $eventId');
+}
+
+class UserMasterPubkeyNotFoundException extends IONException {
+  UserMasterPubkeyNotFoundException({String? pubkey})
+      : super(
+          10023,
+          'Master pubkey is not found for ${pubkey == null ? "current user" : 'user $pubkey'}',
+        );
+}
+
+class RequiredFieldIsEmptyException extends IONException {
+  RequiredFieldIsEmptyException({required String field})
+      : super(10024, 'Required field is empty $field');
+}
+
+class FileUploadException extends IONException {
+  FileUploadException(dynamic error, {required String url})
+      : super(10025, 'Failed to upload file to $url: $error');
+}
+
+class UnknownUploadFileResolutionException extends IONException {
+  UnknownUploadFileResolutionException() : super(10026, 'Unknown upload file resolution');
+}
+
+class CompressImageException extends IONException {
+  CompressImageException(dynamic error) : super(10027, 'Compress image exception: $error');
 }
