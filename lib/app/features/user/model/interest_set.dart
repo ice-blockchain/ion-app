@@ -88,7 +88,7 @@ class InterestSetData with _$InterestSetData implements EventSerializable {
     return ReplaceableEventReference(
       kind: InterestSetEntity.kind,
       pubkey: pubkey,
-      type: type.toShortString(),
+      dTag: type.toShortString(),
     );
   }
 }

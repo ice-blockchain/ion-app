@@ -11,7 +11,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference {
   const factory ReplaceableEventReference({
     required int kind,
     required String pubkey,
-    String? type,
+    String? dTag,
   }) = _ReplaceableEventReference;
 
   const ReplaceableEventReference._();
@@ -26,14 +26,14 @@ class ReplaceableEventReference with _$ReplaceableEventReference {
     return ReplaceableEventReference(
       kind: int.parse(parts[0]),
       pubkey: parts[1],
-      type: parts.elementAtOrNull(2),
+      dTag: parts.elementAtOrNull(2),
     );
   }
 
   List<String> toTag() {
     return [
       tagName,
-      [kind, pubkey, type].whereNotNull().join(':'),
+      [kind, pubkey, dTag].whereNotNull().join(':'),
     ];
   }
 
