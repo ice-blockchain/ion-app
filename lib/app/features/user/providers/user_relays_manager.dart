@@ -5,6 +5,8 @@ import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_client_provider.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -55,14 +57,11 @@ class UserRelaysManager extends _$UserRelaysManager {
       }
     }
 
-    // TODO::fetch from identity
-    // if (pubkeysToFetch.isNotEmpty) {
-    //   final ionIdentity = await ref.watch(ionIdentityClientProvider.future);
-    //   final userDetails = await Future.wait(pubkeysToFetch.map((pubkey) => ionIdentity.users.details(userId: pubkey)));
-    //   result.addAll(userDetails.map((details) => UserRelaysEntity(id: '', pubkey: details, createdAt: createdAt, data: data)));
+    if (pubkeysToFetch.isNotEmpty) {
+      final userRelays = await _fetchRelaysFromIdentityFor(pubkeys: pubkeysToFetch);
 
-    //   ref.read(nostrCacheProvider.notifier).cache(userRelays);
-    // }
+      result.addAll(userRelays);
+    }
 
     return result;
   }
@@ -77,5 +76,35 @@ class UserRelaysManager extends _$UserRelaysManager {
       return null;
     }
     return userRelays.first;
+  }
+
+  Future<List<UserRelaysEntity>> _fetchRelaysFromIdentityFor({
+    required List<String> pubkeys,
+  }) async {
+    final ionIdentity = await ref.read(ionIdentityClientProvider.future);
+    final userDetails = await Future.wait(
+      pubkeys.map((pubkey) async {
+        try {
+          return await ionIdentity.users.details(userId: pubkey);
+        } catch (error, stackTrace) {
+          Logger.log('Error fetching user relays', error: error, stackTrace: stackTrace);
+        }
+      }),
+    );
+    final userRelays = [
+      for (final details in userDetails)
+        if (details != null && details.ionConnectRelays != null)
+          UserRelaysEntity(
+            id: '',
+            masterPubkey: details.masterPubKey,
+            pubkey: details.masterPubKey,
+            createdAt: DateTime.now(),
+            data: UserRelaysData(
+              list: details.ionConnectRelays!.map((url) => UserRelay(url: url)).toList(),
+            ),
+          ),
+    ]..forEach(ref.read(nostrCacheProvider.notifier).cache);
+
+    return userRelays;
   }
 }

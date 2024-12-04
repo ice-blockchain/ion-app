@@ -9,10 +9,10 @@ part 'user_details.g.dart';
 class UserDetails with _$UserDetails {
   const factory UserDetails({
     required List<String> ionConnectIndexerRelays,
-    required String name,
-    required String userId,
-    required String username,
     required String masterPubKey,
+    String? name,
+    String? userId,
+    String? username,
     @JsonKey(name: '2faOptions') List<String>? twoFaOptions,
     List<String>? email,
     List<String>? phoneNumber,

@@ -12,10 +12,10 @@ _$UserDetailsImpl _$$UserDetailsImplFromJson(Map<String, dynamic> json) =>
           (json['ionConnectIndexerRelays'] as List<dynamic>)
               .map((e) => e as String)
               .toList(),
-      name: json['name'] as String,
-      userId: json['userId'] as String,
-      username: json['username'] as String,
       masterPubKey: json['masterPubKey'] as String,
+      name: json['name'] as String?,
+      userId: json['userId'] as String?,
+      username: json['username'] as String?,
       twoFaOptions: (json['2faOptions'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -32,10 +32,10 @@ _$UserDetailsImpl _$$UserDetailsImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$UserDetailsImplToJson(_$UserDetailsImpl instance) =>
     <String, dynamic>{
       'ionConnectIndexerRelays': instance.ionConnectIndexerRelays,
+      'masterPubKey': instance.masterPubKey,
       'name': instance.name,
       'userId': instance.userId,
       'username': instance.username,
-      'masterPubKey': instance.masterPubKey,
       '2faOptions': instance.twoFaOptions,
       'email': instance.email,
       'phoneNumber': instance.phoneNumber,
