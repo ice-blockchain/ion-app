@@ -70,13 +70,19 @@ class ToolbarLinkButton extends StatelessWidget {
           ),
           actions: [
             CupertinoDialogAction(
-              child: Text(context.i18n.button_cancel),
+              child: Text(
+                context.i18n.button_cancel,
+                style: TextStyle(color: context.theme.appColors.primaryAccent),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             CupertinoDialogAction(
-              child: Text(context.i18n.button_link),
+              child: Text(
+                context.i18n.button_link,
+                style: TextStyle(color: context.theme.appColors.primaryAccent),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(linkController.text.trim());
               },
