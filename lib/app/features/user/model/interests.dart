@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/model/replaceable_event_reference.dart';
@@ -16,6 +17,7 @@ class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEn
   const factory InterestsEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required InterestsData data,
   }) = _InterestsEntity;
@@ -30,7 +32,8 @@ class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEn
 
     return InterestsEntity(
       id: eventMessage.id,
-      pubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: InterestsData.fromEventMessage(eventMessage),
     );

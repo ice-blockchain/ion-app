@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -14,6 +15,7 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
   const factory RepostEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required RepostData data,
   }) = _RepostEntity;
@@ -28,7 +30,8 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
 
     return RepostEntity(
       id: eventMessage.id,
-      pubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: RepostData.fromEventMessage(eventMessage),
     );

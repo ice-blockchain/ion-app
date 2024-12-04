@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/enum.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
@@ -19,6 +20,7 @@ class InterestSetEntity with _$InterestSetEntity, NostrEntity implements Cacheab
   const factory InterestSetEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required InterestSetData data,
   }) = _InterestSetEntity;
@@ -33,7 +35,8 @@ class InterestSetEntity with _$InterestSetEntity, NostrEntity implements Cacheab
 
     return InterestSetEntity(
       id: eventMessage.id,
-      pubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: InterestSetData.fromEventMessage(eventMessage),
     );

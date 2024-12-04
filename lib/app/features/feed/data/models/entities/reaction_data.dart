@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -15,6 +16,7 @@ class ReactionEntity with _$ReactionEntity, NostrEntity implements CacheableEnti
   const factory ReactionEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required ReactionData data,
   }) = _ReactionEntity;
@@ -29,7 +31,8 @@ class ReactionEntity with _$ReactionEntity, NostrEntity implements CacheableEnti
 
     return ReactionEntity(
       id: eventMessage.id,
-      pubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: ReactionData.fromEventMessage(eventMessage),
     );

@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
@@ -14,6 +15,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
   const factory UserRelaysEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required UserRelaysData data,
   }) = _UserRelaysEntity;
@@ -28,7 +30,8 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
 
     return UserRelaysEntity(
       id: eventMessage.id,
-      pubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: UserRelaysData.fromEventMessage(eventMessage),
     );

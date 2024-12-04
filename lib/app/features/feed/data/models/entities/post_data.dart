@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_hashtag.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.dart';
@@ -22,6 +23,7 @@ class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
   const factory PostEntity({
     required String id,
     required String pubkey,
+    required String masterPubkey,
     required DateTime createdAt,
     required PostData data,
   }) = _PostEntity;
@@ -36,7 +38,8 @@ class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
 
     return PostEntity(
       id: eventMessage.id,
-      pubkey: NostrEntity.getMasterPubkey(eventMessage),
+      pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       createdAt: eventMessage.createdAt,
       data: PostData.fromEventMessage(eventMessage),
     );
