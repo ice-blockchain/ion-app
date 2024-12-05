@@ -19,7 +19,6 @@ class DeleteAuthenticatorInitialStep extends StatelessWidget {
     final locale = context.i18n;
 
     return DeleteTwoFaInitialScaffold(
-      mainTitle: locale.two_fa_option_authenticator,
       headerIcon: AuthHeaderIcon(
         icon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
       ),

@@ -2,13 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/progress_bar/sliver_app_bar_with_progress.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/features/protect_account/email/views/pages/setup_email/step_pages.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -23,12 +24,17 @@ class EmailSetupPage extends ConsumerWidget {
     return SheetContent(
       body: CustomScrollView(
         slivers: [
-          SliverAppBarWithProgress(
-            progressValue: step.progressValue,
-            title: step.getAppBarTitle(context),
-            onClose: Navigator.of(context, rootNavigator: true).pop,
-            showBackButton: step != EmailSetupSteps.success,
-            showProgress: step != EmailSetupSteps.success,
+          SliverAppBar(
+            primary: false,
+            flexibleSpace: NavigationAppBar.modal(
+              showBackButton: step != EmailSetupSteps.success,
+              actions: [
+                NavigationCloseButton(onPressed: Navigator.of(context, rootNavigator: true).pop),
+              ],
+            ),
+            toolbarHeight: NavigationAppBar.modalHeaderHeight,
+            automaticallyImplyLeading: false,
+            pinned: true,
           ),
           SliverFillRemaining(
             hasScrollBody: false,

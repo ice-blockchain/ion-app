@@ -14,14 +14,6 @@ enum EmailSetupSteps {
         EmailSetupSteps.success => 1.0,
       };
 
-  String? getAppBarTitle(BuildContext context) {
-    return switch (this) {
-      EmailSetupSteps.input => context.i18n.common_step_1,
-      EmailSetupSteps.confirmation => context.i18n.common_step_2,
-      EmailSetupSteps.success => null,
-    };
-  }
-
   String getPageTitle(BuildContext context) {
     return switch (this) {
       EmailSetupSteps.input || EmailSetupSteps.success => context.i18n.email_verification_title,

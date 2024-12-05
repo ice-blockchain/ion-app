@@ -26,15 +26,6 @@ enum AuthenticatorSetupSteps {
     };
   }
 
-  String? getAppBarTitle(BuildContext context) {
-    return switch (this) {
-      AuthenticatorSetupSteps.options => context.i18n.common_step_1,
-      AuthenticatorSetupSteps.instruction => context.i18n.common_step_2,
-      AuthenticatorSetupSteps.confirmation => context.i18n.common_step_3,
-      AuthenticatorSetupSteps.success => null,
-    };
-  }
-
   String getPageTitle(BuildContext context) {
     return switch (this) {
       AuthenticatorSetupSteps.options => context.i18n.authenticator_setup_title,

@@ -12,7 +12,6 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class DeleteTwoFaInitialScaffold extends StatelessWidget {
   const DeleteTwoFaInitialScaffold({
-    required this.mainTitle,
     required this.headerIcon,
     required this.headerTitle,
     required this.prompt,
@@ -21,7 +20,6 @@ class DeleteTwoFaInitialScaffold extends StatelessWidget {
     super.key,
   });
 
-  final String mainTitle;
   final Widget headerIcon;
   final String headerTitle;
   final Widget prompt;
@@ -36,9 +34,7 @@ class DeleteTwoFaInitialScaffold extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          NavigationAppBar.modal(
-            title: Text(mainTitle),
-          ),
+          NavigationAppBar.modal(),
           AuthHeader(
             topOffset: 34.0.s,
             title: headerTitle,

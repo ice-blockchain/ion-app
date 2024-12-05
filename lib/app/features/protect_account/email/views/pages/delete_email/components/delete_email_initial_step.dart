@@ -19,7 +19,6 @@ class DeleteEmailInitialStep extends StatelessWidget {
     final locale = context.i18n;
 
     return DeleteTwoFaInitialScaffold(
-      mainTitle: locale.email_verification_title,
       headerIcon: AuthHeaderIcon(
         icon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
       ),

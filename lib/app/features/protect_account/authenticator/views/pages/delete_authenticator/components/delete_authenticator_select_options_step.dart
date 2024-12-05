@@ -6,7 +6,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/protect_account/components/delete_twofa_select_options_step.dart';
 import 'package:ion/app/features/protect_account/components/delete_twofa_step_scaffold.dart';
-import 'package:ion/app/features/protect_account/secure_account/data/models/delete_twofa_step.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeleteAuthenticatorSelectOptionsStep extends HookWidget {
@@ -22,8 +21,6 @@ class DeleteAuthenticatorSelectOptionsStep extends HookWidget {
     final locale = context.i18n;
 
     return DeleteTwoFAStepScaffold(
-      progressValue: DeleteTwoFAStep.selectOptions.progressValue,
-      title: DeleteTwoFAStep.selectOptions.getAppBarTitle(context),
       headerIcon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
       headerTitle: locale.authenticator_delete_title,
       headerDescription: locale.authenticator_delete_description,

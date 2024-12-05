@@ -3,27 +3,24 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/card/warning_card.dart';
-import 'package:ion/app/components/progress_bar/sliver_app_bar_with_progress.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class DeleteTwoFAStepScaffold extends ConsumerWidget {
   const DeleteTwoFAStepScaffold({
-    required this.child,
-    required this.progressValue,
-    required this.title,
     required this.headerTitle,
     required this.headerDescription,
     required this.headerIcon,
+    required this.child,
     super.key,
   });
 
-  final double progressValue;
-  final String title;
   final String headerTitle;
   final String headerDescription;
   final Widget headerIcon;
@@ -36,10 +33,18 @@ class DeleteTwoFAStepScaffold extends ConsumerWidget {
     return SheetContent(
       body: CustomScrollView(
         slivers: [
-          SliverAppBarWithProgress(
-            progressValue: progressValue,
-            title: title,
-            onClose: Navigator.of(context, rootNavigator: true).pop,
+          SliverAppBar(
+            primary: false,
+            flexibleSpace: NavigationAppBar.modal(
+              actions: [
+                NavigationCloseButton(
+                  onPressed: Navigator.of(context, rootNavigator: true).pop,
+                ),
+              ],
+            ),
+            toolbarHeight: NavigationAppBar.modalHeaderHeight,
+            automaticallyImplyLeading: false,
+            pinned: true,
           ),
           SliverToBoxAdapter(
             child: AuthHeader(
