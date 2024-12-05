@@ -15,7 +15,7 @@ class ArticlesCarouselItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final article = ArticleEntity.fromEventMessage(mockedArticleEvent);
+    final article = ArticleEntity.fromEventMessage(mockedArticleEvents[0]);
 
     return Column(
       children: [
