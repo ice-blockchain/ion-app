@@ -6,11 +6,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/stories/data/models/story.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_page_dismiss.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryViewerPage extends HookConsumerWidget {
   const StoryViewerPage({
@@ -23,9 +23,13 @@ class StoryViewerPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyState = ref.watch(storyViewingControllerProvider);
-    final stories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
 
-    useOnInit(() => ref.read(storyViewingControllerProvider.notifier).updateStories(stories));
+    ref.listen<AsyncValue<List<UserStories>>>(
+      filteredStoriesByPubkeyProvider(pubkey),
+      (_, next) => next.whenData(
+        (stories) => ref.read(storyViewingControllerProvider.notifier).updateStories(stories),
+      ),
+    );
 
     final drag = usePageDismiss(context);
 

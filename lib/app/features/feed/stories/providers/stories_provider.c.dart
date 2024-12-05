@@ -53,11 +53,18 @@ List<UserStories>? stories(Ref ref) {
 }
 
 @riverpod
-List<UserStories> filteredStoriesByPubkey(Ref ref, String pubkey) {
-  final stories = ref.watch(storiesProvider) ?? [];
-  final userIndex = stories.indexWhere((userStories) => userStories.pubkey == pubkey);
+Future<List<UserStories>> filteredStoriesByPubkey(Ref ref, String pubkey) async {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
-  if (userIndex == -1) return [];
+  // TODO: remove currentPubkey check when the data from backend is available
+  if (currentPubkey.isNotEmpty && currentPubkey == pubkey) {
+    return [await generateFakeUserStories(pubkey)];
+  } else {
+    final stories = ref.watch(storiesProvider) ?? [];
+    final userIndex = stories.indexWhere((userStories) => userStories.pubkey == pubkey);
 
-  return stories.sublist(userIndex);
+    if (userIndex == -1) return [];
+
+    return stories.sublist(userIndex);
+  }
 }
