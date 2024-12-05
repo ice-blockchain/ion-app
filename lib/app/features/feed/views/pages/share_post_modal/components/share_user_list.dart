@@ -33,7 +33,10 @@ class ShareUserList extends StatelessWidget {
               subtitle: const Text('@arnoldgrey'),
               profilePicture:
                   'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-              trailing: _getCheckbox(context, selectedUserIds.contains(users[index])),
+              trailing: selectedUserIds.contains(users[index])
+                  ? Assets.svg.iconBlockCheckboxOn.icon()
+                  : Assets.svg.iconBlockCheckboxOff
+                      .icon(color: context.theme.appColors.onTerararyFill),
               verifiedBadge: true,
               contentPadding: EdgeInsets.symmetric(vertical: 8.0.s),
             ),
@@ -42,11 +45,5 @@ class ShareUserList extends StatelessWidget {
       },
       padding: EdgeInsets.only(bottom: 8.0.s),
     );
-  }
-
-  Widget _getCheckbox(BuildContext context, bool isSelected) {
-    return isSelected
-        ? Assets.svg.iconBlockCheckboxOn.icon()
-        : Assets.svg.iconBlockCheckboxOff.icon(color: context.theme.appColors.onTerararyFill);
   }
 }

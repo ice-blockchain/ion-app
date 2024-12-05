@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
@@ -30,7 +31,12 @@ class ManageCoinsPage extends HookConsumerWidget {
 
     useOnInit(
       () {
-        ref.read(filteredCoinsNotifierProvider(searchText: searchText.value).notifier).filter(
+        ref
+            .read(
+              filteredCoinsNotifierProvider(searchText: searchText.value)
+                  .notifier,
+            )
+            .filter(
               searchText: searchText.value,
             );
       },
@@ -63,17 +69,16 @@ class ManageCoinsPage extends HookConsumerWidget {
                     }
                     return SliverPadding(
                       padding: EdgeInsets.only(
-                        bottom: 23.0.s + MediaQuery.paddingOf(context).bottom,
+                        bottom: ScreenBottomOffset.defaultMargin,
                       ),
                       sliver: SliverList.separated(
                         itemCount: filteredCoins.length,
-                        separatorBuilder: (BuildContext context, int index) {
-                          return SizedBox(height: 12.0.s);
-                        },
+                        separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
                         itemBuilder: (BuildContext context, int index) {
                           return ScreenSideOffset.small(
                             child: ManageCoinItem(
-                              coinId: filteredCoins[index].coinData.abbreviation,
+                              coinId:
+                                  filteredCoins[index].coinData.abbreviation,
                             ),
                           );
                         },
@@ -83,7 +88,8 @@ class ManageCoinsPage extends HookConsumerWidget {
                   loading: () => ListItemsLoadingState(
                     itemsCount: 7,
                     separatorHeight: 12.0.s,
-                    listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
+                    listItemsLoadingStateType:
+                        ListItemsLoadingStateType.scrollView,
                   ),
                   orElse: () => const EmptyState(),
                 ),

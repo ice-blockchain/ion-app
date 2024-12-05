@@ -35,7 +35,7 @@ class NftItem extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(right: 4.0.s),
                 child: Text(
-                  ' ${nftData.currency}',
+                  nftData.currency,
                   style: context.theme.appTextThemes.caption2.copyWith(
                     color: context.theme.appColors.secondaryText,
                   ),
@@ -45,7 +45,8 @@ class NftItem extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: backgroundColor ?? context.theme.appColors.tertararyBackground,
+      backgroundColor:
+          backgroundColor ?? context.theme.appColors.tertararyBackground,
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(16.0.s),
         child: CachedNetworkImage(
