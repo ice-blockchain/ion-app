@@ -31,9 +31,7 @@ class ManageNftsPage extends HookConsumerWidget {
 
     useOnInit(
       () {
-        final notifier =
-            filteredNftsNetworkNotifierProvider(searchText: searchText.value)
-                .notifier;
+        final notifier = filteredNftsNetworkNotifierProvider(searchText: searchText.value).notifier;
 
         ref.read(notifier).filter(searchText: searchText.value);
       },
@@ -83,9 +81,7 @@ class ManageNftsPage extends HookConsumerWidget {
                         itemBuilder: (BuildContext context, int index) {
                           return ScreenSideOffset.small(
                             child: ManageNftNetworkItem(
-                              networkType: filteredNftNetworks
-                                  .elementAt(index)
-                                  .networkType,
+                              networkType: filteredNftNetworks.elementAt(index).networkType,
                             ),
                           );
                         },
@@ -95,8 +91,7 @@ class ManageNftsPage extends HookConsumerWidget {
                   loading: () => ListItemsLoadingState(
                     itemsCount: 7,
                     separatorHeight: 12.0.s,
-                    listItemsLoadingStateType:
-                        ListItemsLoadingStateType.scrollView,
+                    listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
                   ),
                   orElse: () => const EmptyState(),
                 ),
