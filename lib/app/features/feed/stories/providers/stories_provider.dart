@@ -2,8 +2,10 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/providers/fake_stories_generator.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
@@ -53,11 +55,18 @@ List<UserStories>? stories(Ref ref) {
 }
 
 @riverpod
-List<UserStories> filteredStoriesByPubkey(Ref ref, String pubkey) {
-  final stories = ref.watch(storiesProvider) ?? [];
-  final userIndex = stories.indexWhere((userStories) => userStories.pubkey == pubkey);
+Future<List<UserStories>> filteredStoriesByPubkey(Ref ref, String pubkey) async {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
-  if (userIndex == -1) return [];
+  // TODO: remove currentPubkey check when the data from backend is available
+  if (currentPubkey.isNotEmpty && currentPubkey == pubkey) {
+    return [await generateFakeUserStories(pubkey)];
+  } else {
+    final stories = ref.watch(storiesProvider) ?? [];
+    final userIndex = stories.indexWhere((userStories) => userStories.pubkey == pubkey);
 
-  return stories.sublist(userIndex);
+    if (userIndex == -1) return [];
+
+    return stories.sublist(userIndex);
+  }
 }
