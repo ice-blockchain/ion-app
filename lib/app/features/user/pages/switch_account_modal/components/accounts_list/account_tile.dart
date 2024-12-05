@@ -22,13 +22,13 @@ class AccountsTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
-    final keyStore = ref.watch(nostrKeyStoreProvider(identityKeyName)).valueOrNull;
+    final eventSigner = ref.watch(nostrEventSignerProvider(identityKeyName)).valueOrNull;
 
-    if (keyStore == null) {
+    if (eventSigner == null) {
       return Skeleton(child: ListItem());
     }
 
-    final userMetadataValue = ref.watch(userMetadataProvider(keyStore.publicKey)).valueOrNull;
+    final userMetadataValue = ref.watch(userMetadataProvider(eventSigner.publicKey)).valueOrNull;
     final isCurrentUser = identityKeyName == currentIdentityKeyName;
 
     if (userMetadataValue == null) {

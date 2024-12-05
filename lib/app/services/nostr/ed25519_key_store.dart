@@ -57,7 +57,6 @@ class Ed25519KeyStore with EventSigner {
     required String message,
     required String publicKey,
   }) async {
-    //TODO:try without Uint8List.fromList
     final publicKeyBytes = hex.decode(publicKey);
     final signatureBytes = hex.decode(signature);
     final messageBytes = hex.decode(message);

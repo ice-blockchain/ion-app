@@ -109,11 +109,11 @@ class NostrNotifier extends _$NostrNotifier {
   }
 
   Future<EventMessage> sign(EventSerializable entityData) async {
-    final keyStore = ref.read(currentUserNostrKeyStoreProvider).valueOrNull;
+    final eventSigner = ref.read(currentUserNostrEventSignerProvider).valueOrNull;
     final mainWallet = ref.read(mainWalletProvider).valueOrNull;
 
-    if (keyStore == null) {
-      throw KeystoreNotFoundException();
+    if (eventSigner == null) {
+      throw EventSignerNotFoundException();
     }
 
     if (mainWallet == null) {
@@ -121,7 +121,7 @@ class NostrNotifier extends _$NostrNotifier {
     }
 
     return entityData.toEventMessage(
-      keyStore,
+      eventSigner,
       tags: [
         ['b', mainWallet.signingKey.publicKey],
       ],

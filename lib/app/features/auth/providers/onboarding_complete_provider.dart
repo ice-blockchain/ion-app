@@ -19,16 +19,16 @@ Future<bool?> onboardingComplete(Ref ref) async {
     return null;
   }
 
-  final (identity, delegation, nostrKeyStore, userMetadata) = await (
+  final (identity, delegation, eventSigner, userMetadata) = await (
     ref.watch(currentUserIdentityProvider.future),
     ref.watch(currentUserDelegationProvider.future),
-    ref.watch(currentUserNostrKeyStoreProvider.future),
+    ref.watch(currentUserNostrEventSignerProvider.future),
     ref.watch(currentUserMetadataProvider.future),
   ).wait;
 
   return delegation != null &&
-      nostrKeyStore != null &&
-      delegation.data.hasDelegateFor(pubkey: nostrKeyStore.publicKey) &&
+      eventSigner != null &&
+      delegation.data.hasDelegateFor(pubkey: eventSigner.publicKey) &&
       identity != null &&
       (identity.ionConnectRelays?.isNotEmpty).falseOrValue &&
       userMetadata != null;

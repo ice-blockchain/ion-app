@@ -5,7 +5,6 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/user/model/user_delegation.dart';
 import 'package:ion/app/features/wallets/providers/main_wallet_provider.dart';
@@ -41,10 +40,6 @@ Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
 Future<UserDelegationEntity?> currentUserDelegation(Ref ref) async {
   final mainWallet = await ref.watch(mainWalletProvider.future);
   if (mainWallet == null) {
-    return null;
-  }
-  final currentUserNostrKeyStore = await ref.watch(currentUserNostrKeyStoreProvider.future);
-  if (currentUserNostrKeyStore == null) {
     return null;
   }
   try {
