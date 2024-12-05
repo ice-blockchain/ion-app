@@ -22,7 +22,7 @@ Future<PostEntity> generateFakePost() async {
     ),
   );
   return postEntity.copyWith(
-    masterPubkey: '5144fe88ff4253c6408ee89ce7fae6f501d84599bc5bd14014d08e489587d5af',
+    masterPubkey: '5455ba57b9b8d65de441fd247f791511dd01ed8fc40d99b23f4b3b5b2195c010',
   );
 }
 
