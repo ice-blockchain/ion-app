@@ -16,6 +16,7 @@ abstract mixin class NostrEntity {
 
   FutureOr<EventMessage> toEventMessage(EventSerializable data) {
     return data.toEventMessage(
+      createdAt: createdAt,
       _SimpleSigner(pubkey, signature),
       tags: [
         ['b', masterPubkey],

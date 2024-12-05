@@ -115,9 +115,15 @@ class PostData with _$PostData implements EventSerializable {
       }).toList();
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: PostEntity.kind,
       content: content.map((match) => match.text).join(),
       tags: [

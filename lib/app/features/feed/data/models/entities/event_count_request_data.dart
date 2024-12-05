@@ -73,9 +73,15 @@ class EventCountRequestData with _$EventCountRequestData implements EventSeriali
   }
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: EventCountRequestEntity.kind,
       content: filter.toString(),
       tags: [...tags, ...params.toTags()],

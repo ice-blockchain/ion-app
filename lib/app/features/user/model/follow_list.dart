@@ -69,9 +69,15 @@ class FollowListData with _$FollowListData implements EventSerializable {
   const FollowListData._();
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: FollowListEntity.kind,
       tags: [
         ...tags,

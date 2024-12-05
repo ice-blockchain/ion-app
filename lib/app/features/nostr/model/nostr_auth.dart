@@ -26,6 +26,7 @@ class NostrAuth with _$NostrAuth implements EventSerializable {
   Future<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
+    DateTime? createdAt,
   }) async {
     final eventTags = [
       ...tags,
@@ -42,6 +43,7 @@ class NostrAuth with _$NostrAuth implements EventSerializable {
 
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: kind,
       tags: eventTags,
       content: '',

@@ -166,9 +166,15 @@ class FileMetadata with _$FileMetadata implements EventSerializable {
   const FileMetadata._();
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: FileMetadataEntity.kind,
       tags: [
         ...tags,
