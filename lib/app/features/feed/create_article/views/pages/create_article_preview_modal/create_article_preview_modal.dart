@@ -24,7 +24,7 @@ class CreateArticlePreviewModal extends StatelessWidget {
   Widget build(BuildContext context) {
     final paddingValue = 20.0.s;
 
-    final article = ArticleEntity.fromEventMessage(mockedArticleEvent);
+    final article = ArticleEntity.fromEventMessage(mockedArticleEvents[0]);
     final eventReference = EventReference.fromNostrEntity(article);
 
     return SheetContent(
