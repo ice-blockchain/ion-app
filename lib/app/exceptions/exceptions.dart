@@ -135,3 +135,7 @@ class UnknownUploadFileResolutionException extends IONException {
 class CompressImageException extends IONException {
   CompressImageException(dynamic error) : super(10027, 'Compress image exception: $error');
 }
+
+class EntityNotFoundException extends IONException {
+  EntityNotFoundException(String eventId) : super(10028, 'Entity not found $eventId');
+}
