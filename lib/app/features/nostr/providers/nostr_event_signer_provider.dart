@@ -7,7 +7,7 @@ import 'package:ion/app/services/storage/secure_storage.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'nostr_keystore_provider.g.dart';
+part 'nostr_event_signer_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class NostrEventSigner extends _$NostrEventSigner {

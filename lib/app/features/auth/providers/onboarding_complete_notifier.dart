@@ -7,7 +7,7 @@ import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';

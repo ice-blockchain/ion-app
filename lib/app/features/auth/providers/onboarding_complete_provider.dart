@@ -3,7 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
