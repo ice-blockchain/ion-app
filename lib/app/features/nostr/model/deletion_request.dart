@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -16,7 +18,7 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
 
   /// https://github.com/nostr-protocol/nips/blob/master/09.md
   @override
-  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: kind,

@@ -7,11 +7,11 @@ import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-PostEntity generateFakePost() {
+Future<PostEntity> generateFakePost() async {
   final keyStore = KeyStore.generate();
   final random = Random.secure();
   final postEntity = PostEntity.fromEventMessage(
-    EventMessage.fromData(
+    await EventMessage.fromData(
       signer: keyStore,
       kind: PostEntity.kind,
       content: _fakeFeedMessages.elementAt(random.nextInt(_fakeFeedMessages.length)),
@@ -52,8 +52,8 @@ const _fakeFeedMessages = [
   'A big thank you to @everyone @team who supported me throughout this journey. Your encouragement means the world, and Im so grateful! #grateful #community',
   'Attended a workshop on mindfulness today with @guru, and it completely changed the way I think about things. https://mindful.org #mindfulness #growth Feeling inspired and ready to practice more!',
 ];
-PostEntity generateFakePostWithVideo() {
-  final basePost = generateFakePost();
+Future<PostEntity> generateFakePostWithVideo() async {
+  final basePost = await generateFakePost();
 
   final index = Random.secure().nextInt(_fakeVideos.length);
 
