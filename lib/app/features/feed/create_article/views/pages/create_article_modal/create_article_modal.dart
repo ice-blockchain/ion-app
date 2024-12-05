@@ -80,6 +80,7 @@ class CreateArticleModal extends HookConsumerWidget {
               ),
               child: TextField(
                 controller: articleState.titleController,
+                autofocus: true,
                 style: context.theme.appTextThemes.headline2.copyWith(
                   color: context.theme.appColors.primaryText,
                 ),
@@ -95,6 +96,7 @@ class CreateArticleModal extends HookConsumerWidget {
             Expanded(
               child: ScreenSideOffset.small(
                 child: TextEditor(
+                  autoFocus: false,
                   articleState.textEditorController,
                   placeholder: context.i18n.create_article_story_placeholder,
                 ),
