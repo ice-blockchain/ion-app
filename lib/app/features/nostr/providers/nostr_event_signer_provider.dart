@@ -42,5 +42,5 @@ Future<EventSigner?> currentUserNostrEventSigner(Ref ref) async {
   if (currentIdentityKeyName == null) {
     return null;
   }
-  return ref.watch(NostrEventSignerProvider(currentIdentityKeyName).future);
+  return ref.watch(nostrEventSignerProvider(currentIdentityKeyName).future);
 }
