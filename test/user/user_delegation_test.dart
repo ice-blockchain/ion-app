@@ -2,6 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/user/model/user_delegation.dart';
+import 'package:ion/app/services/nostr/ed25519_key_store.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 void main() {
@@ -9,10 +10,10 @@ void main() {
   NostrDart.configure(logLevel: NostrLogLevel.ALL);
 
   group('UserDelegation Tests', () {
-    test('UserDelegation.fromEventMessage should work when all data is there', () {
-      final keyStore = KeyStore.generate();
+    test('UserDelegation.fromEventMessage should work when all data is there', () async {
+      final keyStore = await Ed25519KeyStore.generate();
 
-      final delegationEvent = EventMessage.fromData(
+      final delegationEvent = await EventMessage.fromData(
         signer: keyStore,
         kind: 10100,
         tags: const [
@@ -27,10 +28,10 @@ void main() {
       expect(userDelegation.data.delegates.first.kinds?.length, 2);
     });
 
-    test('UserDelegation.fromEventMessage should work when kinds are not set', () {
-      final keyStore = KeyStore.generate();
+    test('UserDelegation.fromEventMessage should work when kinds are not set', () async {
+      final keyStore = await Ed25519KeyStore.generate();
 
-      final delegationEvent = EventMessage.fromData(
+      final delegationEvent = await EventMessage.fromData(
         signer: keyStore,
         kind: 10100,
         tags: const [
@@ -47,11 +48,11 @@ void main() {
       );
     });
 
-    test('UserDelegation processes valid Event', () {
+    test('UserDelegation processes valid Event', () async {
       final masterKeyStore = KeyStore.generate();
       final subKeyStore = KeyStore.generate();
 
-      final delegationEvent = EventMessage.fromData(
+      final delegationEvent = await EventMessage.fromData(
         signer: masterKeyStore,
         kind: 10100,
         tags: [
@@ -60,7 +61,7 @@ void main() {
         content: '',
       );
 
-      final event = EventMessage.fromData(
+      final event = await EventMessage.fromData(
         signer: subKeyStore,
         kind: 1,
         content: 'test event',
@@ -74,11 +75,11 @@ void main() {
       );
     });
 
-    test('UserDelegation processes invalid Event [attestation]', () {
+    test('UserDelegation processes invalid Event [attestation]', () async {
       final masterKeyStore = KeyStore.generate();
       final subKeyStore = KeyStore.generate();
 
-      final delegationEvent = EventMessage.fromData(
+      final delegationEvent = await EventMessage.fromData(
         signer: masterKeyStore,
         kind: 10100,
         tags: [
@@ -88,7 +89,7 @@ void main() {
         content: '',
       );
 
-      final event = EventMessage.fromData(
+      final event = await EventMessage.fromData(
         signer: subKeyStore,
         kind: 1,
         content: 'test event',
@@ -102,11 +103,11 @@ void main() {
       );
     });
 
-    test('UserDelegation processes invalid Event [kind]', () {
+    test('UserDelegation processes invalid Event [kind]', () async {
       final masterKeyStore = KeyStore.generate();
       final subKeyStore = KeyStore.generate();
 
-      final delegationEvent = EventMessage.fromData(
+      final delegationEvent = await EventMessage.fromData(
         signer: masterKeyStore,
         kind: 10100,
         tags: [
@@ -115,7 +116,7 @@ void main() {
         content: '',
       );
 
-      final event = EventMessage.fromData(
+      final event = await EventMessage.fromData(
         signer: subKeyStore,
         kind: 1,
         content: 'test event',
@@ -129,7 +130,7 @@ void main() {
       );
     });
 
-    test('UserDelegation adding new Delegates work', () {
+    test('UserDelegation adding new Delegates work', () async {
       final masterKeyStore = KeyStore.generate();
       final subKeyStore = KeyStore.generate();
 
@@ -140,7 +141,7 @@ void main() {
 
       final newTag = ['p', subKeyStore.publicKey, '', 'active:1674834236:7'];
 
-      final delegationEvent = EventMessage.fromData(
+      final delegationEvent = await EventMessage.fromData(
         signer: masterKeyStore,
         kind: 10100,
         tags: initialTags,
