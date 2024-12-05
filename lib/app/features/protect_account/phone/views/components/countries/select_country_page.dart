@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/phone/provider/country_provider.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/countries/countries.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class SelectCountryPage extends HookConsumerWidget {
@@ -24,6 +25,11 @@ class SelectCountryPage extends HookConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.select_countries_nav_title),
+            actions: [
+              NavigationCloseButton(
+                onPressed: Navigator.of(context, rootNavigator: true).pop,
+              ),
+            ],
           ),
           Expanded(
             child: CustomScrollView(
