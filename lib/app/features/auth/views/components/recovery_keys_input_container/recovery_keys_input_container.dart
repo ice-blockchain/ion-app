@@ -33,6 +33,7 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
     };
 
     return SheetContent(
+      topPadding: 0,
       body: AuthScrollContainer(
         title: context.i18n.backup_option_with_recovery_keys_title,
         description: context.i18n.restore_identity_creds_description,
@@ -42,34 +43,38 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
           color: context.theme.appColors.secondaryText,
         ),
         children: [
-          Column(
-            children: [
-              ScreenSideOffset.large(
-                child: Form(
-                  key: formKey.value,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 16.0.s),
-                      ...RecoveryKeyProperty.values.map(
-                        (key) => Padding(
-                          padding: EdgeInsets.only(bottom: 16.0.s),
-                          child: RecoveryKeyInput(
-                            controller: controllers[key]!,
-                            labelText: key.getDisplayName(context),
-                            prefixIcon:
-                                key.iconAsset.icon(color: context.theme.appColors.secondaryText),
-                            validator: (value) => validator(value, key),
-                            textInputAction: key == RecoveryKeyProperty.recoveryCode
-                                ? TextInputAction.done
-                                : TextInputAction.next,
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ScreenSideOffset.large(
+                  child: Form(
+                    key: formKey.value,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 16.0.s),
+                        ...RecoveryKeyProperty.values.map(
+                          (key) => Padding(
+                            padding: EdgeInsets.only(bottom: 16.0.s),
+                            child: RecoveryKeyInput(
+                              controller: controllers[key]!,
+                              labelText: key.getDisplayName(context),
+                              prefixIcon:
+                                  key.iconAsset.icon(color: context.theme.appColors.secondaryText),
+                              validator: (value) => validator(value, key),
+                              textInputAction: key == RecoveryKeyProperty.recoveryCode
+                                  ? TextInputAction.done
+                                  : TextInputAction.next,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 4.0.s),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           ScreenBottomOffset(
             margin: 36.0.s,

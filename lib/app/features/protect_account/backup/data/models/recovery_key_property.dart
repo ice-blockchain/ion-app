@@ -6,22 +6,22 @@ import 'package:ion/generated/assets.gen.dart';
 
 enum RecoveryKeyProperty {
   identityKeyName,
-  recoveryKeyId,
-  recoveryCode;
+  recoveryCode,
+  recoveryKeyId;
 
   String getDisplayName(BuildContext context) {
     return switch (this) {
       RecoveryKeyProperty.identityKeyName => context.i18n.common_identity_key_name,
-      RecoveryKeyProperty.recoveryKeyId => context.i18n.restore_identity_creds_recovery_key,
       RecoveryKeyProperty.recoveryCode => context.i18n.restore_identity_creds_recovery_code,
+      RecoveryKeyProperty.recoveryKeyId => context.i18n.restore_identity_creds_recovery_key,
     };
   }
 
   String get iconAsset {
     return switch (this) {
       RecoveryKeyProperty.identityKeyName => Assets.svg.iconIdentitykey,
-      RecoveryKeyProperty.recoveryKeyId => Assets.svg.iconChannelPrivate,
       RecoveryKeyProperty.recoveryCode => Assets.svg.iconCode4,
+      RecoveryKeyProperty.recoveryKeyId => Assets.svg.iconChannelPrivate,
     };
   }
 }
