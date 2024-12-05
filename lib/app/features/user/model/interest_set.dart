@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -73,7 +75,7 @@ class InterestSetData with _$InterestSetData implements EventSerializable {
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: InterestSetEntity.kind,

@@ -14,8 +14,8 @@ class FollowListNotFoundException extends IONException {
   FollowListNotFoundException() : super(10001, 'Follow list is null');
 }
 
-class KeystoreNotFoundException extends IONException {
-  KeystoreNotFoundException() : super(10003, 'KeyStore is null');
+class EventSignerNotFoundException extends IONException {
+  EventSignerNotFoundException() : super(10003, 'Event signer is null');
 }
 
 class UserRelaysNotFoundException extends IONException {

@@ -24,6 +24,7 @@ Future<List<PostEntity>?> feedSearchTopPosts(
   await ref.debounce();
   await Future<void>.delayed(const Duration(milliseconds: 500));
 
-  return List.generate(Random().nextInt(5) + 1, (_) => generateFakePost())
-    ..forEach(ref.read(nostrCacheProvider.notifier).cache);
+  final posts =
+      await Future.wait(List.generate(Random().nextInt(5) + 1, (_) => generateFakePost()));
+  return posts..forEach(ref.read(nostrCacheProvider.notifier).cache);
 }

@@ -3,7 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
@@ -19,16 +19,16 @@ Future<bool?> onboardingComplete(Ref ref) async {
     return null;
   }
 
-  final (identity, delegation, nostrKeyStore, userMetadata) = await (
+  final (identity, delegation, eventSigner, userMetadata) = await (
     ref.watch(currentUserIdentityProvider.future),
     ref.watch(currentUserDelegationProvider.future),
-    ref.watch(currentUserNostrKeyStoreProvider.future),
+    ref.watch(currentUserNostrEventSignerProvider.future),
     ref.watch(currentUserMetadataProvider.future),
   ).wait;
 
   return delegation != null &&
-      nostrKeyStore != null &&
-      delegation.data.hasDelegateFor(pubkey: nostrKeyStore.publicKey) &&
+      eventSigner != null &&
+      delegation.data.hasDelegateFor(pubkey: eventSigner.publicKey) &&
       identity != null &&
       (identity.ionConnectRelays?.isNotEmpty).falseOrValue &&
       userMetadata != null;

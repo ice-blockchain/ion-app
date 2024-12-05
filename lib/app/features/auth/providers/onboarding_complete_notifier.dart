@@ -7,7 +7,7 @@ import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.dart';
 import 'package:ion/app/features/user/model/follow_list.dart';
@@ -33,14 +33,14 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
-        final (relayUrls, nostrKeyStore) =
-            await (_assignUserRelays(), _generateNostrKeyStore()).wait;
+        final (relayUrls, eventSigner) =
+            await (_assignUserRelays(), _generateNostrEventSigner()).wait;
 
         // Build and cache user relays first because it is used to `sendEvents`, upload avatar
         final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
 
         // Send user delegation event in advance so all subsequent events pass delegation attestation
-        final userDelegationEvent = await _buildUserDelegation(pubkey: nostrKeyStore.publicKey);
+        final userDelegationEvent = await _buildUserDelegation(pubkey: eventSigner.publicKey);
 
         await ref
             .read(nostrNotifierProvider.notifier)
@@ -75,11 +75,11 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);
   }
 
-  Future<KeyStore> _generateNostrKeyStore() async {
+  Future<EventSigner> _generateNostrEventSigner() async {
     final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
-    final nostrKeyStore = await ref.read(currentUserNostrKeyStoreProvider.future) ??
-        await ref.read(nostrKeyStoreProvider(currentIdentityKeyName).notifier).generate();
-    return nostrKeyStore;
+    final nostrEventSigner = await ref.read(currentUserNostrEventSignerProvider.future) ??
+        await ref.read(nostrEventSignerProvider(currentIdentityKeyName).notifier).generate();
+    return nostrEventSigner;
   }
 
   Future<EventMessage> _buildAndCacheUserRelays({required List<String> relayUrls}) async {

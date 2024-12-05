@@ -11,7 +11,7 @@ import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_parser.dart';
-import 'package:ion/app/features/nostr/providers/nostr_keystore_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.dart';
 import 'package:ion/app/features/nostr/providers/relays_provider.dart';
 import 'package:ion/app/features/user/model/user_relays.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.dart';
@@ -109,11 +109,11 @@ class NostrNotifier extends _$NostrNotifier {
   }
 
   Future<EventMessage> sign(EventSerializable entityData) async {
-    final keyStore = ref.read(currentUserNostrKeyStoreProvider).valueOrNull;
+    final eventSigner = ref.read(currentUserNostrEventSignerProvider).valueOrNull;
     final mainWallet = ref.read(mainWalletProvider).valueOrNull;
 
-    if (keyStore == null) {
-      throw KeystoreNotFoundException();
+    if (eventSigner == null) {
+      throw EventSignerNotFoundException();
     }
 
     if (mainWallet == null) {
@@ -121,7 +121,7 @@ class NostrNotifier extends _$NostrNotifier {
     }
 
     return entityData.toEventMessage(
-      keyStore,
+      eventSigner,
       tags: [
         ['b', mainWallet.signingKey.publicKey],
       ],

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
@@ -86,7 +88,7 @@ class ArticleData implements EventSerializable {
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: ArticleEntity.kind,

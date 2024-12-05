@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -92,7 +93,7 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
   }
 
   @override
-  EventMessage toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
     return EventMessage.fromData(
       signer: signer,
       kind: UserMetadataEntity.kind,

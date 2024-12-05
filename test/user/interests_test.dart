@@ -3,16 +3,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/nostr/model/replaceable_event_reference.dart';
 import 'package:ion/app/features/user/model/interests.dart';
+import 'package:ion/app/services/nostr/ed25519_key_store.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 void main() {
   NostrDart.configure(logLevel: NostrLogLevel.ALL);
 
   group('Interests Tests', () {
-    test('Interests.fromEventMessage should work when all data is there', () {
-      final keyStore = KeyStore.generate();
+    test('Interests.fromEventMessage should work when all data is there', () async {
+      final keyStore = await Ed25519KeyStore.generate();
 
-      final testEvent = EventMessage.fromData(
+      final testEvent = await EventMessage.fromData(
         signer: keyStore,
         kind: 10015,
         tags: const [

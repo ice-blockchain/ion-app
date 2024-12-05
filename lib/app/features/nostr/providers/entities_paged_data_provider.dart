@@ -148,10 +148,13 @@ class MockPostEntitiesPagedData extends _$MockPostEntitiesPagedData {
       data: Paged.loading(currentState.data.items, pagination: currentState.data.pagination),
     );
 
-    final mockedPosts = List.generate(
-      dataSources!.first.requestFilters.first.limit!,
-      (index) => generateFakePostWithVideo(),
-    ).toSet();
+    final mockedPosts = (await Future.wait(
+      List.generate(
+        dataSources!.first.requestFilters.first.limit!,
+        (index) => generateFakePostWithVideo(),
+      ),
+    ))
+        .toSet();
 
     final nostrCache = ref.read(nostrCacheProvider.notifier);
 
