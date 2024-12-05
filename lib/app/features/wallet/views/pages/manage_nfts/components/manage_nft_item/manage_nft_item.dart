@@ -15,12 +15,6 @@ class ManageNftNetworkItem extends ConsumerWidget {
 
   final NetworkType networkType;
 
-  Widget _getCheckbox(bool isSelected) {
-    return isSelected
-        ? Assets.svg.iconBlockCheckboxOn.icon()
-        : Assets.svg.iconBlockCheckboxOff.icon();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final nftNetworkData = ref.watch(
@@ -36,7 +30,9 @@ class ManageNftNetworkItem extends ConsumerWidget {
       subtitle: Text(networkType.name.toUpperCase()),
       backgroundColor: context.theme.appColors.tertararyBackground,
       leading: networkType.iconAsset.icon(size: 40),
-      trailing: _getCheckbox(nftNetworkData!.isSelected),
+      trailing: nftNetworkData!.isSelected
+          ? Assets.svg.iconBlockCheckboxOn.icon()
+          : Assets.svg.iconBlockCheckboxOff.icon(),
       onTap: () {
         ref.read(manageNftNetworksNotifierProvider.notifier).selectNetwork(
               networkType: networkType,

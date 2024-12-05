@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/components/empty_state/empty_state.dart';
@@ -30,11 +31,11 @@ class ManageNftsPage extends HookConsumerWidget {
 
     useOnInit(
       () {
-        ref
-            .read(
-              filteredNftsNetworkNotifierProvider(searchText: searchText.value).notifier,
-            )
-            .filter(searchText: searchText.value);
+        final notifier =
+            filteredNftsNetworkNotifierProvider(searchText: searchText.value)
+                .notifier;
+
+        ref.read(notifier).filter(searchText: searchText.value);
       },
       [searchText.value],
     );
@@ -74,17 +75,17 @@ class ManageNftsPage extends HookConsumerWidget {
                     }
                     return SliverPadding(
                       padding: EdgeInsets.only(
-                        bottom: 23.0.s + MediaQuery.paddingOf(context).bottom,
+                        bottom: ScreenBottomOffset.defaultMargin,
                       ),
                       sliver: SliverList.separated(
                         itemCount: filteredNftNetworks.length,
-                        separatorBuilder: (BuildContext context, int index) {
-                          return SizedBox(height: 12.0.s);
-                        },
+                        separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
                         itemBuilder: (BuildContext context, int index) {
                           return ScreenSideOffset.small(
                             child: ManageNftNetworkItem(
-                              networkType: filteredNftNetworks.elementAt(index).networkType,
+                              networkType: filteredNftNetworks
+                                  .elementAt(index)
+                                  .networkType,
                             ),
                           );
                         },
@@ -94,7 +95,8 @@ class ManageNftsPage extends HookConsumerWidget {
                   loading: () => ListItemsLoadingState(
                     itemsCount: 7,
                     separatorHeight: 12.0.s,
-                    listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
+                    listItemsLoadingStateType:
+                        ListItemsLoadingStateType.scrollView,
                   ),
                   orElse: () => const EmptyState(),
                 ),
