@@ -14,14 +14,6 @@ enum PhoneSetupSteps {
         PhoneSetupSteps.success => 1.0,
       };
 
-  String? getAppBarTitle(BuildContext context) {
-    return switch (this) {
-      PhoneSetupSteps.input => context.i18n.common_step_1,
-      PhoneSetupSteps.confirmation => context.i18n.common_step_2,
-      PhoneSetupSteps.success => null,
-    };
-  }
-
   String getPageTitle(BuildContext context) {
     return switch (this) {
       PhoneSetupSteps.input || PhoneSetupSteps.success => context.i18n.phone_verification_title,
