@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:convert/convert.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:nostr_dart/nostr_dart.dart';
