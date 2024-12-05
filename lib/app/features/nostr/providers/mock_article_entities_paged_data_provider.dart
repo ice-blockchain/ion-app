@@ -7,7 +7,6 @@ import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.da
 import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'mock_article_entities_paged_data_provider.freezed.dart';
 part 'mock_article_entities_paged_data_provider.g.dart';
 
 @riverpod
