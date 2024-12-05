@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/copy/copy_builder.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
@@ -30,8 +29,6 @@ class ReceiveInfoCard extends HookConsumerWidget {
     final walletAddress = ref.watch(
       receiveCoinsFormControllerProvider.select((state) => state.address),
     );
-
-    final isCopied = useState<bool>(false);
 
     return Row(
       children: [
@@ -82,28 +79,23 @@ class ReceiveInfoCard extends HookConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 22.0.s),
-                Button(
-                  minimumSize: Size(148.0.s, 48.0.s),
-                  leadingIcon: isCopied.value
-                      ? Assets.svg.iconBlockCheckGreen.icon()
-                      : Assets.svg.iconBlockCopyBlue.icon(),
-                  borderColor: isCopied.value
-                      ? context.theme.appColors.success
-                      : context.theme.appColors.strokeElements,
-                  onPressed: () {
-                    isCopied.value = true;
-                    Clipboard.setData(ClipboardData(text: walletAddress));
-                    Future<void>.delayed(const Duration(seconds: 3)).then((_) {
-                      isCopied.value = false;
-                    });
-                  },
-                  label: Text(
-                    isCopied.value ? context.i18n.wallet_copied : context.i18n.button_copy,
-                    style: context.theme.appTextThemes.body.copyWith(
-                      color: context.theme.appColors.primaryText,
+                CopyBuilder(
+                  defaultIcon: Assets.svg.iconBlockCopyBlue.icon(),
+                  defaultText: context.i18n.button_copy,
+                  defaultBorderColor: context.theme.appColors.strokeElements,
+                  builder: (context, onCopy, content) => Button(
+                    minimumSize: Size(148.0.s, 48.0.s),
+                    leadingIcon: content.icon,
+                    borderColor: content.borderColor,
+                    onPressed: () => onCopy(walletAddress),
+                    label: Text(
+                      content.text,
+                      style: context.theme.appTextThemes.body.copyWith(
+                        color: context.theme.appColors.primaryText,
+                      ),
                     ),
+                    type: ButtonType.secondary,
                   ),
-                  type: ButtonType.secondary,
                 ),
                 SizedBox(height: 16.0.s),
               ],
