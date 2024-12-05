@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:convert/convert.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -12,13 +9,18 @@ class Ed25519KeyStore with EventSigner {
   })  : _publicKeyBytes = publicKeyBytes,
         _privateKeyBytes = privateKeyBytes;
 
-  static Future<Ed25519KeyStore> generate() {
-    final privateKeyBytes = Uint8List(KeyPairType.ed25519.privateKeyLength);
-    return Ed25519KeyStore.fromPrivate(utf8.decode(privateKeyBytes));
+  static Future<Ed25519KeyStore> generate() async {
+    final keyPair = await Ed25519().newKeyPair();
+    final privateKeyBytes = await keyPair.extractPrivateKeyBytes();
+    final publicKey = await keyPair.extractPublicKey();
+    return Ed25519KeyStore._(
+      privateKeyBytes: privateKeyBytes,
+      publicKeyBytes: publicKey.bytes,
+    );
   }
 
   static Future<Ed25519KeyStore> fromPrivate(String privateKey) async {
-    final privateKeyBytes = utf8.encode(privateKey);
+    final privateKeyBytes = hex.decode(privateKey);
     final keyPair = await Ed25519().newKeyPairFromSeed(privateKeyBytes);
     final publicKey = await keyPair.extractPublicKey();
 
@@ -29,24 +31,25 @@ class Ed25519KeyStore with EventSigner {
   }
 
   @override
-  String get publicKey => utf8.decode(_publicKeyBytes);
+  String get publicKey => hex.encode(_publicKeyBytes);
 
-  String get privateKey => utf8.decode(_privateKeyBytes);
+  String get privateKey => hex.encode(_privateKeyBytes);
 
   final List<int> _publicKeyBytes;
 
   final List<int> _privateKeyBytes;
 
   @override
-  Future<String> sign({required String message}) async {
+  Future<String> sign({required String message, bool addPrefix = true}) async {
     final algorithm = Ed25519();
     final keyPair = SimpleKeyPairData(
       _privateKeyBytes,
       publicKey: SimplePublicKey(_privateKeyBytes, type: KeyPairType.ed25519),
       type: KeyPairType.ed25519,
     );
-    final signature = await algorithm.signString(message, keyPair: keyPair);
-    return '$signaturePrefix${utf8.decode(signature.bytes)}';
+    final messageBytes = hex.decode(message);
+    final signature = await algorithm.sign(messageBytes, keyPair: keyPair);
+    return '${addPrefix ? ('$signaturePrefix:') : ''}${hex.encode(signature.bytes)}';
   }
 
   static Future<bool> verifyEddsaCurve25519Signature({
@@ -55,9 +58,9 @@ class Ed25519KeyStore with EventSigner {
     required String publicKey,
   }) async {
     //TODO:try without Uint8List.fromList
-    final publicKeyBytes = Uint8List.fromList(hex.decode(publicKey));
-    final signatureBytes = Uint8List.fromList(hex.decode(signature));
-    final messageBytes = Uint8List.fromList(hex.decode(message));
+    final publicKeyBytes = hex.decode(publicKey);
+    final signatureBytes = hex.decode(signature);
+    final messageBytes = hex.decode(message);
 
     final signatureObject = Signature(
       signatureBytes,
