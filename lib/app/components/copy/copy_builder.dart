@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-//ignore_for_file: avoid_positional_boolean_parameters
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
