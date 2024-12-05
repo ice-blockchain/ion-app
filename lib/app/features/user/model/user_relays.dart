@@ -18,6 +18,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required UserRelaysData data,
   }) = _UserRelaysEntity;
@@ -34,6 +35,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig,
       createdAt: eventMessage.createdAt,
       data: UserRelaysData.fromEventMessage(eventMessage),
     );

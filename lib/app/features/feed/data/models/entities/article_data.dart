@@ -17,6 +17,7 @@ class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required ArticleData data,
   }) = _ArticleEntity;
@@ -32,6 +33,7 @@ class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig,
       createdAt: eventMessage.createdAt,
       data: ArticleData.fromEventMessage(eventMessage),
     );

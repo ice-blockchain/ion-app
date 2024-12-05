@@ -18,6 +18,7 @@ class FileMetadataEntity with _$FileMetadataEntity, NostrEntity implements Cache
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required FileMetadata data,
   }) = _FileMetadataEntity;
@@ -34,6 +35,7 @@ class FileMetadataEntity with _$FileMetadataEntity, NostrEntity implements Cache
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig,
       createdAt: eventMessage.createdAt,
       data: FileMetadata.fromEventMessage(eventMessage),
     );

@@ -18,6 +18,7 @@ class GenericRepostEntity with _$GenericRepostEntity, NostrEntity implements Cac
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required GenericRepostData data,
   }) = _GenericRepostEntity;
@@ -34,6 +35,7 @@ class GenericRepostEntity with _$GenericRepostEntity, NostrEntity implements Cac
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig,
       createdAt: eventMessage.createdAt,
       data: GenericRepostData.fromEventMessage(eventMessage),
     );

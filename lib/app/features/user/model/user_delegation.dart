@@ -17,6 +17,7 @@ class UserDelegationEntity with _$UserDelegationEntity, NostrEntity implements C
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required UserDelegationData data,
   }) = _UserDelegationEntity;
@@ -33,6 +34,7 @@ class UserDelegationEntity with _$UserDelegationEntity, NostrEntity implements C
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.pubkey,
+      signature: eventMessage.sig,
       createdAt: eventMessage.createdAt,
       data: UserDelegationData.fromEventMessage(eventMessage),
     );

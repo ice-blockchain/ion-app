@@ -22,6 +22,7 @@ class EventCountRequestEntity
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required EventCountRequestData data,
   }) = _EventCountRequestEntity;
@@ -38,6 +39,7 @@ class EventCountRequestEntity
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig,
       createdAt: eventMessage.createdAt,
       data: EventCountRequestData.fromEventMessage(eventMessage),
     );

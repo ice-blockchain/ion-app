@@ -19,6 +19,7 @@ class ReactionEntity with _$ReactionEntity, NostrEntity implements CacheableEnti
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required ReactionData data,
   }) = _ReactionEntity;
@@ -35,6 +36,7 @@ class ReactionEntity with _$ReactionEntity, NostrEntity implements CacheableEnti
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig,
       createdAt: eventMessage.createdAt,
       data: ReactionData.fromEventMessage(eventMessage),
     );

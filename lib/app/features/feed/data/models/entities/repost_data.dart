@@ -18,6 +18,7 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required RepostData data,
   }) = _RepostEntity;
@@ -34,6 +35,7 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig,
       createdAt: eventMessage.createdAt,
       data: RepostData.fromEventMessage(eventMessage),
     );

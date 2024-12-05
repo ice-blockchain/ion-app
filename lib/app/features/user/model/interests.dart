@@ -20,6 +20,7 @@ class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEn
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required InterestsData data,
   }) = _InterestsEntity;
@@ -36,6 +37,7 @@ class InterestsEntity with _$InterestsEntity, NostrEntity implements CacheableEn
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig,
       createdAt: eventMessage.createdAt,
       data: InterestsData.fromEventMessage(eventMessage),
     );
