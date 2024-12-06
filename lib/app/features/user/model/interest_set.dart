@@ -39,7 +39,7 @@ class InterestSetEntity with _$InterestSetEntity, NostrEntity implements Cacheab
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: InterestSetData.fromEventMessage(eventMessage),
     );

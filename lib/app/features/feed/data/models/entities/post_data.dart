@@ -43,7 +43,7 @@ class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: PostData.fromEventMessage(eventMessage),
     );

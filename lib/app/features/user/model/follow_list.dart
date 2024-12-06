@@ -35,7 +35,7 @@ class FollowListEntity with _$FollowListEntity, NostrEntity implements Cacheable
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: FollowListData.fromEventMessage(eventMessage),
     );

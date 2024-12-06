@@ -36,7 +36,7 @@ class ReactionEntity with _$ReactionEntity, NostrEntity implements CacheableEnti
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: ReactionData.fromEventMessage(eventMessage),
     );

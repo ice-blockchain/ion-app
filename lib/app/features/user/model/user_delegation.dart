@@ -34,7 +34,7 @@ class UserDelegationEntity with _$UserDelegationEntity, NostrEntity implements C
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.pubkey,
-      signature: eventMessage.sig,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: UserDelegationData.fromEventMessage(eventMessage),
     );

@@ -36,7 +36,7 @@ class GenericRepostEntity with _$GenericRepostEntity, NostrEntity implements Cac
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: GenericRepostData.fromEventMessage(eventMessage),
     );

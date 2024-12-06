@@ -54,7 +54,7 @@ class EventCountResultEntity with _$EventCountResultEntity, NostrEntity implemen
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: summary,
     );
