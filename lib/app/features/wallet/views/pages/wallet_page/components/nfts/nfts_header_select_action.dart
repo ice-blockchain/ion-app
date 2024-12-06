@@ -30,9 +30,7 @@ class NftHeaderSelectAction extends ConsumerWidget {
       (ManageNftNetworkData network) => network.networkType == NetworkType.all,
     )
         ? context.i18n.core_all
-        : selectedNftNetworks
-            .map((e) => e.networkType.name.toUpperCase())
-            .join(', ');
+        : selectedNftNetworks.map((e) => e.networkType.name.toUpperCase()).join(', ');
   }
 
   @override
@@ -51,8 +49,7 @@ class NftHeaderSelectAction extends ConsumerWidget {
             Flexible(
               child: Text(
                 '${context.i18n.core_chain}: ${joinSelectedNetworks(selectedNftNetworks, context)}',
-                style:
-                    context.theme.appTextThemes.caption.copyWith(color: color),
+                style: context.theme.appTextThemes.caption.copyWith(color: color),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
