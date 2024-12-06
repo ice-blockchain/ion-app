@@ -1,21 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
-import 'package:json_annotation/json_annotation.dart';
 
+part 'simple_message_response.freezed.dart';
 part 'simple_message_response.g.dart';
 
-@JsonSerializable()
-class SimpleMessageResponse {
-  SimpleMessageResponse(
-    this.message,
-  );
+@freezed
+class SimpleMessageResponse with _$SimpleMessageResponse {
+  const factory SimpleMessageResponse({
+    required String message,
+  }) = _SimpleMessageResponse;
 
-  factory SimpleMessageResponse.fromJson(JsonObject json) {
-    return _$SimpleMessageResponseFromJson(json);
-  }
-
-  final String message;
-
-  JsonObject toJson() => _$SimpleMessageResponseToJson(this);
+  factory SimpleMessageResponse.fromJson(JsonObject json) => _$SimpleMessageResponseFromJson(json);
 }

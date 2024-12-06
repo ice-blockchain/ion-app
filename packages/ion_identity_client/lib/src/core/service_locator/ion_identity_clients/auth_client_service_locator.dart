@@ -9,6 +9,8 @@ import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_us
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
+import 'package:ion_identity_client/src/auth/services/logout/data_sources/logout_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/logout/logout_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user/data_sources/recover_user_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/register/data_sources/register_data_source.dart';
@@ -42,6 +44,7 @@ class AuthClientServiceLocator {
         identitySigner: identitySigner,
       ),
       loginService: login(username: username, config: config, identitySigner: identitySigner),
+      logoutService: logout(username: username, config: config),
       createRecoveryCredentialsService: createRecoveryCredentials(
         username: username,
         config: config,
@@ -82,6 +85,19 @@ class AuthClientServiceLocator {
       username: username,
       identitySigner: identitySigner,
       dataSource: LoginDataSource(
+        networkClient: IONIdentityServiceLocator.networkClient(config: config),
+      ),
+      tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+    );
+  }
+
+  LogoutService logout({
+    required String username,
+    required IONIdentityConfig config,
+  }) {
+    return LogoutService(
+      username: username,
+      dataSource: LogoutDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
       ),
       tokenStorage: IONIdentityServiceLocator.tokenStorage(),

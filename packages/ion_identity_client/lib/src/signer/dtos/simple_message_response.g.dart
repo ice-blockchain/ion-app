@@ -6,14 +6,14 @@ part of 'simple_message_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SimpleMessageResponse _$SimpleMessageResponseFromJson(
+_$SimpleMessageResponseImpl _$$SimpleMessageResponseImplFromJson(
         Map<String, dynamic> json) =>
-    SimpleMessageResponse(
-      json['message'] as String,
+    _$SimpleMessageResponseImpl(
+      message: json['message'] as String,
     );
 
-Map<String, dynamic> _$SimpleMessageResponseToJson(
-        SimpleMessageResponse instance) =>
+Map<String, dynamic> _$$SimpleMessageResponseImplToJson(
+        _$SimpleMessageResponseImpl instance) =>
     <String, dynamic>{
       'message': instance.message,
     };
