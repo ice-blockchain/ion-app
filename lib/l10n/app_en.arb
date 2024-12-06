@@ -515,7 +515,7 @@
   "camera": "Camera",
   "visibility_settings_title_video": "Who can view this video",
   "visibility_settings_title_story": "Who can view this story",
-  "visibility_settings_everyone": "Everyone can reply",
+  "visibility_settings_everyone": "Everyone",
   "visibility_settings_followed_accounts": "Accounts you follow",
   "visibility_settings_verified_accounts": "Verified accounts",
   "visibility_settings_mentioned_accounts": "Only accounts you mention",
