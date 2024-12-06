@@ -70,6 +70,7 @@ class NostrNotifier extends _$NostrNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
+    //TODO: handle NOTICE
     final relay = await _getRelay(actionSource);
     yield* nd.requestEvents(requestMessage, relay);
   }
