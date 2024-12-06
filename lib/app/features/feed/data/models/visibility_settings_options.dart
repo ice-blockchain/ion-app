@@ -11,9 +11,11 @@ enum VisibilitySettingsOptions {
   mentionedAccounts,
   ;
 
-  String getTitle(BuildContext context) {
+  String getTitle(BuildContext context, {bool isForStory = false}) {
     return switch (this) {
-      VisibilitySettingsOptions.everyone => context.i18n.visibility_settings_everyone,
+      VisibilitySettingsOptions.everyone => isForStory
+          ? context.i18n.visibility_settings_story_everyone
+          : context.i18n.visibility_settings_everyone,
       VisibilitySettingsOptions.followedAccounts =>
         context.i18n.visibility_settings_followed_accounts,
       VisibilitySettingsOptions.verifiedAccounts =>

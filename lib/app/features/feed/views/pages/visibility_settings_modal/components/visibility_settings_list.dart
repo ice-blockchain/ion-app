@@ -9,8 +9,11 @@ import 'package:ion/app/features/feed/views/pages/visibility_settings_modal/comp
 
 class VisibilitySettingsList extends ConsumerWidget {
   const VisibilitySettingsList({
+    required this.isForStory,
     super.key,
   });
+
+  final bool isForStory; 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,6 +29,7 @@ class VisibilitySettingsList extends ConsumerWidget {
 
         return VisibilitySettingsListItem(
           option: option,
+          isForStory: isForStory,
         );
       },
     );

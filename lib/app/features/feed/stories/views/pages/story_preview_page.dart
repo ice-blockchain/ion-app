@@ -84,6 +84,7 @@ class StoryPreviewPage extends ConsumerWidget {
                       context: context,
                       child: VisibilitySettingsModal(
                         title: context.i18n.visibility_settings_title_story,
+                        isForStory: true,
                       ),
                     );
                   },
