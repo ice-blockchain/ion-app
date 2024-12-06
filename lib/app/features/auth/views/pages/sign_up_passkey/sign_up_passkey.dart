@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/components/sign_up_list_item/sign_up_list_item.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey_form.dart';
+import 'package:ion/app/router/app_routes.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -47,6 +47,15 @@ class SignUpPasskeyPage extends StatelessWidget {
                   SizedBox(height: 57.0.s),
                   const SignUpPasskeyForm(),
                   ScreenBottomOffset(),
+                  Button(
+                    type: ButtonType.outlined,
+                    onPressed: () {
+                      SignUpPasswordRoute().push<void>(context);
+                    },
+                    label: Text(context.i18n.sign_up_password_title),
+                    mainAxisSize: MainAxisSize.max,
+                    borderColor: Colors.transparent,
+                  ),
                 ],
               ),
             ),

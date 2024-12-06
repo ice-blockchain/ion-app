@@ -32,6 +32,7 @@ class TextInput extends HookWidget {
     this.maxLength,
     this.isLive = false,
     this.alwaysShowPrefixIcon = false,
+    this.obscureText = false,
     EdgeInsets? scrollPadding,
     EdgeInsetsGeometry? contentPadding,
   })  : scrollPadding = scrollPadding ?? EdgeInsets.all(20.0.s),
@@ -68,6 +69,7 @@ class TextInput extends HookWidget {
   final bool alwaysShowPrefixIcon;
   final int? maxLength;
   final bool isLive;
+  final bool obscureText;
 
   @override
   Widget build(BuildContext context) {
@@ -123,6 +125,7 @@ class TextInput extends HookWidget {
       cursorErrorColor: context.theme.appColors.primaryAccent,
       cursorColor: context.theme.appColors.primaryAccent,
       maxLength: maxLength,
+      obscureText: obscureText,
       validator: validate,
       decoration: TextInputDecoration(
         context: context,
