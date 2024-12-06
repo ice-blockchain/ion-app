@@ -22,6 +22,7 @@ class InterestSetEntity with _$InterestSetEntity, NostrEntity implements Cacheab
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required InterestSetData data,
   }) = _InterestSetEntity;
@@ -38,6 +39,7 @@ class InterestSetEntity with _$InterestSetEntity, NostrEntity implements Cacheab
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: InterestSetData.fromEventMessage(eventMessage),
     );
@@ -75,9 +77,15 @@ class InterestSetData with _$InterestSetData implements EventSerializable {
   }
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: InterestSetEntity.kind,
       tags: [
         ...tags,

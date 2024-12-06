@@ -21,6 +21,7 @@ class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements Cache
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required UserMetadata data,
   }) = _UserMetadataEntity;
@@ -37,6 +38,7 @@ class UserMetadataEntity with _$UserMetadataEntity, NostrEntity implements Cache
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: UserMetadata.fromEventMessage(eventMessage),
     );
@@ -93,9 +95,14 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
   }
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: UserMetadataEntity.kind,
       content: jsonEncode(
         UserDataEventMessageContent(

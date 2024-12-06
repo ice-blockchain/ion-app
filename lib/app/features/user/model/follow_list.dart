@@ -18,6 +18,7 @@ class FollowListEntity with _$FollowListEntity, NostrEntity implements Cacheable
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required FollowListData data,
   }) = _FollowListEntity;
@@ -34,6 +35,7 @@ class FollowListEntity with _$FollowListEntity, NostrEntity implements Cacheable
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: FollowListData.fromEventMessage(eventMessage),
     );
@@ -67,9 +69,15 @@ class FollowListData with _$FollowListData implements EventSerializable {
   const FollowListData._();
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: FollowListEntity.kind,
       tags: [
         ...tags,

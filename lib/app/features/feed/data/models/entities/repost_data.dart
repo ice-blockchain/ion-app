@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -18,6 +19,7 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required RepostData data,
   }) = _RepostEntity;
@@ -34,6 +36,7 @@ class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: RepostData.fromEventMessage(eventMessage),
     );
@@ -52,6 +55,7 @@ class RepostData with _$RepostData implements EventSerializable {
   const factory RepostData({
     required String eventId,
     required String pubkey,
+    required EventMessage? repostedEvent,
   }) = _RepostData;
 
   const RepostData._();
@@ -78,15 +82,22 @@ class RepostData with _$RepostData implements EventSerializable {
     return RepostData(
       eventId: eventId,
       pubkey: pubkey,
+      repostedEvent: null,
     );
   }
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: RepostEntity.kind,
-      content: '',
+      content: repostedEvent != null ? jsonEncode(repostedEvent!.toJson().last) : '',
       tags: [
         ...tags,
         ['p', pubkey],

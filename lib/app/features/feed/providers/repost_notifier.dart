@@ -25,12 +25,21 @@ class RepostNotifier extends _$RepostNotifier {
 
     state = await AsyncValue.guard(() async {
       final entity = ref.read(nostrEntityProvider(eventReference: eventReference)).valueOrNull;
+
+      if (entity == null) {
+        throw EntityNotFoundException(eventReference.eventId);
+      }
+
       final data = switch (entity) {
-        _ when entity is PostEntity =>
-          RepostData(eventId: eventReference.eventId, pubkey: eventReference.pubkey),
+        _ when entity is PostEntity => RepostData(
+            eventId: eventReference.eventId,
+            pubkey: eventReference.pubkey,
+            repostedEvent: await entity.toEventMessage(entity.data),
+          ),
         _ when entity is ArticleEntity => GenericRepostData(
             eventId: eventReference.eventId,
             pubkey: eventReference.pubkey,
+            repostedEvent: await entity.toEventMessage(entity.data),
             kind: ArticleEntity.kind,
           ),
         _ => throw UnsupportedRepostException(eventId: eventReference.eventId),

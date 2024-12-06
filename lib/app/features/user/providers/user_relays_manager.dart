@@ -96,6 +96,7 @@ class UserRelaysManager extends _$UserRelaysManager {
         if (details != null && details.ionConnectRelays != null)
           UserRelaysEntity(
             id: '',
+            signature: '',
             masterPubkey: details.masterPubKey,
             pubkey: details.masterPubKey,
             createdAt: DateTime.now(),

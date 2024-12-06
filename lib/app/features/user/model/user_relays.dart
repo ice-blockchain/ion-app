@@ -18,6 +18,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required UserRelaysData data,
   }) = _UserRelaysEntity;
@@ -34,6 +35,7 @@ class UserRelaysEntity with _$UserRelaysEntity, NostrEntity implements Cacheable
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: UserRelaysData.fromEventMessage(eventMessage),
     );
@@ -67,9 +69,15 @@ class UserRelaysData with _$UserRelaysData implements EventSerializable {
   }
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: UserRelaysEntity.kind,
       tags: [
         ...tags,

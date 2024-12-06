@@ -18,6 +18,7 @@ class FileMetadataEntity with _$FileMetadataEntity, NostrEntity implements Cache
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required FileMetadata data,
   }) = _FileMetadataEntity;
@@ -34,6 +35,7 @@ class FileMetadataEntity with _$FileMetadataEntity, NostrEntity implements Cache
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: FileMetadata.fromEventMessage(eventMessage),
     );
@@ -164,9 +166,15 @@ class FileMetadata with _$FileMetadata implements EventSerializable {
   const FileMetadata._();
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: FileMetadataEntity.kind,
       tags: [
         ...tags,

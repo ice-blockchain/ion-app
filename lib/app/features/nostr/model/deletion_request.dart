@@ -18,9 +18,15 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
 
   /// https://github.com/nostr-protocol/nips/blob/master/09.md
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: kind,
       content: '',
       tags: [

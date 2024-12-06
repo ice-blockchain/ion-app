@@ -26,6 +26,7 @@ class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required PostData data,
   }) = _PostEntity;
@@ -42,6 +43,7 @@ class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: PostData.fromEventMessage(eventMessage),
     );
@@ -113,9 +115,15 @@ class PostData with _$PostData implements EventSerializable {
       }).toList();
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: PostEntity.kind,
       content: content.map((match) => match.text).join(),
       tags: [

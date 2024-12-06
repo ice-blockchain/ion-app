@@ -19,6 +19,7 @@ class ReactionEntity with _$ReactionEntity, NostrEntity implements CacheableEnti
     required String id,
     required String pubkey,
     required String masterPubkey,
+    required String signature,
     required DateTime createdAt,
     required ReactionData data,
   }) = _ReactionEntity;
@@ -35,6 +36,7 @@ class ReactionEntity with _$ReactionEntity, NostrEntity implements CacheableEnti
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: ReactionData.fromEventMessage(eventMessage),
     );
@@ -83,9 +85,15 @@ class ReactionData with _$ReactionData implements EventSerializable {
   }
 
   @override
-  FutureOr<EventMessage> toEventMessage(EventSigner signer, {List<List<String>> tags = const []}) {
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) {
     return EventMessage.fromData(
       signer: signer,
+      createdAt: createdAt,
       kind: ReactionEntity.kind,
       content: content,
       tags: [
