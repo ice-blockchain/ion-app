@@ -84,6 +84,8 @@ EntitiesDataSource _buildPostsDataSource({
           RepostsCountSearchExtension(),
           QuotesCountSearchExtension(),
           ReactionsCountSearchExtension(),
+          ReferencesSearchExtension(references: false),
+          ExpirationSearchExtension(expiration: false),
         ].join(' '),
         authors: authors,
         limit: 10,
