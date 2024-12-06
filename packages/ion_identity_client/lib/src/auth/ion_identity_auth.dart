@@ -47,6 +47,8 @@ class IONIdentityAuth {
 
   Future<void> loginUser() => loginService.loginUser();
 
+  Future<void> logOut() => loginService.logOut();
+
   Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials() =>
       createRecoveryCredentialsService.createRecoveryCredentials();
 
@@ -69,11 +71,6 @@ class IONIdentityAuth {
         credentialId: credentialId,
         recoveryKey: recoveryKey,
       );
-
-  Future<void> logOut() async {
-    // TODO: implement logout request
-    return tokenStorage.removeToken(username: username);
-  }
 
   Future<UserToken> delegatedLogin() async =>
       delegatedLoginService.delegatedLogin(username: username);

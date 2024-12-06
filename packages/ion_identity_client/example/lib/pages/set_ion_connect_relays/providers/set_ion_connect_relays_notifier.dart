@@ -28,7 +28,6 @@ class SetIONConnectRelaysNotifier extends _$SetIONConnectRelaysNotifier {
 
       final ionIdentity = await ref.watch(ionIdentityProvider.future);
       return await ionIdentity(username: currentUser).users.setIONConnectRelays(
-            userId: userId,
             followeeList: followeeList,
           );
     });

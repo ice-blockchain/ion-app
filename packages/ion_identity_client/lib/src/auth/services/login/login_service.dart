@@ -18,6 +18,15 @@ class LoginService {
   final LoginDataSource dataSource;
   final TokenStorage tokenStorage;
 
+  Future<void> logOut() async {
+    final token = tokenStorage.getToken(username: username);
+    if (token == null) {
+      throw const UnauthenticatedException();
+    }
+    await dataSource.logout(username: username, token: token.token);
+    return tokenStorage.removeToken(username: username);
+  }
+
   /// Logs in an existing user using the provided username, handling the necessary
   /// API interactions and storing the authentication token securely.
   ///
