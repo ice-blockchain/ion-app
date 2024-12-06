@@ -9,11 +9,11 @@ import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 
-Future<UserStories> generateFakeUserStories(String pubkey) async {
+UserStories generateFakeUserStories(String pubkey) {
   final stories = <PostEntity>[];
 
-  final futures = List.generate(3, (_) => generateFakePostWithMedia(pubkey));
-  stories.addAll(await Future.wait(futures));
+  final posts = List.generate(3, (_) => generateFakePostWithMedia(pubkey));
+  stories.addAll(posts);
 
   return UserStories(
     pubkey: pubkey,
@@ -21,7 +21,7 @@ Future<UserStories> generateFakeUserStories(String pubkey) async {
   );
 }
 
-Future<PostEntity> generateFakePostWithMedia(String pubkey) async {
+PostEntity generateFakePostWithMedia(String pubkey) {
   final random = Random.secure();
 
   final isVideo = random.nextBool();
