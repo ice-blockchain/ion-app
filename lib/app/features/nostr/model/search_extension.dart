@@ -7,6 +7,28 @@ abstract class SearchExtension {
   String toString() => query;
 }
 
+class SearchExtensions {
+  SearchExtensions(this.extensions);
+
+  factory SearchExtensions.withCounters(
+    List<SearchExtension> extensions, {
+    bool root = true,
+  }) {
+    return SearchExtensions([
+      if (root) RootRepliesCountSearchExtension() else RepliesCountSearchExtension(),
+      RepostsCountSearchExtension(),
+      QuotesCountSearchExtension(),
+      ReactionsCountSearchExtension(),
+      ...extensions,
+    ]);
+  }
+
+  final List<SearchExtension> extensions;
+
+  @override
+  String toString() => extensions.join(' ');
+}
+
 class DiscoveryCreatorsSearchExtension extends SearchExtension {
   @override
   final String query = 'discover content creators to follow';

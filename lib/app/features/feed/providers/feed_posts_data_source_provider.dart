@@ -79,14 +79,10 @@ EntitiesDataSource _buildPostsDataSource({
     requestFilters: [
       RequestFilter(
         kinds: const [PostEntity.kind, RepostEntity.kind],
-        search: [
-          RootRepliesCountSearchExtension(),
-          RepostsCountSearchExtension(),
-          QuotesCountSearchExtension(),
-          ReactionsCountSearchExtension(),
+        search: SearchExtensions.withCounters([
           ReferencesSearchExtension(references: false),
           ExpirationSearchExtension(expiration: false),
-        ].join(' '),
+        ]).toString(),
         authors: authors,
         limit: 10,
       ),
