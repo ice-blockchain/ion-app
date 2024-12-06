@@ -31,9 +31,7 @@ class ManageCoinsPage extends HookConsumerWidget {
 
     useOnInit(
       () {
-        final notifier =
-            filteredCoinsNotifierProvider(searchText: searchText.value)
-                .notifier;
+        final notifier = filteredCoinsNotifierProvider(searchText: searchText.value).notifier;
         ref.read(notifier).filter(searchText: searchText.value);
       },
       [searchText.value],
@@ -73,8 +71,7 @@ class ManageCoinsPage extends HookConsumerWidget {
                         itemBuilder: (BuildContext context, int index) {
                           return ScreenSideOffset.small(
                             child: ManageCoinItem(
-                              coinId:
-                                  filteredCoins[index].coinData.abbreviation,
+                              coinId: filteredCoins[index].coinData.abbreviation,
                             ),
                           );
                         },
@@ -84,8 +81,7 @@ class ManageCoinsPage extends HookConsumerWidget {
                   loading: () => ListItemsLoadingState(
                     itemsCount: 7,
                     separatorHeight: 12.0.s,
-                    listItemsLoadingStateType:
-                        ListItemsLoadingStateType.scrollView,
+                    listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
                   ),
                   orElse: () => const EmptyState(),
                 ),
