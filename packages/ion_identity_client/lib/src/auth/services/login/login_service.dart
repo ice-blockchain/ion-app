@@ -17,7 +17,7 @@ class LoginService {
   final IdentitySigner identitySigner;
   final LoginDataSource dataSource;
   final TokenStorage tokenStorage;
-
+  
   /// Logs in an existing user using the provided username, handling the necessary
   /// API interactions and storing the authentication token securely.
   ///

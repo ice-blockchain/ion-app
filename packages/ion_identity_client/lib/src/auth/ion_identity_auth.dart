@@ -4,6 +4,7 @@ import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/create_recovery_credentials/create_recovery_credentials_service.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
 import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
+import 'package:ion_identity_client/src/auth/services/logout/logout_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/register/register_service.dart';
 import 'package:ion_identity_client/src/auth/services/twofa/twofa_service.dart';
@@ -23,6 +24,7 @@ class IONIdentityAuth {
     required this.username,
     required this.registerService,
     required this.loginService,
+    required this.logoutService,
     required this.tokenStorage,
     required this.createRecoveryCredentialsService,
     required this.recoverUserService,
@@ -32,6 +34,7 @@ class IONIdentityAuth {
 
   final RegisterService registerService;
   final LoginService loginService;
+  final LogoutService logoutService;
   final CreateRecoveryCredentialsService createRecoveryCredentialsService;
   final RecoverUserService recoverUserService;
   final DelegatedLoginService delegatedLoginService;
@@ -46,6 +49,8 @@ class IONIdentityAuth {
       registerService.registerWithPassword(password);
 
   Future<void> loginUser() => loginService.loginUser();
+
+  Future<void> logOut() => logoutService.logOut();
 
   Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials() =>
       createRecoveryCredentialsService.createRecoveryCredentials();
@@ -69,11 +74,6 @@ class IONIdentityAuth {
         credentialId: credentialId,
         recoveryKey: recoveryKey,
       );
-
-  Future<void> logOut() async {
-    // TODO: implement logout request
-    return tokenStorage.removeToken(username: username);
-  }
 
   Future<UserToken> delegatedLogin() async =>
       delegatedLoginService.delegatedLogin(username: username);

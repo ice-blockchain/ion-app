@@ -7,6 +7,7 @@ export 'fido_2_assertion_data.dart';
 export 'public_key_credential_descriptor.dart';
 export 'public_key_credential_parameters.dart';
 export 'relying_party.dart';
+export 'simple_message_response.dart';
 export 'supported_credential_kinds.dart';
 export 'supported_credential_kinds_2.dart';
 export 'user_action_challenge.dart';
