@@ -15,7 +15,7 @@ class SearchExtensions {
     bool root = true,
   }) {
     return SearchExtensions([
-      if (root) RootRepliesCountSearchExtension() else RepliesCountSearchExtension(),
+      if (root) RepliesCountSearchExtension(root: root),
       RepostsCountSearchExtension(),
       QuotesCountSearchExtension(),
       ReactionsCountSearchExtension(),
@@ -36,14 +36,12 @@ class DiscoveryCreatorsSearchExtension extends SearchExtension {
 
 /// For every kind 1 that the subscription finds also include the count of replies that it has
 class RepliesCountSearchExtension extends SearchExtension {
-  @override
-  final String query = 'include:dependencies:kind1>kind6400+kind1+group+reply';
-}
+  RepliesCountSearchExtension({this.root = true});
 
-/// For every kind 1 that the subscription finds also include the count of root replies that it has
-class RootRepliesCountSearchExtension extends SearchExtension {
+  final bool root;
+
   @override
-  final String query = 'include:dependencies:kind1>kind6400+kind1+group+root';
+  String get query => 'include:dependencies:kind1>kind6400+kind1+group+${root ? 'root' : 'reply'}';
 }
 
 /// For every kind 1 that the subscription finds also include the count of reposts that it has
@@ -181,4 +179,50 @@ class TagMarkerSearchExtension extends SearchExtension {
 
   @override
   String get query => '${tagName}marker:$marker';
+}
+
+/// For every kind 1 that the subscription finds also include 1 root/not-root replay
+/// that the logged in user made to it — if any
+class ReplySampleSearchExtension extends SearchExtension {
+  ReplySampleSearchExtension({required this.pubkey, this.root = true});
+
+  final bool root;
+
+  final String pubkey;
+
+  @override
+  String get query => 'include:dependencies:kind1>$pubkey@kind1+e+${root ? 'root' : 'reply'}';
+}
+
+/// For every kind 1 that the subscription finds also include 1 reaction event
+/// that the logged in user made for it — if any
+class ReactionsSearchExtension extends SearchExtension {
+  ReactionsSearchExtension({required this.pubkey});
+
+  final String pubkey;
+
+  @override
+  String get query => 'include:dependencies:kind1>$pubkey@kind7';
+}
+
+/// For every kind 1 that the subscription finds also include 1 quote post
+/// that the logged in user made for it — if any
+class QuoteSampleSearchExtension extends SearchExtension {
+  QuoteSampleSearchExtension({required this.pubkey});
+
+  final String pubkey;
+
+  @override
+  String get query => 'kind1>$pubkey@kind1+q';
+}
+
+/// For every kind 1 that the subscription finds also include 1 repost
+/// that the logged in user made for it — if any
+class RepostSampleSearchExtension extends SearchExtension {
+  RepostSampleSearchExtension({required this.pubkey});
+
+  final String pubkey;
+
+  @override
+  String get query => 'kind1>$pubkey@kind6';
 }

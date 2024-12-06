@@ -35,10 +35,12 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
           FeedCategory.videos => _buildPostsDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
               authors: [currentPubkey!], //TODO: temp for debug
+              currentPubkey: currentPubkey,
             ),
           FeedCategory.feed => _buildPostsDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
               authors: filters.filter == FeedFilter.following ? entry.value : null,
+              currentPubkey: currentPubkey!,
             )
         },
     ];
@@ -72,6 +74,7 @@ EntitiesDataSource _buildArticlesDataSource({
 EntitiesDataSource _buildPostsDataSource({
   required ActionSource actionSource,
   required List<String>? authors,
+  required String currentPubkey,
 }) {
   return EntitiesDataSource(
     actionSource: actionSource,
@@ -82,6 +85,7 @@ EntitiesDataSource _buildPostsDataSource({
         search: SearchExtensions.withCounters([
           ReferencesSearchExtension(references: false),
           ExpirationSearchExtension(expiration: false),
+          ReactionsSearchExtension(pubkey: currentPubkey),
         ]).toString(),
         authors: authors,
         limit: 10,
