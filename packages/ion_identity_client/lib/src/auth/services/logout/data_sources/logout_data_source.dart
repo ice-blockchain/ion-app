@@ -12,7 +12,7 @@ class LogoutDataSource {
 
   static const logoutPath = '/auth/logout';
 
-  Future<SimpleMessageResponse> logout({
+  Future<SimpleMessageResponse> logOut({
     required String username,
     required String token,
   }) async {

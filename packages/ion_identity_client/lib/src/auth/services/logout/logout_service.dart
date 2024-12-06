@@ -20,7 +20,7 @@ class LogoutService {
     if (token == null) {
       throw const UnauthenticatedException();
     }
-    await dataSource.logout(username: username, token: token.token);
+    await dataSource.logOut(username: username, token: token.token);
     return tokenStorage.removeToken(username: username);
   }
 }
