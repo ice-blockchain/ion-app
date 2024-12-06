@@ -58,11 +58,8 @@ class SendNftForm extends ConsumerWidget {
                       NftPicture(imageUrl: selectedNft.iconUrl),
                       SizedBox(height: 16.0.s),
                       NftName(
-                        name: selectedNft.collectionName,
                         rank: selectedNft.rank,
-                        price: selectedNft.price,
-                        networkSymbol: selectedNft.currency,
-                        networkSymbolIcon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
+                        name: selectedNft.collectionName,
                       ),
                       SizedBox(height: 16.0.s),
                       ContactInputSwitcher(

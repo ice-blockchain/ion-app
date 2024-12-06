@@ -54,6 +54,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                         formData.wallet.icon,
                         width: ScreenSideOffset.defaultSmallMargin,
                         height: ScreenSideOffset.defaultSmallMargin,
+                        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                       ),
                       secondary: Align(
                         alignment: Alignment.centerRight,
@@ -63,11 +64,6 @@ class SendNftConfirmPage extends ConsumerWidget {
                           style: context.theme.appTextThemes.caption3.copyWith(),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 12.0.s),
-                    ListItem.text(
-                      title: Text(context.i18n.send_nft_confirm_asset),
-                      value: selectedNft.asset,
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
@@ -100,8 +96,9 @@ class SendNftConfirmPage extends ConsumerWidget {
                         context.i18n.button_confirm,
                       ),
                       onPressed: () {
-                        CoinTransactionResultRoute(cryptoAssetType: CryptoAssetType.nft)
-                            .go(context);
+                        CoinTransactionResultRoute(
+                          cryptoAssetType: CryptoAssetType.nft,
+                        ).go(context);
                       },
                     ),
                   ],
