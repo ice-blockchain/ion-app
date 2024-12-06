@@ -824,14 +824,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.1"
-  flutter_screenshot_detect:
-    dependency: "direct main"
-    description:
-      name: flutter_screenshot_detect
-      sha256: "6c2f73e7848e7162b5599d4e47a6c08a858c11294313b18a02cb375f791c3482"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.7"
   flutter_screenutil:
     dependency: "direct main"
     description:
@@ -1174,6 +1166,13 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/ion_identity_client"
+      relative: true
+    source: path
+    version: "0.0.1"
+  ion_screenshot_detector:
+    dependency: "direct main"
+    description:
+      path: "packages/ion_screenshot_detector"
       relative: true
     source: path
     version: "0.0.1"
@@ -2433,5 +2432,5 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
-  dart: ">=3.5.2 <4.0.0"
+  dart: ">=3.5.1 <4.0.0"
   flutter: ">=3.24.2"

@@ -7,9 +7,11 @@ import 'package:ion/app/components/card/rounded_card.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/protect_account/backup/views/components/errors/screenshot_security_alert.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/recovery_key_option.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/create_recover_key_page/hooks/use_on_screenshot.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
@@ -22,7 +24,12 @@ class CreateRecoveryKeySuccessState extends HookWidget {
   Widget build(BuildContext context) {
     final locale = context.i18n;
 
-    useOnScreenshot(() => ScreenshotSecurityAlertRoute().push<void>(context));
+    useOnScreenshot(
+      () => showSimpleBottomSheet<void>(
+        context: context,
+        child: const ScreenshotSecurityAlert(),
+      ),
+    );
 
     return ScreenSideOffset.large(
       child: Column(
