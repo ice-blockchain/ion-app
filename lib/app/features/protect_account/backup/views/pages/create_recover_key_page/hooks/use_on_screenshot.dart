@@ -2,14 +2,13 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_screenshot_detect/flutter_screenshot_detect.dart';
+import 'package:ion_screenshot_detector/ion_screenshot_detector.dart';
 
 void useOnScreenshot(VoidCallback callback) {
   useEffect(
     () {
-      final detector = FlutterScreenshotDetect()
+      final detector = IonScreenshotDetector()
         ..startListening((_) {
-          print('SCREENSHOT DETECTED ++++++++++++++++++++++++++++++');
           callback();
         });
       return detector.dispose;
