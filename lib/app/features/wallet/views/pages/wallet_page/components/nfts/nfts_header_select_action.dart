@@ -18,22 +18,27 @@ class NftHeaderSelectAction extends ConsumerWidget {
     super.key,
   });
 
+  String joinSelectedNetworks(
+    List<ManageNftNetworkData>? selectedNftNetworks,
+    BuildContext context,
+  ) {
+    if (selectedNftNetworks == null) {
+      return '';
+    }
+
+    return selectedNftNetworks.any(
+      (ManageNftNetworkData network) => network.networkType == NetworkType.all,
+    )
+        ? context.i18n.core_all
+        : selectedNftNetworks
+            .map((e) => e.networkType.name.toUpperCase())
+            .join(', ');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedNftNetworks = ref.watch(selectedNftsNetworksProvider).value;
     final color = context.theme.appColors.secondaryText;
-
-    String joinSelectedNetworks() {
-      if (selectedNftNetworks == null) {
-        return '';
-      }
-
-      return selectedNftNetworks.any(
-        (ManageNftNetworkData network) => network.networkType == NetworkType.all,
-      )
-          ? context.i18n.core_all
-          : selectedNftNetworks.map((e) => e.networkType.name.toUpperCase()).join(', ');
-    }
 
     return TextButton(
       onPressed: () {
@@ -45,8 +50,9 @@ class NftHeaderSelectAction extends ConsumerWidget {
           children: [
             Flexible(
               child: Text(
-                '${context.i18n.core_chain}: ${joinSelectedNetworks()}',
-                style: context.theme.appTextThemes.caption.copyWith(color: color),
+                '${context.i18n.core_chain}: ${joinSelectedNetworks(selectedNftNetworks, context)}',
+                style:
+                    context.theme.appTextThemes.caption.copyWith(color: color),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
