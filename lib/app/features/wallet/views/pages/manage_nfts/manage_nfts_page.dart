@@ -32,7 +32,6 @@ class ManageNftsPage extends HookConsumerWidget {
     useOnInit(
       () {
         final notifier = filteredNftsNetworkNotifierProvider(searchText: searchText.value).notifier;
-
         ref.read(notifier).filter(searchText: searchText.value);
       },
       [searchText.value],
