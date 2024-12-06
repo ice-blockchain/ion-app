@@ -55,7 +55,6 @@ class RepostData with _$RepostData implements EventSerializable {
   const factory RepostData({
     required String eventId,
     required String pubkey,
-    required String relayUrl,
     required EventMessage? repostedEvent,
   }) = _RepostData;
 
@@ -64,28 +63,25 @@ class RepostData with _$RepostData implements EventSerializable {
   factory RepostData.fromEventMessage(EventMessage eventMessage) {
     String? eventId;
     String? pubkey;
-    String? relayUrl;
 
     for (final tag in eventMessage.tags) {
       if (tag.isNotEmpty) {
         switch (tag[0]) {
           case 'e':
             eventId = tag[1];
-            relayUrl = tag[2];
           case 'p':
             pubkey = tag[1];
         }
       }
     }
 
-    if (eventId == null || pubkey == null || relayUrl == null) {
+    if (eventId == null || pubkey == null) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 
     return RepostData(
       eventId: eventId,
       pubkey: pubkey,
-      relayUrl: relayUrl,
       repostedEvent: null,
     );
   }
@@ -105,7 +101,7 @@ class RepostData with _$RepostData implements EventSerializable {
       tags: [
         ...tags,
         ['p', pubkey],
-        ['e', eventId, relayUrl],
+        ['e', eventId],
       ],
     );
   }

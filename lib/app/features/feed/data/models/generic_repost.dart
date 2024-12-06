@@ -55,7 +55,6 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
   const factory GenericRepostData({
     required String eventId,
     required String pubkey,
-    required String relayUrl,
     required EventMessage? repostedEvent,
     required int kind,
   }) = _GenericRepostData;
@@ -65,7 +64,6 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
   factory GenericRepostData.fromEventMessage(EventMessage eventMessage) {
     String? eventId;
     String? pubkey;
-    String? relayUrl;
     int? kind;
 
     for (final tag in eventMessage.tags) {
@@ -73,7 +71,6 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
         switch (tag[0]) {
           case 'e':
             eventId = tag[1];
-            relayUrl = tag[2];
           case 'p':
             pubkey = tag[1];
           case 'k':
@@ -82,14 +79,13 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
       }
     }
 
-    if (eventId == null || pubkey == null || kind == null || relayUrl == null) {
+    if (eventId == null || pubkey == null || kind == null) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 
     return GenericRepostData(
       eventId: eventId,
       pubkey: pubkey,
-      relayUrl: relayUrl,
       kind: kind,
       repostedEvent: null,
     );
@@ -110,7 +106,7 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
       tags: [
         ...tags,
         ['p', pubkey],
-        ['e', eventId, relayUrl],
+        ['e', eventId],
         ['k', kind.toString()],
       ],
     );

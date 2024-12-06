@@ -17,7 +17,7 @@ abstract mixin class NostrEntity {
   FutureOr<EventMessage> toEventMessage(EventSerializable data) {
     return data.toEventMessage(
       createdAt: createdAt,
-      _SimpleSigner(pubkey, signature),
+      SimpleSigner(pubkey, signature),
       tags: [
         ['b', masterPubkey],
       ],
@@ -33,8 +33,8 @@ abstract mixin class NostrEntity {
   int get hashCode => id.hashCode;
 }
 
-class _SimpleSigner implements EventSigner {
-  _SimpleSigner(this.publicKey, this.signature);
+class SimpleSigner implements EventSigner {
+  SimpleSigner(this.publicKey, this.signature);
 
   @override
   final String publicKey;
