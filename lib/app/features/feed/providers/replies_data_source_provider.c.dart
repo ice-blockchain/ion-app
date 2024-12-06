@@ -23,13 +23,13 @@ List<EntitiesDataSource>? repliesDataSource(
       requestFilters: [
         RequestFilter(
           kinds: const [PostEntity.kind],
-          e: [eventReference.eventId],
-          search: [
-            RepliesCountSearchExtension(),
-            RepostsCountSearchExtension(),
-            QuotesCountSearchExtension(),
-            ReactionsCountSearchExtension(),
-          ].join(' '),
+          e: [eventReference.eventId, '', 'reply'],
+          search: SearchExtensions.withCounters(
+            [
+              ExpirationSearchExtension(expiration: false),
+            ],
+            root: false,
+          ).toString(),
           limit: 10,
         ),
       ],
