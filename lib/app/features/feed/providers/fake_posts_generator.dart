@@ -56,9 +56,9 @@ const _fakeFeedMessages = [
 Future<PostEntity> generateFakePostWithVideo() async {
   final basePost = await generateFakePost();
 
-  final index = Random.secure().nextInt(_fakeVideos.length);
+  final index = Random.secure().nextInt(fakeVideos.length);
 
-  final videoUrl = _fakeVideos.elementAt(index);
+  final videoUrl = fakeVideos.elementAt(index);
   final thumbUrl = _fakeThumbnails.elementAt(index);
 
   final mockVideo = MediaAttachment(
@@ -82,7 +82,7 @@ Future<PostEntity> generateFakePostWithVideo() async {
   return basePost.copyWith(data: updatedData);
 }
 
-const _fakeVideos = [
+const fakeVideos = [
   'https://video.nostr.build/bc67beeea49b061306dcb80e8c3180b419c9fb05227eee285b13636967d2e2b6.mp4',
   'https://video.nostr.build/14c39a2bb10c7b9ec3689fdc3612de1f7ab247021c161851d7dc874e61d23bbb.mp4',
   'https://video.nostr.build/3b6bf05571aa4a82444f1f37d72cc1dd7232ae0e8a5718c07f3c22af9e1089f2.mp4',
