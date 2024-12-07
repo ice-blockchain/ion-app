@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
-import 'package:ion/app/services/media_service/media_compress_service.c.dart';
+import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -38,7 +38,7 @@ class BannerProcessorNotifier extends _$BannerProcessorNotifier {
     required CropImageUiSettings cropUiSettings,
   }) async {
     final mediaService = ref.read(mediaServiceProvider);
-    final compressService = ref.read(mediaCompressServiceProvider);
+    final compressService = ref.read(compressServiceProvider);
 
     try {
       state = const BannerProcessorState.initial();

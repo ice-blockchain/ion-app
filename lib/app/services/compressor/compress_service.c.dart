@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:io';
+import 'dart:typed_data';
+
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:cross_file/cross_file.dart';
+import 'package:es_compression/brotli.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,15 +24,16 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'media_compress_service.c.g.dart';
+part 'compress_service.c.g.dart';
 
 ///
-/// A service that handles media file compression.
-/// Provides methods to compress video and audio  and image files using FFmpeg,
-/// with configurable compression parameters
+/// A service that handles file compression.
+/// - Compresses video, audio and image files using FFmpeg with configurable compression parameters;
+/// - Compresses/decompresses any files with Brotli.
+///
 /// TODO: Support windows and web platforms
 ///
-class MediaCompressionService {
+class CompressionService {
   ///
   /// Compresses a video file to a new file with the same name in the application cache directory.
   /// If success, returns a new [XFile] with the compressed video.
@@ -179,7 +184,6 @@ class MediaCompressionService {
   }
 
   ///
-  ///
   /// Extracts a thumbnail from a video file.
   /// If success, returns a new [MediaFile] with the thumbnail.
   /// If fails, throws an exception.
@@ -215,6 +219,65 @@ class MediaCompressionService {
   }
 
   ///
+  /// Compresses a file using the Brotli algorithm.
+  ///
+  /// This method reads the input file, compresses its content using the Brotli codec,
+  /// and writes the compressed data to a new file with a `.br` extension.
+  ///
+  Future<File> compressWithBrotli(File inputFile) async {
+    try {
+      // The input buffer needs to be larger than 50% of the total file size
+      // for it to be compressed correctly. This is due to this issue:
+      // https://github.com/instantiations/es_compression/issues/53
+      // Once it is fixed, the current solution needs to be reconsidered.
+      const bufferPercentage = 0.6;
+      final fileSize = inputFile.lengthSync();
+
+      final brotliCompressor = BrotliCodec(
+        inputBufferLength: (fileSize * bufferPercentage).ceil(),
+      );
+      final inputData = await inputFile.readAsBytes();
+      final compressedData = brotliCompressor.encode(inputData);
+
+      // TODO: Some decompressors requires base64 converted output file
+      // Try to convert the output with base64.encode() if the backend requires it
+      return _saveBytesIntoFile(bytes: compressedData, extension: 'br');
+    } catch (error, stackTrace) {
+      Logger.log('Error during Brotli compression!', error: error, stackTrace: stackTrace);
+      throw Exception('Failed to compress file with Brotli.');
+    }
+  }
+
+  ///
+  /// Decompresses a Brotli-compressed file.
+  ///
+  /// This method takes a Brotli-compressed file as input, decodes its content,
+  /// and writes the decompressed data into a new file with the specified output extension.
+  ///
+  Future<File> decompressBrotli(File compressedFile, {String outputExtension = 'txt'}) async {
+    try {
+      final compressedData = await compressedFile.readAsBytes();
+      final decompressedData = brotli.decode(
+        Uint8List.fromList(compressedData),
+      );
+      return _saveBytesIntoFile(bytes: decompressedData, extension: outputExtension);
+    } catch (error, stackTrace) {
+      Logger.log('Error during Brotli decompression!', error: error, stackTrace: stackTrace);
+      throw Exception('Failed to decompress Brotli file.');
+    }
+  }
+
+  Future<File> _saveBytesIntoFile({
+    required List<int> bytes,
+    required String extension,
+  }) async {
+    final outputFilePath = await _generateOutputPath(extension: extension);
+    final outputFile = File(outputFilePath);
+    await outputFile.writeAsBytes(bytes);
+    return outputFile;
+  }
+
+  ///
   /// Generates a new output path for a compressed file.
   ///
   Future<String> _generateOutputPath({String extension = 'webp'}) async {
@@ -247,4 +310,4 @@ class MediaCompressionService {
 }
 
 @riverpod
-MediaCompressionService mediaCompressService(Ref ref) => MediaCompressionService();
+CompressionService compressService(Ref ref) => CompressionService();

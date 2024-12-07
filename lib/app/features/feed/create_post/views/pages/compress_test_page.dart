@@ -10,7 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/services/media_service/media_compress_service.c.dart';
+import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:video_player/video_player.dart';
 
@@ -67,7 +67,7 @@ class VideoCompressTab extends HookConsumerWidget {
 
       if (pickedFile != null) {
         thumbnail.value = await ref
-            .read(mediaCompressServiceProvider)
+            .read(compressServiceProvider)
             .getThumbnail(MediaFile(path: pickedFile.xFiles.first.path));
 
         await compressedVideoController.value?.dispose();
@@ -79,8 +79,7 @@ class VideoCompressTab extends HookConsumerWidget {
             '${(await pickedFile.xFiles.first.length() / 1024 / 1024).toStringAsFixed(2)} MB';
         isCompressing.value = true;
         final pickedXFile = pickedFile.xFiles.first;
-        final compressedFile =
-            await ref.read(mediaCompressServiceProvider).compressVideo(pickedXFile);
+        final compressedFile = await ref.read(compressServiceProvider).compressVideo(pickedXFile);
 
         // Here you would invoke the compression logic
         // For demo purposes, we are directly playing the selected video
@@ -153,7 +152,7 @@ class ImageCompressTab extends HookConsumerWidget {
         isCompressing.value = true;
 
         final pickedXFile = XFile(pickedFile.files.first.path!);
-        final compressedFile = await ref.read(mediaCompressServiceProvider).compressImage(
+        final compressedFile = await ref.read(compressServiceProvider).compressImage(
               MediaFile(path: pickedXFile.path),
               width: 1280,
               height: 720,

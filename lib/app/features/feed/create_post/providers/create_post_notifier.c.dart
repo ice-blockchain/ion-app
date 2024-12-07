@@ -16,7 +16,7 @@ import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
-import 'package:ion/app/services/media_service/media_compress_service.c.dart';
+import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_matcher.dart';
@@ -134,7 +134,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     }
 
     const maxDimension = 1024;
-    final compressedImage = await ref.read(mediaCompressServiceProvider).compressImage(
+    final compressedImage = await ref.read(compressServiceProvider).compressImage(
           MediaFile(path: file.path),
           // Do not pass the second dimension to keep the aspect ratio
           width: assetEntity.width > assetEntity.height ? maxDimension : null,
