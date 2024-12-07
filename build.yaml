@@ -5,7 +5,7 @@ targets:
         - packages/**
 
     builders:
-      freezed:
+      freezed:freezed:
         generate_for:
           include:
             # Core
@@ -66,7 +66,7 @@ targets:
             - '**/*.g.dart'
             - lib/generated/**
 
-      json_serializable:
+      json_serializable:json_serializable:
         generate_for:
           include:
             # Core
@@ -97,7 +97,7 @@ targets:
             - '**/*.g.dart'
             - lib/generated/**
 
-      riverpod_generator:
+      riverpod_generator:riverpod_generator:
         generate_for:
           include:
             # Feature providers
@@ -124,7 +124,7 @@ targets:
             - '**/*.g.dart'
             - lib/generated/**
 
-      go_router_builder:
+      go_router_builder:go_router_builder:
         generate_for:
           include:
             - lib/app/router/**.dart
