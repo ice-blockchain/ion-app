@@ -3,8 +3,148 @@ targets:
     sources:
       exclude:
         - lib/app/network/models/parameters/**
+        - packages/**
+
     dependencies:
       - :network_parameters
+
+    builders:
+      freezed:
+        generate_for:
+          include:
+            # Core models and types
+            - lib/app/core/model/*.dart
+            - lib/app/core/model/emoji/*.dart
+            - lib/app/core/permissions/data/models/*.dart
+
+            # Constants
+            - lib/app/constants/*.dart
+
+            # Providers with freezed state
+            - lib/app/core/providers/poll/*.dart
+            - lib/app/features/**/providers/*.dart
+            - lib/app/router/providers/*.dart
+            
+            # Services with freezed state
+            - lib/app/services/media_service/*.dart
+            
+            # Features data/models
+            - lib/app/features/auth/data/models/*.dart
+            - lib/app/features/chat/model/*.dart
+            - lib/app/features/core/model/*.dart
+            - lib/app/features/core/model/**/*.dart
+            - lib/app/features/core/permissions/data/models/*.dart
+            - lib/app/features/dapps/model/*.dart
+            - lib/app/features/feed/data/models/**/*.dart
+            - lib/app/features/feed/data/models/*.dart
+            - lib/app/features/feed/stories/data/models/*.dart
+            - lib/app/features/feed/**/data/models/**/*.dart
+            - lib/app/features/gallery/data/models/*.dart
+            - lib/app/features/nostr/model/*.dart
+            - lib/app/features/protect_account/**/data/models/*.dart
+            - lib/app/features/search/model/*.dart
+            - lib/app/features/stories/data/models/*.dart
+            - lib/app/features/user/model/*.dart
+            - lib/app/features/wallet/model/*.dart
+            - lib/app/features/wallets/model/*.dart
+            - lib/app/features/feed/content_notification/data/models/*.dart
+            - lib/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/*.dart
+            - lib/app/features/wallet/views/pages/coins_flow/coin_receive_modal/coin_receive_modal.dart
+            - lib/app/features/wallet/views/pages/manage_coins/model/manage_coin_data.dart
+            - lib/app/templates/template.dart
+
+          exclude:
+            - '**/*.g.dart'
+            - '**/*.freezed.dart'
+            - lib/generated/**
+      
+      json_serializable:
+        generate_for:
+          include:
+            # Core models
+            - lib/app/core/model/emoji/*.dart
+            - lib/app/core/types/*.dart
+
+            # Services
+            - lib/app/services/storage/*.dart
+            - lib/app/services/media_service/*.dart
+            - lib/app/services/ion_identity/*.dart
+            - lib/app/services/audio_wave_playback_service/*.dart
+
+            # Features models
+            - lib/app/features/**/model/*.dart
+            - lib/app/features/**/data/models/*.dart
+            - lib/app/features/core/model/emoji/*.dart
+
+            # Providers requiring serialization
+            - lib/app/features/**/providers/*.dart
+            - lib/app/core/providers/**/*.dart
+            - lib/app/nostr/providers/*.dart
+            
+            - lib/app/templates/template.dart
+
+          exclude:
+            - '**/*.freezed.dart'
+            - '**/*.g.dart'
+            - lib/generated/**
+
+      riverpod_generator:
+        generate_for:
+          include:
+            # Feature providers
+            - lib/app/features/**/providers/*.dart
+            - lib/app/features/auth/providers/*.dart
+            - lib/app/features/chat/providers/*.dart
+            - lib/app/features/chat/messages/providers/*.dart
+            - lib/app/features/chat/recent_chats/providers/*.dart
+            - lib/app/features/contacts/providers/*.dart
+            - lib/app/features/core/providers/**/*.dart
+            - lib/app/features/dapps/providers/*.dart
+            - lib/app/features/feed/**/providers/*.dart
+            - lib/app/features/feed/**/providers/**/*.dart
+            - lib/app/features/feed/providers/*.dart
+            - lib/app/features/feed/providers/**/*.dart
+            - lib/app/features/gallery/providers/*.dart
+            - lib/app/features/nostr/providers/*.dart
+            - lib/app/features/protect_account/**/providers/*.dart
+            - lib/app/features/protect_account/**/provider/*.dart
+            - lib/app/features/search/providers/*.dart
+            - lib/app/features/stories/providers/*.dart
+            - lib/app/features/user/providers/*.dart
+            - lib/app/features/wallet/providers/**/*.dart
+            - lib/app/features/wallets/providers/*.dart
+
+            # Core providers
+            - lib/app/core/providers/**/*.dart
+            - lib/app/core/permissions/providers/*.dart
+
+            # Service providers
+            - lib/app/services/**/providers/*.dart
+            - lib/app/services/**/*_provider.dart
+            - lib/app/services/audio_wave_playback_service/*.dart
+            - lib/app/services/ion_identity/*.dart
+            - lib/app/services/media_service/*.dart
+            - lib/app/services/storage/*.dart
+            
+            # Router providers
+            - lib/app/router/providers/*.dart
+
+          exclude:
+            - '**/*.freezed.dart'
+            - '**/*.g.dart'
+            - lib/generated/**
+            - '**/*.freezed.dart'
+            - '**/*.g.dart'
+
+      go_router_builder:
+        generate_for:
+          include:
+            - lib/app/router/*.dart
+          exclude:
+            - lib/app/router/components/**
+            - lib/app/router/utils/**
+            - lib/app/router/main_tabs/**
+
   network_parameters:
     sources:
       include:
@@ -17,4 +157,3 @@ targets:
       freezed:
         options:
           to_json: true
-          
