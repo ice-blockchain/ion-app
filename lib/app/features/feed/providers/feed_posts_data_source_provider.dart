@@ -11,6 +11,7 @@ import 'package:ion/app/features/feed/data/models/generic_repost.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
+import 'package:ion/app/features/nostr/model/search_extension.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,10 +35,12 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
           FeedCategory.videos => _buildPostsDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
               authors: [currentPubkey!], //TODO: temp for debug
+              currentPubkey: currentPubkey,
             ),
           FeedCategory.feed => _buildPostsDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
               authors: filters.filter == FeedFilter.following ? entry.value : null,
+              currentPubkey: currentPubkey!,
             )
         },
     ];
@@ -71,13 +74,22 @@ EntitiesDataSource _buildArticlesDataSource({
 EntitiesDataSource _buildPostsDataSource({
   required ActionSource actionSource,
   required List<String>? authors,
+  required String currentPubkey,
 }) {
   return EntitiesDataSource(
     actionSource: actionSource,
-    entityFilter: (entity) => entity is PostEntity || entity is RepostEntity,
+    entityFilter: (entity) =>
+        (entity is PostEntity && entity.data.parentEvent == null) || entity is RepostEntity,
     requestFilters: [
       RequestFilter(
         kinds: const [PostEntity.kind, RepostEntity.kind],
+        search: SearchExtensions.withCounters(
+          [
+            ReferencesSearchExtension(contain: false),
+            ExpirationSearchExtension(expiration: false),
+          ],
+          currentPubkey: currentPubkey,
+        ).toString(),
         authors: authors,
         limit: 10,
       ),

@@ -43,7 +43,7 @@ class RepliesCounterButton extends ConsumerWidget {
           color: context.theme.appColors.primaryAccent,
         ),
         activeTextColor: context.theme.appColors.primaryAccent,
-        value: repliesCount != null ? formatDoubleCompact(repliesCount) : '',
+        value: formatDoubleCompact(repliesCount),
         isActive: isReplied,
       ),
     );

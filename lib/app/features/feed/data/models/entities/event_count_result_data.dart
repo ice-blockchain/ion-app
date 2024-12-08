@@ -97,7 +97,7 @@ class EventCountResultData with _$EventCountResultData {
     for (final tag in eventMessage.tags) {
       if (tag[0] == 'request') {
         request = EventCountRequestEntity.fromEventMessage(
-          EventMessage.fromJson(jsonDecode(tag[1]) as List<dynamic>),
+          EventMessage.fromPayloadJson(jsonDecode(tag[1]) as Map<String, dynamic>),
         );
       }
       if (tag[0] == 'e') eventId = tag[1];
@@ -117,7 +117,8 @@ class EventCountResultData with _$EventCountResultData {
   }
 
   EventCountResultType getType() {
-    final EventCountRequestData(:filter, :params) = request.data;
+    final EventCountRequestData(:filters, :params) = request.data;
+    final filter = filters.first;
     if (params.group == RelatedEventMarker.reply.toShortString() ||
         params.group == RelatedEventMarker.root.toShortString()) {
       return EventCountResultType.replies;
@@ -135,7 +136,7 @@ class EventCountResultData with _$EventCountResultData {
   }
 
   String getKey(EventCountResultType type) {
-    final filter = request.data.filter;
+    final filter = request.data.filters.first;
     final key = switch (type) {
       EventCountResultType.quotes =>
         filter.q != null && filter.q!.isNotEmpty ? filter.q!.first : null,
