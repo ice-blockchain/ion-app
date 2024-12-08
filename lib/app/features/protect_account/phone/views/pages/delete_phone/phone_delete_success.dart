@@ -7,11 +7,7 @@ import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
-import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/router/app_routes.dart';
-import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -24,35 +20,22 @@ class PhoneDeleteSuccessPage extends ConsumerWidget {
 
     return SheetContent(
       body: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          NavigationAppBar.modal(
-            actions: [
-              NavigationCloseButton(
-                onPressed: Navigator.of(context, rootNavigator: true).pop,
-              ),
-            ],
+          SizedBox(
+            height: 45.0.s,
           ),
-          AuthHeader(
-            topOffset: 34.0.s,
-            title: locale.two_fa_option_phone,
-            titleStyle: context.theme.appTextThemes.headline2,
-            descriptionStyle: context.theme.appTextThemes.body2.copyWith(
-              color: context.theme.appColors.secondaryText,
-            ),
-            icon: AuthHeaderIcon(
-              icon: Assets.svg.icon2faAuthsetup.icon(size: 36.0.s),
-            ),
-          ),
-          const Spacer(),
           ScreenSideOffset.medium(
             child: InfoCard(
-              iconAsset: Assets.svg.actionWalletConfirmemail,
+              iconAsset: Assets.svg.icon2faEmailVerification,
               title: locale.common_congratulations,
-              description: locale.two_fa_delete_email_success,
+              description: locale.two_fa_delete_phone_success,
             ),
           ),
-          const Spacer(),
+          SizedBox(
+            height: 22.0.s,
+          ),
           ScreenSideOffset.large(
             child: Button(
               mainAxisSize: MainAxisSize.max,
@@ -60,7 +43,7 @@ class PhoneDeleteSuccessPage extends ConsumerWidget {
               onPressed: () => SecureAccountOptionsRoute().replace(context),
             ),
           ),
-          ScreenBottomOffset(margin: 36.0.s),
+          ScreenBottomOffset(margin: 16.0.s),
         ],
       ),
     );

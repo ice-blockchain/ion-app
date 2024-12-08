@@ -16,8 +16,8 @@ class PhoneSetupSuccessPage extends StatelessWidget {
     final locale = context.i18n;
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        const Spacer(),
         ScreenSideOffset.medium(
           child: InfoCard(
             iconAsset: Assets.svg.actionWalletConfirmphone,
@@ -25,7 +25,9 @@ class PhoneSetupSuccessPage extends StatelessWidget {
             description: locale.phone_success_description,
           ),
         ),
-        const Spacer(),
+        SizedBox(
+          height: 22.0.s,
+        ),
         ScreenSideOffset.large(
           child: Button(
             mainAxisSize: MainAxisSize.max,
