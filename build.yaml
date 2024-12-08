@@ -5,16 +5,59 @@ targets:
         - lib/app/network/models/parameters/**
     dependencies:
       - :network_parameters
+    builders:
+      freezed:freezed:
+        generate_for:
+          include:
+            - lib/**.c.dart
+          exclude:
+            - lib/generated/**
+            - lib/widgetbook/**
+            - lib/l10n/**
+            - lib/main.dart
+      json_serializable:json_serializable:
+        generate_for:
+          include:
+            - lib/**.c.dart
+          exclude:
+            - lib/generated/**
+            - lib/widgetbook/**
+            - lib/l10n/**
+            - lib/main.dart
+      riverpod_generator:riverpod_generator:
+        generate_for:
+          include:
+            - lib/**.c.dart
+          exclude:
+            - lib/generated/**
+            - lib/widgetbook/**
+            - lib/l10n/**
+            - lib/main.dart
+      go_router_builder:go_router_builder:
+        generate_for:
+          include:
+            - lib/**.c.dart
+          exclude:
+            - lib/generated/**
+            - lib/widgetbook/**
+            - lib/l10n/**
+            - lib/main.dart
+
   network_parameters:
     sources:
       include:
         - lib/app/network/models/parameters/**
     builders:
       json_serializable:
+        generate_for:
+          include:
+            - lib/app/network/models/parameters/**.c.dart
         options:
           create_to_json: true
           explicit_to_json: true
       freezed:
+        generate_for:
+          include:
+            - lib/app/network/models/parameters/**.c.dart
         options:
           to_json: true
-          
