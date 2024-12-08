@@ -82,11 +82,13 @@ EntitiesDataSource _buildPostsDataSource({
     requestFilters: [
       RequestFilter(
         kinds: const [PostEntity.kind, RepostEntity.kind],
-        search: SearchExtensions.withCounters([
-          ReferencesSearchExtension(references: false),
-          ExpirationSearchExtension(expiration: false),
-          ReactionsSearchExtension(pubkey: currentPubkey),
-        ]).toString(),
+        search: SearchExtensions.withCounters(
+          [
+            ReferencesSearchExtension(references: false),
+            ExpirationSearchExtension(expiration: false),
+          ],
+          pubkey: currentPubkey,
+        ).toString(),
         authors: authors,
         limit: 10,
       ),
