@@ -219,7 +219,7 @@ class QuoteSampleSearchExtension extends SearchExtension {
   final String currentPubkey;
 
   @override
-  String get query => 'kind1>$currentPubkey@kind1+q';
+  String get query => 'include:dependencies:kind1>$currentPubkey@kind1+q';
 }
 
 /// For every kind 1 that the subscription finds also include 1 repost
@@ -230,5 +230,16 @@ class RepostSampleSearchExtension extends SearchExtension {
   final String currentPubkey;
 
   @override
-  String get query => 'kind1>$currentPubkey@kind6';
+  String get query => 'include:dependencies:kind1>$currentPubkey@kind6';
+}
+
+class GenericIncludeSearchExtension extends SearchExtension {
+  GenericIncludeSearchExtension({required this.forKind, required this.includeKind});
+
+  final int forKind;
+
+  final int includeKind;
+
+  @override
+  String get query => 'include:dependencies:kind$forKind>kind$includeKind';
 }
