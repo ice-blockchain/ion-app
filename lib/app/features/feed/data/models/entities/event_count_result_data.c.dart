@@ -48,6 +48,7 @@ class EventCountResultEntity with _$EventCountResultEntity, NostrEntity implemen
       key: data.getKey(type),
       type: type,
       content: data.content,
+      requestEventId: data.request.id,
     );
 
     return EventCountResultEntity(
@@ -74,6 +75,7 @@ class EventCountResultSummary with _$EventCountResultSummary {
   const factory EventCountResultSummary({
     required dynamic content,
     required String key,
+    required String requestEventId,
     required EventCountResultType type,
   }) = _EventCountResultSummary;
 }
