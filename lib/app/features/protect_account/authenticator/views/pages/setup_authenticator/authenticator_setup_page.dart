@@ -31,73 +31,80 @@ class AuthenticatorSetupPage extends HookConsumerWidget {
     final codeController = useRef<TextEditingController?>(null);
 
     return SheetContent(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            primary: false,
-            flexibleSpace: NavigationAppBar.modal(
-              showBackButton: step != AuthenticatorSetupSteps.success,
-              actions: [
-                NavigationCloseButton(
-                  onPressed: Navigator.of(context, rootNavigator: true).pop,
-                ),
-              ],
-            ),
-            automaticallyImplyLeading: false,
-            toolbarHeight: NavigationAppBar.modalHeaderHeight,
-            pinned: true,
-          ),
-          SliverFillRemaining(
-            hasScrollBody: step == AuthenticatorSetupSteps.options,
-            child: Column(
-              children: [
-                AuthHeader(
-                  title: step.getPageTitle(context),
-                  description: step.getDescription(context),
-                  titleStyle: context.theme.appTextThemes.headline2,
-                  descriptionStyle: context.theme.appTextThemes.body2.copyWith(
-                    color: context.theme.appColors.secondaryText,
+      body: step == AuthenticatorSetupSteps.success
+          ? Padding(
+              padding: EdgeInsets.only(top: 45.0.s, bottom: 16.0.s),
+              child: const AuthenticatorSuccessPage(),
+            )
+          : CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  primary: false,
+                  flexibleSpace: NavigationAppBar.modal(
+                    showBackButton: step != AuthenticatorSetupSteps.success,
+                    actions: [
+                      NavigationCloseButton(
+                        onPressed: Navigator.of(context, rootNavigator: true).pop,
+                      ),
+                    ],
                   ),
-                  icon: AuthHeaderIcon(
-                    icon: step.headerImageAsset.icon(size: 36.0.s),
-                  ),
+                  automaticallyImplyLeading: false,
+                  toolbarHeight: NavigationAppBar.modalHeaderHeight,
+                  pinned: true,
                 ),
-                if (step != AuthenticatorSetupSteps.options) SizedBox(height: 32.0.s),
-                Expanded(
-                  child: switch (step) {
-                    AuthenticatorSetupSteps.options => AuthenticatorOptionsPage(onTap: (type) {}),
-                    AuthenticatorSetupSteps.instruction => const AuthenticatorInstructionsPage(),
-                    AuthenticatorSetupSteps.confirmation => AuthenticatorCodeConfirmPage(
-                        onFormInitialized: (controller, key) {
-                          codeController.value = controller;
-                          formKey.value = key;
+                SliverFillRemaining(
+                  hasScrollBody: step == AuthenticatorSetupSteps.options,
+                  child: Column(
+                    children: [
+                      AuthHeader(
+                        title: step.getPageTitle(context),
+                        description: step.getDescription(context),
+                        titleStyle: context.theme.appTextThemes.headline2,
+                        descriptionStyle: context.theme.appTextThemes.body2.copyWith(
+                          color: context.theme.appColors.secondaryText,
+                        ),
+                        icon: AuthHeaderIcon(
+                          icon: step.headerImageAsset.icon(size: 36.0.s),
+                        ),
+                      ),
+                      if (step != AuthenticatorSetupSteps.options) SizedBox(height: 32.0.s),
+                      Expanded(
+                        child: switch (step) {
+                          AuthenticatorSetupSteps.options =>
+                            AuthenticatorOptionsPage(onTap: (type) {}),
+                          AuthenticatorSetupSteps.instruction =>
+                            const AuthenticatorInstructionsPage(),
+                          AuthenticatorSetupSteps.confirmation => AuthenticatorCodeConfirmPage(
+                              onFormInitialized: (controller, key) {
+                                codeController.value = controller;
+                                formKey.value = key;
+                              },
+                            ),
+                          AuthenticatorSetupSteps.success => const AuthenticatorSuccessPage(),
                         },
                       ),
-                    AuthenticatorSetupSteps.success => const AuthenticatorSuccessPage(),
-                  },
-                ),
-                if (step == AuthenticatorSetupSteps.options) const HorizontalSeparator(),
-                SizedBox(height: step == AuthenticatorSetupSteps.options ? 12.0.s : 22.0.s),
-                ScreenSideOffset.large(
-                  child: Button(
-                    mainAxisSize: MainAxisSize.max,
-                    label: Text(step.getButtonText(context)),
-                    onPressed: () => step == AuthenticatorSetupSteps.confirmation
-                        ? _validateAndProceed(
-                            context,
-                            ref,
-                            formKey.value,
-                            codeController.value?.text ?? '',
-                          )
-                        : _navigateToNextStep(context),
+                      if (step == AuthenticatorSetupSteps.options) const HorizontalSeparator(),
+                      SizedBox(height: step == AuthenticatorSetupSteps.options ? 12.0.s : 22.0.s),
+                      ScreenSideOffset.large(
+                        child: Button(
+                          mainAxisSize: MainAxisSize.max,
+                          label: Text(step.getButtonText(context)),
+                          onPressed: () => step == AuthenticatorSetupSteps.confirmation
+                              ? _validateAndProceed(
+                                  context,
+                                  ref,
+                                  formKey.value,
+                                  codeController.value?.text ?? '',
+                                )
+                              : _navigateToNextStep(context),
+                        ),
+                      ),
+                      ScreenBottomOffset(margin: 36.0.s),
+                    ],
                   ),
                 ),
-                ScreenBottomOffset(margin: 36.0.s),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
