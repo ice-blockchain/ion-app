@@ -20,6 +20,21 @@ class VideosPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useEffect(
+      () {
+        return () {
+          SystemChrome.setSystemUIOverlayStyle(
+            const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.light,
+            ),
+          );
+        };
+      },
+      [],
+    );
+
     final dataSource = ref.watch(feedVideosDataSourceProvider(eventReference: eventReference));
 
     // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
