@@ -60,15 +60,16 @@ EntitiesDataSource _buildArticlesDataSource({
       ExpirationSearchExtension(expiration: false),
     ],
     currentPubkey: currentPubkey,
+    forKind: ArticleEntity.kind,
   ).toString();
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
-      if (entity is GenericRepostEntity &&
-          (authors == null || authors.contains(entity.masterPubkey))) {
-        return true;
+      if (authors != null && !authors.contains(entity.masterPubkey)) {
+        return false;
       }
-      return entity is ArticleEntity;
+
+      return entity is ArticleEntity || entity is GenericRepostEntity;
     },
     requestFilters: [
       RequestFilter(
@@ -95,7 +96,13 @@ EntitiesDataSource _buildVideosDataSource({
 }) {
   return EntitiesDataSource(
     actionSource: actionSource,
-    entityFilter: (entity) => entity is ArticleEntity || entity is GenericRepostEntity,
+    entityFilter: (entity) {
+      if (authors != null && !authors.contains(entity.masterPubkey)) {
+        return false;
+      }
+
+      return (entity is PostEntity && entity.data.parentEvent == null) || entity is RepostEntity;
+    },
     requestFilters: [
       RequestFilter(
         kinds: const [PostEntity.kind, RepostEntity.kind],
@@ -121,8 +128,13 @@ EntitiesDataSource _buildPostsDataSource({
 }) {
   return EntitiesDataSource(
     actionSource: actionSource,
-    entityFilter: (entity) =>
-        (entity is PostEntity && entity.data.parentEvent == null) || entity is RepostEntity,
+    entityFilter: (entity) {
+      if (authors != null && !authors.contains(entity.masterPubkey)) {
+        return false;
+      }
+
+      return (entity is PostEntity && entity.data.parentEvent == null) || entity is RepostEntity;
+    },
     requestFilters: [
       RequestFilter(
         kinds: const [PostEntity.kind, RepostEntity.kind],

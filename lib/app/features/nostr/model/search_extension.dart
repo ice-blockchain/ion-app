@@ -23,19 +23,23 @@ class SearchExtensions {
   factory SearchExtensions.withCounters(
     List<SearchExtension> extensions, {
     required String currentPubkey,
+    int forKind = PostEntity.kind,
     bool root = true,
   }) {
     // ignore: avoid_print
     print(currentPubkey);
     return SearchExtensions([
-      if (root) RepliesCountSearchExtension(root: root),
-      RepostsCountSearchExtension(),
-      QuotesCountSearchExtension(),
-      ReactionsCountSearchExtension(),
-      // ReplySampleSearchExtension(currentPubkey: currentPubkey),
-      // QuoteSampleSearchExtension(currentPubkey: currentPubkey),
-      // RepostSampleSearchExtension(currentPubkey: currentPubkey),
-      // ReactionsSearchExtension(currentPubkey: currentPubkey),
+      if (root) RepliesCountSearchExtension(root: root, forKind: forKind),
+      if (forKind == PostEntity.kind)
+        RepostsCountSearchExtension()
+      else
+        GenericRepostsCountSearchExtension(forKind: forKind),
+      QuotesCountSearchExtension(forKind: forKind),
+      ReactionsCountSearchExtension(forKind: forKind),
+      // ReplySampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
+      // QuoteSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
+      // RepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
+      // ReactionsSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ...extensions,
     ]);
   }
