@@ -5,24 +5,10 @@ targets:
         generate_for:
           include:
             - lib/**.c.dart
-          exclude:
-            - "**.g.dart"
-            - "**.freezed.dart"
-            - lib/src/**/*.g.dart
-            - lib/src/**/*.freezed.dart
-
       json_serializable:json_serializable:
         generate_for:
           include:
             - lib/**.c.dart
-          exclude:
-            - "**.freezed.dart"
-            - "**.g.dart"
-            - lib/src/**/*.g.dart
-            - lib/src/**/*.freezed.dart
-            - "**/service.dart"
-            - "**/service_locator.dart"
-            - "**/data_source.dart"
         options:
           create_to_json: true
           explicit_to_json: true
