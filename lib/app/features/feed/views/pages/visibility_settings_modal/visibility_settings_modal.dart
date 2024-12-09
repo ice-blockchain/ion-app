@@ -10,12 +10,10 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 class VisibilitySettingsModal extends StatelessWidget {
   const VisibilitySettingsModal({
     this.title,
-    this.isForStory = false,
     super.key,
   });
 
   final String? title;
-  final bool isForStory; 
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +26,7 @@ class VisibilitySettingsModal extends StatelessWidget {
         ),
         SizedBox(height: 12.0.s),
         const HorizontalSeparator(),
-        VisibilitySettingsList(isForStory: isForStory),
+        const VisibilitySettingsList(),
         const HorizontalSeparator(),
         ScreenBottomOffset(
           margin: 0,
