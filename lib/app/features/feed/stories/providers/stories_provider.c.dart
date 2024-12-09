@@ -55,7 +55,7 @@ List<UserStories>? stories(Ref ref) {
 }
 
 @riverpod
-List<UserStories> filteredStoriesByPubkey(Ref ref, String pubkey)  {
+List<UserStories> filteredStoriesByPubkey(Ref ref, String pubkey) {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
   // TODO: remove currentPubkey check when the data from backend is available
