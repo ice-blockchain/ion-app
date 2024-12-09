@@ -14,10 +14,12 @@ import 'package:ion/generated/assets.gen.dart';
 class EmptyState extends ConsumerWidget {
   const EmptyState({
     required this.tabType,
+    required this.onBottomActionTap,
     super.key,
   });
 
   final WalletTabType tabType;
+  final VoidCallback onBottomActionTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,7 +51,7 @@ class EmptyState extends ConsumerWidget {
               BottomAction(
                 asset: tabType.bottomActionAsset,
                 title: tabType.getBottomActionTitle(context),
-                onTap: () {},
+                onTap: onBottomActionTap,
               ),
           ],
         ),

@@ -10,7 +10,6 @@ import 'package:ion/app/features/wallet/providers/filtered_assets_provider.c.dar
 import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab.dart';
-import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/coins/coins_tab_header.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/contacts/contacts_list.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
@@ -18,7 +17,6 @@ import 'package:ion/app/features/wallet/views/pages/wallet_page/components/heade
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/loaders/grid_loader.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/loaders/list_loader.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab.dart';
-import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_footer.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_header.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
@@ -39,22 +37,14 @@ class WalletPage extends HookConsumerWidget {
     final nftsState = ref.watch(filteredNftsProvider);
     final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
 
-    List<Widget> getActiveTabContent() {
+    Widget getActiveTabContent() {
       if (activeTab.value == WalletTabType.coins) {
-        return coinsState.isLoading
-            ? [const ListLoader()]
-            : [
-                const CoinsTab(),
-                const CoinsTabFooter(),
-              ];
+        return coinsState.isLoading ? const ListLoader() : const CoinsTab();
       }
       if (nftsState.isLoading) {
-        return nftLayoutType == NftLayoutType.list ? [const ListLoader()] : [const GridLoader()];
+        return nftLayoutType == NftLayoutType.list ? const ListLoader() : const GridLoader();
       }
-      return [
-        const NftsTab(),
-        const NftsTabFooter(),
-      ];
+      return const NftsTab();
     }
 
     return Scaffold(
@@ -90,7 +80,7 @@ class WalletPage extends HookConsumerWidget {
             const NftsTabHeader()
           else
             const CoinsTabHeader(),
-          ...getActiveTabContent(),
+          getActiveTabContent(),
         ],
       ),
     );
