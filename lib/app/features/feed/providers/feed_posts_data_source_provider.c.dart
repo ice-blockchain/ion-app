@@ -24,23 +24,24 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters.filter)).valueOrNull;
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
-  if (filterRelays != null) {
+  if (filterRelays != null && currentPubkey != null) {
     return [
       for (final entry in filterRelays.entries)
         switch (filters.category) {
           FeedCategory.articles => _buildArticlesDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
               authors: filters.filter == FeedFilter.following ? entry.value : null,
+              currentPubkey: currentPubkey,
             ),
-          FeedCategory.videos => _buildPostsDataSource(
+          FeedCategory.videos => _buildVideosDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
-              authors: [currentPubkey!], //TODO: temp for debug
+              authors: filters.filter == FeedFilter.following ? entry.value : null,
               currentPubkey: currentPubkey,
             ),
           FeedCategory.feed => _buildPostsDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
               authors: filters.filter == FeedFilter.following ? entry.value : null,
-              currentPubkey: currentPubkey!,
+              currentPubkey: currentPubkey,
             )
         },
     ];
@@ -51,20 +52,62 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
 EntitiesDataSource _buildArticlesDataSource({
   required ActionSource actionSource,
   required List<String>? authors,
+  required String currentPubkey,
+}) {
+  final search = SearchExtensions.withCounters(
+    [
+      ReferencesSearchExtension(contain: false),
+      ExpirationSearchExtension(expiration: false),
+    ],
+    currentPubkey: currentPubkey,
+  ).toString();
+  return EntitiesDataSource(
+    actionSource: actionSource,
+    entityFilter: (entity) {
+      if (entity is GenericRepostEntity &&
+          (authors == null || authors.contains(entity.masterPubkey))) {
+        return true;
+      }
+      return entity is ArticleEntity;
+    },
+    requestFilters: [
+      RequestFilter(
+        kinds: const [ArticleEntity.kind],
+        authors: authors,
+        search: search,
+        limit: 10,
+      ),
+      RequestFilter(
+        kinds: const [GenericRepostEntity.kind],
+        authors: authors,
+        search: search,
+        k: [ArticleEntity.kind.toString()],
+        limit: 10,
+      ),
+    ],
+  );
+}
+
+EntitiesDataSource _buildVideosDataSource({
+  required ActionSource actionSource,
+  required List<String>? authors,
+  required String currentPubkey,
 }) {
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) => entity is ArticleEntity || entity is GenericRepostEntity,
     requestFilters: [
       RequestFilter(
-        kinds: const [ArticleEntity.kind],
+        kinds: const [PostEntity.kind, RepostEntity.kind],
+        search: SearchExtensions.withCounters(
+          [
+            ReferencesSearchExtension(contain: false),
+            ExpirationSearchExtension(expiration: false),
+            VideosSearchExtension(contain: true),
+          ],
+          currentPubkey: currentPubkey,
+        ).toString(),
         authors: authors,
-        limit: 10,
-      ),
-      RequestFilter(
-        kinds: const [GenericRepostEntity.kind],
-        authors: authors,
-        k: [ArticleEntity.kind.toString()],
         limit: 10,
       ),
     ],

@@ -24,17 +24,13 @@ class RelatedEvent with _$RelatedEvent {
     }
 
     if (tag.length < 5) {
-      //TODO::uncomment and remove stub when using own relays
-      // throw IncorrectEventTagException(tag: tag.toString());
+      throw IncorrectEventTagException(tag: tag.toString());
     }
 
     return RelatedEvent(
       eventId: tag[1],
       marker: RelatedEventMarker.values.byName(tag[3]),
-      // TODO::remove when our relays are used
-      pubkey: tag.length == 5
-          ? tag[4]
-          : '5e42daa682da9ad308e284b4a50b0967a23d6f352d2b819f40f0d9fa42a1b44d',
+      pubkey: tag[4],
     );
   }
 
