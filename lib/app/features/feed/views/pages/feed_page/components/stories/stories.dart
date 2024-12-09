@@ -21,7 +21,7 @@ class Stories extends ConsumerWidget {
 
     final storyHasMore = ref.watch(
       entitiesPagedDataProvider(ref.watch(feedStoriesDataSourceProvider))
-          .select((state) => state?.hasMore.falseOrValue),
+          .select((state) => (state?.hasMore).falseOrValue),
     );
 
     return Column(

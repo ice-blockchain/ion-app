@@ -15,6 +15,8 @@ class SearchExtensions {
     required String currentPubkey,
     bool root = true,
   }) {
+    // ignore: avoid_print
+    print(currentPubkey);
     return SearchExtensions([
       if (root) RepliesCountSearchExtension(root: root),
       RepostsCountSearchExtension(),

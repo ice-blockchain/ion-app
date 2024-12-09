@@ -12,7 +12,7 @@ import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.d
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/model/search_extension.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

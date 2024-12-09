@@ -26,7 +26,7 @@ class TabEntitiesList extends ConsumerWidget {
     final entities = entitiesPagedData?.data.items;
 
     return LoadMoreBuilder(
-      slivers: [w
+      slivers: [
         if (entities == null)
           const EntitiesListSkeleton()
         else if (entities.isEmpty)
