@@ -29,7 +29,7 @@ class IONDatabase extends _$IONDatabase {
 @UseRowClass(DbEventMessage)
 class DbEventMessages extends Table {
   TextColumn get id => text()();
-  TextColumn get sig => text()();
+  TextColumn get sig => text().nullable()();
   TextColumn get tags => text()();
   TextColumn get pubkey => text()();
   IntColumn get kind => integer()();
@@ -80,7 +80,7 @@ class DbEventMessage implements Insertable<DbEventMessage> {
   final String pubkey;
   final String tags;
   final String content;
-  final String sig;
+  final String? sig;
   final DateTime createdAt;
 
   @override
