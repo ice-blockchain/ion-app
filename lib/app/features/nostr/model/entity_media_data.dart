@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_matcher.dart';
