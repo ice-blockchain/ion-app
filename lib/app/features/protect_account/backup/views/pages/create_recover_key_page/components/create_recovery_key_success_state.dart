@@ -24,12 +24,14 @@ class CreateRecoveryKeySuccessState extends HookWidget {
   Widget build(BuildContext context) {
     final locale = context.i18n;
 
-    useOnScreenshot(
+    final showScreenshotSecurityAlert = useCallback(
       () => showSimpleBottomSheet<void>(
         context: context,
         child: const ScreenshotSecurityAlert(),
       ),
     );
+
+    useOnScreenshot(showScreenshotSecurityAlert);
 
     return ScreenSideOffset.large(
       child: Column(
