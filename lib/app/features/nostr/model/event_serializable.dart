@@ -11,3 +11,11 @@ abstract class EventSerializable {
     DateTime? createdAt,
   });
 }
+
+abstract class EventSerializableByPubkey {
+  FutureOr<EventMessage> toEventMessage({
+    required String pubkey,
+    required DateTime createdAt,
+    List<List<String>> tags = const [],
+  });
+}
