@@ -1,10 +1,20 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+
 abstract class SearchExtension {
   String get query;
 
   @override
   String toString() => query;
+}
+
+abstract class IncludeSearchExtension extends SearchExtension {
+  int get forKind;
+
+  @override
+  String toString() => 'include:dependencies:kind$forKind>$query';
 }
 
 class SearchExtensions {
@@ -41,32 +51,133 @@ class DiscoveryCreatorsSearchExtension extends SearchExtension {
   final String query = 'discover content creators to follow';
 }
 
-/// For every kind 1 that the subscription finds also include the count of replies that it has
-class RepliesCountSearchExtension extends SearchExtension {
-  RepliesCountSearchExtension({this.root = true});
+/// For every kind [forKind] that the subscription finds also include the count of replies that it has
+class RepliesCountSearchExtension extends IncludeSearchExtension {
+  RepliesCountSearchExtension({this.root = true, this.forKind = PostEntity.kind});
 
   final bool root;
 
   @override
-  String get query => 'include:dependencies:kind1>kind6400+kind1+group+${root ? 'root' : 'reply'}';
+  final int forKind;
+
+  @override
+  String get query => 'kind6400+kind1+group+${root ? 'root' : 'reply'}';
 }
 
-/// For every kind 1 that the subscription finds also include the count of reposts that it has
-class RepostsCountSearchExtension extends SearchExtension {
+/// For every kind [PostEntity.kind] that the subscription finds also include the count of reposts that it has
+class RepostsCountSearchExtension extends IncludeSearchExtension {
   @override
-  final String query = 'include:dependencies:kind1>kind6400+kind6+group+e';
+  int get forKind => PostEntity.kind;
+
+  @override
+  final String query = 'kind6400+kind6+group+e';
 }
 
-/// For every kind 1 that the subscription finds also include the count of quotes that it has
-class QuotesCountSearchExtension extends SearchExtension {
+/// For every kind [forKind] that the subscription finds also include the count of generic reposts that it has
+class GenericRepostsCountSearchExtension extends IncludeSearchExtension {
+  GenericRepostsCountSearchExtension({this.forKind = ArticleEntity.kind});
+
   @override
-  final String query = 'include:dependencies:kind1>kind6400+kind1+group+q';
+  final int forKind;
+
+  @override
+  final String query = 'kind6400+kind16+group+e';
 }
 
-/// For every kind 1 that the subscription finds also include the count of reactions that it has
-class ReactionsCountSearchExtension extends SearchExtension {
+/// For every kind [forKind] that the subscription finds also include the count of quotes that it has
+class QuotesCountSearchExtension extends IncludeSearchExtension {
+  QuotesCountSearchExtension({this.forKind = PostEntity.kind});
+
   @override
-  final String query = 'include:dependencies:kind1>kind6400+kind7+group+content';
+  final int forKind;
+
+  @override
+  final String query = 'kind6400+kind1+group+q';
+}
+
+/// For every kind [forKind] that the subscription finds also include the count of reactions that it has
+class ReactionsCountSearchExtension extends IncludeSearchExtension {
+  ReactionsCountSearchExtension({this.forKind = PostEntity.kind});
+
+  @override
+  final int forKind;
+
+  @override
+  final String query = 'kind6400+kind7+group+content';
+}
+
+/// For every kind [forKind] that the subscription finds also include 1 root/not-root replay
+/// that the logged in user made to it — if any
+class ReplySampleSearchExtension extends IncludeSearchExtension {
+  ReplySampleSearchExtension({
+    required this.currentPubkey,
+    this.forKind = PostEntity.kind,
+    this.root = true,
+  });
+
+  final bool root;
+
+  final String currentPubkey;
+
+  @override
+  final int forKind;
+
+  @override
+  String get query => '$currentPubkey@kind1+e+${root ? 'root' : 'reply'}';
+}
+
+/// For every kind [forKind] that the subscription finds also include 1 reaction event
+/// that the logged in user made for it — if any
+class ReactionsSearchExtension extends IncludeSearchExtension {
+  ReactionsSearchExtension({required this.currentPubkey, this.forKind = PostEntity.kind});
+
+  final String currentPubkey;
+
+  @override
+  final int forKind;
+
+  @override
+  String get query => '$currentPubkey@kind7';
+}
+
+/// For every kind [forKind] that the subscription finds also include 1 quote post
+/// that the logged in user made for it — if any
+class QuoteSampleSearchExtension extends IncludeSearchExtension {
+  QuoteSampleSearchExtension({required this.currentPubkey, this.forKind = PostEntity.kind});
+
+  final String currentPubkey;
+
+  @override
+  final int forKind;
+
+  @override
+  String get query => '$currentPubkey@kind1+q';
+}
+
+/// For every kind [forKind] that the subscription finds also include 1 repost
+/// that the logged in user made for it — if any
+class RepostSampleSearchExtension extends IncludeSearchExtension {
+  RepostSampleSearchExtension({required this.currentPubkey, this.forKind = PostEntity.kind});
+
+  final String currentPubkey;
+
+  @override
+  final int forKind;
+
+  @override
+  String get query => '$currentPubkey@kind6';
+}
+
+class GenericIncludeSearchExtension extends IncludeSearchExtension {
+  GenericIncludeSearchExtension({required this.forKind, required this.includeKind});
+
+  @override
+  final int forKind;
+
+  final int includeKind;
+
+  @override
+  String get query => 'kind$includeKind';
 }
 
 /// true → only events that have the expiration tag set and have not expired yet are included
@@ -186,62 +297,4 @@ class TagMarkerSearchExtension extends SearchExtension {
 
   @override
   String get query => '${tagName}marker:$marker';
-}
-
-/// For every kind 1 that the subscription finds also include 1 root/not-root replay
-/// that the logged in user made to it — if any
-class ReplySampleSearchExtension extends SearchExtension {
-  ReplySampleSearchExtension({required this.currentPubkey, this.root = true});
-
-  final bool root;
-
-  final String currentPubkey;
-
-  @override
-  String get query =>
-      'include:dependencies:kind1>$currentPubkey@kind1+e+${root ? 'root' : 'reply'}';
-}
-
-/// For every kind 1 that the subscription finds also include 1 reaction event
-/// that the logged in user made for it — if any
-class ReactionsSearchExtension extends SearchExtension {
-  ReactionsSearchExtension({required this.currentPubkey});
-
-  final String currentPubkey;
-
-  @override
-  String get query => 'include:dependencies:kind1>$currentPubkey@kind7';
-}
-
-/// For every kind 1 that the subscription finds also include 1 quote post
-/// that the logged in user made for it — if any
-class QuoteSampleSearchExtension extends SearchExtension {
-  QuoteSampleSearchExtension({required this.currentPubkey});
-
-  final String currentPubkey;
-
-  @override
-  String get query => 'include:dependencies:kind1>$currentPubkey@kind1+q';
-}
-
-/// For every kind 1 that the subscription finds also include 1 repost
-/// that the logged in user made for it — if any
-class RepostSampleSearchExtension extends SearchExtension {
-  RepostSampleSearchExtension({required this.currentPubkey});
-
-  final String currentPubkey;
-
-  @override
-  String get query => 'include:dependencies:kind1>$currentPubkey@kind6';
-}
-
-class GenericIncludeSearchExtension extends SearchExtension {
-  GenericIncludeSearchExtension({required this.forKind, required this.includeKind});
-
-  final int forKind;
-
-  final int includeKind;
-
-  @override
-  String get query => 'include:dependencies:kind$forKind>kind$includeKind';
 }
