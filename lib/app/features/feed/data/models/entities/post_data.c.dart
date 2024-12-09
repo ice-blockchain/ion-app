@@ -115,7 +115,6 @@ class PostData with _$PostData implements EventSerializable {
       }).toList();
 
   @override
-  @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],

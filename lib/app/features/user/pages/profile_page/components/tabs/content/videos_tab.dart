@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/tab_entities_list.dart';
-import 'package:ion/app/features/user/providers/user_posts_data_source_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_videos_data_source_provider.c.dart';
 
 class VideosTab extends ConsumerWidget {
   const VideosTab({
@@ -15,7 +15,7 @@ class VideosTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dataSource = ref.watch(userPostsDataSourceProvider(pubkey));
+    final dataSource = ref.watch(userVideosDataSourceProvider(pubkey));
     return TabEntitiesList(dataSource: dataSource);
   }
 }

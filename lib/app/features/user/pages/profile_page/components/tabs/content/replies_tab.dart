@@ -16,7 +16,7 @@ class RepliesTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dataSource = ref.watch(userPostsDataSourceProvider(pubkey));
+    final dataSource = ref.watch(userRepliesDataSourceProvider(pubkey));
     return TabEntitiesList(
       dataSource: dataSource,
       builder: (entities) => EntitiesList(entities: entities.toList(), showParent: true),

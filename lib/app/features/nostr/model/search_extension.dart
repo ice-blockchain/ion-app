@@ -12,7 +12,7 @@ class SearchExtensions {
 
   factory SearchExtensions.withCounters(
     List<SearchExtension> extensions, {
-    required String pubkey,
+    required String currentPubkey,
     bool root = true,
   }) {
     return SearchExtensions([
@@ -20,10 +20,10 @@ class SearchExtensions {
       RepostsCountSearchExtension(),
       QuotesCountSearchExtension(),
       ReactionsCountSearchExtension(),
-      ReplySampleSearchExtension(pubkey: pubkey),
-      QuoteSampleSearchExtension(pubkey: pubkey),
-      RepostSampleSearchExtension(pubkey: pubkey),
-      ReactionsSearchExtension(pubkey: pubkey),
+      // ReplySampleSearchExtension(currentPubkey: currentPubkey),
+      // QuoteSampleSearchExtension(currentPubkey: currentPubkey),
+      // RepostSampleSearchExtension(currentPubkey: currentPubkey),
+      // ReactionsSearchExtension(currentPubkey: currentPubkey),
       ...extensions,
     ]);
   }
@@ -92,12 +92,12 @@ class ExpirationSearchExtension extends SearchExtension {
 ///
 /// When querying for kind 6/16 events this extension instead applies to the kind 1/30023 event it points to
 class VideosSearchExtension extends SearchExtension {
-  VideosSearchExtension({required this.videos});
+  VideosSearchExtension({required this.contain});
 
-  final bool videos;
+  final bool contain;
 
   @override
-  String get query => 'videos:$videos';
+  String get query => 'videos:$contain';
 }
 
 /// true → only events that have at least 1 imeta tag with any image based mime type are included
@@ -109,12 +109,12 @@ class VideosSearchExtension extends SearchExtension {
 ///
 /// When querying for kind 6/16 events this extension instead applies to the kind 1/30023 event it points to
 class ImagesSearchExtension extends SearchExtension {
-  ImagesSearchExtension({required this.images});
+  ImagesSearchExtension({required this.contain});
 
-  final bool images;
+  final bool contain;
 
   @override
-  String get query => 'images:$images';
+  String get query => 'images:$contain';
 }
 
 /// true → only events that have at least 1 [tagName] tag with any value are included
@@ -125,14 +125,14 @@ class ImagesSearchExtension extends SearchExtension {
 ///
 /// When querying for kind 6/16 events this extension instead applies to the kind 1/30023 event it points to
 class TagSearchExtension extends SearchExtension {
-  TagSearchExtension({required this.tagName, required this.has});
+  TagSearchExtension({required this.tagName, required this.contain});
 
-  final bool has;
+  final bool contain;
 
   final String tagName;
 
   @override
-  String get query => '${tagName}tag:$has';
+  String get query => '${tagName}tag:$contain';
 }
 
 /// true → only events that have the q tag set are included
@@ -143,12 +143,12 @@ class TagSearchExtension extends SearchExtension {
 ///
 /// When querying for kind 6 events this extension instead applies to the kind 1 event it points to
 class QuotesSearchExtension extends SearchExtension {
-  QuotesSearchExtension({required this.quotes});
+  QuotesSearchExtension({required this.contain});
 
-  final bool quotes;
+  final bool contain;
 
   @override
-  String get query => 'quotes:$quotes';
+  String get query => 'quotes:$contain';
 }
 
 /// true → only events that have at least 1 e tag are included
@@ -159,12 +159,12 @@ class QuotesSearchExtension extends SearchExtension {
 ///
 /// This extension is ignored when querying kind 6 events
 class ReferencesSearchExtension extends SearchExtension {
-  ReferencesSearchExtension({required this.references});
+  ReferencesSearchExtension({required this.contain});
 
-  final bool references;
+  final bool contain;
 
   @override
-  String get query => 'references:$references';
+  String get query => 'references:$contain';
 }
 
 /// Applies to the marker of any tag, I.E. like the one on the e tag
@@ -189,45 +189,46 @@ class TagMarkerSearchExtension extends SearchExtension {
 /// For every kind 1 that the subscription finds also include 1 root/not-root replay
 /// that the logged in user made to it — if any
 class ReplySampleSearchExtension extends SearchExtension {
-  ReplySampleSearchExtension({required this.pubkey, this.root = true});
+  ReplySampleSearchExtension({required this.currentPubkey, this.root = true});
 
   final bool root;
 
-  final String pubkey;
+  final String currentPubkey;
 
   @override
-  String get query => 'include:dependencies:kind1>$pubkey@kind1+e+${root ? 'root' : 'reply'}';
+  String get query =>
+      'include:dependencies:kind1>$currentPubkey@kind1+e+${root ? 'root' : 'reply'}';
 }
 
 /// For every kind 1 that the subscription finds also include 1 reaction event
 /// that the logged in user made for it — if any
 class ReactionsSearchExtension extends SearchExtension {
-  ReactionsSearchExtension({required this.pubkey});
+  ReactionsSearchExtension({required this.currentPubkey});
 
-  final String pubkey;
+  final String currentPubkey;
 
   @override
-  String get query => 'include:dependencies:kind1>$pubkey@kind7';
+  String get query => 'include:dependencies:kind1>$currentPubkey@kind7';
 }
 
 /// For every kind 1 that the subscription finds also include 1 quote post
 /// that the logged in user made for it — if any
 class QuoteSampleSearchExtension extends SearchExtension {
-  QuoteSampleSearchExtension({required this.pubkey});
+  QuoteSampleSearchExtension({required this.currentPubkey});
 
-  final String pubkey;
+  final String currentPubkey;
 
   @override
-  String get query => 'kind1>$pubkey@kind1+q';
+  String get query => 'kind1>$currentPubkey@kind1+q';
 }
 
 /// For every kind 1 that the subscription finds also include 1 repost
 /// that the logged in user made for it — if any
 class RepostSampleSearchExtension extends SearchExtension {
-  RepostSampleSearchExtension({required this.pubkey});
+  RepostSampleSearchExtension({required this.currentPubkey});
 
-  final String pubkey;
+  final String currentPubkey;
 
   @override
-  String get query => 'kind1>$pubkey@kind6';
+  String get query => 'kind1>$currentPubkey@kind6';
 }

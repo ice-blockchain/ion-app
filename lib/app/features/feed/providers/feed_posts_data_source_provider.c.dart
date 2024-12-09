@@ -78,16 +78,17 @@ EntitiesDataSource _buildPostsDataSource({
 }) {
   return EntitiesDataSource(
     actionSource: actionSource,
-    entityFilter: (entity) => entity is PostEntity || entity is RepostEntity,
+    entityFilter: (entity) =>
+        (entity is PostEntity && entity.data.parentEvent == null) || entity is RepostEntity,
     requestFilters: [
       RequestFilter(
         kinds: const [PostEntity.kind, RepostEntity.kind],
         search: SearchExtensions.withCounters(
           [
-            ReferencesSearchExtension(references: false),
+            ReferencesSearchExtension(contain: false),
             ExpirationSearchExtension(expiration: false),
           ],
-          pubkey: currentPubkey,
+          currentPubkey: currentPubkey,
         ).toString(),
         authors: authors,
         limit: 10,

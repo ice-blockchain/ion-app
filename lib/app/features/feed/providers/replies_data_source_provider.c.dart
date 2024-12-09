@@ -35,7 +35,7 @@ List<EntitiesDataSource>? repliesDataSource(
             [
               ExpirationSearchExtension(expiration: false),
             ],
-            pubkey: currentPubkey,
+            currentPubkey: currentPubkey,
             root: false,
           ).toString(),
           limit: 10,
