@@ -22,49 +22,57 @@ class EmailSetupPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            primary: false,
-            flexibleSpace: NavigationAppBar.modal(
-              showBackButton: step != EmailSetupSteps.success,
-              actions: [
-                NavigationCloseButton(onPressed: Navigator.of(context, rootNavigator: true).pop),
-              ],
-            ),
-            toolbarHeight: NavigationAppBar.modalHeaderHeight,
-            automaticallyImplyLeading: false,
-            pinned: true,
-          ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Column(
-              children: [
-                AuthHeader(
-                  topOffset: 34.0.s,
-                  title: step.getPageTitle(context),
-                  description: step.getDescription(context),
-                  titleStyle: context.theme.appTextThemes.headline2,
-                  descriptionStyle: context.theme.appTextThemes.body2.copyWith(
-                    color: context.theme.appColors.secondaryText,
+      body: step == EmailSetupSteps.success
+          ? Padding(
+              padding: EdgeInsets.only(top: 45.0.s, bottom: 16.0.s),
+              child: const EmailSetupSuccessPage(),
+            )
+          : CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  primary: false,
+                  flexibleSpace: NavigationAppBar.modal(
+                    showBackButton: step != EmailSetupSteps.success,
+                    actions: [
+                      NavigationCloseButton(
+                        onPressed: Navigator.of(context, rootNavigator: true).pop,
+                      ),
+                    ],
                   ),
-                  icon: AuthHeaderIcon(
-                    icon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
+                  toolbarHeight: NavigationAppBar.modalHeaderHeight,
+                  automaticallyImplyLeading: false,
+                  pinned: true,
+                ),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Column(
+                    children: [
+                      AuthHeader(
+                        topOffset: 34.0.s,
+                        title: step.getPageTitle(context),
+                        description: step.getDescription(context),
+                        titleStyle: context.theme.appTextThemes.headline2,
+                        descriptionStyle: context.theme.appTextThemes.body2.copyWith(
+                          color: context.theme.appColors.secondaryText,
+                        ),
+                        icon: AuthHeaderIcon(
+                          icon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
+                        ),
+                      ),
+                      if (step == EmailSetupSteps.input)
+                        const Expanded(
+                          child: EmailSetupInputPage(),
+                        ),
+                      if (step == EmailSetupSteps.confirmation)
+                        Expanded(
+                          child: EmailSetupConfirmPage(email: email!),
+                        ),
+                      ScreenBottomOffset(margin: 36.0.s),
+                    ],
                   ),
                 ),
-                Expanded(
-                  child: switch (step) {
-                    EmailSetupSteps.input => const EmailSetupInputPage(),
-                    EmailSetupSteps.confirmation => EmailSetupConfirmPage(email: email!),
-                    EmailSetupSteps.success => const EmailSetupSuccessPage(),
-                  },
-                ),
-                ScreenBottomOffset(margin: 36.0.s),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

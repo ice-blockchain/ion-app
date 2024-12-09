@@ -22,51 +22,57 @@ class PhoneSetupPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            primary: false,
-            flexibleSpace: NavigationAppBar.modal(
-              showBackButton: step != PhoneSetupSteps.success,
-              actions: [
-                NavigationCloseButton(
-                  onPressed: Navigator.of(context, rootNavigator: true).pop,
+      body: step == PhoneSetupSteps.success
+          ? Padding(
+              padding: EdgeInsets.only(top: 45.0.s, bottom: 16.0.s),
+              child: const PhoneSetupSuccessPage(),
+            )
+          : CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  primary: false,
+                  flexibleSpace: NavigationAppBar.modal(
+                    showBackButton: step != PhoneSetupSteps.success,
+                    actions: [
+                      NavigationCloseButton(
+                        onPressed: Navigator.of(context, rootNavigator: true).pop,
+                      ),
+                    ],
+                  ),
+                  toolbarHeight: NavigationAppBar.modalHeaderHeight,
+                  automaticallyImplyLeading: false,
+                  pinned: true,
+                ),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Column(
+                    children: [
+                      AuthHeader(
+                        topOffset: 34.0.s,
+                        title: step.getPageTitle(context),
+                        description: step.getDescription(context),
+                        titleStyle: context.theme.appTextThemes.headline2,
+                        descriptionStyle: context.theme.appTextThemes.body2.copyWith(
+                          color: context.theme.appColors.secondaryText,
+                        ),
+                        icon: AuthHeaderIcon(
+                          icon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
+                        ),
+                      ),
+                      if (step == PhoneSetupSteps.input)
+                        const Expanded(
+                          child: PhoneSetupInputPage(),
+                        ),
+                      if (step == PhoneSetupSteps.confirmation)
+                        Expanded(
+                          child: PhoneSetupConfirmPage(phone: phone!),
+                        ),
+                      ScreenBottomOffset(margin: 36.0.s),
+                    ],
+                  ),
                 ),
               ],
             ),
-            toolbarHeight: NavigationAppBar.modalHeaderHeight,
-            automaticallyImplyLeading: false,
-            pinned: true,
-          ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Column(
-              children: [
-                AuthHeader(
-                  topOffset: 34.0.s,
-                  title: step.getPageTitle(context),
-                  description: step.getDescription(context),
-                  titleStyle: context.theme.appTextThemes.headline2,
-                  descriptionStyle: context.theme.appTextThemes.body2.copyWith(
-                    color: context.theme.appColors.secondaryText,
-                  ),
-                  icon: AuthHeaderIcon(
-                    icon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
-                  ),
-                ),
-                Expanded(
-                  child: switch (step) {
-                    PhoneSetupSteps.input => const PhoneSetupInputPage(),
-                    PhoneSetupSteps.confirmation => PhoneSetupConfirmPage(phone: phone!),
-                    PhoneSetupSteps.success => const PhoneSetupSuccessPage(),
-                  },
-                ),
-                ScreenBottomOffset(margin: 36.0.s),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

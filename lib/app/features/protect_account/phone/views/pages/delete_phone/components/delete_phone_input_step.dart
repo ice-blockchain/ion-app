@@ -23,7 +23,7 @@ class DeletePhoneInputStep extends ConsumerWidget {
       headerIcon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
       child: DeleteTwoFAInputStep(
         twoFaToDelete: TwoFaType.sms,
-        onDeleteSuccess: () => EmailDeleteSuccessRoute().push<void>(context),
+        onDeleteSuccess: () => PhoneDeleteSuccessRoute().push<void>(context),
         twoFaTypes: ref.watch(selectedTwoFaOptionsProvider).toList(),
       ),
     );
