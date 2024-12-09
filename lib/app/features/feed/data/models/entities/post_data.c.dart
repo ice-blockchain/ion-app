@@ -144,7 +144,7 @@ class PostData with _$PostData implements EventSerializable {
       return {};
     }
 
-    final imeta = _parseImeta(imetaTags);
+    final imeta = imetaTags.parseImeta();
 
     final media = parsedContent.fold<Map<String, MediaAttachment>>(
       {},
@@ -157,29 +157,6 @@ class PostData with _$PostData implements EventSerializable {
       },
     );
     return media;
-  }
-
-  /// Parses a list of imeta tags (Media Attachments defined in NIP-92).
-  ///
-  /// Media attachments (images, videos, and other files) may be added to events
-  /// by including a URL in the event content, along with a matching imeta tag.
-  /// imeta ("inline metadata") tags add information about media URLs in the
-  /// event's content.
-  ///
-  /// The imeta tag is variadic, and each entry is a space-delimited key/value pair.
-  /// Each imeta tag MUST have a url, and at least one other field.
-  /// imeta may include any field specified by NIP 94.
-  ///
-  /// Source: https://github.com/nostr-protocol/nips/blob/master/92.md
-  static Map<String, MediaAttachment> _parseImeta(List<List<String>> imetaTags) {
-    final imeta = <String, MediaAttachment>{};
-    for (final tag in imetaTags) {
-      if (tag[0] == 'imeta') {
-        final mediaAttachment = MediaAttachment.fromTag(tag);
-        imeta[mediaAttachment.url] = mediaAttachment;
-      }
-    }
-    return imeta;
   }
 
   static QuotedEvent? _buildQuotedEvent(List<List<String>>? qTags) {

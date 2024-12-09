@@ -2,11 +2,12 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.c.dart';
-import 'package:ion/app/features/nostr/model/event_serializable.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -25,6 +26,7 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity, NostrEntity 
 
   const PrivateDirectMessageEntity._();
 
+  /// https://github.com/nostr-protocol/nips/blob/master/01.md
   factory PrivateDirectMessageEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw Exception('Incorrect event kind ${eventMessage.kind}, expected $kind');
@@ -44,50 +46,52 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity, NostrEntity 
 }
 
 @freezed
-class PrivateDirectMessageData
-    with _$PrivateDirectMessageData
-    implements EventSerializableByPubkey {
+class PrivateDirectMessageData with _$PrivateDirectMessageData {
   const factory PrivateDirectMessageData({
     required String content,
-    required List<RelatedPubkey> relatedPubkeys,
-    required List<RelatedEvent> relatedEvents,
+    required Map<String, MediaAttachment> media,
+    List<RelatedPubkey>? relatedPubkeys,
+    List<RelatedEvent>? relatedEvents,
   }) = _PrivateDirectMessageData;
 
   factory PrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+
     return PrivateDirectMessageData(
       content: eventMessage.content,
-      relatedPubkeys: eventMessage.tags.map(RelatedPubkey.fromTag).toList(),
-      relatedEvents: eventMessage.tags.map(RelatedEvent.fromTag).toList(),
+      media: tags[MediaAttachment.tagName].parseImeta(),
+      relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
+      relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
     );
   }
 
-  @override
   FutureOr<EventMessage> toEventMessage({
     required String pubkey,
-    required DateTime createdAt,
-    List<List<String>> tags = const [],
   }) {
+    final eventTags = [
+      if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
+      if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
+      if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+    ];
+
+    final createdAt = DateTime.now();
+
     final kind14EventId = EventMessage.calculateEventId(
       publicKey: pubkey,
       createdAt: createdAt,
       kind: PrivateDirectMessageEntity.kind,
-      tags: [
-        ...tags,
-        ...relatedPubkeys.map((pubkey) => pubkey.toTag()),
-        ...relatedEvents.map((event) => event.toTag()),
-      ],
+      tags: eventTags,
       content: content,
     );
 
-    final kind14Event = EventMessage(
+    return EventMessage(
       id: kind14EventId,
       pubkey: pubkey,
       createdAt: createdAt,
       kind: PrivateDirectMessageEntity.kind,
-      tags: tags,
+      tags: eventTags,
       content: content,
       sig: null,
     );
-    return kind14Event;
   }
 }
