@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# This script:
+# 1. Looks for all files that were renamed to *.c.dart in the specified directories.
+# 2. Updates their `part` directives to point to the .c.freezed.dart and .c.g.dart files
+#    instead of the original *.freezed.dart or *.g.dart.
+#
+# After this script, the part directives in the renamed files match the new naming convention.
+
 SEARCH_DIRS=("lib" "packages/ion_identity_client/lib")
 
 for SEARCH_DIR in "${SEARCH_DIRS[@]}"; do
