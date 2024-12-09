@@ -62,7 +62,6 @@ import 'package:ion/app/features/protect_account/authenticator/views/pages/delet
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_success.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/authenticator_setup_page.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/errors/recovery_keys_error_alert.dart';
-import 'package:ion/app/features/protect_account/backup/views/components/errors/screenshot_security_alert.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/errors/secure_account_error_alert.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/backup_options_page.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/backup_recovery_keys_modal.dart';
@@ -146,23 +145,14 @@ import 'package:ion/app/router/main_tabs/main_tab_navigation.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'app_routes.c.g.dart';
-
 part 'auth_routes.dart';
-
 part 'channel_routes.dart';
-
 part 'chat_routes.dart';
-
 part 'dapps_routes.dart';
-
 part 'feed_routes.dart';
-
 part 'profile_routes.dart';
-
 part 'protect_account_routes.dart';
-
 part 'settings_routes.dart';
-
 part 'wallet_routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');

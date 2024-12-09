@@ -1169,6 +1169,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  ion_screenshot_detector:
+    dependency: "direct main"
+    description:
+      path: "packages/ion_screenshot_detector"
+      relative: true
+    source: path
+    version: "0.0.1"
   js:
     dependency: "direct overridden"
     description:
