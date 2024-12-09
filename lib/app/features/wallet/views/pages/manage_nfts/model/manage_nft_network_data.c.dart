@@ -3,7 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 
-part 'manage_nft_network_data.freezed.dart';
+part 'manage_nft_network_data.c.freezed.dart';
 
 @freezed
 class ManageNftNetworkData with _$ManageNftNetworkData {

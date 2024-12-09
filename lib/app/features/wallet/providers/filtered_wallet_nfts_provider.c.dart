@@ -5,7 +5,8 @@ import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
 import 'package:ion/app/features/wallet/providers/filtered_assets_provider.c.dart';
 import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
-import 'package:ion/app/features/wallet/views/pages/manage_nfts/model/manage_nft_network_data.dart';
+import 'package:ion/app/features/wallet/views/pages/manage_nfts/model/manage_nft_network_data.c.dart';
+import 'package:ion/app/features/wallet/views/pages/manage_nfts/providers/manage_nfts_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'filtered_wallet_nfts_provider.c.g.dart';

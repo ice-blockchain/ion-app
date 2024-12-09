@@ -8,9 +8,9 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
-import 'package:ion/app/features/wallet/views/pages/manage_nfts/model/manage_nft_network_data.dart';
-import 'package:ion/app/features/wallet/views/pages/manage_nfts/providers/manage_nfts_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/wallet/views/pages/manage_nfts/model/manage_nft_network_data.c.dart';
+import 'package:ion/app/features/wallet/views/pages/manage_nfts/providers/manage_nfts_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NftHeaderSelectAction extends ConsumerWidget {

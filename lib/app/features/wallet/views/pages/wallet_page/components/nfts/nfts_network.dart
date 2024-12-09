@@ -5,7 +5,7 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallet/model/nft_data.dart';
+import 'package:ion/app/features/wallet/model/nft_data.c.dart';
 import 'package:ion/app/features/wallet/model/nft_layout_type.dart';
 
 class NftNetwork extends StatelessWidget {

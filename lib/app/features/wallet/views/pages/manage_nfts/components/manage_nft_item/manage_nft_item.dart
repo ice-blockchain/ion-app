@@ -7,7 +7,7 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
-import 'package:ion/app/features/wallet/views/pages/manage_nfts/providers/manage_nfts_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/manage_nfts/providers/manage_nfts_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ManageNftNetworkItem extends ConsumerWidget {

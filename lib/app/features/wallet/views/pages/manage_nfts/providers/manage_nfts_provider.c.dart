@@ -2,11 +2,11 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
-import 'package:ion/app/features/wallet/views/pages/manage_nfts/model/manage_nft_network_data.dart';
+import 'package:ion/app/features/wallet/views/pages/manage_nfts/model/manage_nft_network_data.c.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_nfts/providers/mock_data/manage_nfts_mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'manage_nfts_provider.g.dart';
+part 'manage_nfts_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 class ManageNftNetworksNotifier extends _$ManageNftNetworksNotifier {
