@@ -418,10 +418,10 @@ packages:
     dependency: transitive
     description:
       name: dart_style
-      sha256: "99e066ce75c89d6b29903d788a7bb9369cf754f7b24bf70bf4b6d6d6b26853b9"
+      sha256: "7856d364b589d1f08986e140938578ed36ed948581fbc3bc9aef1805039ac5ab"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.6"
+    version: "2.3.7"
   dartx:
     dependency: transitive
     description:
@@ -494,6 +494,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  drift:
+    dependency: "direct main"
+    description:
+      name: drift
+      sha256: c2d073d35ad441730812f4ea05b5dd031fb81c5f9786a4f5fb77ecd6307b6f74
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.22.1"
+  drift_dev:
+    dependency: "direct dev"
+    description:
+      name: drift_dev
+      sha256: f4ab5d6976b1e31551ceb82ff597a505bda7818ff4f7be08a1da9d55eb6e730c
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.22.1"
+  drift_flutter:
+    dependency: "direct main"
+    description:
+      name: drift_flutter
+      sha256: "0bc2f1dde59e59cedde0df67a4ff7bd8f0d42274f18b50bf7e7dae7ca3d77801"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   email_validator:
     dependency: "direct main"
     description:
@@ -1707,6 +1731,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  recase:
+    dependency: transitive
+    description:
+      name: recase
+      sha256: e4eb4ec2dcdee52dcf99cb4ceabaffc631d7424ee55e56f280bc039737f89213
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   resizable_widget:
     dependency: transitive
     description:
@@ -1928,6 +1960,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.4"
+  sqlite3:
+    dependency: transitive
+    description:
+      name: sqlite3
+      sha256: cb7f4e9dc1b52b1fa350f7b3d41c662e75fc3d399555fa4e5efcf267e9a4fbb5
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.0"
+  sqlite3_flutter_libs:
+    dependency: transitive
+    description:
+      name: sqlite3_flutter_libs
+      sha256: "636b0fe8a2de894e5455572f6cbbc458f4ffecfe9f860b79439e27041ea4f0b9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.27"
+  sqlparser:
+    dependency: transitive
+    description:
+      name: sqlparser
+      sha256: "4cad4b2c5f63dc9ea1a8dcffb58cf762322bea5dd8836870164a65e913bdae41"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.40.0"
   stack_trace:
     dependency: transitive
     description:

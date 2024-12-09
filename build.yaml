@@ -17,3 +17,9 @@ targets:
         generate_for:
           include:
             - lib/**.c.dart
+      drift_dev:
+        generate_for:
+          include:
+            - lib/**.c.dart
+        options:
+          use_sql_column_name_as_json_key : true
