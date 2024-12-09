@@ -65,6 +65,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData {
     );
   }
 
+  const PrivateDirectMessageData._();
+
   List<MediaAttachment> get medias => media.values.toList();
   MediaAttachment? get primaryMedia => medias.firstOrNull;
 
