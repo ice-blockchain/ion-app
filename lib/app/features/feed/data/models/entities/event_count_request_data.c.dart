@@ -76,7 +76,6 @@ class EventCountRequestData with _$EventCountRequestData implements EventSeriali
   }
 
   @override
-  @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],

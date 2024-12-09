@@ -22,12 +22,11 @@ class SearchExtensions {
 
   factory SearchExtensions.withCounters(
     List<SearchExtension> extensions, {
+    // ignore: avoid_unused_constructor_parameters
     required String currentPubkey,
     int forKind = PostEntity.kind,
     bool root = true,
   }) {
-    // ignore: avoid_print
-    print(currentPubkey);
     return SearchExtensions([
       if (root) RepliesCountSearchExtension(root: root, forKind: forKind),
       if (forKind == PostEntity.kind)
@@ -36,7 +35,7 @@ class SearchExtensions {
         GenericRepostsCountSearchExtension(forKind: forKind),
       QuotesCountSearchExtension(forKind: forKind),
       ReactionsCountSearchExtension(forKind: forKind),
-      // TODO:uncomment when impl
+      // TODO:uncomment when impl and remove avoid_unused_constructor_parameters comment
       // ReplySampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       // QuoteSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       // RepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),

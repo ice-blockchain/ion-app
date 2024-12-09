@@ -72,7 +72,6 @@ class InterestsData with _$InterestsData implements EventSerializable {
   }
 
   @override
-  @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],
