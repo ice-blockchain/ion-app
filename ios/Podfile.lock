@@ -259,12 +259,12 @@ SPEC REPOS:
     - VEPlaybackSDK
     - VideoEditor
   https://github.com/CocoaPods/Specs.git:
-    - sqlite3
     - DKImagePickerController
     - DKPhotoGallery
     - ffmpeg-kit-ios-full-gpl
     - MTBBarcodeScanner
     - SDWebImage
+    - sqlite3
     - SwiftyGif
     - TOCropViewController
   https://github.com/sdk-banuba/banuba-sdk-podspecs.git:

@@ -1,24 +1,31 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/components/info_card.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/components/receive_info_card.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:share_plus/share_plus.dart';
 
-class ShareAddressView extends StatelessWidget {
+class ShareAddressView extends HookConsumerWidget {
   const ShareAddressView({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final walletAddress = ref.watch(
+      receiveCoinsFormControllerProvider.select((state) => state.address),
+    );
+
     return SheetContent(
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -52,7 +59,9 @@ class ShareAddressView extends StatelessWidget {
                   label: Text(
                     context.i18n.button_share,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Share.share(walletAddress);
+                  },
                 ),
               ],
             ),
