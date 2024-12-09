@@ -36,6 +36,7 @@ class SearchExtensions {
         GenericRepostsCountSearchExtension(forKind: forKind),
       QuotesCountSearchExtension(forKind: forKind),
       ReactionsCountSearchExtension(forKind: forKind),
+      // TODO:uncomment when impl
       // ReplySampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       // QuoteSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       // RepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
