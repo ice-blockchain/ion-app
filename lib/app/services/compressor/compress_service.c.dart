@@ -235,8 +235,6 @@ class CompressionService {
       final inputData = await inputFile.readAsBytes();
       final compressedData = brotliCompressor.encode(inputData);
 
-      // TODO: Some decompressors requires base64 converted output file
-      // Try to convert the output with base64.encode() if the backend requires it
       return _saveBytesIntoFile(bytes: compressedData, extension: 'br');
     } catch (error, stackTrace) {
       Logger.log('Error during Brotli compression!', error: error, stackTrace: stackTrace);
