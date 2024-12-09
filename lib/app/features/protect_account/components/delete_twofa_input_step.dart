@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/card/warning_card.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
@@ -76,6 +77,13 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
                     ),
                   ),
               ],
+            ),
+            const Spacer(),
+            WarningCard(
+              text: context.i18n.two_fa_warning,
+            ),
+            SizedBox(
+              height: 24.0.s,
             ),
             Button(
               mainAxisSize: MainAxisSize.max,
