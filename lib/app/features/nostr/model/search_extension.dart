@@ -36,7 +36,7 @@ class SearchExtensions {
       QuotesCountSearchExtension(forKind: forKind),
       ReactionsCountSearchExtension(forKind: forKind),
       // TODO:uncomment when impl and remove avoid_unused_constructor_parameters comment
-      // ReplySampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
+      // ReplySampleSearchExtension(currentPubkey: currentPubkey, root: root, forKind: forKind),
       // QuoteSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       // RepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       // ReactionsSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
