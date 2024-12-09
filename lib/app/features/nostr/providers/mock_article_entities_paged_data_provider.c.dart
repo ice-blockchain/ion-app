@@ -2,7 +2,7 @@
 
 import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
 import 'package:ion/app/features/feed/providers/fake_articles_generator.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'mock_article_entities_paged_data_provider.c.g.dart';

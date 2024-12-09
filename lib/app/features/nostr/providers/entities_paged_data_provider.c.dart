@@ -8,7 +8,7 @@ import 'package:ion/app/features/core/model/paged.dart';
 import 'package:ion/app/features/feed/providers/fake_posts_generator.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
+import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
