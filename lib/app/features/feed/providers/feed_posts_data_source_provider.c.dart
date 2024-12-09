@@ -101,7 +101,10 @@ EntitiesDataSource _buildVideosDataSource({
         return false;
       }
 
-      return (entity is PostEntity && entity.data.parentEvent == null) || entity is RepostEntity;
+      return (entity is PostEntity &&
+              entity.data.parentEvent == null &&
+              entity.data.quotedEvent == null) ||
+          entity is RepostEntity;
     },
     requestFilters: [
       RequestFilter(
