@@ -7,8 +7,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.c.dart';
+import 'package:ion/app/features/nostr/model/entity_media_data.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/services/text_parser/text_match.dart';
+import 'package:ion/app/services/text_parser/text_parser.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'private_direct_message_data.c.freezed.dart';
@@ -46,20 +49,22 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity, NostrEntity 
 }
 
 @freezed
-class PrivateDirectMessageData with _$PrivateDirectMessageData {
+class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataMixin {
   const factory PrivateDirectMessageData({
-    required String content,
+    required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedEvent>? relatedEvents,
   }) = _PrivateDirectMessageData;
 
   factory PrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
+    final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
+
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
     return PrivateDirectMessageData(
-      content: eventMessage.content,
-      media: tags[MediaAttachment.tagName].parseImeta(),
+      content: parsedContent,
+      media: EntityMediaDataMixin.buildMedia(tags[MediaAttachment.tagName], parsedContent),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
     );
@@ -68,6 +73,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData {
   const PrivateDirectMessageData._();
 
   List<MediaAttachment> get medias => media.values.toList();
+  @override
   MediaAttachment? get primaryMedia => medias.firstOrNull;
 
   FutureOr<EventMessage> toEventMessage({
@@ -80,13 +86,14 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData {
     ];
 
     final createdAt = DateTime.now();
+    final contentString = content.map((match) => match.text).join();
 
     final kind14EventId = EventMessage.calculateEventId(
       publicKey: pubkey,
       createdAt: createdAt,
       kind: PrivateDirectMessageEntity.kind,
       tags: eventTags,
-      content: content,
+      content: contentString,
     );
 
     return EventMessage(
@@ -95,7 +102,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData {
       createdAt: createdAt,
       kind: PrivateDirectMessageEntity.kind,
       tags: eventTags,
-      content: content,
+      content: contentString,
       sig: null,
     );
   }
