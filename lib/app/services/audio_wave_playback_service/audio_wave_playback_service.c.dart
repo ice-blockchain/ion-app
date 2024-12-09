@@ -6,16 +6,16 @@ import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/media_service/media_compress_service.c.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'audio_wave_playback_service.c.g.dart';
 
 class AudioWavePlaybackService {
-  const AudioWavePlaybackService(this._mediaCompressionService);
-  final MediaCompressionService _mediaCompressionService;
+  const AudioWavePlaybackService(this._compressionService);
+  final CompressionService _compressionService;
 
   Future<void> initializePlayer(
     String id,
@@ -62,11 +62,11 @@ class AudioWavePlaybackService {
       name: id,
       link: LinkDetails(link: audioUrl),
     );
-    final compressedFilePath = await _mediaCompressionService.compressAudioToWav(savedFilePath);
+    final compressedFilePath = await _compressionService.compressAudioToWav(savedFilePath);
     return compressedFilePath;
   }
 }
 
 @riverpod
 AudioWavePlaybackService audioWavePlaybackService(Ref ref) =>
-    AudioWavePlaybackService(ref.watch(mediaCompressServiceProvider));
+    AudioWavePlaybackService(ref.watch(compressServiceProvider));

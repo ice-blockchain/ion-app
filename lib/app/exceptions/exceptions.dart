@@ -139,3 +139,27 @@ class CompressImageException extends IONException {
 class EntityNotFoundException extends IONException {
   EntityNotFoundException(String eventId) : super(10028, 'Entity not found $eventId');
 }
+
+class CompressVideoException extends IONException {
+  CompressVideoException() : super(10029, 'Failed to compress video.');
+}
+
+class CompressAudioException extends IONException {
+  CompressAudioException() : super(10030, 'Failed to convert audio to opus.');
+}
+
+class CompressAudioToWavException extends IONException {
+  CompressAudioToWavException() : super(10031, 'Failed to convert audio to wav.');
+}
+
+class ExtractThumbnailException extends IONException {
+  ExtractThumbnailException() : super(10032, 'Failed to extract thumbnail.');
+}
+
+class CompressWithBrotliException extends IONException {
+  CompressWithBrotliException() : super(10033, 'Failed to compress file with Brotli.');
+}
+
+class DecompressBrotliException extends IONException {
+  DecompressBrotliException() : super(10034, 'Failed to decompress Brotli file.');
+}
