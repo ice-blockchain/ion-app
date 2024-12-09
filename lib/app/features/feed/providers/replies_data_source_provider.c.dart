@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/model/event_reference.dart';
@@ -16,6 +17,12 @@ List<EntitiesDataSource>? repliesDataSource(
   Ref ref, {
   required EventReference eventReference,
 }) {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+
+  if (currentPubkey == null) {
+    return null;
+  }
+
   final dataSources = [
     EntitiesDataSource(
       actionSource: ActionSourceUser(eventReference.pubkey),
@@ -23,11 +30,12 @@ List<EntitiesDataSource>? repliesDataSource(
       requestFilters: [
         RequestFilter(
           kinds: const [PostEntity.kind],
-          e: [eventReference.eventId, '', 'reply'],
+          e: [eventReference.eventId],
           search: SearchExtensions.withCounters(
             [
               ExpirationSearchExtension(expiration: false),
             ],
+            pubkey: currentPubkey,
             root: false,
           ).toString(),
           limit: 10,

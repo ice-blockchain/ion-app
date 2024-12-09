@@ -12,6 +12,7 @@ class SearchExtensions {
 
   factory SearchExtensions.withCounters(
     List<SearchExtension> extensions, {
+    required String pubkey,
     bool root = true,
   }) {
     return SearchExtensions([
@@ -19,6 +20,10 @@ class SearchExtensions {
       RepostsCountSearchExtension(),
       QuotesCountSearchExtension(),
       ReactionsCountSearchExtension(),
+      ReplySampleSearchExtension(pubkey: pubkey),
+      QuoteSampleSearchExtension(pubkey: pubkey),
+      RepostSampleSearchExtension(pubkey: pubkey),
+      ReactionsSearchExtension(pubkey: pubkey),
       ...extensions,
     ]);
   }
