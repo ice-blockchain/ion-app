@@ -18,12 +18,12 @@ import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_bitrate_arg.da
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_preset_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_scale_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_video_codec_arg.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'compress_service.g.dart';
+part 'compress_service.c.g.dart';
 
 ///
 /// A service that handles file compression.
