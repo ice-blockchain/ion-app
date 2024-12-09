@@ -18,12 +18,12 @@ import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_bitrate_arg.da
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_preset_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_scale_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_video_codec_arg.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'compress_service.c.g.dart';
+part 'compress_service.g.dart';
 
 ///
 /// A service that handles file compression.
@@ -80,11 +80,11 @@ class CompressionService {
         final logs = await session.getAllLogsAsString();
         final stackTrace = await session.getFailStackTrace();
         Logger.log('Failed to compress video. Logs: $logs, StackTrace: $stackTrace');
-        throw Exception('Failed to compress video.');
+        throw CompressVideoException();
       });
     } catch (error, stackTrace) {
       Logger.log('Error during video compression!', error: error, stackTrace: stackTrace);
-      throw Exception('Failed to compress video.');
+      throw CompressVideoException();
     }
   }
 
@@ -152,7 +152,7 @@ class CompressionService {
       final logs = await session.getAllLogsAsString();
       final stackTrace = await session.getFailStackTrace();
       Logger.log('Failed to convert audio to opus. Logs: $logs, StackTrace: $stackTrace');
-      throw Exception('Failed to convert audio to opus.');
+      throw CompressAudioException();
     });
   }
 
@@ -178,7 +178,7 @@ class CompressionService {
       final logs = await session.getAllLogsAsString();
       final stackTrace = await session.getFailStackTrace();
       Logger.log('Failed to convert audio to wav. Logs: $logs, StackTrace: $stackTrace');
-      throw Exception('Failed to convert audio to wav.');
+      throw CompressAudioToWavException();
     });
   }
 
@@ -213,15 +213,12 @@ class CompressionService {
       return compressedImage;
     } catch (error, stackTrace) {
       Logger.log('Error during thumbnail extraction!', error: error, stackTrace: stackTrace);
-      throw Exception('Failed to extract thumbnail.');
+      throw ExtractThumbnailException();
     }
   }
 
   ///
   /// Compresses a file using the Brotli algorithm.
-  ///
-  /// This method reads the input file, compresses its content using the Brotli codec,
-  /// and writes the compressed data to a new file with a `.br` extension.
   ///
   Future<File> compressWithBrotli(File inputFile) async {
     try {
@@ -243,15 +240,12 @@ class CompressionService {
       return _saveBytesIntoFile(bytes: compressedData, extension: 'br');
     } catch (error, stackTrace) {
       Logger.log('Error during Brotli compression!', error: error, stackTrace: stackTrace);
-      throw Exception('Failed to compress file with Brotli.');
+      throw CompressWithBrotliException();
     }
   }
 
   ///
   /// Decompresses a Brotli-compressed file.
-  ///
-  /// This method takes a Brotli-compressed file as input, decodes its content,
-  /// and writes the decompressed data into a new file with the specified output extension.
   ///
   Future<File> decompressBrotli(File compressedFile, {String outputExtension = 'txt'}) async {
     try {
@@ -262,7 +256,7 @@ class CompressionService {
       return _saveBytesIntoFile(bytes: decompressedData, extension: outputExtension);
     } catch (error, stackTrace) {
       Logger.log('Error during Brotli decompression!', error: error, stackTrace: stackTrace);
-      throw Exception('Failed to decompress Brotli file.');
+      throw DecompressBrotliException();
     }
   }
 
