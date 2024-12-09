@@ -1,10 +1,5 @@
 targets:
   $default:
-    sources:
-      exclude:
-        - lib/app/network/models/parameters/**
-    dependencies:
-      - :network_parameters
     builders:
       freezed:freezed:
         generate_for:
@@ -42,22 +37,3 @@ targets:
             - lib/widgetbook/**
             - lib/l10n/**
             - lib/main.dart
-
-  network_parameters:
-    sources:
-      include:
-        - lib/app/network/models/parameters/**
-    builders:
-      json_serializable:
-        generate_for:
-          include:
-            - lib/app/network/models/parameters/**.c.dart
-        options:
-          create_to_json: true
-          explicit_to_json: true
-      freezed:
-        generate_for:
-          include:
-            - lib/app/network/models/parameters/**.c.dart
-        options:
-          to_json: true
