@@ -14,8 +14,8 @@ import 'package:ion/app/features/user/pages/profile_page/components/header/heade
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_details.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/articles_tab.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/posts_tab.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/replies_tab.c.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/videos_tab.c.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/replies_tab.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/videos_tab.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content_separator.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opacity_on_scroll.dart';
