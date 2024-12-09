@@ -85,7 +85,6 @@ class ReactionData with _$ReactionData implements EventSerializable {
   }
 
   @override
-  @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],

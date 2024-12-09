@@ -16,7 +16,7 @@ class TabEntitiesList extends ConsumerWidget {
     super.key,
   });
 
-  final List<EntitiesDataSource> dataSource;
+  final List<EntitiesDataSource>? dataSource;
 
   final Widget Function(List<NostrEntity> entities)? builder;
 

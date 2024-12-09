@@ -87,7 +87,6 @@ class RepostData with _$RepostData implements EventSerializable {
   }
 
   @override
-  @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],

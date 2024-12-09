@@ -69,7 +69,6 @@ class UserRelaysData with _$UserRelaysData implements EventSerializable {
   }
 
   @override
-  @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
     List<List<String>> tags = const [],

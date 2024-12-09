@@ -11,7 +11,7 @@ part 'likes_count_provider.c.g.dart';
 @riverpod
 class LikesCount extends _$LikesCount {
   @override
-  int? build(EventReference eventReference) {
+  int build(EventReference eventReference) {
     final reactionsCountEntity = ref.watch(
       nostrCacheProvider.select(
         cacheSelector<EventCountResultEntity>(
@@ -24,7 +24,7 @@ class LikesCount extends _$LikesCount {
     );
 
     if (reactionsCountEntity == null) {
-      return null;
+      return 0;
     }
 
     final content = reactionsCountEntity.data.content as Map<String, dynamic>;
@@ -32,14 +32,10 @@ class LikesCount extends _$LikesCount {
   }
 
   void addOne() {
-    if (state != null) {
-      state = state! + 1;
-    }
+    state = state + 1;
   }
 
   void removeOne() {
-    if (state != null) {
-      state = state! - 1;
-    }
+    state = state - 1;
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/tab_entities_list.dart';
-import 'package:ion/app/features/user/providers/user_posts_data_source_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_replies_data_source_provider.c.dart';
 
 class RepliesTab extends ConsumerWidget {
   const RepliesTab({
@@ -16,7 +16,7 @@ class RepliesTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dataSource = ref.watch(userPostsDataSourceProvider(pubkey));
+    final dataSource = ref.watch(userRepliesDataSourceProvider(pubkey));
     return TabEntitiesList(
       dataSource: dataSource,
       builder: (entities) => EntitiesList(entities: entities.toList(), showParent: true),

@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
@@ -35,6 +36,7 @@ class EventParser {
       GenericRepostEntity.kind => GenericRepostEntity.fromEventMessage(eventMessage),
       FileMetadataEntity.kind => FileMetadataEntity.fromEventMessage(eventMessage),
       ReactionEntity.kind => ReactionEntity.fromEventMessage(eventMessage),
+      EventCountResultEntity.kind => EventCountResultEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     } as NostrEntity;
   }

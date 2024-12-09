@@ -33,11 +33,10 @@ class RepostsCount extends _$RepostsCount {
       ),
     );
 
-    if (repostsCountEntity == null || quotesCountEntity == null) {
-      return null;
-    }
+    final repostsCount = repostsCountEntity != null ? repostsCountEntity.data.content as int : 0;
+    final quotesCount = quotesCountEntity != null ? quotesCountEntity.data.content as int : 0;
 
-    return (repostsCountEntity.data.content as int) + (quotesCountEntity.data.content as int);
+    return repostsCount + quotesCount;
   }
 
   void addOne() {

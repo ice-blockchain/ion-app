@@ -10,10 +10,10 @@ import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_posts_data_source_provider.c.g.dart';
+part 'user_videos_data_source_provider.c.g.dart';
 
 @riverpod
-List<EntitiesDataSource>? userPostsDataSource(Ref ref, String pubkey) {
+List<EntitiesDataSource>? userVideosDataSource(Ref ref, String pubkey) {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) {
@@ -33,6 +33,7 @@ List<EntitiesDataSource>? userPostsDataSource(Ref ref, String pubkey) {
             [
               ReferencesSearchExtension(contain: false),
               ExpirationSearchExtension(expiration: false),
+              VideosSearchExtension(contain: true),
             ],
             currentPubkey: currentPubkey,
           ).toString(),
