@@ -62,6 +62,7 @@ EntitiesDataSource _buildArticlesDataSource({
     currentPubkey: currentPubkey,
     forKind: ArticleEntity.kind,
   ).toString();
+
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
