@@ -26,7 +26,9 @@ List<EntitiesDataSource>? repliesDataSource(
   final dataSources = [
     EntitiesDataSource(
       actionSource: ActionSourceUser(eventReference.pubkey),
-      entityFilter: (entity) => entity is PostEntity,
+      entityFilter: (entity) =>
+          //TODO:impl filtering with RequestFilter when BE is ready (`!` is impl), to test remove the second check
+          entity is PostEntity && entity.data.parentEvent?.eventId == eventReference.eventId,
       requestFilters: [
         RequestFilter(
           kinds: const [PostEntity.kind],
