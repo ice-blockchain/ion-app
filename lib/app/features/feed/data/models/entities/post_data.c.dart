@@ -9,6 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_hashtag.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.c.dart';
+import 'package:ion/app/features/nostr/model/entity_media_data.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
@@ -58,7 +59,7 @@ class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
 }
 
 @freezed
-class PostData with _$PostData implements EventSerializable {
+class PostData with _$PostData, EntityMediaDataMixin implements EventSerializable {
   const factory PostData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
@@ -75,7 +76,7 @@ class PostData with _$PostData implements EventSerializable {
 
     return PostData(
       content: parsedContent,
-      media: _buildMedia(tags[MediaAttachment.tagName], parsedContent),
+      media: EntityMediaDataMixin.buildMedia(tags[MediaAttachment.tagName], parsedContent),
       quotedEvent: _buildQuotedEvent(tags[QuotedEvent.tagName]),
       relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
@@ -100,20 +101,6 @@ class PostData with _$PostData implements EventSerializable {
 
   const PostData._();
 
-  List<MediaAttachment> get postMedia => content.fold<List<MediaAttachment>>(
-        [],
-        (result, match) {
-          if (match.matcher is UrlMatcher && media.containsKey(match.text)) {
-            result.add(media[match.text]!);
-          }
-          return result;
-        },
-      );
-
-  List<TextMatch> get contentWithoutMedia => content.where((match) {
-        return !postMedia.any((media) => media.url == match.text);
-      }).toList();
-
   @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
@@ -136,29 +123,6 @@ class PostData with _$PostData implements EventSerializable {
     );
   }
 
-  static Map<String, MediaAttachment> _buildMedia(
-    List<List<String>>? imetaTags,
-    List<TextMatch> parsedContent,
-  ) {
-    if (imetaTags == null) {
-      return {};
-    }
-
-    final imeta = imetaTags.parseImeta();
-
-    final media = parsedContent.fold<Map<String, MediaAttachment>>(
-      {},
-      (result, match) {
-        final link = match.text;
-        if (match.matcher is UrlMatcher && imeta.containsKey(link)) {
-          result[link] = imeta[link]!;
-        }
-        return result;
-      },
-    );
-    return media;
-  }
-
   static QuotedEvent? _buildQuotedEvent(List<List<String>>? qTags) {
     if (qTags == null) {
       return null;
@@ -170,8 +134,6 @@ class PostData with _$PostData implements EventSerializable {
   String toString() {
     return 'PostData(${content.map((match) => match.text).join()})';
   }
-
-  MediaAttachment? get primaryMedia => media.isNotEmpty ? media.values.first : null;
 
   RelatedEvent? get parentEvent {
     if (relatedEvents == null) return null;
@@ -205,14 +167,11 @@ class QuotedEvent with _$QuotedEvent {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
     if (tag.length < 4) {
-      //TODO::uncomment and remove stub when using own relays
-      // throw IncorrectEventTagException(tag: tag.toString());
+      throw IncorrectEventTagException(tag: tag.toString());
     }
     return QuotedEvent(
       eventId: tag[1],
-      pubkey: /*tag[3]*/ tag.length < 4
-          ? '5e42daa682da9ad308e284b4a50b0967a23d6f352d2b819f40f0d9fa42a1b44d'
-          : tag[3],
+      pubkey: tag[3],
     );
   }
 
