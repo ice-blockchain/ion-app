@@ -8,8 +8,7 @@ enum VisibilitySettingsOptions {
   everyone,
   followedAccounts,
   verifiedAccounts,
-  mentionedAccounts,
-  ;
+  mentionedAccounts;
 
   String getTitle(BuildContext context) {
     return switch (this) {

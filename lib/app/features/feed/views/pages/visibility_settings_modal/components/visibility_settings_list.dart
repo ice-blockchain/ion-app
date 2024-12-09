@@ -24,9 +24,7 @@ class VisibilitySettingsList extends ConsumerWidget {
       itemBuilder: (BuildContext context, int index) {
         final option = VisibilitySettingsOptions.values[index];
 
-        return VisibilitySettingsListItem(
-          option: option,
-        );
+        return VisibilitySettingsListItem(option: option);
       },
     );
   }
