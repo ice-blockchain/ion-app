@@ -63,6 +63,7 @@ class RecoveryKeyOption extends StatelessWidget {
                           maxLines: 1,
                           overflowWidget: TextOverflowWidget(
                             position: TextOverflowPosition.middle,
+                            align: TextOverflowAlign.center,
                             child: Text('...', style: textTheme.subtitle),
                           ),
                         ),
