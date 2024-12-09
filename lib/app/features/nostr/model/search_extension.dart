@@ -55,6 +55,11 @@ class DiscoveryCreatorsSearchExtension extends SearchExtension {
   final String query = 'discover content creators to follow';
 }
 
+class MostRelevantFollowersSearchExtension extends SearchExtension {
+  @override
+  final String query = 'most relevant followers';
+}
+
 /// For every kind [forKind] that the subscription finds also include the count of replies that it has
 class RepliesCountSearchExtension extends IncludeSearchExtension {
   RepliesCountSearchExtension({this.root = true, this.forKind = PostEntity.kind});
