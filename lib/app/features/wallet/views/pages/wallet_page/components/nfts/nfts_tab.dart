@@ -11,6 +11,7 @@ import 'package:ion/app/features/wallet/views/pages/wallet_page/components/empty
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/constants.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nft_grid_item.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nft_list_item.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab_footer.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
@@ -29,53 +30,64 @@ class NftsTab extends ConsumerWidget {
     final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
 
     if (nfts.isEmpty) {
-      return const EmptyState(
+      return EmptyState(
         tabType: tabType,
+        onBottomActionTap: () {},
       );
     }
 
     if (nftLayoutType == NftLayoutType.grid) {
-      return SliverPadding(
-        padding: EdgeInsets.symmetric(
-          horizontal: ScreenSideOffset.defaultSmallMargin,
-        ),
-        sliver: SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: NftConstants.gridSpacing,
-            mainAxisSpacing: NftConstants.gridSpacing,
-            childAspectRatio: aspectRatio,
+      return SliverMainAxisGroup(
+        slivers: [
+          SliverPadding(
+            padding: EdgeInsets.symmetric(
+              horizontal: ScreenSideOffset.defaultSmallMargin,
+            ),
+            sliver: SliverGrid(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: NftConstants.gridSpacing,
+                mainAxisSpacing: NftConstants.gridSpacing,
+                childAspectRatio: aspectRatio,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return NftGridItem(
+                    nftData: nfts[index],
+                  );
+                },
+                childCount: nfts.length,
+              ),
+            ),
           ),
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return NftGridItem(
-                nftData: nfts[index],
-              );
-            },
-            childCount: nfts.length,
-          ),
-        ),
+          const NftsTabFooter(),
+        ],
       );
     }
 
     return nfts.isNotEmpty
-        ? SliverList.separated(
-            itemCount: nfts.length,
-            separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(
-                height: 12.0.s,
-              );
-            },
-            itemBuilder: (BuildContext context, int index) {
-              return ScreenSideOffset.small(
-                child: NftListItem(
-                  nftData: nfts[index],
-                  onTap: () {
-                    NftDetailsRoute($extra: nfts[index]).push<void>(context);
-                  },
-                ),
-              );
-            },
+        ? SliverMainAxisGroup(
+            slivers: [
+              SliverList.separated(
+                itemCount: nfts.length,
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    height: 12.0.s,
+                  );
+                },
+                itemBuilder: (BuildContext context, int index) {
+                  return ScreenSideOffset.small(
+                    child: NftListItem(
+                      nftData: nfts[index],
+                      onTap: () {
+                        NftDetailsRoute($extra: nfts[index]).push<void>(context);
+                      },
+                    ),
+                  );
+                },
+              ),
+              const NftsTabFooter(),
+            ],
           )
         : const SliverToBoxAdapter(child: SizedBox.shrink());
   }
