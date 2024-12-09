@@ -3,7 +3,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/features/nostr/model/search_extension.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,6 +24,12 @@ List<EntitiesDataSource>? repliesDataSource(
         RequestFilter(
           kinds: const [PostEntity.kind],
           e: [eventReference.eventId],
+          search: [
+            RepliesCountSearchExtension(),
+            RepostsCountSearchExtension(),
+            QuotesCountSearchExtension(),
+            ReactionsCountSearchExtension(),
+          ].join(' '),
           limit: 10,
         ),
       ],
