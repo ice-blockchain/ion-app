@@ -8,9 +8,9 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
-import 'package:ion/app/features/chat/model/message_author.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.dart';
-import 'package:ion/app/features/core/providers/video_player_provider.dart';
+import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
+import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 
 part 'components/message_with_timestamp.dart';
 

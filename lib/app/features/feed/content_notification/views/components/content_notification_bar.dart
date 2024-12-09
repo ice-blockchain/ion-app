@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.dart';
-import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.dart';
+import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.c.dart';
+import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.c.dart';
 import 'package:ion/app/features/feed/stories/effects/slide_in_out_effects.dart';
 
 class ContentNotificationBar extends ConsumerWidget {

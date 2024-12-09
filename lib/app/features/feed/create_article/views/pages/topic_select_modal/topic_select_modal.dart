@@ -7,7 +7,7 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
-import 'package:ion/app/features/feed/providers/article/select_topics_provider.dart';
+import 'package:ion/app/features/feed/providers/article/select_topics_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 

@@ -2,7 +2,7 @@
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
-import 'package:ion_identity_client/src/signer/dtos/user_action_signing_complete_request.dart';
+import 'package:ion_identity_client/src/signer/dtos/user_action_signing_complete_request.c.dart';
 
 class LoginDataSource {
   LoginDataSource({

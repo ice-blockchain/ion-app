@@ -13,8 +13,8 @@ import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_h
 import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/step_pages.dart';
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/features/wallet/model/wallet_data_with_loading_state.dart';
+import 'package:ion/app/features/wallet/model/wallet_data_with_loading_state.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum WalletTabType {

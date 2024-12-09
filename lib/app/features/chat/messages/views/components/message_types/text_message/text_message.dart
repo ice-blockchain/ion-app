@@ -7,9 +7,9 @@ import 'package:ion/app/features/chat/messages/views/components/message_item_wra
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/messages/views/components/replied_message_info/replied_message_info.dart';
-import 'package:ion/app/features/chat/model/message_author.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.dart';
-import 'package:ion/app/features/chat/model/replied_message.dart';
+import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
+import 'package:ion/app/features/chat/model/replied_message.c.dart';
 
 class TextMessage extends StatelessWidget {
   const TextMessage({

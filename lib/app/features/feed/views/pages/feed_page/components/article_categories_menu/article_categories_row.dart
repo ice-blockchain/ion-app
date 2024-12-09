@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/article_category.dart';
+import 'package:ion/app/features/feed/data/models/article_category.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ArticleCategoriesRow extends StatelessWidget {

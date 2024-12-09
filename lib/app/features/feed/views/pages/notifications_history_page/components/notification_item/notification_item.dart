@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/notifications/notification_data.dart';
+import 'package:ion/app/features/feed/data/models/notifications/notification_data.c.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/notification_info.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/notification_type_icon.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/user_avatar.dart';
-import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 
 class NotificationItem extends StatelessWidget {
   const NotificationItem({

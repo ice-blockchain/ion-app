@@ -12,7 +12,7 @@ import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/get_started/login_form.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 

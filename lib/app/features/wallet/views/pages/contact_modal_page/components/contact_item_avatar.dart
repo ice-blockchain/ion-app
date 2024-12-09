@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallet/model/contact_data.dart';
+import 'package:ion/app/features/wallet/model/contact_data.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ContactItemAvatar extends StatelessWidget {

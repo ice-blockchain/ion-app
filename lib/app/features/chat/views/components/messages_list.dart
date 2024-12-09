@@ -18,9 +18,9 @@ import 'package:ion/app/features/chat/messages/views/components/message_types/sy
 import 'package:ion/app/features/chat/messages/views/components/message_types/text_message/text_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/url_preview_message/url_preview_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/video_message/video_message.dart';
-import 'package:ion/app/features/chat/model/message_list_item.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.dart';
-import 'package:ion/app/features/chat/providers/author_to_display_provider.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
+import 'package:ion/app/features/chat/providers/author_to_display_provider.c.dart';
 
 class ChatMessagesList extends ConsumerWidget {
   const ChatMessagesList(

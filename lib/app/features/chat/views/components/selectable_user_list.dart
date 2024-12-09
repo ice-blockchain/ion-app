@@ -8,7 +8,7 @@ import 'package:ion/app/components/list_items_loading_state/list_items_loading_s
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/selectable_user_list_item.dart';
-import 'package:ion/app/features/user/model/user_metadata.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 

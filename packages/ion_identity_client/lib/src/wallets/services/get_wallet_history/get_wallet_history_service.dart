@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/src/wallets/services/get_wallet_history/data_sources/get_wallet_history_data_source.dart';
-import 'package:ion_identity_client/src/wallets/services/get_wallet_history/models/wallet_history.dart';
+import 'package:ion_identity_client/src/wallets/services/get_wallet_history/models/wallet_history.c.dart';
 
 class GetWalletHistoryService {
   const GetWalletHistoryService(

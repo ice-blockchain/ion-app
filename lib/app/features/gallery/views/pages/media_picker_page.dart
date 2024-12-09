@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
+import 'package:ion/app/features/gallery/data/models/gallery_state.c.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';

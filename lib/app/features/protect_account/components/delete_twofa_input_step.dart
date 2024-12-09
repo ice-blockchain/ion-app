@@ -11,8 +11,8 @@ import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/compon
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_try_again_page.dart';
 import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/adapter/twofa_type_adapter.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class DeleteTwoFAInputStep extends HookConsumerWidget {

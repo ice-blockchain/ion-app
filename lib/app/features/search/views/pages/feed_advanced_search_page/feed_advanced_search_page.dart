@@ -11,7 +11,7 @@ import 'package:ion/app/features/search/views/components/advanced_search_navigat
 import 'package:ion/app/features/search/views/components/advanced_search_tab_bar/advanced_search_tab_bar.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_top/feed_advanced_search_top.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_users/feed_advanced_search_users.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class FeedAdvancedSearchPage extends HookConsumerWidget {
   const FeedAdvancedSearchPage({required this.query, super.key});

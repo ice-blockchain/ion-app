@@ -8,14 +8,14 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ion/app/features/feed/stories/data/models/story_camera_state.dart';
+import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_recording_progress.dart';
-import 'package:ion/app/features/feed/stories/providers/story_camera_provider.dart';
+import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
-import 'package:ion/app/features/gallery/data/models/camera_state.dart';
-import 'package:ion/app/features/gallery/providers/camera_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
-import 'package:ion/app/services/media_service/banuba_service.dart';
+import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
+import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/banuba_service.c.dart';
 
 class StoryRecordPage extends HookConsumerWidget {
   const StoryRecordPage({super.key});

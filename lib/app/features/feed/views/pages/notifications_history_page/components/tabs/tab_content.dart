@@ -9,17 +9,17 @@ import 'package:ion/app/components/empty_list/empty_list.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/content_creators_data_source_provider.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
-import 'package:ion/app/features/feed/data/models/notifications/notification_data.dart';
+import 'package:ion/app/features/auth/providers/content_creators_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/notifications/notification_data.c.dart';
 import 'package:ion/app/features/feed/data/models/notifications/notifications_tab_type.dart';
 import 'package:ion/app/features/feed/data/models/notifications/notifications_type.dart';
-import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.dart';
+import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/content_separator.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/notification_item.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/tabs/mock_data.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
-import 'package:ion/app/features/user/model/user_metadata.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class TabContent extends HookConsumerWidget {

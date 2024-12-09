@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/channels_provider.dart';
+import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
 import 'package:ion/app/features/chat/views/pages/components/joined_users_amount_tile.dart';
 import 'package:ion/generated/assets.gen.dart';
 

@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/restore_menu/restore_menu_item.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 

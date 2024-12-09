@@ -5,9 +5,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/video_player_provider.dart';
+import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:video_player/video_player.dart';
 

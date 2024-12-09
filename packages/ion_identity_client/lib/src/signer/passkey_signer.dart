@@ -6,7 +6,7 @@ import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion.dart';
 import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion_data.dart';
-import 'package:ion_identity_client/src/signer/dtos/user_action_challenge.dart';
+import 'package:ion_identity_client/src/signer/dtos/user_action_challenge.c.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:passkeys/authenticator.dart';
 import 'package:passkeys/types.dart';

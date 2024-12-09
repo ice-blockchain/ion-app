@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/model/message_author.dart';
+import 'package:ion/app/features/chat/model/message_author.c.dart';
 
 class RecentChatDataModel {
   RecentChatDataModel(

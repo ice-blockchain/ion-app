@@ -8,8 +8,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
-import 'package:ion/app/features/chat/model/message_author.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.dart';
+import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
 part 'components/meta_data_preview.dart';

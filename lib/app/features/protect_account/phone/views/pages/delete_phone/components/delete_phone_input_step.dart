@@ -6,8 +6,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/protect_account/components/delete_twofa_input_step.dart';
 import 'package:ion/app/features/protect_account/components/delete_twofa_step_scaffold.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeletePhoneInputStep extends ConsumerWidget {

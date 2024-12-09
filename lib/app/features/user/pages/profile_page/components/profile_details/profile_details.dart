@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/user/pages/components/user_name_tile/user_name_tile.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followed_by/followed_by.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_about.dart';

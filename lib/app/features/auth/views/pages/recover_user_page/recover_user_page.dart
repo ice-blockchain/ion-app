@@ -10,9 +10,9 @@ import 'package:ion/app/features/auth/views/pages/recover_user_page/components/t
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/twofa_options_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/models/recover_user_step.dart';
 import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
-import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 typedef RecoveryCreds = ({String name, String id, String code});

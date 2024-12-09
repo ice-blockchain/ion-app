@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_text_button.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallet/providers/coins_provider.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
+import 'package:ion/app/features/wallet/providers/coins_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
 import 'package:ion/app/utils/validators.dart';
 
 class CoinAmountInput extends ConsumerWidget {

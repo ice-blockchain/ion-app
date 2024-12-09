@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
-import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
-import 'package:ion/app/features/wallet/providers/wallet_user_preferences/wallet_user_preferences_provider.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
+import 'package:ion/app/features/wallet/providers/wallet_user_preferences/wallet_user_preferences_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BalanceVisibilityAction extends ConsumerWidget {

@@ -9,8 +9,8 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
-import 'package:ion/app/features/wallet/providers/coins_provider.dart';
-import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
+import 'package:ion/app/features/wallet/providers/coins_provider.c.dart';
+import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/utils/num.dart';
 
 class CoinNetworkItem extends ConsumerWidget {

@@ -7,12 +7,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/content_creators_data_source_provider.dart';
+import 'package:ion/app/features/auth/providers/content_creators_data_source_provider.c.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.dart';
+import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/selectable_user_list.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
-import 'package:ion/app/features/user/model/user_metadata.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class AddAdminModal extends HookConsumerWidget {

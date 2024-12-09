@@ -10,9 +10,9 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu_item.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
-import 'package:ion/app/features/user/model/user_metadata.dart';
-import 'package:ion/app/features/user/providers/follow_list_provider.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 

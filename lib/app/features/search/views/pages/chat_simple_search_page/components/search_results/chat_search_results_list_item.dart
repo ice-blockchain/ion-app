@@ -6,8 +6,8 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/search/providers/feed_search_history_provider.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/features/search/providers/feed_search_history_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 

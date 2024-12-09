@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/gallery/data/models/gallery_state.dart';
+import 'package:ion/app/features/gallery/data/models/gallery_state.c.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 

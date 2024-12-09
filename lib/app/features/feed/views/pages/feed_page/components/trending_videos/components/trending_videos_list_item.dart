@@ -4,12 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_author.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_likes_button.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_menu_button.dart';
-import 'package:ion/app/features/nostr/model/event_reference.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class TrendingVideoListItem extends ConsumerWidget {
   const TrendingVideoListItem({

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart'; // Import hooks
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/providers/user_followers_provider.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/user/providers/user_followers_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class FollowedByText extends HookConsumerWidget {
   const FollowedByText({

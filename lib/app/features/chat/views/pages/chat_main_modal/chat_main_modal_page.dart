@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/conversation_type.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';

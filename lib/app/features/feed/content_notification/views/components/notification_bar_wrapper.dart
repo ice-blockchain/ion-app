@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.dart';
+import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.c.dart';
 import 'package:ion/app/features/feed/content_notification/views/components/content_notification_bar.dart';
 
 class NotificationBarWrapper extends ConsumerWidget {

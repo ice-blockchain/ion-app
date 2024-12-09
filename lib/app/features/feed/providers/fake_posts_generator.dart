@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/services/nostr/ed25519_key_store.dart';

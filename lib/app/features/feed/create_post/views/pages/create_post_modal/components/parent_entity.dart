@@ -6,13 +6,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/replying_to/replying_to.dart';
-import 'package:ion/app/features/nostr/model/event_reference.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 
 class ParentEntity extends ConsumerWidget {

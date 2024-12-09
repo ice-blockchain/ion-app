@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/language.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class FeedSearchFilterLanguagesSection extends StatelessWidget {

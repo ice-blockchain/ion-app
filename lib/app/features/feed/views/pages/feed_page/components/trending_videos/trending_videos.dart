@@ -8,16 +8,16 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/section_header/section_header.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/trending_videos_overlay.dart';
-import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.dart';
+import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_skeleton.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/video_icon.dart';
-import 'package:ion/app/features/nostr/model/event_reference.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class TrendingVideos extends ConsumerWidget {
   const TrendingVideos({super.key});

@@ -7,8 +7,8 @@ import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart'
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_page_dismiss.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_provider.dart';
-import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 

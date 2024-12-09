@@ -8,7 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.dart';
+import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/selection_list_item.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admin_type_selection_modal/components/delete_admin_button.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';

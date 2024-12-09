@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/providers/bookmarks_provider.dart';
+import 'package:ion/app/features/feed/providers/bookmarks_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BookmarkButton extends ConsumerWidget {

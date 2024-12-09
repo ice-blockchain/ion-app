@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class ToolbarImageButton extends StatelessWidget {
   const ToolbarImageButton({required this.textEditorController, super.key});

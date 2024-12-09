@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/poll/poll_length_time_provider.dart';
+import 'package:ion/app/features/core/providers/poll/poll_length_time_provider.c.dart';
 import 'package:ion/app/features/core/views/components/poll/poll_add_answer_button.dart';
 import 'package:ion/app/features/core/views/components/poll/poll_answers_list_view.dart';
 import 'package:ion/app/features/core/views/components/poll/poll_close_button.dart';

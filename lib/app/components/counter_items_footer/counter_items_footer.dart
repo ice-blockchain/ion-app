@@ -7,7 +7,7 @@ import 'package:ion/app/components/counter_items_footer/replies_counter_button.d
 import 'package:ion/app/components/counter_items_footer/reposts_counter_button.dart';
 import 'package:ion/app/components/counter_items_footer/share_button.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 
 class CounterItemsFooter extends HookConsumerWidget {
   CounterItemsFooter({

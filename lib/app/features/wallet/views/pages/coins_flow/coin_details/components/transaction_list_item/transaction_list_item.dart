@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallet/model/coin_data.dart';
-import 'package:ion/app/features/wallet/model/coin_transaction_data.dart';
+import 'package:ion/app/features/wallet/model/coin_data.c.dart';
+import 'package:ion/app/features/wallet/model/coin_transaction_data.c.dart';
 import 'package:ion/app/features/wallet/model/transaction_type.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_item_leading_icon.dart';
 import 'package:ion/app/utils/date.dart';

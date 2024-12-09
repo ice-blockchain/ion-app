@@ -7,15 +7,15 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/visibility_settings_options.dart';
-import 'package:ion/app/features/feed/providers/selected_visibility_options_provider.dart';
+import 'package:ion/app/features/feed/providers/selected_visibility_options_provider.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
-import 'package:ion/app/features/feed/stories/providers/story_camera_provider.dart';
+import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_share_button.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_image_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/user/verified_account_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/visibility_settings_modal/visibility_settings_modal.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 

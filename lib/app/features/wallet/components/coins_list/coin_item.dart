@@ -7,8 +7,8 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallet/model/coin_data.dart';
-import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
+import 'package:ion/app/features/wallet/model/coin_data.c.dart';
+import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/utils/num.dart';
 
 class CoinItem extends ConsumerWidget {

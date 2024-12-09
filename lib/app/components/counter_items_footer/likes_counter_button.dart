@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/text_action_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.dart';
-import 'package:ion/app/features/feed/providers/counters/likes_count_provider.dart';
-import 'package:ion/app/features/feed/providers/counters/likes_notifier.dart';
-import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
+import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';
+import 'package:ion/app/features/feed/providers/counters/likes_notifier.c.dart';
+import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 

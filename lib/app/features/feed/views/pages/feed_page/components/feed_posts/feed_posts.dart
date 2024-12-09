@@ -5,11 +5,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
-import 'package:ion/app/features/feed/providers/feed_current_filter_provider.dart';
-import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.dart';
+import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
-import 'package:ion/app/features/nostr/providers/mock_article_entities_paged_data_provider.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/nostr/providers/mock_article_entities_paged_data_provider.c.dart';
 
 class FeedPosts extends ConsumerWidget {
   const FeedPosts({super.key});

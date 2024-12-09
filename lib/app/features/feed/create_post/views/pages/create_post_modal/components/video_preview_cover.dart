@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/video_player_provider.dart';
+import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_duration.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_edit_cover.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
+import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:video_player/video_player.dart';
 

@@ -6,8 +6,8 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/feed/providers/counters/likes_count_provider.dart';
-import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';
+import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 

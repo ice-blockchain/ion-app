@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:ion/app/features/wallet/model/coin_transaction_data.dart';
+import 'package:ion/app/features/wallet/model/coin_transaction_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/model/transaction_type.dart';
 

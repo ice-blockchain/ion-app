@@ -8,7 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
@@ -18,8 +18,8 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/component
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/articles_carousel.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/user_biography.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/hooks/use_scroll_indicator.dart';
-import 'package:ion/app/features/nostr/model/event_reference.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
+import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 

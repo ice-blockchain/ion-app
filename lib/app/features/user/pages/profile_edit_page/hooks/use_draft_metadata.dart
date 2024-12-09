@@ -2,9 +2,9 @@
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/user/model/user_metadata.dart';
-import 'package:ion/app/features/user/providers/avatar_processor_notifier.dart';
-import 'package:ion/app/features/user/providers/banner_processor_notifier.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
+import 'package:ion/app/features/user/providers/banner_processor_notifier.c.dart';
 
 ({
   bool hasChanges,

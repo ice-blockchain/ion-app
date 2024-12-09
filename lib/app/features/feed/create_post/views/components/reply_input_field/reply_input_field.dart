@@ -17,8 +17,8 @@ import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_qui
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_image_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_poll_button.dart';
-import 'package:ion/app/features/nostr/model/event_reference.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ReplyInputField extends HookConsumerWidget {

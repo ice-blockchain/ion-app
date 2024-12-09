@@ -6,8 +6,8 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
-import 'package:ion/app/router/app_routes.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
+import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class GalleryPermissionButton extends ConsumerWidget {

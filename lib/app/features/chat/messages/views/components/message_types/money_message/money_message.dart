@@ -9,8 +9,8 @@ import 'package:ion/app/features/chat/messages/views/components/message_author/m
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
-import 'package:ion/app/features/chat/model/message_author.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.dart';
+import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/generated/assets.gen.dart';
 
