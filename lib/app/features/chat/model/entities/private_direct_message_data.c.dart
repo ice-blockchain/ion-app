@@ -26,7 +26,7 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity, NostrEntity 
 
   const PrivateDirectMessageEntity._();
 
-  /// https://github.com/nostr-protocol/nips/blob/master/01.md
+  /// https://github.com/nostr-protocol/nips/blob/master/17.md
   factory PrivateDirectMessageEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw Exception('Incorrect event kind ${eventMessage.kind}, expected $kind');
@@ -64,6 +64,9 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData {
       relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
     );
   }
+
+  List<MediaAttachment> get medias => media.values.toList();
+  MediaAttachment? get primaryMedia => medias.firstOrNull;
 
   FutureOr<EventMessage> toEventMessage({
     required String pubkey,
