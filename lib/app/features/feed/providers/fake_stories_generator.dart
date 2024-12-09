@@ -2,9 +2,9 @@
 
 import 'dart:math';
 
-import 'package:ion/app/features/feed/data/models/entities/post_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/providers/fake_posts_generator.dart';
-import 'package:ion/app/features/feed/stories/data/models/story.dart';
+import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
@@ -49,6 +49,7 @@ PostEntity generateFakePostWithMedia(String pubkey) {
 
   final postEntity = PostEntity(
     id: '${random.nextInt(10000)}',
+    signature: '',
     pubkey: pubkey,
     masterPubkey: pubkey,
     createdAt: DateTime.now(),

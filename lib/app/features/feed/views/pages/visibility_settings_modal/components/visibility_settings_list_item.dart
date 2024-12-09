@@ -11,12 +11,10 @@ import 'package:ion/generated/assets.gen.dart';
 class VisibilitySettingsListItem extends ConsumerWidget {
   const VisibilitySettingsListItem({
     required this.option,
-    this.isForStory = false,
     super.key,
   });
 
   final VisibilitySettingsOptions option;
-  final bool isForStory;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,7 +28,7 @@ class VisibilitySettingsListItem extends ConsumerWidget {
 
     return ListItem(
       onTap: onSelect,
-      title: Text(option.getTitle(context, isForStory: isForStory)),
+      title: Text(option.getTitle(context)),
       backgroundColor: context.theme.appColors.secondaryBackground,
       leading: Container(
         width: 36.0.s,
