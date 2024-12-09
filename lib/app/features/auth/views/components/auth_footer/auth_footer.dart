@@ -7,7 +7,7 @@ import 'package:ion/app/constants/links.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/components/passkeys/secured_by.dart';
+import 'package:ion/app/features/components/verify_identity/secured_by.dart';
 import 'package:ion/app/services/browser/browser.dart';
 import 'package:ion/l10n/i10n.dart';
 

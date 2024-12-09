@@ -11,8 +11,8 @@ import 'package:ion/app/features/auth/providers/register_action_notifier.c.dart'
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
-import 'package:ion/app/features/auth/views/pages/sign_up_password/password_input.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_password_button.dart';
+import 'package:ion/app/features/components/verify_identity/components/password_input.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -27,8 +27,30 @@ class SignUpPasswordPage extends HookConsumerWidget {
     final passwordController = useTextEditingController();
     final passwordConfirmationController = useTextEditingController();
     final formKey = useRef(GlobalKey<FormState>());
-    final checkboxSelected = useState(false);
-    final checkboxHighlighted = useState(false);
+
+    final registerActionState = ref.watch(registerActionNotifierProvider);
+
+    ref.displayErrors(registerActionNotifierProvider);
+
+    final passwordsError = useState<String?>(null);
+    useEffect(
+      () {
+        void clearError() {
+          if (passwordsError.value != null) {
+            passwordsError.value = null;
+          }
+        }
+
+        passwordController.addListener(clearError);
+        passwordConfirmationController.addListener(clearError);
+
+        return () {
+          passwordController.removeListener(clearError);
+          passwordConfirmationController.removeListener(clearError);
+        };
+      },
+      [passwordController, passwordConfirmationController, passwordsError],
+    );
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -44,29 +66,34 @@ class SignUpPasswordPage extends HookConsumerWidget {
                   children: [
                     SizedBox(height: 60.0.s),
                     IdentityKeyNameInput(
+                      errorText: registerActionState.error?.toString(),
                       controller: identityKeyNameController,
                       textInputAction: TextInputAction.next,
                       scrollPadding: EdgeInsets.only(bottom: 250.0.s),
                     ),
                     SizedBox(height: 16.0.s),
-                    PasswordInput(controller: passwordController),
+                    PasswordInput(
+                      controller: passwordController,
+                      errorText: passwordsError.value,
+                    ),
                     SizedBox(height: 16.0.s),
                     PasswordInput(
-                      controller: passwordConfirmationController,
                       isConfirmation: true,
+                      controller: passwordConfirmationController,
+                      errorText: passwordsError.value,
                     ),
                     SizedBox(height: 20.0.s),
                     SignUpPasswordButton(
                       onPressed: () {
-                        final valid = formKey.value.currentState!.validate();
-                        if (checkboxSelected.value) {
-                          if (valid) {
-                            ref
-                                .read(registerActionNotifierProvider.notifier)
-                                .signUp(keyName: identityKeyNameController.text);
+                        if (passwordController.text == passwordConfirmationController.text) {
+                          if (formKey.value.currentState!.validate()) {
+                            ref.read(registerActionNotifierProvider.notifier).signUpWithPassword(
+                                  keyName: identityKeyNameController.text,
+                                  password: passwordController.text,
+                                );
                           }
                         } else {
-                          checkboxHighlighted.value = true;
+                          passwordsError.value = context.i18n.error_passwords_are_not_equal;
                         }
                       },
                     ),

@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -12,15 +15,16 @@ import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/get_started/login_form.dart';
+import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class GetStartedPage extends StatelessWidget {
+class GetStartedPage extends ConsumerWidget {
   const GetStartedPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
       body: KeyboardDismissOnTap(
         child: AuthScrollContainer(
@@ -47,8 +51,17 @@ class GetStartedPage extends StatelessWidget {
                     leadingIcon: Assets.svg.iconLoginCreateacc.icon(
                       color: context.theme.appColors.secondaryText,
                     ),
-                    onPressed: () {
-                      SignUpPasskeyRoute().push<void>(context);
+                    onPressed: () async {
+                      final isPasskeyAvailable = await ref.read(isPasskeyAvailableProvider.future);
+                      if (context.mounted) {
+                        // TODO: remove once passwords flow is fully implemented and tested
+                        final randomBool = Random().nextBool();
+                        if (isPasskeyAvailable && randomBool) {
+                          await SignUpPasskeyRoute().push<void>(context);
+                        } else {
+                          await SignUpPasswordRoute().push<void>(context);
+                        }
+                      }
                     },
                     label: Text(context.i18n.button_register),
                     mainAxisSize: MainAxisSize.max,

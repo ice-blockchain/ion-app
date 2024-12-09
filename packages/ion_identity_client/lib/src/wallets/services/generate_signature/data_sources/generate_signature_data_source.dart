@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/types/http_method.dart';
 import 'package:ion_identity_client/src/signer/types/user_action_signing_request.dart';
 import 'package:ion_identity_client/src/wallets/services/generate_signature/models/generate_signature_request.c.dart';
@@ -14,19 +15,21 @@ class GenerateSignatureDataSource {
   UserActionSigningRequest buildGenerateSignatureSigningRequest({
     required String username,
     required String walletId,
-    required String kind,
     String? hash,
     String? message,
     String? externalId,
   }) {
-    final request = kind == 'Hash'
+    if (message == null && hash == null) {
+      throw const IncompleteDataIONIdentityException();
+    }
+    final request = hash != null
         ? SignatureRequestHash(
-            kind: kind,
-            hash: hash!,
+            kind: 'Hash',
+            hash: hash,
             externalId: externalId,
           ).toJson()
         : SignatureRequestMessage(
-            kind: kind,
+            kind: 'Message',
             message: _hexEncode(message!),
             externalId: externalId,
           ).toJson();

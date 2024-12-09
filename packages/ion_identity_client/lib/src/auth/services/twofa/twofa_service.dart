@@ -86,7 +86,7 @@ class TwoFAService {
 
     final hash = sha256.convert(utf8.encode('$timestamp:$userId'));
 
-    final signatureResponse = await _wallets.generateHashSignature(
+    final signatureResponse = await _wallets.generateHashSignatureWithPasskey(
       mainWallet.id,
       hash.toString(),
     );

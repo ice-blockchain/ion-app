@@ -2,10 +2,10 @@
 
 import 'dart:convert';
 
-import 'package:cryptography/cryptography.dart' as cryptography;
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user/data_sources/recover_user_data_source.dart';
+import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class RecoverUserService {
@@ -56,66 +56,24 @@ class RecoverUserService {
         'newCredentials': {
           'firstFactorCredential': attestation.toJson(),
         },
-        'recovery': signedRecoveryPackage,
+        'recovery': signedRecoveryPackage.toJson(),
       },
       temporaryAuthenticationToken: challenge.temporaryAuthenticationToken,
     );
   }
 
-  Future<Map<String, dynamic>> _signNewCredentials({
+  Future<AssertionRequestData> _signNewCredentials({
     required String encryptedKey,
     required String recoveryKey,
     required String credentialId,
     required Map<String, dynamic> newCredentials,
   }) async {
-    final recoveryClientData = jsonEncode({
-      'challenge': base64UrlEncode(utf8.encode(jsonEncode(newCredentials))),
-      'crossOrigin': false,
-      'origin': config.origin,
-      'type': 'key.get',
-    });
-
-    final signature = await generateSignature(
+    return identitySigner.signWithPassword(
+      challenge: base64UrlEncode(utf8.encode(jsonEncode(newCredentials))),
       encryptedPrivateKey: encryptedKey,
-      recoveryKey: recoveryKey,
-      message: recoveryClientData,
-      encoding: 'base64Url',
+      password: recoveryKey,
+      credentialId: credentialId,
+      credentialKind: CredentialKind.RecoveryKey,
     );
-
-    return {
-      'kind': 'RecoveryKey',
-      'credentialAssertion': {
-        'credId': credentialId,
-        'clientData': base64UrlEncode(utf8.encode(recoveryClientData)),
-        'signature': signature,
-      },
-    };
-  }
-
-  // Generate signature using the decrypted private key
-  Future<String> generateSignature({
-    required String encryptedPrivateKey,
-    required String message,
-    required String encoding,
-    required String recoveryKey,
-  }) async {
-    final privateKeyPem = await keyService.decryptPrivateKey(encryptedPrivateKey, recoveryKey);
-
-    final privateKey = await keyService.pemToPrivateKey(privateKeyPem);
-
-    final algorithm = cryptography.Ed25519();
-
-    final signature = await algorithm.sign(
-      utf8.encode(message),
-      keyPair: privateKey,
-    );
-
-    if (encoding == 'hex') {
-      return signature.bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
-    } else if (encoding == 'base64Url') {
-      return base64UrlEncode(signature.bytes);
-    } else {
-      throw Exception('Unsupported encoding');
-    }
   }
 }

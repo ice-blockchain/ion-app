@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 export 'allow_credentials.c.dart';
+export 'assertion_request_data.c.dart';
 export 'authenticator_selection_criteria.c.dart';
-export 'fido_2_assertion.dart';
-export 'fido_2_assertion_data.dart';
+export 'credential_assertion_data.c.dart';
 export 'public_key_credential_descriptor.c.dart';
 export 'public_key_credential_parameters.c.dart';
 export 'relying_party.c.dart';

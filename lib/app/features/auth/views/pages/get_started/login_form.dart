@@ -9,7 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/login_action_notifier.c.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
-import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
+import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class LoginForm extends HookConsumerWidget {
@@ -60,9 +60,9 @@ class LoginForm extends HookConsumerWidget {
   ) {
     return guardPasskeyDialog(
       ref.context,
-      (child) => RiverpodPasskeyRequestBuilder(
+      (child) => RiverpodVerifyIdentityRequestBuilder(
         provider: loginActionNotifierProvider,
-        request: () {
+        requestWithVerifyIdentity: (_) {
           ref.read(loginActionNotifierProvider.notifier).signIn(keyName: identityKeyName);
         },
         child: child,

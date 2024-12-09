@@ -5,9 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
+import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/backup/providers/create_recovery_key_action_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class CreateRecoveryKeyErrorState extends ConsumerWidget {
   const CreateRecoveryKeyErrorState({super.key});
@@ -55,12 +56,13 @@ class CreateRecoveryKeyErrorState extends ConsumerWidget {
               label: Text(locale.button_retry),
               onPressed: () => guardPasskeyDialog(
                 context,
-                (child) => RiverpodPasskeyRequestBuilder(
+                (child) => RiverpodVerifyIdentityRequestBuilder(
                   provider: createRecoveryKeyActionNotifierProvider,
-                  request: () {
+                  requestWithVerifyIdentity:
+                      (OnVerifyIdentity<CredentialResponse> onVerifyIdentity) {
                     ref
                         .read(createRecoveryKeyActionNotifierProvider.notifier)
-                        .createRecoveryCredentials();
+                        .createRecoveryCredentials(onVerifyIdentity);
                   },
                   child: child,
                 ),

@@ -11,6 +11,7 @@ class AllowCredentials {
   AllowCredentials(
     this.webauthn,
     this.key,
+    this.passwordProtectedKey,
   );
 
   factory AllowCredentials.fromJson(JsonObject json) {
@@ -19,6 +20,7 @@ class AllowCredentials {
 
   final List<PublicKeyCredentialDescriptor> webauthn;
   final List<PublicKeyCredentialDescriptor> key;
+  final List<PublicKeyCredentialDescriptor>? passwordProtectedKey;
 
   JsonObject toJson() => _$AllowCredentialsToJson(this);
 }

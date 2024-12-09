@@ -17,7 +17,7 @@ class UserActionSigningCompleteRequest {
       _$UserActionSigningCompleteRequestFromJson(json);
 
   final String challengeIdentifier;
-  final Fido2Assertion firstFactor;
+  final AssertionRequestData firstFactor;
 
   JsonObject toJson() => _$UserActionSigningCompleteRequestToJson(this);
 

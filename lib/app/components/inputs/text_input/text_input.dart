@@ -126,6 +126,7 @@ class TextInput extends HookWidget {
       cursorColor: context.theme.appColors.primaryAccent,
       maxLength: maxLength,
       obscureText: obscureText,
+      obscuringCharacter: '*',
       validator: validate,
       decoration: TextInputDecoration(
         context: context,

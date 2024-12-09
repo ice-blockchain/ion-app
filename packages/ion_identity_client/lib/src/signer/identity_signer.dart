@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
-import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion.dart';
+import 'package:ion_identity_client/src/signer/dtos/assertion_request_data.c.dart';
 import 'package:ion_identity_client/src/signer/dtos/user_action_challenge.c.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/signer/password_signer.dart';
@@ -34,8 +33,24 @@ class IdentitySigner {
     );
   }
 
-  Future<Fido2Assertion> signWithPasskey(UserActionChallenge challenge) async {
+  Future<AssertionRequestData> signWithPasskey(UserActionChallenge challenge) async {
     return passkeySigner.sign(challenge);
+  }
+
+  Future<AssertionRequestData> signWithPassword({
+    required String challenge,
+    required String encryptedPrivateKey,
+    required String password,
+    required String credentialId,
+    required CredentialKind credentialKind,
+  }) async {
+    return passwordSigner.createCredentialAssertion(
+      challenge: challenge,
+      encryptedPrivateKey: encryptedPrivateKey,
+      password: password,
+      credentialKind: credentialKind,
+      credentialId: credentialId,
+    );
   }
 
   Future<bool> isPasskeyAvailable() async {

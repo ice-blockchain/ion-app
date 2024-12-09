@@ -11,6 +11,7 @@ PublicKeyCredentialDescriptor _$PublicKeyCredentialDescriptorFromJson(
     PublicKeyCredentialDescriptor(
       json['type'] as String,
       json['id'] as String,
+      json['encryptedPrivateKey'] as String?,
     );
 
 Map<String, dynamic> _$PublicKeyCredentialDescriptorToJson(
@@ -18,4 +19,5 @@ Map<String, dynamic> _$PublicKeyCredentialDescriptorToJson(
     <String, dynamic>{
       'type': instance.type,
       'id': instance.id,
+      'encryptedPrivateKey': instance.encryptedPrivateKey,
     };

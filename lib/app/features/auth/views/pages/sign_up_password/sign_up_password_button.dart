@@ -6,7 +6,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/features/auth/providers/register_action_notifier.c.dart';
 
 class SignUpPasswordButton extends ConsumerWidget {
   const SignUpPasswordButton({
@@ -19,12 +19,14 @@ class SignUpPasswordButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
+    final registerActionState = ref.watch(registerActionNotifierProvider);
 
     return Button(
-      disabled: authState.isLoading,
-      trailingIcon: authState.isLoading || (authState.valueOrNull?.hasAuthenticated).falseOrValue
-          ? const IONLoadingIndicator()
-          : Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
+      disabled: registerActionState.isLoading,
+      trailingIcon:
+          registerActionState.isLoading || (authState.valueOrNull?.hasAuthenticated).falseOrValue
+              ? const IONLoadingIndicator()
+              : const SizedBox.shrink(),
       onPressed: onPressed,
       label: Text(context.i18n.button_continue),
       mainAxisSize: MainAxisSize.max,

@@ -26,6 +26,11 @@ class PasskeyValidationException extends IONIdentityException {
   const PasskeyValidationException() : super('Passkey validation failed');
 }
 
+class PasswordFlowNotAvailableForTheUserException extends IONIdentityException {
+  const PasswordFlowNotAvailableForTheUserException()
+      : super('Password flow is not available for this user');
+}
+
 class TwoFARequiredException extends IONIdentityException {
   const TwoFARequiredException(
     this.twoFAOptionsCount,
@@ -36,4 +41,8 @@ class TwoFARequiredException extends IONIdentityException {
 
 class UnknownIONIdentityException extends IONIdentityException {
   const UnknownIONIdentityException([super.message]);
+}
+
+class IncompleteDataIONIdentityException extends IONIdentityException {
+  const IncompleteDataIONIdentityException([super.message]);
 }

@@ -49,8 +49,13 @@ class IONIdentityWallets {
   Future<Wallet> createWallet({
     required String network,
     required String name,
+    required OnVerifyIdentity<Wallet> onVerifyIdentity,
   }) =>
-      _createWalletService.createWallet(network: network, name: name);
+      _createWalletService.createWallet(
+        network: network,
+        name: name,
+        onVerifyIdentity: onVerifyIdentity,
+      );
 
   /// Lists the wallets associated with the current user by making an API request.
   ///
@@ -80,21 +85,43 @@ class IONIdentityWallets {
         pageToken: pageToken,
       );
 
-  Future<GenerateSignatureResponse> generateMessageSignature(
+  Future<GenerateSignatureResponse> generateMessageSignatureWithPasskey(
     String walletId,
     String message,
   ) =>
-      _generateSignatureService.generateMessageSignature(
+      _generateSignatureService.generateMessageSignatureWithPasskey(
         walletId: walletId,
         message: message,
       );
 
-  Future<GenerateSignatureResponse> generateHashSignature(
+  Future<GenerateSignatureResponse> generateMessageSignatureWithPassword(
+    String walletId,
+    String message,
+    String password,
+  ) =>
+      _generateSignatureService.generateMessageSignatureWithPassword(
+        walletId: walletId,
+        message: message,
+        password: password,
+      );
+
+  Future<GenerateSignatureResponse> generateHashSignatureWithPasskey(
     String walletId,
     String hash,
   ) =>
-      _generateSignatureService.generateHashSignature(
+      _generateSignatureService.generateHashSignatureWithPasskey(
         walletId: walletId,
         hash: hash,
+      );
+
+  Future<GenerateSignatureResponse> generateHashSignatureWithPassword(
+    String walletId,
+    String hash,
+    String password,
+  ) =>
+      _generateSignatureService.generateHashSignatureWithPassword(
+        walletId: walletId,
+        hash: hash,
+        password: password,
       );
 }

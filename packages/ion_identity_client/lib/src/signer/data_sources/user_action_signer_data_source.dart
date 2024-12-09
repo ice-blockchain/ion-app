@@ -5,9 +5,7 @@ import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/http_method.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:ion_identity_client/src/core/types/types.dart';
-import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion.dart';
-import 'package:ion_identity_client/src/signer/dtos/user_action_challenge.c.dart';
+import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/dtos/user_action_signing_complete_request.c.dart';
 import 'package:ion_identity_client/src/signer/dtos/user_action_signing_init_request.c.dart';
 import 'package:ion_identity_client/src/signer/types/user_action_signing_request.dart';
@@ -46,7 +44,7 @@ class UserActionSignerDataSource {
 
   Future<String> createUserActionSignature(
     String username,
-    Fido2Assertion assertion,
+    AssertionRequestData assertion,
     String challengeIdentifier,
   ) {
     final token = tokenStorage.getToken(username: username);

@@ -19,6 +19,7 @@ class CreateWalletService {
   Future<Wallet> createWallet({
     required String network,
     required String name,
+    required OnVerifyIdentity<Wallet> onVerifyIdentity,
   }) async {
     final request = _dataSource.buildCreateWalletSigningRequest(
       username: username,
@@ -26,9 +27,20 @@ class CreateWalletService {
       name: name,
     );
 
-    return _userActionSigner.execute(
-      request,
-      Wallet.fromJson,
+    return onVerifyIdentity(
+      onPasswordFlow: ({required String password}) {
+        return _userActionSigner.signWithPassword(
+          request,
+          Wallet.fromJson,
+          password,
+        );
+      },
+      onPasskeyFlow: () {
+        return _userActionSigner.signWithPasskey(
+          request,
+          Wallet.fromJson,
+        );
+      },
     );
   }
 }

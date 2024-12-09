@@ -6,9 +6,12 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart' as crypto;
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
+import 'package:ion_identity_client/src/auth/dtos/client_data_type.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
+import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
+
+enum SignatureEncryption { hex, base64Url }
 
 class PasswordSigner {
   PasswordSigner({
@@ -32,6 +35,7 @@ class PasswordSigner {
     final clientData = buildClientData(
       challenge: challenge,
       origin: config.origin,
+      clientDataType: ClientDataType.createKey,
     );
 
     final clientDataHash = sha256Hash(utf8.encode(clientData));
@@ -41,9 +45,10 @@ class PasswordSigner {
       publicKeyPem: keyPair.publicKeyPem,
     );
 
-    final signature = await signCredentialInfoFingerprint(
-      credentialInfoFingerprint,
-      keyPair.keyPair,
+    final signature = await signDataWithPrivateKey(
+      data: credentialInfoFingerprint,
+      privateKey: keyPair.keyPair,
+      signatureEncryption: SignatureEncryption.hex,
     );
 
     final attestationData = buildAttestationData(
@@ -74,15 +79,47 @@ class PasswordSigner {
     );
   }
 
+  Future<AssertionRequestData> createCredentialAssertion({
+    required String challenge,
+    required String encryptedPrivateKey,
+    required String password,
+    required String credentialId,
+    required CredentialKind credentialKind,
+  }) async {
+    final keyPair =
+        await keyService.reconstructKeyPairFromEncryptedPrivateKey(encryptedPrivateKey, password);
+    final clientData = buildClientData(
+      challenge: challenge,
+      origin: config.origin,
+      clientDataType: ClientDataType.getKey,
+    );
+
+    final signature = await signDataWithPrivateKey(
+      data: clientData,
+      privateKey: keyPair.keyPair,
+      signatureEncryption: SignatureEncryption.base64Url,
+    );
+
+    return AssertionRequestData(
+      kind: credentialKind,
+      credentialAssertion: CredentialAssertionData(
+        clientData: base64UrlEncode(utf8.encode(clientData)),
+        credId: credentialId,
+        signature: signature,
+      ),
+    );
+  }
+
   String buildClientData({
     required String challenge,
     required String origin,
+    required ClientDataType clientDataType,
   }) {
     final clientDataMap = {
       'challenge': challenge,
       'crossOrigin': false,
       'origin': origin,
-      'type': 'key.create',
+      'type': clientDataType.value,
     };
 
     // Ensure keys are sorted alphabetically
@@ -117,18 +154,23 @@ class PasswordSigner {
     return jsonEncode(sortedFingerprintMap);
   }
 
-  Future<String> signCredentialInfoFingerprint(
-    String fingerprintData,
-    crypto.SimpleKeyPairData privateKey,
-  ) async {
+  Future<String> signDataWithPrivateKey({
+    required String data,
+    required crypto.SimpleKeyPairData privateKey,
+    required SignatureEncryption signatureEncryption,
+  }) async {
     final algorithm = crypto.Ed25519();
 
     final signature = await algorithm.sign(
-      utf8.encode(fingerprintData),
+      utf8.encode(data),
       keyPair: privateKey,
     );
 
-    return signature.bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+    return switch (signatureEncryption) {
+      SignatureEncryption.hex =>
+        signature.bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join(),
+      SignatureEncryption.base64Url => base64UrlEncode(signature.bytes),
+    };
   }
 
   // Builds the attestation data JSON string
