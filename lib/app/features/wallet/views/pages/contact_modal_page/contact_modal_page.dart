@@ -11,7 +11,7 @@ import 'package:ion/app/features/wallet/views/pages/contact_modal_page/component
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ion/app/services/share/share.dart';
+import 'package:ion/app/utils/share.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ContactPage extends ConsumerWidget {
