@@ -15,7 +15,9 @@ List<EntitiesDataSource> userArticlesDataSource(Ref ref, String pubkey) {
   return [
     EntitiesDataSource(
       actionSource: ActionSourceUser(pubkey),
-      entityFilter: (entity) => entity is ArticleEntity || entity is GenericRepostEntity,
+      entityFilter: (entity) =>
+          entity.masterPubkey == pubkey &&
+          (entity is ArticleEntity || entity is GenericRepostEntity),
       requestFilters: [
         RequestFilter(
           kinds: const [ArticleEntity.kind],

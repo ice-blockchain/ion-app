@@ -23,7 +23,8 @@ List<EntitiesDataSource>? userVideosDataSource(Ref ref, String pubkey) {
   return [
     EntitiesDataSource(
       actionSource: ActionSourceUser(pubkey),
-      entityFilter: (entity) => entity is PostEntity || entity is RepostEntity,
+      entityFilter: (entity) =>
+          entity.masterPubkey == pubkey && (entity is PostEntity || entity is RepostEntity),
       requestFilters: [
         RequestFilter(
           kinds: const [PostEntity.kind, RepostEntity.kind],

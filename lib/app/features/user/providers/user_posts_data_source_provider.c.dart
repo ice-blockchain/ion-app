@@ -24,7 +24,7 @@ List<EntitiesDataSource>? userPostsDataSource(Ref ref, String pubkey) {
     EntitiesDataSource(
       actionSource: ActionSourceUser(pubkey),
       entityFilter: (entity) =>
-          (entity is PostEntity && entity.data.parentEvent == null) || entity is RepostEntity,
+          entity.masterPubkey == pubkey && (entity is PostEntity || entity is RepostEntity),
       requestFilters: [
         RequestFilter(
           kinds: const [PostEntity.kind, RepostEntity.kind],

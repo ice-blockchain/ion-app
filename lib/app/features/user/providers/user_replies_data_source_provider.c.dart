@@ -22,7 +22,7 @@ List<EntitiesDataSource>? userRepliesDataSource(Ref ref, String pubkey) {
   return [
     EntitiesDataSource(
       actionSource: ActionSourceUser(pubkey),
-      entityFilter: (entity) => entity is PostEntity,
+      entityFilter: (entity) => entity.masterPubkey == pubkey && entity is PostEntity,
       requestFilters: [
         RequestFilter(
           kinds: const [PostEntity.kind],
