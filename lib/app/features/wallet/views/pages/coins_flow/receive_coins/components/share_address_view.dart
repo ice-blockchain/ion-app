@@ -15,7 +15,7 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ShareAddressView extends HookConsumerWidget {
+class ShareAddressView extends ConsumerWidget {
   const ShareAddressView({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
