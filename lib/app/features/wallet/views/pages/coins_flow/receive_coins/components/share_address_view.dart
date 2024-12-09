@@ -12,8 +12,8 @@ import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/pro
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/utils/share.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ShareAddressView extends HookConsumerWidget {
   const ShareAddressView({super.key});
@@ -60,7 +60,7 @@ class ShareAddressView extends HookConsumerWidget {
                     context.i18n.button_share,
                   ),
                   onPressed: () {
-                    Share.share(walletAddress);
+                    shareContent(walletAddress);
                   },
                 ),
               ],
