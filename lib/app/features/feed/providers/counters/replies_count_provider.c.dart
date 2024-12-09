@@ -10,7 +10,7 @@ part 'replies_count_provider.c.g.dart';
 @riverpod
 class RepliesCount extends _$RepliesCount {
   @override
-  int? build(EventReference eventReference) {
+  int build(EventReference eventReference) {
     final entity = ref.watch(
       nostrCacheProvider.select(
         cacheSelector<EventCountResultEntity>(
@@ -21,18 +21,19 @@ class RepliesCount extends _$RepliesCount {
         ),
       ),
     );
-    return entity?.data.content as int?;
+
+    if (entity == null) {
+      return 0;
+    }
+
+    return entity.data.content as int;
   }
 
   void addOne() {
-    if (state != null) {
-      state = state! + 1;
-    }
+    state = state + 1;
   }
 
   void removeOne() {
-    if (state != null) {
-      state = state! - 1;
-    }
+    state = state - 1;
   }
 }

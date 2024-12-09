@@ -78,6 +78,8 @@ EntitiesDataSource _buildPostsDataSource({
     requestFilters: [
       RequestFilter(
         kinds: const [PostEntity.kind, RepostEntity.kind],
+        search:
+            'include:dependencies:kind1>kind6400+kind1+group+root include:dependencies:kind1>kind6400+kind6+group+e include:dependencies:kind1>kind6400+kind1+group+q include:dependencies:kind1>kind6400+kind7+group+content',
         authors: authors,
         limit: 10,
       ),

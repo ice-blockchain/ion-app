@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
@@ -38,7 +37,7 @@ class EventCountRequestEntity
     return EventCountRequestEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      masterPubkey: eventMessage.masterPubkey,
+      masterPubkey: '',
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: EventCountRequestData.fromEventMessage(eventMessage),
@@ -56,7 +55,7 @@ class EventCountRequestEntity
 @freezed
 class EventCountRequestData with _$EventCountRequestData implements EventSerializable {
   const factory EventCountRequestData({
-    required RequestFilter filter,
+    required List<RequestFilter> filters,
     required EventCountRequestParams params,
     String? output,
   }) = _EventCountRequestData;
@@ -65,8 +64,11 @@ class EventCountRequestData with _$EventCountRequestData implements EventSeriali
 
   factory EventCountRequestData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+    final filters = (jsonDecode(eventMessage.content) as List<dynamic>)
+        .map((filterJson) => RequestFilter.fromJson(filterJson as Map<String, dynamic>))
+        .toList();
     return EventCountRequestData(
-      filter: RequestFilter.fromJson(jsonDecode(eventMessage.content) as Map<String, dynamic>),
+      filters: filters,
       params: EventCountRequestParams.fromTags(tags[EventCountRequestParams.tagName] ?? []),
       output: tags['output']?.first[1],
     );
@@ -83,7 +85,7 @@ class EventCountRequestData with _$EventCountRequestData implements EventSeriali
       signer: signer,
       createdAt: createdAt,
       kind: EventCountRequestEntity.kind,
-      content: filter.toString(),
+      content: json.encode(filters.map((filter) => filter.toString())),
       tags: [...tags, ...params.toTags()],
     );
   }
@@ -107,7 +109,7 @@ class EventCountRequestParams with _$EventCountRequestParams {
           throw IncorrectEventTagException(tag: tag.toString());
         }
         if (tag[1] == 'group') group = tag[2];
-        if (tag[1] == 'relay') group = tag[2];
+        if (tag[1] == 'relay') relay = tag[2];
       }
     }
 

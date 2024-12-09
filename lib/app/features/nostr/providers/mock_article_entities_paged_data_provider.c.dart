@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/mocked_counters.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
 import 'package:ion/app/features/feed/providers/fake_articles_generator.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'mock_article_entities_paged_data_provider.c.g.dart';
@@ -29,13 +27,6 @@ class MockArticleEntitiesPagedData extends _$MockArticleEntitiesPagedData {
       dataSources!.first.requestFilters.first.limit ?? 10,
       (_) => generateFakeArticle(),
     );
-
-    final nostrCache = ref.read(nostrCacheProvider.notifier);
-
-    for (final article in mockedArticles) {
-      generateFakeCounters(ref, article.id);
-      nostrCache.cache(article);
-    }
 
     state = [...state ?? [], ...mockedArticles];
   }

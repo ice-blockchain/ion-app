@@ -4,13 +4,11 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/paged.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/mocked_counters.dart';
+import 'package:ion/app/features/core/model/paged.dart';
 import 'package:ion/app/features/feed/providers/fake_posts_generator.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
+import 'package:ion/app/features/nostr/providers/nostr_notifier.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -102,7 +100,7 @@ class EntitiesPagedData extends _$EntitiesPagedData {
 
     DateTime? lastEventTime;
     await for (final entity in entitiesStream) {
-      if (dataSource.entityFilter(entity) && !(state?.data.items?.contains(entity)).falseOrValue) {
+      if (dataSource.entityFilter(entity) && !state?.data.items?.contains(entity).falseOrValue) {
         lastEventTime = entity.createdAt;
         state = state?.copyWith(
           data: Paged.loading(
@@ -155,13 +153,6 @@ class MockPostEntitiesPagedData extends _$MockPostEntitiesPagedData {
       ),
     ))
         .toSet();
-
-    final nostrCache = ref.read(nostrCacheProvider.notifier);
-
-    for (final post in mockedPosts) {
-      generateFakeCounters(ref, post.id);
-      nostrCache.cache(post);
-    }
 
     final paginationEntries = await Future.delayed(
       const Duration(milliseconds: 500),
