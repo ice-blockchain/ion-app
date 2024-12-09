@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
-import 'package:ion/app/utils/clipboard.dart';
+import 'package:ion/app/services/clipboard/clipboard.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ShareLinkTile extends ConsumerWidget {
