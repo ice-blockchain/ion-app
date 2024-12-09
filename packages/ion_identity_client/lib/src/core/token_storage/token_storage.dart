@@ -7,7 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
-import 'package:ion_identity_client/src/core/types/user_token.dart';
+import 'package:ion_identity_client/src/core/types/user_token.c.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// A class responsible for securely storing and managing user tokens using

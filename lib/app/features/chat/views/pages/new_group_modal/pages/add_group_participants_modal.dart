@@ -8,12 +8,12 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/content_creators_data_source_provider.dart';
-import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.dart';
+import 'package:ion/app/features/auth/providers/content_creators_data_source_provider.c.dart';
+import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/selectable_user_list.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
-import 'package:ion/app/features/user/model/user_metadata.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class AddGroupParticipantsModal extends HookConsumerWidget {

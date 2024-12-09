@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
 import 'package:ion/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
-import 'package:ion/app/features/nostr/model/event_reference.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.dart';
+import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
 import 'package:ion/app/utils/algorithm.dart';
 
 class Article extends ConsumerWidget {

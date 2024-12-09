@@ -9,7 +9,7 @@ import 'package:ion/app/components/copy/copy_builder.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
-import 'package:ion/app/features/core/providers/theme_mode_provider.dart';
+import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/generated/assets.gen.dart';

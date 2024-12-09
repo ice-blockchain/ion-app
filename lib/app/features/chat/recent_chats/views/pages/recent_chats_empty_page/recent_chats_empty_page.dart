@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/constants/ui.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatsEmptyPage extends StatelessWidget {

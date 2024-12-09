@@ -7,10 +7,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
-import 'package:ion/app/features/chat/providers/channels_provider.dart';
+import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
 import 'package:ion/app/features/chat/views/pages/channel_page/components/empty_state_copy_link.dart';
 import 'package:ion/app/features/chat/views/pages/components/joined_users_amount_tile.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/keyboard/keyboard.dart';
 import 'package:ion/generated/assets.gen.dart';
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/services/storage/local_storage.dart';
+import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum TestEnum { one, two, three }

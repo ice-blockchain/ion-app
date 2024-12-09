@@ -9,8 +9,8 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/channel_type.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.dart';
-import 'package:ion/app/features/chat/providers/channels_provider.dart';
+import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
+import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/channel_page/components/channel_avatar.dart';
@@ -21,7 +21,7 @@ import 'package:ion/app/features/chat/views/pages/components/bottom_sticky_butto
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/desc_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/title_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admins_management_modal/admins_management_modal.dart';
-import 'package:ion/app/features/user/providers/avatar_processor_notifier.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 

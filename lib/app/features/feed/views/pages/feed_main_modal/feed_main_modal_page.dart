@@ -9,11 +9,11 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/features/wallet/model/feed_type.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class FeedMainModalPage extends StatelessWidget {
   const FeedMainModalPage({super.key});

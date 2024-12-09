@@ -11,8 +11,8 @@ import 'package:ion/app/features/core/permissions/views/components/permission_di
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/plus_icon.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class CurrentUserStoryListItem extends HookConsumerWidget {
   const CurrentUserStoryListItem({

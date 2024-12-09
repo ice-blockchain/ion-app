@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 

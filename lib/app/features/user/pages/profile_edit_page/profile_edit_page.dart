@@ -9,7 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/bio_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/location_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/name_input.dart';
@@ -22,8 +22,8 @@ import 'package:ion/app/features/user/pages/profile_edit_page/components/edit_su
 import 'package:ion/app/features/user/pages/profile_edit_page/components/header/header.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/user_banner_picked/user_banner_picked.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/hooks/use_draft_metadata.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class ProfileEditPage extends HookConsumerWidget {
   const ProfileEditPage({

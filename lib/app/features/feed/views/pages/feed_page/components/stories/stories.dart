@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_provider.dart';
+import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_skeleton.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 
 class Stories extends ConsumerWidget {
   const Stories({super.key});

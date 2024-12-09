@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:ion/app/features/feed/data/models/entities/article_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/mocked_data.dart';
 
 ArticleEntity generateFakeArticle() {

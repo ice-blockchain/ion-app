@@ -10,7 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reaction_dialog/components/message_reaction_context_menu.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reaction_dialog/components/message_reaction_emoji_bar.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class MessageReactionDialog extends HookConsumerWidget {
   const MessageReactionDialog({

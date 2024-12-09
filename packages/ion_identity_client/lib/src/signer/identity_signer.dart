@@ -3,7 +3,7 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion.dart';
-import 'package:ion_identity_client/src/signer/dtos/user_action_challenge.dart';
+import 'package:ion_identity_client/src/signer/dtos/user_action_challenge.c.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/signer/password_signer.dart';
 

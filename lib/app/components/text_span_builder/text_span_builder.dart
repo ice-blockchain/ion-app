@@ -3,7 +3,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/browser/browser.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_matcher.dart';

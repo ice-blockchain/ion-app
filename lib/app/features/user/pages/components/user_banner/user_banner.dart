@@ -6,8 +6,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class UserBanner extends ConsumerWidget {
   const UserBanner({

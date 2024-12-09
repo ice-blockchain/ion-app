@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-part of 'app_routes.dart';
+part of 'app_routes.c.dart';
 
 class AuthRoutes {
   static const authPrefix = 'auth';

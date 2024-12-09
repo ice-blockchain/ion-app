@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/components/components.dart';
-import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.dart';
+import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 
 class MessagingBottomBar extends ConsumerWidget {
   const MessagingBottomBar({

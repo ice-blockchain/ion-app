@@ -7,16 +7,16 @@ import 'package:flutter_quill/quill_delta.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/providers/poll/poll_answers_provider.dart';
-import 'package:ion/app/features/core/providers/poll/poll_title_notifier.dart';
-import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.dart';
-import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.dart';
-import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.dart';
+import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
+import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
+import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.c.dart';
+import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.c.dart';
+import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
-import 'package:ion/app/features/nostr/model/event_reference.dart';
+import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/utils/validators.dart';
 
 class PostSubmitButton extends HookConsumerWidget {

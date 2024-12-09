@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.dart';
+import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.c.dart';
 
 class StoryReactionOverlay extends HookConsumerWidget {
   const StoryReactionOverlay({

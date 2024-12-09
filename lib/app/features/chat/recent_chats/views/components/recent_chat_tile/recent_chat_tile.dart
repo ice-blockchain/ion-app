@@ -5,11 +5,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/model/message_author.dart';
+import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 

@@ -7,18 +7,18 @@ import 'package:ion/app/components/list_items_loading_state/list_items_loading_s
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallet/model/coin_transaction_data.dart';
+import 'package:ion/app/features/wallet/model/coin_transaction_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_item.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_section_header.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/providers/coin_transactions_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/providers/coin_transactions_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/providers/hooks/use_transactions_by_date.dart';
-import 'package:ion/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
+import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 

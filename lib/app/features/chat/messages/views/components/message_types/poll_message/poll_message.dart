@@ -9,8 +9,8 @@ import 'package:ion/app/features/chat/messages/views/components/message_item_wra
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/poll_message/mock.dart';
-import 'package:ion/app/features/chat/model/message_author.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.dart';
+import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 
 part 'poll_result_message.dart';
 

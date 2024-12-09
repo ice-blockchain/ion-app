@@ -6,7 +6,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/components/delete_twofa_initial_scaffold.dart';
-import 'package:ion/app/features/protect_account/email/providers/linked_email_provider.dart';
+import 'package:ion/app/features/protect_account/email/providers/linked_email_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeleteEmailInitialStep extends StatelessWidget {

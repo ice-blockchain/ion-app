@@ -3,13 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/user/pages/components/user_name_tile/user_name_tile.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/profile_details/profile_details_cell.dart';
-import 'package:ion/app/features/user/providers/follow_list_provider.dart';
-import 'package:ion/app/features/user/providers/user_followers_provider.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_followers_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class ProfileDetails extends ConsumerWidget {
   const ProfileDetails({

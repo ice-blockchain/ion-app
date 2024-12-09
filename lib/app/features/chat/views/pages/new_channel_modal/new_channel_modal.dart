@@ -9,11 +9,11 @@ import 'package:ion/app/components/controllers/hooks/use_text_editing_with_highl
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/channel_data.dart';
+import 'package:ion/app/features/chat/model/channel_data.c.dart';
 import 'package:ion/app/features/chat/model/channel_type.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.dart';
-import 'package:ion/app/features/chat/providers/channels_provider.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.dart';
+import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
+import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/components/bottom_sticky_button.dart';
@@ -21,8 +21,8 @@ import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/c
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/desc_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/title_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admins_management_modal/admins_management_modal.dart';
-import 'package:ion/app/features/user/providers/avatar_processor_notifier.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';

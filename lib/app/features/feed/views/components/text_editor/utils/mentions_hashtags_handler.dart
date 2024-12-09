@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.dart';
+import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/hashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/mentions_suggestions.dart';

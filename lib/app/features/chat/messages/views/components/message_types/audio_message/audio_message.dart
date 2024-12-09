@@ -11,10 +11,10 @@ import 'package:ion/app/features/chat/messages/views/components/message_author/m
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
-import 'package:ion/app/features/chat/model/message_author.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.dart';
+import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.dart';
+import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:visibility_detector/visibility_detector.dart';

@@ -3,8 +3,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
-import 'package:ion/app/features/wallets/providers/selected_wallet_id_provider.dart';
-import 'package:ion/app/services/storage/local_storage.dart';
+import 'package:ion/app/features/wallets/providers/selected_wallet_id_provider.c.dart';
+import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../mocks.dart';

@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/onboarding_data_provider.dart';
-import 'package:ion/app/features/core/providers/app_locale_provider.dart';
+import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/core/views/pages/language_selector_page.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
 

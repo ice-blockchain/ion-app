@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/src/auth/dtos/register_complete_wallet.dart';
+import 'package:ion_identity_client/src/auth/dtos/register_complete_wallet.c.dart';
 
 class RequestDefaults {
   // TODO: replace with ION later

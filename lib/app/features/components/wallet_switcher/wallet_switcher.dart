@@ -6,8 +6,8 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/components/wallet_icon/wallet_icon.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class WalletSwitcher extends ConsumerWidget {
   const WalletSwitcher({

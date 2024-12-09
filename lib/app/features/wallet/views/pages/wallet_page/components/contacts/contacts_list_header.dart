@@ -7,8 +7,8 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/contacts/pages/contacts_list_view.dart';
-import 'package:ion/app/features/wallet/model/contact_data.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/wallet/model/contact_data.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class ContactListHeader extends StatelessWidget {
   const ContactListHeader({super.key});

@@ -10,7 +10,7 @@ import 'package:ion/app/features/wallet/components/nft_item/nft_item.dart';
 import 'package:ion/app/features/wallet/components/send_to_recipient/send_to_recipient.dart';
 import 'package:ion/app/features/wallet/components/timeline/timeline.dart';
 import 'package:ion/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/features/wallet/views/pages/transaction_details/transaction_details_actions.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';

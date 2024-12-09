@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/ui.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallet/providers/filtered_wallet_nfts_provider.dart';
+import 'package:ion/app/features/wallet/providers/filtered_wallet_nfts_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_header_layout_action.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_header_sort_action.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/search_bar/search_bar.dart';

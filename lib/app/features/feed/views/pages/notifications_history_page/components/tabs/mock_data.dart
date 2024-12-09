@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/feed/data/models/notifications/notification_data.dart';
+import 'package:ion/app/features/feed/data/models/notifications/notification_data.c.dart';
 import 'package:ion/app/features/feed/data/models/notifications/notifications_type.dart';
 
 final mockedNotificationDataArray = [

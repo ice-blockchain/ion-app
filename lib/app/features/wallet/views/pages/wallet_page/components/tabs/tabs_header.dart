@@ -9,9 +9,9 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/tabs/tabs_header_tab.dart';
-import 'package:ion/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.dart';
+import 'package:ion/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class WalletTabsHeader extends ConsumerWidget {

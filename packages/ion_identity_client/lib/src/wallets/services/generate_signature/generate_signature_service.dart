@@ -2,7 +2,7 @@
 
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:ion_identity_client/src/wallets/services/generate_signature/data_sources/generate_signature_data_source.dart';
-import 'package:ion_identity_client/src/wallets/services/generate_signature/models/generate_signature_response.dart';
+import 'package:ion_identity_client/src/wallets/services/generate_signature/models/generate_signature_response.c.dart';
 
 class GenerateSignatureService {
   GenerateSignatureService({

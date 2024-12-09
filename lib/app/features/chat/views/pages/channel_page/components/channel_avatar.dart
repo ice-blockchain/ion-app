@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/channels_provider.dart';
+import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
 
 class ChannelAvatar extends ConsumerWidget {

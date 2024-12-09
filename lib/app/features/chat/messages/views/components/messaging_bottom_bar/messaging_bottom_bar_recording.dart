@@ -7,8 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/components/components.dart';
-import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.dart';
-import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.dart';
+import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
+import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
 import 'package:ion/app/utils/date.dart';
 
 class BottomBarRecordingView extends HookConsumerWidget {

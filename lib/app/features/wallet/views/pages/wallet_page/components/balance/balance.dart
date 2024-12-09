@@ -7,11 +7,11 @@ import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.dart';
+import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance_visibility_action.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/num.dart';
 
 class Balance extends ConsumerWidget {

@@ -16,7 +16,7 @@ import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/coin_id_button.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';

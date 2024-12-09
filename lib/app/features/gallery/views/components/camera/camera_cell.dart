@@ -5,12 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/permissions/providers/permissions_provider.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ion/app/features/gallery/data/models/camera_state.dart';
-import 'package:ion/app/features/gallery/providers/camera_provider.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.dart';
+import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
+import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
+import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/gallery/views/components/camera/camera.dart';
 
 class CameraCell extends HookConsumerWidget {

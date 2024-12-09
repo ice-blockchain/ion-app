@@ -15,7 +15,7 @@ import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 

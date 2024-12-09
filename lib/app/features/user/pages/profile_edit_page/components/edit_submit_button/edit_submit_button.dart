@@ -7,10 +7,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/model/user_metadata.dart';
-import 'package:ion/app/features/user/providers/avatar_processor_notifier.dart';
-import 'package:ion/app/features/user/providers/banner_processor_notifier.dart';
-import 'package:ion/app/features/user/providers/update_user_metadata_notifier.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
+import 'package:ion/app/features/user/providers/banner_processor_notifier.c.dart';
+import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class EditSubmitButton extends ConsumerWidget {

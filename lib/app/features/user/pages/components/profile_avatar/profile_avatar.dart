@@ -6,7 +6,7 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class ProfileAvatar extends ConsumerWidget {
   const ProfileAvatar({

@@ -8,8 +8,8 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class StoryListItem extends HookConsumerWidget {
   const StoryListItem({

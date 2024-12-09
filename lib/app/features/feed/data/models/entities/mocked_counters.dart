@@ -3,9 +3,9 @@
 import 'dart:math';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.dart';
-import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 void generateFakeCounters(Ref ref, String eventId) {

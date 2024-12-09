@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/contacts/providers/contacts_provider.dart';
+import 'package:ion/app/features/contacts/providers/contacts_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/address_input_field.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/buttons/contact_button.dart';
 

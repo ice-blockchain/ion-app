@@ -6,7 +6,7 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/passkeys/secured_by.dart';
-import 'package:ion/app/features/core/providers/theme_mode_provider.dart';
+import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class PasskeyPromptDialog extends ConsumerWidget {

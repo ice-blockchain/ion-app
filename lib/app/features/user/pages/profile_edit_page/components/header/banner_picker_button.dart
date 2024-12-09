@@ -8,9 +8,9 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
-import 'package:ion/app/features/user/providers/banner_processor_notifier.dart';
+import 'package:ion/app/features/user/providers/banner_processor_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/media_service/media_service.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BannerPickerButton extends ConsumerWidget {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/templates/template.dart';
+import 'package:ion/app/templates/template.c.dart';
 import 'package:ion/app/theme/app_bar_theme.dart';
 import 'package:ion/app/theme/app_colors.dart';
 import 'package:ion/app/theme/app_text_themes.dart';

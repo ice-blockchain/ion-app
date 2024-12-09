@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_receive_modal/components/coin_address_tile/coin_address_tile.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';

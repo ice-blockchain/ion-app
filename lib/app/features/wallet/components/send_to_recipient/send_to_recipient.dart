@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/card/rounded_card.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallet/model/contact_data.dart';
+import 'package:ion/app/features/wallet/model/contact_data.c.dart';
 
 class SendToRecipient extends StatelessWidget {
   const SendToRecipient({

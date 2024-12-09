@@ -1,0 +1,111 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
+import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'auth_provider.c.freezed.dart';
+part 'auth_provider.c.g.dart';
+
+@freezed
+class AuthState with _$AuthState {
+  const factory AuthState({
+    required List<String> authenticatedIdentityKeyNames,
+    required String? currentIdentityKeyName,
+  }) = _AuthState;
+
+  const AuthState._();
+
+  bool get hasAuthenticated {
+    return authenticatedIdentityKeyNames.isNotEmpty;
+  }
+}
+
+@Riverpod(keepAlive: true)
+class Auth extends _$Auth {
+  @override
+  Future<AuthState> build() async {
+    final authenticatedIdentityKeyNames =
+        await ref.watch(authenticatedIdentityKeyNamesStreamProvider.future);
+    final savedIdentityKeyName = await ref.watch(currentIdentityKeyNameStoreProvider.future);
+
+    final currentIdentityKeyName = authenticatedIdentityKeyNames.contains(savedIdentityKeyName)
+        ? savedIdentityKeyName
+        : authenticatedIdentityKeyNames.lastOrNull;
+
+    return AuthState(
+      authenticatedIdentityKeyNames: authenticatedIdentityKeyNames.toList(),
+      currentIdentityKeyName: currentIdentityKeyName,
+    );
+  }
+
+  Future<void> signOut() async {
+    state = const AsyncValue.loading();
+
+    final currentUser = state.valueOrNull?.currentIdentityKeyName;
+    if (currentUser == null) return;
+
+    final ionIdentity = await ref.read(ionIdentityProvider.future);
+    await ionIdentity(username: currentUser).auth.logOut();
+  }
+
+  void setCurrentUser(String identityKeyName) {
+    ref
+        .read(currentIdentityKeyNameStoreProvider.notifier)
+        .setCurrentIdentityKeyName(identityKeyName);
+  }
+}
+
+@Riverpod(keepAlive: true)
+String? currentIdentityKeyNameSelector(Ref ref) {
+  return ref.watch(
+    authProvider.select((state) => state.valueOrNull?.currentIdentityKeyName),
+  );
+}
+
+@riverpod
+String? currentPubkeySelector(Ref ref) {
+  final mainWallet = ref.watch(mainWalletProvider).valueOrNull;
+  if (mainWallet == null) {
+    return null;
+  }
+  return mainWallet.signingKey.publicKey;
+}
+
+@riverpod
+bool isCurrentUserSelector(Ref ref, String pubkey) {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+
+  return currentPubkey == pubkey;
+}
+
+@Riverpod(keepAlive: true)
+Stream<Iterable<String>> authenticatedIdentityKeyNamesStream(Ref ref) async* {
+  final ionIdentity = await ref.watch(ionIdentityProvider.future);
+
+  yield* ionIdentity.authorizedUsers;
+}
+
+@Riverpod(keepAlive: true)
+class CurrentIdentityKeyNameStore extends _$CurrentIdentityKeyNameStore {
+  static const String _currentIdentityKeyNameKey = 'Auth:currentIdentityKeyName';
+
+  @override
+  Future<String?> build() async {
+    // Watch prefs to be sure LocalStorage is initialized
+    await ref.watch(sharedPreferencesProvider.future);
+
+    final localStorage = ref.watch(localStorageProvider);
+
+    return localStorage.getString(_currentIdentityKeyNameKey);
+  }
+
+  Future<void> setCurrentIdentityKeyName(String identityKeyName) async {
+    final localStorage = ref.read(localStorageProvider);
+    await localStorage.setString(_currentIdentityKeyNameKey, identityKeyName);
+    state = AsyncData(identityKeyName);
+  }
+}

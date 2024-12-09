@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ConversationArchiveButton extends ConsumerWidget {

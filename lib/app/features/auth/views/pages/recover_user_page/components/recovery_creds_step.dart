@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/views/components/recovery_keys_input_container/recovery_keys_input_container.dart';
-import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.dart';
+import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.c.dart';
 
 class RecoveryCredsStep extends ConsumerWidget {
   const RecoveryCredsStep({

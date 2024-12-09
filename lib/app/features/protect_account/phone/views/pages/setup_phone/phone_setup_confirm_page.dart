@@ -15,8 +15,8 @@ import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/compon
 import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.dart';
-import 'package:ion/app/router/app_routes.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';

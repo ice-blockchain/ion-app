@@ -6,7 +6,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/topic_select_modal/topic_select_modal.dart';
-import 'package:ion/app/features/feed/providers/article/select_topics_provider.dart';
+import 'package:ion/app/features/feed/providers/article/select_topics_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/topics_carousel/topics_carousel.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';

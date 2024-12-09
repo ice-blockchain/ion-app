@@ -7,7 +7,7 @@ import 'package:ion/app/features/protect_account/phone/views/pages/delete_phone/
 import 'package:ion/app/features/protect_account/phone/views/pages/delete_phone/components/delete_phone_input_step.dart';
 import 'package:ion/app/features/protect_account/phone/views/pages/delete_phone/components/delete_phone_select_options_step.dart';
 import 'package:ion/app/features/protect_account/secure_account/data/models/delete_twofa_step.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
 
 class PhoneDeletePage extends HookWidget {
   const PhoneDeletePage({super.key});
