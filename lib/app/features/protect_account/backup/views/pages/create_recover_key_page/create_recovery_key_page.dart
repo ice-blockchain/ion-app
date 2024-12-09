@@ -15,6 +15,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class CreateRecoveryKeyPage extends StatelessWidget {
   const CreateRecoveryKeyPage({super.key});
@@ -80,6 +81,8 @@ class _Body extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recoveryData = ref.watch(createRecoveryKeyActionNotifierProvider);
 
+    ref.displayErrors(createRecoveryKeyActionNotifierProvider);
+
     useOnInit(() {
       guardPasskeyDialog(
         context,
@@ -93,16 +96,11 @@ class _Body extends HookConsumerWidget {
       );
     });
 
-    if (recoveryData.isLoading || recoveryData.valueOrNull == null) {
-      return const CreateRecoveryKeyLoadingState();
-    }
-    if (recoveryData.hasError) {
-      return const CreateRecoveryKeyErrorState();
-    }
-    if (recoveryData.hasValue) {
-      return CreateRecoveryKeySuccessState(recoveryData: recoveryData.requireValue!);
-    }
-
-    return const CreateRecoveryKeyLoadingState();
+    return switch (recoveryData) {
+      AsyncData(:final CreateRecoveryCredentialsSuccess value) =>
+        CreateRecoveryKeySuccessState(recoveryData: value),
+      AsyncError() => const CreateRecoveryKeyErrorState(),
+      _ => const CreateRecoveryKeyLoadingState(),
+    };
   }
 }
