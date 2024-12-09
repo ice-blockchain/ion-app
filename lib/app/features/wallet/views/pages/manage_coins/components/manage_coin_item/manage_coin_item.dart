@@ -18,12 +18,6 @@ class ManageCoinItem extends ConsumerWidget {
 
   final String coinId;
 
-  Widget _getCheckbox(bool isSelected) {
-    return isSelected
-        ? Assets.svg.iconBlockCheckboxOn.icon()
-        : Assets.svg.iconBlockCheckboxOff.icon();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final manageCoinData = ref.watch(
@@ -43,7 +37,9 @@ class ManageCoinItem extends ConsumerWidget {
       subtitle: Text(coinData.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
       leading: coinData.iconUrl.icon(size: 36.0.s),
-      trailing: _getCheckbox(manageCoinData.isSelected),
+      trailing: manageCoinData.isSelected
+          ? Assets.svg.iconBlockCheckboxOn.icon()
+          : Assets.svg.iconBlockCheckboxOff.icon(),
       onTap: () {
         ref.read(manageCoinsNotifierProvider.notifier).switchCoin(coinId: coinData.abbreviation);
       },

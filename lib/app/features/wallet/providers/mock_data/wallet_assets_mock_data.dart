@@ -3,6 +3,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:ion/app/features/wallet/model/coin_data.c.dart';
+import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -92,6 +93,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     description:
         'Explore the mysteries of the universe with WZRD! This hand-drawn, one-of-a-kind digital artwork features a whimsical feline adorned with interstellar patterns and vibrant colors. Perfect for space enthusiasts and cat lovers alike, this NFT brings a touch of the cosmos to your collection. Own a piece of digital space art today!',
     network: 'Ethereum',
+    networkType: NetworkType.bnb,
     tokenStandard: 'ERC-1123',
     contractAddress: '0x4559...4jd83g',
     rank: 1,
@@ -107,6 +109,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     description:
         'Step into a world of electric hues and surreal landscapes with Moonrunners Specialty. This unique digital painting captures the essence of a futuristic city bathed in neon lights. With its intricate details and vivid colors, this NFT promises to be a standout addition to any digital art collection. Embrace the future with Moonrunners Specialty.',
     network: 'Ethereum',
+    networkType: NetworkType.solana,
     tokenStandard: 'ERC-1123',
     contractAddress: '0x4559...4jd83g',
     rank: 2,
@@ -122,6 +125,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     description:
         'Behold the Crazy Monkey, a mesmerizing 3D digital sculpture that exudes mystery and power. Crafted with intricate textures and lifelike details, this NFT represents a mythical protector from a forgotten era. Perfect for collectors of fantasy and mythology, Crazy Monkey is a testament to digital artistry at its finest.',
     network: 'Ethereum',
+    networkType: NetworkType.arbitrum,
     tokenStandard: 'ERC-1123',
     contractAddress: '0x4559...4jd83g',
     rank: 3,
@@ -137,6 +141,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     description:
         'Experience the harmony of the digital world with Metaverse Melody, a dynamic audio-visual NFT. This piece combines stunning visuals with an original soundtrack, creating an immersive experience that transports you to the heart of the metaverse. Ideal for those who appreciate both visual and auditory art forms, Metaverse Melody is a symphony for the senses.',
     network: 'Ethereum',
+    networkType: NetworkType.eth,
     tokenStandard: 'ERC-1123',
     contractAddress: '0x4559...4jd83g',
     rank: 4,
@@ -152,6 +157,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     description:
         'Delicate and enchanting, Ethereal Butterfly is a digital artwork that captures the ephemeral beauty of a butterfly in flight. With its shimmering wings and vibrant colors, this NFT is a symbol of transformation and freedom. Perfect for nature lovers and art enthusiasts, Ethereal Butterfly adds a touch of grace and elegance to any collection.',
     network: 'Ethereum',
+    networkType: NetworkType.eth,
     tokenStandard: 'ERC-1123',
     contractAddress: '0x4559...4jd83g',
     rank: 5,
@@ -167,6 +173,7 @@ const List<NftData> mockedNftsDataArray = <NftData>[
     description:
         'Unleash the warrior within with Pixel Samurai, a striking 8-bit digital artwork that combines classic retro gaming aesthetics with the fierce elegance of a samurai. This NFT features a meticulously designed warrior poised for battle, set against a backdrop of traditional Japanese elements. Perfect for fans of retro gaming and martial arts, Pixel Samurai brings a blend of nostalgia and artistry to your digital collection.',
     network: 'Ethereum',
+    networkType: NetworkType.eth,
     tokenStandard: 'ERC-1123',
     contractAddress: '0x4559...4jd83g',
     rank: 6,
