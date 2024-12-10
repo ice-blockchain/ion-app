@@ -99,7 +99,10 @@ class ReplyInputField extends HookConsumerWidget {
           if (hasFocus.value)
             ActionsToolbar(
               actions: [
-                ToolbarImageButton(textEditorController: textEditorController),
+                ToolbarImageButton(
+                  attachedMediaNotifier: useState([]),
+                  textEditorController: textEditorController,
+                ),
                 ToolbarPollButton(textEditorController: textEditorController),
               ],
               trailing: PostSubmitButton(

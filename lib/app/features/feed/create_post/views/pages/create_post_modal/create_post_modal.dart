@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+import 'dart:math';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -18,15 +22,21 @@ import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_cover.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_keyboard_scroll_handler.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
+import 'package:ion/app/features/feed/views/components/post/constants.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
 import 'package:ion/app/features/feed/views/components/visibility_settings_toolbar/visibility_settings_toolbar.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
+import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/generated/assets.gen.dart';
+import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
 class CreatePostModal extends HookConsumerWidget {
   const CreatePostModal({
@@ -69,6 +79,8 @@ class CreatePostModal extends HookConsumerWidget {
     Future<void> onBack() async =>
         textEditorController.document.isEmpty() ? context.pop() : _showCancelCreationModal(context);
 
+    final attachedMediaNotifier = useState<List<MediaFile>>([]);
+
     return BackHardwareButtonInterceptor(
       onBackPress: (_) => onBack(),
       child: SheetContent(
@@ -106,9 +118,21 @@ class CreatePostModal extends HookConsumerWidget {
                                   padding: EdgeInsets.only(
                                     top: 6.0.s,
                                   ),
-                                  child: TextEditor(
-                                    textEditorController,
-                                    placeholder: createOption.getPlaceholder(context),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      TextEditor(
+                                        textEditorController,
+                                        placeholder: createOption.getPlaceholder(context),
+                                      ),
+                                      if (attachedMediaNotifier.value.isNotEmpty) ...[
+                                        SizedBox(height: 12.0.s),
+                                        _AttachedMediaPreview(
+                                          attachedMediaNotifier: attachedMediaNotifier,
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                 ),
                               ),
@@ -131,7 +155,11 @@ class CreatePostModal extends HookConsumerWidget {
               key: actionsToolbarKey,
               child: ActionsToolbar(
                 actions: [
-                  ToolbarImageButton(textEditorController: textEditorController),
+                  // ToolbarImageButton(textEditorController: textEditorController),
+                  ToolbarImageButton(
+                    textEditorController: textEditorController,
+                    attachedMediaNotifier: attachedMediaNotifier,
+                  ),
                   ToolbarPollButton(textEditorController: textEditorController),
                   ToolbarRegularButton(textEditorController: textEditorController),
                   ToolbarItalicButton(textEditorController: textEditorController),
@@ -156,6 +184,135 @@ class CreatePostModal extends HookConsumerWidget {
       child: CancelCreationModal(
         title: context.i18n.cancel_creation_post_title,
         onCancel: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+}
+
+class _AttachedMediaPreview extends ConsumerWidget {
+  const _AttachedMediaPreview({
+    required this.attachedMediaNotifier,
+    super.key,
+  });
+
+  final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final list = attachedMediaNotifier.value;
+
+    // TODO: Refactor copy/paste from PostMedia.calculateAspectRatio.
+    // Should be one utility
+    double calculateAspectRatio({required List<MediaFile> media}) {
+      if (media.isEmpty) {
+        return 0;
+      }
+
+      final horizontalRatios = <double>[];
+      final verticalRatios = <double>[];
+
+      // for (final MediaAttachment(:aspectRatio) in media) {
+      for (final MediaFile(:width, :height) in media) {
+        final aspectRatio = height != null && width != null ? width / height : 0.0;
+
+        aspectRatio < 1
+            ? verticalRatios.add(
+                max(PostConstants.minVerticalMediaAspectRatio, aspectRatio),
+              )
+            : horizontalRatios.add(
+                min(PostConstants.maxHorizontalMediaAspectRatio, aspectRatio),
+              );
+      }
+
+      final ratios =
+          horizontalRatios.length > verticalRatios.length ? horizontalRatios : verticalRatios;
+
+      final ratio = ratios.reduce((a, b) => a + b) / ratios.length;
+      return ratio;
+    }
+
+    final attachedMediaAspectRatio = list.isEmpty ? 0.0 : calculateAspectRatio(media: list);
+    final isHorizontalPreviews = attachedMediaAspectRatio >= 1;
+
+    return Container(
+      color: Colors.yellow.withOpacity(0.3),
+      constraints: BoxConstraints(
+        maxHeight: 190.0.s,
+      ),
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, i) {
+          final file = attachedMediaNotifier.value[i];
+
+          final assetEntity = ref.watch(assetEntityProvider(file.path)).valueOrNull;
+          if (assetEntity == null) {
+            return const SizedBox.shrink();
+          }
+
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(12.0.s),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: 190.0.s,
+                maxWidth: 300.0.s,
+              ),
+              child: Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: attachedMediaAspectRatio,
+                    child: Image(
+                      image: AssetEntityImageProvider(
+                        assetEntity,
+                        isOriginal: false,
+                        // thumbnailSize: const ThumbnailSize.square(300),
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                      onPressed: () {
+                        attachedMediaNotifier.value = attachedMediaNotifier.value.toList()
+                          ..remove(file);
+                      },
+                      icon: Assets.svg.iconFieldClearall.icon(
+                        size: isHorizontalPreviews ? 24.0.s : 16.0.s,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(12.0.s),
+            child: AspectRatio(
+              aspectRatio: attachedMediaAspectRatio,
+              child: Image.file(
+                File(file.path),
+                fit: BoxFit.cover,
+              ),
+
+              // switch (file.mediaType) {
+              //   MediaType.image => CachedNetworkImage(
+              //     imageUrl: mediaItem.url,
+              //     fit: BoxFit.cover,
+              //     errorWidget: (context, url, error) => const SizedBox.shrink(),
+              //   ),
+              //   MediaType.video => VideoPreview(
+              //     videoUrl: mediaItem.url,
+              //   ),
+              //   _ => const SizedBox.shrink(),
+              // },
+            ),
+          );
+        },
+        separatorBuilder: (_, __) => SizedBox(width: 12.0.s),
+        itemCount: attachedMediaNotifier.value.length,
       ),
     );
   }

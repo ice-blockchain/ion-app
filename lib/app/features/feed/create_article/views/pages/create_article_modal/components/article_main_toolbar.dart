@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
 
-class ArticleMainToolbar extends StatelessWidget {
+class ArticleMainToolbar extends HookConsumerWidget {
   const ArticleMainToolbar({
     required this.textEditorController,
     required this.onTypographyPressed,
@@ -16,10 +18,14 @@ class ArticleMainToolbar extends StatelessWidget {
   final VoidCallback onTypographyPressed;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ActionsToolbar(
       actions: [
-        ToolbarImageButton(textEditorController: textEditorController),
+        // ToolbarImageButton(textEditorController: textEditorController),
+        ToolbarImageButton(
+          attachedMediaNotifier: useState([]),
+          textEditorController: textEditorController,
+        ),
         ToolbarTypographyButton(
           textEditorController: textEditorController,
           onPressed: onTypographyPressed,

@@ -7,7 +7,13 @@ import 'package:ion/app/features/feed/views/components/text_editor/components/ga
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class ToolbarImageButton extends StatelessWidget {
-  const ToolbarImageButton({required this.textEditorController, super.key});
+  const ToolbarImageButton({
+    required this.textEditorController,
+    required this.attachedMediaNotifier,
+    super.key,
+  });
+
+  final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
   final QuillController textEditorController;
 
   @override
@@ -16,7 +22,8 @@ class ToolbarImageButton extends StatelessWidget {
       onMediaSelected: (mediaFiles) {
         if (mediaFiles != null && mediaFiles.isNotEmpty) {
           for (final mediaFile in mediaFiles) {
-            addSingleImageBlock(textEditorController, mediaFile);
+            attachedMediaNotifier.value.add(mediaFile);
+            // addSingleImageBlock(textEditorController, mediaFile);
           }
         }
       },
